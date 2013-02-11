@@ -4,7 +4,7 @@
     <!-- line -->
     <item>
         <shape>
-            <solid android:color="#597f07" />
+            <solid android:color="@color/middle_custom_color" />
         </shape>
     </item>
 
@@ -13,8 +13,8 @@
         <shape>
             <gradient
                 android:angle="270"
-                android:endColor="#4c4c4c"
-                android:startColor="#000" />
+                android:endColor="@color/dark_custom_gray"
+                android:startColor="@android:color/black" />
         </shape>
     </item>
 
