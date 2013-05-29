@@ -3,6 +3,13 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/home/teresadeus/Documents/adt-bundle-linux-x86_64-20130219/sdk/platforms/android-17/android.jar" sourcepath="/home/teresadeus/Documents/adt-bundle-linux-x86_64-20130219/sdk/sources">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/teresadeus/Documents/adt-bundle-linux-x86_64-20130219/sdk/docs/reference"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
