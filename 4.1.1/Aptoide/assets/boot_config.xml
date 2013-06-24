@@ -1,0 +1,27 @@
+<bootconf>
+	<aptoideconf>
+        <!--<partnertype>basic</partnertype>-->
+        <!--<partnerid>735f7a5ef72500285cf5c00b276e29b7</partnerid>-->
+        <!--<defaultstorename>magalhaest2</defaultstorename>-->
+        <brand>brand_aptoide</brand>
+        <!--<splashscreen>https://dl.dropbox.com/u/54355993/magalhaes_splashscreen.png</splashscreen>-->
+        <!--<splashscreenland>https://dl.dropbox.com/u/54355993/magalhaes_splashscreen_land.png</splashscreenland>-->
+        <maturecontentswitch>true</maturecontentswitch>
+        <maturecontentswitchvalue>true</maturecontentswitchvalue>
+        <multiplestores>true</multiplestores>
+        <searchstores>true</searchstores>
+        <customeditorschoice>false</customeditorschoice>
+        <aptoidetheme>default</aptoidetheme>
+		<marketname>Aptoide</marketname>
+		<adunitid>18947d9a99e511e295fa123138070049</adunitid>
+ 	</aptoideconf>
+ 	
+	<storeconf>
+		<!-- for OEM stores -->
+        <theme>magalhaes</theme>
+        <avatar>http://cdn1.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description>Magalhães Market: free educational apps</description>
+        <view>list</view>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+	</storeconf>
+</bootconf>

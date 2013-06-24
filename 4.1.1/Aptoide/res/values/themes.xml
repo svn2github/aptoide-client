@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Aptoide default theme -->
+    <style name="Aptoide.Theme.Default" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <!-- <item name="actionBarStyle">@style/Aptoide.Widget.Styled.ActionBar</item> -->
+        <!-- <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Aptoide.Widget.Styled.ActionBar</item> -->
+        <!-- <item name="actionOverflowButtonStyle">@style/Widget.Sherlock.ActionButton.Overflow</item> -->
+        <!-- <item name="android:actionOverflowButtonStyle" tools:ignore="NewApi">@style/Widget.Sherlock.ActionButton.Overflow</item> -->
+        <!-- <item name="android:actionMenuTextColor" tools:ignore="NewApi">@android:color/white</item> -->
+        <item name="android:buttonStyle">@style/custom_button_style_aptoide</item>
+        <item name="custom_color">@color/custom_color</item>
+        <item name="dark_custom_color">@color/dark_custom_color</item>
+        <item name="light_custom_color">@color/light_custom_color</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_aptoide</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_aptoide</item>
+        <item name="customSearchButton">@style/custom_search_button_style_aptoide</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_aptoide</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_aptoide</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_aptoide</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_aptoide</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_aptoide</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <!-- <style name="Aptoide.Widget.Styled.ActionBar" parent="Widget.Sherlock.ActionBar"> -->
+    <!-- <item name="android:titleTextStyle" tools:ignore="NewApi">@android:color/white</item> -->
+    <!-- <item name="titleTextStyle">@android:color/white</item> -->
+    <!-- <item name="background">@drawable/actionbar_bgd_aptoide</item> -->
+    <!-- <item name="android:background">@drawable/actionbar_bgd_aptoide</item> -->
+    <!-- </style> -->
+
+
+    <!-- Midnight theme -->
+    <style name="Aptoide.Theme.Midnight" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <!-- <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Midnight</item> -->
+        <!-- <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Midnight</item> -->
+        <!-- <item name="actionOverflowButtonStyle">@style/Widget.Sherlock.ActionButton.Overflow</item> -->
+        <!-- <item name="android:actionOverflowButtonStyle" tools:ignore="NewApi">@style/Widget.Sherlock.ActionButton.Overflow</item> -->
+        <item name="android:buttonStyle">@style/custom_button_style_midnight</item>
+        <item name="custom_color">@color/custom_color_midnight</item>
+        <item name="dark_custom_color">@color/dark_custom_color_midnight</item>
+        <item name="light_custom_color">@color/light_custom_color_midnight</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_midnight</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_midnight</item>
+        <item name="customSearchButton">@style/custom_search_button_style_midnight</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_midnight</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <!-- <style name="Widget.Styled.ActionBar.Midnight" parent="Widget.Sherlock.ActionBar"> -->
+    <!-- <item name="background">@drawable/actionbar_bgd_midnight</item> -->
+    <!-- <item name="android:background">@drawable/actionbar_bgd_midnight</item> -->
+    <!-- <item name="android:titleTextStyle" tools:ignore="NewApi">@android:color/white</item> -->
+    <!-- <item name="titleTextStyle">@android:color/white</item> -->
+    <!-- </style> -->
+
+    <style name="Aptoide.Theme.Magalhaes" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_magalhaes</item>
+        <item name="custom_color">@color/custom_color_magalhaes</item>
+        <item name="dark_custom_color">@color/dark_custom_color_magalhaes</item>
+        <item name="light_custom_color">@color/light_custom_color_magalhaes</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_magalhaes</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_magalhaes</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_magalhaes</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_magalhaes</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_magalhaes</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_magalhaes</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_magalhaes</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Maroon" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_maroon</item>
+        <item name="custom_color">@color/custom_color_maroon</item>
+        <item name="dark_custom_color">@color/dark_custom_color_maroon</item>
+        <item name="light_custom_color">@color/light_custom_color_maroon</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_maroon</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_maroon</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_maroon</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_maroon</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Gold" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_gold</item>
+        <item name="custom_color">@color/custom_color_gold</item>
+        <item name="dark_custom_color">@color/dark_custom_color_gold</item>
+        <item name="light_custom_color">@color/light_custom_color_gold</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_gold</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_gold</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_gold</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_gold</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Orange" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_orange</item>
+        <item name="custom_color">@color/custom_color_orange</item>
+        <item name="dark_custom_color">@color/dark_custom_color_orange</item>
+        <item name="light_custom_color">@color/light_custom_color_orange</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_orange</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_orange</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_orange</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_orange</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.SpringGreen" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_springgreen</item>
+        <item name="custom_color">@color/custom_color_springgreen</item>
+        <item name="dark_custom_color">@color/dark_custom_color_springgreen</item>
+        <item name="light_custom_color">@color/light_custom_color_springgreen</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_springgreen</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_springgreen</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_springgreen</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_springgreen</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.LightSky" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_lightsky</item>
+        <item name="custom_color">@color/custom_color_lightsky</item>
+        <item name="dark_custom_color">@color/dark_custom_color_lightsky</item>
+        <item name="light_custom_color">@color/light_custom_color_lightsky</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_lightsky</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_lightsky</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_lightsky</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_lightsky</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Pink" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_pink</item>
+        <item name="custom_color">@color/custom_color_pink</item>
+        <item name="dark_custom_color">@color/dark_custom_color_pink</item>
+        <item name="light_custom_color">@color/light_custom_color_pink</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_pink</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_pink</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_pink</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_pink</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Blue" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_blue</item>
+        <item name="custom_color">@color/custom_color_blue</item>
+        <item name="dark_custom_color">@color/dark_custom_color_blue</item>
+        <item name="light_custom_color">@color/light_custom_color_blue</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_blue</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_blue</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_blue</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_blue</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Red" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_red</item>
+        <item name="custom_color">@color/custom_color_red</item>
+        <item name="dark_custom_color">@color/dark_custom_color_red</item>
+        <item name="light_custom_color">@color/light_custom_color_red</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_red</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_red</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_red</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_red</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Magenta" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_magenta</item>
+        <item name="custom_color">@color/custom_color_magenta</item>
+        <item name="dark_custom_color">@color/dark_custom_color_magenta</item>
+        <item name="light_custom_color">@color/light_custom_color_magenta</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_magenta</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_magenta</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_magenta</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_magenta</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.SlateGray" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_slategray</item>
+        <item name="custom_color">@color/custom_color_slategray</item>
+        <item name="dark_custom_color">@color/dark_custom_color_slategray</item>
+        <item name="light_custom_color">@color/light_custom_color_slategray</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_slategray</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_slategray</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_slategray</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_slategray</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.SeaGreen" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_seagreen</item>
+        <item name="custom_color">@color/custom_color_seagreen</item>
+        <item name="dark_custom_color">@color/dark_custom_color_seagreen</item>
+        <item name="light_custom_color">@color/light_custom_color_seagreen</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_seagreen</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_seagreen</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_seagreen</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_seagreen</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.Silver" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_silver</item>
+        <item name="custom_color">@color/custom_color_silver</item>
+        <item name="dark_custom_color">@color/dark_custom_color_silver</item>
+        <item name="light_custom_color">@color/light_custom_color_silver</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_silver</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_silver</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_silver</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_silver</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.DimGray" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_dimgray</item>
+        <item name="custom_color">@color/custom_color_dimgray</item>
+        <item name="dark_custom_color">@color/dark_custom_color_dimgray</item>
+        <item name="light_custom_color">@color/light_custom_color_dimgray</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_dimgray</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_dimgray</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_dimgray</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_dimgray</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.TimWe" parent="@style/Theme.Sherlock.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color_timwe</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_timwe</item>
+        <item name="custom_color">@color/custom_color_timwe</item>
+        <item name="dark_custom_color">@color/dark_custom_color_timwe</item>
+        <item name="light_custom_color">@color/light_custom_color_timwe</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color_timwe</item>
+        <item name="customSearchButton">@style/custom_search_button_style_timwe</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_timwe</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_timwe</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_timwe</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_dark</item>
+        <item name="dialogBackground">@style/store_dialog_style_dark</item>
+        <item name="labelBackground">@style/label_style_dark</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_dark</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_dark</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_dark</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_dark</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_dark</item>
+    </style>
+
+    <style name="Aptoide.Theme.EOcean" parent="@style/Theme.Sherlock.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_eocean</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_eocean</item>
+        <item name="custom_color">@color/custom_color_eocean</item>
+        <item name="dark_custom_color">@color/dark_custom_color_eocean</item>
+        <item name="light_custom_color">@color/light_custom_color_eocean</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color_eocean</item>
+        <item name="customSearchButton">@style/custom_search_button_style_eocean</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_eocean</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_eocean</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_eocean</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_dark</item>
+        <item name="dialogBackground">@style/store_dialog_style_dark</item>
+        <item name="labelBackground">@style/label_style_dark</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_dark</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_dark</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_dark</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_dark</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_dark</item>
+    </style>
+
+    <style name="Aptoide.Theme.DigitallyDifferent" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_digitallydifferent</item>
+        <item name="custom_color">@color/custom_color_digitallydifferent</item>
+        <item name="dark_custom_color">@color/dark_custom_color_digitallydifferent</item>
+        <item name="light_custom_color">@color/light_custom_color_digitallydifferent</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_digitallydifferent</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_digitallydifferent</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_digitallydifferent</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_digitallydifferent</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.JBlow" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_magalhaes</item>
+        <item name="custom_color">@color/custom_color_magalhaes</item>
+        <item name="dark_custom_color">@color/dark_custom_color_magalhaes</item>
+        <item name="light_custom_color">@color/light_custom_color_magalhaes</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_magalhaes</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_magalhaes</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_magalhaes</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_magalhaes</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_magalhaes</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_magalhaes</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_magalhaes</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.HappyBlue" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_magalhaes</item>
+        <item name="custom_color">@color/custom_color_magalhaes</item>
+        <item name="dark_custom_color">@color/dark_custom_color_magalhaes</item>
+        <item name="light_custom_color">@color/light_custom_color_magalhaes</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_magalhaes</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_magalhaes</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_magalhaes</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_magalhaes</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_magalhaes</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_magalhaes</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_magalhaes</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="Aptoide.Theme.DarkOrange" parent="@style/Theme.Sherlock.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color_timwe</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_timwe</item>
+        <item name="custom_color">@color/custom_color_timwe</item>
+        <item name="dark_custom_color">@color/dark_custom_color_timwe</item>
+        <item name="light_custom_color">@color/light_custom_color_timwe</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color_timwe</item>
+        <item name="customSearchButton">@style/custom_search_button_style_timwe</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_timwe</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_timwe</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_timwe</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_dark</item>
+        <item name="dialogBackground">@style/store_dialog_style_dark</item>
+        <item name="labelBackground">@style/label_style_dark</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_dark</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_dark</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_dark</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_dark</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_dark</item>
+    </style>
+
+    <style name="Aptoide.Theme.GreenApple" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@color/custom_background_color</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:buttonStyle">@style/custom_button_style_digitallydifferent</item>
+        <item name="custom_color">@color/custom_color_digitallydifferent</item>
+        <item name="dark_custom_color">@color/dark_custom_color_digitallydifferent</item>
+        <item name="light_custom_color">@color/light_custom_color_digitallydifferent</item>
+        <item name="custom_inside_background_color">@color/custom_inside_background_color</item>
+        <item name="customSearchButton">@style/custom_search_button_style_digitallydifferent</item>
+        <item name="customActionbarBackground">@style/custom_actionbar_style_digitallydifferent</item>
+        <item name="customHeaderTextViewBackground">@style/custom_header_style_digitallydifferent</item>
+        <item name="apkInfoHeaderBackground">@style/apk_info_separator_style_digitallydifferent</item>
+        <item name="topAppItemBackground">@style/top_app_item_style_light</item>
+        <item name="dialogBackground">@style/store_dialog_style_light</item>
+        <item name="labelBackground">@style/label_style_light</item>
+        <item name="icUpdateDrawable">@style/ic_update_style_oem</item>
+        <item name="icMenuMoreDrawable">@style/ic_menu_more_style_oem</item>
+        <item name="breadcrumbStyle">@style/breadcrumbs_style_light</item>
+        <item name="quotesInDrawable">@style/quotes_in_style_light</item>
+        <item name="quotesOutDrawable">@style/quotes_out_style_light</item>
+        <item name="popQuickActionBackground">@style/quick_action_style_oem</item>
+        <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_light</item>
+        <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
+        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+    </style>
+
+</resources>
