@@ -15,6 +15,6 @@ public class Comment {
     public String username;
     public String subject;
     public String text;
-    public Date timeStamp;
+    public long timeStamp;
 
 }

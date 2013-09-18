@@ -16,10 +16,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.com.nostra13.universalimageloader.core.DisplayImageOptions;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.FailReason;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import cm.aptoide.pt.R;
 
 import java.util.ArrayList;
@@ -154,25 +154,25 @@ public class ImageGalleryAdapter extends BaseAdapter {
 		imageLoader.displayImage(hd?url.get(position):screenshotToThumb(url.get(position)), (ImageView) v.findViewById(R.id.screenshot_image_item), options, new ImageLoadingListener() {
 
 			@Override
-			public void onLoadingStarted() {
+			public void onLoadingStarted(String uri, View v) {
 				pb.setVisibility(View.VISIBLE);
 			}
 
 			@Override
-			public void onLoadingFailed(FailReason failReason) {
+			public void onLoadingFailed(String uri, View v,FailReason failReason) {
 				((ImageView) v.findViewById(R.id.screenshot_image_item)).setImageResource(android.R.drawable.ic_delete);
 				pb.setVisibility(View.GONE);
 				Log.d("onLoadingFailed", "Failed to load screenshot");
 			}
 
 			@Override
-			public void onLoadingComplete(Bitmap loadedImage) {
+			public void onLoadingComplete(String uri, View v,Bitmap loadedImage) {
 				pb.setVisibility(View.GONE);
 			}
 
 			@Override
-			public void onLoadingCancelled() {	}
-		}, hashCode);
+			public void onLoadingCancelled(String uri, View v) {	}
+		});
 
 		return v;
 	}

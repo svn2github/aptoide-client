@@ -17,13 +17,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.com.nostra13.universalimageloader.core.DisplayImageOptions;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.FailReason;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import cm.aptoide.com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ScreenshotsViewer;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 
@@ -43,44 +43,46 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
 		this.url=imagesurl;
 		this.hd=hd;
-		this.hashCode=hashCode.hashCode()+"";
-		System.out.println("hash:Method:"+hashCode + " " + this.hashCode);
+
+
 		options = new DisplayImageOptions.Builder()
 		 .displayer(new FadeInBitmapDisplayer(1000))
 		 .resetViewBeforeLoading()
 		 .cacheOnDisc()
+
 		 .build();
 	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, final int position) {
-		final String hashCode=this.hashCode+"."+position;
+
 		final View v = LayoutInflater.from(context).inflate(R.layout.row_item_screenshots_big, null);
 		final ProgressBar pb = (ProgressBar) v.findViewById(R.id.screenshots_loading_big);
-		imageLoader.displayImage(hd?url.get(position):screenshotToThumb(url.get(position)),(ImageView) v.findViewById(R.id.screenshot_image_big),options, new ImageLoadingListener() {
 
-			@Override
-			public void onLoadingStarted() {
-				pb.setVisibility(View.VISIBLE);
-			}
 
-			@Override
-			public void onLoadingFailed(FailReason failReason) {
-				((ImageView) v.findViewById(R.id.screenshot_image_big)).setImageResource(android.R.drawable.ic_delete);
-				pb.setVisibility(View.GONE);
-			}
 
-			@Override
-			public void onLoadingComplete(Bitmap loadedImage) {
-				pb.setVisibility(View.GONE);
-			}
+		imageLoader.displayImage(hd ? url.get(position) : screenshotToThumb(url.get(position)), (ImageView) v.findViewById(R.id.screenshot_image_big), options, new ImageLoadingListener() {
 
-			@Override
-			public void onLoadingCancelled() {
-				// TODO Auto-generated method stub
+            @Override
+            public void onLoadingStarted(String uri, View view) {
+                pb.setVisibility(View.VISIBLE);
+            }
 
-			}
-		}, hashCode);
+            @Override
+            public void onLoadingFailed(String uri, View v, FailReason failReason) {
+                ((ImageView) v.findViewById(R.id.screenshot_image_big)).setImageResource(android.R.drawable.ic_delete);
+                pb.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
+                pb.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingCancelled(String uri, View v) {
+            }
+        });
 		container.addView(v);
 		if(!hd){
 			v.setOnClickListener(new OnClickListener() {

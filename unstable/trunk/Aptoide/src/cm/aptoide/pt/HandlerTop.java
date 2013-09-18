@@ -30,6 +30,30 @@ public class HandlerTop extends DefaultHandler{
 	final StringBuilder sb  = new StringBuilder();
 	private boolean insidePackage = false;
 	void loadElements() {
+
+        elements.put("cpu", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setCpuAbi(sb.toString());
+            }
+        });
+
+        elements.put("screenCompat", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setScreenCompat(sb.toString());
+            }
+        });
 		elements.put("name", new ElementHandler() {
 
 
@@ -153,16 +177,7 @@ public class HandlerTop extends DefaultHandler{
 			}
 		});
 
-		elements.put("sz", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
 
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setSize(sb.toString());
-			}
-		});
 
 		elements.put("screen", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -208,27 +223,7 @@ public class HandlerTop extends DefaultHandler{
 			}
 		});
 
-		elements.put("path", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
 
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setPath(sb.toString());
-			}
-		});
-
-		elements.put("md5h", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setMd5(sb.toString());
-			}
-		});
 
 		elements.put("basepath", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -340,8 +335,6 @@ public class HandlerTop extends DefaultHandler{
 
 		if (elementHandler != null) {
 			elementHandler.startElement(attributes);
-		} else {
-//			System.out.println("Element not found:" + localName);
 		}
 	}
 
@@ -361,8 +354,6 @@ public class HandlerTop extends DefaultHandler{
 
 		if (elementHandler != null) {
 			elementHandler.endElement();
-		} else {
-//			System.out.println("Element not found:" + localName);
 		}
 	}
 

@@ -7,16 +7,16 @@
  ******************************************************************************/
 package cm.aptoide.pt;
 
+import android.content.Intent;
+import android.util.Log;
+import cm.aptoide.pt.util.Utils;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import android.content.Intent;
-import android.util.Log;
 
 public class RepoParser {
 	static final Object lock = new Object();
@@ -85,6 +85,20 @@ public class RepoParser {
 				SAXParserFactory factory = SAXParserFactory.newInstance();
 				SAXParser parser = factory.newSAXParser();
 				parser.parse(new File(xml), new HandlerInfoXml(server,xml));
+
+                if(server.coutriesPermitted != null){
+                    Log.w("TAG", server.coutriesPermitted+" using locale: " + Utils.getMyCountry(ApplicationAptoide.getContext()));
+                }else{
+                    Log.w("TAG", "is null using locale: " + Utils.getMyCountry(ApplicationAptoide.getContext()));
+                }
+
+                if(!server.isDelta &&
+                        server.coutriesPermitted != null &&
+                        server.coutriesPermitted.contains(Utils.getMyCountry(ApplicationAptoide.getContext()))){
+                    RepoLocaleUpdater localeUpdater = new RepoLocaleUpdater(server, ApplicationAptoide.getContext());
+                    localeUpdater.parse();
+                }
+
 			}catch(Exception e){
 				e.printStackTrace();
 			}finally{

@@ -15,44 +15,43 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import cm.aptoide.pt.Server.State;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.views.*;
 import cm.aptoide.pt.webservices.MalwareStatus;
 import cm.aptoide.pt.webservices.TasteModel;
 import cm.aptoide.pt.webservices.comments.Comment;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Database {
-	public static SQLiteDatabase database = null;
-	private DbStructure dbhandler;
-	private int i = 0;
-	static Context context = ApplicationAptoide.getContext();
+public class Database  {
+	private static SQLiteDatabase database = null;
+    private int i = 0;
+	final static Context context = ApplicationAptoide.getContext();
 
-	private static final String COLUMN_A = "A.";
-	private static final String COLUMN_A_NAME = "A";
 
-	private static final String COLUMN_B = "B.";
-	private static final String COLUMN_B_NAME = "B";
 
-	private static final String COLUMN_C = "C.";
-	private static final String COLUMN_C_NAME = "C";
-
-	public static final int TOP_ID = 0;
+    public static final int TOP_ID = 0;
 	public static final int LATEST_ID = 1;
 
-	private HashMap<String, Integer> categories1 = new HashMap<String, Integer>();
-	private HashMap<String, Integer> categories2 = new HashMap<String, Integer>();
-	private Object lock = new Object();
-	private Object lock2 = new Object();
+	private final static HashMap<String, Integer> categories1 = new HashMap<String, Integer>();
+	private final static HashMap<String, Integer> categories2 = new HashMap<String, Integer>();
+    private final static int sdk = HWSpecifications.getSdkVer();
+    private final static String gles = HWSpecifications.getGlEsVer(context);
+    private final static int screen = HWSpecifications.getScreenSize(context);
+    private final static String screenSpec = HWSpecifications.getNumericScreenSize(context)+ "/" + HWSpecifications.getDensityDpi(context);
+    private final static String cpu = HWSpecifications.getCpuAbi();
+    private final static String cpu2 = HWSpecifications.getCpuAbi2();
 
-	private Database() {
-		dbhandler = new DbStructure(context);
+
+    private Database() {
+        DbStructure dbhandler = new DbStructure(context);
 		database = dbhandler.getWritableDatabase();
+
 	}
 
     public void insertLikes(TasteModel likes, Category category, long id) {
@@ -227,6 +226,109 @@ public class Database {
 
     }
 
+    public int getStoresCount() {
+
+        Cursor c = getStores(false);
+
+        int storesCount = c.getCount();
+        c.close();
+
+        return storesCount;
+    }
+
+    public void insertDownloadPath(String apkDownloadPath, Category category, long id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(DbStructure.COLUMN_REMOTE_PATH, apkDownloadPath);
+
+
+        switch (category) {
+            case TOP:
+                database.update(DbStructure.TABLE_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case LATEST:
+                database.update(DbStructure.TABLE_LATEST_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case TOPFEATURED:
+                database.update(DbStructure.TABLE_FEATURED_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case EDITORSCHOICE:
+                database.update(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case INFOXML:
+                database.update(DbStructure.TABLE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case ITEMBASED:
+            case USERBASED:
+                database.update(DbStructure.TABLE_ITEMBASED_APK, values, "_id = ?", new String[]{id+""});
+                break;
+        }
+
+    }
+
+    public void insertApkMd5(String apkMd5, Category category, long id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(DbStructure.COLUMN_MD5, apkMd5);
+
+
+        switch (category) {
+            case TOP:
+                database.update(DbStructure.TABLE_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case LATEST:
+                database.update(DbStructure.TABLE_LATEST_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case TOPFEATURED:
+                database.update(DbStructure.TABLE_FEATURED_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case EDITORSCHOICE:
+                database.update(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case INFOXML:
+                database.update(DbStructure.TABLE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case ITEMBASED:
+            case USERBASED:
+                database.update(DbStructure.TABLE_ITEMBASED_APK, values, "_id = ?", new String[]{id+""});
+                break;
+        }
+
+    }
+
+    public void insertApkSize(String apkSize, Category category, long id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(DbStructure.COLUMN_SIZE, apkSize);
+
+
+        switch (category) {
+            case TOP:
+                database.update(DbStructure.TABLE_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case LATEST:
+                database.update(DbStructure.TABLE_LATEST_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case TOPFEATURED:
+                database.update(DbStructure.TABLE_FEATURED_TOP_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case EDITORSCHOICE:
+                database.update(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case INFOXML:
+                database.update(DbStructure.TABLE_APK, values, "_id = ?", new String[]{id+""});
+                break;
+            case ITEMBASED:
+            case USERBASED:
+                database.update(DbStructure.TABLE_ITEMBASED_APK, values, "_id = ?", new String[]{id+""});
+                break;
+        }
+
+    }
+
     private static class SingletonHolder {
 		public static final Database INSTANCE = new Database();
 	}
@@ -240,17 +342,63 @@ public class Database {
 		ContentValues values = new ContentValues();
 		values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
 		values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-		putCommonValues(apk, values);
+        values.put(DbStructure.COLUMN_IS_COMPATIBLE,isCompatible(apk));
+
+        putCommonValues(apk, values);
 		long id = database.insert(DbStructure.TABLE_FEATURED_TOP_APK, null,
 				values);
 		apk.setId(id);
+
+        if(apk.getScreenCompat()!=null){
+            insertScreenCompat(apk, Category.TOPFEATURED);
+        }
 		insertScreenshots(apk, Category.TOPFEATURED);
 		// database.yieldIfContendedSafely(1000);
 		// database.setTransactionSuccessful();
 		// database.endTransaction();
 	}
 
-	public void insert(ViewApkFeaturedEditorsChoice apk) {
+    private void insertScreenCompat(ViewApk apk, Category category) {
+
+        String[] screenCompat = apk.getScreenCompat().split("/");
+        int screen = Integer.parseInt(screenCompat[0]);
+        int density = Integer.parseInt(screenCompat[1]);
+
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.COLUMN__ID, apk.getId());
+        values.put(DbStructure.COLUMN_SCREEN, screen);
+        values.put(DbStructure.COLUMN_DENSITY, density);
+
+        switch (category) {
+            case TOP:
+                database.insert(DbStructure.TABLE_TOP_APK_SCREEN_COMPAT, null, values);
+                break;
+            case LATEST:
+                database.insert(DbStructure.TABLE_LATEST_APK_SCREEN_COMPAT, null, values);
+                break;
+            case TOPFEATURED:
+                database.insert(DbStructure.TABLE_FEATURED_TOP_APK_SCREEN_COMPAT, null, values);
+                break;
+            case EDITORSCHOICE:
+                database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREEN_COMPAT, null, values);
+                break;
+            case INFOXML:
+                database.insert(DbStructure.TABLE_APK_SCREEN_COMPAT, null, values);
+                break;
+            case USERBASED:
+            case ITEMBASED:
+                database.insert(DbStructure.TABLE_ITEMBASED_SCREEN_COMPAT, null, values);
+                break;
+            default:
+                break;
+
+        }
+        yield();
+
+    }
+
+    public void insert(ViewApkFeaturedEditorsChoice apk) {
+
 		ContentValues values = new ContentValues();
 		values.put(DbStructure.COLUMN_ICONS_PATH, apk.getServer().iconsPath);
 		values.put(DbStructure.COLUMN_SCREENS_PATH, apk.getServer().screenspath);
@@ -258,16 +406,21 @@ public class Database {
 				apk.getServer().featuredgraphicPath);
 		values.put(DbStructure.COLUMN_NAME, apk.getServer().url);
 		values.put(DbStructure.COLUMN_BASE_PATH, apk.getServer().basePath);
-		long i = database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_REPO,
-				null, values);
+		long i = database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_REPO, null, values);
 		values.clear();
+
 		values.put(DbStructure.COLUMN_REPO_ID, i);
 		values.put(DbStructure.COLUMN_FEATURED_HIGHLIGHTED, apk.isHighlighted());
 		values.put(DbStructure.COLUMN_FEATURED_GRAPHIC, apk.getFeatureGraphic());
-		putCommonValues(apk, values);
-		long id = database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK,
-				null, values);
+        values.put(DbStructure.COLUMN_IS_COMPATIBLE,isCompatible(apk));
+
+        putCommonValues(apk, values);
+
+		long id = database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK,null, values);
 		apk.setId(id);
+        if(apk.getScreenCompat()!=null){
+            insertScreenCompat(apk, Category.TOPFEATURED);
+        }
 		insertScreenshots(apk, Category.EDITORSCHOICE);
 	}
 
@@ -277,13 +430,16 @@ public class Database {
 
 			values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
 			values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-			putCommonValues(apk, values);
+            values.put(DbStructure.COLUMN_IS_COMPATIBLE,isCompatible(apk));
+            putCommonValues(apk, values);
 			yield();
-			long id = database.insert(DbStructure.TABLE_LATEST_APK, null,
-					values);
+			long id = database.insert(DbStructure.TABLE_LATEST_APK, null,values);
 			yield();
 			insertDynamicCategories(apk, Category.LATEST);
 			apk.setId(id);
+            if(apk.getScreenCompat()!=null){
+                insertScreenCompat(apk, Category.TOPFEATURED);
+            }
 			insertScreenshots(apk, Category.LATEST);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -297,11 +453,15 @@ public class Database {
 			ContentValues values = new ContentValues();
 			values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
 			values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-			putCommonValues(apk, values);
+            values.put(DbStructure.COLUMN_IS_COMPATIBLE, isCompatible(apk));
+            putCommonValues(apk, values);
 			yield();
 			long id = database.insert(DbStructure.TABLE_TOP_APK, null, values);
 			insertDynamicCategories(apk, Category.TOP);
 			apk.setId(id);
+            if(apk.getScreenCompat()!=null){
+                insertScreenCompat(apk, Category.TOPFEATURED);
+            }
 			insertScreenshots(apk, Category.TOP);
 			i++;
 		} catch (Exception e) {
@@ -318,6 +478,7 @@ public class Database {
 			values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
 			values.put(DbStructure.COLUMN_CATEGORY_2ND,
 					categories2.get(apk.getCategory2()));
+            values.put(DbStructure.COLUMN_IS_COMPATIBLE,isCompatible(apk));
 			putCommonValues(apk, values);
 			database.insert(DbStructure.TABLE_APK, null, values);
 			yield();
@@ -327,12 +488,29 @@ public class Database {
 				i.putExtra("serverid", apk.getRepo_id());
 				context.sendBroadcast(i);
 			}
+        if(apk.getScreenCompat()!=null){
+            insertScreenCompat(apk, Category.TOPFEATURED);
+        }
 	}
 
-	public void insert(ViewApkUserBased apk) {
+    private boolean isCompatible(ViewApk apk) {
+
+        return Integer.parseInt(apk.getMinSdk()) <= sdk &&
+               apk.getMinScreen() <= screen &&
+               Float.parseFloat(apk.getMinGlEs()) <= Float.parseFloat(gles) &&
+                (apk.getScreenCompat() == null || apk.getScreenCompat().contains(screenSpec)) &&
+                (apk.getCpuAbi()==null || apk.getCpuAbi().contains(cpu) || apk.getCpuAbi().contains(cpu2) );
+
+    }
+
+    public void insert(ViewApkUserBased apk) {
 		ContentValues values = new ContentValues();
+        values.put(DbStructure.COLUMN_IS_COMPATIBLE, isCompatible(apk));
 		putCommonValues(apk, values);
 		database.insert(DbStructure.TABLE_APK, null, values);
+        if(apk.getScreenCompat()!=null){
+            insertScreenCompat(apk, Category.TOPFEATURED);
+        }
 		yield();
 	}
 
@@ -347,11 +525,15 @@ public class Database {
 		values.clear();
 		values.put("repo_id", i);
 		values.put("parent_apkid", apk.getParentApk().getApkid());
+        values.put(DbStructure.COLUMN_IS_COMPATIBLE, isCompatible(apk));
 		putCommonValues(apk, values);
 		long id = database.insert(DbStructure.TABLE_ITEMBASED_APK, null, values);
 		yield();
 		apk.setRepo_id(i);
 		apk.setId(id);
+        if(apk.getScreenCompat()!=null){
+            insertScreenCompat(apk, Category.TOPFEATURED);
+        }
 		insertScreenshots(apk, Category.ITEMBASED);
 		yield();
 	}
@@ -404,6 +586,45 @@ public class Database {
 	// }
 
 	// }
+
+    SQLiteStatement statement;
+    SQLiteStatement statementTop;
+    SQLiteStatement statementLatest;
+
+    public void updateApkName(ViewApk apk){
+
+        if(statement==null){
+            statement = database.compileStatement("UPDATE apk " +
+                    "SET name=? " +
+                    "WHERE apkid=? and repo_id = ?");
+        }
+
+        statement.bindAllArgsAsStrings(new String[]{apk.getName(), apk.getApkid(), String.valueOf(apk.getRepo_id())});
+        statement.execute();
+
+        if(statementTop==null){
+            statementTop = database.compileStatement("UPDATE top_apk " +
+                    "SET name=? " +
+                    "WHERE apkid=? and repo_id = ?");
+        }
+
+        statementTop.bindAllArgsAsStrings(new String[]{apk.getName(), apk.getApkid(), String.valueOf(apk.getRepo_id())});
+        statementTop.execute();
+
+        if(statementLatest==null){
+            statementLatest = database.compileStatement("UPDATE latest_apk " +
+                    "SET name=? " +
+                    "WHERE apkid=? and repo_id = ?");
+        }
+
+        statementLatest.bindAllArgsAsStrings(new String[]{apk.getName(), apk.getApkid(), String.valueOf(apk.getRepo_id())});
+        statementLatest.execute();
+
+        //ContentValues values = new ContentValues();
+        //values.put(DbStructure.COLUMN_NAME, apk.getName());
+        //database.update(DbStructure.TABLE_APK, values, "apkid = ? and repo_id=?", new String[]{apk.getApkid(), String.valueOf(apk.getRepo_id())});
+
+    }
 
 	private void insertCategories(ViewApk apk) {
 			ContentValues values = new ContentValues();
@@ -489,8 +710,7 @@ public class Database {
 			Order order, boolean allApps) {
 		Cursor c = null;
 		yield();
-		SharedPreferences sPref = PreferenceManager
-				.getDefaultSharedPreferences(context);
+
 		try {
 
 			String order_string = "";
@@ -515,25 +735,14 @@ public class Database {
 				break;
 			}
 
-			String filter = "";
-			if (sPref.getBoolean("hwspecsChkBox", true)) {
-				filter = filter + " and minscreen <= "
-						+ HWSpecifications.getScreenSize(context)
-						+ " and minsdk <=  " + HWSpecifications.getSdkVer()
-						+ " and mingles <= "
-						+ HWSpecifications.getEsglVer(context);
-			}
-
-			if (sPref.getBoolean("matureChkBox", false)) {
-				filter = filter + " and mature <= 0";
-			}
+			String filter = filters("a");
 
 			if (allApps) {
 				if (mergeStores) {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
 											+ filter
 											+ " group by apkid "
 											+ order_string, null);
@@ -542,7 +751,7 @@ public class Database {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where repo_id = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where repo_id = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
 											+ filter
 											+ " group by apkid "
 											+ order_string,
@@ -554,7 +763,7 @@ public class Database {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads,a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where category_2nd = ? and vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads,a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where category_2nd = ? and vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
 											+ filter
 											+ " group by apkid "
 											+ order_string,
@@ -564,7 +773,7 @@ public class Database {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where repo_id = ? and category_2nd = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where repo_id = ? and category_2nd = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
 											+ filter
 											+ " group by apkid "
 											+ order_string, new String[] {
@@ -710,32 +919,13 @@ public class Database {
 		}
 	}
 
-	public void insertUserBasedApk(ViewApk apk) {
-		ContentValues values = new ContentValues();
-
-		values.put(DbStructure.COLUMN_APKID, apk.getApkid());
-		values.put(DbStructure.COLUMN_VERCODE, apk.getVercode());
-
-		database.insert("userbasedapk", null, values);
-	}
-
-	public Cursor getUserBasedApk(long repo_id, boolean joinStores) {
+    public Cursor getUserBasedApk(long repo_id, boolean joinStores) {
 
 
 		yield();
-		SharedPreferences sPref = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		String filter = "";
-		if (sPref.getBoolean("hwspecsChkBox", true)) {
-			filter = filter + " and b.minscreen <= "
-					+ HWSpecifications.getScreenSize(context)
-					+ " and b.minsdk <=  " + HWSpecifications.getSdkVer()
-					+ " and b.mingles <= " + HWSpecifications.getEsglVer(context);
-		}
 
-		if (sPref.getBoolean("matureChkBox", false)) {
-			filter = filter + " and b.mature <= 0 ";
-		}
+		String filter = filters("a");
+
 
 		Cursor c = null;
 
@@ -743,11 +933,11 @@ public class Database {
 			if(joinStores){
 			c = database
 					.rawQuery(
-							"select a._id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid, a.vercode, c.iconspath as iconspath from apk a,itembased_apk b, itembased_repo as c where b.parent_apkid = 'recommended' and a.apkid=b.apkid and a.vercode=b.vercode and b.repo_id=c._id " +filter,null);
+							"select a._id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid, a.vercode, c.iconspath as iconspath from apk a,itembased_apk b, itembased_repo as c left join itembased_screen_compat as d on a._id = d._id where b.parent_apkid = 'recommended' and a.apkid=b.apkid and a.vercode=b.vercode and b.repo_id=c._id " +filter,null);
 			}else{
 			c = database
 					.rawQuery(
-							"select a._id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid, a.vercode, c.iconspath as iconspath from apk a,itembased_apk b, itembased_repo as c where a.repo_id = ? and b.parent_apkid = 'recommended' and a.apkid=b.apkid and a.vercode=b.vercode and b.repo_id=c._id " +filter,
+							"select a._id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid, a.vercode, c.iconspath as iconspath from apk a,itembased_apk b, itembased_repo as c left join itembased_screen_compat as d on a._id = d._id where a.repo_id = ? and b.parent_apkid = 'recommended' and a.apkid=b.apkid and a.vercode=b.vercode and b.repo_id=c._id " +filter,
 							new String[] { repo_id + "" });
 			}
 		} catch (Exception e) {
@@ -758,7 +948,7 @@ public class Database {
 	}
 
 	public Cursor getCategory2(long l, long store, boolean mergeStores) {
-		Cursor c = null;
+		Cursor c;
 		yield();
 		if (mergeStores) {
 			c = database
@@ -839,7 +1029,7 @@ public class Database {
 		return server;
 	}
 
-	public void deleteTopOrLatest(long id, Category category) {
+	private void deleteTopOrLatest(long id, Category category) {
 		try {
 			switch (category) {
 			case TOP:
@@ -866,31 +1056,7 @@ public class Database {
 		}
 	}
 
-	public void deleteFeatured(long id, Category category) {
-		switch (category) {
-		case TOPFEATURED:
-			database.delete(DbStructure.TABLE_FEATURED_TOP_APK, "repo_id = ?",
-					new String[] { id + "" });
-			database.delete(DbStructure.TABLE_FEATURED_TOP_SCREENSHOTS,
-					"repo_id = ?", new String[] { id + "" });
-			database.delete(DbStructure.TABLE_FEATURED_TOP_REPO, "_id = ?",
-					new String[] { id + "" });
-			break;
-		case EDITORSCHOICE:
-			database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK,
-					"repo_id = ?", new String[] { id + "" });
-			database.delete(
-					DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREENSHOTS,
-					"repo_id = ?", new String[] { id + "" });
-			database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_REPO,
-					"_id = ?", new String[] { id + "" });
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void deleteServer(long id, boolean fromRepoTable) {
+    public void deleteServer(long id, boolean fromRepoTable) {
 		// ArrayList<String> catg1_deletes = new ArrayList<String>();
 		// ArrayList<String> catg2_deletes = new ArrayList<String>();
 		if (fromRepoTable) {
@@ -966,10 +1132,8 @@ public class Database {
 			c = database.query("repo", null, "_id > 0", null, null, null, null);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-
 		}
-		if (mergeStores && c.getCount() > 0) {
+        if (mergeStores&& c!=null && c.getCount() > 0) {
 			MatrixCursor mc = new MatrixCursor(new String[] { "_id",
 					DbStructure.COLUMN_NAME, DbStructure.COLUMN_AVATAR_URL,
 					DbStructure.COLUMN_DOWNLOADS, "status", DbStructure.COLUMN_STORE_THEME });
@@ -1003,25 +1167,15 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return return_string;
 	}
 
-	public long getServerId(String server) {
-		System.out.println(server);
-		yield();
-		Cursor c = database.query("repo", new String[] { "_id" }, "url = ?",
-				new String[] { server }, null, null, null);
-		c.moveToFirst();
-		long return_long = c.getLong(0);
-		c.close();
-
-		return return_long;
-	}
-
-	public String getBasePath(long repo_id, Category category) {
+    public String getBasePath(long repo_id, Category category) {
 		yield();
 		Cursor c = null;
 		String path = null;
@@ -1075,36 +1229,14 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 		return path;
 	}
 
-	public void insertServerInfo(Server server) {
-
-		ContentValues values = new ContentValues();
-		if (server.iconsPath != null) {
-			values.put(DbStructure.COLUMN_ICONS_PATH, server.iconsPath);
-		}
-		if (server.basePath != null) {
-			values.put(DbStructure.COLUMN_BASE_PATH, server.basePath);
-		}
-		if (server.webservicesPath != null) {
-			values.put("webservicespath", server.webservicesPath);
-		}
-		if (server.hash != null) {
-			values.put("hash", server.hash);
-		}
-		if (server.apkPath != null) {
-			values.put("apkpath", server.apkPath);
-		}
-		if (values.size() > 0) {
-			database.update("repo", values, "_id = ?", new String[] { server.id + "" });
-		}
-
-	}
-
-	public void insertInstalled(ViewApk apk) {
+    public void insertInstalled(ViewApk apk) {
 		ContentValues values = new ContentValues();
 
 		values.put(DbStructure.COLUMN_APKID, apk.getApkid());
@@ -1132,8 +1264,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return apkids;
 	}
@@ -1159,10 +1293,10 @@ public class Database {
 		Cursor c = null;
 		try {
 
-			String filter = filters();
+			String filter = filters("b");
 
-			String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid,b.vercode as vercode, c.iconspath as iconspath, b.md5, c.apkpath, b.remote_path from installed as a, apk as b, repo as c "
-					+ "where a.apkid=b.apkid and b.vercode > a.vercode and b.vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and b.repo_id = c._id and not exists (select 1 from excluded_apkid as d where b.apkid = d.apkid and b.vercode = d.vercode ) "
+			String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid,b.vercode as vercode, c.iconspath as iconspath, b.md5, c.apkpath, b.remote_path from installed as a, apk as b, repo as c left join apk_screen_compat as d on b._id = d._id"
+					+ " where a.apkid=b.apkid and b.vercode > a.vercode and b.vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and b.repo_id = c._id and not exists (select 1 from excluded_apkid as d where b.apkid = d.apkid and b.vercode = d.vercode ) "
 					+ filter + " group by a.apkid";
 
 			query = orderBy(order, query);
@@ -1174,31 +1308,23 @@ public class Database {
 		return c;
 	}
 
-	/**
-	 * @return
-	 */
-	private String filters() {
+
+	private String filters(String columnNameApk) {
 		SharedPreferences sPref = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		String filter = "";
 		if (sPref.getBoolean("hwspecsChkBox", true)) {
-			filter = filter + " and minscreen <= "
-					+ HWSpecifications.getScreenSize(context)
-					+ " and minsdk <=  " + HWSpecifications.getSdkVer()
-					+ " and mingles <= " + HWSpecifications.getEsglVer(context);
+			filter = " and "+columnNameApk+".is_compatible=1";
 		}
 
 		if (sPref.getBoolean("matureChkBox", false)) {
-			filter = filter + " and mature <= 0 ";
+			filter = filter + " and "+columnNameApk+".mature <= 0 ";
 		}
-		return filter;
+
+        return filter;
 	}
 
-	/**
-	 * @param order
-	 * @param query
-	 * @return
-	 */
+
 	private String orderBy(Order order, String query) {
 		switch (order) {
 		case NAME:
@@ -1235,101 +1361,49 @@ public class Database {
         }
     }
 
-	long insertTopApk(ViewApk apk) {
-		long return_long = 0;
-		try {
-			ContentValues values = new ContentValues();
 
-			values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
-			values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-
-			putCommonValues(apk, values);
-
-			return_long = database.insert(DbStructure.TABLE_TOP_APK, null,
-					values);
-			i++;
-			// database.yieldIfContendedSafely(1000);
-			// if(i%300==0){
-			// Intent i = new Intent("update");
-			// i.putExtra("server", apk.getRepo_id());
-			// context.sendBroadcast(i);
-			// }
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return return_long;
-
-	}
-
-	/**
-	 * @param apk
-	 * @param values
-	 */
 	private void putCommonValues(ViewApk apk, ContentValues values) {
 		values.put(DbStructure.COLUMN_NAME, Html.fromHtml(apk.getName()).toString());
 		values.put(DbStructure.COLUMN_VERNAME, apk.getVername());
 		values.put(DbStructure.COLUMN_APKID, apk.getApkid());
-		values.put(DbStructure.COLUMN_MD5, apk.getMd5());
+		//values.put(DbStructure.COLUMN_MD5, apk.getMd5());
 		values.put(DbStructure.COLUMN_VERCODE, apk.getVercode());
 		values.put(DbStructure.COLUMN_ICON, apk.getIcon());
 		values.put(DbStructure.COLUMN_DOWNLOADS, apk.getDownloads());
-		values.put(DbStructure.COLUMN_SIZE, apk.getSize());
+		//values.put(DbStructure.COLUMN_SIZE, apk.getSize());
 		values.put(DbStructure.COLUMN_RATING, apk.getRating());
-		values.put(DbStructure.COLUMN_REMOTE_PATH, apk.getPath());
+		//values.put(DbStructure.COLUMN_REMOTE_PATH, apk.getPath());
 		values.put(DbStructure.COLUMN_MIN_SCREEN, apk.getMinScreen());
 		values.put(DbStructure.COLUMN_MIN_SDK, apk.getMinSdk());
 		values.put(DbStructure.COLUMN_DATE, apk.getDate());
 		values.put(DbStructure.COLUMN_PRICE, apk.getPrice());
 		values.put(DbStructure.COLUMN_MIN_GLES, apk.getMinGlEs());
 		values.put(DbStructure.COLUMN_MATURE, apk.getAge());
+        values.put(DbStructure.COLUMN_CPU_ABI, apk.getCpuAbi());
 	}
 
 	public Cursor getTopApps(long store_id, boolean joinStores_boolean) {
 		yield();
 		Cursor c = null;
 		try {
-			String filter = "";
-			SharedPreferences sPref = PreferenceManager
-					.getDefaultSharedPreferences(context);
-
-			if (sPref.getBoolean("hwspecsChkBox", true)) {
-				filter = filter + " and minscreen <= "
-						+ HWSpecifications.getScreenSize(context)
-						+ " and minsdk <=  " + HWSpecifications.getSdkVer()
-						+ " and mingles <= "
-						+ HWSpecifications.getEsglVer(context);
-			}
-
-			if (sPref.getBoolean("matureChkBox", false)) {
-				filter = filter + " and mature <= 0";
-			}
-
+			String filter = filters("a");
 			if (joinStores_boolean) {
-				c = database
-						.rawQuery(
-								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from top_apk as a, top_repo as c where a.repo_id = c._id "
-										+ filter + " group by a._id", null);
 
-				// c = database.query(DbStructure.TABLE_FEATURED_TOP_APK +
-				// " as " + COLUMN_A_NAME + " ,  " +
-				// DbStructure.TABLE_FEATURED_TOP_REPO + " as " + COLUMN_B_NAME,
-				//
-				// new String[]{COLUMN_A + DbStructure.COLUMN__ID, },
-				// DbStructure.COLUMN_CATEGORY_1ST + "=? and " + COLUMN_A +
-				// DbStructure.COLUMN_REPO_ID + "=" +
-				// COLUMN_B+"."+DbStructure.COLUMN__ID, new
-				// String[]{category_id+""}, COLUMN_A+DbStructure.COLUMN__ID,
-				// null, null);
-			} else {
 				c = database
 						.rawQuery(
-								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from top_apk as a, top_repo as c where repo_id = ? and a.repo_id = c._id "
+								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from top_apk as a, top_repo as c left join top_screen_compat as d on a._id = d._id where a.repo_id = c._id "
+										+ filter + " group by a._id", null);
+            }else{
+				c = database
+						.rawQuery(
+								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from top_apk as a, top_repo as c left join top_screen_compat as d on a._id = d._id where repo_id = ? and a.repo_id = c._id "
 										+ filter + " group by a._id",
 								new String[] { store_id + "" });
+
+
 			}
 
-			System.out.println("getapps " + "repo_id =" + store_id);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1340,26 +1414,12 @@ public class Database {
 		Cursor c = null;
 		yield();
 		try {
-			String filter = "";
-			SharedPreferences sPref = PreferenceManager
-					.getDefaultSharedPreferences(context);
-
-			if (sPref.getBoolean("hwspecsChkBox", true)) {
-				filter = filter + " and minscreen <= "
-						+ HWSpecifications.getScreenSize(context)
-						+ " and minsdk <=  " + HWSpecifications.getSdkVer()
-						+ " and mingles <= "
-						+ HWSpecifications.getEsglVer(context);
-			}
-
-			if (sPref.getBoolean("matureChkBox", false)) {
-				filter = filter + " and mature <= 0";
-			}
+			String filter = filters("a");
 
 			if (joinStores_boolean) {
 				c = database
 						.rawQuery(
-								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from latest_apk as a, latest_repo as c where a.repo_id = c._id "
+								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from latest_apk as a, latest_repo as c left join latest_screen_compat as d on a._id = d._id where a.repo_id = c._id "
 										+ filter + " group by a._id", null);
 
 				// c = database.query(DbStructure.TABLE_FEATURED_TOP_APK +
@@ -1375,7 +1435,7 @@ public class Database {
 			} else {
 				c = database
 						.rawQuery(
-								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from latest_apk as a, latest_repo as c where repo_id = ? and a.repo_id = c._id "
+								"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from latest_apk as a, latest_repo as c left join latest_screen_compat as d on a._id = d._id where repo_id = ? and a.repo_id = c._id "
 										+ filter + " group by a._id",
 								new String[] { store_id + "" });
 			}
@@ -1446,8 +1506,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 		return path;
 	}
 
@@ -1613,8 +1675,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 		return return_string;
 	}
 
@@ -1622,9 +1686,10 @@ public class Database {
 		i = 0;
 		categories1.clear();
 		categories2.clear();
+
 	}
 
-	public ViewApk getApk(long id, Category category) {
+    public ViewApk getApk(long id, Category category) {
 		Cursor c = null;
 		ViewApk apk = new ViewApk();
 		Log.d("Aptoide-Database", "Get APK id: " + category.name() + " " + id);
@@ -1707,7 +1772,7 @@ public class Database {
 			apk.setIconPath(c.getString(10) + c.getString(5));
 			apk.setName(c.getString(6));
 			apk.setRating(c.getString(7));
-			apk.setPath(c.getString(12) + c.getString(8));
+			apk.setPath(c.getString(8));
 			apk.setMd5(c.getString(9));
 			apk.setRepoName(c.getString(11));
 			apk.setId(id);
@@ -1877,53 +1942,6 @@ public class Database {
         return malwareStatus;
 	}
 
-	private String getMalwareStatus(ViewApk apk, Category category) {
-
-        Cursor c = null;
-
-        String return_string = EnumApkMalware.UNKNOWN.name();
-
-        try{
-
-            switch (category) {
-                case TOP:
-                    c = database.query(DbStructure.TABLE_TOP_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-                case LATEST:
-                    c = database.query(DbStructure.TABLE_LATEST_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-                case TOPFEATURED:
-                    c = database.query(DbStructure.TABLE_FEATURED_TOP_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-                case EDITORSCHOICE:
-                    c = database.query(DbStructure.TABLE_FEATURED_EDITORSCHOICE_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-                case INFOXML:
-                    c = database.query(DbStructure.TABLE_APK_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-                case ITEMBASED:
-                case USERBASED:
-                    c = database.query(DbStructure.TABLE_ITEMBASED_CACHE,new String[]{DbStructure.COLUMN_MALWARE_STATUS},"_id = ?", new String[]{apk.getId()+""},null,null,null);
-                    break;
-            }
-
-            if(c!=null && c.moveToFirst()){
-                return_string = c.getString(0);
-            }
-
-
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c!=null) c.close();
-        }
-
-
-        return return_string;  //To change body of created methods use File | Settings | File Templates.
-    }
-
 
     public void insertComment (long id, Comment comment, Category category){
 
@@ -1931,7 +1949,7 @@ public class Database {
         ContentValues values = new ContentValues();
 
         values.put(DbStructure.COLUMN_TEXT,comment.text);
-        values.put(DbStructure.COLUMN_DATE,comment.timeStamp.toString());
+        values.put(DbStructure.COLUMN_DATE,comment.timeStamp);
         values.put(DbStructure.COLUMN_USERNAME,comment.username);
         values.put(DbStructure.COLUMN__ID, id );
         values.put(DbStructure.COLUMN_TYPE, category.name());
@@ -1961,13 +1979,13 @@ public class Database {
                     new String[]{DbStructure.COLUMN_USERNAME,DbStructure.COLUMN_DATE,DbStructure.COLUMN_TEXT}, "_id = ? and type = ?",
                     new String[]{viewApk.getId() + "" , category.name()},null,null,null);
 
-            SimpleDateFormat dateFormater = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+
 
             for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
                 Comment comment = new Comment();
                 comment.text = c.getString(2);
                 comment.username = c.getString(0);
-                comment.timeStamp = dateFormater.parse(c.getString(1));
+                comment.timeStamp = c.getLong(1);
                 comments.add(comment);
             }
 
@@ -2111,7 +2129,7 @@ public class Database {
     }
 
     public Cursor getAllApkVersions(String apkid, long id, String vername,
-			boolean b, long repo_id) {
+                                    long repo_id) {
 		Cursor c = null;
 		MatrixCursor mc = new MatrixCursor(
 				new String[] { "_id", DbStructure.COLUMN_APKID,
@@ -2134,8 +2152,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 		return mc;
 	}
 
@@ -2160,14 +2180,14 @@ public class Database {
                 case LATEST:
                 case TOP:
                 case TOPFEATURED:
-                    return "http://webservices.aptoide.com/";
+                    return AptoideConfiguration.getInstance().getWebServicesUri();
                 default:
                     break;
             }
             if (c.moveToFirst()) {
                 return_string = c.getString(0);
             } else {
-                return_string = "http://webservices.aptoide.com/";
+                return_string = AptoideConfiguration.getInstance().getWebServicesUri();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2185,83 +2205,12 @@ public class Database {
 			if(database.yieldIfContendedSafely(1000)){
 				System.out.println("Yelded at id: " + i);
 			}
-		} catch (Exception e){};
+		} catch (Exception ignored){}
 	}
 
-	public String getWebServicesPath(long repo_id) {
+    public ArrayList<HashMap<String, String>> getItemBasedApks(String apkid) {
 		Cursor c = null;
-		String return_string = null;
-		yield();
-		try {
-			c = database.query("repo", new String[] { "webservicespath" },
-					"_id = ?", new String[] { repo_id + "" }, null, null, null);
-			c.moveToFirst();
-			if (c.getCount() > 0) {
-				return_string = c.getString(0);
-			} else {
-				return_string = "http://webservices.aptoide.com/";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			c.close();
-		}
-		return return_string;
-	}
-
-	public void insertItemBasedApk(Server server, ViewApk apk, String hashCode,
-			Category category) {
-		// insert itembasedapkrepo
-		database.beginTransaction();
-		try {
-			ContentValues values = new ContentValues();
-			values.put(DbStructure.COLUMN_ICONS_PATH, apk.getServer().iconsPath);
-			values.put(DbStructure.COLUMN_SCREENS_PATH, server.screenspath);
-			values.put("featuredgraphicpath", server.featuredgraphicPath);
-			values.put(DbStructure.COLUMN_NAME, server.url);
-			values.put(DbStructure.COLUMN_BASE_PATH, server.basePath);
-			// insert itembasedapk
-			long i = database.insert(DbStructure.TABLE_ITEMBASED_REPO, null,
-					values);
-			values.clear();
-
-			values.put(DbStructure.COLUMN_APKID, apk.getApkid());
-			values.put(DbStructure.COLUMN_VERCODE, apk.getVercode());
-			values.put(DbStructure.COLUMN_VERNAME, apk.getVername());
-			values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-			values.put(DbStructure.COLUMN_DOWNLOADS, apk.getDownloads());
-			values.put(DbStructure.COLUMN_RATING, apk.getRating());
-			values.put(DbStructure.COLUMN_REMOTE_PATH, apk.getPath());
-			values.put(DbStructure.COLUMN_SIZE, apk.getSize());
-			values.put(DbStructure.COLUMN_MD5, apk.getMd5());
-			values.put(DbStructure.COLUMN_NAME, apk.getName());
-			values.put(DbStructure.COLUMN_MIN_SCREEN, apk.getMinScreen());
-			values.put(DbStructure.COLUMN_MIN_SDK, apk.getMinSdk());
-			values.put(DbStructure.COLUMN_MIN_GLES, apk.getMinGlEs());
-			values.put(DbStructure.COLUMN_MATURE, apk.getAge());
-			values.put(DbStructure.COLUMN_ICON, apk.getIcon());
-
-			// if(apk.isHighlighted()){
-			// values.put("highlight", "true");
-			// }
-			// values.put("featuredgraphic", apk.getFeatureGraphic());
-			values.put("itembasedapkrepo_id", i);
-			values.put("parent_apkid", hashCode);
-			apk.setId(i);
-
-			insertScreenshots(apk, category);
-			database.insert(DbStructure.TABLE_ITEMBASED_APK, null, values);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		database.setTransactionSuccessful();
-		database.endTransaction();
-	}
-
-	public ArrayList<HashMap<String, String>> getItemBasedApks(String apkid) {
-		Cursor c = null;
-		Cursor d = null;
+		Cursor d;
 		yield();
 		ArrayList<HashMap<String, String>> values = new ArrayList<HashMap<String, String>>();
 		SharedPreferences sPref = PreferenceManager
@@ -2272,7 +2221,7 @@ public class Database {
 			filter = filter + " and minscreen <= "
 					+ HWSpecifications.getScreenSize(context)
 					+ " and minsdk <=  " + HWSpecifications.getSdkVer()
-					+ " and mingles <= " + HWSpecifications.getEsglVer(context);
+					+ " and mingles <= " + HWSpecifications.getGlEsVer(context);
 		}
 
 		if (sPref.getBoolean("matureChkBox", false)) {
@@ -2295,20 +2244,20 @@ public class Database {
 						"_id = ?", new String[] { c.getString(2) }, null, null,
 						null);
 				d.moveToFirst();
-				value.put(DbStructure.COLUMN_ICON,
-						d.getString(0) + c.getString(1));
+				value.put(DbStructure.COLUMN_ICON, d.getString(0) + c.getString(1));
 				value.put("_id", c.getString(3));
 				value.put(DbStructure.COLUMN_RATING, c.getString(4));
 				value.put("hashCode",
 						(c.getString(5) + "|" + c.getString(6)));
 				values.add(value);
+                d.close();
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (d != null) {
-				d.close();
-			}
+
+
 			if (c != null) {
 				c.close();
 			}
@@ -2323,26 +2272,13 @@ public class Database {
 		Cursor d = null;
 		yield();
 		ArrayList<HashMap<String, String>> values = new ArrayList<HashMap<String, String>>();
-		SharedPreferences sPref = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		String filter = "";
 
-		if (sPref.getBoolean("hwspecsChkBox", true)) {
-			filter = filter + " and a.minscreen <= "
-					+ HWSpecifications.getScreenSize(context)
-					+ " and a.minsdk <=  " + HWSpecifications.getSdkVer()
-					+ " and a.mingles <= "
-					+ HWSpecifications.getEsglVer(context);
-		}
-
-		if (sPref.getBoolean("matureChkBox", false)) {
-			filter = filter + " and a.mature <= 0";
-		}
+		String filter = filters("a");
 
 		try {
 			c = database
 					.rawQuery(
-							"select a.name as name, a.icon as icon, a.repo_id as itembasedapkrepo_id, a._id as _id, a.rating as _id, a.apkid as apkid, a.vercode as vercode, a.vername as vername, a.downloads as downloads from itembased_apk as a where a.parent_apkid = ? "
+							"select a.name as name, a.icon as icon, a.repo_id as itembasedapkrepo_id, a._id as _id, a.rating as _id, a.apkid as apkid, a.vercode as vercode, a.vername as vername, a.downloads as downloads from itembased_apk as a left join itembased_screen_compat as d on a._id = d._id where a.parent_apkid = ? "
 									+ filter, new String[] { apkid });
 
 			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -2369,8 +2305,10 @@ public class Database {
 			if (d != null) {
 				d.close();
 			}
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return values;
 	}
@@ -2390,8 +2328,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 		return return_string;
 	}
 
@@ -2595,98 +2535,22 @@ public class Database {
 			default:
 				break;
 			}
-			if (c.moveToFirst()) {
+			if (c != null && c.moveToFirst()) {
 				return_string = c.getString(0);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return return_string;
 	}
 
-	public ViewApk getItemBasedApk(long id) {
-		Cursor c = null;
-		ViewApk apk = new ViewApk();
-		yield();
-		try {
-			c = database.query(DbStructure.TABLE_ITEMBASED_APK, new String[] {
-					DbStructure.COLUMN_APKID, DbStructure.COLUMN_VERNAME,
-					"itembasedapkrepo_id", DbStructure.COLUMN_DOWNLOADS,
-					DbStructure.COLUMN_SIZE, DbStructure.COLUMN_ICON,
-					DbStructure.COLUMN_NAME, DbStructure.COLUMN_RATING,
-					DbStructure.COLUMN_REMOTE_PATH, DbStructure.COLUMN_MD5 },
-					"_id = ?", new String[] { id + "" }, null, null, null);
-
-			c.moveToFirst();
-			apk.setApkid(c.getString(0));
-			apk.setVername(c.getString(1));
-			apk.setRepo_id(c.getLong(2));
-			apk.setMd5(c.getString(9));
-			apk.setDownloads(c.getString(3));
-			apk.setSize(c.getString(4));
-			apk.setIconPath(c.getString(5));
-			apk.setName(c.getString(6));
-			apk.setRating(c.getString(7));
-			apk.setPath(c.getString(8));
-			apk.setId(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			c.close();
-		}
-
-		return apk;
-	}
-
-	public String getItemBasedServer(long repo_id) {
-		Cursor c = null;
-		String return_string = null;
-		yield();
-		try {
-			c = database.query(DbStructure.TABLE_ITEMBASED_REPO,
-					new String[] { DbStructure.COLUMN_NAME }, "_id=?",
-					new String[] { repo_id + "" }, null, null, null);
-
-			if (c.moveToFirst()) {
-				return_string = c.getString(0);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			c.close();
-		}
-
-		return return_string;
-	}
-
-	public String getItemBasedBasePath(long repo_id) {
-		Cursor c = null;
-		String return_string = null;
-		yield();
-		try {
-			c = database.query(DbStructure.TABLE_ITEMBASED_REPO,
-					new String[] { DbStructure.COLUMN_BASE_PATH }, "_id=?",
-					new String[] { repo_id + "" }, null, null, null);
-
-			if (c.moveToFirst()) {
-				return_string = c.getString(0);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			c.close();
-		}
-
-		return return_string;
-	}
-
-	public void deleteItemBasedApks(ViewApk apk) {
+    public void deleteItemBasedApks(ViewApk apk) {
 
 		Cursor c = null;
 		yield();
@@ -2705,8 +2569,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		database.delete(DbStructure.TABLE_ITEMBASED_APK, "parent_apkid = ?",
 				new String[] { apk.getApkid() });
@@ -2729,8 +2595,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return return_int;
 	}
@@ -2751,8 +2619,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return return_int;
 	}
@@ -2765,7 +2635,7 @@ public class Database {
 		yield();
 		try {
 			c = database.rawQuery(
-							"select a._id, b.featuredgraphicspath, a.featuredgraphic ,a.apkid, a.vercode from featured_editorschoice_apk a, featured_editorschoice_repo b where b._id = a.repo_id and  a.highlighted = 0 " + filters(),
+							"select a._id, b.featuredgraphicspath, a.featuredgraphic ,a.apkid, a.vercode from featured_editorschoice_apk a, featured_editorschoice_repo b left join featured_editorschoice_screen_compat as d on a._id=d._id where b._id = a.repo_id and  a.highlighted = 0 " + filters("a"),
 							null);
 
 			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -2780,8 +2650,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 		return arrayList;
 	}
@@ -2794,7 +2666,7 @@ public class Database {
 		try {
 			c = database
 					.rawQuery(
-							"select a._id, b.featuredgraphicspath, a.featuredgraphic ,a.apkid, a.vercode from featured_editorschoice_apk a, featured_editorschoice_repo b where a.highlighted = 1 " + filters(),
+							"select a._id, b.featuredgraphicspath, a.featuredgraphic ,a.apkid, a.vercode from featured_editorschoice_apk a, featured_editorschoice_repo b  left join featured_editorschoice_screen_compat as c on c._id=a._id where a.highlighted = 1 " + filters("a"),
 							null);
 
 			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -2805,8 +2677,10 @@ public class Database {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			c.close();
-		}
+            if (c != null) {
+                c.close();
+            }
+        }
 
 
 		return value;
@@ -2835,7 +2709,13 @@ public class Database {
             e.printStackTrace();
         }
 
-        return c != null && c.moveToFirst();
+        boolean isScheduledDOwnload = c != null && c.moveToFirst();
+
+        if (c != null) {
+            c.close();
+        }
+
+        return isScheduledDOwnload;
 
     }
 
@@ -2900,12 +2780,12 @@ public class Database {
 
 	public Cursor getSearch(String searchQuery) {
 		yield();
-		String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid ,b.vercode as vercode, c.iconspath as iconspath from apk as b, repo as c where (b.name LIKE '%"
+		String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid ,b.vercode as vercode, c.iconspath as iconspath from apk as b, repo as c left outer join apk_cache as a on b._id = a._id left join featured_editorschoice_screen_compat as d on d._id=b._id where (b.name LIKE '%"
 				+ searchQuery
 				+ "%' OR b.apkid LIKE '%"
 				+ searchQuery
 				+ "%') and b.repo_id = c._id "
-                + filters();
+                + filters("b") + " order by CASE WHEN a.malware_status='scanned' THEN 1 ELSE 2 END asc, b.downloads desc";
 
 
 
@@ -2976,19 +2856,20 @@ public class Database {
 
 		if(c.moveToFirst()){
 			hash = c.getLong(0);
-			c.close();
+
 		}
+
+        c.close();
 
 		return hash;
 	}
 
 	public Cursor getFeaturedTopApps() {
 		yield();
-		Cursor c = database
-				.rawQuery(
-						"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from featured_top_apk as a, featured_top_repo as c where c._id = a.repo_id "
-								+ filters() + " group by a._id", null);
-		return c;
+        return database
+                .rawQuery(
+                        "select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from featured_top_apk as a, featured_top_repo as c left join featured_top_screen_compat as d on d._id=a._id where c._id = a.repo_id "
+                                + filters("a") + " group by a._id", null);
 	}
 
 	public void deleteFeaturedTopApps() {
@@ -3050,22 +2931,7 @@ public class Database {
 				+ "=?", new String[] { url });
 	}
 
-	public void updateStoreInfo(String avatar, String theme,
-			String description, String view, String items, long id) {
-		ContentValues values = new ContentValues();
-		values.put(DbStructure.COLUMN_AVATAR_URL, avatar);
-		values.put(DbStructure.COLUMN_STORE_THEME, theme);
-		values.put(DbStructure.COLUMN_STORE_DESCRIPTION, description);
-		values.put(DbStructure.COLUMN_STORE_VIEW, view);
-		values.put(DbStructure.COLUMN_STORE_ITEMS, items);
-
-		database.update(DbStructure.TABLE_REPO, values, DbStructure.COLUMN__ID + "= ?", new String[]{id+""});
-
-
-
-	}
-
-	public String getStoreTheme(long store_id) {
+    public String getStoreTheme(long store_id) {
 
 		String return_string = "default";
 
@@ -3073,6 +2939,7 @@ public class Database {
 		if(c.moveToFirst()){
 			return_string = c.getString(0);
 		}
+        c.close();
 
 		return return_string;
 	}
@@ -3085,6 +2952,7 @@ public class Database {
 		if(c.moveToFirst()){
 			return_string = c.getString(0);
 		}
+        c.close();
 
 		return return_string;
 	}
@@ -3097,6 +2965,7 @@ public class Database {
 		if(c.moveToFirst()){
 			return_string = c.getString(0);
 		}
+        c.close();
 
 		return return_string;
 	}

@@ -12,19 +12,19 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
 import cm.aptoide.pt.Category;
 import cm.aptoide.pt.Database;
+import cm.aptoide.pt.GetApkWebserviceInfo;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.views.ViewApk;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class UpdatesAdapter extends CursorAdapter {
 
@@ -83,7 +83,7 @@ public class UpdatesAdapter extends CursorAdapter {
 		String iconspath = cursor.getString(9)+cursor.getString(4);
 		final String hash = (cursor.getString(cursor.getColumnIndex("apkid"))+"|"+cursor.getString(cursor.getColumnIndex("vercode")));
 		holder.name.setText(name);
-		ImageLoader.getInstance().displayImage(iconspath, holder.icon,hash);
+		ImageLoader.getInstance().displayImage(iconspath, holder.icon);
 //		 try{
 //	        	holder.rating.setRating(Float.parseFloat(cursor.getString(5)));
 //	        }catch (Exception e) {
@@ -91,16 +91,12 @@ public class UpdatesAdapter extends CursorAdapter {
 //			}
 //		 holder.downloads.setText(cursor.getString(6));
 		holder.vername.setText(context.getString(R.string.update_to)+": "+ vername);
-		holder.update.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				ViewApk apk = Database.getInstance().getApk(id, Category.INFOXML);
-				Log.d("UpdatesAdapter","about to call service download manager to "+apk.getName());
-				serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk),apk);
-                Toast toast = Toast.makeText(mContext, mContext.getString(R.string.starting_download), Toast.LENGTH_SHORT);
-                toast.show();
-			}
-		});
-		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE ||
+        holder.update.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                new GetApkWebserviceInfo(mContext, serviceDownloadManager, false).execute(id);
+            }
+        });
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE ||
         		(context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
 			holder.ignore_update.setOnClickListener(new View.OnClickListener() {
 

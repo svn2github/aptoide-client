@@ -24,17 +24,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import cm.aptoide.com.actionbarsherlock.app.SherlockFragmentActivity;
-import cm.aptoide.com.actionbarsherlock.view.Menu;
-import cm.aptoide.com.actionbarsherlock.view.MenuItem;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.views.ViewApk;
 
 import java.util.HashMap;
 
-public class ScheduledDownloads extends SherlockFragmentActivity/*SherlockFragmentActivity */implements LoaderCallbacks<Cursor>{
+public class ScheduledDownloads extends SherlockFragmentActivity implements LoaderCallbacks<Cursor>{
 	private Database db;
 	HashMap<String,ScheduledDownload> scheduledDownloadsHashMap = new HashMap<String, ScheduledDownload>();
 	ListView lv;
@@ -170,7 +170,9 @@ public class ScheduledDownloads extends SherlockFragmentActivity/*SherlockFragme
 			      // ((TextView) v.findViewById(R.id.isinst)).setText(c.getString(3));
 			      // ((TextView) v.findViewById(R.id.name)).setText(c.getString(2));
 			      String hashCode = (c.getString(2)+"|"+c.getString(3));
-			      ImageLoader.getInstance().displayImage(hashCode, imageViewIcon, hashCode);
+			      ImageLoader.getInstance().displayImage(hashCode, imageViewIcon);
+
+                //TODO
 			}
 		};
 		lv.setAdapter(adapter);

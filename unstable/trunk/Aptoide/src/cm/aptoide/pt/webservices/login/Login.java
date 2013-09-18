@@ -25,17 +25,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.AptoideThemePicker;
 import cm.aptoide.pt.Configs;
 import cm.aptoide.pt.Database;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Algorithms;
 import cm.aptoide.pt.views.ViewApk;
+import com.actionbarsherlock.app.SherlockActivity;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -148,8 +148,8 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 		try {
 			password = Algorithms.computeSHA1sum(password_box.getText()
 					.toString());
-		} catch (Exception e) {
-		}
+		} catch (Exception ignored) {}
+
 
 		checkCredentials(username, password);
 	}
@@ -219,7 +219,7 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 		String username_string;
 		String password_string;
 		String fromSignIn;
-		JSONObject array;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -255,12 +255,12 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 		 * @throws JSONException
 		 * @throws InterruptedException
 		 */
-		private JSONObject checkUserCredentials(String username, String password) throws MalformedURLException,
-				IOException, UnsupportedEncodingException, JSONException, InterruptedException {
+		private JSONObject checkUserCredentials(String username, String password) throws
+                IOException, JSONException, InterruptedException {
 			URL url;
 			StringBuilder sb;
 			String data;
-			url = new URL("http://webservices.aptoide.com/webservices/checkUserCredentials");
+			url = new URL(AptoideConfiguration.getInstance().getWebServicesUri()+"webservices/checkUserCredentials");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
@@ -375,13 +375,12 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 
 	public static void updateName(String name) throws InvalidKeyException,
 			IllegalStateException, NoSuchAlgorithmException,
-			ClientProtocolException, IOException, JSONException {
+            IOException, JSONException {
 		String passwordSha1 = sPref.getString(Configs.LOGIN_PASSWORD, null);
 		String email = sPref.getString(Configs.LOGIN_USER_LOGIN, null);
 		String hmac = Algorithms.computeHmacSha1(email + passwordSha1 + name
-				+ 1, "bazaar_hmac");
-		HttpPost post = new HttpPost(
-				"http://webservices.aptoide.com/webservices/createUser");
+                + 1, "bazaar_hmac");
+		HttpPost post = new HttpPost(AptoideConfiguration.getInstance().getWebServicesUri()+"webservices/createUser");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("email", email));
 		nameValuePairs.add(new BasicNameValuePair("passhash", passwordSha1));

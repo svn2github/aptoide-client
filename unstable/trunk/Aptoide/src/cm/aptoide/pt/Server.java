@@ -7,13 +7,17 @@
  ******************************************************************************/
 package cm.aptoide.pt;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import cm.aptoide.pt.views.ViewLogin;
 
-public class Server implements Parcelable{
-	
-	public static enum State { PARSINGLATEST, PARSINGTOP, PARSING, PARSED, QUEUED, FAILED };
+import java.util.ArrayList;
+
+public class Server {
+
+    public boolean isDelta;
+    public boolean showError = true;
+    public boolean isBare;
+
+    public static enum State { PARSINGLATEST, PARSINGTOP, PARSING, PARSED, QUEUED, FAILED }
 	
 	public long id;
 	public String url = "";
@@ -30,7 +34,8 @@ public class Server implements Parcelable{
 	public String featuredgraphicPath;
 	public String name;
 	public String theme;
-	public boolean oem; 
+	public boolean oem;
+    public ArrayList<String> coutriesPermitted;
 	
 	private ViewLogin login;
 	
@@ -45,81 +50,6 @@ public class Server implements Parcelable{
 		this.hash = delta;
 		this.id=id;
 	}
-
-	/**
-	 *
-	 * Constructor to use when re-constructing object
-	 * from a parcel
-	 *
-	 * @param in a parcel from which to read this object
-	 */
-	public Server(Parcel in) {
-		readFromParcel(in);
-	}
-
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-
-		// We just need to write each field into the
-		// parcel. When we read from parcel, they
-		// will come back in the same order
-		dest.writeLong(id);
-		dest.writeString(url);
-		dest.writeString(hash);
-		dest.writeString(timestamp);
-		dest.writeInt(n_apk);
-		dest.writeInt(state.ordinal());
-	}
-
-	/**
-	 *
-	 * Called from the constructor to create this
-	 * object from a parcel.
-	 *
-	 * @param in parcel from which to re-create object
-	 */
-	private void readFromParcel(Parcel in) {
-
-		// We just need to read back each
-		// field in the order that it was
-		// written to the parcel
-		id = in.readLong();
-		url = in.readString();
-		hash = in.readString();
-		timestamp = in.readString();
-		n_apk = in.readInt();
-		state = State.values()[in.readInt()];
-	}
-
-   /**
-    *
-    * This field is needed for Android to be able to
-    * create new objects, individually or as arrays.
-    *
-    * This also means that you can use use the default
-    * constructor to create the object and use another
-    * method to hyrdate it as necessary.
-    *
-    * I just find it easier to use the constructor.
-    * It makes sense for the way my brain thinks ;-)
-    *
-    */
-   public static final Parcelable.Creator<Server> CREATOR =
-   	new Parcelable.Creator<Server>() {
-           public Server createFromParcel(Parcel in) {
-               return new Server(in);
-           }
-
-           public Server[] newArray(int size) {
-               return new Server[size];
-           }
-       };
 
        public void clear() {
     		iconsPath = null;

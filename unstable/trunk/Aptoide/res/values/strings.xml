@@ -39,7 +39,7 @@
     <string name="no_downloads">No downloads. Start downloading!</string>
     <string name="not_downloaded_apps">Not downloaded apps</string>
     <string name="completed">Completed</string>
-    <string name="paused">Paused</string>
+
     <string name="waiting">Waiting...</string>
     <string name="exit">exit</string>
     <string name="install">Install</string>
@@ -398,4 +398,25 @@
     <string name="powered_by">Powered by</string>
     
     <string name="restart_launcher">%s is going to restart your launcher in order to maintain your preferences. Click OK to continue.</string>
+    <string name="setting_updates">Updates</string>
+    <string name="setting_updates_notification_title">Updates Notification</string>
+    <string name="setting_updates_notification_sum">Show new updates notifications.</string>
+    <string name="permissions">Permissions:</string>
+    <string name="no_permissions_required">No permissions required for this app.</string>
+    <string name="restore">Install</string>
+    <string name="crash_reports">Crash Reports</string>
+    <string name="pref_enable_acra">Send reports</string>
+    <string name="pref_acra_enabled">Check to allow send reports in order to help us improve Aptoide.</string>
+    <string name="pref_acra_syslog">Send system information</string>
+    <string name="pref_acra_syslog_enabled">Check to allow sending information of your device in the report.</string>
+    <string name="pref_acra_user_email">Contact email</string>
+    <string name="pref_acra_user_email_summary">We may contact you to obtain more information about errors.
+    </string>
+    <string name="pref_acra_alwaysaccept">Auto-send reports</string>
+    <string name="pref_acra_alwaysaccept_enabled">Check to auto-send reports on crash events.</string>
+    <string name="crash_reports_settings">Crash Reports Settings</string>
+    <string name="store_already_added">Store already added!</string>
+    <string name="dev_mode">Developer Mode</string>
+    <string name="clearsearch_title">Clear search history</string>
+
 </resources>

@@ -9,15 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
-import cm.aptoide.com.actionbarsherlock.view.Window;
-import cm.aptoide.com.nostra13.universalimageloader.core.DisplayImageOptions;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.FailReason;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import cm.aptoide.com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.*;
 
@@ -36,10 +37,10 @@ public class Start extends SherlockActivity {
 	private ImageLoadingListener listener = new ImageLoadingListener() {
 
 		@Override
-		public void onLoadingStarted() { }
+		public void onLoadingStarted(String uri, View v) { }
 
 		@Override
-		public void onLoadingFailed(FailReason failReason) {
+		public void onLoadingFailed(String uri, View v, FailReason failReason) {
 			Log.e("Start-onLoadingFailed","Failed to load splashscreen");
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				saveSplashscreenImageToSDCard("splashscreen_land.png");
@@ -50,12 +51,12 @@ public class Start extends SherlockActivity {
 		}
 
 		@Override
-		public void onLoadingComplete(Bitmap loadedImage) {
+		public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
 			showSplash();
 		}
 
 		@Override
-		public void onLoadingCancelled() {	}
+		public void onLoadingCancelled(String uri, View v) {	}
 	};
 
 
@@ -81,15 +82,16 @@ public class Start extends SherlockActivity {
 			setContentView(R.layout.splash);
 			imageSplash = (ImageView) findViewById(R.id.splashscreen);
 			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREENLAND, imageSplash, options, listener, "splashscreen_land");
+				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREENLAND, imageSplash, options, listener);
 			}else{
-				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREEN, imageSplash, options, listener, "splashscreen");
+				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREEN, imageSplash, options, listener);
 			}
 
 		}else{
             finish();
 			Intent intent = new Intent();
 			intent.setClass(Start.this, MainActivity.class);
+
 			startActivity(intent);
 
 		}

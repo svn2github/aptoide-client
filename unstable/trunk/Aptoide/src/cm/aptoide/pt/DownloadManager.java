@@ -21,41 +21,31 @@ package cm.aptoide.pt;
 
 import android.content.*;
 import android.content.DialogInterface.OnDismissListener;
-import android.graphics.drawable.Drawable;
-import android.os.*;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import cm.aptoide.com.actionbarsherlock.app.SherlockFragmentActivity;
-import cm.aptoide.com.actionbarsherlock.view.Menu;
-import cm.aptoide.com.actionbarsherlock.view.MenuItem;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.com.viewpagerindicator.TitlePageIndicator;
-import cm.aptoide.pt.adapters.DownloadedListAdapter;
-import cm.aptoide.pt.adapters.DownloadingListAdapter;
-import cm.aptoide.pt.adapters.NotDownloadedListAdapter;
-import cm.aptoide.pt.adapters.ViewPagerAdapter;
 import cm.aptoide.pt.download.DownloadInfo;
 import cm.aptoide.pt.download.Utils;
 import cm.aptoide.pt.download.event.DownloadStatusEvent;
 import cm.aptoide.pt.events.BusProvider;
-import cm.aptoide.pt.services.AIDLServiceDownloadManager;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.sharing.DialogShareOnFacebook;
 import cm.aptoide.pt.util.quickaction.ActionItem;
 import cm.aptoide.pt.util.quickaction.EnumQuickActions;
 import cm.aptoide.pt.util.quickaction.QuickAction;
-import cm.aptoide.pt.views.EnumDownloadStatus;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Locale;
 
 /**
  * DownloadManager
@@ -64,24 +54,15 @@ import java.util.Locale;
  *
  */
 public class DownloadManager extends SherlockFragmentActivity {
-	private boolean isRunning = false;
 
-	private LinearLayout downloading;
-	private DownloadingListAdapter downloadingAdapter;
 
-	private LinearLayout downloaded;
-	private DownloadedListAdapter downloadedAdapter;
 
-	private LinearLayout notDownloaded;
-	private NotDownloadedListAdapter notDownloadedAdapter;
-
-	private Button exitButton;
 
 	private TextView noDownloads;
 
-	private AIDLServiceDownloadManager serviceManager = null;
 
-	private boolean serviceManagerIsBound = false;
+
+
 
     private ArrayList<DownloadInfo> notOnGoingArrayList;
     private ServiceConnection serviceManagerConnection = new ServiceConnection() {
@@ -126,8 +107,8 @@ public class DownloadManager extends SherlockFragmentActivity {
 		public void onServiceDisconnected(ComponentName className) {
 			// This is called when the connection with the service has been
 			// unexpectedly disconnected -- that is, its process crashed.
-			serviceManagerIsBound = false;
-			serviceManager = null;
+			
+
 
 			Log.v("Aptoide-DownloadManager", "Disconnected from ServiceDownloadManager");
 		}
@@ -139,158 +120,10 @@ public class DownloadManager extends SherlockFragmentActivity {
     MyAdapter notOngoingAdapter;
 
 
-    private AIDLDownloadManager.Stub serviceManagerCallback = new AIDLDownloadManager.Stub() {
-
-		@Override
-		public void updateDownloadStatus(int status) throws RemoteException {
-        	if (serviceManagerIsBound) {
-    			EnumDownloadStatus task = EnumDownloadStatus.reverseOrdinal(status);
-				switch (task) {
-					case RESTARTING:
-					case FAILED:
-						try {
-							downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-							notDownloadedAdapter.updateList(serviceManager.callGetDownloadsFailed());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-
-					case DOWNLOADING:
-					case PAUSED:
-						try {
-							downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case RESUMING:
-						try {
-							downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case STOPPED:
-						try {
-							downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-
-					case COMPLETED:
-						try {
-							downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-							downloadedAdapter.updateList(serviceManager.callGetDownloadsCompleted());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-
-					default:
-						break;
-				}
-			}
-        	interfaceTasksHandler.sendEmptyMessage(status);
-		}
-
-	};
-
-
-	private Handler interfaceTasksHandler = new Handler(){
-
-		public void handleMessage(Message msg) {
-			switch (EnumDownloadStatus.reverseOrdinal(msg.what)) {
-				case RESTARTING:
-				case FAILED:
-					if (downloadingAdapter.isEmpty()) {
-						downloading.setVisibility(View.GONE);
-					} else {
-						downloading.setVisibility(View.VISIBLE);
-					}
-					if(downloadedAdapter.isEmpty()){
-						downloaded.setVisibility(View.GONE);
-					}
-					notDownloaded.setVisibility(View.VISIBLE);
-					break;
-
-				case DOWNLOADING:
-				case PAUSED:
-				case RESUMING:
-				case STOPPED:
-					downloading.setVisibility(View.VISIBLE);
-					if(notDownloadedAdapter.isEmpty()){
-						notDownloaded.setVisibility(View.GONE);
-					}
-					if(downloadedAdapter.isEmpty()){
-						downloaded.setVisibility(View.GONE);
-					}
-					break;
-
-				case COMPLETED:
-					if (downloadingAdapter.isEmpty()) {
-						downloading.setVisibility(View.GONE);
-					} else {
-						downloading.setVisibility(View.VISIBLE);
-					}
-					if(notDownloadedAdapter.isEmpty()){
-						notDownloaded.setVisibility(View.GONE);
-					}
-					downloaded.setVisibility(View.VISIBLE);
-					break;
-
-				default:
-					break;
-				}
-
-		}
-	};
     private ListView onGoingListView;
     private TextView onGoingTextView;
     private ListView notOngoingListView;
     private TextView notOngoingTextView;
-
-    private void prePopulateLists(){
-		try {
-
-			if(serviceManager.callAreDownloadsOngoing()){
-				noDownloads.setVisibility(View.GONE);
-				downloadingAdapter.updateList(serviceManager.callGetDownloadsOngoing());
-//				if(!downloadingAdapter.isEmpty()){
-					downloading.setVisibility(View.VISIBLE);
-//				}else{
-//					downloading.setVisibility(View.GONE);
-//				}
-			}else{
-				downloading.setVisibility(View.GONE);
-			}
-			if(serviceManager.callAreDownloadsCompleted()){
-				noDownloads.setVisibility(View.GONE);
-				downloadedAdapter.updateList(serviceManager.callGetDownloadsCompleted());
-//				if (!downloadedAdapter.isEmpty()) {
-					downloaded.setVisibility(View.VISIBLE);
-//				}else{
-//					downloaded.setVisibility(View.GONE);
-//				}
-			}else{
-				downloaded.setVisibility(View.GONE);
-			}
-			if(serviceManager.callAreDownloadsFailed()){
-				noDownloads.setVisibility(View.GONE);
-				notDownloadedAdapter.updateList(serviceManager.callGetDownloadsFailed());
-//				if(!notDownloadedAdapter.isEmpty()){
-					notDownloaded.setVisibility(View.VISIBLE);
-//				}else{
-//					notDownloaded.setVisibility(View.GONE);
-//				}
-			}else{
-				notDownloaded.setVisibility(View.GONE);
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
 
     @Subscribe
@@ -666,7 +499,9 @@ public class DownloadManager extends SherlockFragmentActivity {
 //            }
             rowViewHolder.app_download_progress.setProgress(download.getPercentDownloaded());
             String iconUrl = download.getViewApk().getIcon();
-            ImageLoader.getInstance().displayImage(iconUrl, rowViewHolder.app_icon, (download.getViewApk().getApkid() + "|" + download.getViewApk().getVercode()));
+
+            ImageLoader.getInstance().displayImage(iconUrl, rowViewHolder.app_icon);
+
 
             rowViewHolder.manageDownloadsButton.setOnClickListener(new View.OnClickListener() {
                 @Override

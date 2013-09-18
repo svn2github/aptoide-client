@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.webservices.login.Login;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;

@@ -1,12 +1,15 @@
 package cm.aptoide.pt.webservices;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 import cm.aptoide.pt.ApplicationAptoide;
 import cm.aptoide.pt.Category;
 import cm.aptoide.pt.Database;
+import cm.aptoide.pt.ExtrasContentProvider;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.NetworkUtils;
-import cm.aptoide.pt.views.ApkPermission;
+import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.views.ViewApk;
 import cm.aptoide.pt.webservices.comments.Comment;
 import org.json.JSONArray;
@@ -16,7 +19,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,20 +33,20 @@ import java.util.ArrayList;
  */
 public class WebserviceGetApkInfo {
 
+    private final Context context;
     JSONObject response;
 
-    private URL url;
-    String arguments = "getApkInfo/<repo>/<apkid>/<apkversion>/options=(<options>)/<mode>";
-    String defaultWebservice = "http://webservices.aptoide.com/webservices/";
+
+    //"getApkInfo/<repo>/<apkid>/<apkversion>/options=(<options>)/<mode>";
+    String defaultWebservice = AptoideConfiguration.getInstance().getWebServicesUri();
     private ArrayList<Comment> comments;
     private boolean seeAll = false;
     private boolean screenshotChanged;
 
-    public static String getMyCountrCode(Context context){
-        return context.getResources().getConfiguration().locale.getLanguage()+"_"+context.getResources().getConfiguration().locale.getCountry();
-    }
 
-    public WebserviceGetApkInfo(String webservice,ViewApk apk, Category category, String token, String md5 ) throws IOException, JSONException {
+
+    public WebserviceGetApkInfo(Context context, String webservice,ViewApk apk, Category category, String token) throws IOException, JSONException {
+        this.context = context;
 
         StringBuilder url = new StringBuilder();
 
@@ -58,9 +60,12 @@ public class WebserviceGetApkInfo {
 
         if(token!=null)options.add(new WebserviceOptions("token", token));
         options.add(new WebserviceOptions("cmtlimit", "6"));
-        options.add(new WebserviceOptions("md5sum", md5));
+        options.add(new WebserviceOptions("vercode", String.valueOf(apk.getVercode())));
+
         options.add(new WebserviceOptions("payinfo", "true"));
-        options.add(new WebserviceOptions("lang", getMyCountrCode(ApplicationAptoide.getContext())));
+        options.add(new WebserviceOptions("q", Utils.filters(context)));
+        options.add(new WebserviceOptions("lang", Utils.getMyCountryCode(ApplicationAptoide.getContext())));
+
 
 
 
@@ -88,6 +93,8 @@ public class WebserviceGetApkInfo {
             sb.append(line).append('\n');
         }
 
+        br.close();
+
         Log.e("REQUEST",url.toString());
         Log.e("RESPONSE",sb.toString());
         response = new JSONObject(sb.toString());
@@ -98,9 +105,6 @@ public class WebserviceGetApkInfo {
             Database database = Database.getInstance();
 
             Log.d("WebserviceGetApkInfo", comments.size()+"");
-
-
-
 
 
             if(category.equals(Category.INFOXML)){
@@ -127,6 +131,12 @@ public class WebserviceGetApkInfo {
 
 
             }
+
+            ContentValues values = new ContentValues();
+            values.put("apkid", apk.getApkid());
+            values.put("comment", getDescription());
+            context.getContentResolver().insert(ExtrasContentProvider.CONTENT_URI, values);
+
             database.deleteCommentsCache(apk.getId(), category);
             for(Comment comment: comments){
                 database.insertComment(apk.getId(),comment,category);
@@ -144,8 +154,13 @@ public class WebserviceGetApkInfo {
 
             }
 
+            database.insertDownloadPath(getApkDownloadPath(), category, apk.getId());
+            database.insertApkMd5(getApkMd5(), category, apk.getId());
+            database.insertApkSize(getApkSize(), category, apk.getId());
+
+
         } catch (ParseException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
 
@@ -157,11 +172,20 @@ public class WebserviceGetApkInfo {
     }
 
     public MalwareStatus getMalwareInfo() throws JSONException {
-
         JSONObject malwareResponse = response.getJSONObject("malware");
-
         return new MalwareStatus(malwareResponse.getString("status"), malwareResponse.getString("reason"));
+    }
 
+    public String getApkMd5() throws JSONException {
+        return response.getJSONObject("apk").getString("md5sum");
+    }
+
+    public String getApkDownloadPath() throws JSONException {
+        return response.getJSONObject("apk").getString("path");
+    }
+
+    public String getApkSize() throws JSONException {
+        return response.getJSONObject("apk").getString("size");
     }
 
     public String getName() throws JSONException {
@@ -174,18 +198,11 @@ public class WebserviceGetApkInfo {
         return malwareResponse.getString("description");
     }
 
-    public ArrayList<ApkPermission> getApkPermissions() throws JSONException {
+    public JSONArray getApkPermissions() throws JSONException {
 
-        JSONArray permissionArray = response.getJSONArray("apkpermissions");
+        JSONArray permissionArray = response.getJSONArray("permissions");
 
-        ArrayList<ApkPermission> list = new ArrayList<ApkPermission>();
-        for(int i = 0; i!= permissionArray.length(); i++){
-            String permission = permissionArray.getJSONObject(i).getString("permission");
-            String description = permissionArray.getJSONObject(i).getString("description");
-            list.add(new ApkPermission(permission, description));
-        }
-
-        return list;
+        return permissionArray;
 
     }
 
@@ -217,7 +234,7 @@ public class WebserviceGetApkInfo {
             Comment comment = new Comment();
             comment.id = array.getJSONObject(i).getInt("id");
             comment.subject = array.getJSONObject(i).getString("subject");
-            comment.timeStamp =  dateFormater.parse(array.getJSONObject(i).getString("timestamp"));
+            comment.timeStamp =  dateFormater.parse(array.getJSONObject(i).getString("timestamp")).getTime();
             comment.username = array.getJSONObject(i).getString("username");
             comment.text = array.getJSONObject(i).getString("text");
             comments.add(comment);
@@ -270,6 +287,10 @@ public class WebserviceGetApkInfo {
 
     public JSONObject getPayment() throws JSONException {
         return response.getJSONObject("payment");
+    }
+
+    public boolean hasPermissions() {
+        return response.has("permissions");  //To change body of created methods use File | Settings | File Templates.
     }
 
     private class WebserviceOptions {

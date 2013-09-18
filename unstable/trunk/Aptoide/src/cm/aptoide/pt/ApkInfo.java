@@ -17,7 +17,10 @@ import android.content.*;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
@@ -33,12 +36,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import cm.aptoide.pt.adapters.ImageGalleryAdapter;
 import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
 import cm.aptoide.pt.contentloaders.ViewApkLoader;
@@ -52,7 +49,9 @@ import cm.aptoide.pt.util.RepoUtils;
 import cm.aptoide.pt.util.quickaction.ActionItem;
 import cm.aptoide.pt.util.quickaction.EnumQuickActions;
 import cm.aptoide.pt.util.quickaction.QuickAction;
-import cm.aptoide.pt.views.*;
+import cm.aptoide.pt.views.EnumApkMalware;
+import cm.aptoide.pt.views.EnumDownloadFailReason;
+import cm.aptoide.pt.views.ViewApk;
 import cm.aptoide.pt.webservices.MalwareStatus;
 import cm.aptoide.pt.webservices.TasteModel;
 import cm.aptoide.pt.webservices.WebserviceGetApkInfo;
@@ -62,13 +61,22 @@ import cm.aptoide.pt.webservices.comments.ViewComments;
 import cm.aptoide.pt.webservices.login.Login;
 import cm.aptoide.pt.webservices.taste.EnumUserTaste;
 import cm.aptoide.pt.webservices.taste.Likes;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.mopub.mobileads.MoPubView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.otto.Subscribe;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -151,6 +159,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             }
         }
     };
+    private GetApkInfo aSyncTask;
 
 
     @Override
@@ -326,7 +335,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     }
                 }).start();
 
-                Log.d("Aptoide-ApkInfo", "1");
+
                 mainObbUrl = viewApk.getMainObbUrl();
                 mainObbMd5 = viewApk.getMainObbMd5();
                 mainObbName = viewApk.getMainObbFileName();
@@ -341,7 +350,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     setLikes(viewApk.getLikes() + "", viewApk.getDislikes() + "");
                 }
 
-                Log.d("Aptoide-ApkInfo", "2");
+
                 if (viewApk.getComments() != null && viewApk.getComments().size() > 0) {
                     setComments(viewApk.getComments());
                     loading.setVisibility(View.GONE);
@@ -385,11 +394,14 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     findViewById(R.id.inst_version).setVisibility(View.GONE);
                 }
 
-                Log.d("Aptoide-ApkInfo", "3");
+
                 repo_string = viewApk.getRepoName();
                 checkDownloadStatus();
-                Log.d("Aptoide-ApkInfo", "4");
+
                 webservicespath = viewApk.getWebservicesPath();
+
+                Log.d("Aptoide-ApkInfo", "Webservices path:" + webservicespath);
+
 
                 try {
                     ((RatingBar) findViewById(R.id.ratingbar)).setRating(Float.parseFloat(viewApk.getRating()));
@@ -400,7 +412,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     ((RatingBar) findViewById(R.id.ratingbar)).setIsIndicator(true);
                 }
                 ((TextView) findViewById(R.id.app_store)).setText(getString(R.string.store) + ": " + repo_string);
-                ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) * 1024 + mainObbSize + patchObbSize)));
+                ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) + mainObbSize + patchObbSize)));
                 ((TextView) findViewById(R.id.version_label)).setText(getString(R.string.version) + " " + viewApk.getVername());
                 ((TextView) findViewById(R.id.app_name)).setText(viewApk.getName());
 //                ((TextView) findViewById(R.id.app_category)).setText(viewApk.getCategory1());
@@ -415,9 +427,10 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                         .build();
                 ImageLoader.getInstance().displayImage(viewApk.getIcon(), (ImageView) findViewById(R.id.app_icon), options, null);
 
-                Log.d("Aptoide-ApkInfo", "5");
-                new GetApkInfo().execute();
-                Log.d("Aptoide-ApkInfo", "6");
+
+                aSyncTask = new GetApkInfo();
+                aSyncTask.execute();
+
 
 				/*Comments comments = new Comments(context,webservicespath);
                 comments.getComments(repo_string, viewApk.getApkid(),viewApk.getVername(),(LinearLayout) findViewById(R.id.commentContainer), false);*/
@@ -448,17 +461,22 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             }
 
             private void loadMalwareBadges() {
-                new Thread(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        try {
-                            loadMalware(viewApk.getMalwareStatus());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                if (viewApk.getMalwareStatus() != null) {
+
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                loadMalware(viewApk.getMalwareStatus());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }).start();
+                    }).start();
+
+                }
 
             }
 
@@ -853,7 +871,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 i.putExtra("apkid", viewApk.getApkid());
                 i.putExtra("version", viewApk.getVername());
                 i.putExtra("repo", repo_string);
-                i.putExtra("webservicespath", "http://webservices.aptoide.com/");
+                i.putExtra("webservicespath", viewApk.getWebservicesPath());
                 startActivityForResult(i, AddComment.ADD_COMMENT_REQUESTCODE);
             }
         });
@@ -885,7 +903,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 i.putExtra("repo", repo_string);
                 i.putExtra("apkid", viewApk.getApkid());
                 i.putExtra("vername", viewApk.getVername());
-                i.putExtra("webservicespath", "http://webservices.aptoide.com/");
+                i.putExtra("webservicespath", viewApk.getWebservicesPath());
                 startActivity(i);
 
             }
@@ -921,12 +939,33 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
     private int patchObbSize = 0;
 
 
+    private boolean resultIsReturned;
     OnClickListener installListener = new OnClickListener() {
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View button) {
 //            findViewById(R.id.btinstall).setOnClickListener(null);
-            download();
+
+
+            if(resultIsReturned){
+
+                download();
+            }else{
+                pd.show();
+                registerGetApkInfoCallback(new Runnable(){
+                    @Override
+                    public void run() {
+                        download();
+                        pd.dismiss();
+                    }
+                });
+
+            }
+
+
+
+
+
 //            new Thread(new Runnable() {
 //                public void run() {
 //                    if (scheduledDownloadChBox.isChecked()) {
@@ -1010,6 +1049,22 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
         }
     };
+
+    private void registerGetApkInfoCallback(final Runnable runnable) {
+
+        aSyncTask.callback = new ApkInfoCallBack() {
+            @Override
+            public void onUpdate() {
+                runnable.run();
+            }
+        };
+
+
+
+
+    }
+
+
 
     private void download() {
 
@@ -1232,8 +1287,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
             @Override
             public Cursor loadInBackground() {
-                return db.getAllApkVersions(viewApk.getApkid(), viewApk.getId(), viewApk.getVername(), getIntent()
-                        .getExtras().getBoolean("top", false), viewApk.getRepo_id());
+                return db.getAllApkVersions(viewApk.getApkid(), viewApk.getId(), viewApk.getVername(), viewApk.getRepo_id());
             }
         };
 
@@ -1340,7 +1394,9 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
     private ViewGroup viewComments;
 
-    private class GetApkInfo extends AsyncTask<Void, Void, Void> {
+    private class GetApkInfo extends AsyncTask<Void, Void, Void>  {
+
+        public ApkInfoCallBack callback;
 
         private WebserviceGetApkInfo webservice;
 
@@ -1351,6 +1407,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 findViewById(R.id.btinstall).setEnabled(false);
                 ((Button) findViewById(R.id.btinstall)).setTextColor(Color.GRAY);
             }
+            resultIsReturned = false;
         }
 
         /**
@@ -1371,7 +1428,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         protected Void doInBackground(Void... params) {
 
             try {
-                webservice = new WebserviceGetApkInfo(ApkInfo.this, webservicespath, viewApk, category, Login.getToken(context), viewApk.getMd5());
+                webservice = new WebserviceGetApkInfo(ApkInfo.this, webservicespath, viewApk, category, Login.getToken(context));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -1398,6 +1455,17 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             super.onPostExecute(aVoid);
             unstrustedPayment = false;
 
+
+            try{
+
+                viewApk.setPath(webservice.getApkDownloadPath());
+                viewApk.setMd5(webservice.getApkMd5());
+                viewApk.setSize(webservice.getApkSize());
+                ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) + mainObbSize + patchObbSize)));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             try {
                 String name = webservice.getName();
                 viewApk.setName(name);
@@ -1408,13 +1476,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             }
 
             try {
-                String description = webservice.getDescription();
-                ((TextView) findViewById(R.id.descript)).setText(webservice.getDescription());
-
-                ContentValues values = new ContentValues();
-                values.put("apkid", viewApk.getApkid());
-                values.put("comment", description);
-                context.getContentResolver().insert(ExtrasContentProvider.CONTENT_URI, values);
+                loadDescription();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1434,17 +1496,14 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     mainObbName = webservice.getMainOBB().getString("filename");
                     mainObbSize = webservice.getMainOBB().getInt("filesize");
 
-
                     if (webservice.hasPatchOBB()) {
-
                         patchObbUrl = webservice.getPatchOBB().getString("path");
                         patchObbMd5 = webservice.getPatchOBB().getString("md5sum");
                         patchObbName = webservice.getPatchOBB().getString("filename");
                         patchObbSize = webservice.getPatchOBB().getInt("filesize");
-
-
                     }
-                    ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) * 1024 + mainObbSize + patchObbSize)));
+
+                    ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) + mainObbSize + patchObbSize)));
 
                     viewApk.setMainObbUrl(mainObbUrl);
                     viewApk.setMainObbFileName(mainObbName);
@@ -1463,6 +1522,24 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             }
 
             Log.d("TAAAAAG", mainObbUrl + " " + mainObbName + " " + mainObbMd5);
+
+            try{
+
+                if(webservice.hasPermissions()){
+
+                    JSONArray array = webservice.getApkPermissions();
+                    ArrayList<String > permissionList = new ArrayList<String>();
+                    for(int i = 0; i!=array.length();i++){
+                        permissionList.add(array.getString(i));
+                    }
+
+                    viewApk.setPermissionsList(permissionList);
+
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
             try {
@@ -1584,6 +1661,10 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
             b.setTextColor(Color.WHITE);
 
+            resultIsReturned = true;
+            if(callback!=null){
+                callback.onUpdate();
+            }
 
         }
 
@@ -1592,11 +1673,15 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
     private void setComments(ArrayList<Comment> result) {
         viewComments.removeAllViews();
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+        DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
         for (Comment comment : result) {
+
+            Date date = new Date(comment.timeStamp);
             View v = LayoutInflater.from(context).inflate(R.layout.row_comment_item, null);
             ((TextView) v.findViewById(R.id.author)).setText(comment.username);
             ((TextView) v.findViewById(R.id.content)).setText(comment.text);
-            ((TextView) v.findViewById(R.id.date)).setText(comment.timeStamp.toString());
+            ((TextView) v.findViewById(R.id.date)).setText(timeFormat.format(date) + " | " + dateFormat.format(date));
             viewComments.addView(v);
         }
     }

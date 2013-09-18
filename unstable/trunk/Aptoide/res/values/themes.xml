@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <style name="Preferences" parent="@style/Theme.Sherlock.NoActionBar"/>
     <!-- Aptoide default theme -->
     <style name="Aptoide.Theme.Default" parent="@style/Theme.Sherlock.Light.NoActionBar">
         <item name="android:windowBackground">@color/custom_background_color</item>
@@ -30,7 +32,8 @@
         <item name="popQuickActionBackground">@style/quick_action_style_aptoide</item>
         <item name="viewPagerIndicatorBackground">@style/title_bar_bgd_style_aptoide</item>
         <item name="autoScaleTextViewStyle">@style/autoScaleTextView</item>
-        <item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>
+
+        <!--<item name="android:alertDialogStyle">@style/alert_dialog_style_light</item>-->
     </style>
 
     <!-- <style name="Aptoide.Widget.Styled.ActionBar" parent="Widget.Sherlock.ActionBar"> -->

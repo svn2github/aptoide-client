@@ -5,7 +5,7 @@ package cm.aptoide.pt.util.databasecreator;
 public class Column {
 	
 	public enum SQLiteType{
-		INTEGER, TEXT, FLOAT, DATE, REAL
+		INTEGER, TEXT, FLOAT, DATE, REAL, BOOLEAN
 	}
 	
 	public enum OnConflict{

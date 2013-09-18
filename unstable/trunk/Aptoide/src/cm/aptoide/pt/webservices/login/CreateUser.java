@@ -20,7 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.AptoideThemePicker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.util.Algorithms;

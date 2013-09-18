@@ -62,6 +62,9 @@ public class ViewApk implements Parcelable {
     private String patchObbMd5;
     private String patchObbFileName;
     private int patchObbFileSize;
+    private String screenCompat;
+    private String cpuAbi;
+    private ArrayList<String> permissionsList;
 
 
     /**
@@ -138,6 +141,10 @@ public class ViewApk implements Parcelable {
 	}
 
 	public String getSize() {
+
+        if(size==null){
+            return "0";
+        }
 		return size;
 	}
 
@@ -298,11 +305,13 @@ public class ViewApk implements Parcelable {
 		this.path="";
 		this.date="";
 		this.age=0;
-		this.minGlEs="0";
+		this.minGlEs="0.0";
 		this.minScreen=0;
 		this.minSdk="0";
         this.price=0;
 		screenshots.clear();
+        this.screenCompat = null;
+        this.cpuAbi = null;
 	}
 
 
@@ -538,5 +547,29 @@ public class ViewApk implements Parcelable {
 
     public void setPatchObbFileSize(int patchObbFileSize) {
         this.patchObbFileSize = patchObbFileSize;
+    }
+
+    public void setScreenCompat(String screenCompat) {
+        this.screenCompat = screenCompat;
+    }
+
+    public String getScreenCompat() {
+        return screenCompat;
+    }
+
+    public void setCpuAbi(String cpuAbi) {
+        this.cpuAbi = cpuAbi;
+    }
+
+    public String getCpuAbi() {
+        return cpuAbi;
+    }
+
+    public void setPermissionsList(ArrayList<String> permissionsList) {
+        this.permissionsList = permissionsList;
+    }
+
+    public ArrayList<String> getPermissionsList() {
+        return permissionsList;
     }
 }

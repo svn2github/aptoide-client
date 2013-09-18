@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import cm.aptoide.pt.Database;
 import cm.aptoide.pt.R;
 
@@ -50,9 +50,8 @@ public class InstalledAdapter extends CursorAdapter {
 		holder.name.setText(cursor.getString(1));
 		String iconspath = cursor.getString(9)+
 				cursor.getString(4);
-		String hash = (cursor.getString(cursor.getColumnIndex("apkid"))+"|"+
-				cursor.getString(cursor.getColumnIndex("vercode")));
-		ImageLoader.getInstance().displayImage(iconspath, holder.icon,hash);
+
+		ImageLoader.getInstance().displayImage(iconspath, holder.icon);
 		 try{
 	        	holder.rating.setRating(Float.parseFloat(cursor.getString(5)));
 	        	holder.rating.setIsIndicator(true);

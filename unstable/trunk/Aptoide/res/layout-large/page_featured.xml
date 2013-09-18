@@ -37,6 +37,7 @@
                 android:layout_margin="0.5dp"
                 android:layout_weight="0.5"
                 android:adjustViewBounds="true"
+
                 android:clickable="true" />
 
             <LinearLayout

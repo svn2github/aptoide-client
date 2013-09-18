@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,12 +33,14 @@ public class NetworkUtils {
 
 	private static int TIME_OUT = 10000;
 
+    public BufferedInputStream getInputStream(String url, Context context) throws IOException {
+        return getInputStream(url, null, null, context);
+    }
+
 
 	public BufferedInputStream getInputStream(String url, String username, String password, Context mctx) throws IOException{
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-
-
 
         if(username!=null && password!=null){
 			String basicAuth = "Basic " + new String(Base64.encode((username+":"+password).getBytes(),Base64.NO_WRAP ));
@@ -72,6 +75,7 @@ public class NetworkUtils {
 								Base64.NO_WRAP));
 				client.setRequestProperty("Authorization", basicAuth);
 			}
+            client.setRequestMethod("HEAD");
 			client.setConnectTimeout(TIME_OUT);
 			client.setReadTimeout(TIME_OUT);
 			if(ApplicationAptoide.DEBUG_MODE)Log.i("Aptoide-NetworkUtils-checkServerConnection", "Checking on: "+client.getURL().toString());
@@ -92,11 +96,14 @@ public class NetworkUtils {
 
 	public JSONObject getJsonObject(String url, Context mctx) throws IOException, JSONException{
 		String line = null;
-		BufferedReader br = new BufferedReader(new java.io.InputStreamReader(getInputStream(url, null, null, mctx)));
+        InputStreamReader reader = new java.io.InputStreamReader(getInputStream(url, null, null, mctx));
+		BufferedReader br = new BufferedReader(reader);
 		StringBuilder sb = new StringBuilder();
 		while ((line = br.readLine()) != null){
 			sb.append(line + '\n');
 		}
+
+        br.close();
 
 		return new JSONObject(sb.toString());
 
@@ -150,35 +157,40 @@ public class NetworkUtils {
 		if(permissions.isWiFi()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
-				if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wifi: "+connectionAvailable);
+				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wifi: "+connectionAvailable);
 			} catch (Exception e) { }
 		}
 		if(permissions.isWiMax()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(6).getState() == NetworkInfo.State.CONNECTED;
-				if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wimax: "+connectionAvailable);
+				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wimax: "+connectionAvailable);
 			} catch (Exception e) { }
 		}
 		if(permissions.isMobile()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED;
-				if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable mobile: "+connectionAvailable);
+				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable mobile: "+connectionAvailable);
 			} catch (Exception e) { }
 		}
 		if(permissions.isEthernet()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(9).getState() == NetworkInfo.State.CONNECTED;
-				if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable ethernet: "+connectionAvailable);
+				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable ethernet: "+connectionAvailable);
 			} catch (Exception e) { }
 		}
 
-		if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable: "+connectionAvailable+"  permissions: "+permissions);
+		//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable: "+connectionAvailable+"  permissions: "+permissions);
 		return connectionAvailable;
 	}
 
     public long getLastModified(URL url) throws IOException {
 
-        return url.openConnection().getLastModified();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        long lastModified = connection.getLastModified();
+        connection.disconnect();
+
+
+        return lastModified;
 
     }
 

@@ -30,6 +30,7 @@ public class Md5Handler {
 			byte[] md5sum = digest.digest();
 			BigInteger bigInt = new BigInteger(1, md5sum);
 			md5hash = bigInt.toString(16);
+            is.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 			return md5hash;

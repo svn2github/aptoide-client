@@ -3,6 +3,7 @@ package cm.aptoide.pt.download;
 import android.util.Log;
 import cm.aptoide.pt.ApplicationAptoide;
 import cm.aptoide.pt.util.NetworkUtils;
+import org.acra.ACRA;
 import org.apache.http.HttpStatus;
 
 import java.io.BufferedInputStream;
@@ -36,7 +37,7 @@ public class DownloadConnectionImpl extends DownloadConnection {
         connection.setConnectTimeout(TIME_OUT);
         connection.setReadTimeout(TIME_OUT);
         connection.setRequestProperty("User-Agent", NetworkUtils.getUserAgentString(ApplicationAptoide.getContext()));
-
+        Log.d("DownloadManager", "Downloading from: " + mURL.toString() + " with " + NetworkUtils.getUserAgentString(ApplicationAptoide.getContext()));
         if (downloaded > 0L) {
             // server must support partial content for resume
             connection.addRequestProperty("Range", "bytes=" + downloaded + "-");
@@ -52,6 +53,7 @@ public class DownloadConnectionImpl extends DownloadConnection {
             if(responseCode == 404){
                 throw new NotFoundException();
             }else if(responseCode == 403){
+                ACRA.getErrorReporter().handleException(new Exception("403 on "+ mURL.toString()));
                 throw new IPBlackListedException();
             }
             // response not ok

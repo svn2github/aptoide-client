@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.views.ViewApk;
 import org.xml.sax.InputSource;

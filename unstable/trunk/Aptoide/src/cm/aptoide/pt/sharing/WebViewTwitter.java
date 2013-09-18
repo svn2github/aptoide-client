@@ -14,7 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.R;
 
 public class WebViewTwitter extends SherlockActivity {

@@ -9,7 +9,7 @@ package cm.aptoide.pt.webservices.comments;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.AptoideThemePicker;
 import cm.aptoide.pt.R;
 

@@ -8,7 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.webservices.login.Login;
 import com.paypal.android.MEP.PayPal;
 import com.paypal.android.MEP.PayPalPreapproval;

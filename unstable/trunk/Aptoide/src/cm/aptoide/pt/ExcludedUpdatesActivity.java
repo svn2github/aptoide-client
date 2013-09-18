@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 
 import java.util.ArrayList;
 
@@ -202,7 +202,7 @@ public class ExcludedUpdatesActivity extends SherlockActivity /*SherlockActivity
 
 //	@Override
 //	public boolean onOptionsItemSelected(
-//			cm.aptoide.com.actionbarsherlock.view.MenuItem item) {
+//			com.actionbarsherlock.view.MenuItem item) {
 //		if (item.getItemId() == android.R.id.home) {
 //			finish();
 //			return true;

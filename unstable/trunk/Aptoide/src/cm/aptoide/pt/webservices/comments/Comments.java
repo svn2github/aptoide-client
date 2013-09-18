@@ -10,6 +10,7 @@ package cm.aptoide.pt.webservices.comments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.webservices.login.Login;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,9 +35,11 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Comments {
 
@@ -50,7 +54,7 @@ public class Comments {
 	public String WEB_SERVICE_COMMENTS_POST;
 
 	private boolean submitting = false;
-	private String username = null;
+
 
 	static AsyncTask<String, Void, ArrayList<Comment>> task;
 
@@ -81,7 +85,9 @@ public class Comments {
 	}
 
 	public class CommentsGetter extends AsyncTask<String, Void, ArrayList<Comment>>{
-		SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+        DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
+        SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		View loading;
 		Exception errorMessage;
 		boolean error;
@@ -89,10 +95,10 @@ public class Comments {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			((LinearLayout) view).removeAllViews();
+			view.removeAllViews();
 
 			loading = LayoutInflater.from(context).inflate(R.layout.loadingfootercomments, null);
-			((LinearLayout) view).addView(loading,new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			view.addView(loading, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
 		}
 
@@ -100,7 +106,10 @@ public class Comments {
 		protected ArrayList<Comment> doInBackground(final String... params) {
 			final ArrayList<Comment> comments = new ArrayList<Comment>();
 			try{
-				HttpURLConnection connection = (HttpURLConnection) new URL(String.format(WEB_SERVICE_COMMENTS_LIST, new Object[]{params[0],params[1],params[2]})).openConnection();
+                String url = String.format(WEB_SERVICE_COMMENTS_LIST, params[0],params[1],URLEncoder.encode(params[2], "UTF-8"));
+
+
+				HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 				System.out.println(connection.getURL());
 				connection.setConnectTimeout(10000);
 				connection.setReadTimeout(10000);
@@ -149,7 +158,7 @@ public class Comments {
 							comment.text=sb.toString();
 						}else if(localName.equals("timestamp")){
 							try {
-								comment.timeStamp=dateFormater.parse(sb.toString());
+								comment.timeStamp=dateFormater.parse(sb.toString()).getTime();
 							} catch (ParseException e) {
 								e.printStackTrace();
 							}
@@ -169,6 +178,7 @@ public class Comments {
 				cancel(false);
 			}catch(SAXException e){
 				System.out.println("saxexception");
+                e.printStackTrace();
 				if(seeAllComments){
 					context.runOnUiThread(new Runnable() {
 
@@ -201,11 +211,12 @@ public class Comments {
 				view.addView(tv);
 			}
 			for(Comment comment : result){
+                Date date = new Date(comment.timeStamp);
 				View v = LayoutInflater.from(context).inflate(R.layout.row_comment_item, null);
 				((TextView) v.findViewById(R.id.author)).setText(comment.username);
 				((TextView) v.findViewById(R.id.content)).setText(comment.text);
-				((TextView) v.findViewById(R.id.date)).setText(dateFormater.format(comment.timeStamp));
-				((LinearLayout) view).addView(v);
+                ((TextView) v.findViewById(R.id.date)).setText(timeFormat.format(date) + " | " + dateFormat.format(date));
+                view.addView(v);
 			}
 
 		}
@@ -258,8 +269,8 @@ public class Comments {
 		@Override
 		protected EnumCommentResponse doInBackground(String... params) {
 
-			String data = null;
-			StringBuilder sb=null;
+			String data;
+			StringBuilder sb;
 			EnumCommentResponse response = null;
 			try {
 				if(params[5]!=null){
@@ -275,7 +286,11 @@ public class Comments {
 			    data += "&" + URLEncoder.encode("apkid", "UTF-8") + "=" + URLEncoder.encode(params[2],"UTF-8");
 			    data += "&" + URLEncoder.encode("apkversion", "UTF-8") + "=" + URLEncoder.encode(params[3],"UTF-8");
 			    data += "&" + URLEncoder.encode("text", "UTF-8") + "=" + URLEncoder.encode(params[4],"UTF-8");
-			    data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8");
+                data += "&" + URLEncoder.encode("lang", "UTF-8") + "=" + URLEncoder.encode(Utils.getMyCountryCode(context), "UTF-8");
+                data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8");
+
+
+                Log.d("Adding comment", data);
 
 			    OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
 			    wr.write(data);
@@ -285,7 +300,7 @@ public class Comments {
                 sb = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
-                    sb.append(line+"\n");
+                    sb.append(line).append("\n");
                 }
                 wr.close();
                 br.close();

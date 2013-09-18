@@ -38,15 +38,24 @@
             android:key="hwspecsChkBox"
             android:summary="@string/setting_appfiltersum"
             android:title="@string/setting_appfiltertitle" />
+
         <CheckBoxPreference
             android:key="matureChkBox"
             android:summary="@string/setting_dont_show_mature_content"
             android:title="@string/setting_mature_filtering" />
 
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_updates" >
         <Preference
-            android:key="showexcludedupdates"
-            android:summary="@string/excluded_updates_sum"
-            android:title="@string/excluded_updates" />
+                android:key="showexcludedupdates"
+                android:summary="@string/excluded_updates_sum"
+                android:title="@string/excluded_updates" />
+        <CheckBoxPreference
+                android:key="showUpdatesNotification"
+                android:summary="@string/setting_updates_notification_sum"
+                android:defaultValue="true"
+                android:title="@string/setting_updates_notification_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_schdwntitle" >
         <CheckBoxPreference
@@ -62,10 +71,35 @@
             android:key="clearcache"
             android:title="@string/clearcache_title" />
 
+        <Preference
+                android:key="clearsearch"
+                android:title="@string/clearsearch_title" />
+
         <EditTextPreference
             android:key="maxFileCache"
             android:summary="@string/settings_maxFileCache_sum"
             android:title="@string/settings_maxFileCache_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/crash_reports" >
+        <PreferenceScreen
+                android:key="second_preferencescreen"
+                android:title="@string/crash_reports_settings" >
+            <CheckBoxPreference android:key="acra.enable"
+                                android:title="@string/pref_enable_acra"
+                                android:summary="@string/pref_acra_enabled"
+                                android:defaultValue="true"/>
+            <CheckBoxPreference android:key="acra.syslog.enable"
+                                android:summaryOn="@string/pref_acra_syslog_enabled"
+                                android:title="@string/pref_acra_syslog"
+                                android:defaultValue="true"/>
+            <EditTextPreference android:key="acra.user.email"
+                                android:title="@string/pref_acra_user_email"
+                                android:summary="@string/pref_acra_user_email_summary"/>
+            <CheckBoxPreference android:key="acra.alwaysaccept"
+                                android:title="@string/pref_acra_alwaysaccept"
+                                android:summary="@string/pref_acra_alwaysaccept_enabled"
+                                android:defaultValue="false"/>
+        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="about"
@@ -73,6 +107,19 @@
         <Preference
             android:key="aboutDialog"
             android:title="@string/about_us" >
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:key="devmode"
+            android:title="@string/dev_mode">
+        <Preference
+                android:key="devmode"
+
+                android:title="@string/dev_mode">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:targetPackage="cm.aptoide.pt"
+                    android:targetClass="cm.aptoide.pt.DeveloperMode" />
         </Preference>
     </PreferenceCategory>
 

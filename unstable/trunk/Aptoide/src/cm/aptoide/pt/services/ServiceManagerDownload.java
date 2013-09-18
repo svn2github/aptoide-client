@@ -20,7 +20,10 @@ import cm.aptoide.pt.util.Constants;
 import cm.aptoide.pt.views.ViewApk;
 import com.squareup.otto.Subscribe;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -91,6 +94,10 @@ public class ServiceManagerDownload extends Service {
         DownloadModel apkDownload = new DownloadModel(apk.getPath(), DEFAULT_APK_DESTINATION + apk.getApkid() + "." +apk.getMd5()+".apk", apk.getMd5());
         apkDownload.setAutoExecute(true);
         downloadList.add(apkDownload);
+
+
+
+
         if(apk.getMainObbUrl()!=null){
             DownloadModel mainObbDownload = new DownloadModel(apk.getMainObbUrl(), OBB_DESTINATION + apk.getApkid() + "/" +apk.getMainObbFileName(), apk.getMainObbMd5());
             downloadList.add(mainObbDownload);
@@ -99,6 +106,9 @@ public class ServiceManagerDownload extends Service {
                 downloadList.add(patchObbDownload);
             }
         }
+
+
+
         download.setFilesToDownload(downloadList);
         download.download();
 
@@ -153,19 +163,21 @@ public class ServiceManagerDownload extends Service {
 
         managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-
+        showNotification = true;
         Intent onClick = new Intent();
-        onClick.setClassName(Constants.APTOIDE_PACKAGE_NAME, Constants.APTOIDE_PACKAGE_NAME+".DownloadManager");
-        onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        onClick.setAction(Constants.APTOIDE_PACKAGE_NAME+".FROM_NOTIFICATION");
+        onClick.setClassName(getPackageName(), Constants.APTOIDE_PACKAGE_NAME+".DownloadManager");
+        //onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        onClick.setAction("");
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent onClickAction = PendingIntent.getActivity(this, 0, onClick, 0);
+
         mBuilder.setOngoing(true);
         mBuilder.setContentTitle(getString(R.string.aptoide_downloading, ApplicationAptoide.MARKETNAME))
                 .setContentText(getString(R.string.x_app, ongoingDownloads.size()))
                 .setSmallIcon(android.R.drawable.stat_sys_download);
         mBuilder.setContentIntent(onClickAction);
+
 
         updateProgress(mBuilder);
         return mBuilder;

@@ -37,6 +37,29 @@ public class HandlerUserBased extends DefaultHandler {
 
 	void loadSpecificElements() {
 
+        elements.put("cpu", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setCpuAbi(sb.toString());
+            }
+        });
+
+        elements.put("screenCompat", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setScreenCompat(sb.toString());
+            }
+        });
 		elements.put("apklst", new ElementHandler() {
 
 			@Override
@@ -115,31 +138,7 @@ public class HandlerUserBased extends DefaultHandler {
 			}
 		});
 
-		elements.put("path", new ElementHandler() {
 
-			@Override
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setPath(sb.toString());
-			}
-		});
-
-		elements.put("sz", new ElementHandler() {
-
-			@Override
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setSize(sb.toString());
-			}
-		});
 
 		elements.put("vercode", new ElementHandler() {
 
@@ -193,18 +192,6 @@ public class HandlerUserBased extends DefaultHandler {
 			}
 		});
 
-		elements.put("md5h", new ElementHandler() {
-
-			@Override
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setMd5(sb.toString());
-			}
-		});
 
 		elements.put("screen", new ElementHandler() {
 

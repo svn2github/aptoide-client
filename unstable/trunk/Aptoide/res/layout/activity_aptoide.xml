@@ -16,7 +16,7 @@
         android:id="@+id/actionbar"
         layout="@layout/actionbar" />
 
-    <cm.aptoide.com.viewpagerindicator.TitlePageIndicator
+    <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/indicator"
         style="?attr/viewPagerIndicatorBackground"
         android:layout_width="fill_parent"

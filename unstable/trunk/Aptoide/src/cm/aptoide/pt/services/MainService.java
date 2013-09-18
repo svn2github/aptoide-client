@@ -19,12 +19,14 @@ import android.database.Cursor;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.pt.*;
 import cm.aptoide.pt.Server.State;
 import cm.aptoide.pt.exceptions.AptoideException;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.util.RepoUtils;
+import cm.aptoide.pt.util.Utils;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -33,8 +35,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+
+
+
+
+
 public class MainService extends Service {
-//	Database db;
+
+
+
+
+    //	Database db;
 	private static boolean isParsing = false;
 	String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 	String defaultXmlPath = defaultPath+"/.aptoide/info.xml";
@@ -46,10 +57,17 @@ public class MainService extends Service {
 	static ArrayList<String> serversParsing = new ArrayList<String>();
 	private static final int ID_UPDATES_NOTIFICATION = 1;
 	private ArrayList<String> updatesList = new ArrayList<String>();
-	@Override
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        registerReceiver(receiver , new IntentFilter("complete"));
+        registerReceiver(parseCompletedReceiver , new IntentFilter("parse_completed"));
+    }
+
+    @Override
 	public IBinder onBind(Intent intent) {
-		registerReceiver(receiver , new IntentFilter("complete"));
-		registerReceiver(parseCompletedReceiver , new IntentFilter("parse_completed"));
 		return new LocalBinder();
 	}
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -71,8 +89,12 @@ public class MainService extends Service {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Cursor updates = Database.getInstance().getUpdates(Order.DATE);
-					setUpdatesNotification(updates);
+
+                    if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("showUpdatesNotification", true)){
+    					Cursor updates = Database.getInstance().getUpdates(Order.DATE);
+	    				setUpdatesNotification(updates);
+                    }
+
 				}
 			}).start();
 		}
@@ -108,12 +130,14 @@ public class MainService extends Service {
 //		}.start();
 //	}
 
-	public String get(Server server,String xmlpath,String what, boolean delta) throws MalformedURLException, IOException{
+	public String get(Server server,String xmlpath,String what, boolean delta) throws IOException{
 		getApplicationContext().sendBroadcast(new Intent("connecting"));
 		String hash = "";
-
+        server.name = RepoUtils.split(server.url);
 		if (delta&&server.hash.length() > 0) {
-			hash = "?hash=" + server.hash;
+			hash = "?hash=" + server.hash + ":"+ Utils.getMyCountryCode(getApplicationContext());
+            server.showError = false;
+            server.isDelta = false;
 		}
 		NetworkUtils utils = new NetworkUtils();
         Log.d("TAG", server.url + " " + server.getLogin().getUsername() + " " + server.getLogin().getPassword());
@@ -126,6 +150,10 @@ public class MainService extends Service {
 		System.out.println(server);
 		System.out.println(server.getClass().getCanonicalName());
 		File f = new File(xmlpath);
+
+        if (!f.getParentFile().exists()) {
+            f.getParentFile().mkdirs();
+        }
 		InputStream in = utils.getInputStream(
 				url,
 				server.getLogin().getUsername(),
@@ -225,6 +253,8 @@ public class MainService extends Service {
     @Override
 	public void onDestroy() {
 		unregisterReceiver(receiver);
+
+
 		unregisterReceiver(parseCompletedReceiver);
 		try{
 			File[] files = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide").listFiles();
@@ -267,7 +297,7 @@ public class MainService extends Service {
 		}
 	}
 
-	public void parseServer(final Database db, final Server server) throws MalformedURLException, IOException {
+	public void parseServer(final Database db, final Server server) throws  IOException {
 
 
 		if(!serversParsing.contains(server.url)){
@@ -291,7 +321,9 @@ public class MainService extends Service {
 						getApplicationContext().sendBroadcast(i);
 						serversParsing.remove(server.url);
 					}catch (IOException e){
-						server.state=State.FAILED;
+                        if(server.showError){
+                            server.state=State.FAILED;
+                        }
 						db.updateStatus(server);
 						serversParsing.remove(server.url);
 						e.printStackTrace();
@@ -485,28 +517,29 @@ public class MainService extends Service {
 
 	}
 
-	public void parseInfoXml(final Database db, final Server server) throws MalformedURLException, IOException{
-		String path = null;
-		path = get(server,defaultXmlPath,"info.xml",true);
+	public void parseInfoXml(final Database db, final Server server) throws IOException{
+
+        Log.d("TAG", "SERVER IS BARE: " + server.isBare);
+
+		String path = get(server,defaultXmlPath,"info.xml", !server.isBare);
 		RepoParser.getInstance(db).parseInfoXML(path,server);
-		parseExtras(server);
+		//parseExtras(server);
 	}
 
 	public void addStoreInfo(Database db, Server server) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(
-					String.format("http://webservices.aptoide.com/webservices/getRepositoryInfo/%s/json",
+			HttpURLConnection connection = (HttpURLConnection) new URL(String.format("http://webservices.aptoide.com/webservices/getRepositoryInfo/%s/json",
 							RepoUtils.split(server.url))).openConnection();
 			connection.connect();
 			int rc = connection.getResponseCode();
 			if (rc == 200) {
-				String line = null;
+				String line;
 				BufferedReader br = new BufferedReader(
 						new java.io.InputStreamReader(connection
 								.getInputStream()));
 				StringBuilder sb = new StringBuilder();
 				while ((line = br.readLine()) != null)
-					sb.append(line + '\n');
+					sb.append(line).append('\n');
 
 				JSONObject json = new JSONObject(sb.toString());
 				JSONObject array = json.getJSONObject("listing");
@@ -567,7 +600,7 @@ public class MainService extends Service {
 				}
 
 			}
-
+        updates.close();
 		}
 
 		if(isNotification){

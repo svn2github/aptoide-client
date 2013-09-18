@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.*;
+import android.provider.SearchRecentSuggestions;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,16 @@ public class Settings extends PreferenceActivity{
 			}
 		});
 
+        findPreference("clearsearch").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(Settings.this,
+                        RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
+                suggestions.clearHistory();
+                return false;
+            }
+        });
+
 //		Preference hwspecs = (Preference) findPreference("hwspecs");
 //		hwspecs.setIntent(new Intent(getBaseContext(), HWSpecActivity.class));
 		Preference hwSpecs = (Preference) findPreference("hwspecs");
@@ -90,12 +101,11 @@ public class Settings extends PreferenceActivity{
 					.setIcon(android.R.drawable.ic_menu_info_details)
 					.setMessage(getString(R.string.setting_sdk_version)+ ": "+HWSpecifications.getSdkVer()+"\n" +
 							    getString(R.string.setting_screen_size)+ ": "+HWSpecifications.getScreenSize(mctx)+"\n" +
-							    getString(R.string.setting_esgl_version)+ ": "+HWSpecifications.getEsglVer(mctx))
+							    getString(R.string.setting_esgl_version)+ ": "+HWSpecifications.getGlEsVer(mctx))
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok),new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int id) {
-							return;
-						}
+                        }
 					 });
 				AlertDialog alertDialog = alertDialogBuilder.create();
 				alertDialog.show();
@@ -159,6 +169,15 @@ public class Settings extends PreferenceActivity{
 			preferenceScreen.removePreference(preferenceGroup);
 
 		}
+
+
+        if(!ApplicationAptoide.DEBUG_MODE){
+            PreferenceScreen preferenceScreen = getPreferenceScreen();
+            Preference etp = (Preference) preferenceScreen.findPreference("devmode");
+            PreferenceGroup preferenceGroup = (PreferenceGroup) findPreference("devmode");
+            preferenceGroup.removePreference(etp);
+            preferenceScreen.removePreference(preferenceGroup);
+        }
 	}
 
 	public class DeleteDir extends AsyncTask<File, Void, Void>{

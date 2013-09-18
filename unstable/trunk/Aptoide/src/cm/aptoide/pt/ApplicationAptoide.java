@@ -29,23 +29,29 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
-import cm.aptoide.com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import cm.aptoide.com.nostra13.universalimageloader.core.DisplayImageOptions;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import cm.aptoide.com.nostra13.universalimageloader.core.assist.FlushedInputStream;
-import cm.aptoide.com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import cm.aptoide.com.nostra13.universalimageloader.core.download.ImageDownloader;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.preferences.ManagerPreferences;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.util.Constants;
 import cm.aptoide.pt.util.NetworkUtils;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FlushedInputStream;
+import com.nostra13.universalimageloader.core.assist.LoadedFrom;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import org.acra.ACRA;
+import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.xml.sax.Attributes;
@@ -56,12 +62,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 
 /**
  * ApplicationAptoide, centralizes, statically, calls to instantiated objects
@@ -76,6 +82,7 @@ import java.util.Locale;
 //        formUriBasicAuthPassword="",
    		formKey = "",
    		formUri = "http://acra.aptoide.com/acraaptoide",
+        customReportContent = { ReportField.APP_VERSION_NAME, ReportField.APP_VERSION_CODE, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,ReportField.STACK_TRACE, ReportField.LOGCAT, ReportField.INSTALLATION_ID, ReportField.USER_IP, ReportField.USER_COMMENT, ReportField.USER_CRASH_DATE },
         mode = ReportingInteractionMode.NOTIFICATION,
         resToastText = R.string.crash_dialog_title, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
         resNotifTickerText = R.string.crash_notif_ticker_text,
@@ -137,10 +144,21 @@ public class ApplicationAptoide extends Application {
 		ACRA.init(this);
 //
 
+
         startService(new Intent(this, ServiceManagerDownload.class));
 
 		AptoideThemePicker.setAptoideTheme(this);
 		setContext(getApplicationContext());
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//
+//                .build());
 
 
 
@@ -264,29 +282,52 @@ public class ApplicationAptoide extends Application {
 		}
 
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-															 .displayer(new FadeInBitmapDisplayer(1000))
+															 .displayer(new FadeInBitmapDisplayer(1000){
+                                                                 @Override
+                                                                 public Bitmap display(Bitmap bitmap, ImageView imageView, LoadedFrom loadedFrom) {
+                                                                     imageView.setImageBitmap(bitmap);
+
+                                                                     switch (loadedFrom){
+                                                                         case DISC_CACHE:
+                                                                         case NETWORK:
+                                                                             animate(imageView, 1000);
+                                                                             break;
+                                                                     }
+
+                                                                     return bitmap;    //To change body of overridden methods use File | Settings | File Templates.
+                                                                 }
+                                                             })
 															 .showStubImage(android.R.drawable.sym_def_app_icon)
 															 .resetViewBeforeLoading()
 															 .cacheInMemory()
+
 															 .cacheOnDisc()
 															 .build();
 
 		ImageLoaderConfiguration config;
 
-		if(DEBUG_MODE){
+        FileNameGenerator generator = new FileNameGenerator() {
+            @Override
+            public String generate(String s) {
+
+                if(s.contains("thumbs/mobile/")){
+                    return "mobile." + s.substring(s.lastIndexOf('/') + 1);
+                }
+
+                return s.substring(s.lastIndexOf('/') + 1);
+
+            }
+        };
+
+
+
 			config = new ImageLoaderConfiguration.Builder(getApplicationContext())
 																				  .defaultDisplayImageOptions(options)
-																				  .discCache(new UnlimitedDiscCache(new File(Environment.getExternalStorageDirectory().getPath()+"/.aptoide/icons/")))
-																				  .enableLogging()
+                                                                                  .discCache(new UnlimitedDiscCache(new File(AptoideConfiguration.getInstance().getPathCacheIcons()), generator))
 																				  .imageDownloader(new ImageDownloaderWithPermissions())
+
 																				  .build();
-		}else{
-			config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-																				  .defaultDisplayImageOptions(options)
-																				  .discCache(new UnlimitedDiscCache(new File(Environment.getExternalStorageDirectory().getPath()+"/.aptoide/icons/")))
-																				  .imageDownloader(new ImageDownloaderWithPermissions())
-																				  .build();
-		}
+
 
         ImageLoader.getInstance().init(config);
 
@@ -620,7 +661,7 @@ public class ApplicationAptoide extends Application {
 		return context;
 	}
 
-	public class ImageDownloaderWithPermissions extends ImageDownloader{
+	public class ImageDownloaderWithPermissions implements ImageDownloader{
 
 		/** {@value} */
 		public static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5 * 1000; // milliseconds
@@ -635,29 +676,30 @@ public class ApplicationAptoide extends Application {
 		}
 
 		public ImageDownloaderWithPermissions(int connectTimeout, int readTimeout) {
-			this.connectTimeout = connectTimeout;
+
+            this.connectTimeout = connectTimeout;
 			this.readTimeout = readTimeout;
 		}
 
 		@Override
-		public InputStream getStreamFromNetwork(URI imageUri) throws IOException {
+		public InputStream getStream(String imageUri, Object o) throws IOException {
 
 	        boolean download = NetworkUtils.isPermittedConnectionAvailable(context, managerPreferences.getIconDownloadPermissions());
 
-	        Log.d("AplicationAptoide", ""+download);
-	        Log.d("AplicationAptoide", ""+managerPreferences.getIconDownloadPermissions());
+
 
 	        if(download){
-	        	URLConnection conn = imageUri.toURL().openConnection();
+	        	URLConnection conn = new URL(imageUri).openConnection();
 				conn.setConnectTimeout(connectTimeout);
 				conn.setReadTimeout(readTimeout);
-				return new FlushedInputStream(new BufferedInputStream(conn.getInputStream(), BUFFER_SIZE));
+				return new FlushedInputStream(new BufferedInputStream(conn.getInputStream(), 8192));
 	        }else{
 	        	return null;
 	        }
 		}
 
-	}
+
+    }
 
 	/**
 	 * @param context the context to set

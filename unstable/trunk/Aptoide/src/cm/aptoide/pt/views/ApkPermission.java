@@ -1,5 +1,8 @@
 package cm.aptoide.pt.views;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -7,7 +10,7 @@ package cm.aptoide.pt.views;
  * Time: 15:52
  * To change this template use File | Settings | File Templates.
  */
-public class ApkPermission {
+public class ApkPermission implements Parcelable{
 
     private String name;
     private String description;
@@ -31,5 +34,17 @@ public class ApkPermission {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

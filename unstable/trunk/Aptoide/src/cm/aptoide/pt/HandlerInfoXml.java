@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +41,40 @@ public class HandlerInfoXml extends DefaultHandler {
 
 			}
 		});
+
+        elements.put("localize", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.getServer().coutriesPermitted = new ArrayList<String>(Arrays.asList(sb.toString().split(",")));
+            }
+        });
+
+        elements.put("cpu", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setCpuAbi(sb.toString());
+            }
+        });
+
+        elements.put("screenCompat", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setScreenCompat(sb.toString());
+            }
+        });
 
 		elements.put("repository", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -173,17 +209,6 @@ public class HandlerInfoXml extends DefaultHandler {
 			}
 		});
 
-		elements.put("path", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setPath(sb.toString());
-			}
-		});
-
 		elements.put("ver", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
 
@@ -231,16 +256,7 @@ public class HandlerInfoXml extends DefaultHandler {
 			}
 		});
 
-		elements.put("md5h", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
 
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setMd5(sb.toString());
-			}
-		});
 
 		elements.put("dwn", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -286,16 +302,7 @@ public class HandlerInfoXml extends DefaultHandler {
 			}
 		});
 
-		elements.put("sz", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
 
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.setSize(sb.toString());
-			}
-		});
 
 		elements.put("age", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -424,8 +431,6 @@ public class HandlerInfoXml extends DefaultHandler {
 
 		if (elementHandler != null) {
 			elementHandler.startElement(attributes);
-		} else {
-			System.out.println("Element not found:" + localName);
 		}
 	}
 
@@ -445,8 +450,6 @@ public class HandlerInfoXml extends DefaultHandler {
 
 		if (elementHandler != null) {
 			elementHandler.endElement();
-		} else {
-			System.out.println("Element not found:" + localName);
 		}
 	}
 

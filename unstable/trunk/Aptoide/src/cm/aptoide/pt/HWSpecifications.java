@@ -2,42 +2,19 @@ package cm.aptoide.pt;
 
 
 import android.app.ActivityManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 public class HWSpecifications{
 
 
-	public int sdkVer;
-	public int screenSize;
-	public String esglVer;
+    private static String cpuAbi2;
 
-
-	public HWSpecifications(Context context) {
-		// TODO Auto-generated constructor stub
-		//	switch (screenSizeInt) {
-		//	case 1:
-		//		this.screenSize="smallScreen";
-		//		break;
-		//	case 2:
-		//		this.screenSize="normalScreen";
-		//	break;
-		//	
-		//	case 3:
-		//		this.screenSize="largeScreen";
-		//		break;
-		//
-		//	default:
-		//		this.screenSize="Undefined Screen Size";
-		//		break;
-		//	}
-
-	}
-
-
-
-	/**
+    /**
 	 * @return the sdkVer
 	 */
 
@@ -52,12 +29,40 @@ public class HWSpecifications{
 		return context.getResources().getConfiguration().screenLayout&Configuration.SCREENLAYOUT_SIZE_MASK;
 	}
 
-	/**
-	 * @return the esglVer
-	 */
-	static public String getEsglVer(Context context) {
+    static public int getNumericScreenSize(Context context) {
+        int size = context.getResources().getConfiguration().screenLayout&Configuration.SCREENLAYOUT_SIZE_MASK;
+        return (size + 1) * 100;
+    }
+
+
+        /**
+         * @return the esglVer
+         */
+	static public String getGlEsVer(Context context) {
 		return ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
 	}
 
 
+    public static int getDensityDpi(Context context) {
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager manager = (WindowManager) context.getSystemService(Service.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(metrics);
+
+        return metrics.densityDpi;
+    }
+
+    public static String getCpuAbi() {
+        return Build.CPU_ABI;
+    }
+
+    public static String getCpuAbi2() {
+
+        if(getSdkVer()>=8 && !Build.CPU_ABI2.equals(Build.UNKNOWN)){
+            return Build.CPU_ABI2;
+        }else{
+            return "";
+        }
+
+    }
 }

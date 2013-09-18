@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import cm.aptoide.pt.util.Base64;
 import cm.aptoide.pt.util.Md5Handler;
 import cm.aptoide.pt.views.ViewApk;
@@ -154,6 +154,7 @@ public class ItemBasedApks {
 				while ((len = in.read(buffer)) != -1) {
 					out.write(buffer, 0, len);
 				}
+                in.close();
 				out.close();
 
 				String md5hash = Md5Handler.md5Calc(f);
@@ -238,7 +239,7 @@ public class ItemBasedApks {
 //				        	container.setVisibility(View.VISIBLE);
 				            LinearLayout txtSamItem = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.row_related_griditem, null);
 				           	((TextView) txtSamItem.findViewById(R.id.name)).setText(values.get(i).get("name"));
-				           	ImageLoader.getInstance().displayImage(values.get(i).get("icon"), (ImageView)txtSamItem.findViewById(R.id.icon), values.get(i).get("hashCode"));
+				           	ImageLoader.getInstance().displayImage(values.get(i).get("icon"), (ImageView)txtSamItem.findViewById(R.id.icon));
 //				           	float stars = 0f;
 //				           	try{
 //				           		stars = Float.parseFloat(values.get(i).get("rating"));

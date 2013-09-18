@@ -9,7 +9,7 @@ package cm.aptoide.pt;
 
 import android.os.Bundle;
 import android.widget.TextView;
-import cm.aptoide.com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 
 
 public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
@@ -39,7 +39,7 @@ public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
 
 		sdkVer.setText(HWSpecifications.getSdkVer()+"");
 		screenSize.setText(HWSpecifications.getScreenSize(this)+"");
-		esglVer.setText(HWSpecifications.getEsglVer(this));
+		esglVer.setText(HWSpecifications.getGlEsVer(this));
 
 
 	}
