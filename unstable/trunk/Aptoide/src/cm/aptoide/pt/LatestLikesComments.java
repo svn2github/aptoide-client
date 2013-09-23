@@ -11,6 +11,7 @@ package cm.aptoide.pt;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.DateTimeUtils;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.util.RepoUtils;
@@ -30,14 +31,13 @@ import java.util.Date;
 public class LatestLikesComments {
 
 	private String repoName;
-	private String endPointComments = "http://webservices.aptoide.com/webservices/listRepositoryComments/%s/json";
-	private String endPointLikes = "http://webservices.aptoide.com/webservices/listRepositoryLikes/%s/json";
+	private String endPointComments = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listRepositoryComments/%s/json";
+	private String endPointLikes = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listRepositoryLikes/%s/json";
 	private Context context;
 
 	public LatestLikesComments(long store_id, Database db, Context context) {
-		this.context=context;
+		this.context = context;
 		this.repoName = RepoUtils.split(db.getServer(store_id,false).url);
-
 	}
 
 	public Cursor getComments() {
@@ -97,7 +97,7 @@ public class LatestLikesComments {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line+"\n");
+                sb.append(line).append("\n");
             }
             br.close();
 

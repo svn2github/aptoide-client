@@ -22,7 +22,9 @@ import java.util.Map;
 
 public class HandlerInfoXml extends DefaultHandler {
 
-	interface ElementHandler {
+    private boolean multipleApk;
+
+    interface ElementHandler {
 		void startElement(Attributes atts) throws SAXException;
 		void endElement() throws SAXException;
 	}
@@ -170,16 +172,16 @@ public class HandlerInfoXml extends DefaultHandler {
 			}
 		});
 
-		elements.put("apkpath", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
-
-			}
-
-			@Override
-			public void endElement() throws SAXException {
-				apk.getServer().apkPath=sb.toString();
-			}
-		});
+//		elements.put("apkpath", new ElementHandler() {
+//			public void startElement(Attributes atts) throws SAXException {
+//
+//			}
+//
+//			@Override
+//			public void endElement() throws SAXException {
+//				apk.getServer().apkPath=sb.toString();
+//			}
+//		});
 
 		elements.put("package", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
@@ -188,26 +190,52 @@ public class HandlerInfoXml extends DefaultHandler {
 
 			@Override
 			public void endElement() throws SAXException {
-				if(isRemove){
-					db.remove(apk,apk.getServer());
-					isRemove=false;
-				}else{
-					db.insert(apk);
-				}
+                if (!multipleApk) {
+                    if (isRemove) {
+                        db.remove(apk, apk.getServer());
+                        isRemove = false;
+                    } else {
+                        db.insert(apk);
+                    }
+                }else{
+                    multipleApk = false;
+                }
 
 			}
 		});
+
+        elements.put("multipleapk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                multipleApk = true;
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+            }
+        });
+
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                    db.insert(apk);
+            }
+        });
 
 		elements.put("name", new ElementHandler() {
-			public void startElement(Attributes atts) throws SAXException {
+            public void startElement(Attributes atts) throws SAXException {
 
-			}
+            }
 
-			@Override
-			public void endElement() throws SAXException {
-				apk.setName(sb.toString());
-			}
-		});
+            @Override
+            public void endElement() throws SAXException {
+                apk.setName(sb.toString());
+            }
+        });
 
 		elements.put("ver", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {

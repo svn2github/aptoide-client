@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.webservices.login.Login;
 import com.paypal.android.MEP.PayPal;
@@ -41,15 +42,14 @@ public class Buy extends SherlockActivity {
 	String pakey;
 
 	int server = PayPal.ENV_LIVE;
-//	String appID = "APP-0WB20234R97894824";
     String appID = "APP-6027308829574225E";
 	String repo;
 	String apkid;
 	String versionName;
 	String userMail ;
 	String token ;
-	String url = ("http://webservices.aptoide.com/webservices/hasPurchaseAuthorization");
-	String urlPay = ("http://webservices.aptoide.com/webservices/payApk/");
+	String url = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/hasPurchaseAuthorization";
+	String urlPay = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/payApk/";
 //	String urlCheck = ("http://webservices.aptoide.com/webservices/checkPaidProduct/");
 //	String urlRedirect="http://www.sandbox.paypal.com/webscr?cmd=_ap-payment&paykey=";
 

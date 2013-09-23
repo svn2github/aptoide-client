@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.webservices.login.Login;
 import org.apache.http.HttpResponse;
@@ -36,12 +37,12 @@ public class CreditCard extends SherlockActivity {
 	String paykey;
 
 //	int server = PayPal.ENV_SANDBOX;
-	String appID = "APP-6027308829574225E";
+
 	String userMail;
 	String token;
 //	String url = ("http://webservices.aptoide.com/webservices/hasPurchaseAuthorization");
-	String urlPay = ("http://webservices.aptoide.com/webservices/payApk");
-	String urlCheck = ("http://webservices.aptoide.com/webservices/checkPaidProduct");
+	String urlPay = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/payApk";
+
 	//http://dev.aptoide.com/webservices/payApk/e8b1d6a4dd8b5351c823cd1af95243ed70e9ad3f4f5f2f9c0e89b/rui.mateus@caixamagica.pt/diogo/com.smedio.mediaplayer/1.05.7/completed_payment/json
 	String urlRedirect="https://www.paypal.com/webscr?cmd=_ap-payment&paykey=";
 //	String urlRedirect="https://www.paypal.com/webapps/adaptivepayment/flow/pay?expType=mini&paykey=";

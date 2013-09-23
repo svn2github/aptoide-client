@@ -63,6 +63,7 @@ public class DbStructure extends SQLiteOpenHelper {
     public static final String TABLE_FEATURED_TOP_APK_SCREEN_COMPAT = "featured_top_screen_compat";;
     public static final String TABLE_ITEMBASED_SCREEN_COMPAT = "itembased_screen_compat";
     public static final String TABLE_APK_SCREEN_COMPAT = "apk_screen_compat";
+    public static final String TABLE_SCHEDULED_PERMISSIONS = "scheduled_permissions";
 
 
 
@@ -129,6 +130,8 @@ public class DbStructure extends SQLiteOpenHelper {
     public static final String COLUMN_DENSITY = "density";
     public static final String COLUMN_CPU_ABI = "cpu_abi";
     public static final String COLUMN_IS_COMPATIBLE = "is_compatible";
+    public static final String COLUMN_PERMISSION = "permission";
+    public static final String COLUMN_REPO_NAME = "repo_name";
 
 
     public DbStructure(Context context) {
@@ -569,21 +572,12 @@ public class DbStructure extends SQLiteOpenHelper {
 
 
 		creator.newTable(TABLE_SCHEDULED).addColumn(new Column(SQLiteType.INTEGER, COLUMN__ID).setPrimaryKey())
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_NAME))
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_APKID))
+										 .addColumn(new Column(SQLiteType.TEXT, COLUMN_NAME))
+										 .addColumn(new Column(SQLiteType.TEXT, COLUMN_APKID))
 										 .addColumn(new Column(SQLiteType.INTEGER, COLUMN_VERCODE))
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_VERNAME))
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_REMOTE_PATH))
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_MD5))
-										 .addColumn(new Column(SQLiteType.TEXT,    COLUMN_ICON))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_MAINOBB_PATH))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_MAINOBB_MD5))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_MAINOBB_SIZE))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_MAINOBB_FILENAME))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_PATCHOBB_PATH))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_PATCHOBB_MD5))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_PATCHOBB_SIZE))
-                                         .addColumn(new Column(SQLiteType.TEXT,    COLUMN_PATCHOBB_FILENAME))
+										 .addColumn(new Column(SQLiteType.TEXT, COLUMN_VERNAME))
+										 .addColumn(new Column(SQLiteType.TEXT, COLUMN_REPO_NAME))
+										 .addColumn(new Column(SQLiteType.TEXT, COLUMN_ICON))
 										 .createTable();
 
 		creator.newTable(TABLE_EXCLUDED_APKID).addColumn(new Column(SQLiteType.TEXT, COLUMN_APKID))
@@ -619,7 +613,7 @@ public class DbStructure extends SQLiteOpenHelper {
 //		db.execSQL("create table userbasedapk (_id integer primary key, apkid text, vercode integer);");
 //		db.execSQL("create table scheduled (_id integer primary key, name text, apkid text, vercode integer, vername text, remotepath text, md5 text );");
 		db.execSQL("CREATE INDEX installed_index ON installed(apkid);");
-		db.execSQL("CREATE INDEX apk_index ON apk(apkid,vercode,category_2nd,repo_id);");
+		db.execSQL("CREATE INDEX apk_index ON apk(apkid,vercode,category_2nd,repo_id,name);");
 		db.execSQL("CREATE INDEX top_apk_index ON top_apk(apkid,vercode,repo_id);");
 		db.execSQL("CREATE INDEX latest_apk_index ON latest_apk(apkid,vercode,repo_id);");
 		db.execSQL("CREATE INDEX itembased_apk_index ON itembased_apk(apkid,vercode,repo_id);");

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeoutException;
@@ -51,8 +52,12 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
             Log.d("TAG", "Requesting auto-update from " +  url);
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 
-            parser.parse(new URL(url).openStream(),autoUpdateHandler);
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+
+            parser.parse(connection.getInputStream(),autoUpdateHandler);
             return autoUpdateHandler.getAutoUpdateInfo();
 
         } catch (ParserConfigurationException e) {

@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -21,9 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.views.ViewApk;
+import com.actionbarsherlock.app.SherlockActivity;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -145,63 +146,79 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
             startMarketIntent(param);
         }else{
 			if(ApplicationAptoide.SEARCHSTORES){
-				try{
-					System.out.println(getIntent().getDataString());
-					downloadMyappFile(getIntent().getDataString());
-					parseXmlMyapp(TMP_MYAPP_FILE);
-
-					if(app!=null&&!app.isEmpty()){
-						View simpleView = LayoutInflater.from(this).inflate(R.layout.dialog_simple_layout, null);
-						Builder dialogBuilder = new AlertDialog.Builder(this).setView(simpleView);
-						final AlertDialog installAppDialog = dialogBuilder.create();
-						installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
-						installAppDialog.setIcon(android.R.drawable.ic_menu_more);
-						installAppDialog.setCancelable(false);
-
-						TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-						message.setText(getString(R.string.installapp_alrt) +app.get("name")+"?");
-
-						installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								ViewApk apk = new ViewApk();
-								apk.setApkid(app.get("apkid"));
-								apk.setName(app.get("name"));
-								apk.setVercode(0);
-								apk.setVername("");
-								apk.generateAppHashid();
-                                apk.setMd5(app.get("md5sum"));
-                                apk.setPath(app.get("path"));
-
-                                apk.setMainObbUrl(app.get("main_path"));
-                                apk.setMainObbFileName(app.get("main_filename"));
-                                apk.setMainObbMd5(app.get("main_md5sum"));
-
-                                apk.setPatchObbUrl(app.get("patch_path"));
-                                apk.setPatchObbFileName(app.get("patch_filename"));
-                                apk.setPatchObbMd5(app.get("patch_md5sum"));
-
-								serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk),apk);
-								Toast toast = Toast.makeText(IntentReceiver.this, getString(R.string.starting_download), Toast.LENGTH_SHORT);
-	                            toast.show();
-							}
-						});
-						installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
-						installAppDialog.setOnDismissListener(this);
-						installAppDialog.show();
-
-					}else{
-						proceed();
-					}
-
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
+                new MyAppDownloader().execute(getIntent().getDataString());
 			}
 
 		}
 
 	}
+
+    class MyAppDownloader extends AsyncTask<String, Void, Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            try{
+                System.out.println(params[0]);
+                downloadMyappFile(params[0]);
+                parseXmlMyapp(TMP_MYAPP_FILE);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(app!=null&&!app.isEmpty()){
+                View simpleView = LayoutInflater.from(IntentReceiver.this).inflate(R.layout.dialog_simple_layout, null);
+                Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this).setView(simpleView);
+                final AlertDialog installAppDialog = dialogBuilder.create();
+                installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
+                installAppDialog.setIcon(android.R.drawable.ic_menu_more);
+                installAppDialog.setCancelable(false);
+
+                TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
+                message.setText(getString(R.string.installapp_alrt) +app.get("name")+"?");
+
+                installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        ViewApk apk = new ViewApk();
+                        apk.setApkid(app.get("apkid"));
+                        apk.setName(app.get("name"));
+                        apk.setVercode(0);
+                        apk.setVername("");
+                        apk.generateAppHashid();
+                        apk.setMd5(app.get("md5sum"));
+                        apk.setPath(app.get("path"));
+
+                        apk.setMainObbUrl(app.get("main_path"));
+                        apk.setMainObbFileName(app.get("main_filename"));
+                        apk.setMainObbMd5(app.get("main_md5sum"));
+
+                        apk.setPatchObbUrl(app.get("patch_path"));
+                        apk.setPatchObbFileName(app.get("patch_filename"));
+                        apk.setPatchObbMd5(app.get("patch_md5sum"));
+
+                        apk.setPermissionsList(new ArrayList<String>());
+
+                        serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk),apk);
+                        Toast toast = Toast.makeText(IntentReceiver.this, getString(R.string.starting_download), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+                installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
+                installAppDialog.setOnDismissListener(IntentReceiver.this);
+                installAppDialog.show();
+
+            }else{
+                proceed();
+            }
+        }
+    }
 
 	private void startMarketIntent(String param) {
 		System.out.println(param);

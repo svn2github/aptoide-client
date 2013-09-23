@@ -25,13 +25,15 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
     private final Context context;
     private final ServiceManagerDownload serviceDownloadManager;
     private final boolean showProgressDialog;
+
     ProgressDialog pd;
     private ViewApk apk;
 
-    public GetApkWebserviceInfo(Context context, ServiceManagerDownload serviceDownloadManager, boolean b){
+    public GetApkWebserviceInfo(Context context, ServiceManagerDownload serviceDownloadManager, boolean showProgress){
         this.context = context;
         this.serviceDownloadManager= serviceDownloadManager;
-        this.showProgressDialog = b;
+        this.showProgressDialog = showProgress;
+
     }
     @Override
     protected void onPreExecute() {
@@ -45,9 +47,12 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
 
     @Override
     protected WebserviceGetApkInfo doInBackground(Long... params) {
-        this.apk = Database.getInstance().getApk(params[0], Category.INFOXML);
+
+
+        this.apk = Database.getInstance().getApk((Long) params[0], Category.INFOXML);
+
         try {
-            return new WebserviceGetApkInfo(context, apk.getWebservicesPath(), apk, Category.INFOXML, null);
+            return new WebserviceGetApkInfo(context, apk.getWebservicesPath(), apk, Category.INFOXML, null, true);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -90,9 +95,10 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
             Toast toast = Toast.makeText(context, context.getString(R.string.starting_download) + ": " + apk.getName(), Toast.LENGTH_SHORT);
             toast.show();
+            serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
+
 
         }else{
             Toast toast = Toast.makeText(context, context.getString(R.string.an_error_check_net), Toast.LENGTH_SHORT);

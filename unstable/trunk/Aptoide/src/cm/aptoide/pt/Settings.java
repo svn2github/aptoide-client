@@ -15,21 +15,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.*;
 import android.provider.SearchRecentSuggestions;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.preferences.ManagerPreferences;
 
 import java.io.File;
 import java.text.DecimalFormat;
 
 public class Settings extends PreferenceActivity{
-	String aptoide_path = Environment.getExternalStorageDirectory()+"/.aptoide/";
-	String icon_path = Environment.getExternalStorageDirectory()+"/.aptoide/icons/";
+	String aptoide_path = AptoideConfiguration.getInstance().getPathCache();
+	String icon_path = aptoide_path + "icons/";
 	ManagerPreferences preferences;
 	Context mctx;
 	private boolean unlocked = false;
@@ -91,7 +91,7 @@ public class Settings extends PreferenceActivity{
 
 //		Preference hwspecs = (Preference) findPreference("hwspecs");
 //		hwspecs.setIntent(new Intent(getBaseContext(), HWSpecActivity.class));
-		Preference hwSpecs = (Preference) findPreference("hwspecs");
+		Preference hwSpecs = findPreference("hwspecs");
 		hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -120,7 +120,7 @@ public class Settings extends PreferenceActivity{
 			mCategory.removePreference(mCheckBoxPref);
 		}
 
-		Preference showExcluded = (Preference) findPreference("showexcludedupdates");
+		Preference showExcluded = findPreference("showexcludedupdates");
 		showExcluded.setIntent(new Intent(mctx, ExcludedUpdatesActivity.class));
 
 		EditTextPreference maxFileCache = (EditTextPreference) findPreference("maxFileCache");
@@ -136,7 +136,7 @@ public class Settings extends PreferenceActivity{
 		});
 
 
-		Preference about = (Preference) findPreference("aboutDialog");
+		Preference about = findPreference("aboutDialog");
 		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -162,7 +162,7 @@ public class Settings extends PreferenceActivity{
 
 		if(ApplicationAptoide.PARTNERID!=null){
 			PreferenceScreen preferenceScreen = getPreferenceScreen();
-			Preference etp = (Preference) preferenceScreen.findPreference("aboutDialog");
+			Preference etp = preferenceScreen.findPreference("aboutDialog");
 
 			PreferenceGroup preferenceGroup = (PreferenceGroup) findPreference("about");
 			preferenceGroup.removePreference(etp);
@@ -173,7 +173,7 @@ public class Settings extends PreferenceActivity{
 
         if(!ApplicationAptoide.DEBUG_MODE){
             PreferenceScreen preferenceScreen = getPreferenceScreen();
-            Preference etp = (Preference) preferenceScreen.findPreference("devmode");
+            Preference etp = preferenceScreen.findPreference("devmode");
             PreferenceGroup preferenceGroup = (PreferenceGroup) findPreference("devmode");
             preferenceGroup.removePreference(etp);
             preferenceScreen.removePreference(preferenceGroup);
@@ -263,14 +263,13 @@ public class Settings extends PreferenceActivity{
 	      if (files == null) {
 	          return true;
 	      }
-	      for(int i=0; i<files.length; i++) {
-	         if(files[i].isDirectory()) {
-	           deleteDirectory(files[i]);
-	         }
-	         else {
-	           files[i].delete();
-	         }
-	      }
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
+                } else {
+                    file.delete();
+                }
+            }
 	    }
 	    return true ;
 	  }

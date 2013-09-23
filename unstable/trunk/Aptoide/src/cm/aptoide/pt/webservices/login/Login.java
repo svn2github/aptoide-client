@@ -397,15 +397,13 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 
 		String responseText = EntityUtils.toString(entity);
 		final JSONObject json = new JSONObject(responseText);
-		if (json.has("errors")) {
+        if (!json.has("errors")) {
+            Editor sPrefeditor = sPref.edit();
+            sPrefeditor.putString(Configs.LOGIN_USER_USERNAME, name);
+            sPrefeditor.commit();
+        }
 
-		} else {
-			Editor sPrefeditor = sPref.edit();
-			sPrefeditor.putString(Configs.LOGIN_USER_USERNAME, name);
-			sPrefeditor.commit();
-		}
-
-	}
+    }
 
 //	@Override
 //	public boolean onOptionsItemSelected(MenuItem item) {

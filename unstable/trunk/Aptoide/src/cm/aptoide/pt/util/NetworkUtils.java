@@ -49,11 +49,10 @@ public class NetworkUtils {
         connection.setConnectTimeout(TIME_OUT);
         connection.setReadTimeout(TIME_OUT);
 		connection.setRequestProperty("User-Agent", getUserAgentString(mctx));
-        System.out.println("Using user-agent: " + (getUserAgentString(mctx)));
 		BufferedInputStream bis = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 
-//		if(ApplicationAptoide.DEBUG_MODE)
-            Log.i("Aptoide-NetworkUtils", "Getting: "+url);
+		if(ApplicationAptoide.DEBUG_MODE)
+            ApplicationAptoide.log.info("Getting: "+url);
 
 		return bis;
 
@@ -75,7 +74,7 @@ public class NetworkUtils {
 								Base64.NO_WRAP));
 				client.setRequestProperty("Authorization", basicAuth);
 			}
-            client.setRequestMethod("HEAD");
+            client.setRequestMethod("GET");
 			client.setConnectTimeout(TIME_OUT);
 			client.setReadTimeout(TIME_OUT);
 			if(ApplicationAptoide.DEBUG_MODE)Log.i("Aptoide-NetworkUtils-checkServerConnection", "Checking on: "+client.getURL().toString());
@@ -158,25 +157,25 @@ public class NetworkUtils {
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
 				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wifi: "+connectionAvailable);
-			} catch (Exception e) { }
+			} catch (Exception ignore) { }
 		}
 		if(permissions.isWiMax()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(6).getState() == NetworkInfo.State.CONNECTED;
 				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wimax: "+connectionAvailable);
-			} catch (Exception e) { }
+			} catch (Exception ignore) { }
 		}
 		if(permissions.isMobile()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED;
 				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable mobile: "+connectionAvailable);
-			} catch (Exception e) { }
+			} catch (Exception ignore) { }
 		}
 		if(permissions.isEthernet()){
 			try {
 				connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(9).getState() == NetworkInfo.State.CONNECTED;
 				//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable ethernet: "+connectionAvailable);
-			} catch (Exception e) { }
+			} catch (Exception ignore) { }
 		}
 
 		//if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable: "+connectionAvailable+"  permissions: "+permissions);
@@ -188,8 +187,6 @@ public class NetworkUtils {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         long lastModified = connection.getLastModified();
         connection.disconnect();
-
-
         return lastModified;
 
     }

@@ -418,5 +418,6 @@
     <string name="store_already_added">Store already added!</string>
     <string name="dev_mode">Developer Mode</string>
     <string name="clearsearch_title">Clear search history</string>
+    <string name="updating">Updating all apps</string>
 
 </resources>

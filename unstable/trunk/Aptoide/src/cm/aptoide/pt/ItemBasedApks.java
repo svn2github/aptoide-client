@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Base64;
 import cm.aptoide.pt.util.Md5Handler;
 import cm.aptoide.pt.views.ViewApk;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -103,9 +103,9 @@ public class ItemBasedApks {
 
 
 	public class ItemBasedParser extends AsyncTask<String, Void, ArrayList<HashMap<String, String>> >{
-		private String xmlpath = Environment.getExternalStorageDirectory()+"/.aptoide/itembasedapks.xml";
-		private String url = "http://webservices.aptoide.com/webservices/listItemBasedApks/%s/10/%s/xml";
-		private boolean inTransaction = false;
+		private String xmlpath = AptoideConfiguration.getInstance().getPathCache() + "itembasedapks.xml";
+		private String url = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listItemBasedApks/%s/10/%s/xml";
+
 
 
 		@Override
@@ -113,7 +113,7 @@ public class ItemBasedApks {
 			super.onPreExecute();
 			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			lp.gravity=Gravity.CENTER_HORIZONTAL;
-			((LinearLayout) container).addView(pb,lp);
+			container.addView(pb, lp);
 			pb.setVisibility(View.VISIBLE);
 
 		}
@@ -159,19 +159,14 @@ public class ItemBasedApks {
 
 				String md5hash = Md5Handler.md5Calc(f);
 //				Database.database.beginTransaction();
-				inTransaction = true;
+
 				if(!md5hash.equals(db.getItemBasedApksHash(apkid))){
 					db.deleteItemBasedApks(parent_apk);
-					System.out.println("Old md5" + db.getItemBasedApksHash(apkid));
-					System.out.println("Inserting New md5" + md5hash);
 					db.insertItemBasedApkHash(md5hash,apkid);
 					SAXParserFactory factory = SAXParserFactory.newInstance();
 					SAXParser parser = factory.newSAXParser();
 					parser.parse(f, new HandlerItemBased(parent_apk));
-//					if(inTransaction ){
-//						Database.database.setTransactionSuccessful();
-//						Database.database.endTransaction();
-//					}
+
 					return db.getItemBasedApks(apkid);
 				}
 
@@ -189,12 +184,9 @@ public class ItemBasedApks {
 			} finally{
 				f.delete();
 			}
-//			if(inTransaction ){
-//				Database.database.setTransactionSuccessful();
-//				Database.database.endTransaction();
-//			}
+
 			return null;
-		};
+		}
 
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> values) {

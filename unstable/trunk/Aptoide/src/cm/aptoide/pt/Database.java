@@ -43,7 +43,7 @@ public class Database  {
     private final static int sdk = HWSpecifications.getSdkVer();
     private final static String gles = HWSpecifications.getGlEsVer(context);
     private final static int screen = HWSpecifications.getScreenSize(context);
-    private final static String screenSpec = HWSpecifications.getNumericScreenSize(context)+ "/" + HWSpecifications.getDensityDpi(context);
+    private final static String screenSpec = "400"+ "/" + "160";
     private final static String cpu = HWSpecifications.getCpuAbi();
     private final static String cpu2 = HWSpecifications.getCpuAbi2();
 
@@ -51,6 +51,7 @@ public class Database  {
     private Database() {
         DbStructure dbhandler = new DbStructure(context);
 		database = dbhandler.getWritableDatabase();
+        database.execSQL("ANALYZE");
 
 	}
 
@@ -329,6 +330,61 @@ public class Database  {
 
     }
 
+    public void invalidateTimestampCache() {
+
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.COLUMN_HASH, "0");
+        database.update(DbStructure.TABLE_FEATURED_TOP_REPO,values, null, null);
+        database.update(DbStructure.TABLE_HASHES ,values, "apkid = ?", new String[]{"editorschoice"});
+
+    }
+
+    public void invalidateApkCache() {
+
+        database.delete(DbStructure.TABLE_APK_CACHE, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_CACHE, null, null);
+        database.delete(DbStructure.TABLE_TOP_CACHE, null, null);
+        database.delete(DbStructure.TABLE_LATEST_CACHE, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_TOP_CACHE, null, null);
+        database.delete(DbStructure.TABLE_ITEMBASED_CACHE, null, null);
+        database.delete(DbStructure.TABLE_COMMENTS_CACHE, null, null);
+        
+    }
+
+    public void invalidateFeatured() {
+
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_CACHE, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREENSHOTS, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_REPO, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREEN_COMPAT, null, null);
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.COLUMN_HASH, "0");
+        database.update(DbStructure.TABLE_HASHES ,values, "apkid = ?", new String[]{"editorschoice"});
+
+
+        database.delete(DbStructure.TABLE_FEATURED_TOP_APK, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_TOP_CACHE, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_TOP_SCREENSHOTS, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_TOP_REPO, null, null);
+        database.delete(DbStructure.TABLE_FEATURED_TOP_APK_SCREEN_COMPAT, null, null);
+
+    }
+
+    public ArrayList<String> getScheduledPermissionsList(String id) {
+
+        ArrayList<String> permissions = new ArrayList<String>();
+
+        Cursor c = database.query(DbStructure.TABLE_SCHEDULED_PERMISSIONS, new String[]{DbStructure.COLUMN_PERMISSION}, "_id = ?", new String[]{id},null,null,null);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            permissions.add(c.getString(0));
+        }
+        c.close();
+
+        return permissions;
+    }
+
     private static class SingletonHolder {
 		public static final Database INSTANCE = new Database();
 	}
@@ -360,40 +416,44 @@ public class Database  {
 
     private void insertScreenCompat(ViewApk apk, Category category) {
 
-        String[] screenCompat = apk.getScreenCompat().split("/");
-        int screen = Integer.parseInt(screenCompat[0]);
-        int density = Integer.parseInt(screenCompat[1]);
+        for(String screens : apk.getScreenCompat().split(",")){
+            String[] screenCompat = screens.split("/");
+            int screen = Integer.parseInt(screenCompat[0]);
+            int density = Integer.parseInt(screenCompat[1]);
+            ContentValues values = new ContentValues();
+            values.put(DbStructure.COLUMN__ID, apk.getId());
+            values.put(DbStructure.COLUMN_SCREEN, screen);
+            values.put(DbStructure.COLUMN_DENSITY, density);
 
-        ContentValues values = new ContentValues();
-        values.put(DbStructure.COLUMN__ID, apk.getId());
-        values.put(DbStructure.COLUMN_SCREEN, screen);
-        values.put(DbStructure.COLUMN_DENSITY, density);
+            switch (category) {
+                case TOP:
+                    database.insert(DbStructure.TABLE_TOP_APK_SCREEN_COMPAT, null, values);
+                    break;
+                case LATEST:
+                    database.insert(DbStructure.TABLE_LATEST_APK_SCREEN_COMPAT, null, values);
+                    break;
+                case TOPFEATURED:
+                    database.insert(DbStructure.TABLE_FEATURED_TOP_APK_SCREEN_COMPAT, null, values);
+                    break;
+                case EDITORSCHOICE:
+                    database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREEN_COMPAT, null, values);
+                    break;
+                case INFOXML:
+                    database.insert(DbStructure.TABLE_APK_SCREEN_COMPAT, null, values);
+                    break;
+                case USERBASED:
+                case ITEMBASED:
+                    database.insert(DbStructure.TABLE_ITEMBASED_SCREEN_COMPAT, null, values);
+                    break;
+                default:
+                    break;
 
-        switch (category) {
-            case TOP:
-                database.insert(DbStructure.TABLE_TOP_APK_SCREEN_COMPAT, null, values);
-                break;
-            case LATEST:
-                database.insert(DbStructure.TABLE_LATEST_APK_SCREEN_COMPAT, null, values);
-                break;
-            case TOPFEATURED:
-                database.insert(DbStructure.TABLE_FEATURED_TOP_APK_SCREEN_COMPAT, null, values);
-                break;
-            case EDITORSCHOICE:
-                database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_SCREEN_COMPAT, null, values);
-                break;
-            case INFOXML:
-                database.insert(DbStructure.TABLE_APK_SCREEN_COMPAT, null, values);
-                break;
-            case USERBASED:
-            case ITEMBASED:
-                database.insert(DbStructure.TABLE_ITEMBASED_SCREEN_COMPAT, null, values);
-                break;
-            default:
-                break;
-
+            }
+            yield();
         }
-        yield();
+
+
+
 
     }
 
@@ -419,7 +479,7 @@ public class Database  {
 		long id = database.insert(DbStructure.TABLE_FEATURED_EDITORSCHOICE_APK,null, values);
 		apk.setId(id);
         if(apk.getScreenCompat()!=null){
-            insertScreenCompat(apk, Category.TOPFEATURED);
+            insertScreenCompat(apk, Category.EDITORSCHOICE);
         }
 		insertScreenshots(apk, Category.EDITORSCHOICE);
 	}
@@ -438,7 +498,7 @@ public class Database  {
 			insertDynamicCategories(apk, Category.LATEST);
 			apk.setId(id);
             if(apk.getScreenCompat()!=null){
-                insertScreenCompat(apk, Category.TOPFEATURED);
+                insertScreenCompat(apk, Category.LATEST);
             }
 			insertScreenshots(apk, Category.LATEST);
 		} catch (Exception e) {
@@ -460,7 +520,7 @@ public class Database  {
 			insertDynamicCategories(apk, Category.TOP);
 			apk.setId(id);
             if(apk.getScreenCompat()!=null){
-                insertScreenCompat(apk, Category.TOPFEATURED);
+                insertScreenCompat(apk, Category.TOP);
             }
 			insertScreenshots(apk, Category.TOP);
 			i++;
@@ -489,11 +549,17 @@ public class Database  {
 				context.sendBroadcast(i);
 			}
         if(apk.getScreenCompat()!=null){
-            insertScreenCompat(apk, Category.TOPFEATURED);
+            insertScreenCompat(apk, Category.INFOXML);
         }
 	}
 
     private boolean isCompatible(ViewApk apk) {
+
+        if(apk.getCpuAbi()!=null){
+            Log.d("Tag", cpu);
+            Log.d("Tag", cpu2);
+            Log.d("Tag", apk.getCpuAbi());
+        }
 
         return Integer.parseInt(apk.getMinSdk()) <= sdk &&
                apk.getMinScreen() <= screen &&
@@ -735,14 +801,21 @@ public class Database  {
 				break;
 			}
 
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("hwspecsChkBox", true)) {
+                order_string += ", CASE WHEN a.cpu_abi LIKE '%" + cpu + "%' THEN 1 WHEN a.cpu_abi LIKE '%" + cpu2 + "%' THEN 2 ELSE 3 END asc";
+            }
+
+
 			String filter = filters("a");
+
+
 
 			if (allApps) {
 				if (mergeStores) {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where vercode = (select max(vercode) from apk as b where a.apkid=b.apkid "+filters("b")+") and a.repo_id = c._id and minsdk = (select max(minsdk) from apk as b where a.apkid=b.apkid "+filters("b")+")"
 											+ filter
 											+ " group by apkid "
 											+ order_string, null);
@@ -751,7 +824,7 @@ public class Database  {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where repo_id = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c  where repo_id = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid "+filters("b")+" order by vercode asc) and a.repo_id = c._id and minsdk = (select max(minsdk) from apk as b where a.apkid=b.apkid "+filters("b")+") "
 											+ filter
 											+ " group by apkid "
 											+ order_string,
@@ -763,7 +836,7 @@ public class Database  {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads,a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where category_2nd = ? and vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads,a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c  where category_2nd = ? and vercode = (select max(vercode) from apk as b where a.apkid=b.apkid "+filters("b")+" ) and a.repo_id = c._id and minsdk = (select max(minsdk) from apk as b where a.apkid=b.apkid "+filters("b")+") "
 											+ filter
 											+ " group by apkid "
 											+ order_string,
@@ -773,7 +846,7 @@ public class Database  {
 
 					c = database
 							.rawQuery(
-									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c left join apk_screen_compat as d on a._id = d._id where repo_id = ? and category_2nd = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid order by vercode asc) and a.repo_id = c._id "
+									"select a._id as _id, a.name, a.vername, a.repo_id, a.icon as imagepath, a.rating, a.downloads, a.apkid as apkid, a.vercode as vercode, c.iconspath as iconspath from apk as a, repo as c where repo_id = ? and category_2nd = ? and vercode in (select vercode from apk as b where a.apkid=b.apkid "+filters("b")+" order by vercode asc) and a.repo_id = c._id and minsdk = (select max(minsdk) from apk as b where a.apkid=b.apkid "+filters("b")+") "
 											+ filter
 											+ " group by apkid "
 											+ order_string, new String[] {
@@ -781,6 +854,9 @@ public class Database  {
 
 				}
 			}
+
+
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1295,8 +1371,8 @@ public class Database  {
 
 			String filter = filters("b");
 
-			String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid,b.vercode as vercode, c.iconspath as iconspath, b.md5, c.apkpath, b.remote_path from installed as a, apk as b, repo as c left join apk_screen_compat as d on b._id = d._id"
-					+ " where a.apkid=b.apkid and b.vercode > a.vercode and b.vercode = (select max(vercode) from apk as b where a.apkid=b.apkid) and b.repo_id = c._id and not exists (select 1 from excluded_apkid as d where b.apkid = d.apkid and b.vercode = d.vercode ) "
+			String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid,b.vercode as vercode, c.iconspath as iconspath, b.md5, c.apkpath, b.remote_path from installed as a, apk as b, repo as c "
+					+ " where a.apkid=b.apkid and b.vercode > a.vercode and b.vercode = (select max(vercode) from apk as b where a.apkid=b.apkid "+filters("b")+") and b.repo_id = c._id and not exists (select 1 from excluded_apkid as d where b.apkid = d.apkid and b.vercode = d.vercode ) "
 					+ filter + " group by a.apkid";
 
 			query = orderBy(order, query);
@@ -1342,7 +1418,8 @@ public class Database  {
 		default:
 			break;
 		}
-		return query;
+
+		return query + ", CASE WHEN b.cpu_abi LIKE '%" + cpu + "%' THEN 1 WHEN b.cpu_abi LIKE '%" + cpu2 + "%' THEN 2 ELSE 3 END asc";
 	}
 
 	public void updateStatus(Server server) {
@@ -1448,8 +1525,8 @@ public class Database  {
 	}
 
 	public void remove(ViewApk apk, Server server) {
-		database.delete(DbStructure.TABLE_APK, "repo_id = ? and apkid=?",
-				new String[] { server.id + "", apk.getApkid() });
+		database.delete(DbStructure.TABLE_APK, "repo_id = ? and apkid = ? and vercode = ?",
+				new String[] { server.id + "", apk.getApkid(), String.valueOf(apk.getVercode())});
 	}
 
 	public String getIconsPath(long repo_id, Category category) {
@@ -2136,27 +2213,27 @@ public class Database  {
 						DbStructure.COLUMN_VERNAME, "repo_id" });
 		yield();
 		try {
-			c = database.query(DbStructure.TABLE_APK, new String[] {
+            String order_string = "vercode desc";
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("hwspecsChkBox", true)) {
+                order_string += ", CASE WHEN a.cpu_abi LIKE '%" + cpu + "%' THEN 1 WHEN a.cpu_abi LIKE '%" + cpu2 + "%' THEN 2 ELSE 3 END asc";
+            }
+			c = database.query(DbStructure.TABLE_APK +" as a", new String[] {
 					DbStructure.COLUMN__ID, DbStructure.COLUMN_APKID,
 					DbStructure.COLUMN_VERNAME, DbStructure.COLUMN_REPO_ID },
-					"apkid = ? and repo_id != ?", new String[] { apkid,
-							repo_id + "" }, null, null, "vercode desc");
+					"apkid = ? and vername = ? "+filters("a"), new String[] { apkid,
+							vername + "" }, null, null, order_string);
 
-			mc.newRow().add(id).add(apkid).add(vername).add(repo_id);
-
-			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-				mc.newRow().add(c.getString(0)).add(c.getString(1))
-						.add(c.getString(2)).add(c.getString(3));
-			}
+//			mc.newRow().add(id).add(apkid).add(vername).add(repo_id);
+//
+//			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+//				mc.newRow().add(c.getString(0)).add(c.getString(1))
+//						.add(c.getString(2)).add(c.getString(3));
+//			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-		return mc;
+		}
+		return c;
 	}
 
     public String getWebServicesPath(long repo_id, Category category) {
@@ -2699,7 +2776,7 @@ public class Database  {
 		return c;
 	}
 
-    public boolean isScheduledDownloas(ViewApk apk) {
+    public boolean isScheduledDownload(ViewApk apk) {
 
         Cursor c = null;
         yield();
@@ -2720,7 +2797,7 @@ public class Database  {
     }
 
 	public void insertScheduledDownload(String apkid, int vercode,
-			String vername, String remotePath, String name, String md5, String icon, String mainObbPath, String mainObbMd5sum, String mainObbFilename, String patchObbPath, String patchObbMd5sum, String patchObbFilename) {
+                                        String vername, String repoName, String name, String icon) {
 
 		Cursor c = database.query(DbStructure.TABLE_SCHEDULED, null,
 				"apkid = ? and vercode = ?",
@@ -2735,26 +2812,19 @@ public class Database  {
 		ContentValues values = new ContentValues();
 		values.put(DbStructure.COLUMN_NAME, name);
 		values.put(DbStructure.COLUMN_APKID, apkid);
-		values.put(DbStructure.COLUMN_MD5, md5);
 		values.put(DbStructure.COLUMN_VERCODE, vercode);
 		values.put(DbStructure.COLUMN_VERNAME, vername);
-		values.put(DbStructure.COLUMN_REMOTE_PATH, remotePath);
+		values.put(DbStructure.COLUMN_REPO_NAME, repoName);
 		values.put(DbStructure.COLUMN_ICON, icon);
-        values.put(DbStructure.COLUMN_MAINOBB_FILENAME, mainObbFilename);
-        values.put(DbStructure.COLUMN_MAINOBB_MD5, mainObbMd5sum);
-        values.put(DbStructure.COLUMN_MAINOBB_PATH, mainObbPath);
-        values.put(DbStructure.COLUMN_PATCHOBB_FILENAME, patchObbFilename);
-        values.put(DbStructure.COLUMN_PATCHOBB_MD5, patchObbMd5sum);
-        values.put(DbStructure.COLUMN_PATCHOBB_PATH, patchObbPath);
 
+		long id = database.insert(DbStructure.TABLE_SCHEDULED, null, values);
 
-		database.insert(DbStructure.TABLE_SCHEDULED, null, values);
 
 	}
 
-	public void deleteScheduledDownload(String planet) {
+	public void deleteScheduledDownload(String id) {
 		database.delete(DbStructure.TABLE_SCHEDULED, "_id = ?",
-				new String[] { planet });
+				new String[] { id });
 	}
 
 	public void deleteScheduledDownload(String apkid, String versionName) {
@@ -2780,14 +2850,18 @@ public class Database  {
 
 	public Cursor getSearch(String searchQuery) {
 		yield();
+
+        String orderString = "";
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("hwspecsChkBox", true)) {
+            orderString += ", CASE WHEN b.cpu_abi LIKE '%" + cpu + "%' THEN 1 WHEN b.cpu_abi LIKE '%" + cpu2 + "%' THEN 2 ELSE 3 END asc";
+        }
+
 		String query = "select b._id as _id, b.name,b.vername,b.repo_id,b.icon as imagepath,b.rating,b.downloads,b.apkid as apkid ,b.vercode as vercode, c.iconspath as iconspath from apk as b, repo as c left outer join apk_cache as a on b._id = a._id left join featured_editorschoice_screen_compat as d on d._id=b._id where (b.name LIKE '%"
 				+ searchQuery
 				+ "%' OR b.apkid LIKE '%"
 				+ searchQuery
 				+ "%') and b.repo_id = c._id "
-                + filters("b") + " order by CASE WHEN a.malware_status='scanned' THEN 1 ELSE 2 END asc, b.downloads desc";
-
-
+                + filters("b") + "group by b.apkid, b.vername order by CASE WHEN a.malware_status='scanned' THEN 1 ELSE 2 END asc, b.downloads desc " + orderString ;
 
 
 		Cursor c = null;

@@ -21,17 +21,7 @@ public class ViewComments extends SherlockActivity /*SherlockActivity */{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.list_all_comments);
-//		getSupportActionBar().hide();
 		Comments comments = new Comments(this, getIntent().getStringExtra("webservicespath"));
 		comments.getComments(getIntent().getStringExtra("repo"), getIntent().getStringExtra("apkid"), getIntent().getStringExtra("vername"), (LinearLayout) findViewById(R.id.container),true);
 	}
-
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		if (item.getItemId() == android.R.id.home) {
-//			finish();
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
 }

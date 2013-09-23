@@ -23,4 +23,7 @@ public class Defaults {
     public static final String PATH_CACHE_ICONS  = PATH_CACHE + "icons/";
 
     public static final boolean ALWAYS_UPDATE = false;
+    public static final String EDITORS_PATH = "editors.xml";
+    public static final String TOP_PATH = "top.xml";
+    public static final String DEFAULT_STORE = "apps";
 }

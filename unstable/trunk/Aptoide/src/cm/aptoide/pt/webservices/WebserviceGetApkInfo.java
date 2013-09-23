@@ -37,7 +37,7 @@ public class WebserviceGetApkInfo {
     JSONObject response;
 
 
-    //"getApkInfo/<repo>/<apkid>/<apkversion>/options=(<options>)/<mode>";
+    //For reference: getApkInfo/<repo>/<apkid>/<apkversion>/options=(<options>)/<mode>;
     String defaultWebservice = AptoideConfiguration.getInstance().getWebServicesUri();
     private ArrayList<Comment> comments;
     private boolean seeAll = false;
@@ -45,7 +45,7 @@ public class WebserviceGetApkInfo {
 
 
 
-    public WebserviceGetApkInfo(Context context, String webservice,ViewApk apk, Category category, String token) throws IOException, JSONException {
+    public WebserviceGetApkInfo(Context context, String webservice, ViewApk apk, Category category, String token, boolean cacheData) throws IOException, JSONException {
         this.context = context;
 
         StringBuilder url = new StringBuilder();
@@ -99,68 +99,69 @@ public class WebserviceGetApkInfo {
         Log.e("RESPONSE",sb.toString());
         response = new JSONObject(sb.toString());
 
+        if (cacheData) {
+            try {
+                comments = getComments();
+                Database database = Database.getInstance();
 
-        try {
-            comments = getComments();
-            Database database = Database.getInstance();
-
-            Log.d("WebserviceGetApkInfo", comments.size()+"");
-
-
-            if(category.equals(Category.INFOXML)){
-                JSONArray screenshots = getScreenshots();
+                Log.d("WebserviceGetApkInfo", comments.size() + "");
 
 
-                ArrayList<String> loadedScreenshots =  apk.getScreenshots();
+                if (category.equals(Category.INFOXML)) {
+                    JSONArray screenshots = getScreenshots();
 
 
-                for(int i = 0; i != screenshots.length(); i++){
-                    if(!loadedScreenshots.contains(screenshots.getString(i))){
-                        apk.getScreenshots().clear();
-                        for(int j = 0; j != screenshots.length(); j++){
-                            apk.getScreenshots().add(screenshots.getString(j));
+                    ArrayList<String> loadedScreenshots = apk.getScreenshots();
+
+
+                    for (int i = 0; i != screenshots.length(); i++) {
+                        if (!loadedScreenshots.contains(screenshots.getString(i))) {
+                            apk.getScreenshots().clear();
+                            for (int j = 0; j != screenshots.length(); j++) {
+                                apk.getScreenshots().add(screenshots.getString(j));
+                            }
+                            Database.getInstance().insertScreenshots(apk, category);
+                            screenshotChanged = true;
+                            break;
                         }
-                        Database.getInstance().insertScreenshots(apk,category);
-                        screenshotChanged = true;
-                        break;
                     }
+
+                    Log.d("WebserviceGetApkInfo", loadedScreenshots.toString());
+                    Log.d("WebserviceGetApkInfo", screenshots.toString());
+
+
                 }
 
-                Log.d("WebserviceGetApkInfo", loadedScreenshots.toString());
-                Log.d("WebserviceGetApkInfo", screenshots.toString());
+                ContentValues values = new ContentValues();
+                values.put("apkid", apk.getApkid());
+                values.put("comment", getDescription());
+                context.getContentResolver().insert(ExtrasContentProvider.CONTENT_URI, values);
 
+                database.deleteCommentsCache(apk.getId(), category);
+                for (Comment comment : comments) {
+                    database.insertComment(apk.getId(), comment, category);
+                }
+                database.insertLikes(getLikes(), category, apk.getId());
+                database.insertMalwareInfo(getMalwareInfo(), category, apk.getId());
+                if (hasOBB()) {
+                    JSONObject mainObb = getMainOBB();
+                    database.insertMainObbInfo(mainObb.getString("path"), mainObb.getString("md5sum"), mainObb.getString("filesize"), mainObb.getString("filename"), apk.getId(), category);
 
-            }
+                    if (hasPatchOBB()) {
+                        JSONObject patchObb = getPatchOBB();
+                        database.insertPatchObbInfo(patchObb.getString("path"), patchObb.getString("md5sum"), patchObb.getString("filesize"), patchObb.getString("filename"), apk.getId(), category);
+                    }
 
-            ContentValues values = new ContentValues();
-            values.put("apkid", apk.getApkid());
-            values.put("comment", getDescription());
-            context.getContentResolver().insert(ExtrasContentProvider.CONTENT_URI, values);
-
-            database.deleteCommentsCache(apk.getId(), category);
-            for(Comment comment: comments){
-                database.insertComment(apk.getId(),comment,category);
-            }
-            database.insertLikes(getLikes(),category, apk.getId());
-            database.insertMalwareInfo(getMalwareInfo(),category, apk.getId());
-            if(hasOBB()){
-                JSONObject mainObb = getMainOBB();
-                database.insertMainObbInfo(mainObb.getString("path"), mainObb.getString("md5sum"), mainObb.getString("filesize"), mainObb.getString("filename"), apk.getId(), category);
-
-                if(hasPatchOBB()){
-                    JSONObject patchObb = getPatchOBB();
-                    database.insertPatchObbInfo(patchObb.getString("path"), patchObb.getString("md5sum"), patchObb.getString("filesize"), patchObb.getString("filename"), apk.getId(), category);
                 }
 
+                database.insertDownloadPath(getApkDownloadPath(), category, apk.getId());
+                database.insertApkMd5(getApkMd5(), category, apk.getId());
+                database.insertApkSize(getApkSize(), category, apk.getId());
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-
-            database.insertDownloadPath(getApkDownloadPath(), category, apk.getId());
-            database.insertApkMd5(getApkMd5(), category, apk.getId());
-            database.insertApkSize(getApkSize(), category, apk.getId());
-
-
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
 

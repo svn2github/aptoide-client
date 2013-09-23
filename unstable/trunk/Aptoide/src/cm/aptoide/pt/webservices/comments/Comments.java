@@ -10,7 +10,6 @@ package cm.aptoide.pt.webservices.comments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -18,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.webservices.login.Login;
 import org.json.JSONException;
@@ -48,7 +48,7 @@ public class Comments {
 
 	private static final String listApkComments = "webservices/listApkComments/%1$s/%2$s/%3$s/xml";
 	private static final String addApkComment = "webservices/addApkComment";
-	private static final String DEFAULT_PATH = "http://webservices.aptoide.com/";
+	private static final String DEFAULT_PATH = AptoideConfiguration.getInstance().getWebServicesUri();
 	private static final String COMMENTS_TO_LOAD = "5";
 	public String WEB_SERVICE_COMMENTS_LIST;
 	public String WEB_SERVICE_COMMENTS_POST;
@@ -289,8 +289,6 @@ public class Comments {
                 data += "&" + URLEncoder.encode("lang", "UTF-8") + "=" + URLEncoder.encode(Utils.getMyCountryCode(context), "UTF-8");
                 data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8");
 
-
-                Log.d("Adding comment", data);
 
 			    OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
 			    wr.write(data);

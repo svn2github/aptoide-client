@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.webservices.EnumResponseStatus;
 import cm.aptoide.pt.webservices.login.Login;
@@ -33,7 +34,7 @@ public class Likes {
 	private static final String listApkLikesWithToken = "webservices/listApkLikesCount/%1$s/%2$s/%3$s/%4$s/json";
 	private static final String listApkLikes = "webservices/listApkLikesCount/%1$s/%2$s/%3$s/json";
 	private static final String addApkLike = "webservices/addApkLike";
-	private static final String DEFAULT_PATH = "http://webservices.aptoide.com/";
+	private static final String DEFAULT_PATH = AptoideConfiguration.getInstance().getWebServicesUri();
 	public String WEB_SERVICE_LIKES_LIST;
 	public String WEB_SERVICE_LIKES_POST;
 	private ViewGroup view;
@@ -126,85 +127,10 @@ public class Likes {
 					break;
 				}
 
-
-
-//				System.out.println(connection.getURL());
-//				connection.setConnectTimeout(10000);
-//				connection.setReadTimeout(10000);
-//				BufferedInputStream bis = new BufferedInputStream(
-//						connection.getInputStream(), 8 * 1024);
-//				SAXParserFactory spfact = SAXParserFactory.newInstance();
-//				SAXParser parser = spfact.newSAXParser();
-//				parser.parse(bis, new DefaultHandler() {
-//					StringBuilder sb = new StringBuilder();
-//
-//					@Override
-//					public void startElement(String uri, String localName,
-//							String qName, Attributes attributes)
-//							throws SAXException {
-//						super.startElement(uri, localName, qName, attributes);
-//						switch (EnumResponseTasteElement
-//								.valueOfToUpper(localName)) {
-//								case LIKES:
-//									tasteIndicator = EnumResponseTasteElement.LIKES;
-//									break;
-//								case DISLIKES:
-//									tasteIndicator = EnumResponseTasteElement.DISLIKES;
-//									break;
-//								default:
-//							break;
-//						}
-//
-//						sb.setLength(0);
-//
-//					}
-//
-//					@Override
-//					public void characters(char[] ch, int start, int length)
-//							throws SAXException {
-//						super.characters(ch, start, length);
-//						sb.append(ch, start, length);
-//					}
-//
-//					@Override
-//					public void endElement(String uri, String localName,
-//							String qName) throws SAXException {
-//						super.endElement(uri, localName, qName);
-//
-//						if (EnumResponseTasteElement.valueOfToUpper(localName) == EnumResponseTasteElement.ENTRY) {
-//							if (isLoggedin&&sb.toString().equals(userHashId)) {
-//								userTasted = true;
-//								userTasted2 = true;
-//							}
-//							switch (tasteIndicator) {
-//							case LIKES:
-//								likes++;
-//								if (userTasted) {
-//									usertaste = EnumUserTaste.LIKE;
-//									userTasted=false;
-//								}
-//								break;
-//							case DISLIKES:
-//								if (userTasted) {
-//									usertaste = EnumUserTaste.DONTLIKE;
-//									userTasted=false;
-//								}
-//								dislikes++;
-//								break;
-//							default:
-//								break;
-//							}
-//						}
-//
-//					}
-//				});
-//				bis.close();
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				result = EnumResponseStatus.FAIL;
 			}
-			System.out.println("RESULT: " +result);
 			return result;
 		}
 

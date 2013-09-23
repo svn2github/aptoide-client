@@ -93,7 +93,7 @@ public class UpdatesAdapter extends CursorAdapter {
 		holder.vername.setText(context.getString(R.string.update_to)+": "+ vername);
         holder.update.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                new GetApkWebserviceInfo(mContext, serviceDownloadManager, false).execute(id);
+                new GetApkWebserviceInfo(mContext, serviceDownloadManager, true).execute(id);
             }
         });
         if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE ||

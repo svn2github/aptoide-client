@@ -111,8 +111,8 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         public void onServiceConnected(ComponentName name, IBinder service) {
             MainActivity.this.service = ((LocalBinder) service).getService();
 
-            if (ApplicationAptoide.DEFAULTSTORENAME != null && db.getServer("http://" + ApplicationAptoide.DEFAULTSTORENAME + ".store.aptoide.com/") == null) {
-                MainActivity.this.service.addStore(Database.getInstance(), "http://" + ApplicationAptoide.DEFAULTSTORENAME + ".store.aptoide.com/", null, null);
+            if (ApplicationAptoide.DEFAULTSTORENAME != null && db.getServer("http://" + ApplicationAptoide.DEFAULTSTORENAME + AptoideConfiguration.getInstance().getDomainAptoideStore()) == null) {
+                MainActivity.this.service.addStore(Database.getInstance(), "http://" + ApplicationAptoide.DEFAULTSTORENAME + AptoideConfiguration.getInstance().getDomainAptoideStore(), null, null);
             }
 
             loadUi();
@@ -150,7 +150,6 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         public void onReceive(Context context, Intent intent) {
             if (depth.equals(ListDepth.STORES)) {
                 availableLoader.forceLoad();
-                System.out.println("Status broadcast received");
             }
         }
     };
@@ -180,7 +179,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         }
     };
     protected Order order;
-    int a = 0;
+
     ArrayList<HashMap<String, String>> values;
     LinearLayout breadcrumbs;
     LinearLayout banner;
@@ -242,14 +241,13 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     };
     private long store_id;
     private CursorAdapter updatesAdapter;
-    ;
+
     private Loader<Cursor> updatesLoader;
     private ListView updatesListView;
     private BroadcastReceiver loginReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             loadRecommended();
         }
     };
@@ -277,7 +275,6 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             try {
-                Log.d("MainActivity-openUpdatesReceiver", "change page");
                 pager.setCurrentItem(3);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -289,12 +286,11 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Aptoide-MainActivity", "onNewRepoReceive");
             if (intent.hasExtra("newrepo")) {
-                ArrayList<String> repos = (ArrayList<String>) intent.getSerializableExtra("newrepo");
+                ArrayList<String> repos = intent.getExtras().getStringArrayList("newrepo");
                 for (final String uri2 : repos) {
                     if (Database.getInstance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
-                        Toast.makeText(MainActivity.this, "Store already added", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                     } else {
                         View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
                         Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
@@ -325,7 +321,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
         }
     };
-    private String storeUri = "apps" + AptoideConfiguration.getInstance().getDomainAptoideStore();
+    private String storeUri = AptoideConfiguration.getInstance().getDefaultStore() + AptoideConfiguration.getInstance().getDomainAptoideStore();
     private ServiceManagerDownload serviceDownloadManager;
     private ServiceConnection serviceManagerConnection = new ServiceConnection() {
 
@@ -443,7 +439,6 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     f = File.createTempFile("tempFile", "");
                     String countryCode = Geolocation.getCountryCode(mContext);
 
-
                     Log.d("Aptoide-Geolocation", "Using countrycode: " + countryCode);
 
                     if (ApplicationAptoide.CUSTOMEDITORSCHOICE) {
@@ -451,19 +446,20 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                         if (((HttpURLConnection) new URL(url).openConnection())
                                 .getResponseCode() != 200) {
-                            url = getEditorsChoiceURL("apps", countryCode);
+                            url = getEditorsChoiceURL(AptoideConfiguration.getInstance().getDefaultStore(), countryCode);
                         }
 
                     } else {
-                        url = getEditorsChoiceURL("apps", countryCode);
+                        url = getEditorsChoiceURL(AptoideConfiguration.getInstance().getDefaultStore(), countryCode);
                     }
 
+                    ApplicationAptoide.log.info("EditorsUrl is: " + url);
 
                     long date = utils.getLastModified(new URL(url));
                     long cachedDate = db.getEditorsChoiceHash();
 
-                    Log.d("Getting", "Date is " + date);
-                    Log.d("Getting", "CachedDate is " + cachedDate);
+                    Log.d("Editors", "Date is " + date);
+                    Log.d("Editors", "CachedDate is " + cachedDate);
 
                     if (cachedDate < date) {
 
@@ -491,18 +487,19 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     // Database.database.endTransaction();
                 } catch (Exception e) {
                     e.printStackTrace();
+                }finally {
+                    if (f != null) f.delete();
                 }
 
-                if (f != null) f.delete();
 
             }
 
             private String getEditorsChoiceURL(String store, String countryCode) {
 
                 if (countryCode.length() > 0) {
-                    return "http://" + store + ".store.aptoide.com/editors.xml?country=" + countryCode;
+                    return "http://" + store + AptoideConfiguration.getInstance().getDomainAptoideStore()+AptoideConfiguration.getInstance().getEditorsPath()+"?country=" + countryCode;
                 }
-                return "http://" + store + ".store.aptoide.com/editors.xml";
+                return "http://" + store + AptoideConfiguration.getInstance().getDomainAptoideStore() + AptoideConfiguration.getInstance().getEditorsPath();
             }
 
         });
@@ -522,15 +519,15 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                     String url;
                     if (ApplicationAptoide.CUSTOMEDITORSCHOICE) {
-                        url = "http://" + ApplicationAptoide.DEFAULTSTORENAME + ".store.aptoide.com/top.xml";
+                        url = "http://" + ApplicationAptoide.DEFAULTSTORENAME + AptoideConfiguration.getInstance().getDomainAptoideStore() + AptoideConfiguration.getInstance().getTopPath();
 
                         if (((HttpURLConnection) new URL(url).openConnection())
                                 .getResponseCode() != 200) {
-                            url = "http://apps.store.aptoide.com/top.xml";
+                            url = "http://" + AptoideConfiguration.getInstance().getDefaultStore() + AptoideConfiguration.getInstance().getDomainAptoideStore() + AptoideConfiguration.getInstance().getTopPath();
                         }
 
                     } else {
-                        url = "http://apps.store.aptoide.com/top.xml";
+                        url = "http://" + AptoideConfiguration.getInstance().getDefaultStore() + AptoideConfiguration.getInstance().getDomainAptoideStore() + AptoideConfiguration.getInstance().getTopPath();
                     }
 
                     long date = utils.getLastModified(new URL(url));
@@ -629,7 +626,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                         // imageLoader.DisplayImage(-1, values.get(i).get("icon"),
                         // (ImageView) txtSamItem.findViewById(R.id.icon),
                         // mContext);
-                        float stars = 0f;
+                        float stars;
                         try {
                             stars = Float.parseFloat(values.get(i).get("rating"));
                         } catch (Exception e) {
@@ -693,14 +690,13 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
     }
 
+    int a = 0;
+
     private void loadUIEditorsApps() {
 
         final int[] res_ids = {R.id.central, R.id.topleft, R.id.topright, R.id.bottomleft, R.id.bottomcenter, R.id.bottomright};
         final ArrayList<HashMap<String, String>> image_urls = db.getFeaturedGraphics();
         final HashMap<String, String> image_url_highlight = db.getHighLightFeature();
-
-//        System.out.println(image_url_highlight + "ASDASDASDASD");
-//        System.out.println(image_urls + "ASDASDASDASD");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -738,7 +734,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
             public void run() {
 
 
-                for (int i = a; i != res_ids.length; i++) {
+                for (int i = a; i != res_ids.length && i < image_urls.size(); i++) {
                     try {
                         ImageView v = (ImageView) featuredView
                                 .findViewById(res_ids[i]);
@@ -804,9 +800,9 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                 if (!serversToParse.isEmpty()) {
 
-                    String url = "http://webservices.aptoide.com/webservices/listRepositoryChange/"
+                    String url = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listRepositoryChange/"
                             + repos + "/" + hashes + "/json";
-                    System.out.println(url);
+
                     try {
                         HttpURLConnection connection = (HttpURLConnection) new URL(
                                 url).openConnection();
@@ -970,7 +966,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                         // Get file handle to the directory. In this case the
                         // application files dir
-                        File dir = new File(AptoideConfiguration.getInstance().getPathCacheApks());
+                        File dir = new File(LOCAL_PATH);
 
 
                         if (dir.mkdir()) {
@@ -1051,7 +1047,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
 
                 if (getIntent().hasExtra("newrepo")) {
-                    ArrayList<String> repos = (ArrayList<String>) getIntent().getSerializableExtra("newrepo");
+                    ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
                     for (final String uri2 : repos) {
 
                         if (Database.getInstance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
@@ -1084,7 +1080,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                     }
                 } else if (db.getStoresCount() == 0 && ApplicationAptoide.DEFAULTSTORENAME == null && serversFileIsEmpty) {
-                    View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
+
                     Builder dialogBuilder = new AlertDialog.Builder(mContext);
                     final AlertDialog addAppsRepoDialog = dialogBuilder.create();
                     addAppsRepoDialog.setTitle(getString(R.string.add_store));
@@ -1210,14 +1206,13 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
             }
         }
-        Log.d("TAAAG", ApplicationAptoide.isRestartLauncher() + " restartLauncher");
+
 
         return super.onKeyDown(keyCode, event);
     }
 
     protected void onNewIntent(Intent intent) {
         if (intent.hasExtra("new_updates")) {
-            Log.d("MainActivity-onNewIntent", "new_updates");
             pager.setCurrentItem(3);
         }
     }
@@ -1423,8 +1418,6 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
             @Override
             public void onClick(View v) {
                 updateAll();
-                Toast toast = Toast.makeText(mContext, mContext.getString(R.string.starting_download), Toast.LENGTH_SHORT);
-                toast.show();
             }
         });
 
@@ -1736,7 +1729,8 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     void updateAll() {
-
+        Toast toast = Toast.makeText(this, getString(R.string.updating), Toast.LENGTH_SHORT);
+        toast.show();
         new Thread(new Runnable() {
 
             @Override
@@ -2025,7 +2019,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
     protected void generateXML() {
         System.out.println("Generating servers.xml");
-        File newxmlfile = new File(Environment.getExternalStorageDirectory() + "/.aptoide/servers.xml");
+        File newxmlfile = new File(LOCAL_PATH+"servers.xml");
         try {
             newxmlfile.createNewFile();
         } catch (IOException e) {
@@ -2455,10 +2449,10 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     SAXParser sp = spf.newSAXParser();
                     NetworkUtils utils = new NetworkUtils();
                     BufferedInputStream bis = new BufferedInputStream(utils
-                            .getInputStream(
-                                    "http://webservices.aptoide.com/webservices/listUserBasedApks/"
-                                            + Login.getToken(mContext)
-                                            + "/10/xml", null, null, mContext), 8 * 1024);
+                            .getInputStream(AptoideConfiguration.getInstance().getWebServicesUri() +
+                                    "webservices/listUserBasedApks/"
+                                    + Login.getToken(mContext)
+                                    + "/10/xml", null, null, mContext), 8 * 1024);
                     f = File.createTempFile("abc", "abc");
                     OutputStream out = new FileOutputStream(f);
                     byte buf[] = new byte[1024];
@@ -2521,7 +2515,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                                 ImageLoader.getInstance().displayImage(
                                         valuesRecommended.get(i).get("icon"),
                                         (ImageView) txtSamItem.findViewById(R.id.icon));
-                                float stars = 0f;
+                                float stars;
                                 try {
                                     stars = Float.parseFloat(valuesRecommended.get(i).get("rating"));
                                 } catch (Exception e) {

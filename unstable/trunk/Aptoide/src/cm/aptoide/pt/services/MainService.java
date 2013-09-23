@@ -23,6 +23,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.pt.*;
 import cm.aptoide.pt.Server.State;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.exceptions.AptoideException;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.util.RepoUtils;
@@ -47,12 +48,12 @@ public class MainService extends Service {
 
     //	Database db;
 	private static boolean isParsing = false;
-	String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-	String defaultXmlPath = defaultPath+"/.aptoide/info.xml";
-	String defaultTopXmlPath = defaultPath+"/.aptoide/top.xml";
-	String defaultLatestXmlPath = defaultPath+"/.aptoide/latest.xml";
-	String defaultExtrasXmlPath = defaultPath+"/.aptoide/extras.xml";
-	String defaultBootConfigXmlPath = defaultPath+"/.aptoide/boot_config.xml";
+	String defaultPath = AptoideConfiguration.getInstance().getPathCache();
+	String defaultXmlPath = defaultPath+"info.xml";
+	String defaultTopXmlPath = defaultPath+"top.xml";
+	String defaultLatestXmlPath = defaultPath+"latest.xml";
+	String defaultExtrasXmlPath = defaultPath+"extras.xml";
+	String defaultBootConfigXmlPath = defaultPath+"boot_config.xml";
 
 	static ArrayList<String> serversParsing = new ArrayList<String>();
 	private static final int ID_UPDATES_NOTIFICATION = 1;
@@ -137,7 +138,7 @@ public class MainService extends Service {
 		if (delta&&server.hash.length() > 0) {
 			hash = "?hash=" + server.hash + ":"+ Utils.getMyCountryCode(getApplicationContext());
             server.showError = false;
-            server.isDelta = false;
+            server.isDelta = true;
 		}
 		NetworkUtils utils = new NetworkUtils();
         Log.d("TAG", server.url + " " + server.getLogin().getUsername() + " " + server.getLogin().getPassword());
@@ -175,61 +176,6 @@ public class MainService extends Service {
 		out.close();
 
 		return f.getAbsolutePath();
-	}
-
-//
-//	public String getTop(Server server,String xmlpath) throws MalformedURLException, IOException{
-//		File f = new File(xmlpath);
-//			getApplicationContext().sendBroadcast(new Intent("connecting"));
-//			String url = server.url + "top.xml";
-//			System.out.println(url);
-//	    	InputStream in = getInputStream(new URL(url),server.username,server.password);
-//
-//
-//	    	int i = 0;
-//	    	while(f.exists()){
-//	    		f = new File(xmlpath+i++);
-//	    	}
-//			FileOutputStream out = new FileOutputStream(f);
-//
-//			byte[] buffer = new byte[1024];
-//			int len;
-//			getApplicationContext().sendBroadcast(new Intent("downloading"));
-//			while ((len = in.read(buffer)) != -1) {
-//				out.write(buffer, 0, len);
-//			}
-//			out.close();
-//
-//		return f.getAbsolutePath();
-//    }
-//
-//	public String getLatest(Server server,String xmlpath) throws MalformedURLException, IOException{
-//		File f = new File(xmlpath);
-//			getApplicationContext().sendBroadcast(new Intent("connecting"));
-//			String url = server.url + "latest.xml";
-//			System.out.println(url);
-//	    	InputStream in = getInputStream(new URL(url),server.username,server.password);
-//
-//
-//	    	int i = 0;
-//	    	while(f.exists()){
-//	    		f = new File(xmlpath+i++);
-//	    	}
-//			FileOutputStream out = new FileOutputStream(f);
-//
-//			byte[] buffer = new byte[1024];
-//			int len;
-//			getApplicationContext().sendBroadcast(new Intent("downloading"));
-//			while ((len = in.read(buffer)) != -1) {
-//				out.write(buffer, 0, len);
-//			}
-//			out.close();
-//
-//		return f.getAbsolutePath();
-//    }
-
-	public boolean isParsing() {
-		return isParsing ;
 	}
 
     @Override
@@ -271,19 +217,16 @@ public class MainService extends Service {
 	}
 
 	public void addStore(Database db, String uri_str, String username, String password) {
-		Server server = null;
+		Server server;
 		try{
 
             if(db.getServer(uri_str)!=null){
 				return;
 			}
 
-
-
-
 			db.addStore(uri_str,username,password);
 			server = db.getServer(uri_str);
-
+            server.isBare = true;
 			if(ApplicationAptoide.DEFAULTSTORENAME != null && uri_str.equals("http://" + ApplicationAptoide.DEFAULTSTORENAME + ".store.aptoide.com/")){
 				server.oem = true;
 				db.addStoreInfo(ApplicationAptoide.AVATAR, ApplicationAptoide.DEFAULTSTORENAME, "0", ApplicationAptoide.THEME, ApplicationAptoide.DESCRIPTION, ApplicationAptoide.VIEW, ApplicationAptoide.ITEMS, db.getServer("http://" + ApplicationAptoide.DEFAULTSTORENAME + ".store.aptoide.com/").id);
@@ -301,7 +244,7 @@ public class MainService extends Service {
 
 
 		if(!serversParsing.contains(server.url)){
-            if(server.hash.equals("firstHash")){
+            if(server.isBare){
                 server.state=State.QUEUED;
                 db.updateStatus(server);
             }
@@ -519,16 +462,14 @@ public class MainService extends Service {
 
 	public void parseInfoXml(final Database db, final Server server) throws IOException{
 
-        Log.d("TAG", "SERVER IS BARE: " + server.isBare);
-
-		String path = get(server,defaultXmlPath,"info.xml", !server.isBare);
+        String path = get(server,defaultXmlPath,"info.xml", !server.isBare);
 		RepoParser.getInstance(db).parseInfoXML(path,server);
-		//parseExtras(server);
+
 	}
 
 	public void addStoreInfo(Database db, Server server) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(String.format("http://webservices.aptoide.com/webservices/getRepositoryInfo/%s/json",
+			HttpURLConnection connection = (HttpURLConnection) new URL(String.format(AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/getRepositoryInfo/%s/json",
 							RepoUtils.split(server.url))).openConnection();
 			connection.connect();
 			int rc = connection.getResponseCode();

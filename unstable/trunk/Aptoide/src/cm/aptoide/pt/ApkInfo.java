@@ -659,38 +659,6 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 try {
 
                     imageUrls = viewApk.getScreenshots();
-//					switch (category) {
-//					case TOP:
-//					case LATEST:
-//					case ITEMBASED:
-//					case EDITORSCHOICE:
-//					case TOPFEATURED:
-//					case USERBASED:
-//						db.getScreenshots(originalList,viewApk,category);
-//						thumbnailList = new String[originalList.size()];
-//
-//						for ( int i = 0; i!= originalList.size();i++){
-//							thumbnailList[i]=screenshotToThumb(originalList.get(i));
-//						}
-//
-//						break;
-//
-//					case INFOXML:
-//                        thumbnailList = new String[array.length()];
-//						for ( int i = 0; i!= array.length();i++){
-//							thumbnailList[i]=screenshotToThumb(array.getString(i));
-//						}
-//
-//						for(int i=0;i < array.length();i++){
-//							originalList.add(array.getString(i));
-//						}
-//						break;
-//
-//					default:
-//						break;
-//					}
-//                    final CirclePageIndicator pi = (CirclePageIndicator) findViewById(R.id.indicator);
-//                    final CustomViewPager screenshots = (CustomViewPager) findViewById(R.id.screenShotsPager);
 
                     gallery = (Gallery) findViewById(R.id.gallery);
 
@@ -713,41 +681,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                                 System.out.println(galleryAdapter.getCount() / 2);
                                 gallery.setSelection(galleryAdapter.getCount() / 2);
 
-//                                String hashCode = (viewApk.getApkid()+"|"+viewApk.getVercode());
-//                                screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,imageUrls,hashCode,false));
-//                                TypedValue a = new TypedValue();
-//                                getTheme().resolveAttribute(R.attr.custom_color, a, true);
-//                                pi.setFillColor(a.data);
-//                                pi.setViewPager(screenshots);
-//                                pi.setRadius(4.5f);
-//                                findViewById(R.id.screenshots_container).setVisibility(View.VISIBLE);
                                 findViewById(R.id.screenshots_label).setVisibility(View.VISIBLE);
-//                                if(imageUrls.size()==1){
-//                                    findViewById(R.id.right).setVisibility(View.GONE);
-//                                }
-//                                pi.setOnPageChangeListener(new OnPageChangeListener() {
-//
-//                                    public void onPageSelected(int position) {
-//
-//                                        findViewById(R.id.left).setVisibility(View.VISIBLE);
-//                                        findViewById(R.id.right).setVisibility(View.VISIBLE);
-//
-//                                        if(position==0){
-//                                            findViewById(R.id.left).setVisibility(View.GONE);
-//                                        }
-//                                        if (position==imageUrls.size()-1){
-//                                            findViewById(R.id.right).setVisibility(View.GONE);
-//                                        }
-//                                    }
-//
-//                                    public void onPageScrolled(int arg0, float arg1, int arg2) {
-//
-//                                    }
-//
-//                                    public void onPageScrollStateChanged(int arg0) {
-//
-//                                    }
-//                                });
                             }
 
                         }
@@ -909,18 +843,16 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
             }
         });
 
-        scheduledDownloadChBox.setChecked(db.isScheduledDownloas(viewApk));
+        scheduledDownloadChBox.setChecked(db.isScheduledDownload(viewApk));
         scheduledDownloadChBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-//                    ((Button) findViewById(R.id.btinstall)).setText(R.string.schDwnBtn);
-                    db.insertScheduledDownload(viewApk.getApkid(), viewApk.getVercode(), viewApk.getVername(), viewApk.getPath(), viewApk.getName(), viewApk.getMd5(), viewApk.getIcon(), mainObbUrl, mainObbMd5, mainObbName, patchObbUrl, patchObbMd5, patchObbName);
+                    db.insertScheduledDownload(viewApk.getApkid(), viewApk.getVercode(), viewApk.getVername(), viewApk.getRepoName(), viewApk.getName(), viewApk.getIcon());
                     Toast toast = Toast.makeText(context, context.getString(R.string.addSchDown), Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-//                    ((Button) findViewById(R.id.btinstall)).setText(installString);
                     db.deleteScheduledDownload(viewApk.getApkid(), viewApk.getVername());
                 }
             }
@@ -944,15 +876,20 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
         @Override
         public void onClick(View button) {
-//            findViewById(R.id.btinstall).setOnClickListener(null);
 
-
-            if(resultIsReturned){
-
+            if(viewApk.getPath()!=null || resultIsReturned){
                 download();
             }else{
                 pd.show();
-                registerGetApkInfoCallback(new Runnable(){
+                pd.setCancelable(true);
+                pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        unregisterGetApkInfoCallback();
+                    }
+                });
+
+                registerGetApkInfoCallback(new Runnable() {
                     @Override
                     public void run() {
                         download();
@@ -961,94 +898,12 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 });
 
             }
-
-
-
-
-
-//            new Thread(new Runnable() {
-//                public void run() {
-//                    if (scheduledDownloadChBox.isChecked()) {
-////                        db.insertScheduledDownload(viewApk.getApkid(), viewApk.getVercode(), viewApk.getVername(), viewApk.getPath(), viewApk.getName(), viewApk.getMd5(), viewApk.getIcon(), mainObbUrl, mainObbMd5, mainObbName, patchObbUrl, patchObbMd5, patchObbName);
-//                        runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//                                Toast toast = Toast.makeText(context, context.getString(R.string.addSchDown), Toast.LENGTH_SHORT);
-//                                toast.show();
-//                            }
-//                        });
-//                        findViewById(R.id.btinstall).setOnClickListener(installListener);
-//                    } else {
-//
-//                        ViewCache cache = new ViewCache(viewApk.hashCode(), viewApk.getMd5(), viewApk.getApkid(), viewApk.getVername());
-//
-//                        ViewCacheObb mainObbCache = null;
-//                        if(mainObbUrl!=null){
-//                            mainObbCache = new ViewCacheObb((viewApk.getApkid()+".obb"+"|"+viewApk.getVercode()).hashCode(),mainObbName, mainObbMd5, cache, viewApk.getApkid());
-//                        }
-//
-//                        ViewCacheObb patchObbCache = null;
-//                        if(patchObbUrl!=null){
-//                            patchObbCache = new ViewCacheObb((viewApk.getApkid()+".obb2"+"|"+viewApk.getVercode()).hashCode(),patchObbName, patchObbMd5, cache, viewApk.getApkid());
-//                        }
-//                        ViewObb obb = null;
-//
-//                        if(mainObbCache!=null){
-//                            obb = new ViewObb(mainObbUrl, patchObbUrl, mainObbCache, patchObbCache);
-//                        }
-//
-////                        if(mainObbCache!=null && mainObbCache.checkMd5()){
-////
-////                            if(patchObbCache!=null && patchObbCache.checkMd5()){
-////
-////                                if (cache.isCached() && cache.hasMd5Sum() && cache.checkMd5()) {
-////
-////
-////
-////                                    try {
-////                                        serviceDownloadManager.callInstallApp(cache);
-////                                    } catch (RemoteException e) {
-////                                        e.printStackTrace();
-////                                    }
-////
-////                                }else{
-//
-//
-//                                    download(cache, obb);
-//
-////                                }
-////
-////                            }else{
-////
-////                                download(cache, obb);
-////
-////                            }
-////
-////
-////                        }else{
-////
-////
-////                            if (cache.isCached() && cache.hasMd5Sum() && cache.checkMd5()) {
-////
-////                                try {
-////                                    serviceDownloadManager.callInstallApp(cache);
-////                                } catch (RemoteException e) {
-////                                    e.printStackTrace();
-////                                }
-////
-////                            } else {
-////
-////                                download(cache, obb);
-////
-////                            }
-////                        }
-//                    }
-//                }
-//            }).start();
-
         }
     };
+
+    private void unregisterGetApkInfoCallback() {
+        aSyncTask.callback = null;
+    }
 
     private void registerGetApkInfoCallback(final Runnable runnable) {
 
@@ -1127,8 +982,11 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
      */
     private void checkDownloadStatus() {
         download = serviceDownloadManager.getDownload(viewApk);
-//        handleUpdate(download);
-        Log.d("Aptoide-ApkInfo", "getAppDownloading: " + download);
+//
+        if(ApplicationAptoide.DEBUG_MODE){
+            ApplicationAptoide.log.info("Aptoide-ApkInfo", "getAppDownloading: " + download);
+        }
+
 
         if (!download.getStatusState().getEnumState().equals(EnumState.ERROR) && !download.getStatusState().getEnumState().equals(EnumState.NOSTATE) && !download.getStatusState().getEnumState().equals(EnumState.COMPLETE)) {
             handleUpdate(download);
@@ -1428,7 +1286,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         protected Void doInBackground(Void... params) {
 
             try {
-                webservice = new WebserviceGetApkInfo(ApkInfo.this, webservicespath, viewApk, category, Login.getToken(context));
+                webservice = new WebserviceGetApkInfo(ApkInfo.this, webservicespath, viewApk, category, Login.getToken(context), true);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -1521,22 +1379,18 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 Log.d("ApkInfo", "Error building OBB Object");
             }
 
-            Log.d("TAAAAAG", mainObbUrl + " " + mainObbName + " " + mainObbMd5);
+
 
             try{
 
                 if(webservice.hasPermissions()){
-
                     JSONArray array = webservice.getApkPermissions();
                     ArrayList<String > permissionList = new ArrayList<String>();
                     for(int i = 0; i!=array.length();i++){
                         permissionList.add(array.getString(i));
                     }
-
                     viewApk.setPermissionsList(permissionList);
-
                 }
-
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -1559,10 +1413,11 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                         @Override
                         public void onClick(View v) {
 
-                            String url = null;
+                            String url;
                             try {
                                 url = webservice.getLatestVersionURL();
                                 Intent i = new Intent(Intent.ACTION_VIEW);
+                                url = url.replaceAll(" ", "%20");
                                 i.setData(Uri.parse(url));
                                 startActivity(i);
                             } catch (JSONException e) {
@@ -1847,4 +1702,16 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         }
     };
 
+    /**
+     * Created with IntelliJ IDEA.
+     * User: rmateus
+     * Date: 04-09-2013
+     * Time: 16:25
+     * To change this template use File | Settings | File Templates.
+     */
+    public static interface ApkInfoCallBack {
+
+        void onUpdate();
+
+    }
 }

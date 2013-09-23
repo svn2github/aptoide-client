@@ -73,13 +73,37 @@ public class DeveloperMode extends Activity {
             }
         });
 
-        EditText path_cache_apks = (EditText) findViewById(R.id.path_cache_apk);
-        path_cache_apks.setText(AptoideConfiguration.getInstance().getPathCacheApks());
+        final EditText path_editors = (EditText) findViewById(R.id.path_editors);
+        path_editors.setText(AptoideConfiguration.getInstance().getEditorsPath());
 
-        EditText path_cache_icons = (EditText) findViewById(R.id.path_cache_icons);
-        path_cache_icons.setText(AptoideConfiguration.getInstance().getPathCacheIcons());
+        findViewById(R.id.path_editors_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AptoideConfiguration.getInstance().setEditorsPath(path_editors.getText().toString());
+            }
+        });
 
+        final EditText path_top = (EditText) findViewById(R.id.path_top);
+        path_top.setText(AptoideConfiguration.getInstance().getTopPath());
 
+        findViewById(R.id.path_top_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AptoideConfiguration.getInstance().setTopPath(path_top.getText().toString());
+            }
+        });
+
+        final EditText default_store = (EditText) findViewById(R.id.default_store);
+        default_store.setText(AptoideConfiguration.getInstance().getDefaultStore());
+
+        findViewById(R.id.default_store_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AptoideConfiguration.getInstance().setDefaultStore(default_store.getText().toString());
+            }
+        });
+        
+        
 
         CheckBox alwaysUpdate = (CheckBox) findViewById(R.id.alwaysupdate);
         alwaysUpdate.setChecked(AptoideConfiguration.getInstance().isAlwaysUpdate());
@@ -90,6 +114,26 @@ public class DeveloperMode extends Activity {
                 AptoideConfiguration.getInstance().setAlwaysUpdate(isChecked);
             }
         });
+
+        findViewById(R.id.invalidate_apk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().invalidateApkCache();
+            }
+        });
+        findViewById(R.id.invalidate_timestamp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().invalidateTimestampCache();
+            }
+        });
+        findViewById(R.id.invalidate_featured).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().invalidateFeatured();
+            }
+        });
+
 
 
 

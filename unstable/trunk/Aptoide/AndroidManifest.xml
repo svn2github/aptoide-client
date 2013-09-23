@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="5"
-        android:targetSdkVersion="7" />
+        android:targetSdkVersion="10" />
 
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.INTERNET" />

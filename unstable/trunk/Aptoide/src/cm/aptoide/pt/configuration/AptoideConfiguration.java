@@ -23,9 +23,15 @@ public class AptoideConfiguration {
     private static final String PREF_URI_SEARCH = "dev_mode_uri_search";
     private static final String PREF_STORE_DOMAIN = "dev_mode_store_domain";
     private static final String PREF_WEBSERVICE_URL = "dev_mode_webservices_url";
+    private static final String PREF_EDITORS_PATH = "dev_mode_editors_path";
+    private static final String PREF_TOP_PATH = "dev_mode_top_path";
+    private static final String PREF_DEFAULT_STORE = "dev_mode_featured_store";
 
     private static Context context = ApplicationAptoide.getContext();
     private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
+
+    private String webservicesPath;
+
 
     private AptoideConfiguration() {}
 
@@ -42,10 +48,16 @@ public class AptoideConfiguration {
     }
 
     public String getWebServicesUri() {
-        return sPref.getString(PREF_WEBSERVICE_URL, Defaults.WEBSERVICES_URI);
+
+        if(this.webservicesPath == null){
+            this.webservicesPath = sPref.getString(PREF_WEBSERVICE_URL, Defaults.WEBSERVICES_URI);
+        }
+
+        return this.webservicesPath;
     }
 
     public void setWebservicesUri(String path) {
+        this.webservicesPath = path;
         sPref.edit().putString(PREF_WEBSERVICE_URL, path).commit();
     }
 
@@ -99,5 +111,29 @@ public class AptoideConfiguration {
         sPref.edit().putBoolean(PREF_ALWAYS_UPDATE, alwaysUpdate).commit();
     }
 
+
+    public String getEditorsPath() {
+        return sPref.getString(PREF_EDITORS_PATH, Defaults.EDITORS_PATH);
+    }
+
+    public void setEditorsPath(String editorsPath) {
+        sPref.edit().putString(PREF_EDITORS_PATH, editorsPath).commit();
+    }
+
+    public String getTopPath() {
+        return sPref.getString(PREF_TOP_PATH, Defaults.TOP_PATH);
+    }
+
+    public void setTopPath(String topPath) {
+        sPref.edit().putString(PREF_TOP_PATH, topPath).commit();
+    }
+
+    public String getDefaultStore() {
+        return sPref.getString(PREF_DEFAULT_STORE, Defaults.DEFAULT_STORE);
+    }
+
+    public void setDefaultStore(String store) {
+        sPref.edit().putString(PREF_DEFAULT_STORE, store).commit();
+    }
 
 }

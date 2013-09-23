@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,9 +25,8 @@ import java.io.*;
 
 public class Start extends SherlockActivity {
 
-	private final String SDCARD = Environment.getExternalStorageDirectory()
-			.getPath();
-	private String LOCAL_PATH = SDCARD + "/.aptoide";
+
+	private String LOCAL_PATH = AptoideConfiguration.getInstance().getPathCache();
 
 	/**
 	 * The thread to process splash screen events
@@ -70,30 +70,25 @@ public class Start extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		AptoideThemePicker.setAptoideTheme(this);
 		super.onCreate(savedInstanceState);
-		File file = new File(LOCAL_PATH + "/icons");
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		if(ApplicationAptoide.SPLASHSCREEN != null){
-
-			// Splash screen view
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			setContentView(R.layout.splash);
-			imageSplash = (ImageView) findViewById(R.id.splashscreen);
-			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREENLAND, imageSplash, options, listener);
-			}else{
-				ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREEN, imageSplash, options, listener);
-			}
-
-		}else{
+		if(ApplicationAptoide.SPLASHSCREEN == null){
             finish();
-			Intent intent = new Intent();
-			intent.setClass(Start.this, MainActivity.class);
-
-			startActivity(intent);
-
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+		}else{
+            File file = new File(LOCAL_PATH + "/icons");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            // Splash screen view
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setContentView(R.layout.splash);
+            imageSplash = (ImageView) findViewById(R.id.splashscreen);
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREENLAND, imageSplash, options, listener);
+            }else{
+                ImageLoader.getInstance().displayImage(ApplicationAptoide.SPLASHSCREEN, imageSplash, options, listener);
+            }
 		}
 	}
 

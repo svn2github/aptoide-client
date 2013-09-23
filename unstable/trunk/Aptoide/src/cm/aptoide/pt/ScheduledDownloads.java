@@ -24,13 +24,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
+import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
+import cm.aptoide.pt.services.ServiceManagerDownload;
+import cm.aptoide.pt.views.ViewApk;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
-import cm.aptoide.pt.services.ServiceManagerDownload;
-import cm.aptoide.pt.views.ViewApk;
 
 import java.util.HashMap;
 
@@ -156,7 +156,7 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 				// Display planet data
 				checkBoxScheduled.setChecked( scheduledDownload.isChecked() );
 				textViewName.setText( scheduledDownload.getName() );
-				textViewVersion.setText( ""+scheduledDownload.getVername() );
+				textViewVersion.setText( scheduledDownload.getVername() );
 
 			      // Tag the CheckBox with the Planet it is displaying, so that we can
 			      // access the planet in onClick() when the CheckBox is toggled.
@@ -167,12 +167,10 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 			      textViewName.setText( scheduledDownload.getName() );
 			      textViewVersion.setText( ""+scheduledDownload.getVername() );
 
-			      // ((TextView) v.findViewById(R.id.isinst)).setText(c.getString(3));
-			      // ((TextView) v.findViewById(R.id.name)).setText(c.getString(2));
-			      String hashCode = (c.getString(2)+"|"+c.getString(3));
-			      ImageLoader.getInstance().displayImage(hashCode, imageViewIcon);
 
-                //TODO
+
+			      ImageLoader.getInstance().displayImage(scheduledDownload.getIconPath(), imageViewIcon);
+
 			}
 		};
 		lv.setAdapter(adapter);
@@ -205,16 +203,9 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
                             apk.setVercode(schDown.getVercode());
                             apk.setIconPath(schDown.getIconPath());
                             apk.setVername(schDown.getVername());
-                            apk.setMd5(schDown.getMd5());
-                            apk.setPath(schDown.getUrl());
-                            apk.setMainObbUrl(schDown.getMainObbPath());
-                            apk.setMainObbMd5(schDown.getMainObbMd5sum());
-                            apk.setMainObbFileName(schDown.getMainObbFilename());
-                            apk.setPatchObbUrl(schDown.getPatchObbPath());
-                            apk.setPatchObbMd5(schDown.getPatchObbMd5sum());
-                            apk.setPatchObbFileName(schDown.getPatchObbFilename());
+                            apk.setRepoName(schDown.getRepoName());
 
-                            serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
+                            serviceDownloadManager.startDownloadWithWebservice(serviceDownloadManager.getDownload(apk), apk);
                             Toast toast = Toast.makeText(ScheduledDownloads.this, R.string.starting_download, Toast.LENGTH_SHORT);
                             toast.show();
                         }
@@ -237,38 +228,30 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 			TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
 			message.setText(getText(R.string.schDown_install));
 			scheduleDownloadDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog,int id) {
-					for(String scheduledDownload : scheduledDownloadsHashMap.keySet()){
-						ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-						ViewApk apk = new ViewApk();
+                public void onClick(DialogInterface dialog, int id) {
+                    for (String scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                        ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+                        ViewApk apk = new ViewApk();
                         apk.setApkid(schDown.getApkid());
                         apk.setName(schDown.getName());
                         apk.setVercode(schDown.getVercode());
                         apk.setIconPath(schDown.getIconPath());
                         apk.setVername(schDown.getVername());
-                        apk.setMd5(schDown.getMd5());
-                        apk.setPath(schDown.getUrl());
-                        apk.setMainObbUrl(schDown.getMainObbPath());
-                        apk.setMainObbMd5(schDown.getMainObbMd5sum());
-                        apk.setMainObbFileName(schDown.getMainObbFilename());
-                        apk.setPatchObbUrl(schDown.getPatchObbPath());
-                        apk.setPatchObbMd5(schDown.getPatchObbMd5sum());
-                        apk.setPatchObbFileName(schDown.getPatchObbFilename());
-
-                        serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
+                        apk.setRepoName(schDown.getRepoName());
+                        serviceDownloadManager.startDownloadWithWebservice(serviceDownloadManager.getDownload(apk), apk);
                         Toast toast = Toast.makeText(ScheduledDownloads.this, R.string.starting_download, Toast.LENGTH_SHORT);
                         toast.show();
-					}
-					finish();
-					return;
+                    }
+                    finish();
 
-				}
+
+                }
 			 });
 			scheduleDownloadDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), new Dialog.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
 					finish();
-					return;
+
 			    }
 			});
 			scheduleDownloadDialog.show();
@@ -277,19 +260,15 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 
 	private static class ScheduledDownload {
 		private String name = "" ;
-		private String url = "" ;
+
 		private String apkid = "" ;
-		private String md5 = "" ;
+
 		private String vername = "";
 		private int vercode = 0 ;
 		private boolean checked = false ;
 		private String iconPath = "";
-        private String patchObbMd5sum;
-        private String mainObbPath;
-        private String mainObbFilename;
-        private String mainObbMd5sum;
-        private String patchObbPath;
-        private String patchObbFilename;
+
+        private String repoName;
 
 
         public ScheduledDownload( String name, boolean checked ) {
@@ -314,12 +293,7 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 		public void toggleChecked() {
 			checked = !checked ;
 		}
-		public String getUrl() {
-			return url;
-		}
-		public void setUrl(String url) {
-			this.url = url;
-		}
+
 		public int getVercode() {
 			return vercode;
 		}
@@ -332,12 +306,7 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 		public void setApkid(String apkid) {
 			this.apkid = apkid;
 		}
-		public String getMd5() {
-			return md5;
-		}
-		public void setMd5(String md5) {
-			this.md5 = md5;
-		}
+
 		public String getVername() {
 			return vername;
 		}
@@ -348,54 +317,12 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 			this.iconPath=iconPath;
 		}
 
-
-
-        public void setPatchObbMd5sum(String patchObbMd5sum) {
-            this.patchObbMd5sum = patchObbMd5sum;
+        public void setRepoName(String repoName) {
+            this.repoName = repoName;
         }
 
-        public String getPatchObbMd5sum() {
-            return patchObbMd5sum;
-        }
-
-        public void setMainObbPath(String mainObbPath) {
-            this.mainObbPath = mainObbPath;
-        }
-
-        public String getMainObbPath() {
-            return mainObbPath;
-        }
-
-        public void setMainObbFilename(String mainObbFilename) {
-            this.mainObbFilename = mainObbFilename;
-        }
-
-        public String getMainObbFilename() {
-            return mainObbFilename;
-        }
-
-        public void setMainObbMd5sum(String mainObbMd5sum) {
-            this.mainObbMd5sum = mainObbMd5sum;
-        }
-
-        public String getMainObbMd5sum() {
-            return mainObbMd5sum;
-        }
-
-        public void setPatchObbPath(String patchObbPath) {
-            this.patchObbPath = patchObbPath;
-        }
-
-        public String getPatchObbPath() {
-            return patchObbPath;
-        }
-
-        public void setPatchObbFilename(String patchObbFilename) {
-            this.patchObbFilename = patchObbFilename;
-        }
-
-        public String getPatchObbFilename() {
-            return patchObbFilename;
+        public String getRepoName() {
+            return repoName;
         }
     }
 
@@ -436,18 +363,15 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
         }
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             ScheduledDownload scheduledDownload = new ScheduledDownload(c.getString(1), true);
-            scheduledDownload.setUrl(c.getString(5));
+
+
             scheduledDownload.setApkid(c.getString(2));
             scheduledDownload.setVercode(Integer.parseInt(c.getString(3)));
-            scheduledDownload.setMd5(c.getString(6));
+
             scheduledDownload.setVername(c.getString(4));
-            scheduledDownload.setIconPath(c.getString(7));
-            scheduledDownload.setMainObbPath(c.getString(c.getColumnIndex(DbStructure.COLUMN_MAINOBB_PATH)));
-            scheduledDownload.setMainObbFilename(c.getString(c.getColumnIndex(DbStructure.COLUMN_MAINOBB_FILENAME)));
-            scheduledDownload.setMainObbMd5sum(c.getString(c.getColumnIndex(DbStructure.COLUMN_MAINOBB_MD5)));
-            scheduledDownload.setPatchObbPath(c.getString(c.getColumnIndex(DbStructure.COLUMN_PATCHOBB_PATH)));
-            scheduledDownload.setPatchObbFilename(c.getString(c.getColumnIndex(DbStructure.COLUMN_PATCHOBB_FILENAME)));
-            scheduledDownload.setPatchObbMd5sum(c.getString(c.getColumnIndex(DbStructure.COLUMN_PATCHOBB_MD5)));
+            scheduledDownload.setRepoName(c.getString(5));
+            scheduledDownload.setIconPath(c.getString(6));
+
             scheduledDownloadsHashMap.put(c.getString(0), scheduledDownload);
         }
         adapter.swapCursor(c);

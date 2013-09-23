@@ -17,15 +17,9 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ScheduledDownloadReceiver extends BroadcastReceiver {
 	Database db;
 	Context context;
-
-
-	ArrayList<HashMap<String, String>> failedDownloads;
 
 	@Override
 	public void onReceive(Context arg0, Intent arg1) {
@@ -36,8 +30,7 @@ public class ScheduledDownloadReceiver extends BroadcastReceiver {
 
 				final android.net.NetworkInfo wifi =
 				connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-				final android.net.NetworkInfo mobile =
-						connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+				final android.net.NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
 
 		SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);

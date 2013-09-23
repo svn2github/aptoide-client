@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+<LinearLayout
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -11,7 +12,7 @@
     </RelativeLayout>
 
     <RelativeLayout  android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Webservices URL:" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Def. Webservices URL:" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
         <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/url_webservices"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
         <Button android:layout_alignParentRight="true" android:id="@+id/url_webservices_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
     </RelativeLayout>
@@ -34,34 +35,33 @@
         <Button android:layout_alignParentRight="true" android:id="@+id/path_cache_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
     </RelativeLayout>
 
-    <RelativeLayout  android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Path cache apk:" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
-        <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/path_cache_apk"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
-        <Button android:layout_alignParentRight="true" android:id="@+id/path_cache_apk_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
+    <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
+        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Feat. Top Apps Path:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
+        <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/path_top"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        <Button android:layout_alignParentRight="true" android:id="@+id/path_top_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
     </RelativeLayout>
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Path cache icons:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
-        <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/path_cache_icons"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
-        <Button android:layout_alignParentRight="true" android:id="@+id/path_cache_icons_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
-    </RelativeLayout>
-
-    <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Feat. Top Apps URL:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
-        <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/path_topapps"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
-        <Button android:layout_alignParentRight="true" android:id="@+id/path_topapps_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
-    </RelativeLayout>
-
-    <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Feat. Ed. Choice URL:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
+        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Feat. Ed. Choice Path:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
         <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/path_editors"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
         <Button android:layout_alignParentRight="true" android:id="@+id/path_editors_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
     </RelativeLayout>
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
-        <TextView android:layout_centerVertical="true" android:text="Always update:" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        <TextView android:layout_centerVertical="true" android:id="@+id/left" android:text="Default Store:" android:layout_height="wrap_content" android:layout_width="wrap_content" />
+        <EditText android:layout_centerVertical="true" android:layout_alignBaseline="@id/left" android:layout_toRightOf="@id/left" android:id="@+id/default_store"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        <Button android:layout_alignParentRight="true" android:id="@+id/default_store_button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="set"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:padding="5dp">
+        <TextView android:layout_centerVertical="true" android:text="Always Autoupdate:" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
         <CheckBox android:layout_alignParentRight="true" android:id="@+id/alwaysupdate" android:layout_height="wrap_content" android:layout_width="wrap_content"/>
     </RelativeLayout>
 
+    <Button android:id="@+id/invalidate_timestamp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Invalidate Timestamp caches" android:layout_margin="5dp"></Button>
+    <Button android:id="@+id/invalidate_featured" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Invalidate Featured caches" android:layout_margin="5dp" ></Button>
+    <Button android:id="@+id/invalidate_apk" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Invalidate Apk caches" android:layout_margin="5dp" ></Button>
+
 
 </LinearLayout>
+</ScrollView>

@@ -54,6 +54,7 @@ import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -138,6 +139,7 @@ public class ApplicationAptoide extends Application {
     		STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
 
     SharedPreferences sPref;
+    public final static org.slf4j.Logger log = LoggerFactory.getLogger(MainActivity.class);
 	@Override
 	public void onCreate() {
 
@@ -277,8 +279,9 @@ public class ApplicationAptoide extends Application {
 
         DEBUG_FILE = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/debug.log");
 
-		if(DEBUG_FILE.exists()){
+		if(DEBUG_FILE.exists() || BuildConfig.DEBUG){
 			DEBUG_MODE = true;
+            log.info("-- Application Init --");
 		}
 
 		DisplayImageOptions options = new DisplayImageOptions.Builder()

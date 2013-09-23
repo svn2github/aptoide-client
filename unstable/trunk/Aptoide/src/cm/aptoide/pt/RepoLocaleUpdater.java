@@ -1,7 +1,7 @@
 package cm.aptoide.pt;
 
 import android.content.Context;
-import android.util.Log;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.views.ViewApk;
@@ -75,11 +75,9 @@ public class RepoLocaleUpdater {
         NetworkUtils networkUtils = new NetworkUtils();
         try {
 
-            BufferedInputStream is = networkUtils.getInputStream("http://webservices.aptoide.com/webservices/listRepositoryLocalApkNames/"+server.name+"/"+ Utils.getMyCountryCode(context)+"/xml", context);
+            BufferedInputStream is = networkUtils.getInputStream(AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listRepositoryLocalApkNames/"+server.name+"/"+ Utils.getMyCountryCode(context)+"/xml", context);
 
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-            long startParse = System.currentTimeMillis();
             apk.setRepo_id(server.id);
             parser.parse(is, new DefaultHandler2(){
 
@@ -104,8 +102,6 @@ public class RepoLocaleUpdater {
                     }
                 }
             });
-
-            Log.w("TAG", "End time: " + (System.currentTimeMillis() - startParse));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {

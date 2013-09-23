@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.AptoideThemePicker;
 import cm.aptoide.pt.R;
@@ -42,7 +43,7 @@ public class CreateUser extends SherlockActivity /*SherlockActivity */{
 	CheckBox checkShowPass;
 
 	public static final int REQUEST_CODE = 20;
-	public static final String WEB_SERVICE_CREATEUSER = "http://webservices.aptoide.com/webservices/createUser";
+	public static final String WEB_SERVICE_CREATEUSER = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/createUser";
 
 	Context context;
 	private boolean suceed=false;
@@ -113,8 +114,8 @@ public class CreateUser extends SherlockActivity /*SherlockActivity */{
 		@Override
 		protected JSONObject doInBackground(String... params) {
 			JSONObject status;
-			String data = null;
-			StringBuilder sb = null;
+			String data;
+			StringBuilder sb;
 			try{
 				HttpURLConnection connection = (HttpURLConnection) new URL(WEB_SERVICE_CREATEUSER).openConnection();
 				String password_sha1 = Algorithms.computeSHA1sum(params[1]);
@@ -136,7 +137,7 @@ public class CreateUser extends SherlockActivity /*SherlockActivity */{
                 sb = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
-                    sb.append(line+"\n");
+                    sb.append(line).append("\n");
                 }
                 wr.close();
                 br.close();
@@ -194,14 +195,5 @@ public class CreateUser extends SherlockActivity /*SherlockActivity */{
 		}
 
 	}
-
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		if (item.getItemId() == android.R.id.home) {
-//			finish();
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
 }
 
