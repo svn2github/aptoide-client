@@ -194,7 +194,7 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
                         apk.generateAppHashid();
                         apk.setMd5(app.get("md5sum"));
                         apk.setPath(app.get("path"));
-
+                        apk.setIconPath("");
                         apk.setMainObbUrl(app.get("main_path"));
                         apk.setMainObbFileName(app.get("main_filename"));
                         apk.setMainObbMd5(app.get("main_md5sum"));

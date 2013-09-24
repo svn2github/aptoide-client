@@ -74,6 +74,9 @@ public class PermissionsActivity extends Activity {
 
         } catch (PackageManager.NameNotFoundException e) {
             permissionsDialog(apk, permissions(permissionsList));
+        } catch (NullPointerException e){
+            DownloadExecutorImpl.installWithRoot(apk);
+            finish();
         }
     }
 
@@ -119,7 +122,7 @@ public class PermissionsActivity extends Activity {
         View v = LayoutInflater.from(context).inflate(R.layout.app_permission, null);
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.container);
 
-        if ( permissions!= null) {
+        if ( permissions != null) {
 
             if (!permissions.isEmpty()) {
                 for (int i = 0; i < permissions.size(); i++) {
@@ -143,7 +146,10 @@ public class PermissionsActivity extends Activity {
 
         AlertDialog dialog = new AlertDialog.Builder(context).setView(v).create();
         dialog.setTitle(context.getString(R.string.restore) + " " + viewApk.getName() + "?");
-        dialog.setIcon(BitmapDrawable.createFromPath(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath()));
+        String path = apk.getIconPath();
+
+        dialog.setIcon(BitmapDrawable.createFromPath(ImageLoader.getInstance().getDiscCache().get(path).getAbsolutePath()));
+
 
 
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(android.R.string.yes), new DialogInterface.OnClickListener() {

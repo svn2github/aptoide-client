@@ -36,7 +36,8 @@ public enum EnumDownloadFailReason {
 	CONNECTION_ERROR,
 	NOT_FOUND,
 	MD5_CHECK_FAILED,
-    PAIDAPP_NOTFOUND;
+    PAIDAPP_NOTFOUND,
+    NO_FREE_SPACE;
 
 	public static EnumDownloadFailReason reverseOrdinal(int ordinal){
 		return values()[ordinal];
@@ -56,6 +57,8 @@ public enum EnumDownloadFailReason {
 				return  context.getString(R.string.invalid_apk);
             case PAIDAPP_NOTFOUND:
                 return context.getString(R.string.paidapp_not_found);
+            case NO_FREE_SPACE:
+                return context.getString(R.string.remote_in_nospace);
 			default:
 				return  context.getString(R.string.server_error);
 		}

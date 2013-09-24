@@ -20,6 +20,7 @@ import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import cm.aptoide.pt.*;
 import cm.aptoide.pt.Server.State;
@@ -76,6 +77,7 @@ public class MainService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			try{
+                Log.d("TAG", "Removing server");
 				serversParsing.remove(intent.getStringExtra("server"));
 			}catch (Exception e){
 				e.printStackTrace();
@@ -87,13 +89,21 @@ public class MainService extends Service {
 	private BroadcastReceiver parseCompletedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(final Context context, Intent intent) {
-			new Thread(new Runnable() {
+
+
+            Log.d("TAG", "Parse Complete");
+            new Thread(new Runnable() {
 				@Override
 				public void run() {
 
-                    if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("showUpdatesNotification", true)){
+                    if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("showUpdatesNotification", true) && serversParsing.isEmpty()){
     					Cursor updates = Database.getInstance().getUpdates(Order.DATE);
 	    				setUpdatesNotification(updates);
+                    }
+
+                    if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("auto_update", false) && serversParsing.isEmpty()){
+                        Intent i = new Intent("auto_update");
+                        sendBroadcast(i);
                     }
 
 				}
@@ -539,7 +549,6 @@ public class MainService extends Service {
 					updatesList.add(updateApkid);
 					isNotification = true;
 				}
-
 			}
         updates.close();
 		}
@@ -549,24 +558,33 @@ public class MainService extends Service {
 			NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			int icon = android.R.drawable.stat_sys_download_done;
 			if(ApplicationAptoide.MARKETNAME.equals("Aptoide")){
-				icon = R.drawable.ic_notification;
+
+                icon = R.drawable.ic_stat_aptoide_512x512_notification;
+
 			}
 			CharSequence tickerText = getString(R.string.has_updates, ApplicationAptoide.MARKETNAME);
 			long when = System.currentTimeMillis();
 
-			Notification notification = new Notification(icon, tickerText, when);
+            Context context = getApplicationContext();
+            CharSequence contentTitle = ApplicationAptoide.MARKETNAME;
+            CharSequence contentText = getString(R.string.new_updates, updates.getCount()+"");
+            if(updates.getCount()<2){
+                contentText = getString(R.string.one_new_update, updates.getCount()+"");
+            }
+            Intent notificationIntent = new Intent(context, MainActivity.class);
+            notificationIntent.putExtra("new_updates", true);
 
-			Context context = getApplicationContext();
-			CharSequence contentTitle = ApplicationAptoide.MARKETNAME;
-			CharSequence contentText = getString(R.string.new_updates, updates.getCount()+"");
-			if(updates.getCount()<2){
-				contentText = getString(R.string.one_new_update, updates.getCount()+"");
-			}
-			Intent notificationIntent = new Intent(context, MainActivity.class);
-			notificationIntent.putExtra("new_updates", true);
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-			PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-			notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+			Notification notification = new NotificationCompat.Builder(this)
+                    .setSmallIcon(icon)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText)
+                    .setContentIntent(contentIntent)
+                    .setTicker(tickerText)
+                    .build();
+
+
 
 			managerNotification.notify(ID_UPDATES_NOTIFICATION, notification);
 

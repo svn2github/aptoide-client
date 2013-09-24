@@ -137,6 +137,8 @@ public class DownloadExecutorImpl implements DownloadExecutor {
             mBuilder.setContentTitle(ApplicationAptoide.MARKETNAME)
                     .setContentText(context.getString(R.string.installing, apk.getName()));
 
+
+
             Bitmap bm = BitmapFactory.decodeFile(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath());
 
 

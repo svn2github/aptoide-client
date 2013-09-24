@@ -6,6 +6,7 @@ import cm.aptoide.pt.download.state.ErrorState;
 import cm.aptoide.pt.views.EnumDownloadFailReason;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -85,8 +86,12 @@ public class DownloadThread implements Runnable {
             byte[] bytes = new byte[1024];
             int bytesRead;
             BufferedInputStream mStream = mConnection.getStream();
-            while ( (bytesRead = mStream.read(bytes)) != -1 &&
-                    parent.getStatusState() instanceof ActiveState) {
+
+            if( mRemainingSize > new File(download.getDestination()).getFreeSpace()){
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+            }
+
+            while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
                 mDownloadFile.getmFile().write(bytes, 0 , bytesRead);
                 this.mDownloadedSize += bytesRead;
                 this.mProgress += bytesRead;
@@ -112,6 +117,7 @@ public class DownloadThread implements Runnable {
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
         } catch (IOException e){
             e.printStackTrace();
+
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
         } catch (CompletedDownloadException e) {
 

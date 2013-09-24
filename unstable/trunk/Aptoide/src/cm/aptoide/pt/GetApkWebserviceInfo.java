@@ -28,6 +28,7 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
 
     ProgressDialog pd;
     private ViewApk apk;
+    private boolean noError = false;
 
     public GetApkWebserviceInfo(Context context, ServiceManagerDownload serviceDownloadManager, boolean showProgress){
         this.context = context;
@@ -38,6 +39,7 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+
         if (showProgressDialog) {
             pd = new ProgressDialog(context);
             pd.setMessage(context.getString(R.string.please_wait));
@@ -49,14 +51,17 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
     protected WebserviceGetApkInfo doInBackground(Long... params) {
 
 
-        this.apk = Database.getInstance().getApk((Long) params[0], Category.INFOXML);
-
-        try {
-            return new WebserviceGetApkInfo(context, apk.getWebservicesPath(), apk, Category.INFOXML, null, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        this.apk = Database.getInstance().getApk( params[0], Category.INFOXML);
+        if (!serviceDownloadManager.existsDownload(apk)) {
+            try {
+                return new WebserviceGetApkInfo(context, apk.getWebservicesPath(), apk, Category.INFOXML, null, true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            noError = true;
         }
 
         return null;
@@ -100,6 +105,10 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
             serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
 
 
+        }else if(noError){
+            Toast toast = Toast.makeText(context, context.getString(R.string.starting_download) + ": " + apk.getName(), Toast.LENGTH_SHORT);
+            toast.show();
+            serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
         }else{
             Toast toast = Toast.makeText(context, context.getString(R.string.an_error_check_net), Toast.LENGTH_SHORT);
             toast.show();

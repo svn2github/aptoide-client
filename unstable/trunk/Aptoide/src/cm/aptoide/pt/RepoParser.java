@@ -105,11 +105,11 @@ public class RepoParser {
 				new File(xml).delete();
 			}
 			server.state = cm.aptoide.pt.Server.State.PARSED;
-			ApplicationAptoide.getContext().sendBroadcast(new Intent("parse_completed"));
 			db.updateStatus(server);
 			db.endTransation(server);
+            ApplicationAptoide.getContext().sendBroadcast(new Intent("parse_completed"));
 
-		}
+        }
 	}
 
 

@@ -313,11 +313,16 @@ public class ApplicationAptoide extends Application {
             @Override
             public String generate(String s) {
 
-                if(s.contains("thumbs/mobile/")){
-                    return "mobile." + s.substring(s.lastIndexOf('/') + 1);
+                if(s!=null){
+                    if(s.contains("thumbs/mobile/")){
+                        return "mobile." + s.substring(s.lastIndexOf('/') + 1);
+                    }
+
+                    return s.substring(s.lastIndexOf('/') + 1);
+                }else{
+                    return null;
                 }
 
-                return s.substring(s.lastIndexOf('/') + 1);
 
             }
         };

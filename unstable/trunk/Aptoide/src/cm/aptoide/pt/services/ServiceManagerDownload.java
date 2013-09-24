@@ -4,17 +4,19 @@ import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import cm.aptoide.pt.ApplicationAptoide;
-import cm.aptoide.pt.Category;
-import cm.aptoide.pt.R;
+import cm.aptoide.pt.*;
 import cm.aptoide.pt.download.*;
+import cm.aptoide.pt.download.DownloadManager;
 import cm.aptoide.pt.download.event.DownloadStatusEvent;
 import cm.aptoide.pt.download.state.EnumState;
 import cm.aptoide.pt.events.BusProvider;
@@ -46,6 +48,24 @@ public class ServiceManagerDownload extends Service {
     private boolean showNotification = false;
     private NotificationCompat.Builder mBuilder;
 
+    private BroadcastReceiver autoUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Cursor updates = Database.getInstance().getUpdates(Order.DATE);
+
+            for(updates.moveToFirst();!updates.isAfterLast();updates.moveToNext()){
+                new GetApkWebserviceInfo(context, ServiceManagerDownload.this, false).execute(updates.getLong(updates.getColumnIndex("_id")));
+            }
+
+            updates.close();
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        registerReceiver(autoUpdateReceiver, new IntentFilter("auto_update"));
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -74,6 +94,10 @@ public class ServiceManagerDownload extends Service {
         }
 
         return list;
+    }
+
+    public boolean existsDownload(ViewApk apk) {
+        return downloads.get(apk.getAppHashId())!=null;
     }
 
     public class LocalBinder extends Binder {
@@ -124,54 +148,57 @@ public class ServiceManagerDownload extends Service {
     }
 
     public void startDownloadWithWebservice(final DownloadInfo download, final ViewApk apk){
+        if (existsDownload(apk)) {
+            startDownload(download, apk);
+        } else {
+            new AsyncTask<Void, Void, WebserviceGetApkInfo>() {
 
-        new AsyncTask<Void, Void, WebserviceGetApkInfo>() {
-
-            @Override
-            protected WebserviceGetApkInfo doInBackground(Void... params) {
-                try {
-                    return new WebserviceGetApkInfo(ApplicationAptoide.getContext(), apk.getWebservicesPath(), apk, Category.INFOXML, null, false);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(WebserviceGetApkInfo webserviceGetApkInfo) {
-                super.onPostExecute(webserviceGetApkInfo);
-                try {
-                    if (webserviceGetApkInfo != null) {
-                        apk.setMd5(webserviceGetApkInfo.getApkMd5());
-                        apk.setPath(webserviceGetApkInfo.getApkDownloadPath());
-
-                        if (webserviceGetApkInfo.hasOBB()) {
-                            apk.setMainObbUrl(webserviceGetApkInfo.getMainOBB().getString("path"));
-                            apk.setMainObbFileName(webserviceGetApkInfo.getMainOBB().getString("filename"));
-                            apk.setMainObbMd5(webserviceGetApkInfo.getMainOBB().getString("md5sum"));
-
-                            if (webserviceGetApkInfo.hasPatchOBB()) {
-                                apk.setPatchObbUrl(webserviceGetApkInfo.getPatchOBB().getString("path"));
-                                apk.setPatchObbFileName(webserviceGetApkInfo.getPatchOBB().getString("filename"));
-                                apk.setPatchObbMd5(webserviceGetApkInfo.getPatchOBB().getString("md5sum"));
-                            }
-                        }
-                        JSONArray array = webserviceGetApkInfo.getApkPermissions();
-                        ArrayList<String> permissionList = new ArrayList<String>();
-                        for (int i = 0; i != array.length(); i++) {
-                            permissionList.add(array.getString(i));
-                        }
-                        apk.setPermissionsList(permissionList);
-
-                        startDownload(download, apk);
+                @Override
+                protected WebserviceGetApkInfo doInBackground(Void... params) {
+                    try {
+                        return new WebserviceGetApkInfo(ApplicationAptoide.getContext(), apk.getWebservicesPath(), apk, Category.INFOXML, null, false);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    return null;
                 }
-            }
-        }.execute();
+
+                @Override
+                protected void onPostExecute(WebserviceGetApkInfo webserviceGetApkInfo) {
+                    super.onPostExecute(webserviceGetApkInfo);
+                    try {
+                        if (webserviceGetApkInfo != null) {
+                            apk.setMd5(webserviceGetApkInfo.getApkMd5());
+                            apk.setPath(webserviceGetApkInfo.getApkDownloadPath());
+
+                            if (webserviceGetApkInfo.hasOBB()) {
+                                apk.setMainObbUrl(webserviceGetApkInfo.getMainOBB().getString("path"));
+                                apk.setMainObbFileName(webserviceGetApkInfo.getMainOBB().getString("filename"));
+                                apk.setMainObbMd5(webserviceGetApkInfo.getMainOBB().getString("md5sum"));
+
+                                if (webserviceGetApkInfo.hasPatchOBB()) {
+                                    apk.setPatchObbUrl(webserviceGetApkInfo.getPatchOBB().getString("path"));
+                                    apk.setPatchObbFileName(webserviceGetApkInfo.getPatchOBB().getString("filename"));
+                                    apk.setPatchObbMd5(webserviceGetApkInfo.getPatchOBB().getString("md5sum"));
+                                }
+                            }
+                            JSONArray array = webserviceGetApkInfo.getApkPermissions();
+                            ArrayList<String> permissionList = new ArrayList<String>();
+                            for (int i = 0; i != array.length(); i++) {
+                                permissionList.add(array.getString(i));
+                            }
+                            apk.setPermissionsList(permissionList);
+
+                            startDownload(download, apk);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.execute();
+        }
 
 
 
@@ -221,6 +248,7 @@ public class ServiceManagerDownload extends Service {
     @Override
     public void onDestroy() {
         dismissNotification();
+        unregisterReceiver(autoUpdateReceiver);
         super.onDestroy();
     }
 
