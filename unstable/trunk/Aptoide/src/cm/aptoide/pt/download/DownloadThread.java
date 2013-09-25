@@ -1,12 +1,12 @@
 package cm.aptoide.pt.download;
 
+import android.os.StatFs;
 import android.util.Log;
 import cm.aptoide.pt.download.state.ActiveState;
 import cm.aptoide.pt.download.state.ErrorState;
 import cm.aptoide.pt.views.EnumDownloadFailReason;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -87,7 +87,14 @@ public class DownloadThread implements Runnable {
             int bytesRead;
             BufferedInputStream mStream = mConnection.getStream();
 
-            if( mRemainingSize > new File(download.getDestination()).getFreeSpace()){
+            StatFs stat = new StatFs(download.getDestination());
+
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+
+            long avail = (blockSize * availableBlocks);
+
+            if( mRemainingSize > avail){
                 parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
             }
 

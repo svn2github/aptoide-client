@@ -89,8 +89,6 @@ public class MainService extends Service {
 	private BroadcastReceiver parseCompletedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(final Context context, Intent intent) {
-
-
             Log.d("TAG", "Parse Complete");
             new Thread(new Runnable() {
 				@Override
@@ -117,29 +115,6 @@ public class MainService extends Service {
 			return MainService.this;
 		}
 	}
-
-//	public void parse(final Database db){
-//		new Thread() {
-//
-//
-//			public void run() {
-//
-//				ArrayList<Server> servers = ;
-//
-//				try {
-//					for(Server server : servers){
-//						if(serversParsing.get((int)server.id)==null){
-//
-//						}
-//
-//					}
-//					sendBroadcast(new Intent("starting"));
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			};
-//		}.start();
-//	}
 
 	public String get(Server server,String xmlpath,String what, boolean delta) throws IOException{
 		getApplicationContext().sendBroadcast(new Intent("connecting"));
@@ -288,92 +263,6 @@ public class MainService extends Service {
 		}
 	}
 
-//	private void parseBootConfig(final Database db, final Server server) {
-//		new Thread(new Runnable() {
-//			public void run() {
-//				String path;
-//				try {
-//					//			serversParsing.put((int)server.id, server);
-//					path = get(server, defaultBootConfigXmlPath, "boot_config.xml", false);
-//					SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-//
-//					parser.parse(new File(path), new DefaultHandler(){
-//						StringBuilder sb = new StringBuilder();
-//						String avatar;
-//						String theme;
-//						String description;
-//						String view;
-//						String items;
-//
-//						public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws SAXException {
-//							sb.setLength(0);
-//						};
-//
-//						public void characters(char[] ch, int start, int length) throws SAXException {
-//							sb.append(ch,start,length);
-//						};
-//
-//						public void endElement(String uri, String localName, String qName) throws SAXException {
-//
-//							ApplicationAptoide.StoreElements element;
-//							try{
-//								element = StoreElements.valueOf(localName);
-//							}catch (Exception e) {
-//								element = StoreElements.none;
-//							}
-//
-//							switch (element) {
-//							case avatar:
-//								this.avatar = sb.toString();
-//								break;
-//							case description:
-//								this.description = sb.toString();
-//								Log.d("MainService-bootconfig-parser: description", description);
-//								break;
-//							case items:
-//								this.items = sb.toString();
-//								break;
-//							case theme:
-//								this.theme = sb.toString();
-//								Log.d("MainService-bootconfig-parser: theme", theme);
-//								break;
-//							case view:
-//								this.view = sb.toString();
-//								break;
-//							case storeconf:
-//								db.updateStoreInfo(avatar, theme, description, view, items, server.id);
-//								break;
-//							default:
-//								break;
-//							}
-//
-//
-//						};
-//
-//
-//
-//
-//					});
-//
-//				} catch (MalformedURLException e) {
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				} catch (ParserConfigurationException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (SAXException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}).start();
-//
-//
-//
-//	}
-
-
 
 	public boolean deleteStore(Database db, long id){
 		if(!serversParsing.contains(db.getServer(id, false).url)){
@@ -403,7 +292,7 @@ public class MainService extends Service {
                         Server serverTop = new ServerTop(server);
 
                         serverTop.hash = lastModified + "";
-
+                        db.deleteTopOrLatest(server.id, Category.TOP);
                         RepoParser.getInstance(db).parseTop(path, serverTop);
 
                     }
@@ -454,7 +343,7 @@ public class MainService extends Service {
 						    path = get(server, defaultLatestXmlPath, "latest.xml", false);
                             Server serverLatest = new ServerLatest(server);
                             serverLatest.hash = lastModified + "";
-
+                            db.deleteTopOrLatest(server.id, Category.LATEST);
                             RepoParser.getInstance(db).parseLatest(path, serverLatest);
 
 

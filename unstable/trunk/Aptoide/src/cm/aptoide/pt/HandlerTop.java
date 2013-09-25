@@ -8,6 +8,7 @@
 package cm.aptoide.pt;
 
 import android.content.ContentValues;
+import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.views.ViewApkTop;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -15,12 +16,15 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
 public class HandlerTop extends DefaultHandler{
 
-	interface ElementHandler {
+    private boolean multipleApk = false;
+
+    interface ElementHandler {
 		void startElement(Attributes atts) throws SAXException;
 		void endElement() throws SAXException;
 	}
@@ -130,6 +134,41 @@ public class HandlerTop extends DefaultHandler{
 			}
 		});
 
+        elements.put("multipleapk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                multipleApk = true;
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+            }
+        });
+
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                db.insert(apk);
+            }
+        });
+
+        elements.put(Utils.getMyCountry(ApplicationAptoide.getContext()).toUpperCase(Locale.ENGLISH), new ElementHandler() {
+
+
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setName(sb.toString());
+            }
+        });
+
 		elements.put("package", new ElementHandler() {
 			public void startElement(Attributes atts) throws SAXException {
 				apk.clear();
@@ -138,7 +177,13 @@ public class HandlerTop extends DefaultHandler{
 
 			@Override
 			public void endElement() throws SAXException {
-				db.insert(apk);
+                if(!multipleApk){
+
+                    db.insert(apk);
+//						);
+                }else{
+                    multipleApk = false;
+                }
 //				db.insertScreenshots(apk,category);
 				insidePackage = false;
 			}

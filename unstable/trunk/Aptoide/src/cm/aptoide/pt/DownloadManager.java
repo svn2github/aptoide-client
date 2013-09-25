@@ -465,6 +465,7 @@ public class DownloadManager extends SherlockFragmentActivity {
                     rowViewHolder.app_speed.setText(getString(R.string.download_failed_due_to) +": "+ download.getFailReason().toString(getContext()));
 
                     rowViewHolder.app_progress.setVisibility(View.GONE);
+                    rowViewHolder.app_download_progress.setVisibility(View.GONE);
                     rowViewHolder.app_eta.setVisibility(View.GONE);
                     break;
                 case COMPLETE:

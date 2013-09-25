@@ -18,9 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.services.ServiceManagerDownload;
 import cm.aptoide.pt.views.ViewApk;
@@ -173,15 +170,15 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if(app!=null&&!app.isEmpty()){
-                View simpleView = LayoutInflater.from(IntentReceiver.this).inflate(R.layout.dialog_simple_layout, null);
-                Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this).setView(simpleView);
+
+                Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
                 final AlertDialog installAppDialog = dialogBuilder.create();
                 installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
                 installAppDialog.setIcon(android.R.drawable.ic_menu_more);
                 installAppDialog.setCancelable(false);
 
-                TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-                message.setText(getString(R.string.installapp_alrt) +app.get("name")+"?");
+
+                installAppDialog.setMessage(getString(R.string.installapp_alrt) +app.get("name")+"?");
 
                 installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
                     @Override

@@ -1,30 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="alert_dialog_style_light">
-        <item name="android:fullDark">@drawable/dialog_body_light</item>
-        <item name="android:topDark">@drawable/dialog_title_light</item>
-        <item name="android:centerDark">@drawable/dialog_body_light</item>
-        <item name="android:bottomDark">@drawable/dialog_footer_light</item>
-        <item name="android:fullBright">@drawable/dialog_body_light</item>
-        <item name="android:centerBright">@drawable/dialog_body_light</item>
-        <item name="android:bottomBright">@drawable/dialog_footer_light</item>
-        <item name="android:bottomMedium">@drawable/dialog_footer_light</item>
-        <item name="android:centerMedium">@drawable/dialog_body_light</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="alert_dialog_style_dark">
-        <item name="android:fullDark">@drawable/dialog_body_dark</item>
-        <item name="android:topDark">@drawable/dialog_title_dark</item>
-        <item name="android:centerDark">@drawable/dialog_body_dark</item>
-        <item name="android:bottomDark">@drawable/dialog_footer_dark</item>
-        <item name="android:fullBright">@drawable/dialog_body_dark</item>
-        <item name="android:centerBright">@drawable/dialog_body_dark</item>
-        <item name="android:bottomBright">@drawable/dialog_footer_dark</item>
-        <item name="android:bottomMedium">@drawable/dialog_footer_dark</item>
-        <item name="android:centerMedium">@drawable/dialog_body_dark</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+    <style name="alert_dialog_style_light" parent="android:Theme.Dialog"/>
+    <style name="alert_dialog_style_dark" parent="android:Theme.Dialog"/>
 
     <!-- custom button styles -->
     <style name="custom_button_style">
@@ -694,10 +671,16 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
-        <!-- Note that we use the base animation style here (that is no
-             animations) because we really have no idea how this kind of
-             activity will be used. -->
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="transparent_black" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_dark</item>
     </style>
 
 </resources>

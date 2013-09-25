@@ -390,15 +390,6 @@ public class ApplicationAptoide extends Application {
 		}
 
 
-//        try {
-//            Log.d("TAG","version name" + this.getPackageManager().getPackageInfo(this.getPackageName(),0).versionName);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-
-
-
-
         try{
         	managerPreferences = new ManagerPreferences(getApplicationContext());
         	if (ApplicationAptoide.BRAND.equals("brand_aptoide") && isUpdate()) {

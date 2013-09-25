@@ -27,30 +27,40 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/order_popup_title1"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <RadioButton
                 android:id="@+id/org_rct"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/order_popup_lst1" />
 
             <RadioButton
                 android:id="@+id/org_abc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/order_popup_lst2" />
 
             <RadioButton
                 android:id="@+id/org_rat"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/order_popup_lst3" />
+                android:text="@string/order_popup_lst3"/>
 
             <RadioButton
                 android:id="@+id/org_dwn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/order_popup_lst4" />
+                android:text="@string/order_popup_lst4"/>
 
             <RadioButton
                 android:id="@+id/org_price"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/order_popup_lst5" />
         </RadioGroup>
@@ -71,11 +81,15 @@
 
             <RadioButton
                 android:id="@+id/shw_ct"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/order_popup_catg1" />
 
             <RadioButton
                 android:id="@+id/shw_all"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/order_popup_catg2" />
         </RadioGroup>

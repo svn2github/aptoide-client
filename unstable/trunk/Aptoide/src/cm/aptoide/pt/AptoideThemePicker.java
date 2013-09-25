@@ -5,7 +5,22 @@ import android.content.Context;
 import java.util.Locale;
 
 public class AptoideThemePicker {
+    public static void setPermissionsTheme(Context activity) {
 
+        String theme_string = "APTOIDE_THEME_"
+                + ApplicationAptoide.APTOIDETHEME.toUpperCase(Locale.ENGLISH);
+        try {
+            EnumAptoideThemes theme = EnumAptoideThemes.valueOf(theme_string);
+            switch (theme) {
+                case APTOIDE_THEME_TIMWE:
+                case APTOIDE_THEME_DARKORANGE:
+                case APTOIDE_THEME_EOCEAN:
+                    activity.setTheme(R.style.transparent_black);
+                    break;
+            }
+        }catch (Exception ignore){}
+
+    }
 	public static void setAptoideTheme(Context activity) {
 
 		String theme_string = "APTOIDE_THEME_"

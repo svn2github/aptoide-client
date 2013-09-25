@@ -88,7 +88,7 @@ public class ServiceManagerDownload extends Service {
         ArrayList<DownloadInfo> list = new ArrayList<DownloadInfo>();
 
         for(DownloadInfo downloadInfo: getDownloads()){
-            if(downloadInfo.getStatusState().getEnumState().equals(EnumState.COMPLETE) ){
+            if(downloadInfo.getStatusState().getEnumState().equals(EnumState.COMPLETE) || downloadInfo.getStatusState().getEnumState().equals(EnumState.ERROR)){
                 list.add(downloadInfo);
             }
         }
@@ -281,6 +281,8 @@ public class ServiceManagerDownload extends Service {
     private void updateProgress(NotificationCompat.Builder mBuilder) {
         int percentage = getOngoingDownloadsPercentage();
         mBuilder.setProgress(100, percentage, percentage == 0);
+        mBuilder.setContentText(getString(R.string.x_app, ongoingDownloads.size()));
+
         // Displays the progress bar for the first time
         managerNotification.notify(-3, mBuilder.build());
     }
@@ -290,7 +292,7 @@ public class ServiceManagerDownload extends Service {
         ArrayList<DownloadInfo> list = new ArrayList<DownloadInfo>();
 
         for(DownloadInfo downloadInfo: getDownloads()){
-            if(!downloadInfo.getStatusState().getEnumState().equals(EnumState.COMPLETE) && !downloadInfo.getStatusState().getEnumState().equals(EnumState.NOSTATE) ){
+            if(!downloadInfo.getStatusState().getEnumState().equals(EnumState.COMPLETE) && !downloadInfo.getStatusState().getEnumState().equals(EnumState.NOSTATE) && !downloadInfo.getStatusState().getEnumState().equals(EnumState.ERROR)){
                 list.add(downloadInfo);
             }
         }

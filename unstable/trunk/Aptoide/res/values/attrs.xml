@@ -23,6 +23,7 @@
     <attr name="popQuickActionBackground" format="reference" />
     <attr name="viewPagerIndicatorBackground" format="reference" />
     <attr name="breadcrumbStyle" format="reference" />
+    <attr name="alertDialog" format="reference" />
     
     <attr name="autoScaleTextViewStyle" format="reference" />
     <declare-styleable name="AutoScaleTextView">

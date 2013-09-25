@@ -413,7 +413,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 }
                 ((TextView) findViewById(R.id.app_store)).setText(getString(R.string.store) + ": " + repo_string);
                 ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) + mainObbSize + patchObbSize)));
-                ((TextView) findViewById(R.id.version_label)).setText(getString(R.string.version) + " " + viewApk.getVername());
+                ((TextView) findViewById(R.id.version_label)).setText(getString(R.string.version) + " " + viewApk.getVername() + " Vercode: " + viewApk.getVercode());
                 ((TextView) findViewById(R.id.app_name)).setText(viewApk.getName());
 //                ((TextView) findViewById(R.id.app_category)).setText(viewApk.getCategory1());
 //				ImageLoader imageLoader = ImageLoader.getInstance(context);

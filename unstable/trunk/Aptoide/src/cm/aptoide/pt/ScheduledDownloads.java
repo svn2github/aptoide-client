@@ -219,14 +219,14 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
             }
         });
 		if(getIntent().hasExtra("downloadAll")){
-			View simpleView = LayoutInflater.from(this).inflate(R.layout.dialog_simple_layout, null);
-			Builder dialogBuilder = new AlertDialog.Builder(this).setView(simpleView);
+
+			Builder dialogBuilder = new AlertDialog.Builder(this);
 			final AlertDialog scheduleDownloadDialog = dialogBuilder.create();
 			scheduleDownloadDialog.setTitle(getText(R.string.schDwnBtn));
 			scheduleDownloadDialog.setIcon(android.R.drawable.ic_dialog_alert);
 			scheduleDownloadDialog.setCancelable(false);
-			TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-			message.setText(getText(R.string.schDown_install));
+
+            scheduleDownloadDialog.setMessage(getText(R.string.schDown_install));
 			scheduleDownloadDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     for (String scheduledDownload : scheduledDownloadsHashMap.keySet()) {
@@ -404,8 +404,8 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		View simpleView = LayoutInflater.from(this).inflate(R.layout.dialog_simple_layout, null);
-		Builder dialogBuilder = new AlertDialog.Builder(this).setView(simpleView);
+
+		Builder dialogBuilder = new AlertDialog.Builder(this);
 		final AlertDialog scheduleDialog = dialogBuilder.create();
 
 //		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -421,8 +421,7 @@ public class ScheduledDownloads extends SherlockFragmentActivity implements Load
 				scheduleDialog.setTitle(getText(R.string.schDwnBtn));
 				scheduleDialog.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 				scheduleDialog.setCancelable(false);
-				TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-				message.setText(getText(R.string.schDown_sureremove));
+                scheduleDialog.setMessage(getText(R.string.schDown_sureremove));
 				scheduleDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {

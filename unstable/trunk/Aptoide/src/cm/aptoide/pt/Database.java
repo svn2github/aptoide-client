@@ -43,7 +43,7 @@ public class Database  {
     private final static int sdk = HWSpecifications.getSdkVer();
     private final static String gles = HWSpecifications.getGlEsVer(context);
     private final static int screen = HWSpecifications.getScreenSize(context);
-    private final static String screenSpec = "400"+ "/" + "160";
+    private final static String screenSpec = HWSpecifications.getNumericScreenSize(context)+ "/" + HWSpecifications.getDensityDpi(context);
     private final static String cpu = HWSpecifications.getCpuAbi();
     private final static String cpu2 = HWSpecifications.getCpuAbi2();
 
@@ -1105,7 +1105,7 @@ public class Database  {
 		return server;
 	}
 
-	private void deleteTopOrLatest(long id, Category category) {
+	public void deleteTopOrLatest(long id, Category category) {
 		try {
 			switch (category) {
 			case TOP:

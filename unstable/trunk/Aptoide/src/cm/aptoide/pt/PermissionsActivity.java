@@ -10,6 +10,7 @@ import android.content.pm.PermissionInfo;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,6 +41,7 @@ public class PermissionsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AptoideThemePicker.setPermissionsTheme(this);
         super.onCreate(savedInstanceState);
         this.context = this;
         apk = getIntent().getParcelableExtra("apk");
@@ -118,8 +120,9 @@ public class PermissionsActivity extends Activity {
     }
 
     private void permissionsDialog(final FinishedApk viewApk, ArrayList<ApkPermission> permissions) {
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(context, context.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
 
-        View v = LayoutInflater.from(context).inflate(R.layout.app_permission, null);
+        View v = LayoutInflater.from(wrapper).inflate(R.layout.app_permission, null);
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.container);
 
         if ( permissions != null) {
@@ -127,7 +130,8 @@ public class PermissionsActivity extends Activity {
             if (!permissions.isEmpty()) {
                 for (int i = 0; i < permissions.size(); i++) {
                     ApkPermission permission = permissions.get(i);
-                    View permissionView = LayoutInflater.from(context).inflate(R.layout.row_permission, null);
+
+                    View permissionView = LayoutInflater.from(wrapper).inflate(R.layout.row_permission, null);
                     if(i==0 || !permissions.get(i-1).getName().equals(permission.getName())){
                         ((TextView) permissionView.findViewById(R.id.permission)).setText(permission.getName());
                     }else{
@@ -137,14 +141,14 @@ public class PermissionsActivity extends Activity {
                     layout.addView(permissionView);
                 }
             }else{
-                TextView tv = new TextView(context);
+                TextView tv = new TextView(wrapper);
                 tv.setPadding(10, 10, 10, 10);
                 tv.setText(context.getString(R.string.no_permissions_required));
                 layout.addView(tv);
             }
         }
 
-        AlertDialog dialog = new AlertDialog.Builder(context).setView(v).create();
+        AlertDialog dialog = new AlertDialog.Builder(wrapper).setView(v).create();
         dialog.setTitle(context.getString(R.string.restore) + " " + viewApk.getName() + "?");
         String path = apk.getIconPath();
 

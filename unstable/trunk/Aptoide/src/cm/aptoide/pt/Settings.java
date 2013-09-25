@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.preference.*;
 import android.provider.SearchRecentSuggestions;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -140,8 +141,10 @@ public class Settings extends PreferenceActivity{
 		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				View view = LayoutInflater.from(mctx).inflate(R.layout.dialog_about, null);
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mctx).setView(view);
+                ContextThemeWrapper wrapper = new ContextThemeWrapper(Settings.this, Settings.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+
+                View view = LayoutInflater.from(wrapper).inflate(R.layout.dialog_about, null);
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(wrapper).setView(view);
 
 				final AlertDialog aboutDialog = alertDialogBuilder.create();
 

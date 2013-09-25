@@ -8,6 +8,7 @@
 package cm.aptoide.pt;
 
 import android.content.ContentValues;
+import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.views.ViewApk;
 import cm.aptoide.pt.views.ViewApkItemBased;
 import org.xml.sax.Attributes;
@@ -16,14 +17,16 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class HandlerItemBased extends DefaultHandler {
 
 	Map<String, ElementHandler> elements = new HashMap<String, ElementHandler>();
 	protected Database db = Database.getInstance();
+    private boolean multipleApk = false;
 
-	interface ElementHandler {
+    interface ElementHandler {
 		void startElement(Attributes atts) throws SAXException;
 		void endElement() throws SAXException;
 	}
@@ -36,6 +39,8 @@ public class HandlerItemBased extends DefaultHandler {
 		apk.setServer(new Server());
 		apk.setParentApk(parent_apk);
 		loadSpecificElements();
+
+
 	}
 
 	void loadSpecificElements() {
@@ -52,6 +57,19 @@ public class HandlerItemBased extends DefaultHandler {
             }
         });
 
+        elements.put(Utils.getMyCountry(ApplicationAptoide.getContext()).toUpperCase(Locale.ENGLISH), new ElementHandler() {
+
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setName(sb.toString());
+            }
+
+        });
+
         elements.put("screenCompat", new ElementHandler() {
             @Override
             public void startElement(Attributes atts) throws SAXException {
@@ -63,6 +81,30 @@ public class HandlerItemBased extends DefaultHandler {
                 apk.setScreenCompat(sb.toString());
             }
         });
+
+
+        elements.put("multipleapk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                multipleApk = true;
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+            }
+        });
+
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                db.insert(apk);
+            }
+        });
+
 		elements.put("apklst", new ElementHandler() {
 
 			@Override
@@ -414,7 +456,13 @@ public class HandlerItemBased extends DefaultHandler {
 			@Override
 			public void endElement() throws SAXException {
 				try{
-					db.insert(apk);
+                    if(!multipleApk){
+
+                        db.insert(apk);
+//						);
+                    }else{
+                        multipleApk = false;
+                    }
 				}catch (Exception e){
 					e.printStackTrace();
 				}

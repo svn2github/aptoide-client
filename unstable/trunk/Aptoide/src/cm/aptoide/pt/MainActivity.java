@@ -216,13 +216,12 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
-            Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
+
+            Builder dialogBuilder = new AlertDialog.Builder(mContext);
             final AlertDialog parseErrorDialog = dialogBuilder.create();
             parseErrorDialog.setTitle(getText(R.string.parse_error));
             parseErrorDialog.setIcon(android.R.drawable.ic_dialog_alert);
-            TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-            message.setText(getText(R.string.parse_error_loading));
+            parseErrorDialog.setMessage(getText(R.string.parse_error_loading));
             parseErrorDialog.setCancelable(false);
             parseErrorDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
                 @Override
@@ -292,14 +291,12 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     if (Database.getInstance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
                         Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                     } else {
-                        View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
-                        Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
+
+                        Builder dialogBuilder = new AlertDialog.Builder(mContext);
                         final AlertDialog addNewRepoDialog = dialogBuilder.create();
                         addNewRepoDialog.setTitle(getString(R.string.add_store));
                         addNewRepoDialog.setIcon(android.R.drawable.ic_menu_add);
-
-                        TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-                        message.setText((getString(R.string.newrepo_alrt) + uri2 + " ?"));
+                        addNewRepoDialog.setMessage((getString(R.string.newrepo_alrt) + uri2 + " ?"));
 
                         addNewRepoDialog.setCancelable(false);
                         addNewRepoDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
@@ -359,13 +356,12 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
             if (isChecked) {
-                View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
-                Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
+
+                Builder dialogBuilder = new AlertDialog.Builder(mContext);
                 final AlertDialog adultContentDialog = dialogBuilder.create();
                 adultContentDialog.setTitle(getString(R.string.adult_content));
                 adultContentDialog.setIcon(android.R.drawable.ic_menu_info_details);
-                TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-                message.setText(getString(R.string.are_you_adult));
+                adultContentDialog.setMessage(getString(R.string.are_you_adult));
                 adultContentDialog.setCancelable(false);
                 adultContentDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
                     @Override
@@ -878,13 +874,12 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
         File sdcard_file = new File(SDCARD);
         if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
-            View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
-            Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
+
+            Builder dialogBuilder = new AlertDialog.Builder(mContext);
             final AlertDialog noSDDialog = dialogBuilder.create();
             noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
             noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
-            TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-            message.setText(getText(R.string.remote_in_noSD));
+            noSDDialog.setMessage(getText(R.string.remote_in_noSD));
             noSDDialog.setCancelable(false);
             noSDDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
                 @Override
@@ -908,12 +903,11 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
             if (avail < 10) {
                 Log.d("Aptoide", "No space left on SDCARD...");
                 Log.d("Aptoide", "* * * * * * * * * *");
-                View simpleView = LayoutInflater.from(this).inflate(R.layout.dialog_simple_layout, null);
-                Builder dialogBuilder = new AlertDialog.Builder(this).setView(simpleView);
+
+                Builder dialogBuilder = new AlertDialog.Builder(this);
                 final AlertDialog noSpaceDialog = dialogBuilder.create();
                 noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-                message.setText(getText(R.string.remote_in_noSDspace));
+                dialogBuilder.setMessage(getText(R.string.remote_in_noSDspace));
                 noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -1053,14 +1047,13 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                         if (Database.getInstance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
                             Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                         } else {
-                            View simpleView = LayoutInflater.from(mContext).inflate(R.layout.dialog_simple_layout, null);
-                            Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(simpleView);
+
+                            Builder dialogBuilder = new AlertDialog.Builder(mContext);
                             final AlertDialog addNewRepoDialog = dialogBuilder.create();
                             addNewRepoDialog.setTitle(getString(R.string.add_store));
                             addNewRepoDialog.setIcon(android.R.drawable.ic_menu_add);
+                            addNewRepoDialog.setMessage((getString(R.string.newrepo_alrt) + uri2 + " ?"));
 
-                            TextView message = (TextView) simpleView.findViewById(R.id.dialog_message);
-                            message.setText((getString(R.string.newrepo_alrt) + uri2 + " ?"));
 
                             addNewRepoDialog.setCancelable(false);
                             addNewRepoDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
@@ -1139,13 +1132,11 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
                 if (ApplicationAptoide.isRestartLauncher() && !ApplicationAptoide.BRAND.equals("brand_aptoide")) {
 
-                    View simpleLayoutView = LayoutInflater.from(this).inflate(R.layout.dialog_simple_layout, null);
-                    Builder dialogBuilder = new AlertDialog.Builder(this).setView(simpleLayoutView);
+                    Builder dialogBuilder = new AlertDialog.Builder(this);
                     final AlertDialog restartLauncherDialog = dialogBuilder.create();
                     restartLauncherDialog.setTitle(getString(R.string.payment_warning_title));
                     restartLauncherDialog.setIcon(android.R.drawable.ic_menu_info_details);
-                    TextView message = (TextView) simpleLayoutView.findViewById(R.id.dialog_message);
-                    message.setText(getString(R.string.restart_launcher, ApplicationAptoide.MARKETNAME));
+                    restartLauncherDialog.setMessage(getString(R.string.restart_launcher, ApplicationAptoide.MARKETNAME));
                     restartLauncherDialog.setCancelable(false);
 
                     restartLauncherDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
@@ -1335,8 +1326,12 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     private void showAddStoreCredentialsDialog(String string) {
-        View credentialsDialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_pvt_store, null);
-        AlertDialog credentialsDialog = new AlertDialog.Builder(mContext).setView(credentialsDialogView).create();
+
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+
+
+        View credentialsDialogView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_add_pvt_store, null);
+        AlertDialog credentialsDialog = new AlertDialog.Builder(wrapper).setView(credentialsDialogView).create();
         credentialsDialog.setTitle(getString(R.string.add_private_store) + " " + RepoUtils.split(string));
         credentialsDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(R.string.new_store), new AddStoreCredentialsListener(string, credentialsDialogView));
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -1351,8 +1346,11 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     private void showAddStoreDialog() {
-        alertDialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_store, null);
-        alertDialog = new AlertDialog.Builder(mContext).setView(alertDialogView).create();
+
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+
+        alertDialogView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_add_store, null);
+        alertDialog = new AlertDialog.Builder(wrapper).setView(alertDialogView).create();
         alertDialog.setTitle(getString(R.string.new_store));
         alertDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.new_store), addRepoListener);
         alertDialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.search_for_stores), searchStoresListener);
@@ -1540,7 +1538,17 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     default:
                         return;
                 }
-                addBreadCrumb(((Cursor) parent.getItemAtPosition(position)).getString(1), depth);
+                String breadCrumbBare = ((Cursor) parent.getItemAtPosition(position)).getString(1);
+                Integer breadcrumbRes = EnumCategories.categories.get(breadCrumbBare);
+                String localizedBreadcrumb;
+                if (breadcrumbRes != null) {
+                    localizedBreadcrumb = getString(breadcrumbRes);
+                } else {
+                    localizedBreadcrumb = breadCrumbBare;
+                }
+
+
+                addBreadCrumb(localizedBreadcrumb, depth);
                 refreshAvailableList(true);
             }
         });
@@ -2138,7 +2146,8 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     public void showFollow() {
-        View socialNetworksView = LayoutInflater.from(this).inflate(R.layout.dialog_social_networks, null);
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+        View socialNetworksView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_social_networks, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this).setView(socialNetworksView);
         final AlertDialog socialDialog = dialogBuilder.create();
         socialDialog.setIcon(android.R.drawable.ic_menu_share);
@@ -2199,9 +2208,9 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
 
         final SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
         final Editor editor = sPref.edit();
-
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_order_popup, null);
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext).setView(view);
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+        View view = LayoutInflater.from(wrapper).inflate(R.layout.dialog_order_popup, null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(view);
         final AlertDialog orderDialog = dialogBuilder.create();
         orderDialog.setIcon(android.R.drawable.ic_menu_sort_by_size);
         orderDialog.setTitle(getString(R.string.menu_display_options));
@@ -2573,8 +2582,10 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     private void showUpdateStoreCredentialsDialog(String string) {
-        View credentialsDialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_pvt_store, null);
-        AlertDialog credentialsDialog = new AlertDialog.Builder(mContext).setView(credentialsDialogView).create();
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(this, this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
+
+        View credentialsDialogView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_add_pvt_store, null);
+        AlertDialog credentialsDialog = new AlertDialog.Builder(wrapper).setView(credentialsDialogView).create();
         credentialsDialog.setTitle(getString(R.string.add_private_store) + " " + RepoUtils.split(string));
         credentialsDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(R.string.new_store), new UpdateStoreCredentialsListener(string, credentialsDialogView));
         if (!isFinishing()) {

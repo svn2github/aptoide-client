@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Preferences" parent="@style/Theme.Sherlock.Light.NoActionBar"/>
+    <style name="Preferences" parent="@style/Theme.Sherlock.Light.NoActionBar">
+        <item name="alertDialog">@style/alert_dialog_style_light</item>
+    </style>
+    <style name="alert_dialog_style_light" parent="android:Theme.Holo.Light.Dialog"/>
+    <style name="alert_dialog_style_dark" parent="android:Theme.Holo.Dialog"/>
+
+
 </resources>
