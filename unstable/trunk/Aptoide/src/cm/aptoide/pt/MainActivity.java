@@ -55,6 +55,7 @@ import cm.aptoide.pt.sharing.WebViewFacebook;
 import cm.aptoide.pt.sharing.WebViewTwitter;
 import cm.aptoide.pt.util.*;
 import cm.aptoide.pt.views.ViewApk;
+import cm.aptoide.pt.webservices.WebserviceGetApkInfo;
 import cm.aptoide.pt.webservices.login.Login;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -2437,6 +2438,42 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         }).start();
     }
 
+    public class WebserviceOptions {
+        String key;
+        String value;
+
+
+        private WebserviceOptions(String key,String value) {
+            this.value = value;
+            this.key = key;
+        }
+
+        /**
+         * Returns a string containing a concise, human-readable description of this
+         * object. Subclasses are encouraged to override this method and provide an
+         * implementation that takes into account the object's type and data. The
+         * default implementation is equivalent to the following expression:
+         * <pre>
+         *   getClass().getName() + '@' + Integer.toHexString(hashCode())</pre>
+         * <p>See <a href="{@docRoot}reference/java/lang/Object.html#writing_toString">Writing a useful
+         * {@code toString} method</a>
+         * if you intend implementing your own {@code toString} method.
+         *
+         * @return a printable representation of this object.
+         */
+        @Override
+        public String toString() {
+            return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+
+            Log.d("TAG", "Garbage Collecting WebserviceResponse");
+            super.finalize();
+        }
+    }
+
     private void loadRecommended() {
 
 
@@ -2454,6 +2491,22 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                 loadUIRecommendedApps();
                 File f = null;
                 try {
+                    ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
+                    options.add(new WebserviceOptions("limit", "10"));
+
+                    options.add(new WebserviceOptions("q", Utils.filters(mContext)));
+                    options.add(new WebserviceOptions("lang", Utils.getMyCountryCode(ApplicationAptoide.getContext())));
+
+
+
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("(");
+                    for(WebserviceOptions option: options){
+                        sb.append(option);
+                        sb.append(";");
+                    }
+                    sb.append(")");
                     SAXParserFactory spf = SAXParserFactory.newInstance();
                     SAXParser sp = spf.newSAXParser();
                     NetworkUtils utils = new NetworkUtils();
@@ -2461,7 +2514,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                             .getInputStream(AptoideConfiguration.getInstance().getWebServicesUri() +
                                     "webservices/listUserBasedApks/"
                                     + Login.getToken(mContext)
-                                    + "/10/xml", null, null, mContext), 8 * 1024);
+                                    + "/options="+sb.toString() +"/xml", null, null, mContext), 8 * 1024);
                     f = File.createTempFile("abc", "abc");
                     OutputStream out = new FileOutputStream(f);
                     byte buf[] = new byte[1024];

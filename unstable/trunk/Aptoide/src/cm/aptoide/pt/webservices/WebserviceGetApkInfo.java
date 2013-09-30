@@ -294,7 +294,7 @@ public class WebserviceGetApkInfo {
         return response.has("permissions");  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private class WebserviceOptions {
+    public class WebserviceOptions {
         String key;
         String value;
 

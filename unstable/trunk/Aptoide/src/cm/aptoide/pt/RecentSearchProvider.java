@@ -1,6 +1,11 @@
 package cm.aptoide.pt;
 
+import android.app.*;
+import android.app.SearchManager;
 import android.content.SearchRecentSuggestionsProvider;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.net.Uri;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,5 +22,4 @@ public class RecentSearchProvider extends SearchRecentSuggestionsProvider {
     public RecentSearchProvider() {
         setupSuggestions(AUTHORITY, MODE);
     }
-
 }

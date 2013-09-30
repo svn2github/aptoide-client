@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Base64;
 import cm.aptoide.pt.util.Md5Handler;
+import cm.aptoide.pt.util.Utils;
 import cm.aptoide.pt.views.ViewApk;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import org.xml.sax.SAXException;
@@ -104,7 +106,7 @@ public class ItemBasedApks {
 
 	public class ItemBasedParser extends AsyncTask<String, Void, ArrayList<HashMap<String, String>> >{
 		private String xmlpath = AptoideConfiguration.getInstance().getPathCache() + "itembasedapks.xml";
-		private String url = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listItemBasedApks/%s/10/%s/xml";
+		private String url = AptoideConfiguration.getInstance().getWebServicesUri() + "webservices/listItemBasedApks/%s/%s/xml";
 
 
 
@@ -117,6 +119,8 @@ public class ItemBasedApks {
 			pb.setVisibility(View.VISIBLE);
 
 		}
+
+
 
 		@Override
 		protected ArrayList<HashMap<String, String>> doInBackground(String... params) {
@@ -141,7 +145,28 @@ public class ItemBasedApks {
 					}
 					activestores=activestores+"apps";
 				}
-				in = getInputStream(new URL(String.format(url,apkid,activestores)), null, null);
+
+
+                ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
+                options.add(new WebserviceOptions("limit", "10"));
+
+                options.add(new WebserviceOptions("q", Utils.filters(context)));
+                options.add(new WebserviceOptions("repos", activestores));
+                options.add(new WebserviceOptions("lang", Utils.getMyCountryCode(ApplicationAptoide.getContext())));
+
+
+
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("(");
+                for(WebserviceOptions option: options){
+                    sb.append(option);
+                    sb.append(";");
+                }
+                sb.append(")");
+
+
+				in = getInputStream(new URL(String.format(url,apkid,"options="+sb.toString())), null, null);
 
 				int i = 0;
 				while (f.exists()) {
@@ -198,6 +223,42 @@ public class ItemBasedApks {
 
 		}
 	}
+
+    private class WebserviceOptions {
+        String key;
+        String value;
+
+
+        private WebserviceOptions(String key,String value) {
+            this.value = value;
+            this.key = key;
+        }
+
+        /**
+         * Returns a string containing a concise, human-readable description of this
+         * object. Subclasses are encouraged to override this method and provide an
+         * implementation that takes into account the object's type and data. The
+         * default implementation is equivalent to the following expression:
+         * <pre>
+         *   getClass().getName() + '@' + Integer.toHexString(hashCode())</pre>
+         * <p>See <a href="{@docRoot}reference/java/lang/Object.html#writing_toString">Writing a useful
+         * {@code toString} method</a>
+         * if you intend implementing your own {@code toString} method.
+         *
+         * @return a printable representation of this object.
+         */
+        @Override
+        public String toString() {
+            return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+
+            Log.d("TAG", "Garbage Collecting WebserviceResponse");
+            super.finalize();
+        }
+    }
 
 	public InputStream getInputStream(URL url,String username, String password) throws IOException {
 		System.out.println("Query:" + url.toString());

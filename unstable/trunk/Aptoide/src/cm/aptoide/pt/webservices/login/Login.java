@@ -10,10 +10,12 @@ package cm.aptoide.pt.webservices.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
@@ -33,6 +35,14 @@ import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Algorithms;
 import cm.aptoide.pt.views.ViewApk;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.*;
+import com.google.android.gms.plus.PlusClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -53,9 +63,10 @@ import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Login extends SherlockActivity /*SherlockActivity */{
+public class Login extends SherlockActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 	ProgressDialog pd;
 	EditText username_box;
 	EditText password_box;
@@ -70,12 +81,21 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 	private static SharedPreferences sPref;
 	private static SharedPreferences.Editor prefEdit;
 	public final static int REQUESTCODE = 10;
+    private UiLifecycleHelper uiLifecycleHelper;
+    private PlusClient mPlusClient;
+    private int REQUEST_CODE_RESOLVE_ERR = 9000;
+    private boolean play_installed;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		AptoideThemePicker.setAptoideTheme(this);
 		super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT>8){
 
+            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+
+            uiLifecycleHelper.onCreate(savedInstanceState);
+        }
 		context = this;
 //		getSupportActionBar().hide();
 		pd = new ProgressDialog(context);
@@ -97,8 +117,161 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 
 	}
 
-	private void drawLoginForm() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Build.VERSION.SDK_INT>8){
+            uiLifecycleHelper.onResume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(Build.VERSION.SDK_INT>8){
+            uiLifecycleHelper.onDestroy();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(Build.VERSION.SDK_INT>8){
+            uiLifecycleHelper.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(Build.VERSION.SDK_INT>8){
+            uiLifecycleHelper.onPause();
+        }
+    }
+
+    private Session.StatusCallback statusCallback = new SessionStatusCallback();
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:" + Scopes.PLUS_LOGIN);
+                    Log.d("TAG", "Token: " + token);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GoogleAuthException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        mPlusClient.clearDefaultAccount();
+        mPlusClient.revokeAccessAndDisconnect(new PlusClient.OnAccessRevokedListener() {
+            @Override
+            public void onAccessRevoked(ConnectionResult status) {
+                // mPlusClient is now disconnected and access has been revoked.
+                // Trigger app logic to comply with the developer policies
+            }
+        });
+
+
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
+            // The user clicked the sign-in button already. Start to resolve
+            // connection errors. Wait until onConnected() to dismiss the
+            // connection dialog.
+            if (result.hasResolution()) {
+                try {
+                    result.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
+                } catch (IntentSender.SendIntentException e) {
+                    mPlusClient.connect();
+                }
+            }
+
+        // Save the result and resolve the connection failure upon a user click.
+        mConnectionResult = result;
+
+    }
+
+
+    private class SessionStatusCallback implements Session.StatusCallback {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            Log.d("TAG", "Facebook auth: " + session.getAccessToken());
+            Toast.makeText(Login.this, "Facebook auth: " + session.getAccessToken(), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mPlusClient.disconnect();
+    }
+
+    private void drawLoginForm() {
 		setContentView(R.layout.form_login);
+
+
+        if(Build.VERSION.SDK_INT>8){
+            LoginButton authButton = (LoginButton) findViewById(R.id.fb_login_button);
+            authButton.setReadPermissions(Arrays.asList("basic_info"));
+
+            int val=GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            if(val==ConnectionResult.SUCCESS)
+            {
+                play_installed=true;
+            }
+            else
+            {
+                play_installed=false;
+            }
+            SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
+            if(!play_installed){
+                signInButton.setVisibility(View.GONE);
+            }
+
+            mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+
+            signInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mConnectionResult == null) {
+                        mPlusClient.connect();
+                    } else {
+                        try {
+                            mConnectionResult.startResolutionForResult(Login.this, REQUEST_CODE_RESOLVE_ERR);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Try connecting again.
+                            mConnectionResult = null;
+                            mPlusClient.connect();
+                        }
+                    }
+
+                }
+            });
+
+        }
+
+
 		username_box = (EditText) findViewById(R.id.username);
 		password_box = (EditText) findViewById(R.id.password);
 		checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
@@ -343,10 +516,19 @@ public class Login extends SherlockActivity /*SherlockActivity */{
 
 	}
 
-	@Override
+    private ConnectionResult mConnectionResult;
+
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
+        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
+            mConnectionResult = null;
+            mPlusClient.connect();
+        }
+
+        switch (requestCode) {
+
 		case CreateUser.REQUEST_CODE:
 			switch (resultCode) {
 			case RESULT_OK:

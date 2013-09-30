@@ -17,18 +17,19 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.ApplicationAptoide;
+import cm.aptoide.pt.AptoideThemePicker;
+import cm.aptoide.pt.R;
 import com.actionbarsherlock.view.Window;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
-import cm.aptoide.pt.ApplicationAptoide;
-import cm.aptoide.pt.AptoideThemePicker;
-import cm.aptoide.pt.R;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -66,9 +67,13 @@ public class DialogShareOnFacebook extends Dialog {
 	}
 
 	public boolean saveCredentials(Facebook facebook) {
+
+
 		Editor editor = getContext().getSharedPreferences(KEY, Context.MODE_PRIVATE).edit();
 		editor.putString(TOKEN, facebook.getAccessToken());
 		editor.putLong(EXPIRES, facebook.getAccessExpires());
+
+
 		return editor.commit();
 	}
 
@@ -115,10 +120,13 @@ public class DialogShareOnFacebook extends Dialog {
 			@Override
 			public void onClick(View v) {
 				if (! facebook.isSessionValid()) {
+
 					loginAndPostToWall();
-				}
-				else {
+
+				} else {
+
 					postToWall(nameToPost, iconToPost, messageToPost, descriptionToPost, storeLinkToPost);
+
 				}
 			}
 		});
