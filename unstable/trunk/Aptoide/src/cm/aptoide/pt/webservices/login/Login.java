@@ -171,7 +171,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
                 } catch (IOException e) {
                     e.printStackTrace();
                 }catch (UserRecoverableAuthException e){
-                    startActivityForResult(e.getIntent(),0);
+                    startActivityForResult(e.getIntent(),90);
                 } catch (GoogleAuthException e) {
                     e.printStackTrace();
                 }
@@ -215,7 +215,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
             if(session.isOpened()){
                 Log.d("TAG", "Facebook auth: " + session.getAccessToken());
-                Toast.makeText(Login.this, "Facebook auth: " + session.getAccessToken(), Toast.LENGTH_LONG).show();
+
 
 
 
@@ -604,9 +604,15 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
             mPlusClient.connect();
         }
 
-        switch (requestCode) {
 
-		case CreateUser.REQUEST_CODE:
+        switch (requestCode) {
+            case 90:
+                if (resultCode == RESULT_OK) {
+                    mPlusClient.connect();
+                }
+
+                break;
+            case CreateUser.REQUEST_CODE:
 			switch (resultCode) {
 			case RESULT_OK:
 				if(!Login.isLoggedIn(context)){

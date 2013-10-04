@@ -75,9 +75,7 @@
             android:key="clearcache"
             android:title="@string/clearcache_title" />
 
-        <Preference
-                android:key="clearsearch"
-                android:title="@string/clearsearch_title" />
+
 
         <EditTextPreference
             android:key="maxFileCache"

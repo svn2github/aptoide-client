@@ -1414,9 +1414,11 @@ public class Database  {
 			break;
 		case RATING:
 			query = query + " order by b.rating desc";
-			break;
+            break;
+        case PRICE:
+            query = query + " order by b.price desc";
 		default:
-			break;
+            break;
 		}
 
 		return query + ", CASE WHEN b.cpu_abi LIKE '%" + cpu + "%' THEN 1 WHEN b.cpu_abi LIKE '%" + cpu2 + "%' THEN 2 ELSE 3 END asc";

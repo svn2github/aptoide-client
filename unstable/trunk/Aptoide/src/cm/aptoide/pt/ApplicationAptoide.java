@@ -277,9 +277,9 @@ public class ApplicationAptoide extends Application {
 
 
 
-        DEBUG_FILE = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/debug.log");
+        DEBUG_FILE = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/devmode.log");
 
-		if(DEBUG_FILE.exists() || BuildConfig.DEBUG){
+		if(DEBUG_FILE.exists()){
 			DEBUG_MODE = true;
             log.info("-- Application Init --");
 		}

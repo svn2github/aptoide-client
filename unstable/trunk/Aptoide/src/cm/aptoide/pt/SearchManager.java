@@ -60,10 +60,6 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 			query = query.replaceAll("\\s{2,}", " ");
 		}
 
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-
 		lv = (ListView) findViewById(R.id.listView);
 //		searchBox = (EditText) findViewById(R.id.search_box);
 		v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.footer_search_aptoide, null);

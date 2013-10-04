@@ -80,15 +80,7 @@ public class Settings extends PreferenceActivity{
 			}
 		});
 
-        findPreference("clearsearch").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(Settings.this,
-                        RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
-                suggestions.clearHistory();
-                return false;
-            }
-        });
+
 
 //		Preference hwspecs = (Preference) findPreference("hwspecs");
 //		hwspecs.setIntent(new Intent(getBaseContext(), HWSpecActivity.class));

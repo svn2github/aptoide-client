@@ -97,7 +97,6 @@ public class ServiceManagerDownload extends Service {
     }
 
     public boolean existsDownload(ViewApk apk) {
-
         return downloads.get(apk.getAppHashId())!=null;
     }
 
