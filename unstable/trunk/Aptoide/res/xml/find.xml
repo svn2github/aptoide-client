@@ -3,7 +3,9 @@
         android:label="@string/srch_hint"
         android:hint="@string/srch_hint"
         android:includeInGlobalSearch="true"
-        android:searchSuggestAuthority="cm.aptoide.com.SuggestionProvider"
+        android:searchSuggestIntentAction="android.intent.action.VIEW"
+        android:searchSuggestAuthority="cm.aptoide.pt.SuggestionProvider"
+        android:searchSuggestThreshold="2"
         android:searchSuggestSelection=" ?" >
 
 </searchable>

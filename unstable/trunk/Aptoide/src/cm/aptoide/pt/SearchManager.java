@@ -52,7 +52,10 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 //		getSupportActionBar().hide();
 		if(getIntent().hasExtra("search")){
 			query = getIntent().getExtras().getString("search");
-		}else{
+		}else if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+            Uri uri = getIntent().getData();
+            query = uri.toString();
+        } else {
 			query = getIntent().getExtras().getString(android.app.SearchManager.QUERY).replaceAll("\\s{2,}|\\W", " ").trim();
 			query = query.replaceAll("\\s{2,}", " ");
 		}

@@ -306,23 +306,7 @@ public class MainService extends Service {
 
 	}
 
-	public void parseExtras(final Server server){
-		new Thread(new Runnable() {
-			public void run() {
-				String path;
-				try {
-					path = get(server, defaultExtrasXmlPath, "extras.xml", true);
-					Intent service = new Intent(MainService.this, ExtrasService.class);
-					ArrayList<String> array = new ArrayList<String>();
-					array.add(path);
-					service.putExtra("path", array);
-					startService(service);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
+
 
 	public void parseLatest(final Database db, final Server server){
 			new Thread(new Runnable() {

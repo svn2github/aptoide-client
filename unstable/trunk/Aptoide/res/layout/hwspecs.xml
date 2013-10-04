@@ -47,4 +47,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <TextView
+            android:id="@+id/cpuAbiTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cpuAbi"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+            android:id="@+id/cpuAbi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    <TextView
+            android:id="@+id/screenCodeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/screenCode"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+            android:id="@+id/screenCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 </LinearLayout>

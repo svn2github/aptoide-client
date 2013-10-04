@@ -33,9 +33,13 @@
   <string name="merge_all_stores">Bashko Dyqanet Aplikacioneve</string>
   <string name="search_for_stores">Kërko për Dyqane Aplikacionesh</string>
   <string name="download_manager">Menaxher Shkarkimesh</string>
+  <string name="downloading_apps">Duke shkarkuar</string>
+  <string name="downloaded_apps">Shkarkimet</string>
   <string name="no_downloads">Nuk ka shkarkime. Fillo shkarkimin!</string>
   <string name="not_downloaded_apps">Aplikacionet e pashkarkuara</string>
-  <string name="exit">dil</string>
+  <string name="completed">Të Përfunduara</string>
+  <string name="waiting">Duke pritur...</string>
+  <string name="exit">dalje</string>
   <string name="install">Instalo</string>
   <string name="uninstall">Çinstalo</string>
   <string name="update">Azhorno</string>
@@ -134,7 +138,6 @@
   <string name="setting_appfiltertitle">Filtro Aplikacionet</string>
   <string name="setting_mature_filtering">Filtra Pjekurie</string>
   <string name="setting_dont_show_mature_content">Mos shfaq përmbajtje erotike</string>
-  <string name="setting_appfiltersum">Mos shfaq aplikacione jo kompatibël me pajisjen tuaj.</string>
   <string name="setting_schdwntitle">Shkarkime të Planifikuara</string>
   <string name="setting_schdwninstalltitle">Instalim Automatik</string>
   <string name="setting_schdwninstallsum">Instalo shkarkimet e planifikuara automatikisht kur jeni i lidhur në WiFi</string>
@@ -257,9 +260,15 @@
   <string name="starting_download">Duke filluar shkarkimin</string>
   <string name="resuming_download">Duke rifilluar shkarkimin</string>
   <string name="finished_download">%s mbaroi shkarkimin</string>
+  <string name="time_left">majtas</string>
   <string name="slow">ngadalë</string>
+  <string name="paused">i pushuar</string>
   <string name="stopped">i ndaluar</string>
   <string name="starting">duke filluar</string>
+  <string name="resume">Rifillo</string>
+  <string name="pause">Pusho</string>
+  <string name="stop">Ndalo</string>
+  <string name="clear">Pastro</string>
   <string name="download_failed_due_to">Shkarkimi Dështoi për shkak të</string>
   <string name="timeout">lidhja me internetin u tejzgjat</string>
   <string name="ip_blacklisted">IP juaj është bllokuar</string>
@@ -375,4 +384,5 @@
   <string name="one_new_update">Ka %s azhornim të ri të disponueshëm!</string>
   <string name="has_updates">"%s ka  azhornim(e) të reja të disponueshme!"</string>
   <string name="powered_by">Mundësuar nga</string>
+  <string name="restart_launcher">%s do rifillojë programin. Klikoni OK për të vazhduar.</string>
 </resources>

@@ -25,6 +25,7 @@
     <orderEntry type="library" name="logback-android-1.0.10-2" level="project" />
     <orderEntry type="module" module-name="google-play-services_lib" />
     <orderEntry type="library" name="google-play-services" level="project" />
+    <orderEntry type="module" module-name="android-websockets-master" />
   </component>
 </module>
 

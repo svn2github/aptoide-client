@@ -38,7 +38,6 @@
   <string name="no_downloads">Não existem downloads. Comece a descarregar agora!</string>
   <string name="not_downloaded_apps">Apps não descarregadas</string>
   <string name="completed">Completo</string>
-  <string name="paused">Pausado</string>
   <string name="waiting">A aguardar...</string>
   <string name="exit">sair</string>
   <string name="install">Instalar</string>
@@ -139,7 +138,7 @@
   <string name="setting_appfiltertitle">Filtrar Aplicações</string>
   <string name="setting_mature_filtering">Filtro conteúdo adulto</string>
   <string name="setting_dont_show_mature_content">Não mostrar conteúdo adulto</string>
-  <string name="setting_appfiltersum">Não mostrar aplicações não compatíveis com este dispositivo.</string>
+  <string name="setting_appfiltersum">Não mostrar aplicações não compatíveis com este dispositivo</string>
   <string name="setting_schdwntitle">Downloads agendados</string>
   <string name="setting_schdwninstalltitle">Instalação automática</string>
   <string name="setting_schdwninstallsum">Instalar downloads agendados automaticamente quando uma ligação Wifi está presente.</string>
@@ -264,6 +263,7 @@
   <string name="finished_download">%s acabou o download</string>
   <string name="time_left">em falta</string>
   <string name="slow">lento</string>
+  <string name="paused">pausado</string>
   <string name="stopped">parado</string>
   <string name="starting">a começar</string>
   <string name="resume">Retomar</string>
@@ -386,4 +386,27 @@
   <string name="has_updates">%s tem novas actualizações!</string>
   <string name="powered_by">Desenvolvido por</string>
   <string name="restart_launcher">%s vai reiniciar o seu launcher para manter as definições. Clique em OK para continuar.</string>
+  <string name="setting_updates">Actualizações</string>
+  <string name="setting_updates_notification_title">Notificação de Actualizações</string>
+  <string name="setting_updates_notification_sum">Mostrar notificações de novas actualizações</string>
+  <string name="permissions">Permissões:</string>
+  <string name="no_permissions_required">Esta app não precisa de permissões.</string>
+  <string name="restore">Instalar</string>
+  <string name="crash_reports">Relatórios de Erro</string>
+  <string name="pref_enable_acra">Enviar relatórios</string>
+  <string name="pref_acra_enabled">Permitir o envio de relatórios de erro para ajudar a melhorar o Aptoide</string>
+  <string name="pref_acra_syslog">Enviar informação de sistema</string>
+  <string name="pref_acra_syslog_enabled">Permitir o envio de informação do dispositivo no relatório</string>
+  <string name="pref_acra_user_email">Email de contacto</string>
+  <string name="pref_acra_user_email_summary">Podemos contactá-lo para obter mais informação acerca dos erros</string>
+  <string name="pref_acra_alwaysaccept">Envio automático de relatórios</string>
+  <string name="pref_acra_alwaysaccept_enabled">Permitir o envio automático de relatórios em caso de erro</string>
+  <string name="crash_reports_settings">Configurações de Relatórios de Erro</string>
+  <string name="store_already_added">Loja adicionada!</string>
+  <string name="dev_mode">Modo de Programador</string>
+  <string name="clearsearch_title">Limpar histórico de pesquisa</string>
+  <string name="updating">A actualizar todas as aplicações</string>
+  <string name="setting_auto_update_sum">Activar actualizações automáticas</string>
+  <string name="setting_auto_update_title">Activar auto update</string>
+  <string name="remote_in_nospace">não tem espaço suficiente no seu dispositivo.</string>
 </resources>

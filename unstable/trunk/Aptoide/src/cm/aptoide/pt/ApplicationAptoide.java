@@ -351,43 +351,7 @@ public class ApplicationAptoide extends Application {
 			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
 			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_magalhaes);
 			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("timwe")){
-			ApplicationAptoide.BRAND = "brand_timwe";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_timwe);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("digitallydifferent")){
-			ApplicationAptoide.BRAND = "brand_digitallydifferent";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_digitallydifferent);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("eocean")){
-			ApplicationAptoide.BRAND = "brand_eocean";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_eocean);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("lazerplay")){
-			ApplicationAptoide.BRAND = "brand_lazerplay";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_lazerplay);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.BRAND.equalsIgnoreCase("brand_educomp")){
-			ApplicationAptoide.BRAND = "brand_educomp";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_educomp);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-
-		}else if(ApplicationAptoide.BRAND.equalsIgnoreCase("brand_peoplenet")){
-			ApplicationAptoide.BRAND = "brand_peoplenet";
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("BRAND", ApplicationAptoide.BRAND).commit();
-			ApplicationAptoide.MARKETNAME = getString(R.string.app_name_peoplenet);
-			getSharedPreferences("settings", MODE_PRIVATE).edit().putString("MARKETNAME", ApplicationAptoide.MARKETNAME).commit();
-		}
+        }
 
 
         try{

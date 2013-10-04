@@ -19,10 +19,12 @@ public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
 	private TextView sdkVer;
 	private TextView screenSize;
 	private TextView esglVer;
+    private TextView cpuAbi;
+    private TextView screenCode;
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -36,10 +38,14 @@ public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
 		sdkVer= (TextView) findViewById(R.id.sdkver);
 		screenSize = (TextView) findViewById(R.id.screenSize);
 		esglVer = (TextView) findViewById(R.id.esglVer);
+        cpuAbi = (TextView) findViewById(R.id.cpuAbi);
+        screenCode = (TextView) findViewById(R.id.screenCode);
 
 		sdkVer.setText(HWSpecifications.getSdkVer()+"");
 		screenSize.setText(HWSpecifications.getScreenSize(this)+"");
 		esglVer.setText(HWSpecifications.getGlEsVer(this));
+        cpuAbi.setText(HWSpecifications.getCpuAbi() + " " + HWSpecifications.getCpuAbi2());
+        screenCode.setText(HWSpecifications.getNumericScreenSize(this) + "/" + HWSpecifications.getDensityDpi(this));
 
 
 	}
@@ -53,3 +59,4 @@ public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
 //		return super.onOptionsItemSelected(item);
 //	}
 }
+

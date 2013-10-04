@@ -10,6 +10,7 @@ package cm.aptoide.pt;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
@@ -151,6 +152,14 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
 	}
 
     class MyAppDownloader extends AsyncTask<String, Void, Void>{
+        ProgressDialog pd;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(IntentReceiver.this);
+            pd.show();
+            pd.setMessage(getString(R.string.please_wait));
+        }
 
         @Override
         protected Void doInBackground(String... params) {
@@ -169,6 +178,7 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if(pd.isShowing()&&!isFinishing())pd.dismiss();
             if(app!=null&&!app.isEmpty()){
 
                 Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);

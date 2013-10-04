@@ -102,7 +102,9 @@ public class Settings extends PreferenceActivity{
 					.setIcon(android.R.drawable.ic_menu_info_details)
 					.setMessage(getString(R.string.setting_sdk_version)+ ": "+HWSpecifications.getSdkVer()+"\n" +
 							    getString(R.string.setting_screen_size)+ ": "+HWSpecifications.getScreenSize(mctx)+"\n" +
-							    getString(R.string.setting_esgl_version)+ ": "+HWSpecifications.getGlEsVer(mctx))
+							    getString(R.string.setting_esgl_version)+ ": "+HWSpecifications.getGlEsVer(mctx) +"\n" +
+                                getString(R.string.screenCode)+ ": "+HWSpecifications.getNumericScreenSize(mctx) + "/" + HWSpecifications.getDensityDpi(mctx) +"\n" +
+                                getString(R.string.cpuAbi)+ ": "+HWSpecifications.getCpuAbi() + " " + HWSpecifications.getCpuAbi2())
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok),new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int id) {

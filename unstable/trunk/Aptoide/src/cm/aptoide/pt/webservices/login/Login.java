@@ -35,12 +35,12 @@ import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Algorithms;
 import cm.aptoide.pt.views.ViewApk;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
+import com.facebook.*;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.*;
 import com.google.android.gms.plus.PlusClient;
 import org.apache.http.HttpEntity;
@@ -82,7 +82,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 	private static SharedPreferences.Editor prefEdit;
 	public final static int REQUESTCODE = 10;
     private UiLifecycleHelper uiLifecycleHelper;
-    private PlusClient mPlusClient;
+    private static PlusClient mPlusClient;
     private int REQUEST_CODE_RESOLVE_ERR = 9000;
     private boolean play_installed;
 
@@ -93,9 +93,9 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
         if(Build.VERSION.SDK_INT>8){
 
             uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-
             uiLifecycleHelper.onCreate(savedInstanceState);
         }
+
 		context = this;
 //		getSupportActionBar().hide();
 		pd = new ProgressDialog(context);
@@ -153,27 +153,29 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
     @Override
     public void onConnected(Bundle bundle) {
+        setContentView(R.layout.form_logout);
+        ((TextView) findViewById(R.id.username)).setText(mPlusClient.getAccountName());
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:" + Scopes.PLUS_LOGIN);
+
+
+                    String serverId = "316068701674.apps.googleusercontent.com";
+                    String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:server:client_id:"+ serverId+ ":api_scope:" + Scopes.PLUS_LOGIN);
                     Log.d("TAG", "Token: " + token);
+
                 } catch (IOException e) {
                     e.printStackTrace();
+                }catch (UserRecoverableAuthException e){
+                    startActivityForResult(e.getIntent(),0);
                 } catch (GoogleAuthException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-        mPlusClient.clearDefaultAccount();
-        mPlusClient.revokeAccessAndDisconnect(new PlusClient.OnAccessRevokedListener() {
-            @Override
-            public void onAccessRevoked(ConnectionResult status) {
-                // mPlusClient is now disconnected and access has been revoked.
-                // Trigger app logic to comply with the developer policies
-            }
-        });
+
 
 
 
@@ -207,8 +209,27 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     private class SessionStatusCallback implements Session.StatusCallback {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            Log.d("TAG", "Facebook auth: " + session.getAccessToken());
-            Toast.makeText(Login.this, "Facebook auth: " + session.getAccessToken(), Toast.LENGTH_LONG).show();
+
+
+            if(session.isOpened()){
+                Log.d("TAG", "Facebook auth: " + session.getAccessToken());
+                Toast.makeText(Login.this, "Facebook auth: " + session.getAccessToken(), Toast.LENGTH_LONG).show();
+
+
+
+                Request request = Request.newMeRequest(session, new Request.GraphUserCallback(){
+
+                    @Override
+                    public void onCompleted(GraphUser user, Response response) {
+                        setContentView(R.layout.form_logout);
+                        ((TextView) findViewById(R.id.username)).setText(user.getUsername());
+                    }
+                });
+                request.executeAsync();
+            }
+
+
+
         }
 
     }
@@ -232,24 +253,21 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
         if(Build.VERSION.SDK_INT>8){
             LoginButton authButton = (LoginButton) findViewById(R.id.fb_login_button);
-            authButton.setReadPermissions(Arrays.asList("basic_info"));
+            authButton.setReadPermissions(Arrays.asList("basic_info", "email"));
 
-            int val=GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-            if(val==ConnectionResult.SUCCESS)
-            {
-                play_installed=true;
+            int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            if (val == ConnectionResult.SUCCESS) {
+                play_installed = true;
+            } else {
+                play_installed = false;
             }
-            else
-            {
-                play_installed=false;
-            }
+
             SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
             if(!play_installed){
                 signInButton.setVisibility(View.GONE);
             }
 
             mPlusClient = new PlusClient.Builder(this, this, this).build();
-
 
             signInButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -265,10 +283,8 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
                             mPlusClient.connect();
                         }
                     }
-
                 }
             });
-
         }
 
 
@@ -335,6 +351,23 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 		prefEdit.remove(Configs.LOGIN_USER_USERNAME);
         prefEdit.remove(Configs.LOGIN_DEFAULT_REPO);
 		prefEdit.commit();
+        if(Build.VERSION.SDK_INT>8){
+            Session session = Session.getActiveSession();
+            if(session.isOpened()){
+                session.closeAndClearTokenInformation();
+            }
+            if(mPlusClient.isConnected()){
+                mPlusClient.clearDefaultAccount();
+                mPlusClient.revokeAccessAndDisconnect(new PlusClient.OnAccessRevokedListener() {
+                    @Override
+                    public void onAccessRevoked(ConnectionResult status) {
+                        // mPlusClient is now disconnected and access has been revoked.
+                        // Trigger app logic to comply with the developer policies
+                    }
+                });
+            }
+        }
+
 		ViewApk apk = new ViewApk();
 		apk.setApkid("recommended");
 		Database.getInstance().deleteItemBasedApks(apk);
@@ -358,7 +391,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 	public static boolean isLoggedIn(Context context) {
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		System.out.println("isLoggedin");
-		return sPref.getString(Configs.LOGIN_USER_TOKEN, null) != null;
+		return (sPref.getString(Configs.LOGIN_USER_TOKEN, null) != null) || (Session.getActiveSession()!=null && Session.getActiveSession().isOpened()) || (mPlusClient !=null && mPlusClient.isConnected());
 	}
 
 	public static String getToken(Context context) {

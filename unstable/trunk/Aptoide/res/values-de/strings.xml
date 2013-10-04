@@ -8,10 +8,10 @@
   <string name="WidgetProvider_timestamp_just_now">Soeben</string>
   <string name="menu_context_remove">Löschen</string>
   <string name="menu_context_reparse">Neu laden</string>
-  <string name="preparing_to_load">Laden wird vorbereitet, bitte warten...</string>
-  <string name="store_beginning_to_load">Store beginnt zu laden, bitte warten...</string>
-  <string name="start_loading">Laden...</string>
-  <string name="loading_failed">Ladefehler, bitte versuchen Sie es erneut...</string>
+  <string name="preparing_to_load">Laden wird vorbereitet, bitte warten…</string>
+  <string name="store_beginning_to_load">Store beginnt zu laden, bitte warten…</string>
+  <string name="start_loading">Laden…</string>
+  <string name="loading_failed">Ladefehler, bitte versuchen Sie es erneut…</string>
   <string name="loading_store">Aktualisiere</string>
   <string name="error_latest_apk">Keine APK in der Datenbank. Lädt der Store noch?</string>
   <string name="error_delete_store">Kann Store nicht löschen. Store lädt noch.</string>
@@ -33,8 +33,12 @@
   <string name="merge_all_stores">Stores zusammenführen</string>
   <string name="search_for_stores">Nach Stores suchen</string>
   <string name="download_manager">Download Manager</string>
+  <string name="downloading_apps">Beim Herunterladen</string>
+  <string name="downloaded_apps">Heruntergeladen</string>
   <string name="no_downloads">Keine Downloads. Fang an zu Downloaden!</string>
   <string name="not_downloaded_apps">Nicht heruntergeladene Apps</string>
+  <string name="completed">Abgeschlossen</string>
+  <string name="waiting">Warten...</string>
   <string name="exit">schließen</string>
   <string name="install">Installieren</string>
   <string name="uninstall">Deinstallieren</string>
@@ -71,7 +75,7 @@
   <string name="extended_server">Erweiteter Store</string>
   <string name="btn_add_repo">Store hinzufügen</string>
   <string name="number_apks">Anwendungen:</string>
-  <string name="please_wait">Bitte warten...</string>
+  <string name="please_wait">Bitte warten…</string>
   <string name="search_market">Markt durchsuchen</string>
   <string name="status">Status</string>
   <string name="details">Details</string>
@@ -83,7 +87,7 @@
   <string name="unabletoexecutecheknet">Durchführung nicht möglich. Bitte Internetstatus überprüfen.</string>
   <string name="an_error_check_net">Ein Fehler ist aufgetreten. Bitte überprüfen sie die Internetverbindung.</string>
   <string name="there_was_an_error">Ein Fehler ist aufgetreten, bitte erneut versuchen</string>
-  <string name="opinionsuccess">Ihre Anfrage wurde übermittelt.</string>
+  <string name="opinionsuccess">Ihre Anfrage wurde übermittelt</string>
   <string name="like">Gefällt mir</string>
   <string name="dont_like">Gefällt mir nicht</string>
   <string name="users_like_this">benutzern gefällt das,</string>
@@ -100,14 +104,14 @@
   <string name="logged_as">Eingeloggt als:</string>
   <string name="usernotdef">Kein Benutzer definiert</string>
   <string name="passwordnotdef">Passwort nicht definiert</string>
-  <string name="loggingin">Anmelden...</string>
+  <string name="loggingin">Anmelden…</string>
   <string name="unabletoexecute">Durchführung nicht möglich</string>
   <string name="failedcredentials">Login mit den angegebenen Daten fehlgeschlagen</string>
   <string name="check_your_credentials">Fehler. Bitte überprüfen Sie Ihre Anmeldeinformationen</string>
   <string name="unkown_error">Unbekannter Fehler. Bitte versuche es erneut</string>
-  <string name="loading_likes">Lade Likes...</string>
+  <string name="loading_likes">Lade Likes…</string>
   <string name="add_comment">Kommentar hinzufügen</string>
-  <string name="postingcomment">Kommentar wird gepostet...</string>
+  <string name="postingcomment">Kommentar wird gepostet…</string>
   <string name="commentadded">Ihr Kommentar wurde erfolgreich übermittelt</string>
   <string name="order_popup_title1">Ordne Anwendungen nach</string>
   <string name="order_popup_lst1">Neueste zuerst</string>
@@ -121,7 +125,7 @@
   <string name="order_popup_catg1">Nach Kategorie</string>
   <string name="order_popup_catg2">Alle Anwendungen</string>
   <string name="update_repos">Update Store</string>
-  <string name="update_main">Die Liste der verwendeten Stores hat sich geändert.\nMöchten Sie sie updaten?</string>
+  <string name="update_main">Die Liste der verwendeten Stores hat sich geändert.\nMöchten Sie diese updaten?</string>
   <string name="pass_confirmation">Passwort bestätigung</string>
   <string name="setting_icon_download_rules">Symbol Downloadregeln</string>
   <string name="setting_ethernet">Ethernet</string>
@@ -134,7 +138,7 @@
   <string name="setting_appfiltertitle">Filtere Anwendungen</string>
   <string name="setting_mature_filtering">Vernünftige Filterung</string>
   <string name="setting_dont_show_mature_content">Zeige keinen ErwachsenenInhalt</string>
-  <string name="setting_appfiltersum">Apps ausblenden, die nicht mit Ihrem Gerät kompatibel sind.</string>
+  <string name="setting_appfiltersum">Apps ausblenden, die nicht mit Ihrem Gerät kompatibel sind</string>
   <string name="setting_schdwntitle">Geplante Downloads</string>
   <string name="setting_schdwninstalltitle">Automatische Installation</string>
   <string name="setting_schdwninstallsum">Geplante Downloads automatisch installieren, wenn eine Wlan-Verbindung besteht</string>
@@ -182,7 +186,7 @@
   <string name="about_mail">Kontakt:</string>
   <string name="about_us">Über uns</string>
   <string name="app_trusted">%s Anwendung ist Vertrauenswürdig</string>
-  <string name="app_warning">%s Anwendung ist zu warnen!</string>
+  <string name="app_warning">%s Anwendung ist zu warnen</string>
   <string name="app_unknown">%s Anwendung ist Unbekannt</string>
   <string name="signature_verified">Die Signatur der Anwendung stimmt überein mit dem des Entwicklers.</string>
   <string name="signature_not_verified">Die Signatur der Anwendung stimmt nicht überein mit dem des Entwicklers, die Anwendung wurde möglicherweise verändert.</string>
@@ -199,7 +203,7 @@
   <string name="md5_auto_update_error">Update Paket Prüfsummencheck gescheitert! Behalte aktuelle Version.</string>
   <string name="network_auto_update_error">Update Verbindung gescheitert! Behalte derzeitige Version.</string>
   <string name="aptoide_update">Update</string>
-  <string name="auto_updating">Bitte warten Sie während der Update download verarbeitet wird...</string>
+  <string name="auto_updating">Bitte warten Sie während der Update download verarbeitet wird…</string>
   <string name="update_self_title">Update verfügbar</string>
   <string name="update_self_msg">Es gibt eine neue Version von %s,\nmöchten Sie aktualisieren?</string>
   <string name="md5_error">Die heruntergeladene App hat den md5 Test nicht bestanden!\nBitte aktualisieren Sie Ihre Stores bevor Sie es erneut versuchen.</string>
@@ -234,11 +238,11 @@
   <string name="clear_dwn_btn">Symol herunterladen</string>
   <string name="clear_dwn_msg">Lade Symbolrechte</string>
   <string-array name="dwnif">
-    <item>3G and Wifi</item>
+    <item>3G und Wifi</item>
     <item>Nur Wifi</item>
     <item>Nie Herunterladen</item>
   </string-array>
-  <string name="accept_terms">Durch die Anmeldung erklären Sie sich mit den Aptoide Nutzungsbedingungen und Inhaltsrichtlinien für Entwickler einverstanden.</string>
+  <string name="accept_terms">Durch die Anmeldung erklären Sie sich mit den Aptoide Nutzungsbedingungen und Inhaltsrichtlinien für Entwickler einverstanden</string>
   <string name="username_tip">Geben Sie Ihre E-Mail ein</string>
   <string name="password_tip">Wählen Sie ein Passwort</string>
   <string name="sign_in">Anmelden</string>
@@ -251,20 +255,26 @@
   <string name="clearcache_title">Cache löschen</string>
   <string name="schDown_added">wurde zur geplanten Download-Liste hinzugefügt.</string>
   <string name="clear_cache_sucess">Inhalt erfolgreich entfernt</string>
-  <string name="aptoide_downloading">%s wird heruntergeladen</string>
+  <string name="aptoide_downloading">%s lädt herunter</string>
   <string name="x_app">%d App</string>
   <string name="x_apps">%d Apps</string>
   <string name="starting_download">Starte Download</string>
   <string name="resuming_download">Downloads fortsetzen</string>
   <string name="finished_download">%s Download abgeschlossen</string>
+  <string name="time_left">übrig</string>
   <string name="slow">langsam</string>
+  <string name="paused">pausiert</string>
   <string name="stopped">gestoppt</string>
   <string name="starting">starte</string>
+  <string name="resume">Fortsetzen</string>
+  <string name="pause">Pausieren</string>
+  <string name="stop">Stoppen</string>
+  <string name="clear">Löschen</string>
   <string name="download_failed_due_to">Download gescheitert durch</string>
   <string name="timeout">netzwerk-verbindungs-timeout</string>
   <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="ip_blacklisted_extended">"Die Anwendung wurde nicht heruntergeladen. Ihre IP wurde auf den Aptoide Servern geblacklisted. Um dieses Problem zu lösen kontaktieren Sie bitte "<a href="mailto:ipblacklist@aptoide.com">ipblacklist\@aptoide.com</a></string>
-  <string name="connection_error">Keine Internetverbindung</string>
+  <string name="ip_blacklisted_extended">"Die Anwendung wurde nicht heruntergeladen. Ihre Netzwerkadresse (IP) wurde auf den Aptoide Servern geblacklisted. Um dieses Problem zu lösen kontaktieren Sie bitte "<a href="mailto:ipblacklist@aptoide.com">ipblacklist\@aptoide.com</a></string>
+  <string name="connection_error">keine Internetverbindung</string>
   <string name="apk_not_found">Apk nicht gefunden</string>
   <string name="invalid_apk">Ungültige Apk</string>
   <string name="server_error">Server Fehler</string>
@@ -286,8 +296,8 @@
   <string name="visit_and_install_the_best_apps">Besuchen Sie %s und installieren Sie die besten Apps</string>
   <string name="visit_and_install">Besuchen Sie %s Android Store zum Herunterladen und Installieren dieser App</string>
   <string name="i_downloaded_to_install">Ich habe %s für Android heruntergeladen, um es zu installieren!</string>
-  <string name="loading_facebook">Lade Facebook...</string>
-  <string name="loading_twitter">Lade Twitter...</string>
+  <string name="loading_facebook">Lade Facebook…</string>
+  <string name="loading_twitter">Lade Twitter…</string>
   <string name="facebook_downloaded_to_install">Ich habe %s für Android heruntergeladen, um es zu installieren!</string>
   <string name="social_network_intro">Ihr Feedback ist wichtig. Sie finden uns auf Facebook und/oder folgen Sie uns auf Twitter.</string>
   <string name="find_us_on_facebook">Finde uns auf Facebook</string>
@@ -302,7 +312,7 @@
   <string name="no_launcher_activity">Keine Launcher Aktivität gefunden</string>
   <string name="retrying_registration">Registrierung abschließen</string>
   <string name="credit_card">Kreditkarte</string>
-  <string name="paypal_message">Sie können mit Ihrer Kreditkarte oder Ihrem PayPal-Konto mit Zustimmung zahlen. Wenn Sie Ihr PayPal-Konto ohne Zustimmung verwenden möchten, wählen Sie Kredikarte</string>
+  <string name="paypal_message">Sie können mit Ihrer Kreditkarte oder Ihrem PayPal-Konto mit Zustimmung zahlen. Wenn Sie Ihr PayPal-Konto ohne Zustimmung verwenden möchten, wählen Sie Kreditkarte</string>
   <string name="paidapp_not_found">Fehler beim Herunterladen der App. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.</string>
   <string name="get_latest_version">Erhalte neueste Version</string>
   <string name="get_latest_version_and_trusted">Holen Sie sich aktuellste &amp; vertrauenswürdigste</string>
@@ -366,7 +376,7 @@
   <string name="crash_notif_ticker_text">Unerwarteter Fehler, schicken Sie bitte einen Bericht...</string>
   <string name="crash_notif_text">Bitte klicken Sie hier, um bei der Problembehebung zu helfen.</string>
   <string name="crash_dialog_title">Aptoide ist abgestürzt</string>
-  <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten und zwingt die Anwendung zu beenden. Bitte helfen Sie uns dieses Problem zu beheben, indem Sie uns Fehler-Daten senden, alles was Sie tun müssen, ist klicken Sie auf OK.</string>
+  <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten und hat die Anwendung beendet. Bitte helfen Sie uns dieses Problem zu beheben, indem Sie uns Fehler-Daten senden, alles was Sie tun müssen, ist auf OK zu drücken.</string>
   <string name="crash_dialog_comment_prompt">Sie können Ihre Kommentare über das Problem unten hinzufügen:</string>
   <string name="crash_dialog_ok_toast">Danke !</string>
   <string name="finished_install">%s wurde installiert.</string>
@@ -375,4 +385,28 @@
   <string name="one_new_update">Es ist %s neues Update verfügbar!</string>
   <string name="has_updates">%s hat neue Update(s) verfügbar!</string>
   <string name="powered_by">Präsentiert von</string>
+  <string name="restart_launcher">%s wird Ihren Launcher neu starten, um Ihre Einstellungen beizubehalten. Klicken Sie auf OK, um fortzufahren.</string>
+  <string name="setting_updates">Updates</string>
+  <string name="setting_updates_notification_title">Update Benachrichtigung</string>
+  <string name="setting_updates_notification_sum">Zeige neue Updates Benachrichtigungen</string>
+  <string name="permissions">Berechtigungen:</string>
+  <string name="no_permissions_required">Keine Berechtigungen für diese App benötigt.</string>
+  <string name="restore">Installieren</string>
+  <string name="crash_reports">Absturz-Berichte</string>
+  <string name="pref_enable_acra">Sende Berichte</string>
+  <string name="pref_acra_enabled">Aktivieren um Berichte zu senden, die der Verbesserung von Aptoide helfen</string>
+  <string name="pref_acra_syslog">Sende Systeminformationen</string>
+  <string name="pref_acra_syslog_enabled">Aktivieren um das Senden von Informationen zu Ihrem Gerät in dem Bericht zu erlauben</string>
+  <string name="pref_acra_user_email">Kontakt E-Mail</string>
+  <string name="pref_acra_user_email_summary">Wir werden eventuell mit Ihnen Kontakt aufnehmen, um weitere Informationen über Fehler zu erhalten</string>
+  <string name="pref_acra_alwaysaccept">Berichte automatisch senden</string>
+  <string name="pref_acra_alwaysaccept_enabled">Aktivieren um Berichte bei abstürz-events automatisch zu senden</string>
+  <string name="crash_reports_settings">Absturzberichte Einstellungen</string>
+  <string name="store_already_added">Store bereits hinzugefügt!</string>
+  <string name="dev_mode">Entwickler-Modus</string>
+  <string name="clearsearch_title">Suchverlauf löschen</string>
+  <string name="updating">Aktualisieren aller Apps</string>
+  <string name="setting_auto_update_sum">Aktiviere Automatisches Update von Apps</string>
+  <string name="setting_auto_update_title">Aktiviere Auto-Update</string>
+  <string name="remote_in_nospace">nicht genügend Speicherplatz auf Ihrem Gerät.</string>
 </resources>

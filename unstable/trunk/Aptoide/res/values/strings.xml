@@ -422,6 +422,8 @@
     <string name="setting_auto_update_sum">Enable applications automatic update</string>
     <string name="setting_auto_update_title">Enable auto update</string>
     <string name="remote_in_nospace">not enough space on your device.</string>
+    <string name="screenCode">Screen code</string>
+    <string name="cpuAbi">Cpu</string>
 
 
 </resources>
