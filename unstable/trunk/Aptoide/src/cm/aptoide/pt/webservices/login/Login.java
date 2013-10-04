@@ -153,9 +153,6 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
     @Override
     public void onConnected(Bundle bundle) {
-        setContentView(R.layout.form_logout);
-        ((TextView) findViewById(R.id.username)).setText(mPlusClient.getAccountName());
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,9 +160,14 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
 
                     String serverId = "316068701674.apps.googleusercontent.com";
-                    String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:server:client_id:"+ serverId+ ":api_scope:" + Scopes.PLUS_LOGIN);
-                    Log.d("TAG", "Token: " + token);
+                    final String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:server:client_id:"+ serverId+ ":api_scope:" + Scopes.PLUS_LOGIN);
 
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new CheckUserCredentials().execute(mPlusClient.getAccountName(), token, "false","google");
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }catch (UserRecoverableAuthException e){
@@ -208,7 +210,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
     private class SessionStatusCallback implements Session.StatusCallback {
         @Override
-        public void call(Session session, SessionState state, Exception exception) {
+        public void call(final Session session, SessionState state, Exception exception) {
 
 
             if(session.isOpened()){
@@ -221,8 +223,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
-                        setContentView(R.layout.form_logout);
-                        ((TextView) findViewById(R.id.username)).setText(user.getUsername());
+                        new CheckUserCredentials().execute(String.valueOf(user.getProperty("email")), session.getAccessToken(), "false","facebook");
                     }
                 });
                 request.executeAsync();
@@ -358,13 +359,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
             }
             if(mPlusClient.isConnected()){
                 mPlusClient.clearDefaultAccount();
-                mPlusClient.revokeAccessAndDisconnect(new PlusClient.OnAccessRevokedListener() {
-                    @Override
-                    public void onAccessRevoked(ConnectionResult status) {
-                        // mPlusClient is now disconnected and access has been revoked.
-                        // Trigger app logic to comply with the developer policies
-                    }
-                });
+                mPlusClient.disconnect();
             }
         }
 
@@ -440,7 +435,13 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			username_string = params[0];
 			password_string = params[1];
 			try {
-				return checkUserCredentials(username_string,password_string);
+
+                if(params.length==4){
+                    return checkUserCredentialsWithOAuth(username_string,password_string, params[3]);
+                }else{
+                    return checkUserCredentials(username_string,password_string);
+                }
+
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -499,6 +500,49 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			}
 			return array;
 		}
+
+        private JSONObject checkUserCredentialsWithOAuth(String username, String hash, String authmode) throws
+                IOException, JSONException, InterruptedException {
+            URL url;
+            StringBuilder sb;
+            String data;
+
+            Log.d("TAG", "username:" + username + " " + hash + " " + authmode);
+
+            url = new URL(AptoideConfiguration.getInstance().getWebServicesUri()+"webservices/checkUserCredentials");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
+            data += "&" + URLEncoder.encode("oauthToken", "UTF-8") + "=" + URLEncoder.encode(hash, "UTF-8");
+            data += "&" + URLEncoder.encode("authMode", "UTF-8") + "=" + URLEncoder.encode(authmode, "UTF-8");
+            data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8");
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+            wr.write(data);
+            wr.flush();
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            wr.close();
+            br.close();
+            JSONObject array = new JSONObject(sb.toString());
+            System.out.println(array);
+            if(array.has("errors")){
+                if(array.getString("errors").contains("credentials")&&fromSignIn.equals("true")){
+                    if(retry>=10){
+                        array = null;
+                        throw new IOException();
+                    }
+                    Thread.sleep(3000);
+                    retry++;
+                    System.out.println("Retrying " +retry );
+                    array = checkUserCredentials(username,password);
+                }
+            }
+            return array;
+        }
 
 		@Override
 		protected void onPostExecute(JSONObject array) {
