@@ -136,12 +136,14 @@ public class RepoParser {
 				parser.parse(xml, new HandlerTop(server));
 
 			}catch(Exception e){
-
+                e.printStackTrace();
 			}finally{
 				xml.delete();
                 db.insertTopHash(server.id, server.hash);
             }
-            server.state = cm.aptoide.pt.Server.State.PARSED;
+            if(server.state != Server.State.FAILED){
+                server.state = cm.aptoide.pt.Server.State.PARSED;
+            }
             db.updateStatus(server);
 //			db.updateStatus(server);
 //			db.endTransation(server);
@@ -169,12 +171,16 @@ public class RepoParser {
 				SAXParser parser = factory.newSAXParser();
 				parser.parse(xml, new HandlerLatest(server));
 			}catch(Exception e){
-
+                e.printStackTrace();
 			}finally{
 				xml.delete();
                 db.insertLatestHash(server.id, server.hash);
 			}
-            server.state = cm.aptoide.pt.Server.State.PARSED;
+
+            if(server.state != Server.State.FAILED){
+                server.state = cm.aptoide.pt.Server.State.PARSED;
+            }
+
             db.updateStatus(server);
 
 //			db.endTransation(server);

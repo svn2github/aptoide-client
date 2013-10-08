@@ -576,7 +576,7 @@ public class DownloadManager extends SherlockFragmentActivity {
     	String facebookShareMessage = getString(R.string.i_downloaded_to_install, facebookShareName);
     	String facebookShareDescription;
     	String facebookShareStoreLink;
-    	if(download.getViewApk().getRepoName().equals("Aptoide")){
+    	if(download.getViewApk().getRepoName().equals("apps")){
     		facebookShareDescription = getString(R.string.visit_and_install_the_best_apps, ApplicationAptoide.MARKETNAME);
     		facebookShareStoreLink = getString(R.string.aptoide_url_topapps);
     	}else{

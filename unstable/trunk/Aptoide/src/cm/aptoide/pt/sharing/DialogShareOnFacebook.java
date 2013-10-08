@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -89,55 +90,76 @@ public class DialogShareOnFacebook extends Dialog {
 		AptoideThemePicker.setAptoideTheme(activity);
 		super.onCreate(savedInstanceState);
 
-		facebook = new Facebook(APP_ID);
-		restoreCredentials(facebook);
 
-		WindowManager.LayoutParams params = getWindow().getAttributes();
-		params.width=WindowManager.LayoutParams.FILL_PARENT;
-		params.height=WindowManager.LayoutParams.WRAP_CONTENT;
-		getWindow().setAttributes(params);
+        new AsyncTask<Void, Void, Drawable>(){
 
-		requestWindowFeature(Window.FEATURE_LEFT_ICON);
-		setTitle(R.string.share);
 
-		setContentView(R.layout.dialog_share_facebook);
-		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.facebook_bt);
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                facebook = new Facebook(APP_ID);
+                restoreCredentials(facebook);
 
-		share_description = (TextView) findViewById(R.id.share_description);
-		share_description.setText(messageToPost);
-		icon_image = (ImageView) findViewById(R.id.share_image);
-		Drawable drawable = loadImageFromURL(iconToPost);
-		icon_image.setImageDrawable(drawable);
-		share_visit = (TextView) findViewById(R.id.share_visit);
-		share_visit.setText(descriptionToPost);
-		store_name = (TextView) findViewById(R.id.share_store);
-		store_name.setText(storeLinkToPost);
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.width=WindowManager.LayoutParams.FILL_PARENT;
+                params.height=WindowManager.LayoutParams.WRAP_CONTENT;
+                getWindow().setAttributes(params);
 
-		post_message = (TextView) findViewById(R.id.post_message);
-		post_message.setText(getContext().getString(R.string.want_to_share, ApplicationAptoide.MARKETNAME));
+                requestWindowFeature(Window.FEATURE_LEFT_ICON);
+                setTitle(R.string.share);
 
-		((Button)findViewById(R.id.FacebookShareButton)).setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				if (! facebook.isSessionValid()) {
+                setContentView(R.layout.dialog_share_facebook);
+                setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.facebook_bt);
 
-					loginAndPostToWall();
+                share_description = (TextView) findViewById(R.id.share_description);
+                share_description.setText(messageToPost);
+                icon_image = (ImageView) findViewById(R.id.share_image);
+                share_visit = (TextView) findViewById(R.id.share_visit);
+                share_visit.setText(descriptionToPost);
+                store_name = (TextView) findViewById(R.id.share_store);
+                store_name.setText(storeLinkToPost);
 
-				} else {
+                post_message = (TextView) findViewById(R.id.post_message);
+                post_message.setText(getContext().getString(R.string.want_to_share, ApplicationAptoide.MARKETNAME));
 
-					postToWall(nameToPost, iconToPost, messageToPost, descriptionToPost, storeLinkToPost);
+                ((Button)findViewById(R.id.FacebookShareButton)).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        if (! facebook.isSessionValid()) {
 
-				}
-			}
-		});
+                            loginAndPostToWall();
 
-		((Button)findViewById(R.id.FacebookShareNotButton)).setOnClickListener(new View.OnClickListener(){
+                        } else {
 
-			@Override
-			public void onClick(View v) {
-				dismiss();
-			}
-		});
+                            postToWall(nameToPost, iconToPost, messageToPost, descriptionToPost, storeLinkToPost);
+
+                        }
+                    }
+                });
+
+                ((Button)findViewById(R.id.FacebookShareNotButton)).setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        dismiss();
+                    }
+                });
+            }
+
+            @Override
+            protected Drawable doInBackground(Void... params) {
+                return loadImageFromURL(iconToPost);
+            }
+
+
+            @Override
+            protected void onPostExecute(Drawable drawable) {
+                super.onPostExecute(drawable);
+                icon_image.setImageDrawable(drawable);
+
+
+            }
+        }.execute();
 
 	}
 

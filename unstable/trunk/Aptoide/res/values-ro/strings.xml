@@ -25,14 +25,19 @@
   <string name="add_store_button_below">Agauga un magazin in butonul de mai jos!</string>
   <string name="version">Versiune:</string>
   <string name="apk_id">ID-ul aplicatiei:</string>
+  <string name="vercode">Cod de verificare:</string>
   <string name="empty_store_list">Nu aveţi nici un magazin.</string>
   <string name="new_store">Adaugă magazin</string>
   <string name="add_repo_private">Personal</string>
   <string name="downloads">descărcări</string>
   <string name="merge_all_stores">Uneşte toate magazinele</string>
   <string name="search_for_stores">Căutare magazine</string>
+  <string name="downloading_apps">"Se descarca "</string>
+  <string name="downloaded_apps">Descarcat</string>
   <string name="no_downloads">Nici o descarcare. Incepe descarcarea!</string>
   <string name="not_downloaded_apps">Aplicaţii nedescărcate</string>
+  <string name="completed">Completa</string>
+  <string name="waiting">"Asteapta... "</string>
   <string name="exit">ieşire</string>
   <string name="install">Instalare</string>
   <string name="uninstall">Dezinstalare</string>
@@ -48,7 +53,9 @@
   <string name="chkBoxSchDwn">Descărcare programată</string>
   <string name="exclude_update">Ignora actualizarea</string>
   <string name="restore_updates">Restaureaza actualizarea</string>
+  <string name="added_to_excluded_updates_list">%s a fost exclusă din sugestii actualizari</string>
   <string name="remove_from_excluded_updates_list">Sterge din Lista Actualizarilor Excluse</string>
+  <string name="add_to_excluded_updates_list">"Aceasta aplicație a fost exclusă din actualizări "</string>
   <string name="excluded_updates">Actualizari Excluse</string>
   <string name="no_excluded_updates">Nici o Actualizare Exclusa</string>
   <string name="no_excluded_updates_selected">Nu a fost selectata nici o Actualizare Exclusa</string>
@@ -101,17 +108,17 @@
   <string name="failedcredentials">Conectare eşuată la acreditările indicate</string>
   <string name="check_your_credentials">Eroare. Verifica credentialele</string>
   <string name="unkown_error">Eroare necunoscuta. Incearca din nou</string>
-  <string name="loading_likes">Încarcă \"Îmi place\"...</string>
+  <string name="loading_likes">Încarcă Îmi place...</string>
   <string name="add_comment">Adaugă comentariu</string>
   <string name="postingcomment">Postează comentariu...</string>
   <string name="commentadded">Comentariul dvs. a fost trimis cu succes</string>
-  <string name="order_popup_title1">Ordonează aplicaţiile după:</string>
+  <string name="order_popup_title1">Ordonează aplicaţiile după</string>
   <string name="order_popup_lst1">Cele mai recente întâi</string>
   <string name="order_popup_lst2">Alfabetic</string>
   <string name="order_popup_lst3">Evaluare</string>
   <string name="order_popup_lst4">Număr descărcare</string>
   <string name="order_popup_lst5">Pret</string>
-  <string name="order_popup_title2">Arată aplicaţiile:</string>
+  <string name="order_popup_title2">Arată aplicaţiile</string>
   <string name="order_popup_title3">Conţinut pentru adulţi:</string>
   <string name="are_you_adult">Ai macar 21 de ani?</string>
   <string name="order_popup_catg1">După categorie</string>
@@ -130,7 +137,7 @@
   <string name="setting_appfiltertitle">Filtru aplicaţii</string>
   <string name="setting_mature_filtering">Filtru Adult</string>
   <string name="setting_dont_show_mature_content">Nu afisa continut pentru adulti</string>
-  <string name="setting_appfiltersum">Nu arăta aplicaţiile incompatibile cu dispozitivul dvs.</string>
+  <string name="setting_appfiltersum">Nu arăta aplicaţiile incompatibile cu dispozitivul dvs</string>
   <string name="setting_schdwntitle">Descărcări programate</string>
   <string name="setting_schdwninstalltitle">Instalare automată</string>
   <string name="setting_schdwninstallsum">Instalează automat descărcările programate când este prezentă conexiune Wifi</string>
@@ -147,6 +154,7 @@
   <string name="adult_content">Conţinut pentru adulţi</string>
   <string name="stores">Magazine</string>
   <string name="screenshots">Capturi ecran</string>
+  <string name="about">Descriere</string>
   <string name="rate_this_app">Voteaza aplicatia</string>
   <string name="related_apps">Aplicatii asemanatoare</string>
   <string name="recommended_apps">Aplicatii recomandate</string>
@@ -161,6 +169,7 @@
   <string name="menu_rem_repo">Şterge magazin</string>
   <string name="menu_edit_repo">Editare magazin</string>
   <string name="btn_chlog">Modificare</string>
+  <string name="btn_search_market">"Căutați in alte magazine! "</string>
   <string name="no_results_found">Nici un rezultat gasit</string>
   <string name="found">Gasit</string>
   <string name="results">rezultat(e)</string>
@@ -174,6 +183,7 @@
   <string name="update_done_msg1">Magazine actualizate cu succes.</string>
   <string name="about_site">Acasă:</string>
   <string name="about_mail">Contact:</string>
+  <string name="about_us">Despre noi</string>
   <string name="app_trusted">Aplicatia %s este de Incredere</string>
   <string name="app_warning">Aplicatia %s este Avertizata</string>
   <string name="app_unknown">Aplicatia %s este Necunoscuta</string>
@@ -209,6 +219,7 @@
   <string name="aptoide_error">Nu se poate conecta la serverul la distanţă. Vă rugăm verificaţi conexiunea la internet.</string>
   <string name="no_sch_downloads">Nu sânt descărcări programate!</string>
   <string name="size">Mărime</string>
+  <string name="installed_version">Versiune instalata</string>
   <string name="schDown_install">Doriţi să instalaţi toate descărcările programate?</string>
   <string name="schDown_installselected">Instalare selectate</string>
   <string name="schDown_wireless_detected">Detectat wireless: Descărcaţi toate aplicaţiile în Descărcări programate?</string>
@@ -238,6 +249,7 @@
   <string name="my_account">Contul meu</string>
   <string name="clearcache_sum">Ştege cache-urile (iconiţe, capturile de ecran) de pe cardul SD.</string>
   <string name="clearcontent_sum">Sterge datele de pe cardul SD.</string>
+  <string name="cache_using_X_mb">"Se folosesc %s Megabiti (MB) "</string>
   <string name="clearcontent_title">Înlătură datele şi configurările</string>
   <string name="clearcache_title">Sterge cache-urile</string>
   <string name="schDown_added">adăugat în lista descărcărilor programate.</string>
@@ -248,9 +260,15 @@
   <string name="starting_download">Pornire descărcare</string>
   <string name="resuming_download">Reluare descărcare</string>
   <string name="finished_download">%s s-a descarcat</string>
+  <string name="time_left">Stanga</string>
   <string name="slow">încet</string>
+  <string name="paused">în pauză</string>
   <string name="stopped">oprit</string>
   <string name="starting">Incepe</string>
+  <string name="resume">Reia</string>
+  <string name="pause">Pauza</string>
+  <string name="stop">"Stop "</string>
+  <string name="clear">Nici i descarcare</string>
   <string name="download_failed_due_to">Descarcare Esuata din cauza</string>
   <string name="timeout">Timp conexiune reţea expirat</string>
   <string name="ip_blacklisted">lista neagră a IP-urilor</string>
@@ -263,7 +281,7 @@
   <string name="choose_email_client">Alegeţi o adresă de Email client:</string>
   <string name="refresh_list">Reîmprospătare</string>
   <string name="update_all">Actualizare toate</string>
-  <string name="update_to">Actualizare magazin</string>
+  <string name="update_to">Actualizare catre</string>
   <string name="want_to_share">%s nu va fi postat fara permisiunea ta. Iti respectam intimitatea numarului de telefon. Doresti sa imparti mesajul urmator?</string>
   <string name="share">Imparte</string>
   <string name="facebook_authentication_failed">Autentificarea cu Facebook a esuat!</string>
@@ -299,9 +317,10 @@
   <string name="version_info">Informatii Versiune</string>
   <string name="payment_method">Metoda de Plata</string>
   <string name="payment_warning_text">Nu am potut verifica pretul curent al acestui produs. Posibil ca pretul sa se fi schimbat. Confirma Pretul PayPal inainte de plata.</string>
-  <string name="payment_warning_title">Avertisment</string>
+  <string name="payment_warning_title">"Atenție! "</string>
   <string name="buy">Cumpara</string>
   <string name="applications">Aplicaţii</string>
+  <string name="comics">"Benzi desenate "</string>
   <string name="communication">Comunicatii</string>
   <string name="entertainment">Divertisment</string>
   <string name="finance">Finante</string>
@@ -314,6 +333,7 @@
   <string name="shopping">Cumparaturi</string>
   <string name="social">Social</string>
   <string name="sports">Sporturi</string>
+  <string name="themes">Teme</string>
   <string name="tools">Unelte</string>
   <string name="travel">Calatorii</string>
   <string name="demo">Demo</string>
@@ -348,4 +368,6 @@
   <string name="warning">Avertisment</string>
   <string name="unknown">Necunoscut</string>
   <string name="error_no_market">Nu aveţi instalat Magazin Play!</string>
+  <string name="setting_updates">Actualizări</string>
+  <string name="restore">Instalare</string>
 </resources>

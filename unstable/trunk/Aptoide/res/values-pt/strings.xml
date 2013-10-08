@@ -65,10 +65,10 @@
   <string name="body">Corpo da mensagem</string>
   <string name="subject">Nome</string>
   <string name="available_tab">Disponível</string>
-  <string name="featured_tab">Destacado</string>
+  <string name="featured_tab">Destaques</string>
   <string name="editors_choice">Escolha do Editor</string>
   <string name="top_apps">Aplicações Top</string>
-  <string name="installed_tab">Instalados</string>
+  <string name="installed_tab">Instaladas</string>
   <string name="updates_tab">Actualizações</string>
   <string name="add_private_store">Adicionar loja privada</string>
   <string name="add_repo_text">Nova Loja</string>
@@ -149,7 +149,7 @@
   <string name="menu_update_repo">Actualizações</string>
   <string name="menu_update_all">Actualizar tudo</string>
   <string name="menu_manage">Gerir a Loja</string>
-  <string name="menu_display_options">Mostrar as opções</string>
+  <string name="menu_display_options">Opções de visualização</string>
   <string name="menu_order">Alterar a ordem</string>
   <string name="menu_search">Procurar</string>
   <string name="adult_content">Conteúdo adulto</string>

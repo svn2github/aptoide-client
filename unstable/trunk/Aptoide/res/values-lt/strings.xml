@@ -138,6 +138,7 @@
   <string name="setting_appfiltertitle">Filtruoti programas</string>
   <string name="setting_mature_filtering">Suaugusiųjų filtras</string>
   <string name="setting_dont_show_mature_content">Nerodyti suaugusiems skirto turinio</string>
+  <string name="setting_appfiltersum">Nerodyti programų, nesuderinamų su jūsų prietaisu</string>
   <string name="setting_schdwntitle">Suplanuoti atsisiuntimai</string>
   <string name="setting_schdwninstalltitle">Automatinis diegimas</string>
   <string name="setting_schdwninstallsum">Įdiegti suplanuotus atsisiuntimus automatiškai, kai yra „Wi-Fi“ ryšys</string>
@@ -262,6 +263,7 @@
   <string name="finished_download">%s baigta siųsti</string>
   <string name="time_left">liko</string>
   <string name="slow">lėtas</string>
+  <string name="paused">pristabdyta</string>
   <string name="stopped">sustabdyta</string>
   <string name="starting">pradedama</string>
   <string name="resume">Tęsti</string>
@@ -384,4 +386,6 @@
   <string name="has_updates">%s turi naujų prieinamų naujinimų!</string>
   <string name="powered_by">Sukurta pagal</string>
   <string name="restart_launcher">%s ketina paleisti jūsų launcher iš naujo, siekiant išlaikyti jūsų nuostatas. Norėdami tęsti, spustelėkite OK.</string>
+  <string name="setting_updates">Atnaujinimai</string>
+  <string name="restore">Įdiegti</string>
 </resources>

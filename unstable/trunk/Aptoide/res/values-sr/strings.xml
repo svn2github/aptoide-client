@@ -33,6 +33,8 @@
   <string name="merge_all_stores">Spoji sve Stores-e</string>
   <string name="search_for_stores">Trazi Stores-e</string>
   <string name="download_manager">Upravitelj Preuzimanja</string>
+  <string name="downloading_apps">Preuzimanje</string>
+  <string name="downloaded_apps">Preuzimanja</string>
   <string name="no_downloads">Nema preuzimanja. Počnite preuzimati!</string>
   <string name="not_downloaded_apps">Nepreuzete aplikacije</string>
   <string name="exit">izlaz</string>
@@ -89,7 +91,7 @@
   <string name="postingtaste">Vaš zahtjev se zaprima</string>
   <string name="another_comment_is_beeing_submited">Drugi komentar se zaprima, molimo pričekajte</string>
   <string name="error_occured">Pojavila se greška. Molimo pokušajte ponovo</string>
-  <string name="comment_submitted">Komentar uspješno zaprimljen.</string>
+  <string name="comment_submitted">Komentar uspješno zaprimljen</string>
   <string name="showpass">Pokaži zaporku</string>
   <string name="new_account">Novi račun</string>
   <string name="new_to_aptoide">Novi ste u Aptoide-u? Napravite besplatni račun</string>
@@ -112,7 +114,7 @@
   <string name="order_popup_lst2">Po abecedi</string>
   <string name="order_popup_lst3">Po ocjeni</string>
   <string name="order_popup_lst4">Po broju preuzimanja</string>
-  <string name="order_popup_title2">Pokaži aplikacije:</string>
+  <string name="order_popup_title2">Pokaži aplikacije</string>
   <string name="order_popup_title3">Sadržaj za odrasle</string>
   <string name="are_you_adult">Imate li najmanje 21 godinu starosti?</string>
   <string name="order_popup_catg1">Po kategoriji</string>
@@ -131,7 +133,7 @@
   <string name="setting_appfiltertitle">Filtriraj Aplikacije</string>
   <string name="setting_mature_filtering">Filter za odrasle</string>
   <string name="setting_dont_show_mature_content">Ne prikazuj sadržaje za odrasle</string>
-  <string name="setting_appfiltersum">Ne prikazuj aplikacije koje nisu kompatibilne sa vašim uređajem.</string>
+  <string name="setting_appfiltersum">Ne prikazuj aplikacije koje nisu kompatibilne sa vašim uređajem</string>
   <string name="setting_schdwntitle">Zakazana Preuzimanja</string>
   <string name="setting_schdwninstalltitle">Automatska Instalacija</string>
   <string name="setting_schdwninstallsum">Instaliraj zakazana preuzimanja automatski kad je prisutna WiFi veza</string>
@@ -160,7 +162,7 @@
   <string name="clear_all">Očisti sve</string>
   <string name="menu_add_repo">Novi Store</string>
   <string name="menu_rem_repo">Ukloni store</string>
-  <string name="menu_edit_repo">Nema repozitorija!</string>
+  <string name="menu_edit_repo">Nema repozitorija</string>
   <string name="btn_chlog">Popis promjena</string>
   <string name="no_results_found">Nema pronađenih rezultata</string>
   <string name="found">Pronađeno</string>
@@ -250,8 +252,10 @@
   <string name="resuming_download">Nastavljanje preuzimanja</string>
   <string name="finished_download">%s završeno preuzimanje</string>
   <string name="slow">sporo</string>
+  <string name="paused">pauzirano</string>
   <string name="stopped">zaustavljeno</string>
   <string name="starting">pokretanje</string>
+  <string name="pause">pauzirano</string>
   <string name="download_failed_due_to">Preuzimanje nije uspjelo zbog</string>
   <string name="timeout">izgubljena veza</string>
   <string name="ip_blacklisted">Blokiran IP</string>
@@ -299,4 +303,6 @@
   <string name="trusted">Pouzdan</string>
   <string name="unknown">Nepoznato</string>
   <string name="error_no_market">Nemate instaliran Google Market!</string>
+  <string name="setting_updates">Ažuriranja</string>
+  <string name="restore">Instaliraj</string>
 </resources>

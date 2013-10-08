@@ -94,6 +94,8 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
             uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
             uiLifecycleHelper.onCreate(savedInstanceState);
+            mPlusClient = new PlusClient.Builder(this, this, this).build();
+
         }
 
 		context = this;
@@ -245,7 +247,11 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     protected void onStop() {
         super.onStop();
 
-        mPlusClient.disconnect();
+        if(mPlusClient.isConnected()){
+            mPlusClient.disconnect();
+        }
+
+
     }
 
     private void drawLoginForm() {
@@ -268,7 +274,6 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
                 signInButton.setVisibility(View.GONE);
             }
 
-            mPlusClient = new PlusClient.Builder(this, this, this).build();
 
             signInButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -386,7 +391,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 	public static boolean isLoggedIn(Context context) {
 		sPref = PreferenceManager.getDefaultSharedPreferences(context);
 		System.out.println("isLoggedin");
-		return (sPref.getString(Configs.LOGIN_USER_TOKEN, null) != null) || (Session.getActiveSession()!=null && Session.getActiveSession().isOpened()) || (mPlusClient !=null && mPlusClient.isConnected());
+		return (sPref.getString(Configs.LOGIN_USER_TOKEN, null) != null);
 	}
 
 	public static String getToken(Context context) {
@@ -551,6 +556,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			try {
 				if (array.getString("status").equals("OK")) {
 					succeed = true;
+                    Login.this.username = username_string;
 					prefEdit.putString(Configs.LOGIN_PASSWORD, password_string);
 					prefEdit.putString(Configs.LOGIN_USER_LOGIN, username_string);
 					prefEdit.putString(Configs.LOGIN_USER_ID,Algorithms.computeSHA1sum(username_string));
@@ -569,11 +575,21 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 					toast.show();
 				}
 			} catch (Exception e) {
+                if(Build.VERSION.SDK_INT>8){
+                    Session session = Session.getActiveSession();
+                    if(session.isOpened()){
+                        session.closeAndClearTokenInformation();
+                    }
+                    if(mPlusClient.isConnected()){
+                        mPlusClient.clearDefaultAccount();
+                        mPlusClient.disconnect();
+                    }
+                }
 				Toast toast= Toast.makeText(context,
 						context.getString(R.string.error_occured), Toast.LENGTH_SHORT);
 						toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 30);
 						toast.show();
-				e.printStackTrace();
+
 			}
 
 		}
@@ -584,11 +600,12 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
 		if (succeed) {
 			Intent i = new Intent();
-			i.putExtra("username", username_box.getText().toString());
+			i.putExtra("username", username);
 			setResult(RESULT_OK, i);
 		} else {
 			setResult(RESULT_CANCELED);
 		}
+
 		super.finish();
 
 	}

@@ -14,6 +14,7 @@ import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import cm.aptoide.pt.*;
 import cm.aptoide.pt.download.*;
 import cm.aptoide.pt.download.DownloadManager;
@@ -60,6 +61,7 @@ public class ServiceManagerDownload extends Service {
             updates.close();
         }
     };
+    private ArrayList<String> downladingFileNames = new ArrayList<String>();
 
     @Override
     public void onCreate() {
@@ -118,18 +120,21 @@ public class ServiceManagerDownload extends Service {
         if(downloads.get(apk.getAppHashId())!=null){
             return downloads.get(apk.getAppHashId());
         }else{
-            return new DownloadInfo(apk.getAppHashId(), apk);
+            return new DownloadInfo(apk.getAppHashId(), apk, downladingFileNames);
         }
 
     }
 
     public void startDownload(DownloadInfo download, ViewApk apk){
         downloads.put(apk.getAppHashId(), download);
+
         ArrayList<DownloadModel> downloadList = new ArrayList<DownloadModel>();
         download.setDownloadExecutor(new DownloadExecutorImpl());
         DownloadModel apkDownload = new DownloadModel(apk.getPath(), DEFAULT_APK_DESTINATION + apk.getApkid() + "." +apk.getMd5()+".apk", apk.getMd5());
         apkDownload.setAutoExecute(true);
         downloadList.add(apkDownload);
+        downladingFileNames.add(apk.getApkid() + "." +apk.getMd5()+".apk");
+        Log.d("TAG", "Adding " + apk.getApkid() + "." + apk.getMd5() + ".apk");
 
         if(apk.getMainObbUrl()!=null){
             DownloadModel mainObbDownload = new DownloadModel(apk.getMainObbUrl(), OBB_DESTINATION + apk.getApkid() + "/" +apk.getMainObbFileName(), apk.getMainObbMd5());
@@ -149,7 +154,7 @@ public class ServiceManagerDownload extends Service {
 
     public void startDownloadWithWebservice(final DownloadInfo download, final ViewApk apk){
         if (existsDownload(apk)) {
-            startDownload(download, apk);
+            startDownload(download, download.getViewApk());
         } else {
             new AsyncTask<Void, Void, WebserviceGetApkInfo>() {
 
@@ -327,6 +332,9 @@ public class ServiceManagerDownload extends Service {
 			DownloadInfo downloadInfo = it.next();
 			if(downloadInfo.getStatusState().getEnumState().equals(EnumState.COMPLETE) ){
                 downloads.remove(downloadInfo.getId());
+                ViewApk apk = downloadInfo.getViewApk();
+                downladingFileNames.remove(apk.getApkid() + "." +apk.getMd5()+".apk");
+                Log.d("TAG", "Removing " + apk.getApkid() + "." + apk.getMd5() + ".apk");
                 DownloadManager.INSTANCE.removeFromCompletedList(downloadInfo);
             }
         }

@@ -31,7 +31,7 @@ import java.net.URL;
 public class NetworkUtils {
 
 
-	private static int TIME_OUT = 10000;
+	private static int TIME_OUT = 15000;
 
     public BufferedInputStream getInputStream(String url, Context context) throws IOException {
         return getInputStream(url, null, null, context);

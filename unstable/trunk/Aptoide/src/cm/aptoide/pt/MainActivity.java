@@ -870,7 +870,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         File sdcard_file = new File(SDCARD);
         if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
 
-            Builder dialogBuilder = new AlertDialog.Builder(mContext);
+            Builder dialogBuilder = new AlertDialog.Builder(this);
             final AlertDialog noSDDialog = dialogBuilder.create();
             noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
             noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -900,9 +900,11 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                 Log.d("Aptoide", "* * * * * * * * * *");
 
                 Builder dialogBuilder = new AlertDialog.Builder(this);
+
                 final AlertDialog noSpaceDialog = dialogBuilder.create();
                 noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                dialogBuilder.setMessage(getText(R.string.remote_in_noSDspace));
+                noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
+                noSpaceDialog.setMessage(getText(R.string.remote_in_noSDspace));
                 noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {

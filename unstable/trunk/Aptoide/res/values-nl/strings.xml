@@ -33,8 +33,12 @@
   <string name="merge_all_stores">Voeg alle voorraden bij elkaar</string>
   <string name="search_for_stores">Zoek voor voorraden</string>
   <string name="download_manager">Download Beheerder</string>
+  <string name="downloading_apps">Downloaden</string>
+  <string name="downloaded_apps">Gedownload</string>
   <string name="no_downloads">Geen downloads. Begin met downloaden!</string>
   <string name="not_downloaded_apps">Niet gedownloade apps</string>
+  <string name="completed">Compleet</string>
+  <string name="waiting">Wachten...</string>
   <string name="exit">Exit</string>
   <string name="install">Installeren</string>
   <string name="uninstall">Deinstalleren</string>
@@ -50,7 +54,9 @@
   <string name="chkBoxSchDwn">Download plannen</string>
   <string name="exclude_update">Update negeren</string>
   <string name="restore_updates">Herstel Updates</string>
+  <string name="added_to_excluded_updates_list">%s uitgezonderd van Updates</string>
   <string name="remove_from_excluded_updates_list">Verwijder van Uitgezonderde Updates lijst</string>
+  <string name="add_to_excluded_updates_list">Deze app is verwijderd uit Updates</string>
   <string name="excluded_updates">Uitgezonderde Updates</string>
   <string name="no_excluded_updates">Geen Uitgezonderde Updates</string>
   <string name="no_excluded_updates_selected">Geen Uitgezonderde Updates geselecteerd</string>
@@ -149,6 +155,7 @@
   <string name="adult_content">Volwassenen (18+) inhoud</string>
   <string name="stores">Winkels/ Voorraden</string>
   <string name="screenshots">Scherm afbeeldingen</string>
+  <string name="about">Uitleg</string>
   <string name="rate_this_app">Geef deze app je waardering</string>
   <string name="related_apps">Vergelijkbare Apps</string>
   <string name="recommended_apps">Aanbevolen Apps</string>
@@ -163,6 +170,7 @@
   <string name="menu_rem_repo">Voorraad verwijderen</string>
   <string name="menu_edit_repo">Voorraad bewerken</string>
   <string name="btn_chlog">Veranderingen</string>
+  <string name="btn_search_market">Zoek andere Markten</string>
   <string name="no_results_found">Geen resultaten gevonden</string>
   <string name="found">Gevonden</string>
   <string name="results">resultaten</string>
@@ -176,6 +184,7 @@
   <string name="update_done_msg1">Voorraden zijn met succes bijgewerkt.</string>
   <string name="about_site">Home:</string>
   <string name="about_mail">Contact:</string>
+  <string name="about_us">Over ons</string>
   <string name="app_trusted">%s applicatie is vertrouwd</string>
   <string name="app_warning">%s applicatie wordt gewaarschuwd</string>
   <string name="app_unknown">%s applicatie is onbekend</string>
@@ -211,6 +220,7 @@
   <string name="aptoide_error">Kan niet verbinden met server. Aub controleer je internet verbinding.</string>
   <string name="no_sch_downloads">Geen geplande downloads!</string>
   <string name="size">Grootte</string>
+  <string name="installed_version">Geïnstalleerde Versie</string>
   <string name="schDown_install">Wil je alle geplande downloads installeren?</string>
   <string name="schDown_installselected">Geselecteerde installeren</string>
   <string name="schDown_wireless_detected">Wifi gevonden: Alle geplande toepassingen downloaden?</string>
@@ -251,9 +261,15 @@
   <string name="starting_download">Begin met downloaden</string>
   <string name="resuming_download">Download hervatten</string>
   <string name="finished_download">%s is klaar met downloaden</string>
+  <string name="time_left">over</string>
   <string name="slow">langzaam</string>
+  <string name="paused">gepauzeerd</string>
   <string name="stopped">gestopt</string>
   <string name="starting">Begint</string>
+  <string name="resume">Doorgaan</string>
+  <string name="pause">Pauze</string>
+  <string name="stop">Stop</string>
+  <string name="clear">Verwijder</string>
   <string name="download_failed_due_to">Download mislukt door</string>
   <string name="timeout">netwerk verbinding getimeout</string>
   <string name="ip_blacklisted">IP is op zwartelijst</string>
@@ -303,7 +319,7 @@
   <string name="version_info">Versie info</string>
   <string name="payment_method">Betaling wijze</string>
   <string name="payment_warning_text">We konden de huidige prijs van dit produkt niet controleren. Prijs kon veranderd zijn. Bevestig aub Paypal prijs voor betaling.</string>
-  <string name="payment_warning_title">Waarschuwing</string>
+  <string name="payment_warning_title">Waarschuwing!</string>
   <string name="buy">Kopen</string>
   <string name="applications">Applicaties</string>
   <string name="comics">Stripboeken</string>
@@ -357,4 +373,10 @@
   <string name="warning">Waarschuwing</string>
   <string name="unknown">Onbekend</string>
   <string name="error_no_market">Je hebt geen Google Play Store geïnstalleerd!</string>
+  <string name="crash_notif_ticker_text">Onverwachte fout, stuur aub een rapport...</string>
+  <string name="crash_notif_text">Klik hier om het probleem te helpen verhelpen</string>
+  <string name="crash_dialog_title">Aptoide is vastgelopen</string>
+  <string name="crash_dialog_ok_toast">Bedankt!</string>
+  <string name="setting_updates">Updates</string>
+  <string name="restore">Installeren</string>
 </resources>

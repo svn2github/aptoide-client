@@ -33,8 +33,11 @@
   <string name="merge_all_stores">Połącz repozytoria</string>
   <string name="search_for_stores">Przeszukaj repozytoria</string>
   <string name="download_manager">Menadżer pobierania</string>
+  <string name="downloading_apps">Pobieranie</string>
+  <string name="downloaded_apps">Pobrania</string>
   <string name="no_downloads">Nic nie pobrałeś - pobierz coś.</string>
   <string name="not_downloaded_apps">Aplikacje nie pobrane</string>
+  <string name="completed">Zakończony</string>
   <string name="exit">wyjście</string>
   <string name="install">Instaluj</string>
   <string name="uninstall">Odinstaluj</string>
@@ -132,7 +135,7 @@
   <string name="setting_appfiltertitle">Filtr aplikacji</string>
   <string name="setting_mature_filtering">Filtr treści dla dorosłych</string>
   <string name="setting_dont_show_mature_content">Nie pokazuj zawartości dla pełnoletnich</string>
-  <string name="setting_appfiltersum">Nie pokazuj aplikacji niezgodnych z twoim sprzętem.</string>
+  <string name="setting_appfiltersum">Nie pokazuj aplikacji niezgodnych z twoim sprzętem</string>
   <string name="setting_schdwntitle">Zaplanowane pobrania</string>
   <string name="setting_schdwninstalltitle">Instalacja automatyczna</string>
   <string name="setting_schdwninstallsum">Zainstaluj wybrane aplikacje automatycznie, jeśli dostępne jest połączenie WiFi</string>
@@ -252,8 +255,10 @@
   <string name="resuming_download">Podejmij pobieranie</string>
   <string name="finished_download">%s pobieranie zakończone</string>
   <string name="slow">wolno</string>
+  <string name="paused">pauza</string>
   <string name="stopped">zatrzymane</string>
   <string name="starting">rozpoczęte</string>
+  <string name="pause">Pauza</string>
   <string name="download_failed_due_to">Pobieranie nieudane z powodu</string>
   <string name="timeout">przekroczenie czasu połączenia sieciowego</string>
   <string name="ip_blacklisted">IP na czarnej liście</string>
@@ -357,4 +362,6 @@
   <string name="warning">Ostrzeżenie</string>
   <string name="unknown">Niepewna</string>
   <string name="error_no_market">Nie masz zainstalowanego Google Play!</string>
+  <string name="setting_updates">Aktualizacje</string>
+  <string name="restore">Instaluj</string>
 </resources>

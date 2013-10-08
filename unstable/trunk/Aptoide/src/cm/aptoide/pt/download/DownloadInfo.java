@@ -12,10 +12,7 @@ import cm.aptoide.pt.views.EnumDownloadFailReason;
 import cm.aptoide.pt.views.ViewApk;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * To change this template use File | Settings | File Templates.
  */
 public class DownloadInfo implements Runnable{
+
 
     private int id;
     //    private final DownloadConnection mConnection;
@@ -48,11 +46,20 @@ public class DownloadInfo implements Runnable{
     private DownloadExecutor downloadExecutor;
     private long mProgress = 0;
     private boolean isPaused = false;
+    private ArrayList<String> downloadingFilenames;
 
 
     public DownloadInfo(int id, ViewApk apk) {
         this(null, id, apk);
     }
+
+    public DownloadInfo(int appHashId, ViewApk apk, ArrayList<String> downladingFileNames) {
+        this(null, appHashId, apk);
+
+        this.downloadingFilenames = downladingFileNames;
+
+    }
+
 
     public void setFilesToDownload(List<DownloadModel> mFilesToDownload) {
         this.mFilesToDownload = mFilesToDownload;
@@ -189,11 +196,13 @@ public class DownloadInfo implements Runnable{
     double getDirSize(File dir) {
         double size = 0;
         if (dir.isFile()) {
-            size = dir.length();
+            if(!downloadingFilenames.contains(dir.getName())){
+                size = dir.length();
+            }
         } else {
             File[] subFiles = dir.listFiles();
             for (File file : subFiles) {
-                if (file.isFile()) {
+                if (file.isFile() && !downloadingFilenames.contains(file.getName())) {
                     size += file.length();
                 } else {
                     size += this.getDirSize(file);
@@ -205,7 +214,12 @@ public class DownloadInfo implements Runnable{
     }
 
     private void checkDirectorySize(String dirPath) {
+
+
+
         File dir = new File(dirPath);
+
+
         if(!dir.exists()){
             if(!dir.mkdirs()){
                 return;
@@ -222,12 +236,15 @@ public class DownloadInfo implements Runnable{
             File fileToDelete = null;
             for (File file : files){
                 currentTime = file.lastModified();
-                if(currentTime<latestTime){
+
+                if(currentTime<latestTime && !downloadingFilenames.contains(file.getName())){
                     latestTime=currentTime;
                     fileToDelete = file;
                 }
+
             }
             if(fileToDelete!=null){
+                Log.d("TAG", "Deleting " + fileToDelete.getName());
                 fileToDelete.delete();
             }
             checkDirectorySize(dirPath);

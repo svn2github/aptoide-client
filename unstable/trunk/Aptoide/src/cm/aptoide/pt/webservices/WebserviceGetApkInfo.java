@@ -87,6 +87,7 @@ public class WebserviceGetApkInfo {
         NetworkUtils utils = new NetworkUtils();
         String line;
 
+        Log.d("TAG", url.toString());
         BufferedReader br = new BufferedReader(new InputStreamReader(utils.getInputStream(url.toString(), null, null, ApplicationAptoide.getContext())));
         sb = new StringBuilder();
         while ((line = br.readLine()) != null){

@@ -21,7 +21,16 @@
 
 -keep class android.support.v4.app.** { *; } 
 -keep interface android.support.v4.app.** { *; } 
--keep class com.actionbarsherlock.** { *; } 
+-keep class com.actionbarsherlock.** { *; }
+-keep class com.viewpagerindicator.** { *; }
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.ads.** { *; }
+-keep class com.millennialmedia.android.** { *; }
+-keep class javax.mail.** { *; }
+-keep interface com.viewpagerindicator.** { *; }
+-keep class com.mopub.mobileads.** { *; }
+-keep interface com.mopub.mobileads.** { *; }
+-keep class com.paypal.** { *; }
 -keep interface com.actionbarsherlock.** { *; } 
 -keepattributes *Annotation*
 -keepattributes Signature

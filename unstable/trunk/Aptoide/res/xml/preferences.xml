@@ -75,8 +75,6 @@
             android:key="clearcache"
             android:title="@string/clearcache_title" />
 
-
-
         <EditTextPreference
             android:key="maxFileCache"
             android:summary="@string/settings_maxFileCache_sum"
@@ -91,7 +89,7 @@
                                 android:summary="@string/pref_acra_enabled"
                                 android:defaultValue="true"/>
             <CheckBoxPreference android:key="acra.syslog.enable"
-                                android:summaryOn="@string/pref_acra_syslog_enabled"
+                                android:summary="@string/pref_acra_syslog_enabled"
                                 android:title="@string/pref_acra_syslog"
                                 android:defaultValue="true"/>
             <EditTextPreference android:key="acra.user.email"

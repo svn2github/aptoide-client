@@ -36,10 +36,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
-
-
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class MainService extends Service {
@@ -225,15 +223,17 @@ public class MainService extends Service {
 		}
 	}
 
+    ExecutorService service = Executors.newSingleThreadExecutor();
+
 	public void parseServer(final Database db, final Server server) throws  IOException {
 
 
 		if(!serversParsing.contains(server.url)){
-            if(server.isBare){
-                server.state=State.QUEUED;
-                db.updateStatus(server);
-            }
-			new Thread(new Runnable() {
+
+            server.state=State.QUEUED;
+            db.updateStatus(server);
+
+			service.submit(new Runnable() {
 
 				@Override
 				public void run() {
@@ -251,13 +251,15 @@ public class MainService extends Service {
 					}catch (IOException e){
                         if(server.showError){
                             server.state=State.FAILED;
+                        }else{
+                            server.state=State.PARSED;
                         }
 						db.updateStatus(server);
 						serversParsing.remove(server.url);
 						e.printStackTrace();
 					}
 				}
-			}).start();
+			});
 
 			serversParsing.add(server.url);
 		}

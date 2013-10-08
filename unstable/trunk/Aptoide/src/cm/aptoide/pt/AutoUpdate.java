@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Md5Handler;
 import org.apache.http.HttpResponse;
@@ -93,7 +94,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     }
 
     private void requestUpdateSelf(final AutoUpdateInfo autoUpdateInfo) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(activity, activity.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0, 0));
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
         final AlertDialog updateSelfDialog = dialogBuilder.create();
         updateSelfDialog.setTitle(activity.getText(R.string.update_self_title));
         updateSelfDialog.setIcon(R.drawable.icon_brand_aptoide);

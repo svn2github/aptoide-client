@@ -7,6 +7,7 @@ import cm.aptoide.pt.download.state.ErrorState;
 import cm.aptoide.pt.views.EnumDownloadFailReason;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -107,6 +108,8 @@ public class DownloadThread implements Runnable {
             if(parent.getStatusState() instanceof ActiveState){
                 mDownloadFile.checkMd5();
             }
+
+
 
 
 //            Log.d("DownloadManager", "Download done with " + new Md5Handler().md5Calc(new File(mDestination)));
