@@ -1,10 +1,10 @@
-package cm.aptoide.pt.dev.database;
+package cm.aptoide.pt.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import cm.aptoide.pt.dev.Aptoide;
+import cm.aptoide.pt.Aptoide;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dev.database.table;
+package cm.aptoide.pt.database.table;
 
 /**
  * Created with IntelliJ IDEA.

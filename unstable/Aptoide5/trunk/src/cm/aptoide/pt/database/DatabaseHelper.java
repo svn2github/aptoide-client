@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dev.database;
+package cm.aptoide.pt.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

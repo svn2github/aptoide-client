@@ -1,6 +1,5 @@
-package cm.aptoide.pt.dev.model;
+package cm.aptoide.pt.model;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 /**

@@ -1,8 +1,4 @@
-package cm.aptoide.pt.dev.database.table;
-
-import android.database.sqlite.SQLiteOpenHelper;
-
-import java.sql.Statement;
+package cm.aptoide.pt.database.table;
 
 /**
  * Created with IntelliJ IDEA.

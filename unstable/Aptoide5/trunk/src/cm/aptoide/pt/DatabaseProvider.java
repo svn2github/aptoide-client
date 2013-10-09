@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dev;
+package cm.aptoide.pt;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

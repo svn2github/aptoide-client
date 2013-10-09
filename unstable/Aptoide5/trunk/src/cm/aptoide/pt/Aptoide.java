@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dev;
+package cm.aptoide.pt;
 
 import android.app.Application;
 import android.content.Context;
