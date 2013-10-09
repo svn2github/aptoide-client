@@ -18,6 +18,8 @@ public class Aptoide extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+
+
     }
 
     public static Context getContext(){
