@@ -385,6 +385,16 @@ public class Database  {
         return permissions;
     }
 
+    public void beginTransaction() {
+        database.beginTransaction();
+    }
+
+    public void endTransaction() {
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
+    }
+
     private static class SingletonHolder {
 		public static final Database INSTANCE = new Database();
 	}
@@ -398,7 +408,7 @@ public class Database  {
 		ContentValues values = new ContentValues();
 		values.put(DbStructure.COLUMN_REPO_ID, apk.getRepo_id());
 		values.put(DbStructure.COLUMN_CATEGORY_2ND, apk.getCategory2());
-        values.put(DbStructure.COLUMN_IS_COMPATIBLE,isCompatible(apk));
+        values.put(DbStructure.COLUMN_IS_COMPATIBLE, isCompatible(apk));
 
         putCommonValues(apk, values);
 		long id = database.insert(DbStructure.TABLE_FEATURED_TOP_APK, null,
@@ -1769,109 +1779,111 @@ public class Database  {
 	}
 
     public ViewApk getApk(long id, Category category) {
-		Cursor c = null;
-		ViewApk apk = new ViewApk();
-		Log.d("Aptoide-Database", "Get APK id: " + category.name() + " " + id);
-		yield();
-		switch (category) {
-		case INFOXML:
-			c = database.query("apk as a, repo as c", new String[] { "a.apkid",
-					"a.vername", "a.repo_id", "a.downloads", "a.size",
-					"a.icon", "a.name", "a.rating", "a.remote_path", "a.md5",
-					"c.iconspath", "c.name", "c.apkpath", "a.vercode","a.price" },
-					"a._id = ? and a.repo_id = c._id",
-					new String[] { id + "" }, null, null, null);
-			break;
-		case USERBASED:
-		case ITEMBASED:
-			c = database
-					.query("itembased_apk as a, itembased_repo as c",
-							new String[] { "a.apkid", "a.vername", "a.repo_id",
-									"a.downloads", "a.size", "a.icon",
-									"a.name", "a.rating", "a.remote_path",
-									"a.md5", "c.iconspath", "c.name",
-									"c.basepath", "a.vercode","a.price" },
-							"a._id = ? and a.repo_id = c._id",
-							new String[] { id + "" }, null, null, null);
-			break;
-		case EDITORSCHOICE:
-			c = database
-					.query("featured_editorschoice_apk as a, featured_editorschoice_repo as c",
-							new String[] { "a.apkid", "a.vername", "a.repo_id",
-									"a.downloads", "a.size", "a.icon",
-									"a.name", "a.rating", "a.remote_path",
-									"a.md5", "c.iconspath", "c.name",
-									"c.basepath", "a.vercode","a.price" },
-							"a._id = ? and a.repo_id = c._id",
-							new String[] { id + "" }, null, null, null);
-			break;
-		case TOP:
-			c = database
-					.query("top_apk as a, top_repo as c", new String[] {
-							"a.apkid", "a.vername", "a.repo_id", "a.downloads",
-							"a.size", "a.icon", "a.name", "a.rating",
-							"a.remote_path", "a.md5", "c.iconspath", "c.name",
-							"c.basepath", "a.vercode","a.price" },
-							"a._id = ? and a.repo_id = c._id",
-							new String[] { id + "" }, null, null, null);
-			break;
-		case LATEST:
-			c = database
-					.query("latest_apk as a, latest_repo as c", new String[] {
-							"a.apkid", "a.vername", "a.repo_id", "a.downloads",
-							"a.size", "a.icon", "a.name", "a.rating",
-							"a.remote_path", "a.md5", "c.iconspath", "c.name",
-							"c.basepath", "a.vercode","a.price" },
-							"a._id = ? and a.repo_id = c._id",
-							new String[] { id + "" }, null, null, null);
-			break;
-		case TOPFEATURED:
-			c = database
-					.query("featured_top_apk as a, featured_top_repo as c",
-							new String[] { "a.apkid", "a.vername", "a.repo_id",
-									"a.downloads", "a.size", "a.icon",
-									"a.name", "a.rating", "a.remote_path",
-									"a.md5", "c.iconspath", "c.name",
-									"c.basepath", "a.vercode","a.price" },
-							"a._id = ? and a.repo_id = c._id",
-							new String[] { id + "" }, null, null, null);
-		default:
-			break;
-		}
+        Cursor c = null;
+        ViewApk apk = new ViewApk();
+        Log.d("Aptoide-Database", "Get APK id: " + category.name() + " " + id);
+        yield();
+        switch (category) {
+            case INFOXML:
+                c = database.query("apk as a, repo as c", new String[]{"a.apkid",
+                        "a.vername", "a.repo_id", "a.downloads", "a.size",
+                        "a.icon", "a.name", "a.rating", "a.remote_path", "a.md5",
+                        "c.iconspath", "c.name", "c.apkpath", "a.vercode", "a.price"},
+                        "a._id = ? and a.repo_id = c._id",
+                        new String[]{id + ""}, null, null, null);
+                break;
+            case USERBASED:
+            case ITEMBASED:
+                c = database
+                        .query("itembased_apk as a, itembased_repo as c",
+                                new String[]{"a.apkid", "a.vername", "a.repo_id",
+                                        "a.downloads", "a.size", "a.icon",
+                                        "a.name", "a.rating", "a.remote_path",
+                                        "a.md5", "c.iconspath", "c.name",
+                                        "c.basepath", "a.vercode", "a.price"},
+                                "a._id = ? and a.repo_id = c._id",
+                                new String[]{id + ""}, null, null, null);
+                break;
+            case EDITORSCHOICE:
+                c = database
+                        .query("featured_editorschoice_apk as a, featured_editorschoice_repo as c",
+                                new String[]{"a.apkid", "a.vername", "a.repo_id",
+                                        "a.downloads", "a.size", "a.icon",
+                                        "a.name", "a.rating", "a.remote_path",
+                                        "a.md5", "c.iconspath", "c.name",
+                                        "c.basepath", "a.vercode", "a.price"},
+                                "a._id = ? and a.repo_id = c._id",
+                                new String[]{id + ""}, null, null, null);
+                break;
+            case TOP:
+                c = database
+                        .query("top_apk as a, top_repo as c", new String[]{
+                                "a.apkid", "a.vername", "a.repo_id", "a.downloads",
+                                "a.size", "a.icon", "a.name", "a.rating",
+                                "a.remote_path", "a.md5", "c.iconspath", "c.name",
+                                "c.basepath", "a.vercode", "a.price"},
+                                "a._id = ? and a.repo_id = c._id",
+                                new String[]{id + ""}, null, null, null);
+                break;
+            case LATEST:
+                c = database
+                        .query("latest_apk as a, latest_repo as c", new String[]{
+                                "a.apkid", "a.vername", "a.repo_id", "a.downloads",
+                                "a.size", "a.icon", "a.name", "a.rating",
+                                "a.remote_path", "a.md5", "c.iconspath", "c.name",
+                                "c.basepath", "a.vercode", "a.price"},
+                                "a._id = ? and a.repo_id = c._id",
+                                new String[]{id + ""}, null, null, null);
+                break;
+            case TOPFEATURED:
+                c = database
+                        .query("featured_top_apk as a, featured_top_repo as c",
+                                new String[]{"a.apkid", "a.vername", "a.repo_id",
+                                        "a.downloads", "a.size", "a.icon",
+                                        "a.name", "a.rating", "a.remote_path",
+                                        "a.md5", "c.iconspath", "c.name",
+                                        "c.basepath", "a.vercode", "a.price"},
+                                "a._id = ? and a.repo_id = c._id",
+                                new String[]{id + ""}, null, null, null);
+            default:
+                break;
+        }
 
-		try {
+        try {
 
-			c.moveToFirst();
-			apk.setApkid(c.getString(0));
-			apk.setVername(c.getString(1));
-			apk.setVercode(c.getInt(13));
-			apk.setRepo_id(c.getLong(2));
-			apk.setDownloads(c.getString(3));
-			apk.setSize(c.getString(4));
-			apk.setIconPath(c.getString(10) + c.getString(5));
-			apk.setName(c.getString(6));
-			apk.setRating(c.getString(7));
-			apk.setPath(c.getString(8));
-			apk.setMd5(c.getString(9));
-			apk.setRepoName(c.getString(11));
-			apk.setId(id);
-			apk.setPrice(Double.parseDouble(c.getString(14)));
-            apk.setScreenShots(getScreenshots(apk, category));
-            apk.setWebservicesPath(getWebServicesPath(apk.getRepo_id(),category));
-            apk.setLikes(getLikes(apk,category));
-            apk.setDislikes(getDislikes(apk, category));
-            apk.setComments(getComments(apk,category));
-            apk.setMalwareStatus(getMalware(apk,category));
-            setMainObb(apk,category);
-            setPatchObb(apk,category);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			c.close();
-		}
-		return apk;
-	}
+            if (c.moveToFirst()) {
+                apk.setApkid(c.getString(0));
+                apk.setVername(c.getString(1));
+                apk.setVercode(c.getInt(13));
+                apk.setRepo_id(c.getLong(2));
+                apk.setDownloads(c.getString(3));
+                apk.setSize(c.getString(4));
+                apk.setIconPath(c.getString(10) + c.getString(5));
+                apk.setName(c.getString(6));
+                apk.setRating(c.getString(7));
+                apk.setPath(c.getString(8));
+                apk.setMd5(c.getString(9));
+                apk.setRepoName(c.getString(11));
+                apk.setId(id);
+                apk.setPrice(Double.parseDouble(c.getString(14)));
+                apk.setScreenShots(getScreenshots(apk, category));
+                apk.setWebservicesPath(getWebServicesPath(apk.getRepo_id(), category));
+                apk.setLikes(getLikes(apk, category));
+                apk.setDislikes(getDislikes(apk, category));
+                apk.setComments(getComments(apk, category));
+                apk.setMalwareStatus(getMalware(apk, category));
+                setMainObb(apk, category);
+                setPatchObb(apk, category);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            c.close();
+        }
+        return apk;
+    }
 
 
     private void setMainObb(ViewApk apk, Category category) {
@@ -2037,6 +2049,8 @@ public class Database  {
 
         database.insert(DbStructure.TABLE_COMMENTS_CACHE, null, values);
         yield();
+
+
 
 
     }

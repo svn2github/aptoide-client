@@ -33,6 +33,31 @@ public class HandlerFeaturedTop extends DefaultHandler{
 	final StringBuilder sb  = new StringBuilder();
 	private static boolean insidePackage = false;
 	void loadElements() {
+
+        elements.put("cpu", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setCpuAbi(sb.toString());
+            }
+        });
+
+        elements.put("screenCompat", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setScreenCompat(sb.toString());
+            }
+        });
+
 		elements.put("name", new ElementHandler() {
 
 

@@ -23,6 +23,8 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -100,7 +102,10 @@ public class WebserviceGetApkInfo {
         Log.e("RESPONSE",sb.toString());
         response = new JSONObject(sb.toString());
 
+
+
         if (cacheData) {
+
             try {
                 comments = getComments();
                 Database database = Database.getInstance();
@@ -114,7 +119,7 @@ public class WebserviceGetApkInfo {
 
                     ArrayList<String> loadedScreenshots = apk.getScreenshots();
 
-
+                    database.beginTransaction();
                     for (int i = 0; i != screenshots.length(); i++) {
                         if (!loadedScreenshots.contains(screenshots.getString(i))) {
                             apk.getScreenshots().clear();
@@ -126,6 +131,7 @@ public class WebserviceGetApkInfo {
                             break;
                         }
                     }
+                    database.endTransaction();
 
                     Log.d("WebserviceGetApkInfo", loadedScreenshots.toString());
                     Log.d("WebserviceGetApkInfo", screenshots.toString());
@@ -139,9 +145,11 @@ public class WebserviceGetApkInfo {
                 context.getContentResolver().insert(ExtrasContentProvider.CONTENT_URI, values);
 
                 database.deleteCommentsCache(apk.getId(), category);
+                database.beginTransaction();
                 for (Comment comment : comments) {
                     database.insertComment(apk.getId(), comment, category);
                 }
+                database.endTransaction();
                 database.insertLikes(getLikes(), category, apk.getId());
                 database.insertMalwareInfo(getMalwareInfo(), category, apk.getId());
                 if (hasOBB()) {

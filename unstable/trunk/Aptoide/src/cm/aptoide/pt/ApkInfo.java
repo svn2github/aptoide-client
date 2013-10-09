@@ -272,7 +272,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         }
     };
 
-    @SuppressLint("NewApi")
+
     private void loadElements(long id) {
         viewComments = (ViewGroup) findViewById(R.id.commentContainer);
         viewComments.removeAllViews();
@@ -319,6 +319,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                 if (arg1 == null) {
                     Toast.makeText(ApkInfo.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                     finish();
+                    return;
                 }
                 mAdView = (MoPubView) findViewById(R.id.adview);
                 if (Build.VERSION.SDK_INT > 11) {
@@ -1488,7 +1489,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     ((TextView) viewLikes.findViewById(R.id.likes)).setText(context.getString(R.string.tastenotavailable));
                     ((TextView) viewLikes.findViewById(R.id.dislikes)).setText("");
                 }
-                if (viewApk.getComments().isEmpty()) {
+                if (viewApk.getComments()!= null && viewApk.getComments().isEmpty()) {
                     TextView tv = new TextView(context);
                     tv.setText(context.getString(R.string.no_internet_connection));
                     viewComments.addView(tv);

@@ -247,7 +247,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     protected void onStop() {
         super.onStop();
 
-        if(mPlusClient.isConnected()){
+        if(mPlusClient!=null && mPlusClient.isConnected()){
             mPlusClient.disconnect();
         }
 

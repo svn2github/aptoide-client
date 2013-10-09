@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.Build;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -50,25 +51,28 @@ public class SuggestionProvider extends ContentProvider {
     public Cursor query(final Uri uri, String[] projection, String selection, final String[] selectionArgs, String sortOrder) {
 
 
-
 //        String query = uri.getLastPathSegment().toLowerCase();
 //
 //        Toast.makeText(getContext().getApplicationContext(), "QUERY: " + query, Toast.LENGTH_SHORT).show();
 //
 //
 
+        if (Build.VERSION.SDK_INT > 7) {
+            BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
+            WebSocketSingleton.getInstance().setNotificationUri(uri).setContext(getContext()).setBlockingQueue(arrayBlockingQueue);
 
-        BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
-        WebSocketSingleton.getInstance().setNotificationUri(uri).setContext(getContext()).setBlockingQueue(arrayBlockingQueue);
-
-        MatrixCursor matrix_cursor = null;
-        WebSocketSingleton.send(selectionArgs[0]);
-        try {
-            matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            MatrixCursor matrix_cursor = null;
+            WebSocketSingleton.send(selectionArgs[0]);
+            try {
+                matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return matrix_cursor;
+        }else{
+            return null;
         }
-        return matrix_cursor;  //To change body of implemented methods use File | Settings | File Templates.
+          //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void addRow(MatrixCursor matrix_cursor, String string) {

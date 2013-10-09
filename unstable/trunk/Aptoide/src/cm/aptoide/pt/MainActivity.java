@@ -465,19 +465,21 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                         out.close();
                         bis.close();
                         Server server = new Server();
-                        // Database.database.beginTransaction();
-                        db.deleteEditorsChoice();
-                        sp.parse(f, new HandlerEditorsChoice(server));
+
+                        Database.getInstance().beginTransaction();
+                        try{
+                            db.deleteEditorsChoice();
+                            loadUIEditorsApps();
+                            sp.parse(f, new HandlerEditorsChoice(server));
+                        }catch (SAXException e){
+
+                        }
                         db.insertEditorsChoiceHash(date);
-                        // Database.database.setTransactionSuccessful();
-                        // Database.database.endTransaction();
+                        Database.getInstance().endTransaction();
+
                         loadUIEditorsApps();
 
                     }
-
-                } catch (SAXException e) {
-                    // Database.database.setTransactionSuccessful();
-                    // Database.database.endTransaction();
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -544,10 +546,16 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                             out.write(buf, 0, len);
                         out.close();
                         bis.close();
-                        // Database.database.beginTransaction();
-                        db.deleteFeaturedTopApps();
-                        sp.parse(f, new HandlerFeaturedTop(server));
-                        db.insertFeaturedTopHash(date);
+                        Database.getInstance().beginTransaction();
+                        try{
+                            db.deleteFeaturedTopApps();
+                            loadUItopapps();
+                            sp.parse(f, new HandlerFeaturedTop(server));
+                            db.insertFeaturedTopHash(date);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        Database.getInstance().endTransaction();
                         loadUItopapps();
                         f.delete();
                     }
@@ -1956,44 +1964,46 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     @Override
     public boolean onSearchRequested() {
 
-        WebSocketSingleton.getInstance().connect();
-        isDisconnect = false;
-        android.app.SearchManager manager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        manager.setOnCancelListener(new android.app.SearchManager.OnCancelListener() {
-            @Override
-            public void onCancel() {
+        if (Build.VERSION.SDK_INT > 7) {
+            WebSocketSingleton.getInstance().connect();
+            isDisconnect = false;
+            android.app.SearchManager manager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            manager.setOnCancelListener(new android.app.SearchManager.OnCancelListener() {
+                @Override
+                public void onCancel() {
 
-                isDisconnect = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    isDisconnect = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        if (isDisconnect) {
-                            WebSocketSingleton.getInstance().disconnect();
+                            if (isDisconnect) {
+                                WebSocketSingleton.getInstance().disconnect();
+                            }
+
                         }
-
-                    }
-                }, 5000);
+                    }, 5000);
 
 
-            }
-        });
+                }
+            });
 
-        manager.setOnDismissListener(new android.app.SearchManager.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            manager.setOnDismissListener(new android.app.SearchManager.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        if (isDisconnect) {
-                            WebSocketSingleton.getInstance().disconnect();
+                            if (isDisconnect) {
+                                WebSocketSingleton.getInstance().disconnect();
+                            }
+
                         }
-
-                    }
-                }, 5000);
-            }
-        });
+                    }, 5000);
+                }
+            });
+        }
         return super.onSearchRequested();
     }
 

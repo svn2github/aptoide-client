@@ -42,6 +42,29 @@ public class HandlerEditorsChoice extends DefaultHandler {
 
 	void loadSpecificElements() {
 
+        elements.put("cpu", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setCpuAbi(sb.toString());
+            }
+        });
+
+        elements.put("screenCompat", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setScreenCompat(sb.toString());
+            }
+        });
 
 		elements.put("apklst", new ElementHandler() {
 

@@ -130,7 +130,9 @@ public class RepoParser {
 //			db.startTransation();
 			server.state = Server.State.PARSINGTOP;
 			db.updateStatus(server);
-			try{
+            Database.getInstance().beginTransaction();
+
+            try{
 				SAXParserFactory factory = SAXParserFactory.newInstance();
 				SAXParser parser = factory.newSAXParser();
 				parser.parse(xml, new HandlerTop(server));
@@ -141,6 +143,9 @@ public class RepoParser {
 				xml.delete();
                 db.insertTopHash(server.id, server.hash);
             }
+            Database.getInstance().endTransaction();
+
+
             if(server.state != Server.State.FAILED){
                 server.state = cm.aptoide.pt.Server.State.PARSED;
             }
@@ -166,6 +171,7 @@ public class RepoParser {
 //			db.startTransation();
             server.state = Server.State.PARSINGLATEST;
             db.updateStatus(server);
+            Database.getInstance().beginTransaction();
 			try{
 				SAXParserFactory factory = SAXParserFactory.newInstance();
 				SAXParser parser = factory.newSAXParser();
@@ -176,6 +182,7 @@ public class RepoParser {
 				xml.delete();
                 db.insertLatestHash(server.id, server.hash);
 			}
+            Database.getInstance().endTransaction();
 
             if(server.state != Server.State.FAILED){
                 server.state = cm.aptoide.pt.Server.State.PARSED;

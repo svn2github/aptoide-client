@@ -12,8 +12,8 @@
   <string name="store_beginning_to_load">Toko mulai memuat, silahkan tunggu...</string>
   <string name="start_loading">Sedang memuat...</string>
   <string name="loading_failed">Gagal memuat, silahkan mencoba kembali...</string>
-  <string name="loading_store">Memperbaruhi</string>
-  <string name="error_latest_apk">Tidak ada APK yang tersedian di database, apakah toko sedang memuat?</string>
+  <string name="loading_store">Memperbarui</string>
+  <string name="error_latest_apk">Tidak ada APK yang tersedia di database, apakah toko sedang memuat?</string>
   <string name="error_delete_store">Tidak dapat menghapus toko. Toko sedang memuat.</string>
   <string name="cant_connect_to_store">Tidak dapat menghubungi toko</string>
   <string name="verify_store">Memeriksa nama toko</string>
@@ -35,7 +35,7 @@
   <string name="download_manager">Manager Unduh</string>
   <string name="downloading_apps">Sedang mengunduh</string>
   <string name="downloaded_apps">Selesai mengunduh</string>
-  <string name="no_downloads">Tidah ada unduh. Mulai mengunduh!</string>
+  <string name="no_downloads">Tidak ada unduh. Mulai mengunduh!</string>
   <string name="not_downloaded_apps">Tidak ada apps yang selesai di unduh</string>
   <string name="completed">Selesai</string>
   <string name="waiting">Tunggu...</string>
@@ -281,7 +281,7 @@
   <string name="back">Kembali</string>
   <string name="contact">Kontak</string>
   <string name="choose_email_client">Pilih Email client:</string>
-  <string name="refresh_list">Refresh</string>
+  <string name="refresh_list">Menyegarkan</string>
   <string name="update_all">Perbarui semua</string>
   <string name="update_to">Perbarui untuk</string>
   <string name="want_to_share">%s tidak akan posting tanpa izin anda. Kami menghormati privasi telepon anda. Apakah anda ingin membagi pesan berikut?</string>
@@ -394,13 +394,13 @@
   <string name="restore">Memasang</string>
   <string name="crash_reports">Laporan Kegagalan</string>
   <string name="pref_enable_acra">Kirim Laporan</string>
-  <string name="pref_acra_enabled">Cawang untuk memperbolehkan pengiriman laporan untuk membantu kami meningkatkan Aptoide</string>
+  <string name="pref_acra_enabled">Centang untuk memperbolehkan pengiriman laporan untuk membantu kami meningkatkan Aptoide</string>
   <string name="pref_acra_syslog">Kirim Sistem Informasi</string>
-  <string name="pref_acra_syslog_enabled">Cawang untuk memperbolehkan pengiriman informasi dari perangkat dalam bentuk laporan</string>
+  <string name="pref_acra_syslog_enabled">Centang untuk memperbolehkan pengiriman informasi dari perangkat dalam bentuk laporan</string>
   <string name="pref_acra_user_email">Email kontak</string>
   <string name="pref_acra_user_email_summary">Kami dapat menghubungi anda untuk mendapatkan informasi lebih lanjut tentang kesalahan</string>
   <string name="pref_acra_alwaysaccept">Otomatis mengirim laporan</string>
-  <string name="pref_acra_alwaysaccept_enabled">Carang untuk otomatis mengirim laporan jika terjadi kegagalan</string>
+  <string name="pref_acra_alwaysaccept_enabled">Centang untuk otomatis mengirim laporan jika terjadi kegagalan</string>
   <string name="crash_reports_settings">Pengaturan laporan kegagalan</string>
   <string name="store_already_added">Toko sudah ditambahkan!</string>
   <string name="dev_mode">Mode Pengembangan</string>
