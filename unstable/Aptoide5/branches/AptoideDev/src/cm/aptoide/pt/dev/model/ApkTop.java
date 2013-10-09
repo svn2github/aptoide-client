@@ -1,8 +1,8 @@
-package cm.aptoide.pt.model;
+package cm.aptoide.pt.dev.model;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteStatement;
-import cm.aptoide.pt.database.Database;
+import cm.aptoide.pt.dev.database.Database;
 
 /**
  * Created with IntelliJ IDEA.

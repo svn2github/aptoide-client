@@ -1,12 +1,12 @@
-package cm.aptoide.pt;
+package cm.aptoide.pt.dev;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.util.Log;
 import cm.aptoide.pt.dev.R;
-import cm.aptoide.pt.database.Database;
-import cm.aptoide.pt.model.ApkTop;
+import cm.aptoide.pt.dev.database.Database;
+import cm.aptoide.pt.dev.model.ApkTop;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
