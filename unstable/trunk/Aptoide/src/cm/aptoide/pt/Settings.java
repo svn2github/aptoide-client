@@ -96,7 +96,8 @@ public class Settings extends PreferenceActivity{
 							    getString(R.string.setting_screen_size)+ ": "+HWSpecifications.getScreenSize(mctx)+"\n" +
 							    getString(R.string.setting_esgl_version)+ ": "+HWSpecifications.getGlEsVer(mctx) +"\n" +
                                 getString(R.string.screenCode)+ ": "+HWSpecifications.getNumericScreenSize(mctx) + "/" + HWSpecifications.getDensityDpi(mctx) +"\n" +
-                                getString(R.string.cpuAbi)+ ": "+HWSpecifications.getCpuAbi() + " " + HWSpecifications.getCpuAbi2())
+                                getString(R.string.cpuAbi)+ ": "+HWSpecifications.getCpuAbi() + " " + HWSpecifications.getCpuAbi2() + (
+                                ApplicationAptoide.PARTNERID!=null ? "\nPartner ID:" + ApplicationAptoide.PARTNERID : ""))
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok),new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int id) {

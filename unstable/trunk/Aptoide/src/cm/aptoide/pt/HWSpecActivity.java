@@ -48,6 +48,7 @@ public class HWSpecActivity extends SherlockActivity /*SherlockActivity */{
         screenCode.setText(HWSpecifications.getNumericScreenSize(this) + "/" + HWSpecifications.getDensityDpi(this));
 
 
+
 	}
 
 //	@Override

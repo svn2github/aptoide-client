@@ -17,7 +17,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="library" name="universal-image-loader-1.8.6-with-sources" level="project" />
-    <orderEntry type="module" module-name="mopub-sdk" />
+    <orderEntry type="library" name="AdSdk_4.1.6" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="module" module-name="actionbarsherlock" />
     <orderEntry type="module" module-name="viewpagerindicator" />
@@ -26,6 +26,7 @@
     <orderEntry type="module" module-name="google-play-services_lib" />
     <orderEntry type="library" name="google-play-services" level="project" />
     <orderEntry type="module" module-name="android-websockets-master" />
+    <orderEntry type="module" module-name="mopub-sdk" />
   </component>
 </module>
 

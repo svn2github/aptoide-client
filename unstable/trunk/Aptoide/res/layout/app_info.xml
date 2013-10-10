@@ -509,9 +509,11 @@
 
         <com.mopub.mobileads.MoPubView
             android:id="@+id/adview"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:fitsSystemWindows="true" />
+            android:fitsSystemWindows="true"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -100,6 +100,9 @@ public class DownloadManager extends SherlockFragmentActivity {
             
             refreshListViews();
 
+            BusProvider.getInstance().register(this);
+
+
         }
 
 
@@ -241,7 +244,6 @@ public class DownloadManager extends SherlockFragmentActivity {
 //		getSupportActionBar().setHomeButtonEnabled(true);
 //		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        BusProvider.getInstance().register(this);
         setContentView(R.layout.download_manager);
 //        ViewPager vp = (ViewPager) findViewById(R.id.downloadManagerViewPager);
 

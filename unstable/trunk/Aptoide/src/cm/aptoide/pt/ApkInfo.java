@@ -7,7 +7,6 @@
  ******************************************************************************/
 package cm.aptoide.pt;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -29,10 +28,8 @@ import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -64,6 +61,7 @@ import cm.aptoide.pt.webservices.taste.Likes;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.adsdk.sdk.banner.AdView;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -108,10 +106,6 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
     private ServiceConnection serviceManagerConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the object we can use to
-            // interact with the service.  We are communicating with the
-            // service using AIDL, so here we set the remote service interface.
             serviceDownloadManager = ((ServiceManagerDownload.LocalBinder) service).getService();
             serviceManagerIsBound = true;
 
@@ -121,8 +115,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
+
             serviceManagerIsBound = false;
             serviceDownloadManager = null;
 
@@ -160,6 +153,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
         }
     };
     private GetApkInfo aSyncTask;
+    private AdView mAdViewMobFox;
 
 
     @Override
@@ -322,11 +316,28 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     return;
                 }
                 mAdView = (MoPubView) findViewById(R.id.adview);
-                if (Build.VERSION.SDK_INT > 11) {
-                    mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                if (mAdViewMobFox == null) {
+
+                    mAdViewMobFox = new AdView(ApkInfo.this,"http://my.mobfox.com/request.php",ApplicationAptoide.ADUNITID,true,true);
+
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    lp.gravity = Gravity.CENTER;
+                    mAdViewMobFox.setLayoutParams(lp);
+                    if (Build.VERSION.SDK_INT > 11) {
+                        mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    }
+                    ((LinearLayout)findViewById(R.id.advertisement)).addView(mAdViewMobFox, lp);
+
+                }else{
+                    if (Build.VERSION.SDK_INT > 11) {
+                        mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    }
+                    mAdView.setVisibility(View.VISIBLE);
+                    mAdView.setAdUnitId("18947d9a99e511e295fa123138070049");
+                    mAdView.loadAd();
                 }
-                mAdView.setAdUnitId(ApplicationAptoide.ADUNITID); // Enter your Ad Unit ID from www.mopub.com
-                mAdView.loadAd();
+
+
                 pd.dismiss();
                 viewApk = arg1;
                 new Thread(new Runnable() {
