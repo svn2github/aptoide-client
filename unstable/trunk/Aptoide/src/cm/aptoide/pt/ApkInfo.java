@@ -316,7 +316,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     return;
                 }
                 mAdView = (MoPubView) findViewById(R.id.adview);
-                if (mAdViewMobFox == null) {
+                if (ApplicationAptoide.PARTNERID !=null && mAdViewMobFox == null) {
 
                     mAdViewMobFox = new AdView(ApkInfo.this,"http://my.mobfox.com/request.php",ApplicationAptoide.ADUNITID,true,true);
 
