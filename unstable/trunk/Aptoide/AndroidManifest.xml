@@ -142,10 +142,12 @@
         <activity
             android:name=".ScreenshotsViewer"
             android:configChanges="orientation|keyboardHidden" />
+
         <activity
             android:name=".DownloadManager"
+            android:exported="true"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
 
 
         <activity

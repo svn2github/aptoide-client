@@ -100,8 +100,8 @@ public class DownloadManager extends SherlockFragmentActivity {
             
             refreshListViews();
 
-            BusProvider.getInstance().register(this);
-
+            BusProvider.getInstance().register(DownloadManager.this);
+            registered = true;
 
         }
 
@@ -127,6 +127,7 @@ public class DownloadManager extends SherlockFragmentActivity {
     private TextView onGoingTextView;
     private ListView notOngoingListView;
     private TextView notOngoingTextView;
+    private boolean registered;
 
 
     @Subscribe
@@ -649,7 +650,10 @@ public class DownloadManager extends SherlockFragmentActivity {
 //			e.printStackTrace();
 //		}
 		unbindService(serviceManagerConnection);
-        BusProvider.getInstance().unregister(this);
+
+        if(registered){
+            BusProvider.getInstance().unregister(this);
+        }
         super.onDestroy();
 	}
 

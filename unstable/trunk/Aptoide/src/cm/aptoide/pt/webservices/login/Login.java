@@ -472,7 +472,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			URL url;
 			StringBuilder sb;
 			String data;
-			url = new URL(AptoideConfiguration.getInstance().getWebServicesUri()+"webservices/checkUserCredentials");
+			url = new URL("http://webservices.aptoide.com/webservices/checkUserCredentials");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
@@ -514,7 +514,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
             Log.d("TAG", "username:" + username + " " + hash + " " + authmode);
 
-            url = new URL(AptoideConfiguration.getInstance().getWebServicesUri()+"webservices/checkUserCredentials");
+            url = new URL("http://webservices.aptoide.com/webservices/checkUserCredentials");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");

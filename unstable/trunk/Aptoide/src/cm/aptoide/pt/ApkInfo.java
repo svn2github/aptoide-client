@@ -532,7 +532,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     EnumApkMalware apkStatus = EnumApkMalware.valueOf(malwareStatus.getStatus().toUpperCase(Locale.ENGLISH));
                     Log.d("ApkInfoMalware-malwareStatus", malwareStatus.getStatus());
                     Log.d("ApkInfoMalware-malwareReason", malwareStatus.getReason());
-
+                    final ContextThemeWrapper wrapper = new ContextThemeWrapper(ApkInfo.this, ApkInfo.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0, 0));
                     switch (apkStatus) {
                         case SCANNED:
                             ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
@@ -540,8 +540,10 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                             ((LinearLayout) findViewById(R.id.badge_layout)).setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    View trustedView = LayoutInflater.from(ApkInfo.this).inflate(R.layout.dialog_anti_malware, null);
-                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ApkInfo.this).setView(trustedView);
+                                    ContextThemeWrapper wrapper = new ContextThemeWrapper(ApkInfo.this, ApkInfo.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0, 0));
+
+                                    View trustedView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_anti_malware, null);
+                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(trustedView);
                                     final AlertDialog trustedDialog = dialogBuilder.create();
                                     trustedDialog.setIcon(R.drawable.badge_scanned);
                                     trustedDialog.setTitle(getString(R.string.app_trusted, viewApk.getName()));
@@ -572,8 +574,8 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                             ((LinearLayout) findViewById(R.id.badge_layout)).setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    View warnView = LayoutInflater.from(ApkInfo.this).inflate(R.layout.dialog_anti_malware, null);
-                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ApkInfo.this).setView(warnView);
+                                    View warnView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_anti_malware, null);
+                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(warnView);
                                     final AlertDialog warnDialog = dialogBuilder.create();
                                     warnDialog.setIcon(R.drawable.badge_warn);
                                     warnDialog.setTitle(getString(R.string.app_warning, viewApk.getName()));
@@ -1656,10 +1658,11 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
         @Override
         public void onClick(View v) {
+            ContextThemeWrapper wrapper = new ContextThemeWrapper(ApkInfo.this, ApkInfo.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0, 0));
 
             if (Login.isLoggedIn(context)) {
-                View simpleLayoutView = LayoutInflater.from(ApkInfo.this).inflate(R.layout.dialog_simple_layout, null);
-                Builder dialogBuilder = new AlertDialog.Builder(ApkInfo.this).setView(simpleLayoutView);
+                View simpleLayoutView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
+                Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(simpleLayoutView);
                 final AlertDialog paymentMethodDialog = dialogBuilder.create();
                 paymentMethodDialog.setTitle(R.string.payment_method);
                 paymentMethodDialog.setIcon(android.R.drawable.ic_menu_info_details);
@@ -1690,8 +1693,8 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
 
                 if (unstrustedPayment) {
-                    View simpleLayoutView2 = LayoutInflater.from(context).inflate(R.layout.dialog_simple_layout, null);
-                    Builder dialogBuilder2 = new AlertDialog.Builder(context).setView(simpleLayoutView2);
+                    View simpleLayoutView2 = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
+                    Builder dialogBuilder2 = new AlertDialog.Builder(wrapper).setView(simpleLayoutView2);
                     final AlertDialog paymentWarningDialog = dialogBuilder2.create();
                     paymentWarningDialog.setTitle(R.string.payment_warning_title);
                     paymentWarningDialog.setIcon(android.R.drawable.ic_menu_info_details);

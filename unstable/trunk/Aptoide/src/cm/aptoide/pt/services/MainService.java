@@ -26,6 +26,7 @@ import cm.aptoide.pt.*;
 import cm.aptoide.pt.Server.State;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.exceptions.AptoideException;
+import cm.aptoide.pt.util.Constants;
 import cm.aptoide.pt.util.NetworkUtils;
 import cm.aptoide.pt.util.RepoUtils;
 import cm.aptoide.pt.util.Utils;
@@ -432,11 +433,13 @@ public class MainService extends Service {
 
 			NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			int icon = android.R.drawable.stat_sys_download_done;
+
+
 			if(ApplicationAptoide.MARKETNAME.equals("Aptoide")){
-
                 icon = R.drawable.ic_stat_aptoide_512x512_notification;
-
 			}
+
+
 			CharSequence tickerText = getString(R.string.has_updates, ApplicationAptoide.MARKETNAME);
 			long when = System.currentTimeMillis();
 
@@ -446,10 +449,19 @@ public class MainService extends Service {
             if(updates.getCount()<2){
                 contentText = getString(R.string.one_new_update, updates.getCount()+"");
             }
-            Intent notificationIntent = new Intent(context, MainActivity.class);
+
+
+            Intent notificationIntent = new Intent();
+
+            notificationIntent.setClassName(getPackageName(), Constants.APTOIDE_PACKAGE_NAME+".MainActivity");
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+            notificationIntent.setAction("");
+
+
             notificationIntent.putExtra("new_updates", true);
 
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 			Notification notification = new NotificationCompat.Builder(this)
                     .setSmallIcon(icon)

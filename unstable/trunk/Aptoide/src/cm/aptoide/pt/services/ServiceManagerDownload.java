@@ -264,11 +264,13 @@ public class ServiceManagerDownload extends Service {
         showNotification = true;
         Intent onClick = new Intent();
         onClick.setClassName(getPackageName(), Constants.APTOIDE_PACKAGE_NAME+".DownloadManager");
-        //onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
         onClick.setAction("");
+        onClick.putExtra("", "");
 
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent onClickAction = PendingIntent.getActivity(this, 0, onClick, 0);
+        PendingIntent onClickAction = PendingIntent.getActivity(getApplicationContext(), 0, onClick, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         mBuilder.setOngoing(true);
         mBuilder.setContentTitle(getString(R.string.aptoide_downloading, ApplicationAptoide.MARKETNAME))

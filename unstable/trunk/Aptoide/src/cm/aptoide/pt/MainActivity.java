@@ -1385,6 +1385,9 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
         if (!isFinishing()) {
             alertDialog.show();
         }
+
+
+
     }
 
     private void showAddStoreCredentialsDialog(String string) {
