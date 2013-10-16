@@ -90,7 +90,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 	public void onCreate(Bundle savedInstanceState) {
 		AptoideThemePicker.setAptoideTheme(this);
 		super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
 
             uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
             uiLifecycleHelper.onCreate(savedInstanceState);
@@ -122,7 +122,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     @Override
     protected void onResume() {
         super.onResume();
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             uiLifecycleHelper.onResume();
         }
     }
@@ -130,7 +130,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             uiLifecycleHelper.onDestroy();
         }
     }
@@ -138,7 +138,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -146,7 +146,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     @Override
     public void onPause() {
         super.onPause();
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             uiLifecycleHelper.onPause();
         }
     }
@@ -155,28 +155,41 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
     @Override
     public void onConnected(Bundle bundle) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-
-
                     String serverId = "316068701674.apps.googleusercontent.com";
                     final String token = GoogleAuthUtil.getToken(context, mPlusClient.getAccountName() , "oauth2:server:client_id:"+ serverId+ ":api_scope:" + Scopes.PLUS_LOGIN);
+
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            new CheckUserCredentials().execute(mPlusClient.getAccountName(), token, "false","google");
+                            new CheckUserCredentials().execute(mPlusClient.getAccountName(), token, "false","google", mPlusClient.getCurrentPerson().getDisplayName());
                         }
                     });
+
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
+                    if(pd!=null && pd.isShowing()){
+                        pd.dismiss();
+                    }
                 }catch (UserRecoverableAuthException e){
+                    if(pd!=null && pd.isShowing()){
+                        pd.dismiss();
+                    }
                     startActivityForResult(e.getIntent(),90);
                 } catch (GoogleAuthException e) {
                     e.printStackTrace();
+                    if(pd!=null && pd.isShowing()){
+                        pd.dismiss();
+                    }
                 }
+
             }
         }).start();
 
@@ -187,12 +200,18 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
     @Override
     public void onDisconnected() {
-
+        if(pd!=null && pd.isShowing()){
+            pd.dismiss();
+        }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
+
+        if(pd!=null && pd.isShowing()){
+            pd.dismiss();
+        }
             // The user clicked the sign-in button already. Start to resolve
             // connection errors. Wait until onConnected() to dismiss the
             // connection dialog.
@@ -216,10 +235,8 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 
 
             if(session.isOpened()){
+
                 Log.d("TAG", "Facebook auth: " + session.getAccessToken());
-
-
-
 
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback(){
 
@@ -258,7 +275,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 		setContentView(R.layout.form_login);
 
 
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             LoginButton authButton = (LoginButton) findViewById(R.id.fb_login_button);
             authButton.setReadPermissions(Arrays.asList("basic_info", "email"));
 
@@ -278,8 +295,13 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
             signInButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
                     if (mConnectionResult == null) {
                         mPlusClient.connect();
+                        pd.show();
+                        pd.setMessage(getText(R.string.please_wait));
                     } else {
                         try {
                             mConnectionResult.startResolutionForResult(Login.this, REQUEST_CODE_RESOLVE_ERR);
@@ -357,7 +379,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 		prefEdit.remove(Configs.LOGIN_USER_USERNAME);
         prefEdit.remove(Configs.LOGIN_DEFAULT_REPO);
 		prefEdit.commit();
-        if(Build.VERSION.SDK_INT>8){
+        if(Build.VERSION.SDK_INT>=8){
             Session session = Session.getActiveSession();
             if(session.isOpened()){
                 session.closeAndClearTokenInformation();
@@ -420,7 +442,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 	}
 
 	class CheckUserCredentials extends AsyncTask<String, Void, JSONObject> {
-
+        String name;
 		int retry = 0;
 		String username_string;
 		String password_string;
@@ -441,8 +463,15 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			password_string = params[1];
 			try {
 
-                if(params.length==4){
-                    return checkUserCredentialsWithOAuth(username_string,password_string, params[3]);
+                if(params.length>=4){
+
+
+                    if(params[3].equals("google")){
+                        name = params[4];
+                    }else{
+                        name = null;
+                    }
+                    return checkUserCredentialsWithOAuth(username_string,password_string, params[3], name);
                 }else{
                     return checkUserCredentials(username_string,password_string);
                 }
@@ -472,7 +501,7 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			URL url;
 			StringBuilder sb;
 			String data;
-			url = new URL("http://webservices.aptoide.com/webservices/checkUserCredentials");
+			url = new URL("https://webservices.aptoide.com/webservices/checkUserCredentials");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
@@ -506,19 +535,20 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 			return array;
 		}
 
-        private JSONObject checkUserCredentialsWithOAuth(String username, String hash, String authmode) throws
+        private JSONObject checkUserCredentialsWithOAuth(String username, String hash, String authmode, String name) throws
                 IOException, JSONException, InterruptedException {
             URL url;
             StringBuilder sb;
             String data;
 
-            Log.d("TAG", "username:" + username + " " + hash + " " + authmode);
+            Log.d("TAG", "username:" + username + " " + hash + " " + authmode + " " + name);
 
-            url = new URL("http://webservices.aptoide.com/webservices/checkUserCredentials");
+            url = new URL("https://webservices.aptoide.com/webservices/checkUserCredentials");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             data = URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
             data += "&" + URLEncoder.encode("oauthToken", "UTF-8") + "=" + URLEncoder.encode(hash, "UTF-8");
+            if(name!=null)data += "&" + URLEncoder.encode("oauthUserName", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8");
             data += "&" + URLEncoder.encode("authMode", "UTF-8") + "=" + URLEncoder.encode(authmode, "UTF-8");
             data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8");
             OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
@@ -562,7 +592,13 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 					prefEdit.putString(Configs.LOGIN_USER_ID,Algorithms.computeSHA1sum(username_string));
 					prefEdit.putString(Configs.LOGIN_USER_TOKEN,array.getString("token"));
                     prefEdit.putString(Configs.LOGIN_DEFAULT_REPO, array.getString("repo"));
-					prefEdit.remove(Configs.LOGIN_USER_USERNAME);
+
+                    if(name!=null){
+                        prefEdit.putString(Configs.LOGIN_USER_USERNAME, name);
+                    }else{
+                        prefEdit.remove(Configs.LOGIN_USER_USERNAME);
+                    }
+
 					prefEdit.commit();
 					Intent i = new Intent("login");
 					sendBroadcast(i);
@@ -573,9 +609,19 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
 					toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL,
 							0, 30);
 					toast.show();
+                    if(Build.VERSION.SDK_INT>=8){
+                        Session session = Session.getActiveSession();
+                        if(session.isOpened()){
+                            session.closeAndClearTokenInformation();
+                        }
+                        if(mPlusClient.isConnected()){
+                            mPlusClient.clearDefaultAccount();
+                            mPlusClient.disconnect();
+                        }
+                    }
 				}
 			} catch (Exception e) {
-                if(Build.VERSION.SDK_INT>8){
+                if(Build.VERSION.SDK_INT>=8){
                     Session session = Session.getActiveSession();
                     if(session.isOpened()){
                         session.closeAndClearTokenInformation();
@@ -615,7 +661,11 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+
+        if(uiLifecycleHelper!=null){
+            uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+        }
+
         if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
             mConnectionResult = null;
             mPlusClient.connect();

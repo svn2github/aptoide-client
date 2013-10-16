@@ -125,7 +125,9 @@ public class MainService extends Service {
             server.isDelta = true;
 		}
 		NetworkUtils utils = new NetworkUtils();
+
         Log.d("TAG", server.url + " " + server.getLogin().getUsername() + " " + server.getLogin().getPassword());
+
 		if(delta && utils.checkServerConnection(server.url, server.getLogin().getUsername(),server.getLogin().getPassword())==401){
 			throw new AptoideException("401", new IOException());
 		}
