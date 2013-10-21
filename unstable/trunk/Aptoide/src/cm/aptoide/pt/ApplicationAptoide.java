@@ -83,7 +83,9 @@ import java.util.Locale;
 //        formUriBasicAuthPassword="",
    		formKey = "",
    		formUri = "http://acra.aptoide.com/acraaptoide",
-        customReportContent = { ReportField.APP_VERSION_NAME, ReportField.APP_VERSION_CODE, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,ReportField.STACK_TRACE, ReportField.LOGCAT, ReportField.INSTALLATION_ID, ReportField.USER_IP, ReportField.USER_COMMENT, ReportField.USER_CRASH_DATE },
+
+
+
         mode = ReportingInteractionMode.NOTIFICATION,
         resToastText = R.string.crash_dialog_title, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
         resNotifTickerText = R.string.crash_notif_ticker_text,
@@ -95,6 +97,7 @@ import java.util.Locale;
         resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
         resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
         resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
+        
 )
 
 public class ApplicationAptoide extends Application {

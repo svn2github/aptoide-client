@@ -217,6 +217,7 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
                         toast.show();
                     }
                 });
+
                 installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
                 installAppDialog.setOnDismissListener(IntentReceiver.this);
                 installAppDialog.show();

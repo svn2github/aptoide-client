@@ -244,8 +244,7 @@ public class Comments {
 		if(!submitting){
 			new CommentPoster().execute(Login.getToken(context),repo,apkid,version,comment,username);
 		}else{
-			Toast toast= Toast.makeText(context,
-					context.getString(R.string.another_comment_is_beeing_submited), Toast.LENGTH_SHORT);
+			Toast toast= Toast.makeText(context, context.getString(R.string.another_comment_is_beeing_submited), Toast.LENGTH_SHORT);
 					toast.show();
 		}
 	}
@@ -257,6 +256,7 @@ public class Comments {
 
 	public class CommentPoster extends AsyncTask<String, Void, EnumCommentResponse>{
 		ProgressDialog pd;
+        JSONObject object;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -304,7 +304,7 @@ public class Comments {
                 br.close();
 				System.out.println(sb.toString());
 				System.out.println(connection.getURL());
-			    JSONObject object = new JSONObject(sb.toString());
+			    object = new JSONObject(sb.toString());
 			    response = EnumCommentResponse.valueOf(object.getString("status").toUpperCase());
 
 			} catch (IOException e) {
@@ -337,9 +337,15 @@ public class Comments {
 				context.finish();
 				break;
 			case FAIL:
-				toast= Toast.makeText(context,
-						context.getString(R.string.there_was_an_error), Toast.LENGTH_SHORT);
-						toast.show();
+                try {
+                    toast= Toast.makeText(context, object.getJSONArray("errors").getString(0), Toast.LENGTH_SHORT);
+                    toast.show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
 				break;
 			default:
 				break;

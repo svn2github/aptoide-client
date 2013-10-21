@@ -806,8 +806,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                         HttpURLConnection connection = (HttpURLConnection) new URL(
                                 url).openConnection();
                         connection.connect();
-                        int rc = connection.getResponseCode();
-                        if (rc == 200) {
+
                             NetworkUtils utils = new NetworkUtils();
                             JSONObject json = utils
                                     .getJsonObject(url, mContext);
@@ -829,8 +828,6 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                                 }
 
                             }
-
-                        }
                         connection.disconnect();
 
                     } catch (MalformedURLException e) {
@@ -841,6 +838,8 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                         }
                         e.printStackTrace();
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

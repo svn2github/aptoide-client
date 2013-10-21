@@ -167,7 +167,26 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            new CheckUserCredentials().execute(mPlusClient.getAccountName(), token, "false","google", mPlusClient.getCurrentPerson().getDisplayName());
+
+                            try{
+                                new CheckUserCredentials().execute(mPlusClient.getAccountName(), token, "false","google", mPlusClient.getCurrentPerson().getDisplayName());
+                            }catch (Exception e){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(pd!=null && pd.isShowing()){
+                                            pd.dismiss();
+                                        }
+                                        Toast.makeText(context, R.string.error_occured, Toast.LENGTH_LONG).show();
+                                        if(mPlusClient!=null && mPlusClient.isConnected()){
+                                            mPlusClient.clearDefaultAccount();
+                                            mPlusClient.disconnect();
+                                        }
+                                    }
+                                });
+                            }
+
+
                         }
                     });
 
@@ -188,6 +207,36 @@ public class Login extends SherlockActivity implements GooglePlayServicesClient.
                     if(pd!=null && pd.isShowing()){
                         pd.dismiss();
                     }
+                } catch (NullPointerException e){
+                    e.printStackTrace();
+                    if(pd!=null && pd.isShowing()){
+                        pd.dismiss();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, R.string.error_occured, Toast.LENGTH_LONG).show();
+                            if(mPlusClient!=null && mPlusClient.isConnected()){
+                                mPlusClient.clearDefaultAccount();
+                                mPlusClient.disconnect();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if(pd!=null && pd.isShowing()){
+                        pd.dismiss();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, R.string.error_occured, Toast.LENGTH_LONG).show();
+                            if(mPlusClient!=null && mPlusClient.isConnected()){
+                                mPlusClient.clearDefaultAccount();
+                                mPlusClient.disconnect();
+                            }
+                        }
+                    });
                 }
 
             }
