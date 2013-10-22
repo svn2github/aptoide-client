@@ -24,6 +24,25 @@ public class Webservice {
         return new CheckUserCredentials(webservicePath);
     }
 
+    public GetRepositoryInfo getRepositoryInfo() {
+        return new GetRepositoryInfo(webservicePath);
+    }
+
+    public ListApkComments listApkComments() {
+        return new ListApkComments(webservicePath);
+    }
+
+    public ListRepositoryComments listRepositoryComments() {
+        return new ListRepositoryComments(webservicePath);
+    }
+
+    public ListRepositoryLikes listRepositoryLikes() {
+        return new ListRepositoryLikes(webservicePath);
+    }
+
+    public ListRepositoryLocalApkNames listRepositoryLocalApkNames() {
+        return new ListRepositoryLocalApkNames(webservicePath);
+    }
 
 
 }

@@ -30,20 +30,24 @@ public class GetApkInfo extends AbstractWebservice{
         setHttpClient(new IONGsonClient());
     }
 
-    public void setCallback(FutureCallback<JsonObject> callback){
+    public GetApkInfo setCallback(FutureCallback<JsonObject> callback){
         this.callback = callback;
+        return this;
     }
 
-    public void setRepoName(String repoName){
+    public GetApkInfo setRepoName(String repoName){
         this.repoName = repoName;
+        return this;
     }
 
-    public void setPackageName(String packageName) {
+    public GetApkInfo setPackageName(String packageName) {
         this.packageName = packageName;
+        return this;
     }
 
-    public void setVersionName(String versionName) {
+    public GetApkInfo setVersionName(String versionName) {
         this.versionName = versionName;
+        return this;
     }
 
 
