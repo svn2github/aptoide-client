@@ -2,8 +2,10 @@ package cm.aptoide.ptdev;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.webservices.GetApkInfo;
 import cm.aptoide.ptdev.webservices.Webservice;
@@ -24,28 +26,25 @@ import java.util.ArrayList;
  */
 public class Aptoide extends Application {
 
-    public static final ArrayList<Server> serverList = new ArrayList<Server>();
     public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
-    private static Aptoide context;
-    private static Database db;
+    private Context context;
+    private DatabaseHelper db;
 
 
-    public static Database getDb() {
-        return db;
+    public SQLiteDatabase getDb() {
+        return db.getWritableDatabase();
     }
 
-    public static Context getContext() {
+    public Context getContext() {
         return context;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
+        context = getApplicationContext();
 
-
-
-        db = Database.getInstance();
+        db = DatabaseHelper.getInstance(getApplicationContext());
         Ion.getDefault(getContext()).setLogging("MyLogs", Log.DEBUG);
         Ion.getDefault(getContext()).proxy("192.168.1.70", 8888);
 

@@ -29,9 +29,6 @@ public class StatementHelper {
         if (size > 0) {
             int i = 0;
 
-
-
-
             for (Map.Entry<String, Object> colName : initialValues.valueSet()) {
                 sql.append((i > 0) ? "," : "");
                 sql.append(colName.getKey());

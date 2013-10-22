@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.database;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -19,18 +20,13 @@ import java.util.List;
 public class Database {
 
 
-    private static final Database INSTANCE = new Database();
-
     private final SQLiteDatabase database;
 
-
-    private Database() {
-        this.database = new DatabaseHelper(Aptoide.getContext()).getWritableDatabase();
+    public Database(SQLiteDatabase database) {
+        this.database = database;
     }
 
-    public static Database getInstance() {
-        return INSTANCE;
-    }
+
 
     public List<SQLiteStatement> compileStatements(List<String> statements) {
 
