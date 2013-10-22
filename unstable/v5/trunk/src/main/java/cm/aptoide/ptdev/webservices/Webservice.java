@@ -20,6 +20,10 @@ public class Webservice {
         return new GetApkInfo(webservicePath);
     }
 
+    public CheckUserCredentials getCheckUserCredentials(){
+        return new CheckUserCredentials(webservicePath);
+    }
+
 
 
 }

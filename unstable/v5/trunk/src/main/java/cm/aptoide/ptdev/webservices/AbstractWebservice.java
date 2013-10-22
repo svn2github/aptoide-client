@@ -24,11 +24,11 @@ public abstract class AbstractWebservice {
 
     private Client httpClient;
 
-    public void setWebservicePath(String webservicePath) {
+    void setWebservicePath(String webservicePath) {
         this.webservicePath = webservicePath;
     }
 
-    public String getWebservicePath() {
+    String getWebservicePath() {
         return webservicePath;
     }
 

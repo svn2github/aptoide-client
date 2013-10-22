@@ -32,16 +32,19 @@ public class CheckUserCredentials extends AbstractWebservice {
         setHttpClient(new IONGsonClient());
     }
 
-    public void setCallback(FutureCallback<JsonObject> callback) {
+    public CheckUserCredentials setCallback(FutureCallback<JsonObject> callback) {
         this.callback = callback;
+        return this;
     }
 
-    public void setUsername(String username) {
+    public CheckUserCredentials setUsername(String username) {
         this.username = username;
+        return this;
     }
 
-    public void setPassword(String password) {
+    public CheckUserCredentials setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     @Override
