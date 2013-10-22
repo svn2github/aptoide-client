@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.koushikdutta.ion:ion:1.1.5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/koushikdutta/ion/ion/1.1.5/ion-1.1.5.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/koushikdutta/ion/ion/1.1.5/ion-1.1.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/koushikdutta/ion/ion/1.1.5/ion-1.1.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
