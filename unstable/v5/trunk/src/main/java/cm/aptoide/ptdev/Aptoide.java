@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class Aptoide extends Application {
 
     public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
-    private Context context;
+    private static Context context;
     private DatabaseHelper db;
 
 
@@ -35,7 +35,7 @@ public class Aptoide extends Application {
         return db.getWritableDatabase();
     }
 
-    public Context getContext() {
+    public static Context getContext() {
         return context;
     }
 

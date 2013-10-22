@@ -40,7 +40,7 @@ public class MainActivity extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.server = ((Aptoide)getApplication()).serverList;
+
 
     }
 
