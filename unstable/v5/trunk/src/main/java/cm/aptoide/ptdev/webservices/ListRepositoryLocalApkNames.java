@@ -46,6 +46,6 @@ public class ListRepositoryLocalApkNames extends AbstractWebservice {
         args.add(repo);
         args.add(lang);
 
-        return getHttpClient().get(getWebservicePath() + "/webservices/listRepositoryLocalApkNames/", args).setCallback(callback);
+        return getHttpClient().get(getWebservicePath() + "webservices/listRepositoryLocalApkNames/", args).setCallback(callback);
     }
 }

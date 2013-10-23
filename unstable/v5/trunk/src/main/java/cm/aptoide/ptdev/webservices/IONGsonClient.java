@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
@@ -45,11 +46,16 @@ public class IONGsonClient extends Client {
 
         Builders.Any.B builder = Ion.with(Aptoide.getContext(), url);
 
+
         for(String key: arguments.keySet()){
             builder.setBodyParameter(key, arguments.get(key));
+
+            Log.d("TESTTAG", "Setting " + key + "=" + arguments.get(key));
+
         }
 
         builder.setBodyParameter("mode", "json");
+
 
         return builder.asJsonObject();
     }

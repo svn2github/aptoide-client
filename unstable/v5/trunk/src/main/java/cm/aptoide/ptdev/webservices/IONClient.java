@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.future.ResponseFuture;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,7 +24,13 @@ public class IONClient extends Client {
     }
 
     @Override
-    <T> T post(List<T> arguments) {
+    <T> ResponseFuture<JsonObject> post(String url, HashMap<String, String> arguments) {
         return null;
     }
+
+    /*
+    @Override
+    <T> T post(List<T> arguments) {
+        return null;
+    }*/
 }

@@ -32,6 +32,10 @@ public class Webservice {
         return new ListApkComments(webservicePath);
     }
 
+    public ListRepositoryChange listRepositoryChange() {
+        return new ListRepositoryChange(webservicePath);
+    }
+
     public ListRepositoryComments listRepositoryComments() {
         return new ListRepositoryComments(webservicePath);
     }
@@ -43,6 +47,4 @@ public class Webservice {
     public ListRepositoryLocalApkNames listRepositoryLocalApkNames() {
         return new ListRepositoryLocalApkNames(webservicePath);
     }
-
-
 }

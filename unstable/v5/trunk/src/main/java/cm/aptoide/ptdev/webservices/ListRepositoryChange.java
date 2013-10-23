@@ -1,10 +1,13 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.widget.Toast;
+import cm.aptoide.ptdev.model.Server;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +18,7 @@ import java.util.ArrayList;
  */
 public class ListRepositoryChange extends AbstractWebservice {
 
-    ArrayList<String> args = new ArrayList<String>();
+    HashMap<String, String> args = new HashMap<String, String>();
     private FutureCallback<JsonObject> callback;
 
     private String repo;
@@ -26,9 +29,37 @@ public class ListRepositoryChange extends AbstractWebservice {
         setHttpClient(new IONGsonClient());
     }
 
+    public ListRepositoryChange setCallback(FutureCallback<JsonObject> callback) {
+        this.callback = callback;
+        return this;
+    }
+
+    public ListRepositoryChange setRepos(List<Server> servers) {
+        repo = "";
+        hash = "";
+
+        int remaining_repos = servers.size();
+        for (Server server : servers) {
+            repo += server.getName();
+            hash += server.getHash();
+            remaining_repos--;
+            if (remaining_repos != 0) {
+                repo += ",";
+                hash += ",";
+            }
+        }
+
+
+        return this;
+    }
 
     @Override
-    <T> Future<JsonObject> execute() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Future<JsonObject> execute() {
+        args.put("repo", repo);
+        args.put("hash", hash);
+
+        return getHttpClient().post(getWebservicePath() + "webservices/listRepositoryChange", args).setCallback(callback);
     }
+
+
 }
