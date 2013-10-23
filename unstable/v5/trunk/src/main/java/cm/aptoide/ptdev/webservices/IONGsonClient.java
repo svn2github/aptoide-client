@@ -1,12 +1,12 @@
 package cm.aptoide.ptdev.webservices;
 
-import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.Builders;
 import com.koushikdutta.ion.future.ResponseFuture;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +41,16 @@ public class IONGsonClient extends Client {
     }
 
     @Override
-    <T> T post(List<T> arguments) {
-        return null;
+    <T> ResponseFuture<JsonObject> post(String url, HashMap<String, String> arguments) {
+
+        Builders.Any.B builder = Ion.with(Aptoide.getContext(), url);
+
+        for(String key: arguments.keySet()){
+            builder.setBodyParameter(key, arguments.get(key));
+        }
+
+        builder.setBodyParameter("mode", "json");
+
+        return builder.asJsonObject();
     }
 }

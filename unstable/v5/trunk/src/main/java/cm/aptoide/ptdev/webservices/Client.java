@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.future.ResponseFuture;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +16,6 @@ import java.util.List;
 public abstract class Client {
 
     abstract <T> ResponseFuture<JsonObject> get(String string, List<String> arguments);
-    abstract <T> T post(List<T> arguments);
+    abstract <T> ResponseFuture<JsonObject> post(String url, HashMap<String, String> arguments);
 
 }
