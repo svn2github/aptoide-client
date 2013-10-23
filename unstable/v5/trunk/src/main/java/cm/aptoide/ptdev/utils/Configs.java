@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 public class Configs {
 
     public final static SimpleDateFormat TIME_STAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public final static SimpleDateFormat TIME_STAMP_FORMAT_INFO_XML = new SimpleDateFormat("yyyy-MM-dd");
     public final static String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String LOGIN_USER_ID = "useridLogin";
     public static final String LOGIN_PASSWORD = "passwordLogin";

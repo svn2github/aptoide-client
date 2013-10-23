@@ -1,8 +1,10 @@
 package cm.aptoide.ptdev.model;
 
 import android.database.sqlite.SQLiteStatement;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.Filters;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +32,20 @@ public abstract class Apk {
     private Filters.Age age;
     private int minSdk;
     private Filters.Screen minScreen;
+    private String screenCompat;
+    private Date date;
+    private double price;
+    private String minGlEs;
+
+    public String getCpuAbi() {
+        return cpuAbi;
+    }
+
+    public void setCpuAbi(String cpuAbi) {
+        this.cpuAbi = cpuAbi;
+    }
+
+    private String cpuAbi;
 
 
     public abstract List<String> getStatements();
@@ -156,4 +172,38 @@ public abstract class Apk {
     }
 
     public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements);
+
+    public void setScreenCompat(String screenCompat) {
+        this.screenCompat = screenCompat;
+    }
+
+    public String getScreenCompat() {
+        return screenCompat;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setMinGlEs(String minGlEs) {
+        this.minGlEs = minGlEs;
+    }
+
+    public String getMinGlEs() {
+        return minGlEs;
+    }
+
+    public abstract void databaseDelete(Database db);
 }

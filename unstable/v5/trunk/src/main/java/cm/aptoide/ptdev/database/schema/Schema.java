@@ -18,13 +18,12 @@ public class Schema {
 
 
     @TableDefinition(
-            primaryKey = Apk.COLUMN_ID,
+
             uniques = @TableDefinition.Composite_Unique(
                     fields = {Apk.COLUMN_APKID, Apk.COLUMN_VERCODE, Apk.COLUMN_REPO_ID}),
             indexes = {
                     @TableDefinition.Index(index_name = "byName",
-                            keys = @TableDefinition.Key(field = Apk.COLUMN_NAME, descending = true),
-                            unique = true)
+                            keys = @TableDefinition.Key(field = Apk.COLUMN_NAME, descending = true))
             })
     public static class Apk {
 
@@ -32,7 +31,7 @@ public class Schema {
             return "apk";
         }
 
-        @ColumnDefinition(type = SQLType.TEXT) public static final String COLUMN_ID = "id_apk";
+        @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true) public static final String COLUMN_ID = "id_apk";
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_APKID = "apkid";
 

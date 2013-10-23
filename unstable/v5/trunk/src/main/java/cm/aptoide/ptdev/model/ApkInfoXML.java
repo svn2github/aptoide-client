@@ -1,8 +1,11 @@
 package cm.aptoide.ptdev.model;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
 
@@ -18,6 +21,8 @@ import java.util.List;
  */
 public class ApkInfoXML extends Apk {
 
+    private long repoId;
+
     @Override
     public List<String> getStatements() {
 
@@ -25,9 +30,8 @@ public class ApkInfoXML extends Apk {
         ContentValues values = new ContentValues();
 
         values.put(Schema.Apk.COLUMN_APKID, "");
-        values.put(Schema.Apk.COLUMN_ICON, "");
-        values.put(Schema.Apk.COLUMN_ID, "");
-        values.put(Schema.Apk.COLUMN_NAME, "");
+
+        values.put(Schema.Apk.COLUMN_VERCODE, "");
         values.put(Schema.Apk.COLUMN_REPO_ID, "");
         statements.add(StatementHelper.getStatment(Schema.Apk.getName(), values));
         values.clear();
@@ -46,8 +50,32 @@ public class ApkInfoXML extends Apk {
     @Override
     public void databaseInsert(List<SQLiteStatement> sqLiteStatements) {
 
+        try {
 
-        Log.d("TAG1", sqLiteStatements.get(0).toString());
+            sqLiteStatements.get(0).bindAllArgsAsStrings(new String[]{getPackageName(), String.valueOf(getVersionCode()), String.valueOf(getRepoId())});
+            sqLiteStatements.get(0).executeInsert();
 
+        } catch (SQLiteException e) {
+            Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " +getVersionCode());
+        }
+
+        if (Aptoide.getDb().yieldIfContendedSafely(1000)) {
+            Log.d("RepoParser", "yelded");
+        }
+
+
+    }
+
+    @Override
+    public void databaseDelete(Database db) {
+
+    }
+
+    public long getRepoId() {
+        return repoId;
+    }
+
+    public void setRepoId(long repoId) {
+        this.repoId = repoId;
     }
 }

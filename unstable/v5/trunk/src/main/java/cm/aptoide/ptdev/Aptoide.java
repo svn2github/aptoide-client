@@ -28,10 +28,10 @@ public class Aptoide extends Application {
 
     public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
     private static Context context;
-    private DatabaseHelper db;
+    private static DatabaseHelper db;
 
 
-    public SQLiteDatabase getDb() {
+    public static SQLiteDatabase getDb() {
         return db.getWritableDatabase();
     }
 

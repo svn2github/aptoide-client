@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static DatabaseHelper getInstance(Context context) {
 
-        synchronized (sInstance){
+        synchronized (DatabaseHelper.class){
             if (sInstance == null) {
                 sInstance = new DatabaseHelper(context.getApplicationContext());
             }

@@ -19,7 +19,7 @@ public class Filters {
 
     public static enum Age {
         All,Mature;
-        static Age lookup(String age){
+        public static Age lookup(String age){
             try{
                 return valueOf(age);
             }catch (Exception e) {

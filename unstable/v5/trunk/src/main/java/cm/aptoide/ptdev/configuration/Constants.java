@@ -9,6 +9,6 @@ package cm.aptoide.ptdev.configuration;
  */
 public class Constants {
 
-    public static final int DATABASE_VERSION = 17;
+    public static final int DATABASE_VERSION = 15;
 
 }
