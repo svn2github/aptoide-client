@@ -116,6 +116,7 @@ public class DownloadExecutorImpl implements DownloadExecutor {
 
         return retval;
     }
+
     static public void installWithRoot(final FinishedApk apk) {
         try {
 

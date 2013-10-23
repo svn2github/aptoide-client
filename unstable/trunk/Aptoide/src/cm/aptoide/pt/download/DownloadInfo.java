@@ -202,8 +202,10 @@ public class DownloadInfo implements Runnable{
         } else {
             File[] subFiles = dir.listFiles();
             for (File file : subFiles) {
-                if (file.isFile() && !downloadingFilenames.contains(file.getName())) {
-                    size += file.length();
+                if (file.isFile()){
+                    if(!downloadingFilenames.contains(file.getName())) {
+                        size += file.length();
+                    }
                 } else {
                     size += this.getDirSize(file);
                 }

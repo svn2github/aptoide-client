@@ -31,6 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,6 +159,7 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
             super.onPreExecute();
             pd = new ProgressDialog(IntentReceiver.this);
             pd.show();
+            pd.setCancelable(false);
             pd.setMessage(getString(R.string.please_wait));
         }
 
@@ -255,14 +257,20 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
 			i.putExtra("newrepo", server);
 			sendBroadcast(i);
 			finish();
-		}
+		}else{
+            Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            finish();
+        }
 	}
 
 
 	private void downloadMyappFile(String myappUri) throws Exception{
 		try{
-
-			BufferedInputStream getit = new BufferedInputStream(new URL(myappUri).openStream(),1024);
+            URL url = new URL(myappUri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(5000);
+			BufferedInputStream getit = new BufferedInputStream(connection.getInputStream(),1024);
 
 			File file_teste = new File(TMP_MYAPP_FILE);
 			if(file_teste.exists())

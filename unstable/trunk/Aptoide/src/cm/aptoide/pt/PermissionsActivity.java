@@ -75,7 +75,15 @@ public class PermissionsActivity extends Activity {
             }
 
         } catch (PackageManager.NameNotFoundException e) {
-            permissionsDialog(apk, permissions(permissionsList));
+
+            try{
+                permissionsDialog(apk, permissions(permissionsList));
+            }catch (NullPointerException ignore){
+                DownloadExecutorImpl.installWithRoot(apk);
+                finish();
+            }
+
+
         } catch (NullPointerException e){
             DownloadExecutorImpl.installWithRoot(apk);
             finish();

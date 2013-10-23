@@ -2,9 +2,9 @@
 <resources>
   <string name="WidgetProvider_timestamp_today">היום</string>
   <string name="WidgetProvider_timestamp_yesterday">אתמול</string>
-  <string name="WidgetProvider_timestamp_hour_ago">% שעות קודם לכן</string>
-  <string name="WidgetProvider_timestamp_hours_ago">% שעות קודם לכן</string>
-  <string name="WidgetProvider_timestamp_minutes_ago">% דקות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s שעות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s שעות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s דקות קודם לכן</string>
   <string name="WidgetProvider_timestamp_just_now">כרגע</string>
   <string name="menu_context_remove">הסרה</string>
   <string name="menu_context_reparse">טען מחדש</string>
@@ -46,8 +46,8 @@
   <string name="open">פתח</string>
   <string name="comments">הערות</string>
   <string name="commentlabel">הוסף תגובה</string>
-  <string name="like_or_comment_by_user">ב s%</string>
-  <string name="comment_on_application">על s%</string>
+  <string name="like_or_comment_by_user">ב %s</string>
+  <string name="comment_on_application">על %s</string>
   <string name="no_comments">לא נמצאו הערות. היה הראשון!</string>
   <string name="no_internet_connection">אין חיבור אינטרנט.</string>
   <string name="comment_see_all">ראה הכל</string>
@@ -255,12 +255,12 @@
   <string name="clearcache_title">מחק מטמון</string>
   <string name="schDown_added">נוסף לרשימת ההמתנה</string>
   <string name="clear_cache_sucess">תוכן נמחק בהצלחה</string>
-  <string name="aptoide_downloading">מוריד s%</string>
-  <string name="x_app">s% יישום</string>
-  <string name="x_apps">d% יישומים</string>
+  <string name="aptoide_downloading">מוריד %s</string>
+  <string name="x_app">%d יישום</string>
+  <string name="x_apps">%d יישומים</string>
   <string name="starting_download">מתחיל בהורדה</string>
   <string name="resuming_download">ממשיך להוריד</string>
-  <string name="finished_download">הורדת s% הושלמה</string>
+  <string name="finished_download">הורדת %s הושלמה</string>
   <string name="time_left">נותר</string>
   <string name="slow">האט</string>
   <string name="paused">נעצר</string>

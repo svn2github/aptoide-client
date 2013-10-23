@@ -261,7 +261,7 @@
   <string name="starting_download">Iniciando descarga</string>
   <string name="resuming_download">Reanudando descarga</string>
   <string name="finished_download">%s terminó descarga</string>
-  <string name="time_left">izquierda</string>
+  <string name="time_left">restante</string>
   <string name="slow">lento</string>
   <string name="paused">pausa</string>
   <string name="stopped">detenido</string>

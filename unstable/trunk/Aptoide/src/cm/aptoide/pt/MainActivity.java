@@ -437,8 +437,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                     if (ApplicationAptoide.CUSTOMEDITORSCHOICE) {
                         url = getEditorsChoiceURL(ApplicationAptoide.DEFAULTSTORENAME, countryCode);
 
-                        if (((HttpURLConnection) new URL(url).openConnection())
-                                .getResponseCode() != 200) {
+                        if (((HttpURLConnection) new URL(url).openConnection()).getResponseCode() != 200) {
                             url = getEditorsChoiceURL(AptoideConfiguration.getInstance().getDefaultStore(), countryCode);
                         }
 
@@ -1460,7 +1459,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
     }
 
     protected void onNewIntent(Intent intent) {
-        if (intent.hasExtra("new_updates")) {
+        if (intent.hasExtra("new_updates") && pager != null) {
             pager.setCurrentItem(3);
         }
     }
