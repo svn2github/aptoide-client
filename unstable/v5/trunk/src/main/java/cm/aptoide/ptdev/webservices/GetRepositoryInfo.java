@@ -20,7 +20,6 @@ public class GetRepositoryInfo extends AbstractWebservice {
     private FutureCallback<JsonObject> callback;
 
     private String repo;
-    private String lang;
 
     public GetRepositoryInfo(String webServicePath) {
         setWebservicePath(webServicePath);
@@ -37,16 +36,10 @@ public class GetRepositoryInfo extends AbstractWebservice {
         return this;
     }
 
-    public GetRepositoryInfo setLang(String lang) {
-        this.lang = lang;
-        return this;
-    }
-
     @Override
     public Future<JsonObject> execute() {
         args.add(repo);
-        args.add(lang);
 
-        return getHttpClient().get(getWebservicePath() + "webservices/listRepositoryLocalApkNames/", args).setCallback(callback);
+        return getHttpClient().get(getWebservicePath() + "webservices/getRepositoryInfo/", args).setCallback(callback);
     }
 }
