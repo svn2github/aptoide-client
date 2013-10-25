@@ -23,8 +23,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="Aptoidev5" />
+        <module name="v5" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="v5" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

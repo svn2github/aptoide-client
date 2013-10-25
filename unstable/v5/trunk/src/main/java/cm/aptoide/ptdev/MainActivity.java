@@ -1,19 +1,18 @@
 package cm.aptoide.ptdev;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.model.Server;
-import cm.aptoide.ptdev.services.RabbitMqService;
-import cm.aptoide.ptdev.services.RabbitMqService.RabbitMqBinder;
+import cm.aptoide.ptdev.services.MainService;
 import cm.aptoide.ptdev.webservices.Webservice;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.koushikdutta.async.future.FutureCallback;
@@ -26,35 +25,43 @@ public class MainActivity extends SherlockFragmentActivity {
     private static final String TAG = MainActivity.class.getName();
     static Toast toast;
     private ArrayList<Server> server;
-    private RabbitMqService rabbitMqService;
-    private ServiceConnection wConnection = new ServiceConnection() {
+    private MainService service;
+    private ServiceConnection conn = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            RabbitMqBinder wBinder = (RabbitMqBinder) service;
-            rabbitMqService = wBinder.getService();
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            service = ((MainService.MainServiceBinder)binder).getService();
+            Log.d("Aptoide-MainActivity", "onServiceConnected");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout);
+        //setContentView(R.layout.main_layout);
 
         //testWebservicesCalls();
-        Intent i = new Intent(this, RabbitMqService.class);
-        bindService(i, wConnection, Context.BIND_AUTO_CREATE);
+        Intent i = new Intent(this, MainService.class);
+        if(savedInstanceState==null){
+            startService(i);
+        }
+
+        bindService(i, conn, BIND_AUTO_CREATE);
+
+        SQLiteDatabase db = ((Aptoide)getApplication()).getDb();
+        Database database = new Database(db);
+
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        unbindService(wConnection);
     }
 
     private void testWebservicesCalls() {
@@ -68,7 +75,7 @@ public class MainActivity extends SherlockFragmentActivity {
                 } else {
 
                     Log.d("main", "Response: " + o.toString());
-                    ((TextView) findViewById(R.id.textView)).setText(o.toString());
+                    //((TextView) findViewById(R.id.textView)).setText(o.toString());
                 }
 
             }

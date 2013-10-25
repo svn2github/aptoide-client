@@ -8,7 +8,26 @@
     <artifactId>Aptoidev5</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <build><plugins><plugin>
+        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+        <artifactId>android-maven-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+            <sdk>
+                <path>/opt/android-sdk-linux/</path>
+                <platform>18</platform>
+            </sdk>
+        </configuration>
+    </plugin>
+        <plugin><artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+            <source>1.6</source>
+            <target>1.6</target></configuration></plugin>
+    </plugins></build>
     <dependencies>
+
+
+
         <dependency>
             <groupId>com.koushikdutta.ion</groupId>
             <artifactId>ion</artifactId>
@@ -16,9 +35,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.actionbarsherlock</groupId>
-            <artifactId>actionbarsherlock</artifactId>
-            <version>4.4.0</version>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>r11</version>
         </dependency>
 
         <dependency>

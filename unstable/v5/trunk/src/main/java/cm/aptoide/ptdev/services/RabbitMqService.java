@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import com.rabbitmq.client.*;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.impl.AMQConnection;
+import com.rabbitmq.client.impl.ChannelN;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,27 +28,39 @@ public class RabbitMqService extends Service {
     private final IBinder wBinder = new RabbitMqBinder();
 
     private ExecutorService thread_pool;
+    private AMQConnection connection;
 
 
     @Override
     public IBinder onBind(Intent intent) {
+
+        String host = intent.getStringExtra("host");
+
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost(host);
+            factory.setConnectionTimeout(20000);
+            connection = (AMQConnection) factory.newConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return wBinder;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("RabbitMqService", "RabbitMqService created!");
-
+        Log.d("Aptoide-RabbitMqService", "RabbitMqService created!");
         thread_pool = Executors.newCachedThreadPool();
+
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("RabbitMqService", "RabbitMqService Destroyed!");
-
+        Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
     }
 
     public class RabbitMqBinder extends Binder {
@@ -54,40 +70,51 @@ public class RabbitMqService extends Service {
 
     }
 
-    /*
-    public void newConnection(String queue_id, Runnable task) {
-        com.rabbitmq.client.Connection connection;
-        com.rabbitmq.client.Channel channel;
-        com.rabbitmq.client.Consumer consumer;
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        factory.setConnectionTimeout(0);
+    private ChannelN channel;
+    private QueueingConsumer consumer;
 
-        connection = factory.newConnection();
-
-        channel = connection.createChannel();
-
-        channel.queueDeclare(queue_id, true, false, false,
-                null);
-
+    public void newChannel(String queue_id, AMQHandler task) throws IOException {
+        channel = (ChannelN) connection.createChannel();
+        channel.queueDeclare(queue_id, true, false, false, null);
         channel.basicQos(0);
-
         consumer = new QueueingConsumer(channel);
-
         channel.basicConsume(queue_id, false, consumer);
-
-        thread_pool
-
+        thread_pool.submit(task);
     }
-*/
 
-    public class WebInstall implements Runnable {
+
+    public abstract class AMQHandler implements Runnable {
+
+        private boolean isRunning;
+        private final QueueingConsumer consumer;
+
+        public AMQHandler(QueueingConsumer consumer) {
+            this.consumer = consumer;
+        }
 
         @Override
         public void run() {
-            //To change body of implemented methods use File | Settings | File Templates.
+
+            while(isRunning){
+                try {
+                    QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                    String body = new String(delivery.getBody(), Charset.forName("UTF-8"));
+                    handleMessage(body);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
+
+        abstract void handleMessage(String body);
+
+        public void setRunning(boolean running) {
+            isRunning = running;
+        }
+
     }
 
 }

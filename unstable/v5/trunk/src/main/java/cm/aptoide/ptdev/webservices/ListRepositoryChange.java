@@ -21,8 +21,8 @@ public class ListRepositoryChange extends AbstractWebservice {
     HashMap<String, String> args = new HashMap<String, String>();
     private FutureCallback<JsonObject> callback;
 
-    private String repo;
-    private String hash;
+    private StringBuilder repo;
+    private StringBuilder hash;
 
     public ListRepositoryChange(String webServicePath) {
         setWebservicePath(webServicePath);
@@ -35,17 +35,17 @@ public class ListRepositoryChange extends AbstractWebservice {
     }
 
     public ListRepositoryChange setRepos(List<Server> servers) {
-        repo = "";
-        hash = "";
+        repo.append("");
+        hash.append("");
 
         int remaining_repos = servers.size();
         for (Server server : servers) {
-            repo += server.getName();
-            hash += server.getHash();
+            repo.append(server.getName());
+            hash.append(server.getHash());
             remaining_repos--;
             if (remaining_repos != 0) {
-                repo += ",";
-                hash += ",";
+                repo.append(",");
+                hash.append(",");
             }
         }
 
@@ -55,8 +55,8 @@ public class ListRepositoryChange extends AbstractWebservice {
 
     @Override
     public Future<JsonObject> execute() {
-        args.put("repo", repo);
-        args.put("hash", hash);
+        args.put("repo", repo.toString());
+        args.put("hash", hash.toString());
 
         return getHttpClient().post(getWebservicePath() + "webservices/listRepositoryChange", args).setCallback(callback);
     }

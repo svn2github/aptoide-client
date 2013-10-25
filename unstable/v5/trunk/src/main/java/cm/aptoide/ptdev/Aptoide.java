@@ -24,6 +24,7 @@ import java.util.ArrayList;
  * Time: 15:19
  * To change this template use File | Settings | File Templates.
  */
+
 public class Aptoide extends Application {
 
     public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
@@ -44,10 +45,11 @@ public class Aptoide extends Application {
         super.onCreate();
         context = getApplicationContext();
 
+
+
         db = DatabaseHelper.getInstance(getApplicationContext());
         Ion.getDefault(getContext()).setLogging("MyLogs", Log.DEBUG);
         Ion.getDefault(getContext()).proxy("192.168.1.70", 8888);
-
         //Ion.with(this, "http://webservices.aptoide.com/webservices/checkUserCredentials/rfa.mateus@gmail.com/4b288f73587b1db7700c9661ce011e3b92b36443/json").proxy("192.168.1.70", 8888).asJsonObject();
 
 
