@@ -86,7 +86,7 @@ public class RabbitMqService extends Service {
 
     public abstract class AMQHandler implements Runnable {
 
-        private boolean isRunning;
+        private boolean isRunning = true;
         private final QueueingConsumer consumer;
 
         public AMQHandler(QueueingConsumer consumer) {
