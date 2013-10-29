@@ -190,20 +190,28 @@ public class ApplicationAptoide extends Application {
                 createSdCardBinary();
             }
 
-            try {
-                if(isUpdate()){
-                    BufferedInputStream is = new BufferedInputStream(new URL("http://"+ DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
-                    parseBootConfigStream(is);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (isUpdate()) {
+                            BufferedInputStream is = new BufferedInputStream(new URL("http://" + DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
+                            parseBootConfigStream(is);
+                        }
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    } catch (SAXException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
+            }).start();
+
 
 
         }else if(new File(SDCARD + "/.aptoide_settings/oem").exists() && !getPackageName().equals("cm.aptoide.pt")){
@@ -226,10 +234,28 @@ public class ApplicationAptoide extends Application {
                 MARKETNAME = map.get("MARKETNAME");
                 ADUNITID = map.get("ADUNITID");
 
-                if(isUpdate()){
-                    BufferedInputStream is = new BufferedInputStream(new URL("http://"+ DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
-                    parseBootConfigStream(is);
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (isUpdate()) {
+                                BufferedInputStream is = new BufferedInputStream(new URL("http://" + DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
+                                parseBootConfigStream(is);
+                            }
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        } catch (SAXException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
 
                 savePreferences();
 
@@ -238,12 +264,7 @@ public class ApplicationAptoide extends Application {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
+
             } catch (Exception e){
                 e.printStackTrace();
             }

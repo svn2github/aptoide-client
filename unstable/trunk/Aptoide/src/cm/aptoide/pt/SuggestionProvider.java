@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -57,12 +58,13 @@ public class SuggestionProvider extends ContentProvider {
 //
 //
 
+        Log.d("TAG", "query: " + selectionArgs[0]);
         if (Build.VERSION.SDK_INT > 7) {
             BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
             WebSocketSingleton.getInstance().setNotificationUri(uri).setContext(getContext()).setBlockingQueue(arrayBlockingQueue);
 
             MatrixCursor matrix_cursor = null;
-            WebSocketSingleton.send(selectionArgs[0]);
+            WebSocketSingleton.getInstance().send(selectionArgs[0]);
             try {
                 matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
             } catch (InterruptedException e) {

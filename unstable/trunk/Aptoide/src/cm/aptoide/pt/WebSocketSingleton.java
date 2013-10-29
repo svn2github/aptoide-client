@@ -22,6 +22,8 @@ public class WebSocketSingleton {
 
     private static WebSocketClient web_socket_client;
     String[] matrix_columns = {"_id", SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_INTENT_DATA};
+    private String query;
+    private String buffer;
     private WebSocketClient.Listener listener = new WebSocketClient.Listener() {
         @Override
         public void onConnect() {
@@ -37,8 +39,11 @@ public class WebSocketSingleton {
                 for (int i = 0; i < array.length(); i++) {
                     String suggestion = array.get(i).toString();
                     Log.d("TAG", "Suggestion " + suggestion);
-
                     addRow(mCursor, suggestion, i);
+                }
+
+                if(array.length()==0){
+                    buffer = query;
                 }
 
                 blockingQueue.add(mCursor);
@@ -74,15 +79,18 @@ public class WebSocketSingleton {
     private Context mContext;
     private BlockingQueue blockingQueue;
 
-    private WebSocketSingleton() {
-    }
+    private WebSocketSingleton() {}
 
-    ;
-
-    public static void send(String query) {
-        if (web_socket_client.isConnected()) {
+    public void send(String query) {
+        this.query = query;
+        if (web_socket_client.isConnected() && query.length() > 2 && ( buffer==null || !query.startsWith(buffer))) {
             web_socket_client.send("{\"query\":\"" + query + "\"}");
+            Log.d("TAG", "Sending " + query);
+        }else{
+            MatrixCursor mCursor = null;
+            blockingQueue.add(mCursor);
         }
+
     }
 
     public static WebSocketSingleton getInstance() {
@@ -90,6 +98,9 @@ public class WebSocketSingleton {
     }
 
     void disconnect() {
+
+        Log.d("TAG", "onDisconnect");
+
         if(web_socket_client!=null){
             web_socket_client.disconnect();
             web_socket_client = null;
@@ -99,14 +110,11 @@ public class WebSocketSingleton {
 
     public void connect() {
 
+
         if(web_socket_client==null){
-            web_socket_client = new WebSocketClient(java.net.URI.create("http://webservices.aptoide.com:9000"), listener, null);
+            web_socket_client = new WebSocketClient(java.net.URI.create("ws://192.168.1.71:9000"), listener, null);
             web_socket_client.connect();
         }
-
-
-
-
         Log.d("TAG", "OnConnecting");
     }
 

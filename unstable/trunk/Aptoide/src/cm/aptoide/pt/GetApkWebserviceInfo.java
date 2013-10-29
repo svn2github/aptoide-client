@@ -52,6 +52,11 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
 
 
         this.apk = Database.getInstance().getApk( params[0], Category.INFOXML);
+
+        if(apk==null){
+            return null;
+        }
+
         if (!serviceDownloadManager.existsDownload(apk)) {
             try {
                 return new WebserviceGetApkInfo(context, apk.getWebservicesPath(), apk, Category.INFOXML, null, true);
@@ -110,7 +115,7 @@ public class GetApkWebserviceInfo extends AsyncTask<Long, Void, WebserviceGetApk
             toast.show();
             serviceDownloadManager.startDownload(serviceDownloadManager.getDownload(apk), apk);
         }else{
-            Toast toast = Toast.makeText(context, context.getString(R.string.an_error_check_net), Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context, context.getString(R.string.error_occured), Toast.LENGTH_SHORT);
             toast.show();
         }
     }

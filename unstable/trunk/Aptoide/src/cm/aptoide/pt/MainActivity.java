@@ -1983,7 +1983,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                             }
 
                         }
-                    }, 5000);
+                    }, 10000);
 
 
                 }
@@ -1992,6 +1992,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
             manager.setOnDismissListener(new android.app.SearchManager.OnDismissListener() {
                 @Override
                 public void onDismiss() {
+                    isDisconnect = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -2001,7 +2002,7 @@ public class MainActivity extends SherlockFragmentActivity implements LoaderCall
                             }
 
                         }
-                    }, 5000);
+                    }, 10000);
                 }
             });
         }

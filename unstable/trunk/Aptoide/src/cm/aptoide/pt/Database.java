@@ -46,6 +46,7 @@ public class Database  {
     private final static String screenSpec = HWSpecifications.getNumericScreenSize(context)+ "/" + HWSpecifications.getDensityDpi(context);
     private final static String cpu = HWSpecifications.getCpuAbi();
     private final static String cpu2 = HWSpecifications.getCpuAbi2();
+    private final static String cpu3 = cpu2.equals("armeabi-v7a") ? "armeabi" : "";
 
 
     private Database() {
@@ -564,19 +565,21 @@ public class Database  {
 	}
 
     private boolean isCompatible(ViewApk apk) {
-
-        if(apk.getCpuAbi()!=null){
-            Log.d("Tag", cpu);
-            Log.d("Tag", cpu2);
-            Log.d("Tag", apk.getCpuAbi());
-        }
-
         return Integer.parseInt(apk.getMinSdk()) <= sdk &&
                apk.getMinScreen() <= screen &&
                Float.parseFloat(apk.getMinGlEs()) <= Float.parseFloat(gles) &&
                 (apk.getScreenCompat() == null || apk.getScreenCompat().contains(screenSpec)) &&
-                (apk.getCpuAbi()==null || apk.getCpuAbi().contains(cpu) || apk.getCpuAbi().contains(cpu2) );
+                (apk.getCpuAbi()==null || checkCpuCompatibility(apk.getCpuAbi()));
+    }
 
+    private boolean checkCpuCompatibility(String cpuAbi) {
+
+        ArrayList<String> cpus = new ArrayList<String>(Arrays.asList(cpuAbi.split(",")));
+        for(String cpu : cpus){
+            if((cpu.equals(this.cpu) || (cpu2.length()>0 && cpu.equals(cpu2)) || (cpu3.length()>0 && cpu.equals(cpu3))))
+                return true;
+        }
+        return false;
     }
 
     public void insert(ViewApkUserBased apk) {
