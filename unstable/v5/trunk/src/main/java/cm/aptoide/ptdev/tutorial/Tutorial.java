@@ -1,15 +1,13 @@
 package cm.aptoide.ptdev.tutorial;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import cm.aptoide.ptdev.R;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,92 +18,65 @@ import cm.aptoide.ptdev.R;
  */
 public class Tutorial extends Activity {
 
-    private int tutorial_level;
+    public static final String FRAGMENTS_INTENT_KEY = "tutorial_fragments";
+
+    private ArrayList<TutorialFragment> tutorial_fragments;
+    private int currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tutorial_layout);
 
-        ((Button)findViewById(R.id.next)).setOnClickListener(new View.OnClickListener() {
+        if (getIntent().hasExtra(FRAGMENTS_INTENT_KEY)) {
+            tutorial_fragments = (ArrayList<TutorialFragment>) getIntent().getParcelableArrayListExtra(FRAGMENTS_INTENT_KEY);
+        } else {
+            finish();
+        }
+
+        ((Button) findViewById(R.id.next)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFragment();
+                changeFragment(++currentFragment);
             }
         });
 
-        ((Button)findViewById(R.id.previous)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.previous)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    getFragmentManager().popBackStack();
+                currentFragment--;
+                getFragmentManager().popBackStack();
             }
         });
 
-        ((Button)findViewById(R.id.finish)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.finish)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        if(savedInstanceState == null) {
-            TutorialFragment firstFragment = TutorialFragment.newInstance(tutorial_level);
+        if (savedInstanceState == null) {
+            TutorialFragment firstFragment = tutorial_fragments.get(0);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.add(R.id.tutorial_fragment, firstFragment);
             ft.commit();
-        } else {
-            tutorial_level = savedInstanceState.getInt("LEVEL");
         }
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("LEVEL", tutorial_level);
+
     }
 
-    public void addFragment() {
-        tutorial_level++;
-
-        TutorialFragment tutorial_fragment = TutorialFragment.newInstance(tutorial_level);
-
+    private void changeFragment(int toPage) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.tutorial_fragment, tutorial_fragment);
+        ft.replace(R.id.tutorial_fragment, tutorial_fragments.get(toPage));
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.addToBackStack(null);
         ft.commit();
     }
 
-    public static class TutorialFragment extends Fragment {
-
-        private int num;
-
-        public static TutorialFragment newInstance(int num) {
-            TutorialFragment tutorial_page = new TutorialFragment();
-
-            Bundle args = new Bundle();
-            args.putInt("num", num);
-
-            return tutorial_page;
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            num = (getArguments() != null) ? getArguments().getInt("num") : 1;
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("#page: " + num);
-
-            return view;
-        }
-
-
-    }
 }
