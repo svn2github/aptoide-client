@@ -87,7 +87,6 @@ import java.util.Locale;
 
 
         mode = ReportingInteractionMode.NOTIFICATION,
-        resToastText = R.string.crash_dialog_title, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
         resNotifTickerText = R.string.crash_notif_ticker_text,
         resNotifTitle = R.string.crash_dialog_title,
         resNotifText = R.string.crash_notif_text,
@@ -154,19 +153,6 @@ public class ApplicationAptoide extends Application {
 
 		AptoideThemePicker.setAptoideTheme(this);
 		setContext(getApplicationContext());
-//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//                .detectAll()
-//                .penaltyLog()
-//
-//                .build());
-//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                .detectAll()
-//                .penaltyLog()
-//
-//                .build());
-
-
-
 
 
         sPref = getSharedPreferences("settings", MODE_PRIVATE);
@@ -653,7 +639,7 @@ public class ApplicationAptoide extends Application {
 		/** {@value} */
 		public static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5 * 1000; // milliseconds
 		/** {@value} */
-		public static final int DEFAULT_HTTP_READ_TIMEOUT = 20 * 1000; // milliseconds
+		public static final int DEFAULT_HTTP_READ_TIMEOUT = 10 * 1000; // milliseconds
 
 		private int connectTimeout;
 		private int readTimeout;

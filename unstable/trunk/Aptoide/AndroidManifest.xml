@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="412"
-    android:versionName="4.2.2" >
+    android:versionCode="413"
+    android:versionName="4.2.3" >
 
     <uses-sdk
         android:minSdkVersion="6"

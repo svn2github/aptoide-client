@@ -112,7 +112,7 @@ public class WebSocketSingleton {
 
 
         if(web_socket_client==null){
-            web_socket_client = new WebSocketClient(java.net.URI.create("ws://192.168.1.71:9000"), listener, null);
+            web_socket_client = new WebSocketClient(java.net.URI.create("ws://webservices.aptoide.com:9000"), listener, null);
             web_socket_client.connect();
         }
         Log.d("TAG", "OnConnecting");

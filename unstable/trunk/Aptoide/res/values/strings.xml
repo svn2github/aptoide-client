@@ -424,6 +424,9 @@
     <string name="remote_in_nospace">not enough space on your device.</string>
     <string name="screenCode">Screen code</string>
     <string name="cpuAbi">Cpu</string>
+    <string name="no_search_result">You don\'t have &#8216;%s&#8217; in your added stores.</string>
+    <string name="search_button_text">Search in web</string>
+    <string name="searchmore">Search more in web</string>
 
 
 </resources>

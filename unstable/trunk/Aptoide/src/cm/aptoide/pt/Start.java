@@ -37,11 +37,14 @@ public class Start extends SherlockActivity {
 	private ImageLoadingListener listener = new ImageLoadingListener() {
 
 		@Override
-		public void onLoadingStarted(String uri, View v) { }
+		public void onLoadingStarted(String uri, View v) {
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
 
 		@Override
 		public void onLoadingFailed(String uri, View v, FailReason failReason) {
 			Log.e("Start-onLoadingFailed","Failed to load splashscreen");
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				saveSplashscreenImageToSDCard("splashscreen_land.png");
 			}else{
@@ -52,11 +55,20 @@ public class Start extends SherlockActivity {
 
 		@Override
 		public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
 			showSplash();
 		}
 
 		@Override
-		public void onLoadingCancelled(String uri, View v) {	}
+		public void onLoadingCancelled(String uri, View v) {
+            Log.e("Start-loading splash image", "Image canceled");
+
+            finish();
+
+            Intent intent = new Intent();
+            intent.setClass(Start.this, MainActivity.class);
+            startActivity(intent);
+        }
 	};
 
 
@@ -130,7 +142,7 @@ public class Start extends SherlockActivity {
 		if(ApplicationAptoide.PARTNERID != null){
 			if(evt.getAction() == MotionEvent.ACTION_DOWN)
 			{
-				synchronized(mSplashThread){
+                synchronized(mSplashThread){
 					mSplashThread.notifyAll();
 				}
 			}

@@ -63,7 +63,7 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 		lv = (ListView) findViewById(R.id.listView);
 //		searchBox = (EditText) findViewById(R.id.search_box);
 		v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.footer_search_aptoide, null);
-		v.setOnClickListener(null);
+
 		lv.addFooterView(v);
 
 		results = (TextView) v.findViewById(R.id.results_text);
@@ -75,7 +75,7 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
         }
 
 
-		searchButton.setText(getString(R.string.search_log)+" '"+query+"' "+getString(R.string.search_stores));
+
 
 
 
@@ -127,13 +127,14 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 		adapter.swapCursor(arg1);
 		TypedValue a = new TypedValue();
 		getTheme().resolveAttribute(R.attr.custom_color, a, true);
-		if(adapter.getCount()<=0){
-			results.setText(getString(R.string.no_results_found));
-			results.setTextColor(a.data);
-		}else{
+		if(adapter.getCount()>0){
 			results.setText(getString(R.string.found)+" "+adapter.getCount()+" "+getString(R.string.results));
-			results.setTextColor(a.data);
-		}
+            ((Button)v.findViewById(R.id.baz_src)).setText(getString(R.string.searchmore));
+		}else{
+            results.setText(getString(R.string.no_search_result, query));
+            ((Button)v.findViewById(R.id.baz_src)).setText(getString(R.string.search_button_text));
+        }
+        results.setTextColor(a.data);
 
 	}
 	public void onLoaderReset(Loader<Cursor> arg0) {

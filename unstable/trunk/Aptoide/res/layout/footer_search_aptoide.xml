@@ -18,11 +18,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
+        android:text="@string/no_search_result"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/baz_src"
-        style="@style/gray_button_style" />
+        android:layout_gravity="right"
+        android:text="@string/search_button_text"
+        android:drawableLeft="@drawable/location_web_site"
+        android:drawablePadding="5dp"
+
+        style="@style/custom_button_style" />
 
 </LinearLayout><!--
  * Copyright (C) 2011  Roberto Jacinto

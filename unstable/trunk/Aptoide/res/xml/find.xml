@@ -5,7 +5,8 @@
         android:includeInGlobalSearch="true"
         android:searchSuggestIntentAction="android.intent.action.VIEW"
         android:searchSuggestAuthority="cm.aptoide.pt.SuggestionProvider"
-        android:searchSuggestThreshold="2"
+        android:queryAfterZeroResults="false"
+        android:searchSuggestThreshold="3"
         android:searchSuggestSelection=" ?" >
 
 </searchable>

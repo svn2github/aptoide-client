@@ -4,6 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+
+    <ProgressBar android:id="@+id/progressBar"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerInParent="true"/>
+
     <ImageView
         android:id="@+id/splashscreen"
         android:layout_width="fill_parent"

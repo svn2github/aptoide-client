@@ -33,6 +33,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -267,9 +268,15 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
 	private void downloadMyappFile(String myappUri) throws Exception{
 		try{
             URL url = new URL(myappUri);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
+            URLConnection connection;
+            if(!myappUri.startsWith("file://")){
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(5000);
+                connection.setConnectTimeout(5000);
+            }else{
+                connection = url.openConnection();
+            }
+
 			BufferedInputStream getit = new BufferedInputStream(connection.getInputStream(),1024);
 
 			File file_teste = new File(TMP_MYAPP_FILE);
