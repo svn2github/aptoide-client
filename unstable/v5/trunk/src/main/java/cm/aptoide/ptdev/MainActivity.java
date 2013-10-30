@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.services.MainService;
+import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.webservices.Webservice;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.koushikdutta.async.future.FutureCallback;
@@ -43,9 +46,8 @@ public class MainActivity extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.main_layout);
+        setContentView(R.layout.main_layout);
 
-        //testWebservicesCalls();
         Intent i = new Intent(this, MainService.class);
         if(savedInstanceState==null){
             startService(i);
@@ -56,12 +58,37 @@ public class MainActivity extends SherlockFragmentActivity {
         SQLiteDatabase db = ((Aptoide)getApplication()).getDb();
         Database database = new Database(db);
 
-
+        testTutorial();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+
+    private void testTutorial() {
+        /*
+        final ArrayList<TutorialFragment> fragments = new ArrayList<TutorialFragment>();
+
+        fragments.add(TutorialFragment.newInstance(0, R.layout.tutorial_fragment_layout));
+        fragments.add(TutorialFragment.newInstance(1, R.layout.tutorial_fragment_layout));
+        fragments.add(TutorialFragment.newInstance(2, R.layout.tutorial_fragment_layout));
+        fragments.add(TutorialFragment.newInstance(3, R.layout.tutorial_fragment_layout));
+        fragments.add(TutorialFragment.newInstance(4, R.layout.tutorial_fragment_layout));
+        fragments.add(TutorialFragment.newInstance(5, R.layout.tutorial_fragment_layout));
+*/
+
+
+        ((Button)findViewById(R.id.show_tutorial)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, Tutorial.class);
+               // intent.putParcelableArrayListExtra(Tutorial.FRAGMENTS_INTENT_KEY, fragments);
+                startActivity(intent);
+            }
+        });
     }
 
     private void testWebservicesCalls() {
