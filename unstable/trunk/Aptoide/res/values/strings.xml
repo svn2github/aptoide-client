@@ -425,8 +425,8 @@
     <string name="screenCode">Screen code</string>
     <string name="cpuAbi">Cpu</string>
     <string name="no_search_result">You don\'t have &#8216;%s&#8217; in your added stores.</string>
-    <string name="search_button_text">Search in web</string>
-    <string name="searchmore">Search more in web</string>
+    <string name="searchmore">Search more</string>
+    <string name="search_in_other_stores">(in other stores)</string>
 
 
 </resources>

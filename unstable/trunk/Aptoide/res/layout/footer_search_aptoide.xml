@@ -6,31 +6,51 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:tag="bazaar" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:tag="bazaar">
 
-    <TextView
-        android:id="@+id/results_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dp"
-        android:text="@string/no_search_result"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_toLeftOf="@+id/baz_src"
+            android:orientation="horizontal" android:baselineAligned="false">
+        <TextView
+                android:id="@+id/results_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+    </LinearLayout>
+
 
     <Button
-        android:id="@+id/baz_src"
-        android:layout_gravity="right"
-        android:text="@string/search_button_text"
-        android:drawableLeft="@drawable/location_web_site"
-        android:drawablePadding="5dp"
+            android:id="@+id/baz_src"
+            style="@style/custom_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/layout"
 
-        style="@style/custom_button_style" />
+            android:text="@string/searchmore"
+            android:drawableLeft="@drawable/ic_search_aptoide"/>
 
-</LinearLayout><!--
+    <TextView
+            android:id="@+id/search_in_other_stores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/baz_src"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:text="@string/search_in_other_stores"/>
+
+</RelativeLayout><!--
  * Copyright (C) 2011  Roberto Jacinto
  * roberto.jacinto@caixamagica.pt
  *

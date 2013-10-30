@@ -125,16 +125,13 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 	}
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
 		adapter.swapCursor(arg1);
-		TypedValue a = new TypedValue();
-		getTheme().resolveAttribute(R.attr.custom_color, a, true);
+
 		if(adapter.getCount()>0){
 			results.setText(getString(R.string.found)+" "+adapter.getCount()+" "+getString(R.string.results));
-            ((Button)v.findViewById(R.id.baz_src)).setText(getString(R.string.searchmore));
 		}else{
             results.setText(getString(R.string.no_search_result, query));
-            ((Button)v.findViewById(R.id.baz_src)).setText(getString(R.string.search_button_text));
         }
-        results.setTextColor(a.data);
+
 
 	}
 	public void onLoaderReset(Loader<Cursor> arg0) {
