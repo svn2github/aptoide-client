@@ -6,11 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.R;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,8 +25,8 @@ import java.util.ArrayList;
  */
 public class Wizard {
 
-    public static ArrayList<Fragment> getWizard() {
-        ArrayList<Fragment> wizard = new ArrayList<Fragment>();
+    public static ArrayList<SherlockFragment> getWizard() {
+        ArrayList<SherlockFragment> wizard = new ArrayList<SherlockFragment>();
 
         /*
         Class[] fragments = Wizard.class.getClasses();
@@ -48,12 +52,14 @@ public class Wizard {
     }
 
     public interface WizardCallback {
-        public void clicked(String which_fragment);
+        public void checkActionEvents();
     }
 
     public static class Fragment1 extends SherlockFragment implements WizardCallback {
 
-        WizardCallback listener;
+        CheckBox checkBox1;
+        CheckBox checkBox2;
+        CheckBox checkBox3;
 
         public static Fragment1 newInstace() {
             Fragment1 fragment = new Fragment1();
@@ -67,32 +73,39 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 1");
-            //getArguments().getString("name"));
             return view;
         }
 
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            listener = (WizardCallback) activity;
-        }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            listener.clicked("Fragment 1");
+            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 1");
+            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
         }
 
         @Override
-        public void clicked(String which_fragment) {
-            //To change body of implemented methods use File | Settings | File Templates.
+        public void checkActionEvents() {
+            if (checkBox1.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox2.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox3.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public static class Fragment2 extends SherlockFragment {
+    public static class Fragment2 extends SherlockFragment implements WizardCallback{
+
+        CheckBox checkBox1;
+        CheckBox checkBox2;
+        CheckBox checkBox3;
 
         public static Fragment2 newInstace() {
             Fragment2 fragment = new Fragment2();
@@ -106,15 +119,39 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 2");
-            //getArguments().getString("name"));
             return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 2");
+
+            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+        }
+
+        @Override
+        public void checkActionEvents() {
+            if (checkBox1.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox2.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox3.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public static class Fragment3 extends SherlockFragment {
+    public static class Fragment3 extends SherlockFragment implements WizardCallback{
+
+        CheckBox checkBox1;
+        CheckBox checkBox2;
+        CheckBox checkBox3;
 
         public static Fragment3 newInstace() {
             Fragment3 fragment = new Fragment3();
@@ -130,13 +167,38 @@ public class Wizard {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 3");
-            //getArguments().getString("name"));
             return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 3");
+
+            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+        }
+
+        @Override
+        public void checkActionEvents() {
+            if (checkBox1.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox2.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox3.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public static class Fragment4 extends SherlockFragment {
+    public static class Fragment4 extends SherlockFragment implements WizardCallback{
+
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private CheckBox checkBox3;
 
         public static Fragment4 newInstace() {
             Fragment4 fragment = new Fragment4();
@@ -150,15 +212,39 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 4");
-            //getArguments().getString("name"));
             return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 4");
+
+            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+        }
+
+        @Override
+        public void checkActionEvents() {
+            if (checkBox1.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox2.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox3.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public static class Fragment5 extends SherlockFragment {
+    public static class Fragment5 extends SherlockFragment implements WizardCallback {
+        private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private CheckBox checkBox3;
+
         public static Fragment5 newInstace() {
             Fragment5 fragment = new Fragment5();
 
@@ -171,11 +257,31 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 5");
-            //getArguments().getString("name"));
             return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 5");
+
+            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+        }
+
+        @Override
+        public void checkActionEvents() {
+            if (checkBox1.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox2.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
+            }
+            if (checkBox3.isChecked()) {
+                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
