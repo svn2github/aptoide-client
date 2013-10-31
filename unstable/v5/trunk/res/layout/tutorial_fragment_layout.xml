@@ -5,11 +5,30 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
+
     <TextView android:id="@+id/tutorialpage"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="tutorial page: "
               android:enabled="true"
-            ></TextView>
+            />
+
+    <CheckBox android:id="@+id/checkbox1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="callListener1" />
+
+    <CheckBox android:id="@+id/checkbox2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="callListener2" />
+
+    <CheckBox android:id="@+id/checkbox3"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="callListener3" />
+
+
 
 </LinearLayout>

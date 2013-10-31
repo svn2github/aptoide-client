@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-             >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+        >
 
-    <FrameLayout android:id="@+id/tutorial_fragment"
-              android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout">
+    </android.support.v4.view.ViewPager>
 
+    <LinearLayout
+            android:id="@+id/layout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
-    <LinearLayout android:orientation="horizontal"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:gravity="bottom"
-            >
         <Button android:id="@+id/finish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,4 +42,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
