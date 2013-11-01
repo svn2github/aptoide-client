@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+
+
 <!--
   Copyright (c) 2012 rmateus.
   All rights reserved. This program and the accompanying materials
@@ -7,48 +8,48 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:tag="bazaar">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10dp"
+              android:tag="bazaar">
 
-    <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_toLeftOf="@+id/baz_src"
-            android:orientation="horizontal" android:baselineAligned="false">
+
         <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/results_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:layout_toLeftOf="@+id/baz_src"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
-    </LinearLayout>
 
 
-    <Button
-            android:id="@+id/baz_src"
-            style="@style/custom_button_style"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/layout"
 
-            android:text="@string/searchmore"
-            android:drawableLeft="@drawable/ic_search_aptoide"/>
+
+
+        <Button
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/baz_src"
+                style="@style/custom_button_style"
+                android:text="@string/searchmore"
+                android:layout_centerHorizontal="true"
+                android:drawableLeft="@drawable/ic_search_aptoide"/>
 
     <TextView
             android:id="@+id/search_in_other_stores"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:layout_below="@+id/baz_src"
-            android:layout_alignParentRight="true"
+            android:layout_below="@id/baz_src"
+            android:layout_alignLeft="@id/baz_src"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/darker_gray"
             android:text="@string/search_in_other_stores"/>
+
+
+
 
 </RelativeLayout><!--
  * Copyright (C) 2011  Roberto Jacinto
@@ -63,8 +64,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -->
+
+

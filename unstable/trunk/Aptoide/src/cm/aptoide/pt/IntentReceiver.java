@@ -248,21 +248,30 @@ public class IntentReceiver extends SherlockActivity implements OnDismissListene
 		finish();
 	}
 
-	private void proceed() {
-		if(server!=null && ApplicationAptoide.MULTIPLESTORES){
-			Intent i = new Intent(IntentReceiver.this,MainActivity.class);
-			i.putExtra("newrepo", server);
-			i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-			startActivity(i);
-			i = new Intent("pt.caixamagica.aptoide.NEWREPO");
-			i.putExtra("newrepo", server);
-			sendBroadcast(i);
-			finish();
-		}else{
+    private void proceed() {
+        if (server != null) {
+            Intent i = new Intent(IntentReceiver.this, MainActivity.class);
+
+            if (ApplicationAptoide.MULTIPLESTORES) {
+                i.putExtra("newrepo", server);
+                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            }
+            startActivity(i);
+
+            if (ApplicationAptoide.MULTIPLESTORES) {
+                i = new Intent("pt.caixamagica.aptoide.NEWREPO");
+                i.putExtra("newrepo", server);
+                sendBroadcast(i);
+            }
+            finish();
+
+        } else {
             Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             finish();
         }
-	}
+    }
+
+	
 
 
 	private void downloadMyappFile(String myappUri) throws Exception{

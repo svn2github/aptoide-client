@@ -19,7 +19,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import cm.aptoide.pt.Server.State;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.views.*;
 import cm.aptoide.pt.webservices.MalwareStatus;
@@ -913,8 +912,8 @@ public class Database  {
 		boolean hasCategory = false;
 
 		if (!mergeStores && !allApps
-				&& !getServer(store, false).state.equals(State.PARSED)
-				&& !getServer(store, false).state.equals(State.FAILED)) {
+				&& !getServer(store, false).state.equals(Server.State.PARSED)
+				&& !getServer(store, false).state.equals(Server.State.FAILED)) {
 			for (d.moveToFirst(); !d.isAfterLast(); d.moveToNext()) {
 				if (d.getString(1).equals("Applications")
 						|| d.getString(1).equals("Games")) {
@@ -1102,7 +1101,7 @@ public class Database  {
 			if (c.moveToFirst()) {
 				server = new Server(c.getString(1), c.getString(2),
 						c.getLong(0));
-				server.state = State.valueOf(c.getString(3));
+				server.state = Server.State.valueOf(c.getString(3));
 				ViewLogin login = new ViewLogin(c.getString(4), c.getString(5));
 				server.setLogin(login);
 			}
@@ -2239,20 +2238,20 @@ public class Database  {
 			c = database.query(DbStructure.TABLE_APK +" as a", new String[] {
 					DbStructure.COLUMN__ID, DbStructure.COLUMN_APKID,
 					DbStructure.COLUMN_VERNAME, DbStructure.COLUMN_REPO_ID },
-					"apkid = ? and vername = ? "+filters("a"), new String[] { apkid,
-							vername + "" }, null, null, order_string);
+					"apkid = ? "+filters("a"), new String[] { apkid }, null, null, order_string);
 
-//			mc.newRow().add(id).add(apkid).add(vername).add(repo_id);
-//
-//			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-//				mc.newRow().add(c.getString(0)).add(c.getString(1))
-//						.add(c.getString(2)).add(c.getString(3));
-//			}
+			mc.newRow().add(id).add(apkid).add(vername).add(repo_id);
+
+			for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                if(c.getInt(0)!=id) mc.newRow().add(c.getString(0)).add(c.getString(1)).add(c.getString(2)).add(c.getString(3));
+			}
+
+            c.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return c;
+		return mc;
 	}
 
     public String getWebServicesPath(long repo_id, Category category) {

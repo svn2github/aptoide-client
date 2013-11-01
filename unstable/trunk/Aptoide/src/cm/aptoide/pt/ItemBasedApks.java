@@ -9,9 +9,11 @@ package cm.aptoide.pt;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.util.Base64;
 import cm.aptoide.pt.util.Md5Handler;
@@ -302,7 +305,7 @@ public class ItemBasedApks {
 //				           	((RatingBar) txtSamItem.findViewById(R.id.rating)).setRating(stars);
 				            txtSamItem.setPadding(10, 10, 10, 10);
 				            txtSamItem.setTag(values.get(i).get("_id"));
-				            txtSamItem.setLayoutParams(new LayoutParams(120, LayoutParams.FILL_PARENT, 1));
+				            txtSamItem.setLayoutParams(new LayoutParams(getPixels(context, 120), LayoutParams.FILL_PARENT, 1));
 				            txtSamItem.setOnClickListener(featuredListener );
 
 				            txtSamItem.measure(0, 0);
@@ -324,6 +327,11 @@ public class ItemBasedApks {
 
 
 	}
+
+    public static int getPixels(Context mContext, int dipValue) {
+        Resources r = mContext.getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
+    }
 
 
 

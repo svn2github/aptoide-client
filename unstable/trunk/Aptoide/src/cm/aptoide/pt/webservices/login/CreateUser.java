@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
+import cm.aptoide.pt.ApplicationAptoide;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import com.actionbarsherlock.app.SherlockActivity;
 import cm.aptoide.pt.AptoideThemePicker;
@@ -127,6 +128,7 @@ public class CreateUser extends SherlockActivity /*SherlockActivity */{
 				connection.setDoOutput(true);
 				data = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(params[0], "UTF-8");
 			    data += "&" + URLEncoder.encode("passhash", "UTF-8") + "=" + URLEncoder.encode(password_sha1,"UTF-8");
+                if(ApplicationAptoide.PARTNERID!=null) data += "&" + URLEncoder.encode("oem_id", "UTF-8") + "=" + URLEncoder.encode(ApplicationAptoide.PARTNERID,"UTF-8");
 			    data += "&" + URLEncoder.encode("hmac", "UTF-8") + "=" + URLEncoder.encode(hmac,"UTF-8");
 			    data += "&" + URLEncoder.encode("mode", "UTF-8") + "=" + URLEncoder.encode("json","UTF-8");
 
