@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="mytheme" parent="@android:style/Theme.Holo"></style>
+    <style name="mytheme" parent="@android:style/Theme.Holo">
+        <item name="wizardButtonStyle">@android:style/Widget.Holo.Light.Button</item>
+
+    </style>
 </resources>
