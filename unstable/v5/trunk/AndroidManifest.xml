@@ -13,6 +13,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".tutorial.Tutorial"></activity>
 
         <service android:name=".services.RabbitMqService"
                  android:label="WebInstallService"
