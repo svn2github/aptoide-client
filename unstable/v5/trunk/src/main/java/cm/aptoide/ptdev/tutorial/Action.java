@@ -7,9 +7,8 @@ package cm.aptoide.ptdev.tutorial;
  * Time: 13:16
  * To change this template use File | Settings | File Templates.
  */
-public class Action implements Runnable {
+public abstract class Action  {
 
-    @Override
-    public void run() {
-    }
+
+    public abstract  void run() ;
 }

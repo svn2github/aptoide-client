@@ -13,8 +13,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -120,16 +118,14 @@ public class Tutorial extends SherlockFragmentActivity {
     }
 
     private void runFragmentsActions() {
-        ExecutorService run_actions_thread = Executors.newSingleThreadExecutor();
 
         Iterator<Action> iterator = actionsToExecute.iterator();
         Action action;
         while (iterator.hasNext()) {
             action = iterator.next();
-            run_actions_thread.submit(action);
+            action.run();
         }
 
-        run_actions_thread.shutdown();
     }
 
     /*
