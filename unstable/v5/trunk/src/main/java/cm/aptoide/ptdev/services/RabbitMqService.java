@@ -61,6 +61,8 @@ public class RabbitMqService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
+
+        thread_pool.shutdownNow();
     }
 
     public class RabbitMqBinder extends Binder {

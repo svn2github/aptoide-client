@@ -6,12 +6,10 @@
                 android:layout_height="fill_parent"
         >
 
-    <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout">
-    </android.support.v4.view.ViewPager>
+    <FrameLayout android:id="@+id/wizard_fragment"
+                 android:layout_width="match_parent" android:layout_height="match_parent"
+                 />
+
 
     <LinearLayout
             android:id="@+id/layout"
@@ -27,10 +25,10 @@
                 style="?wizardButtonStyle"
                 />
 
-        <Button android:id="@+id/previous"
+        <Button android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Previous"
+                android:text="Back"
                 />
 
         <Button android:id="@+id/next"

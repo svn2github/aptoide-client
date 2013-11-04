@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +24,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import java.util.ArrayList;
 
 public class MainActivity extends SherlockFragmentActivity {
-
 
     private static final String TAG = MainActivity.class.getName();
     static Toast toast;

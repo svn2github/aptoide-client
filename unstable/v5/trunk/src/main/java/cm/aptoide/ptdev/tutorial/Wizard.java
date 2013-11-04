@@ -1,20 +1,16 @@
 package cm.aptoide.ptdev.tutorial;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.ptdev.R;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,10 +26,9 @@ public class Wizard {
 
         /*
         Class[] fragments = Wizard.class.getClasses();
-        for (int i = 0; i < fragments.length; i++) {
+        for (Class fragment : fragments) {
             try {
-                wizard.add((Fragment) fragments[i].newInstance());
-                Log.d("wizard", fragments[i].getSimpleName());
+                wizard.add(fragments); add((SherlockFragment) fragments[i].newInstance());
             } catch (InstantiationException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             } catch (IllegalAccessException e) {
@@ -41,18 +36,19 @@ public class Wizard {
             }
         }
         */
+
         wizard.add(Fragment1.newInstace());
         wizard.add(Fragment2.newInstace());
         wizard.add(Fragment3.newInstace());
         wizard.add(Fragment4.newInstace());
         wizard.add(Fragment5.newInstace());
 
-
         return wizard;
     }
 
     public interface WizardCallback {
-        public void checkActionEvents();
+
+        public void getActions(ArrayList<Action> actions);
     }
 
     public static class Fragment1 extends SherlockFragment implements WizardCallback {
@@ -77,7 +73,6 @@ public class Wizard {
             return view;
         }
 
-
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
@@ -88,20 +83,36 @@ public class Wizard {
         }
 
         @Override
-        public void checkActionEvents() {
-            if (checkBox1.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox2.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox3.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+        public void getActions(ArrayList<Action> actions) {
+                if (checkBox1.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                        }
+                    });
+                }
+                if (checkBox2.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
+                        }
+                    });
+                }
+                if (checkBox3.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
+                        }
+                    });
+
             }
         }
     }
 
-    public static class Fragment2 extends SherlockFragment implements WizardCallback{
+    public static class Fragment2 extends SherlockFragment implements WizardCallback {
 
         CheckBox checkBox1;
         CheckBox checkBox2;
@@ -134,20 +145,36 @@ public class Wizard {
         }
 
         @Override
-        public void checkActionEvents() {
-            if (checkBox1.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox2.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox3.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+        public void getActions(ArrayList<Action> actions) {
+                if (checkBox1.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                        }
+                    });
+                }
+                if (checkBox2.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
+                        }
+                    });
+                }
+                if (checkBox3.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
+                        }
+                    });
+
             }
         }
     }
 
-    public static class Fragment3 extends SherlockFragment implements WizardCallback{
+    public static class Fragment3 extends SherlockFragment implements WizardCallback {
 
         CheckBox checkBox1;
         CheckBox checkBox2;
@@ -181,20 +208,36 @@ public class Wizard {
         }
 
         @Override
-        public void checkActionEvents() {
-            if (checkBox1.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox2.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox3.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+        public void getActions(ArrayList<Action> actions) {
+                if (checkBox1.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                        }
+                    });
+                }
+                if (checkBox2.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
+                        }
+                    });
+                }
+                if (checkBox3.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
+                        }
+                    });
+
             }
         }
     }
 
-    public static class Fragment4 extends SherlockFragment implements WizardCallback{
+    public static class Fragment4 extends SherlockFragment implements WizardCallback {
 
         private CheckBox checkBox1;
         private CheckBox checkBox2;
@@ -227,15 +270,31 @@ public class Wizard {
         }
 
         @Override
-        public void checkActionEvents() {
-            if (checkBox1.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox2.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox3.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
+        public void getActions(ArrayList<Action> actions) {
+                if (checkBox1.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                        }
+                    });
+                }
+                if (checkBox2.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
+                        }
+                    });
+                }
+                if (checkBox3.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
+                        }
+                    });
+
             }
         }
     }
@@ -262,7 +321,8 @@ public class Wizard {
         }
 
         @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
+        public void onViewCreated(View view, Bundle
+                savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 5");
 
@@ -272,16 +332,32 @@ public class Wizard {
         }
 
         @Override
-        public void checkActionEvents() {
-            if (checkBox1.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox1 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox2.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox2 was checked!", Toast.LENGTH_SHORT).show();
-            }
-            if (checkBox3.isChecked()) {
-                Toast.makeText(getSherlockActivity(), getArguments().getString("name") + "CheckBox3 was checked!", Toast.LENGTH_SHORT).show();
-            }
+        public void getActions(ArrayList<Action> actions) {
+                if (checkBox1.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                        }
+                    });
+                }
+                if (checkBox2.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
+                        }
+                    });
+                }
+                if (checkBox3.isChecked()) {
+                    actions.add(new Action() {
+                        @Override
+                        public void run() {
+                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
+                        }
+                    });
+
+                }
         }
     }
 
