@@ -104,8 +104,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (table_definition != null && table_definition.primaryKey().length != 0) {
                     sql_stmt += ", ";
                     sql_stmt += getPrimaryKey(table_definition);
-                } else {
-                    throw new IllegalArgumentException("X--> " + table.getSimpleName() + " table doesn't have a PRIMARY KEY");
                 }
             } else {
                 if (table_definition != null && table_definition.primaryKey().length != 0) {

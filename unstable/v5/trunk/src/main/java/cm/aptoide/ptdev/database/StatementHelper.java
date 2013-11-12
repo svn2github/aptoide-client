@@ -1,8 +1,8 @@
 package cm.aptoide.ptdev.database;
 
-import android.content.ContentValues;
+import android.database.sqlite.SQLiteStatement;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +13,16 @@ import java.util.Map;
  */
 public class StatementHelper {
 
-    public static String getStatment(String table, ContentValues initialValues){
+    public static void bindAllArgsAsStrings(SQLiteStatement statement, String[] bindArgs){
+        if (bindArgs != null) {
+            for (int i = bindArgs.length; i != 0; i--) {
+                statement.bindString(i, bindArgs[i - 1]);
+            }
+        }
+    }
+
+
+    public static String getInsertStatment(String table, ArrayList<String> initialValues){
 
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT");
@@ -29,9 +38,9 @@ public class StatementHelper {
         if (size > 0) {
             int i = 0;
 
-            for (Map.Entry<String, Object> colName : initialValues.valueSet()) {
+            for (String colName : initialValues) {
                 sql.append((i > 0) ? "," : "");
-                sql.append(colName.getKey());
+                sql.append(colName);
                 i++;
             }
             sql.append(')');
@@ -41,6 +50,7 @@ public class StatementHelper {
             }
         }
         sql.append(')');
+        initialValues.clear();
         return sql.toString();
 
     }

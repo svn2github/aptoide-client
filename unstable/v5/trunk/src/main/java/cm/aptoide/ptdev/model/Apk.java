@@ -5,6 +5,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -171,7 +172,7 @@ public abstract class Apk {
         this.minScreen = minScreen;
     }
 
-    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements);
+
 
     public void setScreenCompat(String screenCompat) {
         this.screenCompat = screenCompat;
@@ -206,4 +207,6 @@ public abstract class Apk {
     }
 
     public abstract void databaseDelete(Database db);
+
+    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<String, Long> categoriesIds);
 }

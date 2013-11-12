@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,11 +22,10 @@ import java.util.Date;
  */
 public class HandlerInfoXml extends AbstractHandler {
 
-    private final long repoId;
+    private final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
 
     public HandlerInfoXml(Database db, long repoId) {
-        super(db);
-        this.repoId = repoId;
+        super(db, repoId);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class HandlerInfoXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
-                apk.databaseInsert(statements);
+                apk.databaseInsert(statements, categoriesIds);
             }
         });
 

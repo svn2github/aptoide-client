@@ -4,14 +4,21 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="android" url="file://$PROJECT_DIR$/../actionbarsherlock" />
+    <file type="android" url="file://$USER_HOME$/AptoideConcept/aptoide-concept/library-PST" />
+    <file type="android" url="file://$PROJECT_DIR$" />
+    <file type="android" url="file://$USER_HOME$/TestingPartners" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/../actionbarsherlock/pom.xml" />
+        <option value="$USER_HOME$/TestingPartners/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$USER_HOME$/AptoideConcept/aptoide-concept/library-PST/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android 4.3 Platform" project-jdk-type="Android SDK">

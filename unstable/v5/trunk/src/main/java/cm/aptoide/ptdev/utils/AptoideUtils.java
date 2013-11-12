@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
@@ -42,6 +44,20 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class AptoideUtils {
+
+    public static String checkStoreUrl(String uri_str){
+
+        if (!uri_str.contains(".")) {
+            uri_str = uri_str.concat(".store.aptoide.com");
+        }
+
+        uri_str = RepoUtils.formatRepoUri(uri_str);
+
+        if (uri_str.contains("bazaarandroid.com")) {
+            uri_str = uri_str.replaceAll("bazaarandroid\\.com", "store.aptoide.com");
+        }
+        return uri_str;
+    }
 
     public static class HWSpecifications {
 
@@ -334,7 +350,6 @@ public class AptoideUtils {
                 uri_str = uri_str.replaceFirst("http//", "http://");
             }
 
-
             if (uri_str.length() != 0 && uri_str.charAt(uri_str.length() - 1) != '/') {
                 uri_str = uri_str + '/';
                 Log.d("Aptoide-ManageRepo", "repo uri: " + uri_str);
@@ -459,6 +474,12 @@ public class AptoideUtils {
             }
         } catch (Exception ex) {
         }
+    }
+    public static int getPixels(Context context, int dipValue){
+        Resources r = context.getResources();
+        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
+        Log.d("getPixels", "" + px);
+        return px;
     }
 
     public static String filters(Context context) {

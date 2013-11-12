@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.parser;
 
+import java.util.concurrent.FutureTask;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus

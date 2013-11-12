@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="mytheme" parent="@android:style/Theme.Holo">
-        <item name="wizardButtonStyle">@android:style/Widget.Holo.Light.Button</item>
 
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
+
+
+    <style name="Settings" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
     </style>
 </resources>

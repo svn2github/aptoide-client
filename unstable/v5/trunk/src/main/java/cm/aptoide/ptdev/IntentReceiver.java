@@ -18,6 +18,7 @@ import cm.aptoide.ptdev.services.RabbitMqService;
  * To change this template use File | Settings | File Templates.
  */
 public class IntentReceiver extends Activity {
+
     private RabbitMqService rabbitMqService;
 
     private ServiceConnection wConnection = new ServiceConnection() {
@@ -37,7 +38,6 @@ public class IntentReceiver extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         if(savedInstanceState==null){
             Intent i = new Intent(this, MainActivity.class);

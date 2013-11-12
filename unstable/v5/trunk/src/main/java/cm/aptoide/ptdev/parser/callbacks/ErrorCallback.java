@@ -9,6 +9,6 @@ package cm.aptoide.ptdev.parser.callbacks;
  */
 public interface ErrorCallback {
 
-    void onError(Exception e);
+    void onError(Exception e, long repoId);
 
 }

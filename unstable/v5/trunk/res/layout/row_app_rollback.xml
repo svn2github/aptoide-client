@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal"
+             android:foreground="@drawable/highlight_overlay"
+             android:background="@drawable/background_card"
+             android:padding="10dp">
+
+    <ImageView
+            android:src="@drawable/ic_revert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ic_rollback_action"
+
+            android:contentDescription="@null" android:layout_gravity="right|center_vertical"
+            android:baselineAlignBottom="true" android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+            />
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="35dp"
+            android:orientation="horizontal"
+            android:layout_gravity="left">
+
+
+        <ImageView
+                android:id="@+id/rollback_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp" android:layout_gravity="center_vertical"/>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" android:layout_weight="1">
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+            <TextView
+                    android:id="@+id/rollback_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Application with very big name"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <TextView
+                    android:id="@+id/rollback_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Version 1.15.0"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+            </LinearLayout>
+            <TextView
+                    android:id="@+id/rollback_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="2013-08-19"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                    android:id="@+id/rollback_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Installed"
+                    android:textColor="@color/custom_color"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </LinearLayout>
+
+        <View android:layout_width="1dip"
+              android:layout_height="fill_parent"
+              android:background="@android:color/darker_gray"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="wizardButtonStyle" format="reference"/>
+    <attr name="custom_color" format="color" />
 
+    <attr name="autoScaleTextViewStyle" format="reference"/>
+    <declare-styleable name="AutoScaleTextView">
+        <attr name="minTextSize" format="dimension"/>
+    </declare-styleable>
 </resources>

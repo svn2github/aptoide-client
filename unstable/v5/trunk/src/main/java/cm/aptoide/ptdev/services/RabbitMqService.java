@@ -53,8 +53,6 @@ public class RabbitMqService extends Service {
         super.onCreate();
         Log.d("Aptoide-RabbitMqService", "RabbitMqService created!");
         thread_pool = Executors.newCachedThreadPool();
-
-
     }
 
     @Override
@@ -103,7 +101,6 @@ public class RabbitMqService extends Service {
                     QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                     String body = new String(delivery.getBody(), Charset.forName("UTF-8"));
                     handleMessage(body);
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

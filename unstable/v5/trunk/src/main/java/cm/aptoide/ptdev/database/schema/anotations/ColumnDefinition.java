@@ -29,8 +29,4 @@ public @interface ColumnDefinition {
     // OnConflict -- Only works for primary keys, unique and Not nulls fields
     OnConflict onConflict() default OnConflict.NONE;
 
-
-
-
-
 }

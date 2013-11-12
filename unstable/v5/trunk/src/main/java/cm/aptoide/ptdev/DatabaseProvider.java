@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
@@ -14,8 +15,19 @@ import android.net.Uri;
  * To change this template use File | Settings | File Templates.
  */
 public class DatabaseProvider extends ContentProvider {
+
+
+    SQLiteDatabase sqLiteDatabase;
+
+
+
     @Override
     public boolean onCreate() {
+
+        sqLiteDatabase = Aptoide.getDb();
+
+
+
 
         return false;
     }

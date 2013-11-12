@@ -9,5 +9,5 @@ package cm.aptoide.ptdev.parser.callbacks;
  */
 public interface CompleteCallback {
 
-    void onComplete();
+    void onComplete(long repoId);
 }

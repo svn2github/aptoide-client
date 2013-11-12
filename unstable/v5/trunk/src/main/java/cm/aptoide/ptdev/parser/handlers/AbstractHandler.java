@@ -1,17 +1,16 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
-import cm.aptoide.ptdev.utils.Configs;
+import cm.aptoide.ptdev.model.ApkInfoXML;
 import cm.aptoide.ptdev.utils.Filters;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -23,14 +22,21 @@ import java.util.HashMap;
  */
 public abstract class AbstractHandler extends DefaultHandler2 {
 
+    public long getRepoId() {
+        return repoId;
+    }
+
+    protected final long repoId;
 
     private final Database db;
 
     ArrayList<SQLiteStatement> statements;
+    private int i;
 
 
-    public AbstractHandler(Database db){
+    public AbstractHandler(Database db, long repoId){
         this.db=db;
+        this.repoId = repoId;
         loadCommonElements();
         loadSpecificElements();
         statements = new ArrayList<SQLiteStatement>(db.compileStatements(apk.getStatements()));
@@ -236,6 +242,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
         elements.put("apkid", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
+                i++;
 
             }
 

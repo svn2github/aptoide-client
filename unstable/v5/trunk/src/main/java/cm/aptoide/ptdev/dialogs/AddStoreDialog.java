@@ -1,11 +1,15 @@
 package cm.aptoide.ptdev.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.os.Bundle;
-import cm.aptoide.ptdev.MainActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
+import cm.aptoide.ptdev.R;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,29 +20,57 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  */
 public class AddStoreDialog extends SherlockDialogFragment {
 
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    private String store;
 
+    private Callback callback;
+    public Callback dummyCallback = new Callback() {
+        @Override
+        public void addStore(String s) {
 
-        return new AlertDialog.Builder(getActivity())
+        }
+    };
 
-                .setTitle("Title")
-                .setMessage("Message")
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ((MainActivity)getActivity()).doPositiveClick();
-                            }
-                        }
-                )
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ((MainActivity)getActivity()).doNegativeClick();
-                            }
-                        }
-                )
-                .create();
+    public interface Callback{
+        public void addStore(String s);
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        callback = (Callback) activity;
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = dummyCallback;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (getDialog() != null) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
+
+        return inflater.inflate(R.layout.dialog_add_store, container, false);
+    }
+
+    @Override
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.addStore(((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString());
+                dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
 }
