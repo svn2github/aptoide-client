@@ -11,12 +11,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.adapters.InstalledAdapter;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
@@ -62,7 +61,7 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 
 		lv = (ListView) findViewById(R.id.listView);
 //		searchBox = (EditText) findViewById(R.id.search_box);
-		v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.footer_search_aptoide, null);
+		v = LayoutInflater.from(this).inflate(R.layout.footer_search_aptoide, null);
 
 		lv.addFooterView(v);
 
@@ -72,6 +71,7 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 
 		if(!ApplicationAptoide.SEARCHSTORES){
 			searchButton.setVisibility(View.GONE);
+            findViewById(R.id.search_in_other_stores).setVisibility(View.GONE);
         }
 
 
@@ -81,19 +81,19 @@ public class SearchManager extends SherlockFragmentActivity implements LoaderCal
 
 		searchButton.setOnClickListener(new OnClickListener() {
 
-			public void onClick(View v) {
+            public void onClick(View v) {
 
-				String url = AptoideConfiguration.getInstance().getUriSearch()+query+"&q="+ Utils.filters(SearchManager.this);
+                String url = AptoideConfiguration.getInstance().getUriSearch() + query + "&q=" + Utils.filters(SearchManager.this);
                 Log.d("TAG", "Searching for:" + url);
 
 
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 url = url.replaceAll(" ", "%20");
                 i.setData(Uri.parse(url));
-				startActivity(i);
+                startActivity(i);
 
-			}
-		});
+            }
+        });
 		adapter = new InstalledAdapter(this,null,CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER,db);
 		lv.setAdapter(adapter);
 

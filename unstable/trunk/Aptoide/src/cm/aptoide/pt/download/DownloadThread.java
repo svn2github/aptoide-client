@@ -7,7 +7,6 @@ import cm.aptoide.pt.download.state.ErrorState;
 import cm.aptoide.pt.views.EnumDownloadFailReason;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -114,8 +113,11 @@ public class DownloadThread implements Runnable {
 
 //            Log.d("DownloadManager", "Download done with " + new Md5Handler().md5Calc(new File(mDestination)));
         }catch (NotFoundException exception){
+
             exception.printStackTrace();
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NOT_FOUND));
+        }catch (ContentTypeNotApkException e){
+            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
         }catch (IPBlackListedException e){
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.IP_BLACKLISTED));
         }catch (Md5FailedException e){
@@ -135,6 +137,8 @@ public class DownloadThread implements Runnable {
             mRemainingSize = 0;
 
             e.printStackTrace();
+
+
         } catch (Exception e){
             e.printStackTrace();
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));

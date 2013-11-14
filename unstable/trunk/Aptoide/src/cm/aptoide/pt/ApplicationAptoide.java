@@ -36,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.preferences.ManagerPreferences;
 import cm.aptoide.pt.services.ServiceManagerDownload;
@@ -51,7 +52,6 @@ import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import org.acra.ACRA;
-import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.slf4j.LoggerFactory;
@@ -171,6 +171,9 @@ public class ApplicationAptoide extends Application {
             APTOIDETHEME = sPref.getString("APTOIDETHEME","DEFAULT");
             MARKETNAME = sPref.getString("MARKETNAME", "Aptoide");
             ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
+            ITEMS = sPref.getString("ITEMS", null);
+
+
 
             if(!BRAND.equals("brand_aptoide")&&!new File(SDCARD + "/.aptoide_settings/oem").exists()){
                 createSdCardBinary();
@@ -219,6 +222,7 @@ public class ApplicationAptoide extends Application {
                 APTOIDETHEME = map.get("APTOIDETHEME");
                 MARKETNAME = map.get("MARKETNAME");
                 ADUNITID = map.get("ADUNITID");
+                ITEMS = map.get("ITEMS");
 
                 new Thread(new Runnable() {
                     @Override
@@ -510,6 +514,7 @@ public class ApplicationAptoide extends Application {
                 .putString("APTOIDETHEME", APTOIDETHEME)
                 .putString("MARKETNAME", MARKETNAME)
                 .putString("ADUNITID", ADUNITID)
+                .putString("ITEMS", ITEMS)
                 .commit();
     }
 
@@ -531,6 +536,7 @@ public class ApplicationAptoide extends Application {
             map.put("APTOIDETHEME", APTOIDETHEME);
             map.put("MARKETNAME", MARKETNAME);
             map.put("ADUNITID", ADUNITID);
+            map.put("ITEMS", ITEMS);
 
             try {
                 File fileDir = new File(SDCARD + "/.aptoide_settings");

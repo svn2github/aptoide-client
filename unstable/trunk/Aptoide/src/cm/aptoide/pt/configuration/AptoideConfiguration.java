@@ -40,7 +40,15 @@ public class AptoideConfiguration {
     }
 
     public String getAutoUpdateUrl() {
-        return sPref.getString(PREF_AUTO_UPDATE_URL, Defaults.AUTO_UPDATE_URL);
+        String url;
+
+        if(ApplicationAptoide.PARTNERID!=null){
+            url = String.format(Defaults.OEM_AUTO_UPDATE_URL, ApplicationAptoide.DEFAULTSTORENAME, ApplicationAptoide.DEFAULTSTORENAME);
+        }else{
+            url = Defaults.AUTO_UPDATE_URL;
+        }
+
+        return sPref.getString(PREF_AUTO_UPDATE_URL, url );
     }
 
     public void setAutoUpdateUrl(String autoUpdateUrl) {

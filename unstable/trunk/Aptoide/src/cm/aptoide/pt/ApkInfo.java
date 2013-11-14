@@ -33,7 +33,9 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.adapters.ImageGalleryAdapter;
+import cm.aptoide.pt.configuration.AptoideConfiguration;
 import cm.aptoide.pt.contentloaders.SimpleCursorLoader;
 import cm.aptoide.pt.contentloaders.ViewApkLoader;
 import cm.aptoide.pt.download.DownloadInfo;
@@ -71,7 +73,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -326,9 +331,10 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
                     if (Build.VERSION.SDK_INT > 11) {
                         mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     }
+
                     ((LinearLayout)findViewById(R.id.advertisement)).addView(mAdViewMobFox, lp);
 
-                }else{
+                }else if(mAdViewMobFox == null){
                     if (Build.VERSION.SDK_INT > 11) {
                         mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     }
@@ -1330,7 +1336,7 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
             try{
 
-                viewApk.setPath(webservice.getApkDownloadPath());
+                if(viewApk.getPrice()==0) viewApk.setPath(webservice.getApkDownloadPath());
                 viewApk.setMd5(webservice.getApkMd5());
                 viewApk.setSize(webservice.getApkSize());
                 ((TextView) findViewById(R.id.versionInfo)).setText(getString(R.string.clear_dwn_title) + ": " + viewApk.getDownloads() + " " + getString(R.string.size) + ": " + Utils.formatBytes((Long.parseLong(viewApk.getSize()) + mainObbSize + patchObbSize)));
@@ -1658,60 +1664,129 @@ public class ApkInfo extends SherlockFragmentActivity implements LoaderCallbacks
 
         @Override
         public void onClick(View v) {
+
+
+
             ContextThemeWrapper wrapper = new ContextThemeWrapper(ApkInfo.this, ApkInfo.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0, 0));
 
             if (Login.isLoggedIn(context)) {
-                View simpleLayoutView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
-                Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(simpleLayoutView);
-                final AlertDialog paymentMethodDialog = dialogBuilder.create();
-                paymentMethodDialog.setTitle(R.string.payment_method);
-                paymentMethodDialog.setIcon(android.R.drawable.ic_menu_info_details);
-                TextView message = (TextView) simpleLayoutView.findViewById(R.id.dialog_message);
-                message.setText(getString(R.string.paypal_message));
-                paymentMethodDialog.setCancelable(false);
-                paymentMethodDialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.credit_card), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent i = new Intent(ApkInfo.this, CreditCard.class);
-                        i.putExtra("apkid", viewApk.getApkid());
-                        i.putExtra("versionName", viewApk.getVername());
-                        i.putExtra("repo", viewApk.getRepoName());
-                        startActivityForResult(i, 1);
-                    }
-                });
-                paymentMethodDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.paypal), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent i = new Intent(ApkInfo.this, Buy.class);
-                        i.putExtra("apkid", viewApk.getApkid());
-                        i.putExtra("versionName", viewApk.getVername());
-                        i.putExtra("repo", viewApk.getRepoName());
-                        startActivityForResult(i, 1);
-                    }
-                });
-                paymentMethodDialog.show();
 
+                if (ApplicationAptoide.PARTNERID != null && ApplicationAptoide.PARTNERID.equals("1a9890b91e2358e06de4be6fe5f316f2")) {
 
-                if (unstrustedPayment) {
-                    View simpleLayoutView2 = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
-                    Builder dialogBuilder2 = new AlertDialog.Builder(wrapper).setView(simpleLayoutView2);
-                    final AlertDialog paymentWarningDialog = dialogBuilder2.create();
-                    paymentWarningDialog.setTitle(R.string.payment_warning_title);
-                    paymentWarningDialog.setIcon(android.R.drawable.ic_menu_info_details);
-                    TextView message2 = (TextView) simpleLayoutView2.findViewById(R.id.dialog_message);
-                    message2.setText(getString(R.string.payment_warning_text));
-                    paymentWarningDialog.setCancelable(false);
-                    paymentWarningDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                    String token = Login.getToken(ApkInfo.this);
+                    String repo = viewApk.getRepoName();
+                    String apkid = viewApk.getApkid();
+                    String versionName = viewApk.getVername();
+
+                    final String urlPay = "http://dev.aptoide.com/" + "webservices/payApk_payseal";
+                    final String params = token + "/" + repo + "/" + apkid + "/" + versionName + "/json";
+                    final ProgressDialog pd = new ProgressDialog(ApkInfo.this);
+                    pd.show();
+                    pd.setMessage(getString(R.string.please_wait));
+                    new Thread(new Runnable() {
                         @Override
-                        public void onClick(DialogInterface dialog, int arg1) {
-                            dialog.cancel();
+                        public void run() {
+
+                            Log.i("educomp payseal", "url: " + urlPay + "/" + params);
+                            StringBuilder sb;
+                            String line;
+                            try {
+                                BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlPay + "/" + params).openStream()));
+                                sb = new StringBuilder();
+                                while ((line = br.readLine()) != null) {
+                                    sb.append(line).append('\n');
+                                }
+                                JSONObject jsonObject = new JSONObject(sb.toString());
+
+                                if (jsonObject.getString("status").equals("OK")) {
+                                    final String url = jsonObject.getString("url");
+                                    final Intent intent = new Intent(ApkInfo.this, CreditCardEducomp.class);
+                                    intent.putExtra("url", url);
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(pd.isShowing()) pd.dismiss();
+                                            startActivityForResult(intent, 1);
+                                        }
+                                    });
+
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(ApkInfo.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                                            if(pd.isShowing()) pd.dismiss();
+                                        }
+                                    });
+
+
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
+                } else {
+
+                    View simpleLayoutView = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
+                    Builder dialogBuilder = new AlertDialog.Builder(wrapper).setView(simpleLayoutView);
+                    final AlertDialog paymentMethodDialog = dialogBuilder.create();
+                    paymentMethodDialog.setTitle(R.string.payment_method);
+                    paymentMethodDialog.setIcon(android.R.drawable.ic_menu_info_details);
+                    TextView message = (TextView) simpleLayoutView.findViewById(R.id.dialog_message);
+                    message.setText(getString(R.string.paypal_message));
+                    paymentMethodDialog.setCancelable(false);
+                    paymentMethodDialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.credit_card), new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent i = new Intent(ApkInfo.this, CreditCard.class);
+                            i.putExtra("apkid", viewApk.getApkid());
+                            i.putExtra("versionName", viewApk.getVername());
+                            i.putExtra("repo", viewApk.getRepoName());
+                            startActivityForResult(i, 1);
                         }
                     });
-                    paymentWarningDialog.show();
+                    paymentMethodDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.paypal), new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent i = new Intent(ApkInfo.this, Buy.class);
+                            i.putExtra("apkid", viewApk.getApkid());
+                            i.putExtra("versionName", viewApk.getVername());
+                            i.putExtra("repo", viewApk.getRepoName());
+                            startActivityForResult(i, 1);
+                        }
+                    });
+                    paymentMethodDialog.show();
+
+
+                    if (unstrustedPayment) {
+                        View simpleLayoutView2 = LayoutInflater.from(wrapper).inflate(R.layout.dialog_simple_layout, null);
+                        Builder dialogBuilder2 = new AlertDialog.Builder(wrapper).setView(simpleLayoutView2);
+                        final AlertDialog paymentWarningDialog = dialogBuilder2.create();
+                        paymentWarningDialog.setTitle(R.string.payment_warning_title);
+                        paymentWarningDialog.setIcon(android.R.drawable.ic_menu_info_details);
+                        TextView message2 = (TextView) simpleLayoutView2.findViewById(R.id.dialog_message);
+                        message2.setText(getString(R.string.payment_warning_text));
+                        paymentWarningDialog.setCancelable(false);
+                        paymentWarningDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int arg1) {
+                                dialog.cancel();
+                            }
+                        });
+                        paymentWarningDialog.show();
+                    }
                 }
             } else {
                 startActivityForResult(new Intent(ApkInfo.this, Login.class), 1);
             }
+
 
 
         }

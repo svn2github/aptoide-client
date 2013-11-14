@@ -1402,7 +1402,7 @@ public class Database  {
 				.getDefaultSharedPreferences(context);
 		String filter = "";
 		if (sPref.getBoolean("hwspecsChkBox", true)) {
-			filter = " and "+columnNameApk+".is_compatible=1";
+			filter = " and "+columnNameApk+".is_compatible=1 ";
 		}
 
 		if (sPref.getBoolean("matureChkBox", false)) {
@@ -1863,11 +1863,11 @@ public class Database  {
                 apk.setIconPath(c.getString(10) + c.getString(5));
                 apk.setName(c.getString(6));
                 apk.setRating(c.getString(7));
-                apk.setPath(c.getString(8));
+                apk.setPrice(Double.parseDouble(c.getString(14)));
+                if(apk.getPrice()==0) apk.setPath(c.getString(8));
                 apk.setMd5(c.getString(9));
                 apk.setRepoName(c.getString(11));
                 apk.setId(id);
-                apk.setPrice(Double.parseDouble(c.getString(14)));
                 apk.setScreenShots(getScreenshots(apk, category));
                 apk.setWebservicesPath(getWebServicesPath(apk.getRepo_id(), category));
                 apk.setLikes(getLikes(apk, category));
@@ -2879,7 +2879,7 @@ public class Database  {
 				+ "%' OR b.apkid LIKE '%"
 				+ searchQuery
 				+ "%') and b.repo_id = c._id "
-                + filters("b") + "group by b.apkid, b.vername order by CASE WHEN a.malware_status='scanned' THEN 1 ELSE 2 END asc, b.downloads desc " + orderString ;
+                + filters("b") + " group by b.apkid, b.vername order by CASE WHEN a.malware_status='scanned' THEN 1 ELSE 2 END asc, b.downloads desc " + orderString ;
 
 
 		Cursor c = null;
