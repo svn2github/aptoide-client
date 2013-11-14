@@ -78,12 +78,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
-            <artifactId>library</artifactId>
-            <version>0.8</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>actionbarsherlock</artifactId>
             <version>4.4.0</version>
