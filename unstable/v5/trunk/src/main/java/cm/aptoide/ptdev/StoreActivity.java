@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -21,13 +20,17 @@ public class StoreActivity extends SherlockFragmentActivity implements StoresCal
 
     private long storeid;
     private int themeordinal;
+    private String storeName;
+    private String storeAvatarUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store_list);
+        storeName = getIntent().getStringExtra("storename");
         storeid = getIntent().getLongExtra("storeid", 0);
         themeordinal = getIntent().getIntExtra("theme", 0);
+        storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
         if(savedInstanceState==null){
             setFragment();
         }
@@ -36,20 +39,17 @@ public class StoreActivity extends SherlockFragmentActivity implements StoresCal
 
     private void setFragment() {
         Fragment fragment = new MyListFragment();
-        Fragment fragmentHeader = new StoreHeaderFragment();
+        Fragment fragmentHeader = new FragmentStoreHeader();
 
         Log.d("Aptoide-", "StoreActivity id" + storeid);
 
-        Bundle argsHeader = new Bundle();
-        argsHeader.putInt("theme", themeordinal);
-
-        fragmentHeader.setArguments(argsHeader);
 
         Bundle args = new Bundle();
         args.putLong("storeid", storeid);
         //args.putBoolean("list", list);
         //args.putInt("theme", theme);
         fragment.setArguments(args);
+        fragmentHeader.setArguments(args);
         getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 

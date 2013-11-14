@@ -118,6 +118,8 @@ public class Parser{
 
                         }
 
+
+
                         Aptoide.getDb().setTransactionSuccessful();
                         Aptoide.getDb().endTransaction();
                         file.delete();

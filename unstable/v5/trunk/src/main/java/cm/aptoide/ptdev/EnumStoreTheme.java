@@ -49,4 +49,16 @@ public enum EnumStoreTheme {
 	public static EnumStoreTheme reverseOrdinal(int ordinal){
 		return values()[ordinal];
 	}
+
+    public static EnumStoreTheme get(String s) {
+
+        EnumStoreTheme theme;
+        try{
+            theme = valueOf(s);
+        }catch (Exception e){
+            theme = APTOIDE_STORE_THEME_DEFAULT;
+        }
+
+        return theme;
+    }
 }

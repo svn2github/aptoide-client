@@ -28,6 +28,10 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
     protected final long repoId;
 
+    public Database getDb() {
+        return db;
+    }
+
     private final Database db;
 
     ArrayList<SQLiteStatement> statements;

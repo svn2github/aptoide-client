@@ -21,6 +21,7 @@ import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.parser.handlers.HandlerLatestXml;
 import cm.aptoide.ptdev.parser.handlers.HandlerTopXml;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,9 +59,13 @@ public class ParserService extends Service {
             @Override
             public void onEnd() {
                 Log.d("Aptoide-", "onEnd");
-                spiceManager.shouldStop();
+                try {
+                    spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 stopForeground(true);
-
+                stopSelf();
             }
         });
 

@@ -12,14 +12,13 @@
             android:layout_width="match_parent"
             android:layout_height="135dp"
             android:id="@+id/banner_background_layout"
-            android:padding="20dp">
+            android:padding="10dp" >
 
 
         <ImageView
                 android:id="@+id/banner_store_avatar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@android:drawable/sym_def_app_icon"
                 android:layout_alignParentBottom="true"
                 android:contentDescription="@null"/>
 
@@ -28,7 +27,9 @@
                 android:layout_toRightOf="@+id/banner_store_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" android:layout_gravity="center_horizontal|bottom"
+                android:paddingLeft="5dp"
+
+                android:orientation="vertical"
                 android:layout_alignParentBottom="true">
 
             <TextView
@@ -37,8 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:text="Store Name"/>
+                    android:textStyle="bold"/>
 
             <!--<com.astuetz.viewpager.extensions.sample.views.AutoScaleTextView-->
             <!--android:id="@+id/banner_store_description"-->
@@ -52,21 +52,21 @@
             <!--android:textStyle="italic"-->
             <!--android:text="Description Description Description Description Description Description Description Description Description Description Description Descript"/>-->
 
-            <!-- <TextView -->
-            <!-- android:id="@+id/store_description" -->
-            <!-- android:layout_width="match_parent" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:ellipsize="end" -->
-            <!-- android:fadeScrollbars="true" -->
-            <!-- android:fadingEdge="vertical" -->
-            <!-- android:lines="3" -->
-            <!-- android:maxLines="2" -->
-            <!-- android:scrollbarStyle="insideOverlay" -->
-            <!-- android:scrollbars="vertical" -->
-            <!-- android:singleLine="false" -->
-            <!-- android:textColor="@android:color/white" -->
-            <!-- android:text="@string/description" -->
-            <!-- android:textStyle="italic" /> -->
+            <TextView
+                    android:id="@+id/store_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fadeScrollbars="true"
+                    android:layout_gravity="center_horizontal"
+                    android:fadingEdge="vertical"
+
+
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textColor="@android:color/white"
+                    android:textStyle="italic" />
         </LinearLayout>
     </RelativeLayout>
 

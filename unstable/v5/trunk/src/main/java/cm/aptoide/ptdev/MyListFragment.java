@@ -101,6 +101,7 @@ public class MyListFragment extends SherlockListFragment implements LoaderManage
             Category category = new Category();
             category.setName(data.getString(0));
             category.setId(data.getLong(1));
+            category.setAppsNumber(data.getInt(2));
             categories.add(category);
 
         }

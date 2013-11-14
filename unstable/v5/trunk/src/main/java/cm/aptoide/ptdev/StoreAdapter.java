@@ -2,16 +2,17 @@ package cm.aptoide.ptdev;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import cm.aptoide.ptdev.R;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.manuelpeinado.multichoiceadapter.MultiChoiceArrayAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -66,7 +67,7 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem>{
         ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
 
         alphaView.setBackgroundResource(storeItem.getTheme().getStoreAlphaColor());
-
+        Log.d("Aptoide-", "BindView " + storeItem.getName());
         return convertView;
 
     }

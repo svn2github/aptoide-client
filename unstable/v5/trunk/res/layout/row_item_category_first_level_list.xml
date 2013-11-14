@@ -18,18 +18,15 @@
         <TextView
                 android:id="@+id/category_first_level_name"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="Recommended for you"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Set of best apps"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/category_first_level_desc"
                 android:layout_gravity="left|center_vertical"

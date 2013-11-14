@@ -42,7 +42,6 @@
 
     <dependencies>
 
-
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-jackson2</artifactId>
@@ -79,19 +78,10 @@
         </dependency>
 
         <dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v7</artifactId>
-            <version>18</version>
-            <type>apklib</type>
+            <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
+            <artifactId>library</artifactId>
+            <version>0.8</version>
         </dependency>
-
-        <dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v7</artifactId>
-            <version>18</version>
-            <type>jar</type>
-        </dependency>
-
 
         <dependency>
             <groupId>com.actionbarsherlock</groupId>

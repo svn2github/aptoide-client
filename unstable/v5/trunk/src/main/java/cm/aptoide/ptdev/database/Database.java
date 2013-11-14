@@ -91,7 +91,46 @@ public class Database {
 
         Log.d("Aptoide-", String.valueOf(storeid));
 
-        return database.rawQuery("select name, id_category from category where id_repo = ? and id_category_parent = ?", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+        return database.rawQuery("select name, id_category, apps_count from category as cat where id_repo = ? and id_category_parent = ? order by apps_count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+    }
+
+    public Cursor getStore(long storeid) {
+        return database.rawQuery("select * from repo where id_repo = ?", new String[]{String.valueOf(storeid)});
+    }
+
+    public void updateAppsCount(long repoId) {
+
+        Cursor c = database.rawQuery("select id_category from category where id_category_parent = 0 and id_repo = ?", new String[]{String.valueOf(repoId)});
+
+        while(c.moveToNext()){
+            getApps(c.getLong(0), repoId);
+        }
+
+        c.close();
+
+    }
+
+    private long getApps(long id_category, long id_repo) {
+
+        long apps = 0;
+        Cursor c = database.rawQuery("select id_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_category), String.valueOf(id_repo)});
+        if(c.getCount()>0){
+            while (c.moveToNext()){
+                apps += getApps(c.getLong(0), id_repo);
+            }
+        }else{
+            c = database.rawQuery("select count(id_category) from category_apk where id_category = ?", new String[]{String.valueOf(id_category)});
+            if(c.moveToFirst()){
+                apps = c.getInt(0);
+            }
+        }
+        c.close();
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.Category.COLUMN_APPS_COUNT, apps);
+        database.update(Schema.Category.getName(), values, "id_category = ?", new String[]{String.valueOf(id_category)});
+
+        return apps;
     }
 }
 

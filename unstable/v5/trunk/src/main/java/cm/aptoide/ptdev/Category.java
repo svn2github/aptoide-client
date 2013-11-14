@@ -11,6 +11,7 @@ public class Category {
 
 
     private String name;
+    private int appsNumber;
 
     public long getId() {
         return id;
@@ -29,5 +30,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setAppsNumber(int appsNumber) {
+        this.appsNumber = appsNumber;
+    }
+
+    public int getAppsNumber() {
+        return appsNumber;
     }
 }

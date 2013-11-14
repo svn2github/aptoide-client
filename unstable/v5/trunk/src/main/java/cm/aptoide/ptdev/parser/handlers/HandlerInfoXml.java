@@ -64,4 +64,10 @@ public class HandlerInfoXml extends AbstractHandler {
             }
         });
     }
+
+    @Override
+    public void endDocument() throws SAXException {
+        super.endDocument();
+        getDb().updateAppsCount(repoId);
+    }
 }

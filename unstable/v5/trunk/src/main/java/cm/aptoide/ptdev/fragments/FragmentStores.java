@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ListView;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
@@ -53,7 +53,8 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     };
 
     private StoreAdapter storeAdapter;
-    private ArrayList<StoreItem> stores;
+    private ArrayList<StoreItem> stores = new ArrayList<StoreItem>();
+    ;
     private GridView gridViewMyStores;
 
     @Override
@@ -72,6 +73,9 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
     @Subscribe
     public void RefreshStoresEvent(RepoAddedEvent event){
+
+        Log.d("Aptoide-", "OnEvent");
+
         loader.forceLoad();
     }
 
@@ -83,7 +87,10 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores);
+
+        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores);
+
         return inflater.inflate(R.layout.page_my_stores,container, false);
     }
 
@@ -97,11 +104,18 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     Loader<Cursor> loader;
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        loader = getLoaderManager().restartLoader(0, null, this);
+
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gridViewMyStores = (GridView) view.findViewById(R.id.gridview_my_stores);
 
-        Toast.makeText(getSherlockActivity(), String.valueOf(R.id.button_add_store),Toast.LENGTH_LONG).show();
+        gridViewMyStores = (GridView) view.findViewById(R.id.gridview_my_stores);
 
         view.findViewById(R.id.button_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +124,9 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             }
         });
 
-        stores = new ArrayList<StoreItem>();
 
-        loader = getLoaderManager().restartLoader(0, null, this);
 
-        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores);
+
 
         storeAdapter.setAdapterView(gridViewMyStores);
 
@@ -122,13 +134,14 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getSherlockActivity(), StoreActivity.class);
-                Log.d("Aptoide-", "Store_id = " + id);
+                StoreItem store = (StoreItem) parent.getItemAtPosition(position);
+
                 i.putExtra("storeid", id);
-                EnumStoreTheme storeTheme = ( (StoreItem) parent.getItemAtPosition(position) ).getTheme();
-                i.putExtra("theme", storeTheme.ordinal());
+
                 startActivity(i);
             }
         });
+
 
     }
 
@@ -153,6 +166,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
         stores.clear();
 
+
         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
             stores.add(new StoreItem(
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME)),
@@ -162,16 +176,16 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                     "list".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );
+            Log.d("Aptoide-", "Added store");
         }
 
         storeAdapter.notifyDataSetChanged();
-
+        Log.d("Aptoide-", "OnLoadFinish");
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }
 

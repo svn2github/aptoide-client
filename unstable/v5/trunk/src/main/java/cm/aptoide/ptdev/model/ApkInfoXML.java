@@ -82,7 +82,9 @@ public class ApkInfoXML extends Apk {
         }
 
         if (categoriesIds.containsKey(getCategory1())) {
+
             category1id = categoriesIds.get(getCategory1());
+
         } else {
 
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{getCategory1(), String.valueOf(getRepoId()), "0"});
@@ -104,8 +106,11 @@ public class ApkInfoXML extends Apk {
         }
 
         if (categoriesIds.containsKey(getCategory2())) {
+
             category2id = categoriesIds.get(getCategory2());
+
         } else {
+
 
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{getCategory2(), String.valueOf(getRepoId()), String.valueOf(category1id)});
 
@@ -128,6 +133,7 @@ public class ApkInfoXML extends Apk {
         try{
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(2), new String[]{ String.valueOf(apkid), String.valueOf(category2id)});
             sqLiteStatements.get(2).executeInsert();
+
         } catch (SQLiteException e){
             e.printStackTrace();
         }

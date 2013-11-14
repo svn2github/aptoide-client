@@ -72,6 +72,9 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_ID_PARENT = "id_category_parent";
 
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_APPS_COUNT = "apps_count";
+
 
         public static String getName() {
             return "category";

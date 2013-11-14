@@ -1,12 +1,14 @@
 package cm.aptoide.ptdev;
 
-import android.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -47,9 +49,22 @@ public class CategoryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        TextView v = (TextView) LayoutInflater.from(context).inflate(R.layout.simple_list_item_1, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_list, null);
 
-        v.setText(getItem(position).getName());
+        ((TextView)v.findViewById(R.id.category_first_level_name)).setText(getItem(position).getName());
+        ((TextView)v.findViewById(R.id.category_first_level_number)).setText(String.valueOf(getItem(position).getAppsNumber()));
+        ImageView icon = (ImageView) v.findViewById(R.id.category_first_level_icon);
+        if(getItem(position).getName().equals("Applications")){
+            icon.setImageResource(R.drawable.cat_applications);
+        } else if(getItem(position).getName().equals("Games")){
+            icon.setImageResource(R.drawable.cat_games);
+        } else if(getItem(position).getName().equals("Top Apps")){
+            icon.setImageResource(R.drawable.cat_top_apps);
+        } else if(getItem(position).getName().equals("Latest Apps")){
+            icon.setImageResource(R.drawable.cat_latest);
+        } else {
+            icon.setImageResource(R.drawable.cat_custom);
+        }
 
         return v;
     }

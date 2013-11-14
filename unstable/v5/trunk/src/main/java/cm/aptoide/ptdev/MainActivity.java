@@ -125,6 +125,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         pager.setAdapter(adapter);
 
 
+
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(pager);
 
@@ -137,12 +138,13 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         database = new Database(db);
 
         if(savedInstanceState==null){
-
+            startService(i);
         }
 
         bindService(i, conn, BIND_AUTO_CREATE);
 
         //spiceManager.execute( new GetRepositoryInfoRequest(AptoideUtils.RepoUtils.split(s)), "json", DurationInMillis.ONE_MINUTE, new WeatherRequestListener());
+
 
 
 
