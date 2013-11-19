@@ -18,6 +18,7 @@ import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
  */
 public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
+
     private final String[] TITLES = { "Home", "Stores", "Updates", "Download Manager" };
 
     public AptoidePagerAdapter(FragmentManager fm) {
