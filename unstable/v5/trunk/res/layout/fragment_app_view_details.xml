@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.astuetz.viewpager.extensions.sample.views.CustomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/app_info_scroller"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -13,7 +13,7 @@
             android:orientation="vertical">
 
         <fragment android:id="@+id/frag_screenshots"
-                  android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewScreenshotsFragment"
+                  android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentScreenShots"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
         <!--<include layout="@layout/fragment_screenshots"-->
@@ -359,10 +359,10 @@ Please note Candy Crush Saga is completely free to play but some in-game items s
         </Button>
 
         <fragment android:id="@+id/frag_related_apps"
-                  android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewRelatedAppsFragment"
+                  android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentRelatedApps"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
 
     </LinearLayout>
-</com.astuetz.viewpager.extensions.sample.views.CustomScrollView>
+</ScrollView>
 

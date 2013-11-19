@@ -10,7 +10,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <fragment android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewDetailsFragment"
+    <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewDetails"
               android:id="@+id/frag_app_view_details"
               android:layout_below="@+id/app_view_header"
               android:layout_width="match_parent"
