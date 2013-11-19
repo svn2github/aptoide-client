@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import cm.aptoide.ptdev.fragments.Callback;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -22,18 +22,24 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem>{
 
 	
 	private LayoutInflater inflater;
+    private Callback callback;
 
-	public StoreAdapter(Bundle savedInstanceState, Context context, ArrayList<StoreItem> items) {
+	public StoreAdapter(Bundle savedInstanceState, Context context, ArrayList<StoreItem> items, Callback callback) {
 		super(savedInstanceState, context, 0, items);
-		inflater = LayoutInflater.from(context);
+        this.callback = callback;
+        inflater = LayoutInflater.from(context);
 	}
 
 //    public StoreAdapter(Bundle savedInstanceState, Context context, ArrayList<StoreItem> items) {
 //        super(savedInstanceState, context, R.layout.row_stores, android.R.id.text1, items);
 //    }
 
+
+
 	@Override
 	public long getItemId(int position) {
+
+        Log.d("Aptoide-", "Getting ItemId " + getItem(position).getId());
 
 		return getItem(position).getId();
 	}
@@ -74,8 +80,10 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem>{
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.menu_action_mode, menu);
+
         return true;
     }
 
@@ -84,27 +92,16 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem>{
         return false;
     }
 
+
+
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.menu_reload) {
-            Toast.makeText(getContext(), "Reloading...", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (id == R.id.menu_discard) {
-            Toast.makeText(getContext(), "Removing...", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if( id == R.id.menu_select_all){
-            selectAll();
-        }
-
-        return false;
+        return callback.onActionItemClicked(mode,item);
     }
 
     boolean allSelected;
 
-    private void selectAll() {
+    public void selectAll() {
 
         allSelected = !allSelected;
         for (int i = 0; i < this.getCount(); ++i) {

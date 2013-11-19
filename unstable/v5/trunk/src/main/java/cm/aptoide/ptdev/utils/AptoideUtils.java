@@ -46,7 +46,7 @@ import java.util.Locale;
 public class AptoideUtils {
 
     public static String checkStoreUrl(String uri_str){
-
+        uri_str = uri_str.trim();
         if (!uri_str.contains(".")) {
             uri_str = uri_str.concat(".store.aptoide.com");
         }
@@ -56,6 +56,7 @@ public class AptoideUtils {
         if (uri_str.contains("bazaarandroid.com")) {
             uri_str = uri_str.replaceAll("bazaarandroid\\.com", "store.aptoide.com");
         }
+
         return uri_str;
     }
 
@@ -234,8 +235,8 @@ public class AptoideUtils {
             NetworkUtils.TIME_OUT = timeout;
         }
 
-        public int checkServerConnection(final String string, final String username, final String password) {
-            try {
+        public static int checkServerConnection(final String string, final String username, final String password) throws IOException {
+
 
                 HttpURLConnection client = (HttpURLConnection) new URL(string
                         + "info.xml").openConnection();
@@ -246,7 +247,7 @@ public class AptoideUtils {
                             Base64.NO_WRAP));
                     client.setRequestProperty("Authorization", basicAuth);
                 }
-                client.setRequestMethod("GET");
+                client.setRequestMethod("HEAD");
                 client.setConnectTimeout(TIME_OUT);
                 client.setReadTimeout(TIME_OUT);
                 if (Aptoide.DEBUG_MODE)
@@ -256,14 +257,6 @@ public class AptoideUtils {
                 } else {
                     return client.getResponseCode();
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return -1;
         }
 
         public JSONObject getJsonObject(String url, Context mctx) throws IOException, JSONException {

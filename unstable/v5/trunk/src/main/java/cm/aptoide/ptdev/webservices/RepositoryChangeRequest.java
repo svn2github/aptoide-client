@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.model.json.RepositoryChangeJson;
+import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;

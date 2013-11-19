@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.parser.callbacks;
 
+import cm.aptoide.ptdev.model.Store;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -10,5 +12,6 @@ package cm.aptoide.ptdev.parser.callbacks;
 public interface ErrorCallback {
 
     void onError(Exception e, long repoId);
+
 
 }

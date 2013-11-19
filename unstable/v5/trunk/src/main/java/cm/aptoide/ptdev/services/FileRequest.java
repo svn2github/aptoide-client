@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.services;
 
+import android.util.Base64;
 import android.util.Log;
+import cm.aptoide.ptdev.model.Login;
 import com.octo.android.robospice.request.ProgressByteProcessor;
 import com.octo.android.robospice.request.SpiceRequest;
 import org.apache.commons.io.IOUtils;
@@ -22,10 +24,12 @@ public class FileRequest extends SpiceRequest<InputStream>{
 
     private final File cacheFile;
     private final String url;
+    private final Login login;
 
-    public FileRequest(final String url, final File cacheFile) {
+    public FileRequest(final String url, final File cacheFile, final Login login) {
         super(InputStream.class);
         this.cacheFile = cacheFile;
+        this.login = login;
         this.url = url;
     }
 
@@ -40,6 +44,14 @@ public class FileRequest extends SpiceRequest<InputStream>{
             file = new File("/sdcard/.aptoide/" + url.hashCode());
 
             final HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+
+            if(login!=null){
+                String basicAuth = "Basic "+ new String(Base64.encode(
+                        (login.getUsername() + ":" + login.getPassword()).getBytes(),
+                        Base64.NO_WRAP));
+                httpURLConnection.setRequestProperty("Authorization", basicAuth);
+            }
+
             is = httpURLConnection.getInputStream();
 
         } catch (Exception e){

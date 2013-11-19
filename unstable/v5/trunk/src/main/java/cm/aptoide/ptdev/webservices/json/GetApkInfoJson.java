@@ -1,7 +1,8 @@
 
-package cm.aptoide.ptdev.model.json;
+package cm.aptoide.ptdev.webservices.json;
 
 import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.Obb;
 import com.google.api.client.util.Key;
 
 import java.util.List;
@@ -204,6 +205,32 @@ public class GetApkInfoJson{
         }
         public void setStatus(String status){
             this.status = status;
+        }
+    }
+
+
+
+    public static class ObbJson {
+
+        @Key("main")
+        private Obb main;
+        @Key("patch")
+        private Obb patch;
+
+        public Obb getMain() {
+            return main;
+        }
+
+        public void setMain(Obb main) {
+            this.main = main;
+        }
+
+        public Obb getPatch() {
+            return patch;
+        }
+
+        public void setPatch(Obb patch) {
+            this.patch = patch;
         }
     }
 }

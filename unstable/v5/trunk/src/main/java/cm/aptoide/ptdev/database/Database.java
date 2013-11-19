@@ -1,20 +1,16 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.schema.Schema;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.model.Store;
-import com.squareup.otto.Produce;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -89,9 +85,8 @@ public class Database {
 
     public Cursor getCategories(long storeid, long parentid) {
 
-        Log.d("Aptoide-", String.valueOf(storeid));
+        return database.rawQuery("select name as name, id_category as _id, apps_count as count, '1' as type from category as cat where id_repo = ? and id_category_parent = ?  union select apk.name, apk.id_apk as _id, '0' ,'0' as type from apk join category_apk on apk.id_apk = category_apk.id_apk where category_apk.id_category = ? order by type desc", new String[]{String.valueOf(storeid), String.valueOf(parentid), String.valueOf(parentid) });
 
-        return database.rawQuery("select name, id_category, apps_count from category as cat where id_repo = ? and id_category_parent = ? order by apps_count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
     }
 
     public Cursor getStore(long storeid) {
@@ -103,20 +98,20 @@ public class Database {
         Cursor c = database.rawQuery("select id_category from category where id_category_parent = 0 and id_repo = ?", new String[]{String.valueOf(repoId)});
 
         while(c.moveToNext()){
-            getApps(c.getLong(0), repoId);
+            getAppsCount(c.getLong(0), repoId);
         }
 
         c.close();
 
     }
 
-    private long getApps(long id_category, long id_repo) {
+    private long getAppsCount(long id_category, long id_repo) {
 
         long apps = 0;
         Cursor c = database.rawQuery("select id_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_category), String.valueOf(id_repo)});
         if(c.getCount()>0){
             while (c.moveToNext()){
-                apps += getApps(c.getLong(0), id_repo);
+                apps += getAppsCount(c.getLong(0), id_repo);
             }
         }else{
             c = database.rawQuery("select count(id_category) from category_apk where id_category = ?", new String[]{String.valueOf(id_category)});
@@ -131,6 +126,29 @@ public class Database {
         database.update(Schema.Category.getName(), values, "id_category = ?", new String[]{String.valueOf(id_category)});
 
         return apps;
+    }
+
+    public Boolean removeStores(Set<Long> checkedItems) {
+
+        Log.d("Aptoide-", "Deleting " + checkedItems);
+
+        database.beginTransaction();
+        for(Long id_store : checkedItems){
+            Cursor c = database.rawQuery("select id_category from category where id_repo = ?", new String[]{String.valueOf(id_store)});
+
+            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+                database.delete("category_apk","id_category=?", new String[]{String.valueOf(c.getLong(0))});
+                Log.d("Aptoide-", "Deleting " + c.getLong(0));
+            }
+            c.close();
+            database.delete("category"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("apk"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("repo","id_repo = ? ", new String[]{String.valueOf(id_store)});
+
+        }
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        return true;
     }
 }
 

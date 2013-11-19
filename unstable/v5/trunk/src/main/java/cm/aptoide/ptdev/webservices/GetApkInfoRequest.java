@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.model.json.GetApkInfoJson;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.json.jackson2.JacksonFactory;

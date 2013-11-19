@@ -1,4 +1,4 @@
-package cm.aptoide.ptdev.model.json;
+package cm.aptoide.ptdev.webservices.json;
 
 import com.google.api.client.util.Key;
 

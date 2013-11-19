@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +17,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * To change this template use File | Settings | File Templates.
  */
 
-public class StoreActivity extends SherlockFragmentActivity implements StoresCallback {
+public class StoreActivity extends SherlockFragmentActivity{
 
 
     private long storeid;
@@ -53,19 +55,19 @@ public class StoreActivity extends SherlockFragmentActivity implements StoresCal
         getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 
-    @Override
-    public void showAddStoreDialog() {
 
-
-    }
 
     @Override
-    public void click() {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        Fragment fragment = new MyListFragment();
-        Bundle args = new Bundle();
+        int i = item.getItemId();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
+        if (i == android.R.id.home) {
+            finish();
+        } else if (i == R.id.abs__home) {
+            finish();
+        }
 
+        return super.onOptionsItemSelected(item);
     }
 }

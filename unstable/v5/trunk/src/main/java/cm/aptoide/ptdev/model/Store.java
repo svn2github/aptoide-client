@@ -16,6 +16,10 @@ public class Store {
     private String theme;
     private String view;
     private String items;
+    private String baseUrl;
+    private long id;
+    private Login login;
+
 
     public long getId() {
         return id;
@@ -25,7 +29,7 @@ public class Store {
         this.id = id;
     }
 
-    long id;
+
 
     public String getBaseUrl() {
         return baseUrl;
@@ -35,7 +39,7 @@ public class Store {
         this.baseUrl = baseUrl;
     }
 
-    private String baseUrl;
+
 
     public String getInfoXmlUrl() {
         return baseUrl + "info.xml";
@@ -103,5 +107,13 @@ public class Store {
 
     public String getItems() {
         return items;
+    }
+
+    public Login getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login login) {
+        this.login = login;
     }
 }

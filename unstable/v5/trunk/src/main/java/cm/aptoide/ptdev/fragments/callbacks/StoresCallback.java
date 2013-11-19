@@ -1,5 +1,9 @@
 package cm.aptoide.ptdev.fragments.callbacks;
 
+import cm.aptoide.ptdev.model.Login;
+
+import java.util.Set;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -9,5 +13,10 @@ package cm.aptoide.ptdev.fragments.callbacks;
  */
 public interface StoresCallback {
     void showAddStoreDialog();
-    void click();
+
+    void addStore(String s, Login login);
+
+    void reloadStores(Set<Long> checkedItems);
+
+
 }

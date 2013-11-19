@@ -16,6 +16,10 @@ public class AptoideDialog {
         return new AddStoreDialog();
     }
 
+    public static SherlockDialogFragment pleaseWaitDialog(){
+        return new ProgressDialogFragment();
+    }
+
 
 
 

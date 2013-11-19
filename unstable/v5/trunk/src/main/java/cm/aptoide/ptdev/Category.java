@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev;
 
+import java.awt.datatransfer.DataFlavor;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -12,6 +14,7 @@ public class Category {
 
     private String name;
     private int appsNumber;
+    private String type;
 
     public long getId() {
         return id;
@@ -38,5 +41,13 @@ public class Category {
 
     public int getAppsNumber() {
         return appsNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

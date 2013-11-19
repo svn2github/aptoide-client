@@ -8,10 +8,11 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.Parser;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
@@ -20,8 +21,13 @@ import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.parser.handlers.HandlerLatestXml;
 import cm.aptoide.ptdev.parser.handlers.HandlerTopXml;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
+import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,15 +38,13 @@ import com.octo.android.robospice.persistence.DurationInMillis;
  */
 public class ParserService extends Service {
 
-    private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
-
-
     Parser parser;
+    private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
     private boolean stopAfterComplete = false;
     private boolean alreadyStopped;
     private ErrorCallback errorCallback;
     private CompleteCallback parserCompleteCallback;
-
+    private MainActivity.DismissCallback dismissCallback;
 
     @Override
     public void onCreate() {
@@ -48,8 +52,11 @@ public class ParserService extends Service {
         Log.d("Aptoide-ParserService", "onStart");
     }
 
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Aptoide-ParserService", "onDestroy");
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -73,12 +80,6 @@ public class ParserService extends Service {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("Aptoide-ParserService", "onDestroy");
-    }
-
-    @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
     }
@@ -87,7 +88,34 @@ public class ParserService extends Service {
         return parser;
     }
 
+    public void setParser(Parser parser) {
+        this.parser = parser;
+    }
 
+
+
+    public void startParse(Database db, Store store, Login login) {
+        if (!spiceManager.isStarted()) {
+            Log.d("Aptoide-Parser", "Starting spice");
+            spiceManager.start(getApplicationContext());
+        }
+        startService(new Intent(getApplicationContext(), ParserService.class));
+        startForeground(45, createDefaultNotification());
+        long id = insertStoreDatabase(db, store);
+        BusProvider.getInstance().post(produceRepoAddedEvent());
+        parser.parse(store.getLatestXmlUrl(), login, 4, new HandlerLatestXml(db, id));
+        parser.parse(store.getTopXmlUrl(), login, 4, new HandlerTopXml(db, id));
+        parser.parse(store.getInfoXmlUrl(), login, 10, new HandlerInfoXml(db, id), errorCallback, parserCompleteCallback);
+
+    }
+
+    private long insertStoreDatabase(Database db, Store store) {
+        return db.insertStore(store);
+    }
+
+    public RepoAddedEvent produceRepoAddedEvent() {
+        return new RepoAddedEvent();
+    }
 
     public Notification createDefaultNotification() {
         Notification notification = new Notification();
@@ -108,73 +136,20 @@ public class ParserService extends Service {
     }
 
 
-    public void setParser(Parser parser) {
-        this.parser = parser;
-    }
 
-
-
-    public void get(Database db, Store store) {
-        if(!spiceManager.isStarted()){
-            Log.d("Aptoide-Parser", "Starting spice");
-            spiceManager.start(getApplicationContext());
-        }
-
-        startForeground(45, createDefaultNotification());
-        long id = insertStoreDatabase(db, store);
-        BusProvider.getInstance().post(produceRepoAddedEvent());
-        parser.parse(store.getLatestXmlUrl(),  4, new HandlerLatestXml(db, id));
-        parser.parse(store.getTopXmlUrl(),     4, new HandlerTopXml(db, id));
-        parser.parse(store.getInfoXmlUrl(),   10, new HandlerInfoXml(db, id), errorCallback, parserCompleteCallback);
-
-
-        //parser.parse("http://onairda.store.aptoide.com/" + "info.xml", 10, new HandlerInfoXml(db, 2));
-        //parser.parse("http://onairda.store.aptoide.com/" + "latest.xml", 4, new HandlerLatestXml(db, 2));
-
-        //parser.parse("http://m3taxx.store.aptoide.com/" + "info.xml", 10, new HandlerInfoXml(db, 3));
-        //parser.parse("http://m3taxx.store.aptoide.com/" + "latest.xml", 4, new HandlerLatestXml(db, 3));
-
-
-        //parser.parse("http://savou.store.aptoide.com/" + "info.xml", 10, new HandlerInfoXml(db , 4));
-        //parser.parse("http://moustwantedapps.store.aptoide.com/" + "info.xml", 10, new HandlerInfoXml(db, 5));
-        //parser.parse("http://htcsense.store.aptoide.com/" + "info.xml", 10, new HandlerInfoXml(db, 6));
-
-
-        //parser.parse(url + "latest.xml", 5, new HandlerLatestXml(db, repoId));
-        //parser.parse(url + "top.xml", 5, new HandlerTopXml(db, repoId));
-
-
-    }
-    public RepoAddedEvent produceRepoAddedEvent() {
-        return new RepoAddedEvent();
-    }
-
-    private long insertStoreDatabase(Database db, Store store) {
-        return db.insertStore(store);
-    }
-
-    public void setCallbacks(ErrorCallback errorCallback, CompleteCallback parserCompleteCallback) {
+    public void setCallbacks(ErrorCallback errorCallback, CompleteCallback parserCompleteCallback, MainActivity.DismissCallback dismissCallback) {
 
         this.errorCallback = errorCallback;
         this.parserCompleteCallback = parserCompleteCallback;
+        this.dismissCallback = dismissCallback;
 
     }
-
 
     public class MainServiceBinder extends Binder {
         public ParserService getService() {
             return ParserService.this;
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 }

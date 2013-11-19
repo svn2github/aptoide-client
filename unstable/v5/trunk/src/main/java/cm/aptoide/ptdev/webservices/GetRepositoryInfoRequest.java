@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.model.json.RepositoryInfoJson;
+import android.util.Log;
+import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -31,9 +32,11 @@ public class GetRepositoryInfoRequest extends GoogleHttpClientSpiceRequest<Repos
         baseUrl = String.format(Locale.ENGLISH, baseUrl, storeName);
 
         GenericUrl url = new GenericUrl(baseUrl);
-
+        Log.d("Aptoide-Request", url.toString());
         HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
 
+        request.setConnectTimeout(10000);
+        request.setReadTimeout(10000);
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs(getResultType());

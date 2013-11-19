@@ -4,6 +4,7 @@ package cm.aptoide.ptdev.parser;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
@@ -64,13 +65,13 @@ public class Parser{
         Log.d("Aptoide-Parser", "GC on Parser");
     }
 
-    public void parse(final String url, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback) {
+    public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback) {
         int key = url.hashCode();
         final File file = new File(AptoideConfiguration.getInstance().getPathCache()+key+".xml");
         i++;
         final long repoId = handler.getRepoId();
 
-        spiceManager.execute(new FileRequest(url,file), Math.abs(key), DurationInMillis.ONE_WEEK, new RequestListener<InputStream>() {
+        spiceManager.execute(new FileRequest(url,file, login), Math.abs(key), DurationInMillis.ONE_WEEK, new RequestListener<InputStream>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.d("Aptoide-Parser", "onRequestFailure");
@@ -118,8 +119,6 @@ public class Parser{
 
                         }
 
-
-
                         Aptoide.getDb().setTransactionSuccessful();
                         Aptoide.getDb().endTransaction();
                         file.delete();
@@ -139,8 +138,8 @@ public class Parser{
         return i==0;
     }
 
-    public void parse(String url, int priority, AbstractHandler handler) {
-        parse(url, priority, handler, null, null);
+    public void parse(String url, Login login, int priority, AbstractHandler handler) {
+        parse(url, login, priority, handler, null, null);
     }
 
     public void setPoolEndCallback(PoolEndedCallback callback) {

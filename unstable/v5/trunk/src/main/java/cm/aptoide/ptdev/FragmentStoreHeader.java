@@ -35,6 +35,12 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
     RelativeLayout store_background;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View header = inflater.inflate(R.layout.header_store_theme, container, false);
@@ -47,16 +53,11 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
         Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
         drawable.setAlpha(200);
         getSherlockActivity().getSupportActionBar().setBackgroundDrawable(drawable);
-
-        return header;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         Bundle bundle = new Bundle();
         bundle.putLong("storeid",getArguments().getLong("storeid"));
         getLoaderManager().restartLoader(30, bundle, this);
+
+        return header;
     }
 
     @Override
@@ -68,6 +69,8 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
             }
         };
     }
+
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

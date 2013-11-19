@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -12,21 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,22 +42,24 @@ import java.util.Locale;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStores extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentStores extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, Callback {
 
     private StoresCallback callback;
 
     private StoresCallback dummyCallback = new StoresCallback() {
 
         @Override
-        public void showAddStoreDialog() {
-
-        }
+        public void showAddStoreDialog() {}
 
         @Override
-        public void click() {
+        public void addStore(String s, Login login) {}
 
-        }
+        @Override
+        public void reloadStores(Set<Long> checkedItems) {}
+
     };
+
+
 
     private StoreAdapter storeAdapter;
     private ArrayList<StoreItem> stores = new ArrayList<StoreItem>();
@@ -61,8 +70,9 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
+
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -81,16 +91,18 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
     @Override
     public void onDetach() {
+        if(storeAdapter!=null){
+            storeAdapter.setAdapterView(gridViewMyStores);
+        }
         super.onDetach();
         BusProvider.getInstance().unregister(this);
+
         this.callback = dummyCallback;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores);
-
-        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores, this);
         return inflater.inflate(R.layout.page_my_stores,container, false);
     }
 
@@ -123,6 +135,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                 callback.showAddStoreDialog();
             }
         });
+
 
 
 
@@ -164,8 +177,8 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        stores.clear();
 
+        stores.clear();
 
         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
             stores.add(new StoreItem(
@@ -179,13 +192,73 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             Log.d("Aptoide-", "Added store");
         }
 
+        storeAdapter.setAdapterView(gridViewMyStores);
         storeAdapter.notifyDataSetChanged();
+
         Log.d("Aptoide-", "OnLoadFinish");
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item){
+        int id = item.getItemId();
+
+        if (id == R.id.menu_reload) {
+            callback.reloadStores(storeAdapter.getCheckedItems());
+            return true;
+        } else if (id == R.id.menu_discard) {
+            HashSet<Long> longs = new HashSet<Long>();
+            for(Long aLong : storeAdapter.getCheckedItems()){
+                longs.add(storeAdapter.getItemId(aLong.intValue()));
+            }
+            removeStores(longs);
+            return true;
+        } else if( id == R.id.menu_select_all){
+            storeAdapter.selectAll();
+            return true;
+        }
+        return false;
+    }
+
+    private void removeStores(Set<Long> checkedItems) {
+        setRetainInstance(true);
+        new AsyncTask<Set<Long>, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                SherlockDialogFragment pd = AptoideDialog.pleaseWaitDialog();
+                pd.setCancelable(false);
+                pd.show(getFragmentManager(), "pleaseWaitDialogRemove");
+            }
+
+            @Override
+            protected Void doInBackground(Set<Long>... params) {
+                try{
+                    new Database(Aptoide.getDb()).removeStores(params[0]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                SherlockDialogFragment pd = (SherlockDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
+                pd.dismiss();
+                setRetainInstance(false);
+                loader.forceLoad();
+            }
+        }.execute(checkedItems);
+
     }
 }
 

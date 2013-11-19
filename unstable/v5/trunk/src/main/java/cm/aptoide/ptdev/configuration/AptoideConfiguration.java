@@ -31,6 +31,8 @@ public class AptoideConfiguration {
     private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
 
     private String webservicesPath;
+    private static String MARKETNAME;
+    private static String brand;
 
 
     private AptoideConfiguration() {}
@@ -38,6 +40,23 @@ public class AptoideConfiguration {
     public static AptoideConfiguration getInstance() {
         return INSTANCE;
     }
+
+    public static String getMarketName() {
+        return MARKETNAME;
+    }
+
+    public static void setMARKETNAME(String MARKETNAME) {
+        AptoideConfiguration.MARKETNAME = MARKETNAME;
+    }
+
+    public static String getBrand() {
+        return brand;
+    }
+
+    public static void setBrand(String brand) {
+        AptoideConfiguration.brand = brand;
+    }
+
 
     public String getAutoUpdateUrl() {
         return sPref.getString(PREF_AUTO_UPDATE_URL, Defaults.AUTO_UPDATE_URL);

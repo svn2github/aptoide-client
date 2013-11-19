@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.model.Login;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 
@@ -25,13 +26,13 @@ public class AddStoreDialog extends SherlockDialogFragment {
     private Callback callback;
     public Callback dummyCallback = new Callback() {
         @Override
-        public void addStore(String s) {
+        public void addStore(String s, Login login) {
 
         }
     };
 
     public interface Callback{
-        public void addStore(String s);
+        public void addStore(String s, Login login);
     }
 
     @Override
@@ -62,7 +63,8 @@ public class AddStoreDialog extends SherlockDialogFragment {
         view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.addStore(((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString());
+
+                callback.addStore(((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString(), null);
                 dismiss();
             }
         });
