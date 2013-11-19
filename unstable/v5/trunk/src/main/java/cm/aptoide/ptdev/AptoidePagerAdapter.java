@@ -1,13 +1,12 @@
 package cm.aptoide.ptdev;
 
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentHome;
 import cm.aptoide.ptdev.fragments.FragmentStores;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +15,7 @@ import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
  * Time: 11:30
  * To change this template use File | Settings | File Templates.
  */
-public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
+public class AptoidePagerAdapter extends FixedFragmentStatePagerAdapter {
 
 
     private final String[] TITLES = { "Home", "Stores", "Updates", "Download Manager" };
