@@ -22,9 +22,9 @@ public class Schema {
             uniques = @TableDefinition.Composite_Unique(
                     fields = {Apk.COLUMN_APKID, Apk.COLUMN_VERCODE, Apk.COLUMN_REPO_ID}),
             indexes = {
-                    @TableDefinition.Index(index_name = "byName",
+                    @TableDefinition.Index(index_name = "nameIdx",
                             keys = @TableDefinition.Key(field = Apk.COLUMN_NAME, descending = true)),
-                    @TableDefinition.Index(index_name = "byRepo",
+                    @TableDefinition.Index(index_name = "repoIdx",
                             keys = @TableDefinition.Key(field = Apk.COLUMN_REPO_ID))
             })
     public static class Apk {
@@ -48,6 +48,24 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER) public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
 
 
+    }
+
+    @TableDefinition(
+            indexes = {
+                    @TableDefinition.Index(index_name = "installedIdx",
+                            keys = @TableDefinition.Key(field = Installed.COLUMN_APKID))
+            })
+    public static class Installed {
+
+        @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true) public static final String COLUMN_ID = "id_installed";
+        @ColumnDefinition(type = SQLType.TEXT, unique = true, onConflict = OnConflict.REPLACE) public final static String COLUMN_APKID = "package_name";
+        @ColumnDefinition(type = SQLType.TEXT ) public final static String COLUMN_NAME = "name";
+        @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "0") public final static String COLUMN_VERCODE = "version_code";
+        @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "") public final static String COLUMN_VERNAME = "version_name";
+
+        public static String getName() {
+            return "installed";
+        }
     }
 
 

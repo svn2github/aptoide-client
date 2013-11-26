@@ -18,7 +18,9 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.InstalledAppsHelper;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -235,7 +237,7 @@ public class AptoideUtils {
             NetworkUtils.TIME_OUT = timeout;
         }
 
-        public static int checkServerConnection(final String string, final String username, final String password) throws IOException {
+        public static int checkServerConnection(final String string, final String username, final String password) throws Exception {
 
 
                 HttpURLConnection client = (HttpURLConnection) new URL(string
@@ -504,6 +506,15 @@ public class AptoideUtils {
 
     public static String getMyCountry(Context context) {
         return context.getResources().getConfiguration().locale.getLanguage();
+    }
+
+    public static void syncInstalledApps() {
+        Log.d("Aptoide-InstalledSync", "Syncing");
+        Database db = new Database(Aptoide.getDb());
+        Aptoide.getDb().beginTransaction();
+        InstalledAppsHelper.sync(db, Aptoide.getContext());
+        Aptoide.getDb().setTransactionSuccessful();
+        Aptoide.getDb().endTransaction();
     }
 }
 

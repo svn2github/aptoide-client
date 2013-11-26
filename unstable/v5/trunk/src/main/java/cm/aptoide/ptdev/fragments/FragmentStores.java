@@ -20,7 +20,7 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
-import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -50,9 +50,6 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
         @Override
         public void showAddStoreDialog() {}
-
-        @Override
-        public void addStore(String s, Login login) {}
 
         @Override
         public void reloadStores(Set<Long> checkedItems) {}
@@ -217,6 +214,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             for(Long aLong : storeAdapter.getCheckedItems()){
                 longs.add(storeAdapter.getItemId(aLong.intValue()));
             }
+
             removeStores(longs);
             return true;
         } else if( id == R.id.menu_select_all){
@@ -236,11 +234,15 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                 SherlockDialogFragment pd = AptoideDialog.pleaseWaitDialog();
                 pd.setCancelable(false);
                 pd.show(getFragmentManager(), "pleaseWaitDialogRemove");
+
             }
 
             @Override
             protected Void doInBackground(Set<Long>... params) {
                 try{
+                    for(Long aLong: params[0]){
+                        BusProvider.getInstance().post(new StopParseEvent(aLong));
+                    }
                     new Database(Aptoide.getDb()).removeStores(params[0]);
                 }catch (Exception e){
                     e.printStackTrace();

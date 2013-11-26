@@ -14,8 +14,6 @@ import java.util.Set;
 public interface StoresCallback {
     void showAddStoreDialog();
 
-    void addStore(String s, Login login);
-
     void reloadStores(Set<Long> checkedItems);
 
 

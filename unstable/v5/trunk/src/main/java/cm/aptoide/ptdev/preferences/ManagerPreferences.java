@@ -23,14 +23,11 @@ package cm.aptoide.ptdev.preferences;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
-
-import java.util.UUID;
 
 /**
  * ManagerPreferences, manages aptoide's preferences I/O
@@ -46,14 +43,8 @@ public class ManagerPreferences {
 
 
         public ManagerPreferences(Context context) {
-
             getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             setPreferences = getPreferences.edit();
-
-            if(getAptoideClientUUID() == null){
-    			createLauncherShortcut(context);
-                setAptoideClientUUID( UUID.randomUUID().toString() );
-            }
         }
 
 
@@ -61,14 +52,14 @@ public class ManagerPreferences {
 
             Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
+
             final Intent intent = new Intent();
             intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-
-            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, AptoideConfiguration.getMarketName());
+            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());
 
             Parcelable iconResource;
             try{
-            	iconResource = Intent.ShortcutIconResource.fromContext(context, context.getResources().getIdentifier("icon_" + AptoideConfiguration.getBrand(),"drawable",context.getPackageName()));
+            	iconResource = Intent.ShortcutIconResource.fromContext(context, context.getResources().getIdentifier("icon_" + Aptoide.getConfiguration().getBrand(),"drawable",context.getPackageName()));
             }catch(Exception e){
             	e.printStackTrace();
             	iconResource = Intent.ShortcutIconResource.fromContext(context, context.getResources().getIdentifier("ic_launcher","drawable",context.getPackageName()));
@@ -76,6 +67,7 @@ public class ManagerPreferences {
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
             intent.putExtra("duplicate", false);
             intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+
             context.sendBroadcast(intent);
         }
 
@@ -92,7 +84,7 @@ public class ManagerPreferences {
         }
 
 
-        private void setAptoideClientUUID(String uuid){
+        public void setAptoideClientUUID(String uuid){
             setPreferences.putString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), uuid);
             setPreferences.commit();
         }

@@ -7,15 +7,14 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/app_hashid"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:padding="10dp"
-              >
+              android:layout_margin="10dp">
 
     <ImageView
-            android:id="@+id/installed_app_icon"
+            android:id="@+id/app_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
@@ -31,7 +30,7 @@
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/installed_app_name"
+                android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -41,9 +40,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
-                android:id="@+id/installed_app_vername"
+                android:id="@+id/app_vername"
                 android:layout_width="wrap_content"
-                android:layout_below="@id/installed_app_name"
+                android:layout_below="@id/app_name"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -64,7 +63,7 @@
             android:layout_weight="5"
             android:orientation="vertical">
 
-        <ImageView android:id="@+id/installed_app_ic_remove"
+        <ImageView android:id="@+id/app_ic_action"
                    android:layout_width="fill_parent"
                    android:layout_height="fill_parent"
                    android:layout_centerInParent="true"

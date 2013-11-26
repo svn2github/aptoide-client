@@ -17,8 +17,14 @@
         <robospice-google-http-client.version>1.4.9</robospice-google-http-client.version>
     </properties>
 
+
+
     <build>
+
+
+
         <plugins>
+
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
@@ -58,6 +64,9 @@
             </exclusions>
         </dependency>
 
+
+
+
         <dependency>
             <groupId>com.nostra13.universalimageloader</groupId>
             <artifactId>universal-image-loader</artifactId>
@@ -71,11 +80,21 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
+            <artifactId>extra-abs</artifactId>
+            <version>0.8</version>
+            <type>apklib</type>
+        </dependency>
+
+
+        <dependency>
             <groupId>android</groupId>
             <artifactId>android</artifactId>
             <version>4.3_r2</version>
             <scope>provided</scope>
         </dependency>
+
+
 
         <dependency>
             <groupId>com.actionbarsherlock</groupId>
@@ -98,14 +117,11 @@
             <type>apklib</type>
         </dependency>
 
-
         <dependency>
             <groupId>com.tonicartos</groupId>
             <artifactId>stickygridheaders</artifactId>
             <version>1.0.1</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>com.rabbitmq</groupId>

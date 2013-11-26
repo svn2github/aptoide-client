@@ -8,18 +8,17 @@
 
 
     <TextView style="@style/separator_label"
-              android:id="@android:id/text1"
+              android:id="@+id/separator_label"
               android:layout_weight="0.2"
               android:padding="5dp"
-              android:gravity="center|left"
-              android:text="Category"/>
+              android:gravity="center|left" android:layout_width="0dp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update all"
             android:gravity="center"
-            android:background="@color/custom_color"
+            android:background="@drawable/abs__list_selector_holo_light"
             android:paddingRight="10dp"
             android:textAppearance="@android:style/TextAppearance.Small"
             android:paddingLeft="10dp"
@@ -27,6 +26,7 @@
             android:layout_marginLeft="5dp"
             android:textColor="@android:color/white"
             android:id="@+id/more"
+            android:clickable="true"
             android:textStyle="italic"
             android:layout_gravity="center_vertical|right"/>
 

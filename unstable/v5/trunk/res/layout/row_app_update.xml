@@ -15,7 +15,7 @@
 
 
     <ImageView
-            android:id="@+id/update_app_icon"
+            android:id="@+id/app_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
@@ -31,7 +31,7 @@
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/update_app_name"
+                android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -54,7 +54,7 @@
                 android:id="@+id/update_app_installed_versionname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/update_app_name"
+                android:layout_below="@id/app_name"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -64,7 +64,7 @@
                 android:id="@+id/update_app_uptodate_versionname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/update_app_name"
+                android:layout_below="@id/app_name"
                 android:layout_toRightOf="@id/update_app_installed_versionname"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -83,7 +83,7 @@
             android:layout_weight="5"
             android:orientation="vertical">
 
-        <ImageView android:id="@+id/update_app_ic_update"
+        <ImageView android:id="@+id/app_ic_action"
                    android:layout_width="48dp"
                    android:layout_height="48dp"
                    android:layout_centerInParent="true"

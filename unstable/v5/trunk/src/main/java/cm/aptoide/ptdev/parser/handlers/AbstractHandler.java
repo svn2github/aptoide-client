@@ -3,9 +3,12 @@ package cm.aptoide.ptdev.parser.handlers;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
-import cm.aptoide.ptdev.model.ApkInfoXML;
+import cm.aptoide.ptdev.parser.events.StopParseEvent;
+import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.utils.Filters;
+import com.squareup.otto.Subscribe;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
@@ -21,6 +24,16 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractHandler extends DefaultHandler2 {
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public void setRunning(boolean running) {
+        isRunning = running;
+    }
+
+    private boolean isRunning = true;
 
     public long getRepoId() {
         return repoId;
@@ -45,6 +58,10 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         loadSpecificElements();
         statements = new ArrayList<SQLiteStatement>(db.compileStatements(apk.getStatements()));
     }
+
+
+
+
 
     Apk apk = getApk();
 
@@ -79,7 +96,9 @@ public abstract class AbstractHandler extends DefaultHandler2 {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
-
+        if(!isRunning()){
+            throw new ParseStoppedException();
+        }
         if(elements.get(localName)!=null){
             elements.get(localName).endElement();
         }

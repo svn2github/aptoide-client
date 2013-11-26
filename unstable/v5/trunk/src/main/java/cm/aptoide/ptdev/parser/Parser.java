@@ -1,9 +1,11 @@
 package cm.aptoide.ptdev.parser;
 
 
+import android.app.Application;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
@@ -67,7 +69,10 @@ public class Parser{
 
     public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback) {
         int key = url.hashCode();
-        final File file = new File(AptoideConfiguration.getInstance().getPathCache()+key+".xml");
+        AptoideConfiguration configuration = Aptoide.getConfiguration();
+
+        String path = configuration.getPathCache();
+        final File file = new File(path+key+".xml");
         i++;
         final long repoId = handler.getRepoId();
 
@@ -99,6 +104,7 @@ public class Parser{
                             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
                             Log.d("Aptoide-Parser", "New SaxParser");
                             parser.parse(inputStream, handler);
+                            Aptoide.getDb().setTransactionSuccessful();
                             if(completeCallback!=null)completeCallback.onComplete(repoId);
                         } catch (ParserConfigurationException e1) {
                             e1.printStackTrace();
@@ -116,10 +122,8 @@ public class Parser{
                             e1.printStackTrace();
                             if (errorCallback != null) errorCallback.onError(e1, repoId);
                             Log.d("Aptoide-Parser", "Error");
-
                         }
 
-                        Aptoide.getDb().setTransactionSuccessful();
                         Aptoide.getDb().endTransaction();
                         file.delete();
                         i--;

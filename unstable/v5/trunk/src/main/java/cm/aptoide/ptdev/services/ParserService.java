@@ -8,10 +8,13 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.util.SparseArray;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
+import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.Parser;
@@ -29,6 +32,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.util.HashSet;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -36,15 +41,14 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * Time: 11:59
  * To change this template use File | Settings | File Templates.
  */
-public class ParserService extends Service {
+public class ParserService extends Service implements ErrorCallback, CompleteCallback{
 
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
     private boolean stopAfterComplete = false;
     private boolean alreadyStopped;
-    private ErrorCallback errorCallback;
-    private CompleteCallback parserCompleteCallback;
-    private MainActivity.DismissCallback dismissCallback;
+    private HashSet<Long> parsingRepos = new HashSet<Long>();
+
 
     @Override
     public void onCreate() {
@@ -93,6 +97,10 @@ public class ParserService extends Service {
     }
 
 
+    public boolean repoIsParsing(long id){
+        return parsingRepos.contains(id);
+    }
+
 
     public void startParse(Database db, Store store, Login login) {
         if (!spiceManager.isStarted()) {
@@ -105,8 +113,8 @@ public class ParserService extends Service {
         BusProvider.getInstance().post(produceRepoAddedEvent());
         parser.parse(store.getLatestXmlUrl(), login, 4, new HandlerLatestXml(db, id));
         parser.parse(store.getTopXmlUrl(), login, 4, new HandlerTopXml(db, id));
-        parser.parse(store.getInfoXmlUrl(), login, 10, new HandlerInfoXml(db, id), errorCallback, parserCompleteCallback);
-
+        parser.parse(store.getInfoXmlUrl(), login, 10, new HandlerInfoXml(db, id), this, this);
+        parsingRepos.add(id);
     }
 
     private long insertStoreDatabase(Database db, Store store) {
@@ -135,14 +143,18 @@ public class ParserService extends Service {
         return notification;
     }
 
+    @Override
+    public void onComplete(long repoId) {
+        parsingRepos.remove(repoId);
+        BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
 
+    }
 
-    public void setCallbacks(ErrorCallback errorCallback, CompleteCallback parserCompleteCallback, MainActivity.DismissCallback dismissCallback) {
+    @Override
+    public void onError(Exception e, long repoId) {
+        parsingRepos.remove(repoId);
 
-        this.errorCallback = errorCallback;
-        this.parserCompleteCallback = parserCompleteCallback;
-        this.dismissCallback = dismissCallback;
-
+        BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
     }
 
     public class MainServiceBinder extends Binder {

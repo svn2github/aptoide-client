@@ -41,7 +41,7 @@ public class CategoryAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app, null);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, null);
 
                 break;
             case 1:
@@ -62,6 +62,8 @@ public class CategoryAdapter extends CursorAdapter {
         return cursor.getInt(cursor.getColumnIndex("type"));
     }
 
+
+
     @Override
     public int getViewTypeCount() {
         return 2;
@@ -78,7 +80,26 @@ public class CategoryAdapter extends CursorAdapter {
         switch (type) {
 
             case 0:
-                ((TextView) view.findViewById(R.id.app_name)).setText(name);
+                AppViewHolder holder = (AppViewHolder) view.getTag();
+
+                if(holder==null){
+                    holder = new AppViewHolder();
+                    holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
+                    holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
+                    holder.appName = (TextView) view.findViewById(R.id.app_name);
+                    view.setTag(holder);
+                }
+
+
+                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                holder.appName.setText(name);
+                holder.appIcon.setImageResource(R.drawable.ic_launcher);
+
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
@@ -92,12 +113,49 @@ public class CategoryAdapter extends CursorAdapter {
                     icon.setImageResource(R.drawable.cat_top_apps);
                 } else if (name.equals("Latest Apps")) {
                     icon.setImageResource(R.drawable.cat_latest);
-                } else {
-                    icon.setImageResource(R.drawable.cat_custom);
+                }else if (name.equals("Business")) {
+                    icon.setImageResource(R.drawable.business);
+                } else if (name.equals("Books & Reference")) {
+                    icon.setImageResource(R.drawable.books_and_reference);
+                } else if (name.equals("Comics")) {
+                    icon.setImageResource(R.drawable.comics);
+                } else if (name.equals("Communication")) {
+                    icon.setImageResource(R.drawable.communication);
+                } else if (name.equals("Education")) {
+                    icon.setImageResource(R.drawable.education);
+                } else if (name.equals("Entertainment")) {
+                    icon.setImageResource(R.drawable.entertainment);
+                } else if (name.equals("Finance")) {
+                    icon.setImageResource(R.drawable.finance);
+                } else if (name.equals("Health")) {
+                    icon.setImageResource(R.drawable.health);
+                } else if (name.equals("Health & Fitness")) {
+                    icon.setImageResource(R.drawable.health_and_fitness);
+                } else if (name.equals("Libraries & Demo")) {
+                    icon.setImageResource(R.drawable.libraries_and_demo);
+                } else if (name.equals("Lifestyle")) {
+                    icon.setImageResource(R.drawable.lifestyle);
+                }  else {
+                    icon.setImageResource(R.drawable.custom_categ_green);
                 }
                 break;
 
 
         }
+    }
+
+    public static class AppViewHolder{
+        ImageView appIcon;
+        ImageView overFlow;
+        TextView appName;
+        TextView versionName;
+        TextView downloads;
+        TextView rating;
+    }
+
+    public static class CategoryViewHolder{
+        ImageView catIcon;
+        TextView catName;
+        TextView appsCount;
     }
 }

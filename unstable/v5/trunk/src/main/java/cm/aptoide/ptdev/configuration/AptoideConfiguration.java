@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.MainActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +15,7 @@ import cm.aptoide.ptdev.Aptoide;
  */
 public class AptoideConfiguration {
 
-    private static final AptoideConfiguration INSTANCE = new AptoideConfiguration();
+
     private static final String PREF_AUTO_UPDATE_URL = "dev_mode_auto_update_url";
     private static final String PREF_ALWAYS_UPDATE = "dev_mode_always_update";
     private static final String PREF_PATH_CACHE_ICONS = "dev_mode_path_cache_icons";
@@ -31,15 +32,10 @@ public class AptoideConfiguration {
     private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
 
     private String webservicesPath;
-    private static String MARKETNAME;
+    private static String MARKETNAME = "Aptoide";
     private static String brand;
 
 
-    private AptoideConfiguration() {}
-
-    public static AptoideConfiguration getInstance() {
-        return INSTANCE;
-    }
 
     public static String getMarketName() {
         return MARKETNAME;
@@ -55,6 +51,10 @@ public class AptoideConfiguration {
 
     public static void setBrand(String brand) {
         AptoideConfiguration.brand = brand;
+    }
+
+    public static Class getShortcutClass() {
+        return MainActivity.class;
     }
 
 

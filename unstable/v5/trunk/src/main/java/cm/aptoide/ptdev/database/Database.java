@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.model.InstalledPackage;
 import cm.aptoide.ptdev.model.Store;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -150,5 +152,46 @@ public class Database {
         database.endTransaction();
         return true;
     }
+
+    public Cursor getInstalled() {
+        return database.rawQuery("select 0 as _id, 'Installed' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name", null);
+    }
+
+    public Cursor getUpdates() {
+        return database.rawQuery("select 0 as _id , 'Updates' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name where installed.version_code > apk.version_code",null);
+    }
+
+    public List<InstalledPackage> getStartupInstalled() {
+
+        ArrayList<InstalledPackage> installedPackages = new ArrayList<InstalledPackage>();
+
+        Cursor c = database.rawQuery("select package_name, version_code from installed", null);
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            installedPackages.add(new InstalledPackage(null, null, c.getString(0), c.getInt(1), null));
+        }
+        c.close();
+
+        return installedPackages;
+    }
+
+    public void insertInstalled(InstalledPackage apk) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Installed.COLUMN_APKID, apk.getPackage_name());
+        values.put(Schema.Installed.COLUMN_NAME, apk.getName());
+        values.put(Schema.Installed.COLUMN_VERCODE, apk.getVersion_code());
+        values.put(Schema.Installed.COLUMN_VERNAME, apk.getVersion_name());
+        database.insert(Schema.Installed.getName(), null, values);
+
+    }
+
+    public void removeStore(long id) {
+        Set<Long> aLong = new HashSet<Long>();
+        aLong.add(id);
+        removeStores(aLong);
+    }
 }
+
 

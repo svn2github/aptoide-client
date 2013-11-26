@@ -2,9 +2,12 @@ package cm.aptoide.ptdev.parser.handlers;
 
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
+import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.Configs;
+import com.squareup.otto.Subscribe;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -26,12 +29,23 @@ public class HandlerInfoXml extends AbstractHandler {
 
     public HandlerInfoXml(Database db, long repoId) {
         super(db, repoId);
+        BusProvider.getInstance().register(this);
+    }
+
+    @Subscribe
+    public void stopParse(StopParseEvent event){
+        Log.d("Aptoide-Parser", "Received stopparseevent for repo " + event.getRepoId());
+        if(event.getRepoId()==repoId){
+            setRunning(false);
+        }
     }
 
     @Override
     protected Apk getApk() {
         return new ApkInfoXML();
     }
+
+
 
     @Override
     protected void loadSpecificElements() {
@@ -44,7 +58,10 @@ public class HandlerInfoXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
-                apk.databaseInsert(statements, categoriesIds);
+                if(isRunning()){
+                    apk.databaseInsert(statements, categoriesIds);
+                }
+
             }
         });
 
