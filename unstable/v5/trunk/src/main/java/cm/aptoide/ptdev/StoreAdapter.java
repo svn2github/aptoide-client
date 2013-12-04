@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +29,9 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem>{
 		super(savedInstanceState, context, 0, items);
         this.callback = callback;
         inflater = LayoutInflater.from(context);
-	}
 
-//    public StoreAdapter(Bundle savedInstanceState, Context context, ArrayList<StoreItem> items) {
-//        super(savedInstanceState, context, R.layout.row_stores, android.R.id.text1, items);
-//    }
+
+	}
 
 
 

@@ -1,14 +1,13 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockListFragment;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +16,7 @@ import com.actionbarsherlock.app.SherlockFragment;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentDownloadManager extends SherlockFragment {
+public class FragmentDownloadManager extends SherlockListFragment {
 
 
     DownloadManagerCallback callback;
@@ -35,8 +34,5 @@ public class FragmentDownloadManager extends SherlockFragment {
         this.callback = null;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.page_download_manager, container, false);
-    }
+
 }

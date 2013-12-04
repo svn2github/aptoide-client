@@ -2,8 +2,9 @@ package cm.aptoide.ptdev;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -65,13 +66,23 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         holder.category.setText(item.getCategory());
         ImageLoader.getInstance().displayImage(item.getIcon(), holder.icon);
 
+        v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getContext().startActivity(new Intent(getContext(), AppViewActivity.class));
             }
         });
+
+
+
+
+
 
 
         return v;

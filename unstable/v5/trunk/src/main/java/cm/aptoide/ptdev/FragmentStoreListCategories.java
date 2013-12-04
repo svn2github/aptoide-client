@@ -37,6 +37,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     private CategoryAdapter arrayAdapter;
 
     private PullToRefreshLayout mPullToRefreshLayout;
+    private long parentId;
+    private long storeId;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         getSherlockActivity().invalidateOptionsMenu();
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,19 +83,42 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         arrayAdapter = new CategoryAdapter(getSherlockActivity());
         setHasOptionsMenu(true);
 
-        long parentId = getArguments().getLong("parentid");
+
+        if(savedInstanceState==null){
+            parentId = getArguments().getLong("parentid");
+            storeId = getArguments().getLong("storeid");
+        }else{
+            parentId = savedInstanceState.getLong("parentid");
+            storeId = savedInstanceState.getLong("storeid");
+        }
+
+
         if(parentId==0){
             setListAdapter(arrayAdapter);
         }
         Bundle bundle = new Bundle();
-        bundle.putLong("storeid", getArguments().getLong("storeid"));
+
+        bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        getLoaderManager().restartLoader(20, bundle, this);
+
+        if(savedInstanceState==null){
+            getLoaderManager().restartLoader(20, bundle, this);
+        }else{
+            getLoaderManager().initLoader(20, bundle, this);
+        }
+
 
 
         getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid"));
+        Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("storeid", storeId);
+        outState.putLong("parentid", parentId);
     }
 
     @Override
@@ -129,12 +156,11 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
             case 1:
                 Fragment fragment = new FragmentStoreListCategories();
 
-
-                args.putLong("storeid", getArguments().getLong("storeid"));
+                args.putLong("storeid", storeId);
                 args.putLong("parentid", id);
 
                 fragment.setArguments(args);
-                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
                 break;
         }
     }
@@ -169,8 +195,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onRefresh() {
         Bundle bundle = new Bundle();
-        bundle.putLong("storeid", getArguments().getLong("storeid"));
-        bundle.putLong("parentid", getArguments().getLong("parentid"));
+        bundle.putLong("storeid", storeId);
+        bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
     }
 

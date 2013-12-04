@@ -21,8 +21,6 @@
 
     <build>
 
-
-
         <plugins>
 
             <plugin>
@@ -63,7 +61,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
 
 
 
@@ -111,19 +108,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.manuelpeinado.fadingactionbar</groupId>
-            <artifactId>fadingactionbar</artifactId>
-            <version>2.2.2</version>
-            <type>apklib</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.tonicartos</groupId>
-            <artifactId>stickygridheaders</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
             <version>3.2.0</version>
@@ -141,6 +125,7 @@
             <version>2.2.4</version>
             <scope>compile</scope>
         </dependency>
+
 
         <dependency>
             <groupId>com.astuetz.pagerslidingtabstrip</groupId>

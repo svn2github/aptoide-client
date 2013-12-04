@@ -26,6 +26,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -81,6 +82,19 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         if (parserServiceIsBound){
             unbindService(conn);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("Aptoide-OnClick", "OnClick");
+        int i = item.getItemId();
+        if (i == R.id.menu_search) {
+            onSearchRequested();
+            Log.d("Aptoide-OnClick", "OnSearchRequested");
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Subscribe

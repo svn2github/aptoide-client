@@ -15,7 +15,7 @@
 
 
         <ImageView
-                android:id="@+id/search_icon"
+                android:id="@+id/app_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp" android:layout_gravity="center_vertical"/>
 
@@ -26,36 +26,36 @@
 
 
             <TextView
-                    android:id="@+id/search_name"
+                    android:id="@+id/app_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="Search Name"
-                    android:drawableRight="@drawable/badge_green"
+
+
                     android:drawablePadding="5dp"
                     android:textColor="@android:color/black"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <TextView
-                    android:id="@+id/search_version"
+                    android:id="@+id/app_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="Version 1.15.0"
+
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <RatingBar
-                    android:id="@+id/search_rating"
+                    android:id="@+id/app_rating"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:numStars="5" android:layout_weight="1"/>
 
         </LinearLayout>

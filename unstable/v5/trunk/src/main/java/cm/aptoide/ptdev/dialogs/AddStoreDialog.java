@@ -19,6 +19,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.internal.widget.PopupWindowCompat;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -137,6 +138,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
                             store.setLogin(login);
 
                             callback.startParse(store);
+                            dismissDialog();
 
                         } else {
                             Log.i("Aptoide-", "Request:" +(url+"repositoryInfo") );
