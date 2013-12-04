@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.DatabaseHelper;
@@ -46,9 +47,7 @@ public class Aptoide extends Application {
     }
 
     public static Context getContext() {
-
         return context;
-
     }
 
     public void setConfiguration(AptoideConfiguration configuration) {
@@ -60,11 +59,15 @@ public class Aptoide extends Application {
         super.onCreate();
         context = getApplicationContext();
 
+
+
         db = DatabaseHelper.getInstance(getApplicationContext());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .resetViewBeforeLoading(true)
+                .showStubImage(R.drawable.ic_launcher)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(options)

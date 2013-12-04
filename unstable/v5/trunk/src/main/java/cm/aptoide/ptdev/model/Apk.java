@@ -18,25 +18,40 @@ import java.util.List;
 public abstract class Apk {
 
 
-    private String name;
-    private String remotePath;
-    private String versionName;
+    public long getRepoId() {
+        return repoId;
+    }
+
+    public void setRepoId(long repoId) {
+        this.repoId = repoId;
+    }
+
+    private long repoId;
+    private String name = "";
+    private String remotePath = "";
+    private String versionName = "";
     private int versionCode;
-    private String packageName;
+    private String packageName = "";
     private String iconPath;
-    private String md5h;
+    private String md5h = "";
     private int downloads;
     private double rating;
-    private String category1;
-    private String category2;
+    private String category1 = "";
+    private String category2 = "";
     private long size;
-    private Filters.Age age;
+    private Filters.Age age = Filters.Age.All;
     private int minSdk;
-    private Filters.Screen minScreen;
-    private String screenCompat;
+    private Filters.Screen minScreen = Filters.Screen.notfound;
+    private String screenCompat = "";
     private Date date;
     private double price;
-    private String minGlEs;
+    private String minGlEs = "";
+    private Server server = new Server() {
+        @Override
+        public String getApkpath() {
+            return super.getApkpath();
+        }
+    };
 
     public String getCpuAbi() {
         return cpuAbi;
@@ -206,7 +221,25 @@ public abstract class Apk {
         return minGlEs;
     }
 
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public void setRunning(boolean running) {
+        isRunning = running;
+    }
+
+    boolean isRunning = true;
+
     public abstract void databaseDelete(Database db);
 
     public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<String, Long> categoriesIds);
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
 }

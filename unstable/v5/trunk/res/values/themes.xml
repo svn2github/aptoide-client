@@ -5,7 +5,7 @@
     <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
 
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customBackground">@style/customRowStyle</item>
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
 

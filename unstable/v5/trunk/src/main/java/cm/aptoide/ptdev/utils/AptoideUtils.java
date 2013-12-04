@@ -7,12 +7,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
-import android.util.Base64;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -237,6 +238,12 @@ public class AptoideUtils {
             NetworkUtils.TIME_OUT = timeout;
         }
 
+        static void getIconSize(Context context){
+
+
+
+        }
+
         public static int checkServerConnection(final String string, final String username, final String password) throws Exception {
 
 
@@ -249,15 +256,20 @@ public class AptoideUtils {
                             Base64.NO_WRAP));
                     client.setRequestProperty("Authorization", basicAuth);
                 }
+
                 client.setRequestMethod("HEAD");
                 client.setConnectTimeout(TIME_OUT);
                 client.setReadTimeout(TIME_OUT);
+
+            String contentType = client.getContentType();
+            int responseCode = client.getResponseCode();
+            client.disconnect();
                 if (Aptoide.DEBUG_MODE)
                     Log.i("Aptoide-NetworkUtils-checkServerConnection", "Checking on: " + client.getURL().toString());
-                if (client.getContentType().equals("application/xml")) {
+                if (contentType.equals("application/xml")) {
                     return 0;
                 } else {
-                    return client.getResponseCode();
+                    return responseCode;
                 }
         }
 
@@ -508,13 +520,12 @@ public class AptoideUtils {
         return context.getResources().getConfiguration().locale.getLanguage();
     }
 
-    public static void syncInstalledApps() {
+    public static void syncInstalledApps(Context context, SQLiteDatabase db) {
         Log.d("Aptoide-InstalledSync", "Syncing");
-        Database db = new Database(Aptoide.getDb());
-        Aptoide.getDb().beginTransaction();
-        InstalledAppsHelper.sync(db, Aptoide.getContext());
-        Aptoide.getDb().setTransactionSuccessful();
-        Aptoide.getDb().endTransaction();
+        long startTime = System.currentTimeMillis();
+        InstalledAppsHelper.sync(db, context);
+        Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
+
     }
 }
 

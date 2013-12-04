@@ -1,14 +1,17 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
@@ -34,23 +37,25 @@ public class FragmentUpdates extends SherlockListFragment {
     private UpdatesAdapter updatesAdapter;
     private Database db;
     private RecentlyUpdated recentUpdates;
-    private Loader<Cursor> installedLoader;
-    private Loader<Cursor> updatesLoader;
+
+    private MergeAdapter adapter;
 
     @Subscribe
     public void RefreshStoresEvent(RepoCompleteEvent event){
 
         Log.d("Aptoide-", "OnEvent");
 
-        installedLoader.forceLoad();
-        updatesLoader.forceLoad();
+
     }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MergeAdapter adapter = new MergeAdapter();
+        adapter = new MergeAdapter();
 
         this.db = new Database(Aptoide.getDb());
 
@@ -63,62 +68,16 @@ public class FragmentUpdates extends SherlockListFragment {
         installedAdapter = new InstalledAdapter(getSherlockActivity());
         adapter.addAdapter(installedAdapter);
 
-        setListAdapter(adapter);
         setHasOptionsMenu(true);
 
-        installedLoader = getLoaderManager().restartLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-                return new SimpleCursorLoader(getSherlockActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        return db.getInstalled();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                installedAdapter.swapCursor(data);
-                setListShown(true);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-
-            }
-        });
-
-        updatesLoader = getLoaderManager().restartLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-                return new SimpleCursorLoader(getSherlockActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        return db.getUpdates();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                if(data.getCount()>1) updatesAdapter.swapCursor(data);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-
-            }
-        });
-
     }
+
+
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
+        startActivity(new Intent(getSherlockActivity(), AppViewActivity.class));
     }
 
     @Override
@@ -153,6 +112,65 @@ public class FragmentUpdates extends SherlockListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        getLoaderManager().initLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                return new SimpleCursorLoader(getSherlockActivity()) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        return db.getUpdates();
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                updatesAdapter.swapCursor(data);
+                if(getListView().getAdapter()==null)
+                    setListAdapter(adapter);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        });
+
+
+        getLoaderManager().initLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                return new SimpleCursorLoader(getSherlockActivity()) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        return db.getInstalled();
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+                    installedAdapter.swapCursor(data);
+                if(getListView().getAdapter()==null)
+                    setListAdapter(adapter);
+
+
+
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        });
+
+
     }
 
 

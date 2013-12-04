@@ -80,7 +80,7 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
             String description = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DESCRIPTION));
             String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
 
-            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme.toUpperCase(Locale.ENGLISH));
+            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT");
 
             store_background.setBackgroundResource( storeTheme.getStoreHeader() );
             ImageLoader.getInstance().displayImage(url, avatar );

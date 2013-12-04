@@ -50,6 +50,8 @@ public enum EnumStoreTheme {
 		return values()[ordinal];
 	}
 
+
+
     public static EnumStoreTheme get(String s) {
 
         EnumStoreTheme theme;

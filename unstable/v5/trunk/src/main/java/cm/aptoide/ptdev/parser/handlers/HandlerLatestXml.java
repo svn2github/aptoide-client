@@ -6,6 +6,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
 import cm.aptoide.ptdev.model.ApkLatestXml;
+import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.Configs;
 import com.squareup.otto.Subscribe;
@@ -31,18 +32,14 @@ public class HandlerLatestXml extends AbstractHandler {
 
     public HandlerLatestXml(Database db, long repoId) {
         super(db, repoId);
-        BusProvider.getInstance().register(this);
+
 
     }
 
-    @Subscribe
-    public void stopParse(StopParseEvent event){
-        Log.d("Aptoide-Parser", "Received stopparseevent for repo " + event.getRepoId());
-        if(event.getRepoId()==repoId){
-            setRunning(false);
-        }
+    @Override
+    protected Server getServer() {
+        return new Server();
     }
-
 
 
     @Override

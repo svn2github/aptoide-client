@@ -20,6 +20,10 @@ public class AptoideDialog {
         return new ProgressDialogFragment();
     }
 
+    public static SherlockDialogFragment passwordDialog(){
+        return new PasswordDialog();
+    }
+
 
 
 

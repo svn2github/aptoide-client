@@ -26,6 +26,7 @@ public class Schema {
                             keys = @TableDefinition.Key(field = Apk.COLUMN_NAME, descending = true)),
                     @TableDefinition.Index(index_name = "repoIdx",
                             keys = @TableDefinition.Key(field = Apk.COLUMN_REPO_ID))
+
             })
     public static class Apk {
 
@@ -44,6 +45,20 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "0") public final static String COLUMN_VERCODE = "version_code";
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_ICON = "icon";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_DATE = "date";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_DOWNLOADS = "downloads";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_RATING = "rating";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_MATURE = "mature";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SDK = "sdk";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SCREEN = "screen";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_GLES = "gles";
 
         @ColumnDefinition(type = SQLType.INTEGER) public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
 
@@ -71,9 +86,12 @@ public class Schema {
 
 
     @TableDefinition(
-
             uniques = @TableDefinition.Composite_Unique(
-                    fields = {Category.COLUMN_NAME, Category.COLUMN_REPO_ID, Category.COLUMN_ID_PARENT})
+                    fields = {
+                            Category.COLUMN_NAME,
+                            Category.COLUMN_REPO_ID,
+                            Category.COLUMN_ID_PARENT
+                    })
             )
 
     public static class Category {
@@ -115,8 +133,33 @@ public class Schema {
 
         public static String getName() {
             return "category_apk";
-
         }
+
+    }
+
+    @TableDefinition(
+            uniques = @TableDefinition.Composite_Unique(
+                    fields = {Featured_Apk.COLUMN_EDITORS_ID, Category_Apk.COLUMN_APK_ID})
+    )
+
+    public static class Featured_Apk {
+
+        @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true)
+        public final static String COLUMN_EDITORS_ID = "id_editors";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_APK_ID = Apk.COLUMN_ID;
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_CATEGORY = "category";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_TYPE = "type";
+
+        public static String getName() {
+            return "featured_apk";
+        }
+
     }
 
 
@@ -164,6 +207,12 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_USERNAME = "username";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_PASSWORD = "password";
 
         @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true)
         public final static String COLUMN_ID = "id_repo";

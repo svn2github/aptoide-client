@@ -1,8 +1,9 @@
 package cm.aptoide.ptdev.services;
 
-import android.util.Base64;
+
 import android.util.Log;
 import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.utils.Base64;
 import com.octo.android.robospice.request.ProgressByteProcessor;
 import com.octo.android.robospice.request.SpiceRequest;
 import org.apache.commons.io.IOUtils;
@@ -45,17 +46,22 @@ public class FileRequest extends SpiceRequest<InputStream>{
 
             final HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
 
-            if(login!=null){
-                String basicAuth = "Basic "+ new String(Base64.encode(
+            if (login != null) {
+
+                String basicAuth = "Basic " + new String(Base64.encode(
                         (login.getUsername() + ":" + login.getPassword()).getBytes(),
                         Base64.NO_WRAP));
-                httpURLConnection.setRequestProperty("Authorization", basicAuth);
+                httpURLConnection.addRequestProperty("Authorization", basicAuth);
+
             }
+
+
 
             is = httpURLConnection.getInputStream();
 
         } catch (Exception e){
-            Log.d("Aptoide-Parser", "Error url");
+            e.printStackTrace();
+            Log.d("Aptoide-Parser", "Error url" + e);
         }
 
 

@@ -8,6 +8,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class ApkInfoXML extends Apk {
 
-    private long repoId;
+
 
     @Override
     public List<String> getStatements() {
@@ -33,7 +34,17 @@ public class ApkInfoXML extends Apk {
         values.add(Schema.Apk.COLUMN_APKID);
         values.add(Schema.Apk.COLUMN_NAME);
         values.add(Schema.Apk.COLUMN_VERCODE);
+        values.add(Schema.Apk.COLUMN_VERNAME);
         values.add(Schema.Apk.COLUMN_REPO_ID);
+        values.add(Schema.Apk.COLUMN_DATE);
+        values.add(Schema.Apk.COLUMN_DOWNLOADS);
+        values.add(Schema.Apk.COLUMN_RATING);
+        values.add(Schema.Apk.COLUMN_MATURE);
+        values.add(Schema.Apk.COLUMN_SDK);
+        values.add(Schema.Apk.COLUMN_SCREEN);
+        values.add(Schema.Apk.COLUMN_GLES);
+        values.add(Schema.Apk.COLUMN_ICON);
+
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
@@ -65,7 +76,22 @@ public class ApkInfoXML extends Apk {
 
         try {
 
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(0), new String[]{getPackageName(), getName(), String.valueOf(getVersionCode()), String.valueOf(getRepoId())});
+            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(0),
+                    new String[]{getPackageName(),
+                            getName(),
+                            String.valueOf(getVersionCode()),
+                            String.valueOf(getVersionName()),
+                            String.valueOf(getRepoId()),
+                            String.valueOf(getDate().getTime()),
+                            String.valueOf(getDownloads()),
+                            String.valueOf(getRating()),
+                            String.valueOf(getAge().equals(Filters.Age.Mature)),
+                            String.valueOf(getMinSdk()),
+                            String.valueOf(getMinScreen()),
+                            getMinGlEs(),
+                            getIconPath()
+                    });
+
             apkid = sqLiteStatements.get(0).executeInsert();
 
         } catch (SQLiteException e) {
@@ -150,11 +176,5 @@ public class ApkInfoXML extends Apk {
 
     }
 
-    public long getRepoId() {
-        return repoId;
-    }
 
-    public void setRepoId(long repoId) {
-        this.repoId = repoId;
-    }
 }

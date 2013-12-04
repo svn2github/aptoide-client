@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.InstalledPackage;
@@ -17,10 +18,14 @@ import java.util.List;
  */
 public class InstalledAppsHelper {
 
-    public static void sync(Database db, Context context) {
+    public static void sync(SQLiteDatabase database, Context context) {
+
+        Database db = new Database(database);
 
         List<PackageInfo> system_installed_list = context.getPackageManager().getInstalledPackages(0);
         List<InstalledPackage> database_installed_list = db.getStartupInstalled();
+
+
         for (PackageInfo pkg : system_installed_list) {
 
             try {
@@ -30,11 +35,12 @@ public class InstalledAppsHelper {
                                 pkg.packageName,
                                 pkg.versionCode,
                                 pkg.versionName);
+
                 if (!database_installed_list.contains(apk)) {
                     Log.d("Aptoide-InstalledSync", "Adding" + apk.getPackage_name() + "-" + apk.getVersion_name());
                     db.insertInstalled(apk);
-                    db.yield();
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

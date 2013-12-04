@@ -21,9 +21,8 @@ import cm.aptoide.ptdev.parser.Parser;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
-import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
-import cm.aptoide.ptdev.parser.handlers.HandlerLatestXml;
-import cm.aptoide.ptdev.parser.handlers.HandlerTopXml;
+import cm.aptoide.ptdev.parser.events.StopParseEvent;
+import cm.aptoide.ptdev.parser.handlers.*;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
@@ -31,7 +30,9 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -47,18 +48,20 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
     private boolean stopAfterComplete = false;
     private boolean alreadyStopped;
-    private HashSet<Long> parsingRepos = new HashSet<Long>();
+
 
 
     @Override
     public void onCreate() {
         super.onCreate();
+        BusProvider.getInstance().register(this);
         Log.d("Aptoide-ParserService", "onStart");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        BusProvider.getInstance().unregister(this);
         Log.d("Aptoide-ParserService", "onDestroy");
     }
 
@@ -98,11 +101,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
 
     public boolean repoIsParsing(long id){
-        return parsingRepos.contains(id);
+        return handlerBundleSparseArray.get((int) id)!=null;
     }
 
+    SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
-    public void startParse(Database db, Store store, Login login) {
+    public void startParse(Database db, Store store) {
         if (!spiceManager.isStarted()) {
             Log.d("Aptoide-Parser", "Starting spice");
             spiceManager.start(getApplicationContext());
@@ -111,10 +115,25 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         startForeground(45, createDefaultNotification());
         long id = insertStoreDatabase(db, store);
         BusProvider.getInstance().post(produceRepoAddedEvent());
-        parser.parse(store.getLatestXmlUrl(), login, 4, new HandlerLatestXml(db, id));
-        parser.parse(store.getTopXmlUrl(), login, 4, new HandlerTopXml(db, id));
-        parser.parse(store.getInfoXmlUrl(), login, 10, new HandlerInfoXml(db, id), this, this);
-        parsingRepos.add(id);
+        HandlerLatestXml handlerLatestXml = new HandlerLatestXml(db, id);
+        HandlerTopXml handlerTopXml = new HandlerTopXml(db, id);
+        HandlerInfoXml handlerInfoXml = new HandlerInfoXml(db, id);
+
+        HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
+
+        parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml);
+        parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml);
+        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this);
+        handlerBundleSparseArray.append((int) id, bundle);
+    }
+    @Subscribe
+    public void cancelRepo(StopParseEvent event){
+        HandlerBundle bundle = handlerBundleSparseArray.get((int) event.getRepoId());
+
+        if(bundle!=null){
+            bundle.cancel();
+        }
+
     }
 
     private long insertStoreDatabase(Database db, Store store) {
@@ -145,16 +164,38 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     @Override
     public void onComplete(long repoId) {
-        parsingRepos.remove(repoId);
+        handlerBundleSparseArray.remove((int) repoId);
+
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
 
     }
 
     @Override
     public void onError(Exception e, long repoId) {
-        parsingRepos.remove(repoId);
-
+        handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
+    }
+
+    public void parseEditorsChoice(Database db, String url) {
+        if (!spiceManager.isStarted()) {
+            Log.d("Aptoide-Parser", "Starting spice");
+            spiceManager.start(getApplicationContext());
+        }
+        startService(new Intent(getApplicationContext(), ParserService.class));
+        startForeground(45, createDefaultNotification());
+        parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), this, this);
+
+    }
+
+    public void parseTopApps(Database database, String url) {
+        if (!spiceManager.isStarted()) {
+            Log.d("Aptoide-Parser", "Starting spice");
+            spiceManager.start(getApplicationContext());
+        }
+        startService(new Intent(getApplicationContext(), ParserService.class));
+        startForeground(45, createDefaultNotification());
+        parser.parse(url, null, 2, new HandlerFeaturedTop(database), this, this);
+
     }
 
     public class MainServiceBinder extends Binder {
@@ -164,4 +205,26 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
 
+    static private class HandlerBundle {
+
+
+        private final HandlerLatestXml handlerLatestXml;
+        private final HandlerTopXml handlerTopXml;
+        private final HandlerInfoXml handlerInfoXml;
+
+        public HandlerBundle(HandlerInfoXml handlerInfoXml, HandlerTopXml handlerTopXml, HandlerLatestXml handlerLatestXml) {
+
+            this.handlerInfoXml = handlerInfoXml;
+            this.handlerTopXml = handlerTopXml;
+            this.handlerLatestXml = handlerLatestXml;
+
+
+        }
+
+        public void cancel(){
+            handlerInfoXml.stopParse();
+            handlerTopXml.stopParse();
+            handlerLatestXml.stopParse();
+        }
+    }
 }

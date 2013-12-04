@@ -1,6 +1,9 @@
 package cm.aptoide.ptdev;
 
-import android.content.*;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -11,14 +14,12 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
-import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
-import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
-import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -28,46 +29,16 @@ import com.actionbarsherlock.view.Menu;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends SherlockFragmentActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
     private static final String TAG = MainActivity.class.getName();
     static Toast toast;
-    ErrorCallback errorCallback = new ErrorCallback() {
-        @Override
-        public void onError(final Exception e, final long repoId) {
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    if(e instanceof ParseStoppedException){
-                        Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-
-        }
-
-
-    };
-    CompleteCallback parserCompleteCallback = new CompleteCallback() {
-        @Override
-        public void onComplete(final long repoId) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    };
     private ArrayList<Server> server;
     private ParserService service;
     private boolean parserServiceIsBound;
@@ -78,6 +49,10 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
             Log.d("Aptoide-MainActivity", "onServiceConnected");
             parserServiceIsBound = true;
+            database.deleteFeatured(2);
+            database.deleteFeatured(1);
+            service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors.xml");
+            service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
         }
 
         @Override
@@ -93,9 +68,11 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
     @Override
     protected void onStop() {
+        super.onStop();
+
         BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
-        super.onStop();
+
     }
 
     @Override
@@ -106,18 +83,42 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         }
     }
 
+    @Subscribe
+    public void onRepoErrorEvent(RepoErrorEvent event){
+
+        Exception e = event.getE();
+        long repoId = event.getRepoId();
+
+        if(e instanceof ParseStoppedException){
+            Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Subscribe
+    public void onRepoComplete(RepoCompleteEvent event){
+        long repoId = event.getRepoId();
+        Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    ExecutorService executorService = Executors.newFixedThreadPool(1);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         mContext = this;
         setContentView(R.layout.activity_main);
-
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
 
@@ -128,28 +129,29 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         tabStrip.setViewPager(pager);
 
         Intent i = new Intent(this, ParserService.class);
-        SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
+        final SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
         database = new Database(db);
 
+        bindService(i, conn, BIND_AUTO_CREATE);
+
+
         if (savedInstanceState == null) {
-            Executors.newFixedThreadPool(1).submit(new Runnable() {
+            executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    AptoideUtils.syncInstalledApps();
+                    AptoideUtils.syncInstalledApps(mContext, db);
                 }
             });
         }
 
-        bindService(i, conn, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStart() {
+        super.onStart();
         spiceManager.start(this);
         BusProvider.getInstance().register(this);
-        super.onStart();
     }
-
 
 
     @Override
@@ -159,8 +161,8 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     }
 
     @Override
-    public void startParse(Store store, Login login) {
-        service.startParse(database, store, login);
+    public void startParse(Store store) {
+        service.startParse(database, store);
     }
 
     @Override

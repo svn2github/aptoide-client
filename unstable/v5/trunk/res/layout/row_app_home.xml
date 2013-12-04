@@ -1,82 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="160dp"
+             android:layout_width="100dp"
+             android:layout_height="match_parent"
              android:foreground="@drawable/highlight_overlay"
              android:background="@drawable/background_card"
+             android:clickable="true"
+             android:layout_gravity="center_horizontal"
              android:layout_margin="10dp">
 
-
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:orientation="horizontal" android:layout_gravity="top">
+            android:layout_marginRight="5dp">
+
         <ImageView
                 android:contentDescription="@null"
                 android:id="@+id/home_icon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"/>
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:scaleType="center" />
+
         <ImageView
                 android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
                 android:contentDescription="@null"
+                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ic_action"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="5dp"
-            android:layout_weight="0.5" android:layout_gravity="bottom">
+            android:layout_margin="5dp" android:layout_gravity="bottom">
+
         <TextView
-                android:id="@+id/home_name"
+                android:id="@+id/app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@android:color/black"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Very big Awesome App name Very big Awesome App name"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
         <TextView
-                android:id="@+id/home_category"
-                android:drawableLeft="@drawable/ic_social_group"
+                android:id="@+id/app_category"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="center|fill_horizontal"
-                android:text="A Arcade and ActionArcade and Actionrcade and Action"/>
+                android:gravity="center|fill_horizontal"/>
     </LinearLayout>
-
-
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/new_ed_choice_tag"
-            android:layout_gravity="left|top"
-            android:src="@drawable/new_ed_choice"
-            android:padding="2dp"
-            />
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:paddingTop="16dp"
-            android:rotation="-45"
-            android:text="NEW"
-            android:textSize="11sp"
-            android:id="@+id/new_text_tag"
-            android:layout_gravity="left|top"/>
 </FrameLayout>
 

@@ -7,11 +7,16 @@ package cm.aptoide.ptdev.model;
  * Time: 16:31
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Server {
+public class Server {
 
     private String name;
     private String url;
     private String hash;
+    private String webservicespath;
+    private String apkpath;
+    private String screenspath;
+    private String iconspath;
+    private String basepath;
 
     public String getName() {
         return name;
@@ -40,4 +45,43 @@ public abstract class Server {
         return this;
     }
 
+    public void setWebservicespath(String webservicespath) {
+        this.webservicespath = webservicespath;
+    }
+
+    public String getWebservicespath() {
+        return webservicespath;
+    }
+
+    public void setApkpath(String apkpath) {
+        this.apkpath = apkpath;
+    }
+
+    public String getApkpath() {
+        return apkpath;
+    }
+
+    public void setScreenspath(String screenspath) {
+        this.screenspath = screenspath;
+    }
+
+    public String getScreenspath() {
+        return screenspath;
+    }
+
+    public void setIconspath(String iconspath) {
+        this.iconspath = iconspath;
+    }
+
+    public String getIconspath() {
+        return iconspath;
+    }
+
+    public void setBasepath(String basepath) {
+        this.basepath = basepath;
+    }
+
+    public String getBasepath() {
+        return basepath;
+    }
 }

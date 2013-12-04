@@ -6,6 +6,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkLatestXml;
 import cm.aptoide.ptdev.model.ApkTopXML;
+import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
 import cm.aptoide.ptdev.utils.Configs;
@@ -31,18 +32,13 @@ public class HandlerTopXml extends AbstractHandler {
 
     public HandlerTopXml(Database db, long repoId) {
         super(db, repoId);
-        BusProvider.getInstance().register(this);
-
-
     }
 
-    @Subscribe
-    public void stopParse(StopParseEvent event){
-        Log.d("Aptoide-Parser", "Received stopparseevent for repo " + event.getRepoId());
-        if(event.getRepoId()==repoId){
-            setRunning(false);
-        }
+    @Override
+    protected Server getServer() {
+        return new Server();
     }
+
 
     @Override
     protected Apk getApk() {
@@ -55,7 +51,7 @@ public class HandlerTopXml extends AbstractHandler {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
                 apk = getApk();
-                ((ApkLatestXml)apk).setRepoId(repoId);
+                apk.setRepoId(repoId);
                 apk.setCategory1("Top Apps");
             }
 

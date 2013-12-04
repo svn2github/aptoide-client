@@ -17,6 +17,10 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="customRowStyle">
+        <item name="android:background">@drawable/fab__gradient</item>
+    </style>
+
     <style name="breadcrumbs_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

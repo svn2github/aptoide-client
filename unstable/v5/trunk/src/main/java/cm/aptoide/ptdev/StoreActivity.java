@@ -13,6 +13,7 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.services.ParserService;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
@@ -24,7 +25,7 @@ import com.squareup.otto.Subscribe;
  * To change this template use File | Settings | File Templates.
  */
 
-public class StoreActivity extends SherlockFragmentActivity{
+public class StoreActivity extends SherlockFragmentActivity {
 
 
     private long storeid;
@@ -32,28 +33,29 @@ public class StoreActivity extends SherlockFragmentActivity{
     private String storeName;
     private String storeAvatarUrl;
     private ParserService service;
-
-    public boolean isRefreshing() {
-        return isRefreshing;
-    }
-
+    private boolean serviceIsBound;
     private boolean isRefreshing;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((ParserService.MainServiceBinder) binder).getService();
-            Toast.makeText(getApplicationContext(), "Is repo parsing? " + service.repoIsParsing(storeid), Toast.LENGTH_LONG).show();
             isRefreshing = service.repoIsParsing(storeid);
+
+            Toast.makeText(getApplicationContext(), "Is repo parsing? " + service.repoIsParsing(storeid), Toast.LENGTH_LONG).show();
             FragmentStoreListCategories fragmentStoreListCategories = (FragmentStoreListCategories) getSupportFragmentManager().findFragmentByTag("fragStore");
             if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
-
+            serviceIsBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            serviceIsBound = false;
         }
     };
+
+    public boolean isRefreshing() {
+        return isRefreshing;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +67,26 @@ public class StoreActivity extends SherlockFragmentActivity{
         storeid = getIntent().getLongExtra("storeid", 0);
         themeordinal = getIntent().getIntExtra("theme", 0);
         storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             setFragment();
         }
 
+    }
 
+    private void setFragment() {
+        Fragment fragment = new FragmentStoreListCategories();
+        Fragment fragmentHeader = new FragmentStoreHeader();
+
+        Log.d("Aptoide-", "StoreActivity id" + storeid);
+
+
+        Bundle args = new Bundle();
+        args.putLong("storeid", storeid);
+
+        fragment.setArguments(args);
+        fragmentHeader.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").replace(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 
     @Override
@@ -84,33 +101,19 @@ public class StoreActivity extends SherlockFragmentActivity{
         BusProvider.getInstance().unregister(this);
     }
 
-    @Subscribe
-    public void onStoreCompleted(RepoCompleteEvent event){
-        if(event.getRepoId()==storeid){
-            FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-            fragStore.onRefresh();
-            fragStore.setRefreshing(false);
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceIsBound) unbindService(conn);
     }
 
-    private void setFragment() {
-        Fragment fragment = new FragmentStoreListCategories();
-        Fragment fragmentHeader = new FragmentStoreHeader();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-        Log.d("Aptoide-", "StoreActivity id" + storeid);
+        getSupportMenuInflater().inflate(R.menu.menu_categories, menu);
 
-
-        Bundle args = new Bundle();
-        args.putLong("storeid", storeid);
-
-
-
-        fragment.setArguments(args);
-        fragmentHeader.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
+        return super.onCreateOptionsMenu(menu);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -121,8 +124,25 @@ public class StoreActivity extends SherlockFragmentActivity{
             finish();
         } else if (i == R.id.abs__home) {
             finish();
+        } else if( i == R.id.refresh_store){
+            refreshList();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe
+    public void onStoreCompleted(RepoCompleteEvent event) {
+        if (event.getRepoId() == storeid) {
+            refreshList();
+        }
+    }
+
+    private void refreshList() {
+        isRefreshing = service.repoIsParsing(storeid);
+
+        FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
+        fragStore.onRefresh();
+        fragStore.setRefreshing(isRefreshing);
     }
 }

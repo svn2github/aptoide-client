@@ -1,7 +1,9 @@
 package cm.aptoide.ptdev.dialogs;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 
@@ -39,16 +42,19 @@ public class AddStoreDialog extends SherlockDialogFragment {
     private Callback callback;
     public Callback dummyCallback = new Callback() {
         @Override
-        public void startParse(Store s, Login login) {
+        public void startParse(Store s) {
 
         }
     };
     private String repoName;
     private String url;
+    private GetRepositoryInfoRequest getRepoInfoRequest;
+    private CheckServerRequest checkServerRequest;
+    private Login login;
 
 
     public interface Callback{
-        public void startParse(Store store, Login login);
+        public void startParse(Store store);
     }
 
     @Override
@@ -78,22 +84,29 @@ public class AddStoreDialog extends SherlockDialogFragment {
         spiceManager.start(getSherlockActivity());
 
         if(url!=null){
-            spiceManager.getFromCache(Integer.class, (url+"rc").hashCode(), DurationInMillis.ONE_MINUTE, new CheckStoreListener());
-            spiceManager.getFromCache(RepositoryInfoJson.class, (url+"repositoryInfo").hashCode(), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
+            spiceManager.getFromCache(Integer.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
+            spiceManager.getFromCache(RepositoryInfoJson.class, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
         }
     }
 
 
 
-    private Login login;
-    public final class CheckStoreListener implements RequestListener<Integer> {
+
+    public final class CheckStoreListener implements RequestListener<Integer>, RequestCancellationListener {
 
 
+        private final Login login;
 
+        public CheckStoreListener(Login login) {
+            this.login = login;
+
+        }
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            dismissDialog("Unable to check store");
+
+
+            dismissDialog("Unable to check store " + spiceException);
 
         }
 
@@ -106,7 +119,9 @@ public class AddStoreDialog extends SherlockDialogFragment {
                     case 401:
                         //on401(url);
                         dismissDialog("Private store found");
-
+                        DialogFragment passDialog = AptoideDialog.passwordDialog();
+                        passDialog.setTargetFragment(AddStoreDialog.this, 20);
+                        passDialog.show(getFragmentManager(), "passDialog");
                         break;
                     case -1:
                         dismissDialog("Invalid Store added.");
@@ -119,12 +134,16 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
                             store.setBaseUrl(url);
                             store.setName(url);
+                            store.setLogin(login);
 
-                            callback.startParse( store, login);
+                            callback.startParse(store);
 
                         } else {
-
-                            spiceManager.execute(new GetRepositoryInfoRequest(repoName), (url+"repositoryInfo").hashCode(), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
+                            Log.i("Aptoide-", "Request:" +(url+"repositoryInfo") );
+                            getRepoInfoRequest = new GetRepositoryInfoRequest(repoName);
+                            RepositoryRequestListener repositoryRequestListener = new RepositoryRequestListener(url, login);
+                            getRepoInfoRequest.setRequestCancellationListener(repositoryRequestListener);
+                            spiceManager.execute(getRepoInfoRequest, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, repositoryRequestListener);
 
                         }
                         break;
@@ -132,6 +151,11 @@ public class AddStoreDialog extends SherlockDialogFragment {
             }
         }
 
+        @Override
+        public void onRequestCancelled() {
+            Toast.makeText(getSherlockActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
+
+        }
     }
 
     @Override
@@ -143,7 +167,24 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
     }
 
-    public final class RepositoryRequestListener implements RequestListener<RepositoryInfoJson> {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case 20:
+                String username = data.getStringExtra("username");
+                String password = data.getStringExtra("password");
+                Login login = new Login();
+                login.setUsername(username.trim());
+                login.setPassword(password.trim());
+                get(url, login);
+                showDialog();
+                break;
+        }
+    }
+
+    public final class RepositoryRequestListener implements RequestListener<RepositoryInfoJson>, RequestCancellationListener {
 
         private final String url;
         private final Login login;
@@ -156,7 +197,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            dismissDialog("Unable to add store.");
+            dismissDialog("Unable to add store " + spiceException);
 
         }
 
@@ -164,7 +205,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
         public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
             String message = null;
 
-            Log.d("Aptoide-", "success");
+            Log.i("Aptoide-", "success");
             if (repositoryInfoJson != null) {
 
 
@@ -187,18 +228,24 @@ public class AddStoreDialog extends SherlockDialogFragment {
                     store.setTheme(repositoryInfoJson.getListing().getTheme());
                     store.setView(repositoryInfoJson.getListing().getView());
                     store.setItems(repositoryInfoJson.getListing().getItems());
-
+                    store.setLogin(login);
 
                     dismissDialog();
                     dismiss();
-                    callback.startParse(store, login);
+                    callback.startParse(store);
 
                 }
             }
         }
+
+        @Override
+        public void onRequestCancelled() {
+            Toast.makeText(getSherlockActivity(), "Request was canceled", Toast.LENGTH_LONG).show();
+        }
     }
 
     void dismissDialog(){
+        setRetainInstance(false);
         SherlockDialogFragment pd = (SherlockDialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null)
                 pd.dismiss();
@@ -209,18 +256,21 @@ public class AddStoreDialog extends SherlockDialogFragment {
         if(message!=null){
             Toast.makeText(getSherlockActivity(),message, Toast.LENGTH_LONG).show();
         }
-        SherlockDialogFragment pd = (SherlockDialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
-        if(pd!=null)
-            pd.dismiss();
+
+        dismissDialog();
     }
 
 
     public void get(String s, final Login login) {
-
+        setRetainInstance(true);
         url = AptoideUtils.checkStoreUrl(s);
+        this.login = login;
         repoName = AptoideUtils.RepoUtils.split(url);
-        spiceManager.execute(new CheckServerRequest(url, login), (url+"rc").hashCode(), DurationInMillis.ONE_MINUTE, new CheckStoreListener());
-        Log.d("Aptoide-", "Request:" +(url+"rc").hashCode() );
+        checkServerRequest = new CheckServerRequest(url, login);
+        CheckStoreListener checkStoreListener = new CheckStoreListener(login);
+        checkServerRequest.setRequestCancellationListener(checkStoreListener);
+        spiceManager.execute(checkServerRequest, (url+"rc"), DurationInMillis.ONE_MINUTE, checkStoreListener);
+        Log.i("Aptoide-", "Request:" +(url+"rc") );
 
     }
 
@@ -253,11 +303,12 @@ public class AddStoreDialog extends SherlockDialogFragment {
         @Override
         public void onCancel() {
 
-            Log.d("Aptoide-", "Canceling:" +(url+"rc").hashCode() );
-            Log.d("Aptoide-", "Canceling:" +(url+"repositoryInfo").hashCode() );
+            Log.i("Aptoide-", "Canceling:" +(url+"rc") );
+            Log.i("Aptoide-", "Canceling:" +(url+"repositoryInfo") );
 
-            spiceManager.cancel(Integer.class, (url+"rc").hashCode());
-            spiceManager.cancel(RepositoryInfoJson.class, (url+"repositoryInfo").hashCode());
+            if(checkServerRequest!=null)checkServerRequest.cancel();
+            if(getRepoInfoRequest!=null)getRepoInfoRequest.cancel();
+            setRetainInstance(false);
             Toast.makeText(getSherlockActivity(), "Canceled", Toast.LENGTH_LONG).show();
         }
     };
@@ -268,6 +319,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
         if(savedInstanceState!=null){
             url = savedInstanceState.getString("url");
+
             ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null){
                 pd.setOnCancelListener(cancelListener);

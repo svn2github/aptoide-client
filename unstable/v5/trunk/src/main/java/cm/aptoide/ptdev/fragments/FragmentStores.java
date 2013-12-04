@@ -19,6 +19,7 @@ import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -113,14 +114,6 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     Loader<Cursor> loader;
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        loader = getLoaderManager().restartLoader(0, null, this);
-
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -149,8 +142,13 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                 i.putExtra("storeid", id);
 
                 startActivity(i);
+
+
             }
         });
+
+        loader = getLoaderManager().restartLoader(0, null, this);
+
 
 
     }
@@ -178,11 +176,12 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
         stores.clear();
 
         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+            String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
             stores.add(new StoreItem(
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
-                    EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME)).toUpperCase(Locale.ENGLISH)),
+                    EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT"),
                     "list".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );
@@ -258,6 +257,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                 pd.dismiss();
                 setRetainInstance(false);
                 loader.forceLoad();
+                BusProvider.getInstance().post(new RepoCompleteEvent(0));
             }
         }.execute(checkedItems);
 

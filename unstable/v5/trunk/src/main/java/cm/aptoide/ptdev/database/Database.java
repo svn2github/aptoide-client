@@ -3,10 +3,14 @@ package cm.aptoide.ptdev.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.widget.Toast;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.InstalledPackage;
+import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class Database {
 
 
     private final SQLiteDatabase database;
+
 
     public Database(SQLiteDatabase database) {
         this.database = database;
@@ -65,7 +70,9 @@ public class Database {
 
 
     public Cursor getServers() {
-        return database.rawQuery("select * from repo", null);
+        Cursor c = database.rawQuery("select * from repo where is_user = 1", null);
+        c.getCount();
+        return c;
     }
 
 
@@ -80,19 +87,30 @@ public class Database {
         values.put(Schema.Repo.COLUMN_THEME, store.getTheme());
         values.put(Schema.Repo.COLUMN_DESCRIPTION, store.getDescription());
         values.put(Schema.Repo.COLUMN_ITEMS, store.getItems());
+
+        if (store.getLogin() != null) {
+            values.put(Schema.Repo.COLUMN_USERNAME, store.getLogin().getUsername());
+            values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
+        }
+
+        Log.d("Aptoide-Inserting store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
+
         values.put(Schema.Repo.COLUMN_IS_USER, true);
 
         return database.insert(Schema.Repo.getName(), "error", values);
     }
 
     public Cursor getCategories(long storeid, long parentid) {
-
-        return database.rawQuery("select name as name, id_category as _id, apps_count as count, '1' as type from category as cat where id_repo = ? and id_category_parent = ?  union select apk.name, apk.id_apk as _id, '0' ,'0' as type from apk join category_apk on apk.id_apk = category_apk.id_apk where category_apk.id_category = ? order by type desc", new String[]{String.valueOf(storeid), String.valueOf(parentid), String.valueOf(parentid) });
+        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ?  union select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by type desc, apk.name", new String[]{String.valueOf(storeid), String.valueOf(parentid), String.valueOf(parentid) });
+        c.getCount();
+        return c;
 
     }
 
     public Cursor getStore(long storeid) {
-        return database.rawQuery("select * from repo where id_repo = ?", new String[]{String.valueOf(storeid)});
+        Cursor c = database.rawQuery("select * from repo where id_repo = ?", new String[]{String.valueOf(storeid)});
+        c.getCount();
+        return c;
     }
 
     public void updateAppsCount(long repoId) {
@@ -154,11 +172,15 @@ public class Database {
     }
 
     public Cursor getInstalled() {
-        return database.rawQuery("select 0 as _id, 'Installed' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name", null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name group by apk.package_name", null);
+        c.getCount();
+        return c;
     }
 
     public Cursor getUpdates() {
-        return database.rawQuery("select 0 as _id , 'Updates' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name where installed.version_code > apk.version_code",null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name union select id_apk as _id, installed.name from apk inner join installed on apk.package_name = installed.package_name where installed.version_code > apk.version_code group by apk.package_name",null);
+        c.getCount();
+        return c;
     }
 
     public List<InstalledPackage> getStartupInstalled() {
@@ -191,6 +213,95 @@ public class Database {
         Set<Long> aLong = new HashSet<Long>();
         aLong.add(id);
         removeStores(aLong);
+    }
+
+    public long insertServer(Server server) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
+        values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+        values.put(Schema.Repo.COLUMN_NAME, server.getName());
+        values.put(Schema.Repo.COLUMN_IS_USER, false);
+        values.put(Schema.Repo.COLUMN_URL, server.getUrl());
+        long id;
+
+        try{
+            id = database.insert(Schema.Repo.getName(), null, values);
+        }catch (SQLiteException e){
+            Cursor c = database.query(Schema.Repo.getName(), new String[]{Schema.Repo.COLUMN_ID}, "url = ?", new String[]{server.getUrl()}, null, null,null );
+            id = c.getLong(0);
+            c.close();
+        }
+
+        return id;
+    }
+
+    public void deleteFeatured(int type){
+
+
+        database.beginTransaction();
+
+        Cursor c = database.query(Schema.Featured_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, null, null, null, null, null);
+
+        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+
+            Cursor appsCursor = database.query(Schema.Apk.getName(), new String[]{"id_repo"}, "id_apk = ?", new String[]{c.getString(0)}, null,null,null);
+
+            if(appsCursor.moveToFirst()){
+                database.delete(Schema.Repo.getName(), "id_repo = ?", new String[]{appsCursor.getString(0)});
+                database.delete(Schema.Apk.getName(), "id_apk = ?", new String[]{c.getString(0)});
+            }
+            appsCursor.close();
+        }
+
+
+
+        c.close();
+
+        database.delete(Schema.Featured_Apk.getName(), "type = ?", new String[]{String.valueOf(type)});
+
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
+
+    }
+
+    public void updateServer(Server server, long repo_id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
+        values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+
+        database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repo_id)});
+
+    }
+
+    public ArrayList<HomeItem> getFeatured(int type, int editorsChoiceBucketSize, List<HomeItem> editorsChoice) {
+
+        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ?", new String[]{String.valueOf(type)});
+        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+        int size = c.getCount();
+        int itemsToAdd = size - ( size % editorsChoiceBucketSize);
+        int i = 0;
+        for(c.moveToFirst();!c.isAfterLast() && i <  itemsToAdd;c.moveToNext()){
+            i++;
+            String name = c.getString(c.getColumnIndex("name"));
+            String category = c.getString(c.getColumnIndex("category"));
+            String icon = c.getString(c.getColumnIndex("icon"));
+            String iconpath = c.getString(c.getColumnIndex("icons_path"));
+            items.add(new HomeItem(name, category, iconpath + icon, c.getLong(c.getColumnIndex(Schema.Apk.COLUMN_ID))));
+
+        }
+
+        c.close();
+
+        editorsChoice.clear();
+        editorsChoice.addAll(items);
+
+        return items;
     }
 }
 

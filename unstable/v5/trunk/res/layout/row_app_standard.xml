@@ -1,134 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="fill_parent"
-             android:layout_height="100dp"
-             android:orientation="horizontal"
-             android:padding="5dp">
-
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center|left">
-
-
-        <ImageView
-                android:id="@+id/app_icon"
-                android:layout_width="67dp"
-                android:layout_height="67dp" android:layout_gravity="center_vertical" android:contentDescription=""/>
-
-        <LinearLayout
-                android:layout_width="0dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" android:layout_weight="2">
+                android:padding="5dp">
 
 
-            <TextView
-                    android:id="@+id/app_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="App Name"
-                    android:drawablePadding="5dp"
-                    android:textColor="@android:color/black"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_weight="1"/>
-
-            <TextView
-                    android:id="@+id/app_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:ellipsize="end"
-                    android:layout_marginLeft="5dp"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="V 1.15.0.aadsf.13r"
-                    android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_weight="1"/>
-
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="left">
-
-                <!--<ImageView-->
-                <!--android:id="@+id/app_version_icon"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_action_about"-->
-                <!--android:layout_gravity="center_vertical|bottom"/>-->
+    <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:contentDescription=""
+            android:scaleType="center"/>
 
 
+    <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:drawablePadding="5dp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_toRightOf="@+id/app_icon"
+            android:layout_alignTop="@+id/app_icon"/>
 
-                <!--<ImageView-->
-                <!--android:id="@+id/app_downloads_icon"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_av_download"-->
-                <!--android:layout_gravity="center_vertical|bottom"/>-->
-
-
-                <TextView
-                        android:id="@+id/app_downloads"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_marginLeft="5dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="40323"
-                        android:gravity="center"
-                        android:drawableLeft="@drawable/ic_av_download"
-                        android:textSize="10sp"
-                        android:layout_weight="1"/>
-
-
-                <!--<ImageView-->
-                <!--android:id="@+id/app_good_rating_icon"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_rating_good"-->
-                <!--android:layout_gravity="center_vertical|bottom"/>-->
-
-                <TextView
-                        android:id="@+id/app_good_rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:gravity="center"
-                        android:text="3.5/5"
-                        android:drawableLeft="@drawable/ic_rating_good"
-                        android:textSize="10sp"
-                        android:layout_weight="1"/>
-
-                <TextView
-                        android:id="@+id/app_votes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:gravity="center"
-                        android:text="1,321 votes"
-                        android:drawableLeft="@drawable/ic_social_group"
-                        android:textSize="10sp"
-                        android:layout_weight="1"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+    <TextView
+            android:id="@+id/app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_toRightOf="@+id/app_icon"
+            android:layout_below="@+id/app_name"/>
 
 
     <ImageView
@@ -136,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ic_action"
-            android:layout_gravity="center|right|top"
             android:contentDescription="@null"
-            />
-</FrameLayout>
+            android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

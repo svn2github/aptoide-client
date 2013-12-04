@@ -1,11 +1,9 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
-import cm.aptoide.ptdev.parser.events.StopParseEvent;
+import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.utils.Filters;
 import com.squareup.otto.Subscribe;
@@ -25,8 +23,18 @@ import java.util.HashMap;
  */
 public abstract class AbstractHandler extends DefaultHandler2 {
 
+
+    protected final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
+
+
     public boolean isRunning() {
         return isRunning;
+    }
+
+    @Subscribe
+    public void stopParse(){
+        setRunning(false);
+        statements.clear();
     }
 
     public void setRunning(boolean running) {
@@ -39,7 +47,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         return repoId;
     }
 
-    protected final long repoId;
+    protected long repoId;
 
     public Database getDb() {
         return db;
@@ -56,6 +64,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         this.repoId = repoId;
         loadCommonElements();
         loadSpecificElements();
+
         statements = new ArrayList<SQLiteStatement>(db.compileStatements(apk.getStatements()));
     }
 
@@ -64,6 +73,9 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
 
     Apk apk = getApk();
+    Server server = getServer();
+
+    protected abstract Server getServer();
 
     static StringBuilder sb = new StringBuilder();
     HashMap<String, ElementHandler> elements = new HashMap<String, ElementHandler>();
@@ -128,7 +140,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                //apk.getServer().coutriesPermitted = new ArrayList<String>(Arrays.asList(sb.toString().split(",")));
+
             }
         });
 
@@ -168,7 +180,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                //apk.getServer().basePath = sb.toString();
+                server.setBasepath(sb.toString());
             }
         });
 
@@ -190,7 +202,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                //apk.getServer().iconsPath = sb.toString();
+                server.setIconspath(sb.toString());
             }
         });
 
@@ -201,7 +213,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                //apk.getServer().screenspath=sb.toString();
+                server.setScreenspath(sb.toString());
             }
         });
 
@@ -212,7 +224,8 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                //apk.getServer().webservicesPath=sb.toString();
+                server.setWebservicespath(sb.toString());
+
             }
         });
 
@@ -223,7 +236,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
 			@Override
 			public void endElement() throws SAXException {
-				//apk.getServer().apkPath=sb.toString();
+                server.setApkpath(sb.toString());
 			}
 		});
 
@@ -278,6 +291,17 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         });
 
         elements.put("icon", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(apk.getIconPath()==null) apk.setIconPath(sb.toString());
+            }
+        });
+
+        elements.put("icon_hd", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
 
             }

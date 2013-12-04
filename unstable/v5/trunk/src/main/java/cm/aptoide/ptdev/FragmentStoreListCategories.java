@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -15,13 +17,12 @@ import android.widget.ListView;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
-import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,17 +33,16 @@ import java.util.ArrayList;
  */
 public class FragmentStoreListCategories extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore {
 
-    private ArrayList<Category> categories = new ArrayList<Category>();
     private Database database;
     private CategoryAdapter arrayAdapter;
-    private long storeid;
-    private long parentid;
+
     private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ViewGroup viewGroup = (ViewGroup) view;
+        setEmptyText("Please wait while store is loading.");
 
         // We need to create a PullToRefreshLayout manually
         mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
@@ -55,47 +55,59 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
                         // We need to mark the ListView and it's Empty View as pullable
                         // This is because they are not dirent children of the ViewGroup
-                .theseChildrenArePullable(android.R.id.list)
+                .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
 
                         // We can now complete the setup as desired
 
-        .listener(this)
-                .options(Options.create().scrollDistance(0.75f).build())
-        .setup(mPullToRefreshLayout);
+                .listener(this)
+                .options(Options.create().scrollDistance(0.5f).headerLayout(R.layout.refresh_header).build())
+                .setup(mPullToRefreshLayout);
 
         mPullToRefreshLayout.setRefreshing(((StoreActivity)getSherlockActivity()).isRefreshing());
-
-
     }
 
     public void setRefreshing(boolean bool){
         mPullToRefreshLayout.setRefreshing(bool);
+        getSherlockActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         database = new Database(Aptoide.getDb());
         arrayAdapter = new CategoryAdapter(getSherlockActivity());
-        setListAdapter(arrayAdapter);
-        storeid = getArguments().getLong("storeid");
-        parentid = getArguments().getLong("parentid");
+        setHasOptionsMenu(true);
+
+        long parentId = getArguments().getLong("parentid");
+        if(parentId==0){
+            setListAdapter(arrayAdapter);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putLong("storeid", getArguments().getLong("storeid"));
+        bundle.putLong("parentid", parentId);
+        getLoaderManager().restartLoader(20, bundle, this);
+
+
         getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.d("Aptoide-", "StoreFragment id" + storeid);
+        Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid"));
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
 
+        if(((StoreActivity)getSherlockActivity()).isRefreshing()){
+            inflater.inflate(R.menu.category_refresh, menu);
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Bundle bundle = new Bundle();
-        bundle.putLong("storeid", storeid);
-        bundle.putLong("parentid", parentid);
 
-        getLoaderManager().restartLoader(20, bundle, this);
     }
 
     @Override
@@ -106,6 +118,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        Bundle args = getArguments();
 
         int type = l.getAdapter().getItemViewType(position);
 
@@ -115,13 +128,13 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
                 break;
             case 1:
                 Fragment fragment = new FragmentStoreListCategories();
-                Bundle args = new Bundle();
 
-                args.putLong("storeid", storeid);
+
+                args.putLong("storeid", getArguments().getLong("storeid"));
                 args.putLong("parentid", id);
 
                 fragment.setArguments(args);
-                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").addToBackStack(null).commit();
                 break;
         }
     }
@@ -139,6 +152,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         arrayAdapter.swapCursor(data);
+        if(getListView().getAdapter()==null)
+            setListAdapter(arrayAdapter);
     }
 
     @Override
@@ -154,8 +169,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onRefresh() {
         Bundle bundle = new Bundle();
-        bundle.putLong("storeid", storeid);
-        bundle.putLong("parentid", parentid);
+        bundle.putLong("storeid", getArguments().getLong("storeid"));
+        bundle.putLong("parentid", getArguments().getLong("parentid"));
         getLoaderManager().restartLoader(20, bundle, this);
     }
 

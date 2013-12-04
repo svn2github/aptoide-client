@@ -4,12 +4,14 @@ package cm.aptoide.ptdev;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.utils.IconSizes;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -25,10 +27,12 @@ public class CategoryAdapter extends CursorAdapter {
 
     private final Context context;
     ArrayList<Category> items;
+    final private String sizeString;
 
     public CategoryAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
         this.context = context;
+        sizeString = IconSizes.generateSizeString(context);
     }
 
 
@@ -87,6 +91,7 @@ public class CategoryAdapter extends CursorAdapter {
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
                     holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
+                    holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
                 }
 
@@ -97,8 +102,17 @@ public class CategoryAdapter extends CursorAdapter {
 
                     }
                 });
-                holder.appName.setText(name);
-                holder.appIcon.setImageResource(R.drawable.ic_launcher);
+                holder.appName.setText(Html.fromHtml(name).toString());
+                String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
+                String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
+                if(icon1.contains("_icon")){
+                    String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
+                    icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                }else{
+                    holder.appIcon.setBackgroundResource(R.drawable.fab__gradient);
+                }
+                ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
+                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
 
                 break;
             case 1:

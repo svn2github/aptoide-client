@@ -6,9 +6,9 @@
               android:background="@drawable/highlight_overlay">
 
     <TextView style="@style/separator_label"
-              android:id="@android:id/text1"
+              android:id="@+id/separator_label"
               android:layout_weight="0.2"
-              android:text="Category"/>
+              android:text="Editors' Choice"/>
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
