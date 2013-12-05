@@ -118,4 +118,8 @@
     <string name="rollback">Rollback</string>
     <string name="install">Install</string>
     <string name="get_latest">Get Latest</string>
+    <string name="review">Review</string>
+    <string name="specs">Specifications</string>
+    <string name="permissions">Permissions</string>
+    <string name="publisher">Publisher</string>
 </resources>

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/app_info_scroller"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/advertisement"
-            android:layout_below="@+id/apkinfoheader">
 
-    <LinearLayout
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -309,5 +304,5 @@ Please note Candy Crush Saga is completely free to play but some in-game items s
                 android:text="Privacy Policy: http://about.king.com/consumer-terms/terms/privacy"/>
 
     </LinearLayout>
-</ScrollView>
+
 

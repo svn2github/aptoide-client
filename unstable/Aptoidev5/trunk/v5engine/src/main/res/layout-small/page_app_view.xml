@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include android:id="@+id/app_view_header"
+             layout="@layout/fragment_app_view_header"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+    <!--<fragment android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewDetailsFragment"-->
+    <!--android:id="@+id/frag_app_view_details"-->
+    <!--android:layout_below="@+id/app_view_header"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@+id/adview"/>-->
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/app_view_header"
+                android:layout_above="@+id/adview">
+
+        <LinearLayout android:id="@+id/page"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+
+            <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewDetails"
+                      android:id="@+id/frag_app_view_details"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+
+            <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRating"
+                      android:id="@+id/frag_app_view_rating"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+
+            <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRelated"
+                      android:id="@+id/frag_app_view_related"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+
+            <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewSpecs"
+                      android:id="@+id/frag_app_view_advanced"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
+

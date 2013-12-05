@@ -1,0 +1,64 @@
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="?attr/custom_color"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:gravity="left"
+                android:text="@string/specs"/>
+
+
+        <TextView
+                android:id="@+id/min_sdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingBottom="5.0dp"
+                android:paddingLeft="5.0dp"
+                android:paddingRight="5.0dp"
+                android:text="Min SDK: 16"/>
+
+        <TextView
+                android:id="@+id/min_screen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingBottom="5.0dp"
+                android:paddingLeft="5.0dp"
+                android:paddingRight="5.0dp"
+                android:text="Min Screen: Small"/>
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="?attr/custom_color"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:gravity="left"
+                android:text="@string/permissions"/>
+
+        <LinearLayout
+                android:id="@+id/permissionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+        </LinearLayout>
+
+    </LinearLayout>
