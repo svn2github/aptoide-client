@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+
+    <LinearLayout
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_weight="1">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            >
+
+        <ImageView
+                android:id="@+id/recommended_apps_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@null"/>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/recommended_apps_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Recommended Name"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <TextView
+                    android:id="@+id/recommended_apps_catg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Categoria2"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <RatingBar
+                    android:id="@+id/recommended_apps_rating"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5" android:layout_weight="1"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="10dp">
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/top_apps_downloads"
+                android:src="@drawable/ic_av_download"
+                android:layout_gravity="center"
+                android:contentDescription="@null"/>
+        <TextView
+                android:id="@+id/recommended_apps_dwn_number"
+                android:layout_width="54dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="2365"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/recommended_apps_good_rating"
+                android:src="@drawable/ic_rating_good"
+                android:layout_gravity="center"
+                android:contentDescription="@null"/>
+        <TextView
+                android:id="@+id/recommended_apps_like_nmbr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="72"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ic_action"
+            android:layout_gravity="center_horizontal|top"
+            android:contentDescription="@null"
+            android:layout_weight="1"/>
+</LinearLayout>

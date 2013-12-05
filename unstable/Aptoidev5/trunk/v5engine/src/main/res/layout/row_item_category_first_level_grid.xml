@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="match_parent"
+             android:layout_margin="4dp"
+             android:background="@drawable/griditem_bgd_light"
+             android:foreground="@drawable/highlight_overlay">
+
+
+    <LinearLayout
+            android:id="@+id/row_grid_background"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+        <ImageView
+                android:id="@+id/category_first_level_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"/>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical">
+
+            <TextView
+                    android:id="@+id/category_first_level_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Applications"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                    android:id="@+id/category_first_level_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Number"
+                    android:textSize="10sp"
+                    android:layout_gravity="center|left"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

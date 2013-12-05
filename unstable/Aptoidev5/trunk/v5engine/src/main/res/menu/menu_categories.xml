@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_sort"
+          android:showAsAction="ifRoom"
+          android:title="@string/sort">
+        <menu android:id="@+id/submenugroup">
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/date"
+                      android:title="@string/by_date"/>
+                <item android:id="@+id/name"
+                      android:title="@string/by_name"/>
+                <item android:id="@+id/rating"
+                      android:title="@string/by_rating"/>
+                <item android:id="@+id/download"
+                      android:title="@string/by_download"/>
+                <item android:id="@+id/price"
+                      android:title="@string/by_price"/>
+            </group>
+
+            <item android:id="@+id/show_all"
+                  android:checkable="true"
+                  android:title="@string/show_all_applications"/>
+
+
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              >
+
+    <include android:id="@+id/app_view_header"
+             layout="@layout/fragment_app_view_header"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+    <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewDetails"
+              android:id="@+id/frag_app_view_details"
+              android:layout_below="@+id/app_view_header"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_above="@+id/adview"/>
+
+
+    <LinearLayout
+            android:id="@+id/adview"
+            android:layout_width="fill_parent"
+            android:background="@color/transparent_black"
+            android:layout_height="50dp"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"/>
+</RelativeLayout>
+

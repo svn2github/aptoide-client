@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent" android:layout_height="135dp">
+
+    <View   android:id="@+id/fab__gradient"
+            android:layout_width="match_parent"
+            android:background="@drawable/fab__gradient"
+            android:layout_height="100dp"/>
+
+    <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:id="@+id/banner_background_layout"
+            android:padding="10dp" >
+
+
+        <ImageView
+                android:id="@+id/banner_store_avatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:contentDescription="@null"/>
+
+        <LinearLayout
+                android:id="@+id/store_info"
+                android:layout_toRightOf="@+id/banner_store_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true">
+
+            <TextView
+                    android:id="@+id/banner_store_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+
+            <!--<com.astuetz.viewpager.extensions.sample.views.AutoScaleTextView-->
+            <!--android:id="@+id/banner_store_description"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:maxLines="2"-->
+            <!--android:scrollbars="vertical"-->
+            <!--android:textSize="16sp"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textStyle="italic"-->
+            <!--android:text="Description Description Description Description Description Description Description Description Description Description Description Descript"/>-->
+
+            <TextView
+                    android:id="@+id/store_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fadeScrollbars="true"
+                    android:layout_gravity="center_horizontal"
+                    android:fadingEdge="vertical"
+
+
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textColor="@android:color/white"
+                    android:textStyle="italic" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

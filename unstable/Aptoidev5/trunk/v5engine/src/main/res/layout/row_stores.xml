@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.manuelpeinado.multichoiceadapter.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                           android:layout_width="0dp"
+                                                           android:layout_height="match_parent"
+                                                           android:foreground="@drawable/highlight_overlay">
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/store_avatar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+
+                android:contentDescription="@null"
+                android:layout_centerInParent="true"
+                />
+
+        <View android:id="@+id/view_alpha"
+              android:layout_centerHorizontal="true"
+              android:layout_alignParentBottom="true"
+              android:layout_width="150dp"
+              android:layout_height="@dimen/carousel_label_height" />
+
+
+
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="@dimen/carousel_label_height"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true">
+
+            <TextView
+                    android:id="@+id/store_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/listPreferredItemHeight"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="@dimen/carousel_label_padding"
+                    android:paddingRight="@dimen/carousel_label_padding"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_large"/>
+
+            <TextView
+                    android:id="@+id/store_dwn_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:singleLine="true"
+                    android:paddingLeft="@dimen/carousel_label_padding"
+                    android:paddingRight="@dimen/carousel_label_padding"
+                    android:ellipsize="end"
+                    android:textColor="@android:color/white"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="@dimen/text_size_small"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</com.manuelpeinado.multichoiceadapter.CheckableFrameLayout>
+
+

@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="customBackground">@style/customRowStyle</item>
+    </style>
+
+
+    <style name="Settings" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+    </style>
+</resources>
