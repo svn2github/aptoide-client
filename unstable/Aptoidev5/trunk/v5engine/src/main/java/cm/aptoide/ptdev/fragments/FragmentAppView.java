@@ -17,7 +17,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
  * Time: 14:34
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentAppView extends SherlockFragment {
+public class FragmentAppView  {
 
 
 
@@ -31,23 +31,31 @@ public class FragmentAppView extends SherlockFragment {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            view.findViewById(R.id.add_comment).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getSherlockActivity(), AppViewActivity.class));
-                }
-            });
+
         }
     }
 
 
 
-    public static class FragmentScreenShots extends SherlockListFragment {
+    public static class FragmentAppViewRelated extends SherlockListFragment {
+
+
 
     }
 
-    public static class FragmentRelatedApps extends SherlockListFragment{
+    public static class FragmentAppViewSpecs extends SherlockFragment{
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+            return inflater.inflate(R.layout.fragment_specifications, container, false);
+        }
+    }
+
+    public static class FragmentAppViewRating extends SherlockFragment{
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_app_rating, container, false);
+        }
     }
 
 }
