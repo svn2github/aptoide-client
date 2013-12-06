@@ -1,64 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-
-        <!--<TextView android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textAppearance="@android:style/TextAppearance.Large"-->
-        <!--android:textColor="?attr/custom_color"-->
-        <!--android:paddingBottom="5dp"-->
-        <!--android:paddingLeft="5dp"-->
-        <!--android:paddingRight="5dp"-->
-        <!--android:paddingTop="10dp"-->
-        <!--android:gravity="left"-->
-        <!--android:text="@string/rate_this_app"/>-->
-
-
-        <!--<RelativeLayout-->
-        <!--android:id="@+id/topLayout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<ImageView  android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/ic_action_important"-->
-        <!--android:id="@+id/imageView" android:layout_centerVertical="true"/>-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/app_likes"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_vertical"-->
-        <!--android:ellipsize="end"-->
-        <!--android:maxLines="1"-->
-        <!--android:paddingLeft="3dp"-->
-        <!--android:singleLine="true"-->
-        <!--android:text="Likes: 100 | Don't Likes: 52"-->
-        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-        <!--android:layout_toRightOf="@+id/imageView"-->
-        <!--android:layout_below="@+id/app_rating_label"/>-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/app_comments_count"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:ellipsize="end"-->
-        <!--android:maxLines="1"-->
-        <!--android:paddingLeft="3dp"-->
-        <!--android:singleLine="true"-->
-        <!--android:text="Comments: 46"-->
-        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-        <!--android:layout_toRightOf="@+id/imageView" android:layout_below="@+id/app_likes"/>-->
-
-        <!--</RelativeLayout>-->
-
 
 
 

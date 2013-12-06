@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -22,121 +23,121 @@
                 android:text="@string/version_info"/>
 
 
-    <LinearLayout
-            android:id="@+id/version_info_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-
-        <TextView
-                android:id="@+id/downloads_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
+        <LinearLayout
+                android:id="@+id/version_info_container"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Downloads: 16334"
-                android:layout_gravity="center_horizontal|left"/>
+                android:layout_margin="5dp"
+                android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/store_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:text="Store: apps"
-                android:layout_gravity="center_horizontal|left"/>
 
-        <TextView
-                android:id="@+id/publisher_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:text="Publisher: King.com"
-                android:layout_gravity="center_horizontal|left"/>
+            <TextView
+                    android:id="@+id/downloads_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Downloads: 16334"
+                    android:layout_gravity="center_horizontal|left"/>
 
-        <TextView
-                android:id="@+id/size_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:text="Size: 51,34M"
-                android:layout_gravity="center_horizontal|left"/>
+            <TextView
+                    android:id="@+id/store_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Store: apps"
+                    android:layout_gravity="center_horizontal|left"/>
 
-        <TextView
-                android:id="@+id/rating_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Rating: 4.5/5"
-                android:layout_gravity="center_horizontal|left"/>
+            <TextView
+                    android:id="@+id/publisher_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Publisher: King.com"
+                    android:layout_gravity="center_horizontal|left"/>
 
-        <TextView
-                android:id="@+id/likes_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Likes: 45"
-                android:layout_gravity="center_horizontal|left"/>
+            <TextView
+                    android:id="@+id/size_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Size: 51,34M"
+                    android:layout_gravity="center_horizontal|left"/>
 
-        <TextView
-                android:id="@+id/dont_likes_label"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Don't Likes: 2"
-                android:layout_gravity="center_horizontal|left"/>
-    </LinearLayout>
+            <TextView
+                    android:id="@+id/rating_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Rating: 4.5/5"
+                    android:layout_gravity="center_horizontal|left"/>
+
+            <TextView
+                    android:id="@+id/likes_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Likes: 45"
+                    android:layout_gravity="center_horizontal|left"/>
+
+            <TextView
+                    android:id="@+id/dont_likes_label"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Don't Likes: 2"
+                    android:layout_gravity="center_horizontal|left"/>
+        </LinearLayout>
 
 
         <TextView
@@ -167,9 +168,7 @@
                     android:paddingLeft="5.0sp"
                     android:paddingRight="5.0sp"
                     android:paddingTop="10.0dip"
-                    android:text="Switch and match your way through more than 100 levels in this delicious and addictive puzzle adventure. Ain't it the sweetest game ever?
-
-Please note Candy Crush Saga is completely free to play but some in-game items such as extra moves or lives will require payment. You can turn-off the payment feature by disabling in-app purchases in your device’s settings."/>
+                    />
         </LinearLayout>
 
         <ImageView
