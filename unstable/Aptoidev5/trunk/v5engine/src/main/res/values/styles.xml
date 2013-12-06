@@ -1,10 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="separator_label">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-
         <item name="android:textColor">@color/custom_color</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
@@ -19,6 +18,13 @@
 
     <style name="customRowStyle">
         <item name="android:background">@drawable/fab__gradient</item>
+    </style>
+
+    <style name="overflowMenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:src">@drawable/overflow_menu</item>
     </style>
 
     <style name="breadcrumbs_style">
@@ -40,7 +46,7 @@
 
     <style name="AppTheme.TranslucentActionBar">
         <!--<item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
-        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay" tools:ignore="NewApi">true</item>
         <!--<item name="actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
         <item name="windowActionBarOverlay">true</item>
     </style>
@@ -85,7 +91,7 @@
     <style name="custom_button_style" parent="@android:style/Widget.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/button_orange</item>
+        <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:maxLines">1</item>
@@ -139,6 +145,6 @@
 
     <style name="Settings" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
-        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
     </style>
 </resources>

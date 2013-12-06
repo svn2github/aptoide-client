@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical" android:padding="10dp">
+              android:layout_gravity="center_vertical"
+              android:layout_margin="5dp"
+              android:padding="5dp"
+              android:background="@drawable/background_card">
+
+    <RelativeLayout android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
 
     <ImageView
             android:id="@+id/category_first_level_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@null" android:layout_gravity="center_vertical"/>
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"/>
 
     <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:orientation="vertical" android:layout_weight="1"
-            android:layout_gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/category_first_level_number"
+            android:layout_toRightOf="@+id/category_first_level_icon">
 
         <TextView
                 android:id="@+id/category_first_level_name"
@@ -45,6 +57,8 @@
             android:singleLine="true"
             android:text="Number"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="center"/>
-</LinearLayout>
+            android:layout_gravity="center" android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</FrameLayout>
 

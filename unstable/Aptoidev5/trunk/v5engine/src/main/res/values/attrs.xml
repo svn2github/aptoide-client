@@ -4,6 +4,7 @@
     <attr name="custom_color" format="color" />
 
     <attr name="customBackground" format="reference"/>
+
     <attr name="autoScaleTextViewStyle" format="reference"/>
     <declare-styleable name="AutoScaleTextView">
         <attr name="minTextSize" format="dimension"/>

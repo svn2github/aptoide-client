@@ -1,41 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="120dp"
+             android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:foreground="@drawable/highlight_overlay"
              android:background="@drawable/background_card"
-             android:padding="5dp">
+             android:padding="5dp"
+             android:layout_margin="5dp">
 
-    <LinearLayout
-            android:layout_width="wrap_content"
+    <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|top">
+
 
         <ImageView
-                android:contentDescription="@null"
-                android:id="@+id/app_related_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"/>
+                android:id="@+id/app_icon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_vertical"/>
+
+
         <TextView
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:id="@+id/app_related_name"
+                android:id="@+id/app_name"
+                android:layout_toRightOf="@+id/app_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Related App"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="center" android:layout_gravity="center"/>
+                android:text="App Name"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_toLeftOf="@+id/ic_action"/>
 
-    </LinearLayout>
-    <ImageView
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-            android:contentDescription="@null"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ic_action" android:layout_gravity="right|top"/>
+        <TextView
+                android:id="@+id/app_version"
+                android:layout_below="@+id/app_name"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Version 1.15.0"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignRight="@+id/app_name"/>
+
+        <ImageView android:id="@+id/ic_action"
+                   style="@style/overflowMenuButton"/>
+
+
+    </RelativeLayout>
+
 
 </FrameLayout>

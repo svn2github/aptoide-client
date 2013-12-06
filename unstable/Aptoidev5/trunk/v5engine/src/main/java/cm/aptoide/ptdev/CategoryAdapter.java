@@ -109,7 +109,7 @@ public class CategoryAdapter extends CursorAdapter {
                     String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
                     icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
                 }else{
-                    holder.appIcon.setBackgroundResource(R.drawable.fab__gradient);
+//                    holder.appIcon.setBackgroundResource(R.drawable.);
                 }
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));

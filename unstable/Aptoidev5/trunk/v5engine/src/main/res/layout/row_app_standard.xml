@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:foreground="@drawable/highlight_overlay"
+             android:background="@drawable/background_card"
+             android:padding="5dp"
+             android:layout_margin="5dp">
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center">
+
+
+        <ImageView
+                android:id="@+id/app_icon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_vertical"/>
+
+
+        <TextView
+                android:id="@+id/app_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="App Name"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:gravity="center|left"
+                android:layout_alignBottom="@+id/ic_action" android:layout_toLeftOf="@+id/ic_action"
+                android:layout_toRightOf="@+id/app_icon"/>
+
+        <TextView
+                android:id="@+id/app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="V 1.15.0.aadsf.13r"
+                android:gravity="center|left"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignLeft="@+id/app_name"
+                android:layout_below="@+id/app_name"
+                android:layout_alignRight="@+id/app_name"/>
+
+        <ImageView android:id="@+id/ic_action"
+                   style="@style/overflowMenuButton" />
+
+    </RelativeLayout>
 
 
-    <ImageView
-            android:id="@+id/app_icon"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:contentDescription=""
-            android:scaleType="center"/>
-
-
-    <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:drawablePadding="5dp"
-            android:textColor="@android:color/black"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@+id/app_icon"
-            android:layout_alignTop="@+id/app_icon"/>
-
-    <TextView
-            android:id="@+id/app_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_toRightOf="@+id/app_icon"
-            android:layout_below="@+id/app_name"/>
-
-
-    <ImageView
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ic_action"
-            android:contentDescription="@null"
-            android:layout_alignParentRight="true"/>
-
-</RelativeLayout>
+</FrameLayout>

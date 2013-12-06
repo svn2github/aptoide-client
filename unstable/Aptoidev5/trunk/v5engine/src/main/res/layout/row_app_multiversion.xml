@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_gravity="center_horizontal"
         android:padding="2dp"
         android:src="@drawable/top_candycrush" />

@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,7 +33,7 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
     TextView banner_store_name;
     TextView banner_description;
     ImageView avatar;
-    RelativeLayout store_background;
+    FrameLayout store_background;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,11 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
         banner_description = (TextView) header.findViewById(R.id.store_description);
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
 
-        store_background = (RelativeLayout) header.findViewById(R.id.banner_background_layout);
+        store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
 
         Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
         drawable.setAlpha(200);
-        getSherlockActivity().getSupportActionBar().setBackgroundDrawable(drawable);
+//        getSherlockActivity().getSupportActionBar().setBackgroundDrawable(drawable);
         Bundle bundle = new Bundle();
         bundle.putLong("storeid",getArguments().getLong("storeid"));
         getLoaderManager().restartLoader(30, bundle, this);

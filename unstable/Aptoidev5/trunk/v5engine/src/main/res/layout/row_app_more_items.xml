@@ -1,141 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:foreground="@drawable/highlight_overlay"
-              android:background="@drawable/background_card"
-              android:layout_margin="10dp">
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal"
+             android:foreground="@drawable/highlight_overlay"
+             android:background="@drawable/background_card"
+             android:layout_margin="5dp"
+             android:padding="5dp">
 
-    <LinearLayout
-            android:id="@+id/main_store_layout"
+    <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:layout_gravity="left">
 
-        <LinearLayout
+
+        <ImageView
+                android:id="@+id/app_icon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"/>
+
+
+        <TextView
+                android:id="@+id/app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="10dp">
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_toRightOf="@+id/app_icon"
+                android:singleLine="true"
+                android:text="Name"
+                android:drawablePadding="5dp"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_toLeftOf="@+id/ic_action"/>
 
-            <ImageView
-                    android:id="@+id/top_apps_icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="@null"/>
+        <TextView
+                android:id="@+id/app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_below="@+id/app_name"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Version 1.15.0"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignRight="@+id/app_name"/>
 
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+        <RatingBar
+                android:id="@+id/app_rating"
+                android:layout_below="@+id/app_version"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5" android:layout_weight="1"/>
 
-                <TextView
-                        android:id="@+id/top_apps_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="Top App Name"
-                        android:textColor="@android:color/black"
-                        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <ImageView android:id="@+id/ic_action"
+                   style="@style/overflowMenuButton"/>
 
-                <TextView
-                        android:id="@+id/top_apps_catg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="Categoria2"
-                        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-                <RatingBar
-                        android:id="@+id/top_apps_rating"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5" android:layout_weight="1"/>
+    </RelativeLayout>
 
 
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--<LinearLayout android:layout_width="match_parent"-->
-                      <!--android:layout_height="wrap_content"-->
-                      <!--android:layout_marginLeft="10dp">-->
-            <!--<ImageView-->
-                    <!--android:layout_width="20dp"-->
-                    <!--android:layout_height="20dp"-->
-                    <!--android:id="@+id/top_apps_downloads"-->
-                    <!--android:src="@drawable/ic_av_download"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:contentDescription="@null"/>-->
-            <!--<TextView-->
-                    <!--android:id="@+id/top_apps_dwn_number"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="5dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:ellipsize="end"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:text="2365"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceSmall"/>-->
-
-            <!--<ImageView-->
-                    <!--android:layout_width="20dp"-->
-                    <!--android:layout_height="20dp"-->
-                    <!--android:id="@+id/top_apps_good_rating"-->
-                    <!--android:src="@drawable/ic_rating_good"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:contentDescription="@null"/>-->
-            <!--<TextView-->
-                    <!--android:id="@+id/top_apps_like_nmbr"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="5dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:ellipsize="end"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:text="72"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceSmall"/>-->
-
-            <!--<ImageView-->
-                    <!--android:layout_width="20dp"-->
-                    <!--android:layout_height="20dp"-->
-                    <!--android:id="@+id/top_apps_bad_rating"-->
-                    <!--android:src="@drawable/ic_rating_bad"-->
-                    <!--android:contentDescription="@null"-->
-                    <!--android:layout_gravity="center"/>-->
-            <!--<TextView-->
-                    <!--android:id="@+id/top_apps_dislike_nmbr"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="5dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:ellipsize="end"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:text="2"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceSmall"/>-->
-        <!--</LinearLayout>-->
-    </LinearLayout>
-
-    <ImageView
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ic_action"
-            android:layout_gravity="center_horizontal|right|top"
-            android:contentDescription="@null"
-            android:layout_weight="1"/>
 </FrameLayout>
