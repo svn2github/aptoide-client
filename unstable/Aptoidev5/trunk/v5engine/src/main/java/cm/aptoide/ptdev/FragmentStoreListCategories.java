@@ -46,6 +46,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         ViewGroup viewGroup = (ViewGroup) view;
         setEmptyText("Please wait while store is loading.");
 
+        getListView().setDivider(null);
+
         // We need to create a PullToRefreshLayout manually
         mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
@@ -111,6 +113,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
         getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
+
 
     }
 

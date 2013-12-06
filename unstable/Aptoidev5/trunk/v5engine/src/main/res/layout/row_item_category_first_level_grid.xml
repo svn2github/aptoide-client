@@ -2,9 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="match_parent"
-             android:layout_margin="5dp"
-             android:padding="5dp"
-             android:background="@drawable/background_card"
              android:foreground="@drawable/highlight_overlay">
 
 
@@ -13,6 +10,12 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:padding="5dp"
+            android:background="@drawable/background_card"
             android:focusable="true"
             android:orientation="horizontal">
 

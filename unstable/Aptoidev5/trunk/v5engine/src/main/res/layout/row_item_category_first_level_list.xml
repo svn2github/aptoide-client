@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              android:layout_margin="5dp"
-              android:padding="5dp"
-              android:background="@drawable/background_card">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:foreground="@drawable/highlight_overlay">
 
     <RelativeLayout android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_card"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="5dp">
 
 
-    <ImageView
-            android:id="@+id/category_first_level_icon"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"/>
+        <ImageView
+                android:id="@+id/category_first_level_icon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:contentDescription="@null"
+                android:layout_gravity="center_vertical"/>
 
-    <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/category_first_level_number"
-            android:layout_toRightOf="@+id/category_first_level_icon">
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/category_first_level_number"
+                android:layout_toRightOf="@+id/category_first_level_icon">
+
+            <TextView
+                    android:id="@+id/category_first_level_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/category_first_level_desc"
+                    android:layout_gravity="left|bottom"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
+        </LinearLayout>
 
         <TextView
-                android:id="@+id/category_first_level_name"
-                android:layout_width="match_parent"
+                android:id="@+id/category_first_level_number"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Number"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center" android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:id="@+id/category_first_level_desc"
-                android:layout_gravity="left|center_vertical"
-                android:maxLines="2"
-                android:ellipsize="end"/>
 
-    </LinearLayout>
-
-    <TextView
-            android:id="@+id/category_first_level_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="Number"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="center" android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
     </RelativeLayout>
+
 </FrameLayout>
 

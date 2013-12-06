@@ -8,6 +8,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -45,11 +46,10 @@ public class CategoryAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, null);
-
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false);
                 break;
             case 1:
-                v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_list, null);
+                v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_list, parent, false);
                 break;
         }
 
@@ -135,6 +135,8 @@ public class CategoryAdapter extends CursorAdapter {
                     icon.setImageResource(R.drawable.comics);
                 } else if (name.equals("Communication")) {
                     icon.setImageResource(R.drawable.communication);
+                } else if (name.equals("Demo")) {
+                    icon.setImageResource(R.drawable.demo);
                 } else if (name.equals("Education")) {
                     icon.setImageResource(R.drawable.education);
                 } else if (name.equals("Entertainment")) {
@@ -149,6 +151,60 @@ public class CategoryAdapter extends CursorAdapter {
                     icon.setImageResource(R.drawable.libraries_and_demo);
                 } else if (name.equals("Lifestyle")) {
                     icon.setImageResource(R.drawable.lifestyle);
+                } else if (name.equals("Media & Video")) {
+                    icon.setImageResource(R.drawable.media_and_video);
+                } else if (name.equals("Medical")) {
+                    icon.setImageResource(R.drawable.medical);
+                } else if (name.equals("Music & Audio")) {
+                    icon.setImageResource(R.drawable.music_and_audio);
+                } else if (name.equals("Multimedia")) {
+                    icon.setImageResource(R.drawable.multimedia);
+                } else if (name.equals("News & Magazines")) {
+                    icon.setImageResource(R.drawable.news_and_magazines);
+                } else if (name.equals("News & Weather")) {
+                    icon.setImageResource(R.drawable.news_and_weather);
+                } else if (name.equals("Personalization")) {
+                    icon.setImageResource(R.drawable.personalization);
+                } else if (name.equals("Photography")) {
+                    icon.setImageResource(R.drawable.photography);
+                } else if (name.equals("Productivity")) {
+                    icon.setImageResource(R.drawable.productivity);
+                } else if (name.equals("Reference")) {
+                    icon.setImageResource(R.drawable.reference);
+                } else if (name.equals("Shopping")) {
+                    icon.setImageResource(R.drawable.shopping);
+                } else if (name.equals("Social")) {
+                    icon.setImageResource(R.drawable.social);
+                } else if (name.equals("Software Libraries")) {
+                    icon.setImageResource(R.drawable.software_libraries);
+                } else if (name.equals("Sports")) {
+                    icon.setImageResource(R.drawable.sports);
+                } else if (name.equals("Themes")) {
+                    icon.setImageResource(R.drawable.themes);
+                } else if (name.equals("Tools")) {
+                    icon.setImageResource(R.drawable.tools);
+                } else if (name.equals("Transport")) {
+                    icon.setImageResource(R.drawable.transport);
+                } else if (name.equals("Transportation")) {
+                    icon.setImageResource(R.drawable.transportation);
+                } else if (name.equals("Travel")) {
+                    icon.setImageResource(R.drawable.travel);
+                } else if (name.equals("Travel & Local")) {
+                    icon.setImageResource(R.drawable.travel_and_local);
+                } else if (name.equals("Weather")) {
+                    icon.setImageResource(R.drawable.weather);
+                } else if (name.equals("Arcade & Action")) {
+                    icon.setImageResource(R.drawable.arcade_and_action);
+                } else if (name.equals("Brain & Puzzle")) {
+                    icon.setImageResource(R.drawable.brain_and_puzzle);
+                } else if (name.equals("Cards & Casino")) {
+                    icon.setImageResource(R.drawable.cards_and_casino);
+                } else if (name.equals("Casual")) {
+                    icon.setImageResource(R.drawable.casual);
+                } else if (name.equals("Racing")) {
+                    icon.setImageResource(R.drawable.racing);
+                } else if (name.equals("Sports Games")) {
+                    icon.setImageResource(R.drawable.sports_games);
                 }  else {
                     icon.setImageResource(R.drawable.custom_categ_green);
                 }

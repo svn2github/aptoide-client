@@ -7,7 +7,7 @@
     <ImageView
             android:id="@+id/banner_store_avatar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
@@ -44,6 +44,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/white"
                 android:textStyle="italic"
+                android:layout_marginBottom="5dp"
                 android:text="This store gathers a set of the best apps and games (with obb file extension)...! Best apps and games to explore and discover! See Top Apps!"/>
 
     </LinearLayout>
