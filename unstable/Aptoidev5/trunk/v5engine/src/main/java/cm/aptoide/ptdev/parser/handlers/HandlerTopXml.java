@@ -27,7 +27,7 @@ import java.util.HashMap;
  */
 public class HandlerTopXml extends AbstractHandler {
     private final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
-
+    boolean insidePackage;
 
 
     public HandlerTopXml(Database db, long repoId) {
@@ -53,11 +53,13 @@ public class HandlerTopXml extends AbstractHandler {
                 apk = getApk();
                 apk.setRepoId(repoId);
                 apk.setCategory1("Top Apps");
+                insidePackage = true;
             }
 
             @Override
             public void endElement() throws SAXException {
                 apk.databaseInsert(statements, categoriesIds);
+                insidePackage = false;
             }
         });
 

@@ -39,5 +39,21 @@ public class HandlerFeaturedTop extends HandlerTopXml {
             }
         });
 
+        elements.put("name", new ElementHandler() {
+            @Override
+            public void startElement(Attributes attributes) throws SAXException {
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(insidePackage){
+                    apk.setName(sb.toString());
+                }else{
+                    server.setName(sb.toString());
+                }
+
+            }
+        });
+
     }
 }

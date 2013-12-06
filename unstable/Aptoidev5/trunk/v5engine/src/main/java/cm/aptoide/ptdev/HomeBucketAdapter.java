@@ -60,7 +60,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             holder = (ViewHolder) v.getTag();
         }
 
-        HomeItem item = currentElement;
+        final HomeItem item = currentElement;
 
         holder.name.setText(item.getName());
         holder.category.setText(item.getCategory());
@@ -75,7 +75,10 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(), AppViewActivity.class));
+                Intent i = new Intent(getContext(), AppViewActivity.class);
+                long id = item.getId();
+                i.putExtra("id", id);
+                getContext().startActivity(i);
             }
         });
 

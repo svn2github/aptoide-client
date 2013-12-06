@@ -52,6 +52,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             parserServiceIsBound = true;
             database.deleteFeatured(2);
             database.deleteFeatured(1);
+            BusProvider.getInstance().post(new RepoCompleteEvent(0));
             service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors.xml");
             service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
         }

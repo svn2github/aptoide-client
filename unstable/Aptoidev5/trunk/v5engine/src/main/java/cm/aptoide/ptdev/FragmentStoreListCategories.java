@@ -154,7 +154,9 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
         switch (type){
             case 0:
-                startActivity(new Intent(getSherlockActivity(), AppViewActivity.class));
+                Intent i = new Intent(getSherlockActivity(), AppViewActivity.class);
+                i.putExtra("id", id);
+                startActivity(i);
                 break;
             case 1:
                 Fragment fragment = new FragmentStoreListCategories();

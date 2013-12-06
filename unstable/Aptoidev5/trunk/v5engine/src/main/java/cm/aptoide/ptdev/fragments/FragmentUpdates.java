@@ -77,7 +77,14 @@ public class FragmentUpdates extends SherlockListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        startActivity(new Intent(getSherlockActivity(), AppViewActivity.class));
+
+        if(id>0){
+            Intent i = new Intent(getSherlockActivity(), AppViewActivity.class);
+            i.putExtra("id", id);
+            startActivity(i);
+        }
+
+
     }
 
     @Override
@@ -130,7 +137,7 @@ public class FragmentUpdates extends SherlockListFragment {
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 updatesAdapter.swapCursor(data);
-                if(getListView().getAdapter()==null)
+                if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
             }
 
@@ -155,12 +162,9 @@ public class FragmentUpdates extends SherlockListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-                    installedAdapter.swapCursor(data);
-                if(getListView().getAdapter()==null)
+                installedAdapter.swapCursor(data);
+                if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
-
-
 
             }
 

@@ -23,8 +23,10 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -125,9 +127,6 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
                 callback.showAddStoreDialog();
             }
         });
-
-
-
 
 
 

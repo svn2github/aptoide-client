@@ -12,8 +12,11 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.HomeBucketAdapter;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,32 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
     private List<HomeItem> editorsChoice = new ArrayList<HomeItem>();
     private List<HomeItem> top = new ArrayList<HomeItem>();
     private int editorsChoiceBucketSize;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+        getLoaderManager().initLoader(50, null, this);
+        getLoaderManager().initLoader(51, null, this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onStoreCompleted(RepoCompleteEvent event) {
+        if (event.getRepoId() == 0) {
+            refreshList();
+        }
+    }
+
+    private void refreshList() {
+        getLoaderManager().restartLoader(50, null, this);
+        getLoaderManager().restartLoader(51, null, this);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -53,17 +82,9 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 //        HomeBucketAdapter homeBucketAdapter3 = new HomeBucketAdapter(getSherlockActivity(), Arrays.asList(new HomeItem[]{new HomeItem(), new HomeItem(), new HomeItem(), new HomeItem()}));
 //        adapter.addView(View.inflate(getSherlockActivity(), R.layout.separator_home_header, null));
 //        adapter.addAdapter(homeBucketAdapter3);
-
-
-
-        getLoaderManager().restartLoader(50, null, this);
-        getLoaderManager().restartLoader(51, null, this);
-
-
-
-
-
     }
+
+
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -90,11 +111,11 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
                 switch (id){
                     case 50:
-                        return new Database(Aptoide.getDb()).getFeatured(2, editorsChoiceBucketSize, editorsChoice);
+                        return new Database(Aptoide.getDb()).getFeatured(2, editorsChoiceBucketSize);
                     case 51:
-                        return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize, top);
+                        return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize);
                     default:
-                        return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize, editorsChoice);
+                        return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize);
                 }
 
 
@@ -110,6 +131,16 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
     public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
 
 
+        switch (loader.getId()) {
+            case 50:
+                editorsChoice.clear();
+                editorsChoice.addAll(data);
+                break;
+            case 51:
+                top.clear();
+                top.addAll(data);
+                break;
+        }
 
         if(getListView().getAdapter()==null){
             setListAdapter(adapter);

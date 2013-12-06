@@ -1,14 +1,25 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.model.Comment;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,15 +28,55 @@ import com.actionbarsherlock.app.SherlockListFragment;
  * Time: 14:34
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentAppView  {
+public abstract class FragmentAppView extends SherlockFragment {
 
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
 
-    public static class FragmentAppViewDetails extends SherlockFragment{
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        BusProvider.getInstance().unregister(this);
+    }
+
+
+    public static class FragmentAppViewDetails extends FragmentAppView{
+
+
+        private TextView description;
+        private TextView size;
+        private TextView version;
+        private TextView publisher;
+
+        @Subscribe
+        public void refreshDetails(AppViewActivity.DetailsEvent event) {
+            Log.d("Aptoide-AppView", "getting event");
+            Log.d("Aptoide-AppView", "Setting description");
+            description.setText(event.getDescription());
+            publisher.setText("Publisher " + event.getPublisher());
+            size.setText("Size: " + String.valueOf(event.getSize()));
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
 
-            return inflater.inflate(R.layout.fragment_app_view_details, container, false);
+            description = (TextView) v.findViewById(R.id.descript);
+            size = (TextView) v.findViewById(R.id.size_label);
+
+            publisher = (TextView) v.findViewById(R.id.publisher_label);
+
+            return v;
         }
 
         @Override
@@ -37,13 +88,13 @@ public class FragmentAppView  {
 
 
 
-    public static class FragmentAppViewRelated extends SherlockListFragment {
+    public static class FragmentAppViewRelated extends FragmentAppView {
 
 
 
     }
 
-    public static class FragmentAppViewSpecs extends SherlockFragment{
+    public static class FragmentAppViewSpecs extends FragmentAppView{
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -51,11 +102,52 @@ public class FragmentAppView  {
         }
     }
 
-    public static class FragmentAppViewRating extends SherlockFragment{
+    public static class FragmentAppViewRating extends FragmentAppView{
+        private LinearLayout commentsContainer;
+
+        @Subscribe
+        public void refreshDetails(AppViewActivity.RatingEvent event) {
+            Log.d("Aptoide-AppView", "getting event");
+
+            if(event.getComments()!=null) FillComments.fillComments(getSherlockActivity(), commentsContainer, event.getComments());
+
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_app_rating, container, false);
+
+            View v = inflater.inflate(R.layout.fragment_app_rating, container, false);
+
+            commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);
+
+            return v;
+        }
+        public static class FillComments{
+
+            public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
+
+                View v;
+
+                for(Comment comment : comments){
+
+                    v = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
+
+                    TextView content = (TextView) v.findViewById(R.id.content);
+                    TextView date = (TextView) v.findViewById(R.id.date);
+                    TextView author = (TextView) v.findViewById(R.id.author);
+
+                    content.setText(comment.getText());
+                    date.setText(comment.getTimestamp());
+                    author.setText(comment.getUsername());
+                    commentsContainer.addView(v);
+                }
+
+
+
+            }
         }
     }
+
+
 
 }

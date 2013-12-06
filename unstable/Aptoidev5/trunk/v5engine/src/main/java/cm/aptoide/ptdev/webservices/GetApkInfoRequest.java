@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.util.Log;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -16,7 +17,10 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJson> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/getApkInfo/savou/com.gameloft.android.ANMP.GloftA7HM/1.0.6/json";
+    private String repoName;
+    private String packageName;
+    private String versionName;
+
 
 
     public GetApkInfoRequest() {
@@ -26,12 +30,38 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
     @Override
     public GetApkInfoJson loadDataFromNetwork() throws Exception {
 
+        String baseUrl = "http://webservices.aptoide.com/webservices/getApkInfo/"+repoName+"/"+packageName+"/"+versionName+"/json";
         GenericUrl url = new GenericUrl(baseUrl);
 
+        Log.e("Aptoide-Request", baseUrl);
         HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs(getResultType());
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
+    }
+
+    public String getVersionName() {
+        return versionName;
     }
 }
