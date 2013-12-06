@@ -88,7 +88,7 @@ public abstract class FragmentAppView extends SherlockFragment {
 
 
 
-    public static class FragmentAppViewRelated extends FragmentAppView {
+    public static class FragmentAppViewRelated extends SherlockListFragment {
 
 
 
