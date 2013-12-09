@@ -138,6 +138,7 @@
   <string name="setting_appfiltertitle">Filtro Aplikacionet</string>
   <string name="setting_mature_filtering">Filtra Pjekurie</string>
   <string name="setting_dont_show_mature_content">Mos shfaq përmbajtje erotike</string>
+  <string name="setting_appfiltersum">Mos shfaq aplikacione jo kompatibël me pajisjen tuaj</string>
   <string name="setting_schdwntitle">Shkarkime të Planifikuara</string>
   <string name="setting_schdwninstalltitle">Instalim Automatik</string>
   <string name="setting_schdwninstallsum">Instalo shkarkimet e planifikuara automatikisht kur jeni i lidhur në WiFi</string>
@@ -385,4 +386,27 @@
   <string name="has_updates">"%s ka  azhornim(e) të reja të disponueshme!"</string>
   <string name="powered_by">Mundësuar nga</string>
   <string name="restart_launcher">%s do rifillojë programin. Klikoni OK për të vazhduar.</string>
+  <string name="setting_updates">Azhornime</string>
+  <string name="setting_updates_notification_title">Njoftime për Azhornime</string>
+  <string name="setting_updates_notification_sum">Trego njoftime për azhornimet e reja</string>
+  <string name="permissions">Autorizimet</string>
+  <string name="no_permissions_required">Nuk kërkohen autorizime për këtë aplikacion.</string>
+  <string name="restore">Instalo</string>
+  <string name="crash_reports">Raportime për Bllokime</string>
+  <string name="pref_enable_acra">Dërgo raportime</string>
+  <string name="pref_acra_enabled">Aktivizo për të dërguar raportime për të ndihmuar Aptoide të përmirësohet</string>
+  <string name="pref_acra_syslog">Dërgo informacionet e sitemit</string>
+  <string name="pref_acra_syslog_enabled">Aktivizo për të dërguar informacionin e pajisjes suaj në raportimet</string>
+  <string name="pref_acra_user_email">Kontakt email</string>
+  <string name="pref_acra_user_email_summary">Mund t\'ju kontaktojmë për të përfituar më shumë informacion rreth gabimeve</string>
+  <string name="pref_acra_alwaysaccept">Dërgo raportime automatikisht</string>
+  <string name="pref_acra_alwaysaccept_enabled">Aktivizo për të dërguar automatikisht raportime në raste dështimi</string>
+  <string name="crash_reports_settings">Konfigurimet për Raportet e Dështimeve</string>
+  <string name="store_already_added">Dyqani tashmë është i shtuar!</string>
+  <string name="dev_mode">Mënyra e zhvilluesit</string>
+  <string name="clearsearch_title">Pastro historinë e kërkimit</string>
+  <string name="updating">Duke azhornuar gjithë aplikacionet</string>
+  <string name="setting_auto_update_sum">Aktivizoni azhornimin automatik të aplikacioneve</string>
+  <string name="setting_auto_update_title">Aktivizoni azhornimin automatik</string>
+  <string name="remote_in_nospace">Nuk ka memorie të lirë në celularin tuaj</string>
 </resources>
