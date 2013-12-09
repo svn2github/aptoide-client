@@ -1,19 +1,21 @@
-package cm.aptoide.ptdev;
+package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -194,6 +196,8 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
     @Override
     public void onRefreshStarted(View view) {
+
+        ((StoreActivity)getSherlockActivity()).onRefreshStarted();
 
     }
 

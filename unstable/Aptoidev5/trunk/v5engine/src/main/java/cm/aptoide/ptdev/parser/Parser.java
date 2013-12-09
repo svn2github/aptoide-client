@@ -11,6 +11,7 @@ import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
+import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.services.FileRequest;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -67,7 +68,7 @@ public class Parser{
         Log.d("Aptoide-Parser", "GC on Parser");
     }
 
-    public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback) {
+    public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback, final Runnable runnable) {
         int key = url.hashCode();
         AptoideConfiguration configuration = Aptoide.getConfiguration();
 
@@ -91,7 +92,6 @@ public class Parser{
             public void onRequestSuccess(final InputStream inputStream) {
 
                 Log.d("Aptoide-Parser", "onRequestSuccess " + url);
-
                 service.execute(new RunnableWithPriority(priority) {
                     @Override
                     public void run() {
@@ -103,7 +103,15 @@ public class Parser{
                         try {
                             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
                             Log.d("Aptoide-Parser", "New SaxParser");
+                            if(runnable!=null) runnable.run();
+
+                            if(handler instanceof HandlerInfoXml){
+                                ((HandlerInfoXml)handler).setFile(file);
+                            }
+
                             parser.parse(inputStream, handler);
+                            Log.d("Aptoide-Parser", "Parse ended");
+
                             Aptoide.getDb().setTransactionSuccessful();
                             if(completeCallback!=null)completeCallback.onComplete(repoId);
                         } catch (ParserConfigurationException e1) {
@@ -125,6 +133,7 @@ public class Parser{
                         }
 
                         Aptoide.getDb().endTransaction();
+                        Log.d("Aptoide-Parser", "Deleting file");
                         file.delete();
                         i--;
                         Log.d("Aptoide-Parser", url + " Took : " + (System.currentTimeMillis() - startTime) + " ms" + " i=" + i);
@@ -142,8 +151,8 @@ public class Parser{
         return i==0;
     }
 
-    public void parse(String url, Login login, int priority, AbstractHandler handler) {
-        parse(url, login, priority, handler, null, null);
+    public void parse(String url, Login login, int priority, AbstractHandler handler, Runnable runnable) {
+        parse(url, login, priority, handler, null, null, runnable);
     }
 
     public void setPoolEndCallback(PoolEndedCallback callback) {

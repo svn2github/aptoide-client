@@ -19,6 +19,30 @@ public class Store {
     private String baseUrl;
     private long id;
     private Login login;
+    private long topTimestamp = 0;
+
+    public long getTopTimestamp() {
+        return topTimestamp;
+    }
+
+    public long getLatestTimestamp() {
+        return latestTimestamp;
+    }
+
+    public void setLatestTimestamp(long latestTimestamp) {
+        this.latestTimestamp = latestTimestamp;
+    }
+
+    public String getDelta() {
+        return delta;
+    }
+
+    public void setDelta(String delta) {
+        this.delta = delta;
+    }
+
+    private long latestTimestamp = 0;
+    private String delta;
 
 
     public long getId() {
@@ -42,7 +66,7 @@ public class Store {
 
 
     public String getInfoXmlUrl() {
-        return baseUrl + "info.xml";
+        return baseUrl + "info.xml"+(delta!=null?"?hash="+delta:"");
     }
 
     public String getLatestXmlUrl() {
@@ -115,5 +139,9 @@ public class Store {
 
     public void setLogin(Login login) {
         this.login = login;
+    }
+
+    public void setTopTimestamp(long topTimestamp) {
+        this.topTimestamp = topTimestamp;
     }
 }

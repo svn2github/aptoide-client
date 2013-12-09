@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.HomeBucketAdapter;
+import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -52,13 +52,24 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
     @Subscribe
     public void onStoreCompleted(RepoCompleteEvent event) {
-        if (event.getRepoId() == 0) {
-            refreshList();
+        Log.d("Aptoide-Home", "OnRefresh");
+
+        if (event.getRepoId() == -2) {
+            refreshEditorsList();
+        }else if(event.getRepoId() == -1){
+            refreshTopList();
         }
     }
 
-    private void refreshList() {
+    private void refreshEditorsList() {
+        editorsChoice.clear();
+        adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(50, null, this);
+    }
+
+    private void refreshTopList() {
+        top.clear();
+        adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(51, null, this);
     }
 
@@ -109,8 +120,10 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
             @Override
             public ArrayList<HomeItem> loadInBackground() {
 
+
                 switch (id){
                     case 50:
+
                         return new Database(Aptoide.getDb()).getFeatured(2, editorsChoiceBucketSize);
                     case 51:
                         return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize);
@@ -133,11 +146,9 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
         switch (loader.getId()) {
             case 50:
-                editorsChoice.clear();
                 editorsChoice.addAll(data);
                 break;
             case 51:
-                top.clear();
                 top.addAll(data);
                 break;
         }
@@ -152,6 +163,17 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
+
+        switch (loader.getId()) {
+            case 50:
+                editorsChoice.clear();
+                break;
+            case 51:
+                top.clear();
+                break;
+        }
+
+        adapter.notifyDataSetChanged();
 
     }
 }

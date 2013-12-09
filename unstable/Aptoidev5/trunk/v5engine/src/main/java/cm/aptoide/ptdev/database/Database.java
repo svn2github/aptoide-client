@@ -145,6 +145,34 @@ public class Database {
         return apps;
     }
 
+
+    public Boolean clearStore(long id_store) {
+
+        Log.d("Aptoide-", "Deleting " + id_store);
+
+        database.beginTransaction();
+
+            Cursor c = database.rawQuery("select id_category, name from category where id_repo = ? ", new String[]{String.valueOf(id_store)});
+
+            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+                if((c.getString(1).equals("Top Apps") && c.getString(1).equals("Latest Apps"))){
+                    database.delete("category_apk", "id_category=?", new String[]{String.valueOf(c.getLong(0))});
+                    Log.d("Aptoide-", "Deleting " + c.getLong(0));
+                }
+
+            }
+            c.close();
+
+            database.delete("apk"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+
+
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        return true;
+    }
+
     public Boolean removeStores(Set<Long> checkedItems) {
 
         Log.d("Aptoide-", "Deleting " + checkedItems);
@@ -239,7 +267,7 @@ public class Database {
 
         database.beginTransaction();
 
-        Cursor c = database.query(Schema.Featured_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, null, null, null, null, null);
+        Cursor c = database.query(Schema.Featured_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, "type = ?", new String[]{String.valueOf(type)}, null, null, null);
 
         for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
 
@@ -269,8 +297,10 @@ public class Database {
 
         ContentValues values = new ContentValues();
 
-        values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
-        values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+
+        if(server.getIconspath()!=null)values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
+        if(server.getWebservicespath()!=null)values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+        if(server.getHash()!=null) values.put(Schema.Repo.COLUMN_HASH, server.getHash());
 
         database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repo_id)});
 
@@ -314,6 +344,65 @@ public class Database {
         c.moveToFirst();
 
         return c;
+    }
+
+    public void setLatestTimestamp(long repoId, long timestamp) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_LATEST_TIMESTAMP, timestamp);
+
+        database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repoId)});
+    }
+
+    public void setTopTimestamp(long repoId, long timestamp) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_TOP_TIMESTAMP, timestamp);
+
+        database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repoId)});
+    }
+
+    public void deleteLatest(long id) {
+
+        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"} );
+        if(c.moveToFirst()){
+            long id_category = c.getLong(0);
+
+            c.close();
+            database.delete(Schema.Category_Apk.getName(), "id_category = ?", new String[]{String.valueOf(id_category)});
+
+            database.delete(Schema.Category.getName(), "id_category = ?", new String[]{String.valueOf(id_category)});
+        }
+
+
+    }
+
+    public void deleteTop(long id) {
+
+        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"} );
+
+        if(c.moveToFirst()){
+            long id_category = c.getLong(0);
+
+            c.close();
+            database.delete(Schema.Category_Apk.getName(), "id_category = ?", new String[]{String.valueOf(id_category)});
+
+            database.delete(Schema.Category.getName(), "id_category = ?", new String[]{String.valueOf(id_category)});
+        }
+
+
+    }
+
+    public void putCategoriesIds(HashMap<String, Long> categoriesIds, long repoId) {
+        Cursor c = database.rawQuery("select name, id_category from category where id_repo = ? ", new String[]{String.valueOf(repoId)});
+
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            categoriesIds.put(c.getString(0), c.getLong(1));
+        }
+
     }
 }
 

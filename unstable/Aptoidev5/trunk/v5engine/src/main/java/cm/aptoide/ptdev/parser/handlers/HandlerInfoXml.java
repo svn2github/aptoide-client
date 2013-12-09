@@ -2,20 +2,17 @@ package cm.aptoide.ptdev.parser.handlers;
 
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
 import cm.aptoide.ptdev.model.Server;
-import cm.aptoide.ptdev.parser.events.StopParseEvent;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
-import com.squareup.otto.Subscribe;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.math.BigInteger;
+import java.io.File;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +23,9 @@ import java.util.HashMap;
  */
 public class HandlerInfoXml extends AbstractHandler {
 
+
+    private boolean isDelta;
+    private File file;
 
     public HandlerInfoXml(Database db, long repoId) {
         super(db, repoId);
@@ -62,6 +62,27 @@ public class HandlerInfoXml extends AbstractHandler {
             }
         });
 
+        elements.put("delta", new ElementHandler() {
+            @Override
+            public void startElement(Attributes attributes) throws SAXException {
+
+                isDelta = true;
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+                String delta = sb.toString();
+
+                if(delta.length()>0){
+                    server.setHash(delta);
+                }
+
+
+            }
+        });
+
         elements.put("date", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
 
@@ -85,6 +106,11 @@ public class HandlerInfoXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
+
+                if(!isDelta){
+                    getDb().clearStore(getRepoId());
+                }
+                getDb().putCategoriesIds(categoriesIds, getRepoId());
                 getDb().updateServer(server, getRepoId());
             }
         });
@@ -94,5 +120,19 @@ public class HandlerInfoXml extends AbstractHandler {
     public void endDocument() throws SAXException {
         super.endDocument();
         getDb().updateAppsCount(repoId);
+
+        if(!isDelta){
+            Log.d("Aptoide-Parser", "Calculating md5");
+            String md5 = AptoideUtils.Algorithms.md5Calc(file);
+            server.setHash(md5);
+        }
+        getDb().updateServer(server, getRepoId());
+
+    }
+
+    public void setFile(File file) {
+
+        this.file = file;
+
     }
 }

@@ -4,9 +4,12 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
 import cm.aptoide.ptdev.MainActivity;
@@ -32,6 +35,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -46,8 +52,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
-    private boolean stopAfterComplete = false;
-    private boolean alreadyStopped;
+
 
 
 
@@ -106,26 +111,68 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
-    public void startParse(Database db, Store store) {
+    public void startParse(final Database db, Store store, boolean newStore) {
         if (!spiceManager.isStarted()) {
             Log.d("Aptoide-Parser", "Starting spice");
             spiceManager.start(getApplicationContext());
         }
         startService(new Intent(getApplicationContext(), ParserService.class));
         startForeground(45, createDefaultNotification());
-        long id = insertStoreDatabase(db, store);
-        BusProvider.getInstance().post(produceRepoAddedEvent());
+        final long id;
+        if(newStore){
+            id = insertStoreDatabase(db, store);
+            BusProvider.getInstance().post(produceRepoAddedEvent());
+        }else{
+            id = store.getId();
+        }
+
         HandlerLatestXml handlerLatestXml = new HandlerLatestXml(db, id);
         HandlerTopXml handlerTopXml = new HandlerTopXml(db, id);
         HandlerInfoXml handlerInfoXml = new HandlerInfoXml(db, id);
 
         HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
 
-        parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml);
-        parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml);
-        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this);
+
+        long currentLatestTimestamp = 0;
+        try {
+            currentLatestTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        long currentTopTimestamp = 0;
+        try {
+            currentTopTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        if (currentLatestTimestamp>store.getLatestTimestamp()) {
+            handlerLatestXml.setTimestamp(currentLatestTimestamp);
+            parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new Runnable() {
+                @Override
+                public void run() {
+                    db.deleteLatest(id);
+                }
+            });
+        }
+
+        if (currentTopTimestamp>store.getTopTimestamp()) {
+            handlerTopXml.setTimestamp(currentTopTimestamp);
+            parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new Runnable() {
+                @Override
+                public void run() {
+                    db.deleteTop(id);
+                }
+            });
+        }
+
+        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, null);
         handlerBundleSparseArray.append((int) id, bundle);
     }
+
+
     @Subscribe
     public void cancelRepo(StopParseEvent event){
         HandlerBundle bundle = handlerBundleSparseArray.get((int) event.getRepoId());
@@ -176,25 +223,58 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
     }
 
-    public void parseEditorsChoice(Database db, String url) {
-        if (!spiceManager.isStarted()) {
-            Log.d("Aptoide-Parser", "Starting spice");
-            spiceManager.start(getApplicationContext());
+    public void parseEditorsChoice(final Database db, String url) throws IOException {
+
+
+        long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        long cachedTimestamp = preferences.getLong("editorschoiceTimestamp", 0);
+
+        if (currentTimestamp > cachedTimestamp) {
+            preferences.edit().putLong("editorschoiceTimestamp", currentTimestamp).commit();
+            if (!spiceManager.isStarted()) {
+                Log.d("Aptoide-Parser", "Starting spice");
+                spiceManager.start(getApplicationContext());
+            }
+
+
+            startService(new Intent(getApplicationContext(), ParserService.class));
+            startForeground(45, createDefaultNotification());
+            parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), this, this, new Runnable() {
+                @Override
+                public void run() {
+                    db.deleteFeatured(2);
+                    BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+                }
+            });
         }
-        startService(new Intent(getApplicationContext(), ParserService.class));
-        startForeground(45, createDefaultNotification());
-        parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), this, this);
 
     }
 
-    public void parseTopApps(Database database, String url) {
-        if (!spiceManager.isStarted()) {
-            Log.d("Aptoide-Parser", "Starting spice");
-            spiceManager.start(getApplicationContext());
+    public void parseTopApps(final Database database, String url) throws IOException {
+
+        long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        long cachedTimestamp = preferences.getLong("topappsTimestamp", 0);
+        if (currentTimestamp > cachedTimestamp) {
+            preferences.edit().putLong("topappsTimestamp", currentTimestamp).commit();
+
+            if (!spiceManager.isStarted()) {
+                Log.d("Aptoide-Parser", "Starting spice");
+                spiceManager.start(getApplicationContext());
+            }
+            startService(new Intent(getApplicationContext(), ParserService.class));
+            startForeground(45, createDefaultNotification());
+            parser.parse(url, null, 2, new HandlerFeaturedTop(database), this, this, new Runnable() {
+                @Override
+                public void run() {
+                    database.deleteFeatured(1);
+                    BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+                }
+            });
         }
-        startService(new Intent(getApplicationContext(), ParserService.class));
-        startForeground(45, createDefaultNotification());
-        parser.parse(url, null, 2, new HandlerFeaturedTop(database), this, this);
 
     }
 

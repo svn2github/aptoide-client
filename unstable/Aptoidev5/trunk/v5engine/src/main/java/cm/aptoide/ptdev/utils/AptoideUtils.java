@@ -171,9 +171,10 @@ public class AptoideUtils {
 
         public static String md5Calc(File f) {
             int i;
-            String md5hash = "";
+
             byte[] buffer = new byte[1024];
             int read = 0;
+            String md5hash;
             try {
                 MessageDigest digest = MessageDigest.getInstance("MD5");
                 InputStream is = new FileInputStream(f);
@@ -186,7 +187,7 @@ public class AptoideUtils {
                 is.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                return md5hash;
+                return null;
             }
 
             if (md5hash.length() != 33) {
@@ -334,7 +335,7 @@ public class AptoideUtils {
             return connectionAvailable;
         }
 
-        public long getLastModified(URL url) throws IOException {
+        public static long getLastModified(URL url) throws IOException {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             long lastModified = connection.getLastModified();

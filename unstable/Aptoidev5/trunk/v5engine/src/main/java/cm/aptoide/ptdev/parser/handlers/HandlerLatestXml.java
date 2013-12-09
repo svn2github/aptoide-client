@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class HandlerLatestXml extends AbstractHandler {
 
     private final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
-
+    private long timestamp;
 
 
     public HandlerLatestXml(Database db, long repoId) {
@@ -78,5 +78,17 @@ public class HandlerLatestXml extends AbstractHandler {
                 }
             }
         });
+    }
+
+    @Override
+    public void endDocument() throws SAXException {
+        super.endDocument();
+        getDb().updateServer(server, getRepoId());
+
+        getDb().setLatestTimestamp(getRepoId(), timestamp);
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

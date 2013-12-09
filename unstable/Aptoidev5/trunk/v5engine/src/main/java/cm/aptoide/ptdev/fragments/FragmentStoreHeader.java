@@ -1,4 +1,4 @@
-package cm.aptoide.ptdev;
+package cm.aptoide.ptdev.fragments;
 
 
 import android.database.Cursor;
@@ -13,6 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.EnumStoreTheme;
+import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -51,8 +54,8 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
 
         store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
 
-        Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
-        drawable.setAlpha(200);
+        //Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
+        //drawable.setAlpha(200);
 //        getSherlockActivity().getSupportActionBar().setBackgroundDrawable(drawable);
         Bundle bundle = new Bundle();
         bundle.putLong("storeid",getArguments().getLong("storeid"));
@@ -83,7 +86,7 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
 
             EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT");
 
-            store_background.setBackgroundResource( storeTheme.getStoreHeader() );
+            //store_background.setBackgroundResource( storeTheme.getStoreHeader() );
             ImageLoader.getInstance().displayImage(url, avatar );
             banner_store_name.setText(store_name);
             banner_description.setText(description);

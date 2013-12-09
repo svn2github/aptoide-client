@@ -11,6 +11,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.actionbarsherlock.app.SherlockFragmentActivity;

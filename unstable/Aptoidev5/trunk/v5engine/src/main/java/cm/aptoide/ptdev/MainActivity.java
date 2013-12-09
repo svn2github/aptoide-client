@@ -12,11 +12,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
+import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -38,11 +39,16 @@ import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.squareup.otto.Subscribe;
+import roboguice.util.temp.Ln;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainActivity extends SherlockFragmentActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
     private static final String TAG = MainActivity.class.getName();
@@ -50,6 +56,9 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     private ArrayList<Server> server;
     private ParserService service;
     private boolean parserServiceIsBound;
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition boundCondition = lock.newCondition();
+
 
     private ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -57,11 +66,13 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
             Log.d("Aptoide-MainActivity", "onServiceConnected");
             parserServiceIsBound = true;
-            database.deleteFeatured(2);
-            database.deleteFeatured(1);
-            BusProvider.getInstance().post(new RepoCompleteEvent(0));
-            service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors.xml");
-            service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
+
+            lock.lock();
+            try{
+                boundCondition.signalAll();
+            }finally {
+                lock.unlock();
+            }
         }
 
         @Override
@@ -153,8 +164,6 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         mContext = this;
         setContentView(R.layout.activity_main);
 
@@ -174,12 +183,33 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
 
         if (savedInstanceState == null) {
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        waitForServiceToBeBound();
+                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors.xml");
+                        service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
                     AptoideUtils.syncInstalledApps(mContext, db);
                 }
             });
+
+
+
         }
 
         mTitle = mDrawerTitle = getTitle();
@@ -220,6 +250,20 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    protected void waitForServiceToBeBound() throws InterruptedException {
+
+
+        lock.lock();
+        try {
+            while (service == null) {
+                boundCondition.await();
+            }
+            Ln.d("Bound ok.");
+        } finally {
+            lock.unlock();
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -235,8 +279,14 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     }
 
     @Override
-    public void startParse(Store store) {
-        service.startParse(database, store);
+    public void startParse(final Store store) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                service.startParse(database, store, true);
+            }
+        });
+
     }
 
     @Override

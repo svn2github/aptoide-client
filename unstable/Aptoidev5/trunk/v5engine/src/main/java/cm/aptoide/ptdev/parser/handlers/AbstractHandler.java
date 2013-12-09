@@ -117,7 +117,10 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
     }
 
-
+    @Override
+    public void endDocument() throws SAXException {
+        super.endDocument();
+    }
 
     void loadCommonElements(){
 

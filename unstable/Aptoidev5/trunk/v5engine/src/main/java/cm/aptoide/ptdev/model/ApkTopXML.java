@@ -94,7 +94,7 @@ public class ApkTopXML extends Apk {
             apkid = sqLiteStatements.get(0).executeInsert();
 
         } catch (SQLiteException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
 
             Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{ String.valueOf(getRepoId()), getPackageName(), String.valueOf(getVersionCode()) });

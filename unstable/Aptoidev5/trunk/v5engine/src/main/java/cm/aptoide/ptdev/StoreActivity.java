@@ -3,19 +3,28 @@ package cm.aptoide.ptdev;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
+import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.ParserService;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.squareup.otto.Subscribe;
+
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -138,11 +147,57 @@ public class StoreActivity extends SherlockFragmentActivity {
         }
     }
 
+    @Subscribe
+    public void onStoreError(RepoErrorEvent event) {
+        if (event.getRepoId() == storeid) {
+            refreshList();
+        }
+    }
+
     private void refreshList() {
         isRefreshing = service.repoIsParsing(storeid);
 
         FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
         fragStore.onRefresh();
         fragStore.setRefreshing(isRefreshing);
+    }
+
+    public void onRefreshStarted() {
+
+
+        if(!isRefreshing){
+
+
+            Executors.newSingleThreadExecutor().submit(new Runnable() {
+                @Override
+                public void run() {
+                    final Database db = new Database(Aptoide.getDb());
+                    final Store store = new Store();
+
+                    Cursor c = db.getStore(storeid);
+
+                    if(c.moveToFirst()){
+                        store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                        store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                        store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                        store.setDelta(c.getString(c.getColumnIndex("hash")));
+                        store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                        if(c.getString(c.getColumnIndex("username"))!=null){
+                            Login login = new Login();
+                            login.setUsername(c.getString(c.getColumnIndex("username")));
+                            login.setPassword(c.getString(c.getColumnIndex("password")));
+                            store.setLogin(login);
+                        }
+
+                    }
+                    service.startParse(db, store, false);
+                }
+            });
+
+        }
+
+
+
+
     }
 }

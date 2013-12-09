@@ -1,4 +1,4 @@
-package cm.aptoide.ptdev;
+package cm.aptoide.ptdev.fragments;
 
 /**
  * Created with IntelliJ IDEA.

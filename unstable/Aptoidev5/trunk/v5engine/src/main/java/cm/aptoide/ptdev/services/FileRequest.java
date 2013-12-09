@@ -39,10 +39,8 @@ public class FileRequest extends SpiceRequest<InputStream>{
     public InputStream loadDataFromNetwork() throws Exception {
 
         InputStream is = null;
-        final byte[] buf = new byte[4096];
-        File file = null;
         try{
-            file = new File("/sdcard/.aptoide/" + url.hashCode());
+
 
             final HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
 
@@ -57,7 +55,7 @@ public class FileRequest extends SpiceRequest<InputStream>{
 
 
 
-            is = httpURLConnection.getInputStream();
+            is = processStream(httpURLConnection.getContentLength(), httpURLConnection.getInputStream());
 
         } catch (Exception e){
             e.printStackTrace();
