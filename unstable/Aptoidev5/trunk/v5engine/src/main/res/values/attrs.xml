@@ -5,9 +5,4 @@
 
     <attr name="customBackground" format="reference"/>
 
-    <declare-styleable name="FragmentBreadCrumb">
-        <attr name="hagDividerVertical" format="reference" />
-        <attr name="hagSelectableItemBackground" format="reference" />
-    </declare-styleable>
-
 </resources>

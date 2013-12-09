@@ -41,6 +41,7 @@ dependencies {
     compile 'com.google.http-client:google-http-client-jackson2:+'
     compile project (':pagerslidertabstrip')
     compile project (':multichoiceadapter-extras')
+    compile project (':hanselandgretel')
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 
