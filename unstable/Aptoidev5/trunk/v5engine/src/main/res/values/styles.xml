@@ -69,12 +69,6 @@
     <style name="Widget.Light.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
     </style>
 
-    <style name="autoScaleTextView">
-        <item name="@android:attr/background">@android:color/transparent</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="@attr/minTextSize">10dp</item>
-    </style>
-
     <style name="gray_button_style" parent="@android:style/Widget.Button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -146,5 +140,9 @@
     <style name="Settings" parent="@style/Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+    </style>
+
+    <style name="Widget.HanselAndGretel.FragmentBreadCrumb" parent="android:Widget">
+        <item name="android:padding">4dp</item>
     </style>
 </resources>

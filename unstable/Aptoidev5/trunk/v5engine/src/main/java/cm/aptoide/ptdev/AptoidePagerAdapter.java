@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Context;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,10 +19,12 @@ import cm.aptoide.ptdev.fragments.FragmentUpdates;
 public class AptoidePagerAdapter extends FixedFragmentStatePagerAdapter {
 
 
-    private final String[] TITLES = { "Home", "Stores", "Updates", "Download Manager" };
+    private String[] TITLES;
 
-    public AptoidePagerAdapter(FragmentManager fm) {
+    public AptoidePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates), context.getString(R.string.download_manager)};
+
     }
 
     @Override

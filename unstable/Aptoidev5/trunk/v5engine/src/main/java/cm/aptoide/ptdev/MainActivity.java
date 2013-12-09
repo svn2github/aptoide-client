@@ -7,8 +7,15 @@ import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
@@ -67,6 +74,15 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
     private String currentRequest;
 
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    MenuListAdapter mMenuAdapter;
+    String[] title;
+    String[] subtitle;
+    int[] icon;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
     @Override
     protected void onStop() {
@@ -89,7 +105,14 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
-        if (i == R.id.menu_search) {
+
+        if (i == R.id.abs__home || i == android.R.id.home){
+            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                mDrawerLayout.closeDrawer(mDrawerList);
+            } else {
+                mDrawerLayout.openDrawer(mDrawerList);
+            }
+        }else if (i == R.id.menu_search) {
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");
 
@@ -137,7 +160,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
 
-        AptoidePagerAdapter adapter = new AptoidePagerAdapter(getSupportFragmentManager());
+        AptoidePagerAdapter adapter = new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
         pager.setAdapter(adapter);
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -159,6 +182,42 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             });
         }
 
+        mTitle = mDrawerTitle = getTitle();
+
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        mMenuAdapter = new MenuListAdapter(mContext);
+
+        //Login Header
+//        View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+//        mDrawerList.addHeaderView(header, null, false);
+
+        mDrawerList.setAdapter(mMenuAdapter);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open,
+                R.string.drawer_close) {
+
+            public void onDrawerClosed(View view) {
+                // TODO Auto-generated method stub
+                super.onDrawerClosed(view);
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                // TODO Auto-generated method stub
+                // Set the title on the action when drawer open
+                getSupportActionBar().setTitle(mDrawerTitle);
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -185,6 +244,37 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
     }
 
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+
+
+        // Locate Position
+        switch (position){
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            default: break;
+        }
+
+        mDrawerList.setItemChecked(position, true);
+
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
 
 }

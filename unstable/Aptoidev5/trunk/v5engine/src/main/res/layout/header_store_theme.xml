@@ -11,6 +11,11 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+    <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/header_blur"/>-->
+
     <View android:id="@+id/view_gradient"
           android:layout_width="match_parent"
           android:background="@drawable/gradient_black"
@@ -33,7 +38,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:text="teresa-deus"/>
+                />
 
         <TextView
                 android:id="@+id/store_description"
@@ -45,7 +50,7 @@
                 android:textColor="@android:color/white"
                 android:textStyle="italic"
                 android:layout_marginBottom="5dp"
-                android:text="This store gathers a set of the best apps and games (with obb file extension)...! Best apps and games to explore and discover! See Top Apps!"/>
+                />
 
     </LinearLayout>
 </FrameLayout>

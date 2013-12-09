@@ -122,4 +122,11 @@
     <string name="specs">Specifications</string>
     <string name="permissions">Permissions</string>
     <string name="publisher">Publisher</string>
+    <string name="download_manager">Download Manager</string>
+    <string name="updates">Updates</string>
+    <string name="home">Home</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="logout">Logout?</string>
+    <string name="rollback_sum">Reinstall older versions</string>
 </resources>

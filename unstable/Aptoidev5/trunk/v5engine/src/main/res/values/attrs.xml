@@ -5,8 +5,9 @@
 
     <attr name="customBackground" format="reference"/>
 
-    <attr name="autoScaleTextViewStyle" format="reference"/>
-    <declare-styleable name="AutoScaleTextView">
-        <attr name="minTextSize" format="dimension"/>
+    <declare-styleable name="FragmentBreadCrumb">
+        <attr name="hagDividerVertical" format="reference" />
+        <attr name="hagSelectableItemBackground" format="reference" />
     </declare-styleable>
+
 </resources>

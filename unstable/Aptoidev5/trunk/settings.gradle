@@ -1,1 +1,1 @@
-include ':Aptoide', ':pagerslidertabstrip', ':v5engine'
+include ':Aptoide', ':pagerslidertabstrip', ':v5engine', ':multichoiceadapter', ':multichoiceadapter-extras'
