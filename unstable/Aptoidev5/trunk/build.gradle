@@ -4,3 +4,12 @@ repositories{
         url 'https://raw.github.com/ark/ark/master/snapshots/'
     }
 }
+
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
