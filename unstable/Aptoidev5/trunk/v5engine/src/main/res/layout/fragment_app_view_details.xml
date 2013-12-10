@@ -15,15 +15,7 @@
 
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/version_info"/>
 
 
@@ -145,16 +137,8 @@
 
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="Description" android:layout_gravity="left|center_vertical"/>
+                style="@style/titleLabel"
+                android:text="@string/description" />
 
         <LinearLayout
                 android:id="@+id/description_container"
@@ -238,16 +222,8 @@
         <!--</HorizontalScrollView>-->
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="What's new?"/>
+                style="@style/titleLabel"
+                android:text="@string/whats_new"/>
 
         <LinearLayout
                 android:id="@+id/whats_new_container"
@@ -283,15 +259,7 @@
 
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/publisher"/>
 
         <TextView

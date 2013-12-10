@@ -5,20 +5,20 @@
             android:orientation="vertical">
 
     <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#77000000"
-                android:paddingBottom="14dip"
-                android:paddingLeft="8dip"
-                android:paddingTop="14dip"
-                android:text="@string/add_store"
-                android:textColor="#FFFFFFFF"
-                android:textSize="18sp"/>
+        <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="#77000000"-->
+                <!--android:paddingBottom="14dip"-->
+                <!--android:paddingLeft="8dip"-->
+                <!--android:paddingTop="14dip"-->
+                <!--android:text="@string/add_store"-->
+                <!--android:textColor="#FFFFFFFF"-->
+                <!--android:textSize="18sp"/>-->
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

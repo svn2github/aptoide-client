@@ -15,15 +15,7 @@
 
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/review"/>
 
         <EditText
@@ -65,15 +57,7 @@
         </LinearLayout>
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/comments"/>
 
 
@@ -99,29 +83,23 @@
 
 
 
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="@string/flag_this_app"/>
+        <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="@android:style/TextAppearance.Large"-->
+                <!--android:textColor="?attr/custom_color"-->
+                <!--android:paddingBottom="5dp"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:gravity="left"-->
+                <!--android:text="@string/flag_this_app"/>-->
 
-        <Button android:id="@+id/button_flag"
-                style="@style/custom_button_style"
-                android:layout_width="fill_parent"
-                android:text="@string/flag"
-                android:layout_margin="10dp"/>
-
-
-        <!--<fragment android:id="@+id/frag_related_apps"-->
-        <!--android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewRelatedAppsFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
+        <!--<Button android:id="@+id/button_flag"-->
+                <!--style="@style/custom_button_style"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:text="@string/flag"-->
+                <!--android:layout_margin="10dp"/>-->
 
     </LinearLayout>
 </ScrollView>

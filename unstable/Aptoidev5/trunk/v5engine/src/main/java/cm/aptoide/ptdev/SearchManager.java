@@ -39,6 +39,7 @@ public class SearchManager extends SherlockFragmentActivity {
         setContentView(R.layout.page_search);
         Bundle args = new Bundle();
         String query;
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra("search")){
             query = getIntent().getExtras().getString("search");

@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="separator_label">
+    <style name="separatorLabel">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">@color/custom_color</item>
+        <item name="android:textColor">?attr/customColor</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
@@ -16,8 +16,28 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="titleLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+        <item name="android:textColor">?attr/customColor</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="customRowStyle">
-        <item name="android:background">@drawable/fab__gradient</item>
+        <item name="android:foreground">@drawable/highlight_overlay</item>
+    </style>
+
+    <style name="backgroundCardStyleLight">
+        <item name="android:background">@drawable/background_card_light</item>
+    </style>
+
+    <style name="backgroundCardStyleDark">
+        <item name="android:background">@drawable/background_card_dark</item>
     </style>
 
     <style name="overflowMenuButton">
@@ -25,6 +45,39 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:src">@drawable/overflow_menu</item>
+    </style>
+
+    <style name="headerSeparatorButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">?attr/customColor</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:layout_gravity">center_vertical|right</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="backgroundTabsStyleLight">
+        <item name="android:background">@drawable/background_tabs_light</item>
+    </style>
+
+    <style name="backgroundTabsStyleDark">
+        <item name="android:background">@drawable/background_tabs_dark</item>
+    </style>
+
+    <style name="apkInfoBackgroundStyleAptoideLight">
+        <item name="android:background">@drawable/app_header_bgd_aptoide_light</item>
+    </style>
+
+    <style name="apkInfoBackgroundStyleAptoideDark">
+        <item name="android:background">@drawable/app_header_bgd_aptoide_dark</item>
     </style>
 
     <style name="breadcrumbs_style">
@@ -91,7 +144,6 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
-        <item name="android:layout_margin">2dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
         <item name="android:textStyle">normal</item>

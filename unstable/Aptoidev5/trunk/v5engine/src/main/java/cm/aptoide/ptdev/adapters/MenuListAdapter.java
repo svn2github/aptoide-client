@@ -21,7 +21,7 @@ public class MenuListAdapter extends BaseAdapter {
     public MenuListAdapter(Context context) {
         this.context = context;
         mTitle = new String[] { context.getString(R.string.my_account), context.getString(R.string.rollback), context.getString(R.string.scheduled_downloads), context.getString(R.string.facebook), context.getString(R.string.twitter)};
-        mSubTitle = new String[] { context.getString(R.string.logout), context.getString(R.string.rollback_sum), context.getString(R.string.setting_schdwninstallsum) , context.getString(R.string.find_us_on_facebook), context.getString(R.string.follow_twitter)};
+        mSubTitle = new String[] { context.getString(R.string.login_or_register), context.getString(R.string.rollback_sum), context.getString(R.string.setting_schdwninstallsum) , context.getString(R.string.find_us_on_facebook), context.getString(R.string.follow_twitter)};
         mIcon = new int[] { android.R.drawable.ic_menu_edit, R.drawable.ic_action_time, R.drawable.ic_drawer_schedule, R.drawable.ic_action_facebook, R.drawable.ic_action_twitter};
     }
 

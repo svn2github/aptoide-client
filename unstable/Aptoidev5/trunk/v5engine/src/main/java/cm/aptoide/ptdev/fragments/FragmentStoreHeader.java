@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
     TextView banner_description;
     ImageView avatar;
     FrameLayout store_background;
+    FrameLayout.LayoutParams params;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,13 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
 
         store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
+
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 200);
+            store_background.setLayoutParams(params);
+        }
 
         //Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
         //drawable.setAlpha(200);

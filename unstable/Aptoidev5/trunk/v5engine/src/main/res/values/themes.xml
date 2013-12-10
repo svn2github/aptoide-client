@@ -5,18 +5,21 @@
     <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
 
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="customBackground">@style/customRowStyle</item>
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideLight</item>
+        <item name="android:windowBackground">@color/background_window</item>
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
-        <item name="custom_color">@color/custom_color</item>
+        <item name="customColor">@color/custom_color</item>
+        <item name="secondaryTextColor">@android:color/secondary_text_light</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-
         <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_aptoide</item>
         <item name="displayOptions">showHome|useLogo</item>
-
         <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_aptoide</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>

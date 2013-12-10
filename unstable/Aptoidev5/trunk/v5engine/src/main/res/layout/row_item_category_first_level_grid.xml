@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="match_parent"
-             android:foreground="@drawable/highlight_overlay">
+             style="?attr/customRowForeground">
 
 
     <LinearLayout
@@ -15,7 +15,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
             android:padding="5dp"
-            android:background="@drawable/background_card"
+            style="?attr/backgroundCard"
             android:focusable="true"
             android:orientation="horizontal">
 

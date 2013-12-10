@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="custom_color" format="color" />
+    <attr name="customColor" format="color" />
 
-    <attr name="customBackground" format="reference"/>
+    <attr name="customRowForeground" format="reference"/>
+
+    <attr name="backgroundCard" format="reference"/>
+
+    <attr name="backgroundTabs" format="reference"/>
+
+    <attr name="apkInfoBackgroundHeader" format="reference"/>
+
+    <attr name="secondaryTextColor" format="color" />
 
 </resources>

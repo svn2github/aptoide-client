@@ -70,7 +70,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
                         // We can now complete the setup as desired
 
                 .listener(this)
-                .options(Options.create().scrollDistance(0.5f).headerLayout(R.layout.refresh_header).build())
+                .options(Options.create().scrollDistance(0.5f).build())
                 .setup(mPullToRefreshLayout);
 
         mPullToRefreshLayout.setRefreshing(((StoreActivity)getSherlockActivity()).isRefreshing());

@@ -14,8 +14,8 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="48dip"
-                app:indicatorColor="?custom_color"
-                android:background="@drawable/background_tabs"/>
+                app:indicatorColor="?attr/customColor"
+                style="?backgroundTabs"/>
 
         <android.support.v4.view.ViewPager
                 android:id="@+id/pager"

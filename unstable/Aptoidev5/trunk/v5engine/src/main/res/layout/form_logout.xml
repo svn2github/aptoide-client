@@ -33,7 +33,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:text="Logged as:...."
+                    android:text="@string/logged_as"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
@@ -43,7 +43,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="2dp"
-                    android:text="Password"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
         </LinearLayout>
 
@@ -52,7 +51,7 @@
                 style="@style/gray_button_style"
                 android:layout_weight="1"
                 android:onClick="logout"
-                android:text="Sign out"/>
+                android:text="@string/sign_out"/>
     </LinearLayout>
 </ScrollView>
 

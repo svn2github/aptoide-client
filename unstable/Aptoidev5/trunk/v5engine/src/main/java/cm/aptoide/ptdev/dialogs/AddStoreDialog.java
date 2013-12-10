@@ -74,7 +74,9 @@ public class AddStoreDialog extends SherlockDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (getDialog() != null) {
-            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            getDialog().getWindow().setTitle(getString(R.string.add_store));
+
         }
         return inflater.inflate(R.layout.dialog_add_store, container, false);
     }

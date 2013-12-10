@@ -2,14 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:foreground="@drawable/highlight_overlay">
+             style="?attr/customRowForeground">
 
     <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal|top"
-            android:background="@drawable/background_card"
+            style="?attr/backgroundCard"
             android:padding="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -51,6 +51,17 @@
                 android:text="Version 1.15.0"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_alignRight="@+id/app_name"/>
+
+        <RatingBar
+                android:id="@+id/app_rating"
+                android:layout_below="@+id/app_version"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5" />
 
         <ImageView android:id="@+id/ic_action"
                    style="@style/overflowMenuButton"/>

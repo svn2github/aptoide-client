@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="125dp"
              android:layout_height="190dp"
-             android:foreground="@drawable/highlight_overlay"
+             style="?attr/customRowForeground"
              android:layout_gravity="center_horizontal">
 
     <RelativeLayout
@@ -13,14 +13,13 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
             android:padding="5dp"
-            android:background="@drawable/background_card"
+            style="?attr/backgroundCard"
             android:orientation="horizontal"
             android:layout_gravity="top">
 
         <ImageView
                 android:contentDescription="@null"
                 android:id="@+id/home_icon"
-                android:background="@android:color/white"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:layout_centerHorizontal="true"/>
@@ -40,7 +39,7 @@
                 android:gravity="center|fill_horizontal"
                 android:layout_below="@+id/app_name"
                 android:layout_alignLeft="@+id/app_name"
-                android:text="A Arcade and ActionArcade and Actionrcade and Action"
+                style="?attr/secondaryTextColor"
                 android:layout_gravity="left|center_vertical"
                 android:layout_toLeftOf="@+id/ic_action"/>
         <TextView
@@ -50,10 +49,8 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:layout_alignParentLeft="true"
-                android:textColor="@android:color/black"
                 android:layout_below="@+id/home_icon"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Very big Awesome App name Very big Awesome App name"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_toLeftOf="@+id/ic_action"/>
 

@@ -25,9 +25,10 @@ public class PasswordDialog extends SherlockDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final View v = LayoutInflater.from(getSherlockActivity()).inflate(R.layout.dialog_storepassword, null);
+        final View v = LayoutInflater.from(getSherlockActivity()).inflate(R.layout.dialog_add_pvt_store, null);
         AlertDialog builder = new AlertDialog.Builder(getSherlockActivity())
                 .setView(v)
+                .setTitle(getString(R.string.add_pvt_store))
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

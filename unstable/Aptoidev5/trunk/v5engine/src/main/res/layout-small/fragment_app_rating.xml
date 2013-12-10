@@ -1,123 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
+            style="@style/titleLabel"
+            android:text="@string/review"/>
+
+    <EditText
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="60dp"
+            android:hint="Insert your comment"
+            android:id="@+id/editText" android:inputType="text"/>
 
 
+    <Button android:id="@+id/button_add_comment"
+            style="@style/custom_button_style"
+            android:layout_width="fill_parent"
+            android:text="@string/add_comment"
+            android:layout_margin="10dp"/>
 
-        <TextView
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center">
+
+        <Button android:id="@+id/button_like"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="@string/review"/>
-
-        <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:hint="Insert your comment"
-                android:id="@+id/editText" android:inputType="text"/>
-
-
-        <Button android:id="@+id/button_add_comment"
-                style="@style/custom_button_style"
-                android:layout_width="fill_parent"
-                android:text="@string/add_comment"
-                android:layout_margin="10dp"/>
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center">
-
-            <Button android:id="@+id/button_like"
-                    android:layout_width="fill_parent"
-                    android:text="@string/like"
-                    android:background="@drawable/highlight_overlay"
-                    android:drawableLeft="@drawable/ic_rating_good"
-                    android:layout_margin="10dp"
-                    android:layout_height="wrap_content"/>
-
-            <Button android:id="@+id/button_dont_like"
-                    android:layout_width="fill_parent"
-                    android:text="@string/dont_like"
-                    android:background="@drawable/highlight_overlay"
-                    android:drawableLeft="@drawable/ic_rating_bad"
-                    android:layout_margin="10dp"
-                    android:layout_height="wrap_content"/>
-
-
-        </LinearLayout>
-
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="@string/comments"/>
-
-
-        <LinearLayout
-                android:id="@+id/commentContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
-        </LinearLayout>
-
-        <Button
-                android:id="@+id/more_comments"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:text="@string/like"
                 android:background="@drawable/highlight_overlay"
-                android:drawableRight="@drawable/ic_more_arrow_right"
-                android:gravity="fill_vertical|right"
-                android:paddingLeft="5.0sp"
-                android:paddingRight="5.0sp"
-                android:text="@string/comment_see_all"
-                android:textColor="@android:color/darker_gray"/>
+                android:drawableLeft="@drawable/ic_rating_good"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"/>
 
-
-
-        <TextView
+        <Button android:id="@+id/button_dont_like"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="@string/flag_this_app"/>
+                android:text="@string/dont_like"
+                android:background="@drawable/highlight_overlay"
+                android:drawableLeft="@drawable/ic_rating_bad"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"/>
 
-        <Button android:id="@+id/button_flag"
-                style="@style/custom_button_style"
-                android:layout_width="fill_parent"
-                android:text="@string/flag"
-                android:layout_margin="10dp"/>
-
-
-        <!--<fragment android:id="@+id/frag_related_apps"-->
-        <!--android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewRelatedAppsFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
 
     </LinearLayout>
+
+    <TextView
+            style="@style/titleLabel"
+            android:text="@string/comments"/>
+
+
+    <LinearLayout
+            android:id="@+id/commentContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/more_comments"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/highlight_overlay"
+            android:drawableRight="@drawable/ic_more_arrow_right"
+            android:gravity="fill_vertical|right"
+            android:paddingLeft="5.0sp"
+            android:paddingRight="5.0sp"
+            android:text="@string/comment_see_all"
+            android:textColor="@android:color/darker_gray"/>
+
+
+    <!--<TextView-->
+    <!--style="@style/titleLabel"-->
+    <!--android:text="@string/flag_this_app"/>-->
+
+    <!--<Button android:id="@+id/button_flag"-->
+    <!--style="@style/custom_button_style"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:text="@string/flag"-->
+    <!--android:layout_margin="10dp"/>-->
+
+
+</LinearLayout>
 
 

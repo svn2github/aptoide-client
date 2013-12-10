@@ -2,11 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:foreground="@drawable/highlight_overlay">
+             style="?attr/customRowForeground">
 
     <RelativeLayout android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_card"
+                    style="?attr/backgroundCard"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="2dp"
@@ -29,7 +29,6 @@
                 android:singleLine="true"
                 android:text="App Name"
                 android:layout_marginLeft="5dp"
-                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center|left"
                 android:layout_alignBottom="@+id/ic_action" android:layout_toLeftOf="@+id/ic_action"
@@ -48,6 +47,17 @@
                 android:layout_alignLeft="@+id/app_name"
                 android:layout_below="@+id/app_name"
                 android:layout_alignRight="@+id/app_name"/>
+
+        <RatingBar
+                android:id="@+id/app_rating"
+                android:layout_below="@+id/app_version"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5" />
 
         <ImageView android:id="@+id/ic_action"
                    style="@style/overflowMenuButton" />

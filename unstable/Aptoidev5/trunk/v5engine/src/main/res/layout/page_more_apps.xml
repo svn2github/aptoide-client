@@ -6,7 +6,7 @@
     <TextView android:id="@+id/more_apps_separator"
             android:layout_width="fill_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
-            android:textColor="?attr/custom_color"
+            android:textColor="?attr/customColor"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"

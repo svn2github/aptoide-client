@@ -8,15 +8,7 @@
 
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/specs"/>
 
 
@@ -41,15 +33,7 @@
                 android:text="Min Screen: Small"/>
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/custom_color"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
+                style="@style/titleLabel"
                 android:text="@string/permissions"/>
 
         <LinearLayout

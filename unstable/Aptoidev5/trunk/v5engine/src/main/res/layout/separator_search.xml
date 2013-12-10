@@ -6,26 +6,15 @@
               android:background="@drawable/highlight_overlay">
 
 
-    <TextView style="@style/separator_label"
+    <TextView style="@style/separatorLabel"
               android:id="@android:id/text1"
               android:layout_weight="0.2"
               android:text="Category"/>
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ other stores"
-            android:gravity="center"
-            android:background="@color/custom_color"
-            android:paddingRight="10dp"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:paddingLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:textColor="@android:color/white"
-            android:id="@+id/search_other_stores"
-            android:textStyle="italic"
-            android:layout_gravity="center_vertical|right"/>
+            style="@style/headerSeparatorButton"
+            android:text="+ search more"
+            android:id="@+id/search_other_stores"/>
 
 
 </LinearLayout>
