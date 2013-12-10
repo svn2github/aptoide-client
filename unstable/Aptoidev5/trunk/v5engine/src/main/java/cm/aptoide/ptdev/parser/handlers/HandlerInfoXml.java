@@ -7,10 +7,14 @@ import cm.aptoide.ptdev.model.ApkInfoXML;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
+import org.apache.commons.io.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -26,6 +30,7 @@ public class HandlerInfoXml extends AbstractHandler {
 
     private boolean isDelta;
     private File file;
+    private boolean isRemove;
 
     public HandlerInfoXml(Database db, long repoId) {
         super(db, repoId);
@@ -50,13 +55,21 @@ public class HandlerInfoXml extends AbstractHandler {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
                 apk = getApk();
-                ((ApkInfoXML)apk).setRepoId(repoId);
+                ((ApkInfoXML) apk).setRepoId(repoId);
             }
 
             @Override
             public void endElement() throws SAXException {
-                if(isRunning()){
-                    apk.databaseInsert(statements, categoriesIds);
+                if (isRunning()) {
+
+                    if(isRemove){
+                        apk.databaseDelete(getDb());
+                        isRemove = false;
+                    }else{
+                        apk.databaseInsert(statements, categoriesIds);
+                    }
+
+
                 }
 
             }
@@ -75,7 +88,7 @@ public class HandlerInfoXml extends AbstractHandler {
 
                 String delta = sb.toString();
 
-                if(delta.length()>0){
+                if (delta.length() > 0) {
                     server.setHash(delta);
                 }
 
@@ -107,11 +120,21 @@ public class HandlerInfoXml extends AbstractHandler {
             @Override
             public void endElement() throws SAXException {
 
-                if(!isDelta){
+                if (!isDelta) {
                     getDb().clearStore(getRepoId());
                 }
                 getDb().putCategoriesIds(categoriesIds, getRepoId());
                 getDb().updateServer(server, getRepoId());
+            }
+        });
+        elements.put("del", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                isRemove = true;
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
             }
         });
     }
@@ -124,6 +147,7 @@ public class HandlerInfoXml extends AbstractHandler {
         if(!isDelta){
             Log.d("Aptoide-Parser", "Calculating md5");
             String md5 = AptoideUtils.Algorithms.md5Calc(file);
+            Log.d("Aptoide-Parser", "md5 is " + md5);
             server.setHash(md5);
         }
         getDb().updateServer(server, getRepoId());
@@ -131,8 +155,7 @@ public class HandlerInfoXml extends AbstractHandler {
     }
 
     public void setFile(File file) {
-
         this.file = file;
-
     }
+
 }

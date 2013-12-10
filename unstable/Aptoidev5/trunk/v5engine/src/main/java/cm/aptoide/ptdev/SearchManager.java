@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -41,13 +42,13 @@ public class SearchManager extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra("search")){
             query = getIntent().getExtras().getString("search");
-        }else if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
-            Uri uri = getIntent().getData();
-            query = uri.toString();
         } else {
             query = getIntent().getExtras().getString(android.app.SearchManager.QUERY).replaceAll("\\s{2,}|\\W", " ").trim();
             query = query.replaceAll("\\s{2,}", " ");
         }
+
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,"cm.aptoide.ptdev.SuggestionProvider", 1);
+        suggestions.saveRecentQuery(query, null);
 
         Toast.makeText(this, "Searched for : " + query, Toast.LENGTH_LONG).show();
         args.putString("query", query);

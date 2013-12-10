@@ -51,6 +51,7 @@ dependencies {
     compile project (':pagerslidertabstrip')
     compile project (':multichoiceadapter-extras')
     compile project (':hanselandgretel')
+    compile project (':android-websockets')
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 

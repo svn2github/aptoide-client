@@ -44,6 +44,10 @@ public class StoreActivity extends SherlockFragmentActivity {
     private ParserService service;
     private boolean serviceIsBound;
     private boolean isRefreshing;
+
+    public enum Sort{ NAME, DATE, DOWNLOADS, RATING, PRICE}
+    public boolean noCategories;
+    public Sort sort;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
@@ -79,6 +83,8 @@ public class StoreActivity extends SherlockFragmentActivity {
         if (savedInstanceState == null) {
             setFragment();
         }
+
+        sort = Sort.NAME;
 
     }
 
@@ -125,6 +131,31 @@ public class StoreActivity extends SherlockFragmentActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.show_all).setChecked(noCategories);
+
+        switch (sort){
+            case NAME:
+                menu.findItem(R.id.name).setChecked(true);
+                break;
+            case DATE:
+                menu.findItem(R.id.date).setChecked(true);
+                break;
+            case DOWNLOADS:
+                menu.findItem(R.id.download).setChecked(true);
+                break;
+            case PRICE:
+                menu.findItem(R.id.price).setChecked(true);
+                break;
+            case RATING:
+                menu.findItem(R.id.rating).setChecked(true);
+                break;
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int i = item.getItemId();
@@ -136,8 +167,55 @@ public class StoreActivity extends SherlockFragmentActivity {
         } else if( i == R.id.refresh_store){
             refreshList();
         }
+        else if( i == R.id.name){
+            sort = Sort.NAME;
+            setSort(item);
+        } else if( i == R.id.date){
+            sort = Sort.DATE;
+            setSort(item);
+        }else if( i == R.id.download){
+            sort = Sort.DOWNLOADS;
+            setSort(item);
+        }else if( i == R.id.rating){
+            sort = Sort.RATING;
+            setSort(item);
+        }else if( i == R.id.price){
+            sort = Sort.PRICE;
+            setSort(item);
+        }else if( i == R.id.show_all){
+
+            noCategories = !noCategories;
+
+            setSort(item);
+        }
+
+
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setSort(MenuItem item) {
+        item.setChecked(!item.isChecked());
+        refreshList();
+    }
+
+    public static class SortObject {
+
+        public SortObject(Sort sort, boolean noCategories) {
+            this.sort = sort;
+            this.noCategories = noCategories;
+        }
+
+        public Sort getSort() {
+            return sort;
+        }
+
+        public boolean isNoCategories() {
+            return noCategories;
+        }
+
+        Sort sort;
+        boolean noCategories;
     }
 
     @Subscribe
@@ -152,6 +230,10 @@ public class StoreActivity extends SherlockFragmentActivity {
         if (event.getRepoId() == storeid) {
             refreshList();
         }
+    }
+
+    public SortObject getSort(){
+        return new SortObject(sort, noCategories);
     }
 
     private void refreshList() {

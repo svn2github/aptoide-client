@@ -71,12 +71,21 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
 
         Details details = new Details();
         Log.d("Aptoide-AppView", "PublishingDetails");
-        if(json!=null){
-            Log.d("Aptoide-AppView", "Description: " + json.getMeta().getDescription());
-            details.setDescription(json.getMeta().getDescription());
-            details.setSize(json.getApk().getSize().longValue());
-            details.setStore(repoName);
-            details.setDownloads(downloads);
+        if (json != null) {
+
+            if (!json.getStatus().equals("FAIL")) {
+
+                Log.d("Aptoide-AppView", "Description: " + json.getMeta().getDescription());
+                details.setDescription(json.getMeta().getDescription());
+                details.setSize(json.getApk().getSize().longValue());
+                details.setStore(repoName);
+                details.setDownloads(downloads);
+            } else {
+
+                for(String error : json.getErrors()){
+                    Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+                }
+            }
         }
 
         return new DetailsEvent(details);

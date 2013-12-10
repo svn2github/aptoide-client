@@ -65,7 +65,7 @@ public class InstalledAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
 
         int type = getItemViewType(cursor.getPosition());
 
@@ -87,7 +87,7 @@ public class InstalledAdapter extends CursorAdapter {
                 if(holder==null){
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
+                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
@@ -104,6 +104,13 @@ public class InstalledAdapter extends CursorAdapter {
                 }
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
+                final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
+                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UninstallHelper.uninstall(context, packageName);
+                    }
+                });
                 break;
 
         }
@@ -114,7 +121,7 @@ public class InstalledAdapter extends CursorAdapter {
 
     public static class AppViewHolder{
         ImageView appIcon;
-        ImageView overFlow;
+        ImageView actionIcon;
         TextView appName;
         TextView versionName;
         TextView downloads;

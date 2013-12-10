@@ -173,7 +173,7 @@ public class ApkInfoXML extends Apk {
 
     @Override
     public void databaseDelete(Database db) {
-
+        db.deleteApk(getPackageName(), getVersionCode(), getRepoId());
     }
 
 

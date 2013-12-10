@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 import android.widget.Toast;
+import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.InstalledPackage;
@@ -98,11 +99,46 @@ public class Database {
     }
 
     public Cursor getCategories(long storeid, long parentid) {
-        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ?  union select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by type desc, apk.name", new String[]{String.valueOf(storeid), String.valueOf(parentid), String.valueOf(parentid) });
+
+        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? ", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
         c.getCount();
+
         return c;
 
     }
+
+    public Cursor getApks(long storeid, long parentid, StoreActivity.SortObject sortObject) {
+
+
+        String sort = "apk.name";
+
+        switch (sortObject.getSort()){
+
+            case NAME:
+                sort = "apk.name collate nocase";
+                break;
+            case DATE:
+                sort = "apk.date desc";
+                break;
+            case DOWNLOADS:
+                sort = "apk.downloads desc";
+                break;
+            case RATING:
+                sort = "apk.rating desc";
+                break;
+            case PRICE:
+                sort = "apk.price desc";
+                break;
+        }
+
+        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by " + sort, new String[]{String.valueOf(parentid) });
+        c.getCount();
+
+        return c;
+
+    }
+
+
 
     public Cursor getStore(long storeid) {
         Cursor c = database.rawQuery("select * from repo where id_repo = ?", new String[]{String.valueOf(storeid)});
@@ -160,11 +196,10 @@ public class Database {
                     database.delete("category_apk", "id_category=?", new String[]{String.valueOf(c.getLong(0))});
                     Log.d("Aptoide-", "Deleting " + c.getLong(0));
                 }
-
             }
             c.close();
 
-            database.delete("apk"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+            //database.delete("apk"," id_repo = ?", new String[]{String.valueOf(id_store)});
 
 
 
@@ -197,7 +232,7 @@ public class Database {
     }
 
     public Cursor getInstalled() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
         c.getCount();
         return c;
     }
@@ -297,12 +332,12 @@ public class Database {
 
         ContentValues values = new ContentValues();
 
-
-        if(server.getIconspath()!=null)values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
-        if(server.getWebservicespath()!=null)values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
-        if(server.getHash()!=null) values.put(Schema.Repo.COLUMN_HASH, server.getHash());
-
-        database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repo_id)});
+        if (server.getIconspath() != null) values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
+        if (server.getWebservicespath() != null)
+            values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+        if (server.getHash() != null) values.put(Schema.Repo.COLUMN_HASH, server.getHash());
+        if (values.size() > 0)
+            database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repo_id)});
 
     }
 
@@ -402,6 +437,12 @@ public class Database {
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
             categoriesIds.put(c.getString(0), c.getLong(1));
         }
+
+    }
+
+    public void deleteApk(String packageName, int versionCode, long repoId) {
+
+        database.delete(Schema.Apk.getName(), "package_name = ? and version_code = ? and id_repo = ?", new String[]{packageName, String.valueOf(versionCode), String.valueOf(repoId)});
 
     }
 }

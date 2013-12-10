@@ -87,16 +87,20 @@ public class FileRequest extends SpiceRequest<InputStream>{
     public InputStream processStream(final int contentLength, final InputStream inputStream) throws IOException {
         OutputStream fileOutputStream = null;
         try {
-            // touch
-            boolean isTouchedNow = cacheFile.setLastModified(System.currentTimeMillis());
-            if (!isTouchedNow) {
-                Ln.d("Modification time of file %s could not be changed normally ", cacheFile.getAbsolutePath());
-            }
+
             fileOutputStream = new FileOutputStream(cacheFile);
-            readBytes(inputStream, new ProgressByteProcessor(this, fileOutputStream, contentLength));
-            return new FileInputStream(cacheFile);
+
+            BufferedInputStream is = new BufferedInputStream(inputStream, 8*1024);
+
+            IOUtils.copy(is, fileOutputStream);
+            IOUtils.closeQuietly(is);
+            Log.d("Aptoide-Parser", "Writed to " + cacheFile.getAbsolutePath());
+
         } finally {
             IOUtils.closeQuietly(fileOutputStream);
         }
+        return new FileInputStream(cacheFile);
+
     }
 }
+

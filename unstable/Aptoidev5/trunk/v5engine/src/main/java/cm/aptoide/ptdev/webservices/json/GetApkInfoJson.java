@@ -15,6 +15,14 @@ public class GetApkInfoJson {
     @Key
     private List<Comment> comments;
 
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    @Key
+    private List<String> errors;
+
+
     @Key
     private String latest;
 

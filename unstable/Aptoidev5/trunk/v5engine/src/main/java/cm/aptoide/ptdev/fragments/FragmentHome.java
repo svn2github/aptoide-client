@@ -146,9 +146,13 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
         switch (loader.getId()) {
             case 50:
+                editorsChoice.clear();
+
                 editorsChoice.addAll(data);
                 break;
             case 51:
+                top.clear();
+
                 top.addAll(data);
                 break;
         }

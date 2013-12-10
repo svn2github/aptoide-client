@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MainActivity;
 
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -34,6 +36,7 @@ public class AptoideConfiguration {
     private String webservicesPath;
     private static String MARKETNAME = "Aptoide";
     private static String brand;
+
 
 
 
@@ -98,7 +101,11 @@ public class AptoideConfiguration {
     }
 
     public String getPathCache() {
-        return sPref.getString(PREF_PATH_CACHE, Defaults.PATH_CACHE);
+
+        String cache = sPref.getString(PREF_PATH_CACHE, Defaults.PATH_CACHE);
+        new File(cache).mkdirs();
+
+        return cache;
 
     }
 

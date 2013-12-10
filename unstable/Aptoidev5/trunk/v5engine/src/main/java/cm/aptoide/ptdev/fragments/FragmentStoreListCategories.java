@@ -21,6 +21,8 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.commonsware.cwac.merge.MergeAdapter;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -36,11 +38,13 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 public class FragmentStoreListCategories extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore {
 
     private Database database;
-    private CategoryAdapter arrayAdapter;
+    private CategoryAdapter categoryAdapter;
 
     private PullToRefreshLayout mPullToRefreshLayout;
     private long parentId;
     private long storeId;
+    private MergeAdapter mainAdapter;
+    private CategoryAdapter apkAdapter;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -78,16 +82,20 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     }
 
 
+    StoreActivity.SortObject sort;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mainAdapter = new MergeAdapter();
         database = new Database(Aptoide.getDb());
-        arrayAdapter = new CategoryAdapter(getSherlockActivity());
+        categoryAdapter = new CategoryAdapter(getSherlockActivity());
+        apkAdapter = new ApkAdapter(getSherlockActivity());
+        mainAdapter.addAdapter(categoryAdapter);
+        mainAdapter.addAdapter(apkAdapter);
         setHasOptionsMenu(true);
 
-
+        sort = ((StoreActivity)getSherlockActivity()).getSort();
         if(savedInstanceState==null){
             parentId = getArguments().getLong("parentid");
             storeId = getArguments().getLong("storeid");
@@ -98,7 +106,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
 
         if(parentId==0){
-            setListAdapter(arrayAdapter);
+            setListAdapter(mainAdapter);
         }
         Bundle bundle = new Bundle();
 
@@ -107,8 +115,12 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
         if(savedInstanceState==null){
             getLoaderManager().restartLoader(20, bundle, this);
+            getLoaderManager().restartLoader(21, bundle, this);
+
         }else{
             getLoaderManager().initLoader(20, bundle, this);
+            getLoaderManager().initLoader(21, bundle, this);
+
         }
 
 
@@ -152,46 +164,72 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         super.onListItemClick(l, v, position, id);
         Bundle args = getArguments();
 
+
+        Log.d("Aptoide-Stores", l.getAdapter().getClass().getCanonicalName());
+
         int type = l.getAdapter().getItemViewType(position);
 
-        switch (type){
-            case 0:
+        Log.d("Aptoide-Stores", String.valueOf(type));
+
+
+        switch (type) {
+            case 1:
+                Fragment fragment = new FragmentStoreListCategories();
+                args.putLong("storeid", storeId);
+                args.putLong("parentid", id);
+                fragment.setArguments(args);
+                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+                break;
+
+            default:
                 Intent i = new Intent(getSherlockActivity(), AppViewActivity.class);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;
-            case 1:
-                Fragment fragment = new FragmentStoreListCategories();
-
-                args.putLong("storeid", storeId);
-                args.putLong("parentid", id);
-
-                fragment.setArguments(args);
-                getFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
-                break;
         }
+
+
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         return new SimpleCursorLoader(getSherlockActivity()) {
             @Override
             public Cursor loadInBackground() {
-                return database.getCategories(args.getLong("storeid"), args.getLong("parentid"));
+
+                switch (id) {
+                    case 20:
+                        return database.getCategories(args.getLong("storeid"), args.getLong("parentid"));
+                    case 21:
+                        return database.getApks(args.getLong("storeid"), args.getLong("parentid"), sort);
+
+                }
+                return null;
+
             }
         };
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        arrayAdapter.swapCursor(data);
+        switch (loader.getId()){
+            case 20:
+                categoryAdapter.swapCursor(data);
+                break;
+            case 21:
+                apkAdapter.swapCursor(data);
+                break;
+        }
+
         if(getListView().getAdapter()==null)
-            setListAdapter(arrayAdapter);
+            setListAdapter(mainAdapter);
+
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        arrayAdapter.swapCursor(null);
+        categoryAdapter.swapCursor(null);
     }
 
     @Override
@@ -206,11 +244,18 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
+        sort = ((StoreActivity)getSherlockActivity()).getSort();
         getLoaderManager().restartLoader(20, bundle, this);
+        getLoaderManager().restartLoader(21, bundle, this);
     }
 
     @Override
     public void onError() {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }

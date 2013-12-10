@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -83,17 +85,16 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
     private Database database;
     private Context mContext;
     private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
-    private String currentRequest;
+
 
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     MenuListAdapter mMenuAdapter;
-    String[] title;
-    String[] subtitle;
-    int[] icon;
+
     private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
+
+    private boolean isDisconnect;
 
     @Override
     protected void onStop() {
@@ -212,8 +213,6 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
         }
 
-        mTitle = mDrawerTitle = getTitle();
-
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -248,6 +247,53 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+
+        if (Build.VERSION.SDK_INT > 7) {
+            WebSocketSingleton.getInstance().connect();
+            isDisconnect = false;
+            android.app.SearchManager manager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            manager.setOnCancelListener(new android.app.SearchManager.OnCancelListener() {
+                @Override
+                public void onCancel() {
+
+                    isDisconnect = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (isDisconnect) {
+                                WebSocketSingleton.getInstance().disconnect();
+                            }
+
+                        }
+                    }, 10000);
+
+
+                }
+            });
+
+            manager.setOnDismissListener(new android.app.SearchManager.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    isDisconnect = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (isDisconnect) {
+                                WebSocketSingleton.getInstance().disconnect();
+                            }
+
+                        }
+                    }, 10000);
+                }
+            });
+        }
+        return super.onSearchRequested();
     }
 
     protected void waitForServiceToBeBound() throws InterruptedException {
