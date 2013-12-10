@@ -30,7 +30,7 @@ public class DownloadConnectionImpl extends DownloadConnection {
     }
 
     @Override
-    public long connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
+    public long connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException {
         connection = (HttpURLConnection) this.mURL.openConnection();
 
 
@@ -60,9 +60,9 @@ public class DownloadConnectionImpl extends DownloadConnection {
             throw new IOException("Cannot retrieve file from server.");
         }
 
-        if(!connection.getHeaderField("Content-Type").equals("application/vnd.android.package-archive")){
-            throw new ContentTypeNotApkException();
-        }
+//        if(!connection.getHeaderField("Content-Type").equals("application/vnd.android.package-archive")){
+//            throw new ContentTypeNotApkException();
+//        }
 
         mStream = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 

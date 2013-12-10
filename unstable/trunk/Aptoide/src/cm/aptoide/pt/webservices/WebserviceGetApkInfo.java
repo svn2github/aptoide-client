@@ -59,8 +59,8 @@ public class WebserviceGetApkInfo {
         }
 
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        if(ApplicationAptoide.PARTNERID!=null && ApplicationAptoide.PARTNERID.equals("1a9890b91e2358e06de4be6fe5f316f2"))
-            options.add(new WebserviceOptions("paymethod", "payseal"));
+//        if(ApplicationAptoide.PARTNERID!=null && ApplicationAptoide.PARTNERID.equals("1a9890b91e2358e06de4be6fe5f316f2"))
+//            options.add(new WebserviceOptions("paymethod", "payseal"));
         if(token!=null)options.add(new WebserviceOptions("token", token));
         options.add(new WebserviceOptions("cmtlimit", "6"));
         options.add(new WebserviceOptions("vercode", String.valueOf(apk.getVercode())));

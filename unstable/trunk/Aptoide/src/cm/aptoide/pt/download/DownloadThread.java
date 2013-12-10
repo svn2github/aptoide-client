@@ -116,8 +116,8 @@ public class DownloadThread implements Runnable {
 
             exception.printStackTrace();
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NOT_FOUND));
-        }catch (ContentTypeNotApkException e){
-            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
+//        }catch (ContentTypeNotApkException e){
+//            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
         }catch (IPBlackListedException e){
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.IP_BLACKLISTED));
         }catch (Md5FailedException e){
