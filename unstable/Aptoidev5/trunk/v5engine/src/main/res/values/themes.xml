@@ -9,11 +9,35 @@
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideLight</item>
-        <item name="android:windowBackground">@color/background_window</item>
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:windowBackground">@color/background_window</item>
         <item name="customColor">@color/custom_color</item>
-        <item name="secondaryTextColor">@android:color/secondary_text_light</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+
+    </style>
+
+    <style name="AppTheme.Dark" parent="@style/Theme.Sherlock">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideDark</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="customColor">@color/custom_color</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
+        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
+        <item name="icWebSiteDrawable">@style/webSiteDark</item>
+        <item name="icEmailDrawable">@style/emailDark</item>
+
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">

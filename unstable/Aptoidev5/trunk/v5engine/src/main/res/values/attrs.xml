@@ -13,7 +13,14 @@
 
     <attr name="secondaryTextColor" format="color" />
 
-    <attr name="primaryBackgroundColor" format="color" />
+    <attr name="navigationDrawerColor" format="color" />
 
+    <attr name="icRatingBadDrawable" format="reference"/>
+
+    <attr name="icRatingGoodDrawable" format="reference"/>
+
+    <attr name="icWebSiteDrawable" format="reference"/>
+
+    <attr name="icEmailDrawable" format="reference"/>
 
 </resources>

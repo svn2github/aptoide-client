@@ -55,13 +55,15 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
 
         store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
+        params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 135);
+        store_background.setLayoutParams(params);
 
-        if ((getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK) ==
-                Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 200);
-            store_background.setLayoutParams(params);
-        }
+//        if ((getResources().getConfiguration().screenLayout &
+//                Configuration.SCREENLAYOUT_SIZE_MASK) ==
+//                Configuration.SCREENLAYOUT_SIZE_LARGE) {
+//            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 200);
+//            store_background.setLayoutParams(params);
+//        }
 
         //Drawable drawable = getSherlockActivity().getResources().getDrawable(R.drawable.ab_shape);
         //drawable.setAlpha(200);

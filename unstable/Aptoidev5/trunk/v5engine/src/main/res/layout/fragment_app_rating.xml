@@ -38,18 +38,18 @@
                 android:layout_gravity="center">
 
             <Button android:id="@+id/button_like"
+                    style="?attr/icRatingGoodDrawable"
                     android:layout_width="fill_parent"
                     android:text="@string/like"
                     android:background="@drawable/highlight_overlay"
-                    android:drawableLeft="@drawable/ic_rating_good"
                     android:layout_margin="10dp"
                     android:layout_height="wrap_content"/>
 
             <Button android:id="@+id/button_dont_like"
+                    style="?attr/icRatingBadDrawable"
                     android:layout_width="fill_parent"
                     android:text="@string/dont_like"
                     android:background="@drawable/highlight_overlay"
-                    android:drawableLeft="@drawable/ic_rating_bad"
                     android:layout_margin="10dp"
                     android:layout_height="wrap_content"/>
 

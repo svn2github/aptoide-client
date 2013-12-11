@@ -33,7 +33,7 @@
                 android:layout_width="fill_parent"
                 android:text="@string/like"
                 android:background="@drawable/highlight_overlay"
-                android:drawableLeft="@drawable/ic_rating_good"
+                style="?attr/icRatingGoodDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
 
@@ -41,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:text="@string/dont_like"
                 android:background="@drawable/highlight_overlay"
-                android:drawableLeft="@drawable/ic_rating_bad"
+                style="?attr/icRatingBadDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
 
