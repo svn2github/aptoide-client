@@ -104,7 +104,7 @@
 
             <Button
                     android:id="@+id/button_login"
-                    style="@style/custom_button_style"
+                    style="@style/Widget.Button.Custom"
                     android:layout_gravity="right"
                     android:onClick="login"
                     android:text="@string/login"

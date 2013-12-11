@@ -1,10 +1,11 @@
 package cm.aptoide.ptdev;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.*;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,6 +34,8 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.services.ParserService;
+import cm.aptoide.ptdev.social.WebViewFacebook;
+import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -124,6 +128,11 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             } else {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
+        }else if (i == R.id.menu_settings) {
+            Intent settingsIntent = new Intent(this, Settings.class);
+            startActivityForResult(settingsIntent, 0);
+        }else if (i == R.id.menu_about) {
+            showAbout();
         }else if (i == R.id.menu_search) {
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");
@@ -353,10 +362,31 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         // Locate Position
         switch (position){
             case 0:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                break;
             case 1:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
+                startActivity(rollbackIntent);
+                break;
             case 2:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
+                startActivity(scheduledIntent);
+                break;
             case 3:
-            case 4:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
+                startActivity(excludedIntent);
+                break;
+            case 5:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                showFacebook();
+                break;
+            case 6:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                showTwitter();
+                break;
             default: break;
         }
 
@@ -372,5 +402,45 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         mDrawerToggle.syncState();
     }
 
+    private void showFacebook() {
+        if (AptoideUtils.isAppInstalled(mContext, "com.facebook.katana")) {
+            Intent sharingIntent;
+            try {
+                getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                sharingIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/225295240870860"));
+                startActivity(sharingIntent);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Intent intent = new Intent(mContext, WebViewFacebook.class);
+            startActivity(intent);
+        }
+    }
 
+    private void showTwitter(){
+        if (AptoideUtils.isAppInstalled(mContext, "com.twitter.android")) {
+            String url = "http://www.twitter.com/aptoide";
+            Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(twitterIntent);
+        } else {
+            Intent intent = new Intent(mContext, WebViewTwitter.class);
+            startActivity(intent);
+        }
+    }
+
+    private void showAbout(){
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_about, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext).setView(view);
+        final AlertDialog aboutDialog = alertDialogBuilder.create();
+        aboutDialog.setTitle(getString(R.string.about_us));
+        aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
+        aboutDialog.setCancelable(false);
+        aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        aboutDialog.show();
+    }
 }

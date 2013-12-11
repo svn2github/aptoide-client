@@ -528,5 +528,18 @@ public class AptoideUtils {
         Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
 
     }
+
+
+    public static boolean isAppInstalled(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        boolean installed;
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
+    }
 }
 

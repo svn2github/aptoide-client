@@ -46,7 +46,7 @@
 
 
             <Button android:id="@+id/button_dialog_add_store"
-                    style="@style/gray_button_style"
+                    style="@style/Widget.Button.Custom.Gray"
                     android:text="@string/add"
                     android:drawableLeft="@drawable/ic_accept"
                     android:drawablePadding="4dp"/>
@@ -65,7 +65,7 @@
                 android:layout_marginLeft="10dp"/>
 
         <Button android:id="@+id/button_top_stores"
-                style="@style/custom_button_style"
+                style="@style/Widget.Button.Custom"
                 android:layout_width="fill_parent"
                 android:text="@string/see_top_stores"
                 android:layout_margin="10dp" />

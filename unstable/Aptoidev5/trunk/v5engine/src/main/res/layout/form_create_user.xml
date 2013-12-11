@@ -63,7 +63,7 @@
 
             <Button
                     android:id="@+id/submitCreateUser"
-                    style="@style/gray_button_style"
+                    style="@style/Widget.Button.Custom.Gray"
                     android:onClick="signUp"
                     android:text="@string/register"/>
 

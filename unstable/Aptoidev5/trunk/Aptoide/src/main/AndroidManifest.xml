@@ -45,6 +45,31 @@
                     android:resource="@xml/find" />
         </activity>
 
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewFacebook"
+                android:configChanges="orientation|keyboardHidden" />
+
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewTwitter"
+                android:configChanges="orientation|keyboardHidden" />
+
+        <activity
+                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity"
+                android:configChanges="orientation|keyboardHidden" >
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity"
+                android:configChanges="orientation|keyboardHidden" >
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.Settings"
+                android:configChanges="orientation|keyboardHidden"
+                android:label="@string/settings_title_bar"
+                android:theme="@style/Settings" />
+
+
         <service android:name="cm.aptoide.ptdev.services.RabbitMqService"
                  android:label="WebInstallService"
                  android:exported="false"/>
@@ -60,6 +85,8 @@
         <service android:name="com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService"
                  android:label="HttpService"
                  android:exported="false"/>
+
+
 
     </application>
 </manifest>

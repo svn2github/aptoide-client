@@ -13,4 +13,7 @@
 
     <attr name="secondaryTextColor" format="color" />
 
+    <attr name="primaryBackgroundColor" format="color" />
+
+
 </resources>
