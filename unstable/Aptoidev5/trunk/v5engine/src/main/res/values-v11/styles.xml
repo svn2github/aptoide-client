@@ -8,6 +8,11 @@
     <style name="Settings" parent="AppBaseTheme">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
+
+
+    <style name="alert_dialog_style_light" parent="android:Theme.Holo.Light.Dialog"/>
+    <style name="alert_dialog_style_dark" parent="android:Theme.Holo.Dialog"/>
 
 </resources>

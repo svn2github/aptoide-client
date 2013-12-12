@@ -1,17 +1,17 @@
 package cm.aptoide.ptdev;
 
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
 
-public class RollbackActivity extends SherlockActivity {
+public class RollbackActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_rollback);
-
 
         getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -27,7 +27,7 @@ public class RollbackActivity extends SherlockActivity {
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

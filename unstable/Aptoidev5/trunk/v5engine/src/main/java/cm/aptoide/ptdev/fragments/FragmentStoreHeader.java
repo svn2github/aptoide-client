@@ -3,8 +3,8 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumStoreTheme;
@@ -20,10 +19,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,13 +28,13 @@ import java.util.Locale;
  * Time: 17:24
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreHeader extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentStoreHeader extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     TextView banner_store_name;
     TextView banner_description;
     ImageView avatar;
-    FrameLayout store_background;
-    FrameLayout.LayoutParams params;
+//    FrameLayout store_background;
+//    FrameLayout.LayoutParams params;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +50,8 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
         banner_description = (TextView) header.findViewById(R.id.store_description);
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
 
-        store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
-        params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 135);
-        store_background.setLayoutParams(params);
-
+//        store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
+//
 //        if ((getResources().getConfiguration().screenLayout &
 //                Configuration.SCREENLAYOUT_SIZE_MASK) ==
 //                Configuration.SCREENLAYOUT_SIZE_LARGE) {
@@ -77,7 +71,7 @@ public class FragmentStoreHeader extends SherlockFragment implements LoaderManag
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
-        return new SimpleCursorLoader(getSherlockActivity()) {
+        return new SimpleCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 return new Database(Aptoide.getDb()).getStore(args.getLong("storeid"));

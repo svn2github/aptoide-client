@@ -22,18 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/progress"
             android:layout_toLeftOf="@+id/view"/>
-    <TextView
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:layout_alignParentLeft="true"
-            android:text="Downloading..."/>
 
     <TextView
-            android:id="@+id/status"
+            android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -43,7 +34,7 @@
             android:text="80%"/>
 
     <View android:layout_width="1dip"
-          android:layout_height="36dp"
+          android:layout_height="25dp"
           android:background="@android:color/darker_gray"
           android:layout_toLeftOf="@+id/ic_action_cancel"
           android:layout_marginTop="10dp"
@@ -61,7 +52,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:contentDescription="@null"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_alignParentRight="true"/>
 
 

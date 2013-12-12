@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +14,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  * Time: 15:46
  * To change this template use File | Settings | File Templates.
  */
-public class ProgressDialogFragment extends SherlockDialogFragment {
+public class ProgressDialogFragment extends DialogFragment {
 
     public interface OnCancelListener{
         void onCancel();

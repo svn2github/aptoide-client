@@ -23,4 +23,8 @@
 
     <attr name="icEmailDrawable" format="reference"/>
 
+    <attr name="actionBarDisplayOptions" format="reference"/>
+
+    <attr name="alertDialog" format="reference" />
+
 </resources>

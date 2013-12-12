@@ -11,10 +11,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
-public class ScheduledDownloadsActivity extends SherlockFragmentActivity implements LoaderCallbacks<Cursor> {
+public class ScheduledDownloadsActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class ScheduledDownloadsActivity extends SherlockFragmentActivity impleme
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

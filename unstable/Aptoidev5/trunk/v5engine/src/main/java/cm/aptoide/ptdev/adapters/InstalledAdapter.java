@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.IconSizes;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -106,7 +106,7 @@ public class InstalledAdapter extends CursorAdapter {
                 holder.actionIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UninstallHelper.uninstall((SherlockFragmentActivity) context, packageName);
+                        UninstallHelper.uninstall((FragmentActivity) context, packageName);
                     }
                 });
                 break;

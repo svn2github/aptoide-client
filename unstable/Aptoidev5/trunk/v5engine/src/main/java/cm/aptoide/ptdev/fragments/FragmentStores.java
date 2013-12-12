@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.view.*;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import cm.aptoide.ptdev.*;
@@ -24,12 +25,6 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -43,7 +38,7 @@ import java.util.Set;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStores extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, Callback {
+public class FragmentStores extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, Callback {
 
     private StoresCallback callback;
 
@@ -100,7 +95,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        storeAdapter = new StoreAdapter(savedInstanceState, getSherlockActivity(), stores, this);
+        storeAdapter = new StoreAdapter(savedInstanceState, getActivity(), stores, this);
         return inflater.inflate(R.layout.page_my_stores,container, false);
     }
 
@@ -133,7 +128,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
         storeAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getSherlockActivity(), StoreActivity.class);
+                Intent i = new Intent(getActivity(), StoreActivity.class);
                 StoreItem store = (StoreItem) parent.getItemAtPosition(position);
 
                 i.putExtra("storeid", id);
@@ -158,7 +153,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new SimpleCursorLoader(getSherlockActivity()) {
+        return new SimpleCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 return new Database(Aptoide.getDb()).getServers();
@@ -196,30 +191,6 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item){
-        int id = item.getItemId();
-
-        if (id == R.id.menu_reload) {
-            callback.reloadStores(storeAdapter.getCheckedItems());
-            return true;
-        } else if (id == R.id.menu_discard) {
-            HashSet<Long> longs = new HashSet<Long>();
-            for(Long aLong : storeAdapter.getCheckedItems()){
-                longs.add(storeAdapter.getItemId(aLong.intValue()));
-            }
-
-            removeStores(longs);
-            return true;
-        } else if( id == R.id.menu_select_all){
-            storeAdapter.selectAll();
-            return true;
-        }
-        return false;
-    }
-
     private void removeStores(Set<Long> checkedItems) {
         setRetainInstance(true);
         new AsyncTask<Set<Long>, Void, Void>() {
@@ -227,7 +198,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                SherlockDialogFragment pd = AptoideDialog.pleaseWaitDialog();
+                DialogFragment pd = AptoideDialog.pleaseWaitDialog();
                 pd.setCancelable(false);
                 pd.show(getFragmentManager(), "pleaseWaitDialogRemove");
 
@@ -250,7 +221,7 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                SherlockDialogFragment pd = (SherlockDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
+                DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
                 pd.dismiss();
                 setRetainInstance(false);
                 loader.forceLoad();
@@ -258,6 +229,28 @@ public class FragmentStores extends SherlockFragment implements LoaderManager.Lo
             }
         }.execute(checkedItems);
 
+    }
+
+    @Override
+    public boolean onActionItemClicked(android.support.v7.view.ActionMode mode, MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_reload) {
+            callback.reloadStores(storeAdapter.getCheckedItems());
+            return true;
+        } else if (id == R.id.menu_discard) {
+            HashSet<Long> longs = new HashSet<Long>();
+            for(Long aLong : storeAdapter.getCheckedItems()){
+                longs.add(storeAdapter.getItemId(aLong.intValue()));
+            }
+
+            removeStores(longs);
+            return true;
+        } else if( id == R.id.menu_select_all){
+            storeAdapter.selectAll();
+            return true;
+        }
+        return false;
     }
 }
 

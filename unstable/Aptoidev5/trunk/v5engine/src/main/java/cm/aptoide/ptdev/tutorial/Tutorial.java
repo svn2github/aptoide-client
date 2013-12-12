@@ -2,14 +2,13 @@ package cm.aptoide.ptdev.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.tutorial.Wizard.WizardCallback;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,11 +20,11 @@ import java.util.Iterator;
  * Time: 13:11
  * To change this template use File | Settings | File Templates.
  */
-public class Tutorial extends SherlockFragmentActivity {
+public class Tutorial extends FragmentActivity {
 
     private int currentFragment;
     private int lastFragment;
-    private ArrayList<SherlockFragment> wizard_fragments;
+    private ArrayList<Fragment> wizard_fragments;
     private ArrayList<Action> actionsToExecute = new ArrayList<Action>();
 
     @Override
@@ -109,7 +108,7 @@ public class Tutorial extends SherlockFragmentActivity {
     }
 
     private void getFragmentsActions() {
-        Iterator<SherlockFragment> iterator = wizard_fragments.iterator();
+        Iterator<Fragment> iterator = wizard_fragments.iterator();
         WizardCallback wizardCallback;
         while (iterator.hasNext()) {
             wizardCallback = (WizardCallback) iterator.next();

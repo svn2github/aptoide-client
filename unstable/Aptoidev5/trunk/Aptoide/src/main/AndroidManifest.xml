@@ -43,6 +43,41 @@
         <activity android:name="cm.aptoide.ptdev.AppViewActivity"
                   android:launchMode="singleTask"/>
 
+        <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
+                  android:theme="@style/transparent"
+                  android:launchMode="standard"
+                  android:configChanges="keyboardHidden|orientation"/>
+
+
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewFacebook"
+                android:configChanges="orientation|keyboardHidden"/>
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewTwitter"
+                android:configChanges="orientation|keyboardHidden"/>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.RollbackActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.Settings"
+                android:configChanges="orientation|keyboardHidden"
+                android:label="@string/settings_title_bar"
+                android:theme="@style/Settings"/>
+
+
         <activity
                 android:name="cm.aptoide.ptdev.SearchManager"
                 android:configChanges="orientation|keyboardHidden"
@@ -75,14 +110,12 @@
                  android:label="HttpService"
                  android:exported="false"/>
 
-
         <service android:name="cm.aptoide.ptdev.services.DownloadService"
                  android:label="DownloadService"
                  android:exported="false"/>
 
         <provider android:name="cm.aptoide.ptdev.SuggestionProvider"
                   android:authorities="cm.aptoide.ptdev.SuggestionProvider" android:exported="false"/>
-
 
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>

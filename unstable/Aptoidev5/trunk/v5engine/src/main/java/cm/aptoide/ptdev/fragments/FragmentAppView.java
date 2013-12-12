@@ -2,21 +2,19 @@ package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Comment;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import java.util.ArrayList;
  * Time: 14:34
  * To change this template use File | Settings | File Templates.
  */
-public abstract class FragmentAppView extends SherlockFragment {
+public abstract class FragmentAppView extends Fragment {
 
 
     @Override
@@ -88,7 +86,7 @@ public abstract class FragmentAppView extends SherlockFragment {
 
 
 
-    public static class FragmentAppViewRelated extends SherlockListFragment {
+    public static class FragmentAppViewRelated extends ListFragment {
 
 
 
@@ -109,7 +107,7 @@ public abstract class FragmentAppView extends SherlockFragment {
         public void refreshDetails(AppViewActivity.RatingEvent event) {
             Log.d("Aptoide-AppView", "getting event");
 
-            if(event.getComments()!=null) FillComments.fillComments(getSherlockActivity(), commentsContainer, event.getComments());
+            if(event.getComments()!=null) FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
 
         }
 

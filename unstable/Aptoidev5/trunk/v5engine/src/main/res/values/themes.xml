@@ -2,7 +2,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light.DarkActionBar"></style>
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:cacheColorHint">@null</item>
+
+    </style>
+    <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
+        <item name="android:cacheColorHint">@null</item>
+    </style>
 
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="customRowForeground">@style/customRowStyle</item>
@@ -19,10 +25,9 @@
         <item name="icRatingBadDrawable">@style/ratingBadLight</item>
         <item name="icWebSiteDrawable">@style/webSiteLight</item>
         <item name="icEmailDrawable">@style/emailLight</item>
-
     </style>
 
-    <style name="AppTheme.Dark" parent="@style/Theme.Sherlock">
+    <style name="AppTheme.Dark" parent="AppBaseThemeDark">
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
@@ -40,7 +45,7 @@
 
     </style>
 
-    <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_aptoide</item>
         <item name="displayOptions">showHome|useLogo</item>

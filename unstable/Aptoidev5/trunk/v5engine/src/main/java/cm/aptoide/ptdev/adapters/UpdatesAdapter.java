@@ -12,7 +12,6 @@ import android.widget.TextView;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.IconSizes;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**

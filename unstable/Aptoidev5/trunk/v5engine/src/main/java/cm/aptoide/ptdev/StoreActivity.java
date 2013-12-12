@@ -7,7 +7,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -19,9 +22,6 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.ParserService;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
  * To change this template use File | Settings | File Templates.
  */
 
-public class StoreActivity extends SherlockFragmentActivity {
+public class StoreActivity extends ActionBarActivity {
 
 
     private long storeid;
@@ -84,6 +84,8 @@ public class StoreActivity extends SherlockFragmentActivity {
             setFragment();
         }
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sort = Sort.NAME;
 
     }
@@ -125,7 +127,7 @@ public class StoreActivity extends SherlockFragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getSupportMenuInflater().inflate(R.menu.menu_categories, menu);
+        getMenuInflater().inflate(R.menu.menu_categories, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -162,7 +164,7 @@ public class StoreActivity extends SherlockFragmentActivity {
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         } else if( i == R.id.refresh_store){
             refreshList();

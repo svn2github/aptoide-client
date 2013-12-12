@@ -1,7 +1,5 @@
 package cm.aptoide.ptdev;
 
-import android.graphics.drawable.Drawable;
-
 public class StoreItem {
 
 	private String storeName;

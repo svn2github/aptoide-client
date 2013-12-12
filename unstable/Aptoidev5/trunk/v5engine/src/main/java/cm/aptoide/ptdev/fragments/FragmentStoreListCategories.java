@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ListView;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
@@ -18,12 +18,8 @@ import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.commonsware.cwac.merge.MergeAdapter;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -35,7 +31,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Time: 17:12
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreListCategories extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore {
+public class FragmentStoreListCategories extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore {
 
     private Database database;
     private CategoryAdapter categoryAdapter;
@@ -73,12 +69,12 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
                 .options(Options.create().scrollDistance(0.5f).build())
                 .setup(mPullToRefreshLayout);
 
-        mPullToRefreshLayout.setRefreshing(((StoreActivity)getSherlockActivity()).isRefreshing());
+        mPullToRefreshLayout.setRefreshing(((StoreActivity)getActivity()).isRefreshing());
     }
 
     public void setRefreshing(boolean bool){
         if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshing(bool);
-        getSherlockActivity().invalidateOptionsMenu();
+        getActivity().supportInvalidateOptionsMenu();
     }
 
 
@@ -87,15 +83,16 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mainAdapter = new MergeAdapter();
         database = new Database(Aptoide.getDb());
-        categoryAdapter = new CategoryAdapter(getSherlockActivity());
-        apkAdapter = new ApkAdapter(getSherlockActivity());
+        categoryAdapter = new CategoryAdapter(getActivity());
+        apkAdapter = new ApkAdapter(getActivity());
         mainAdapter.addAdapter(categoryAdapter);
         mainAdapter.addAdapter(apkAdapter);
         setHasOptionsMenu(true);
 
-        sort = ((StoreActivity)getSherlockActivity()).getSort();
+        sort = ((StoreActivity)getActivity()).getSort();
         if(savedInstanceState==null){
             parentId = getArguments().getLong("parentid");
             storeId = getArguments().getLong("storeid");
@@ -124,8 +121,6 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         }
 
 
-
-        getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
 
 
@@ -143,7 +138,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(((StoreActivity)getSherlockActivity()).isRefreshing()){
+        if(((StoreActivity)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
     }
@@ -183,7 +178,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
                 break;
 
             default:
-                Intent i = new Intent(getSherlockActivity(), AppViewActivity.class);
+                Intent i = new Intent(getActivity(), AppViewActivity.class);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;
@@ -194,7 +189,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        return new SimpleCursorLoader(getSherlockActivity()) {
+        return new SimpleCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
 
@@ -240,7 +235,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     @Override
     public void onRefreshStarted(View view) {
 
-        ((StoreActivity)getSherlockActivity()).onRefreshStarted();
+        ((StoreActivity)getActivity()).onRefreshStarted();
 
     }
 
@@ -249,7 +244,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        sort = ((StoreActivity)getSherlockActivity()).getSort();
+        sort = ((StoreActivity)getActivity()).getSort();
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
     }

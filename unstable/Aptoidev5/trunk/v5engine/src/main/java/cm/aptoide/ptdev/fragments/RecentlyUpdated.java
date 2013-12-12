@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +19,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * To change this template use File | Settings | File Templates.
  */
 public class RecentlyUpdated extends CursorAdapter {
-    public RecentlyUpdated(SherlockFragmentActivity sherlockActivity) {
+    public RecentlyUpdated(FragmentActivity sherlockActivity) {
         super(sherlockActivity, null, FLAG_REGISTER_CONTENT_OBSERVER);
     }
 

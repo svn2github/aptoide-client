@@ -18,8 +18,6 @@ import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.internal.widget.PopupWindowCompat;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -35,7 +33,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * Time: 17:27
  * To change this template use File | Settings | File Templates.
  */
-public class AddStoreDialog extends SherlockDialogFragment {
+public class AddStoreDialog extends DialogFragment {
     private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
 
     private String store;
@@ -84,7 +82,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        spiceManager.start(getSherlockActivity());
+        spiceManager.start(getActivity());
 
         if(url!=null){
             spiceManager.getFromCache(Integer.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
@@ -157,7 +155,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
         @Override
         public void onRequestCancelled() {
-            Toast.makeText(getSherlockActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
 
         }
     }
@@ -244,13 +242,13 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
         @Override
         public void onRequestCancelled() {
-            Toast.makeText(getSherlockActivity(), "Request was canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Request was canceled", Toast.LENGTH_LONG).show();
         }
     }
 
     void dismissDialog(){
         setRetainInstance(false);
-        SherlockDialogFragment pd = (SherlockDialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
+        DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null)
                 pd.dismiss();
 
@@ -258,7 +256,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
 
     void dismissDialog(String message){
         if(message!=null){
-            Toast.makeText(getSherlockActivity(),message, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),message, Toast.LENGTH_LONG).show();
         }
 
         dismissDialog();
@@ -313,7 +311,7 @@ public class AddStoreDialog extends SherlockDialogFragment {
             if(checkServerRequest!=null)checkServerRequest.cancel();
             if(getRepoInfoRequest!=null)getRepoInfoRequest.cancel();
             setRetainInstance(false);
-            Toast.makeText(getSherlockActivity(), "Canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();
         }
     };
 

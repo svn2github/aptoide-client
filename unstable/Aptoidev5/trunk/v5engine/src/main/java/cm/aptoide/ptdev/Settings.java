@@ -8,29 +8,25 @@
 package cm.aptoide.ptdev;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.*;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.text.InputType;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Toast;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import java.io.File;
 import java.text.DecimalFormat;
 
-public class Settings extends SherlockPreferenceActivity {
+public class Settings extends PreferenceActivity {
 	String aptoide_path = Aptoide.getConfiguration().getPathCache();
 	String icon_path = aptoide_path + "icons/";
 	ManagerPreferences preferences;
@@ -183,9 +179,9 @@ public class Settings extends SherlockPreferenceActivity {
 
 
 
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setTitle("");
+//        getActionBar().setHomeButtonEnabled(true);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -290,7 +286,7 @@ public class Settings extends SherlockPreferenceActivity {
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

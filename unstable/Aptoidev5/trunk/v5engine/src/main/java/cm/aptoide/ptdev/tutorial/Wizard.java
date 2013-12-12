@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.tutorial;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
-import com.actionbarsherlock.app.SherlockFragment;
 
 import java.util.ArrayList;
 
@@ -21,8 +21,8 @@ import java.util.ArrayList;
  */
 public class Wizard {
 
-    public static ArrayList<SherlockFragment> getWizard() {
-        ArrayList<SherlockFragment> wizard = new ArrayList<SherlockFragment>();
+    public static ArrayList<Fragment> getWizard() {
+        ArrayList<Fragment> wizard = new ArrayList<Fragment>();
 
         /*
         Class[] fragments = Wizard.class.getClasses();
@@ -51,7 +51,7 @@ public class Wizard {
         public void getActions(ArrayList<Action> actions);
     }
 
-    public static class Fragment1 extends SherlockFragment implements WizardCallback {
+    public static class Fragment1 extends Fragment implements WizardCallback {
 
         CheckBox checkBox1;
         CheckBox checkBox2;
@@ -112,7 +112,7 @@ public class Wizard {
         }
     }
 
-    public static class Fragment2 extends SherlockFragment implements WizardCallback {
+    public static class Fragment2 extends Fragment implements WizardCallback {
 
         CheckBox checkBox1;
         CheckBox checkBox2;
@@ -174,7 +174,7 @@ public class Wizard {
         }
     }
 
-    public static class Fragment3 extends SherlockFragment implements WizardCallback {
+    public static class Fragment3 extends Fragment implements WizardCallback {
 
         CheckBox checkBox1;
         CheckBox checkBox2;
@@ -237,7 +237,7 @@ public class Wizard {
         }
     }
 
-    public static class Fragment4 extends SherlockFragment implements WizardCallback {
+    public static class Fragment4 extends Fragment implements WizardCallback {
 
         private CheckBox checkBox1;
         private CheckBox checkBox2;
@@ -299,7 +299,7 @@ public class Wizard {
         }
     }
 
-    public static class Fragment5 extends SherlockFragment implements WizardCallback {
+    public static class Fragment5 extends Fragment implements WizardCallback {
         private CheckBox checkBox1;
         private CheckBox checkBox2;
         private CheckBox checkBox3;

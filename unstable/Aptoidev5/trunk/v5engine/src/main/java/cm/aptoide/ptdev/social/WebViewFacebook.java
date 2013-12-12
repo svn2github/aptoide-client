@@ -7,8 +7,12 @@
  ******************************************************************************/
 package cm.aptoide.ptdev.social;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -16,13 +20,11 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class WebViewFacebook extends SherlockActivity {
+public class WebViewFacebook extends ActionBarActivity {
 
 	private String url;
 	private WebView webView;
@@ -34,11 +36,12 @@ public class WebViewFacebook extends SherlockActivity {
 	public static final String CANCEL_URI = "fbconnect:cancel";
 	static final String DISPLAY_STRING = "touch";
 
-	/** Called when the activity is first created. */
-	@Override
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.webview_social);
+
 		Bundle parameters = new Bundle();
 //		parameters.putString("client_id", APP_ID);
 		parameters.putString("type", "user_agent");
@@ -157,7 +160,7 @@ public class WebViewFacebook extends SherlockActivity {
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

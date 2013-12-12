@@ -6,20 +6,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
-import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.otto.Subscribe;
 
@@ -32,7 +28,7 @@ import java.util.ArrayList;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentDownloadManager extends SherlockListFragment {
+public class FragmentDownloadManager extends ListFragment {
 
 
     DownloadManagerCallback callback;
@@ -80,9 +76,9 @@ public class FragmentDownloadManager extends SherlockListFragment {
 
     @Override
     public void onDetach() {
-        getSherlockActivity().unbindService(conn);
         super.onDetach();
         this.callback = null;
+        getActivity().unbindService(conn);
     }
 
     @Override

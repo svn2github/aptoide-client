@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -14,7 +15,6 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.otto.Subscribe;
 
@@ -28,7 +28,7 @@ import java.util.List;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome extends SherlockListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
+public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
 
 
     private MergeAdapter adapter;
@@ -84,13 +84,14 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
         adapter = new MergeAdapter();
 
-        HomeBucketAdapter homeBucketAdapter = new HomeBucketAdapter(getSherlockActivity(), editorsChoice);
-        adapter.addView(View.inflate(getSherlockActivity(), R.layout.separator_home_header, null));
+        HomeBucketAdapter homeBucketAdapter = new HomeBucketAdapter(getActivity(), editorsChoice);
+        adapter.addView(View.inflate(getActivity(), R.layout.separator_home_header, null));
         editorsChoiceBucketSize = homeBucketAdapter.getBucketSize();
         adapter.addAdapter(homeBucketAdapter);
 
-        HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getSherlockActivity(), top);
-        View v = View.inflate(getSherlockActivity(), R.layout.separator_home_header, null);
+
+        HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
+        View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView)v.findViewById(R.id.separator_label)).setText("Top Apps");
         adapter.addView(v);
         adapter.addAdapter(homeBucketAdapter2);
@@ -98,6 +99,8 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 //        HomeBucketAdapter homeBucketAdapter3 = new HomeBucketAdapter(getSherlockActivity(), Arrays.asList(new HomeItem[]{new HomeItem(), new HomeItem(), new HomeItem(), new HomeItem()}));
 //        adapter.addView(View.inflate(getSherlockActivity(), R.layout.separator_home_header, null));
 //        adapter.addAdapter(homeBucketAdapter3);
+
+
     }
 
 
@@ -121,7 +124,7 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
 
 
 
-        AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getSherlockActivity()) {
+        AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
             @Override
             public ArrayList<HomeItem> loadInBackground() {
 

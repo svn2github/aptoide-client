@@ -1,7 +1,6 @@
 package cm.aptoide.ptdev.dialogs;
 
-import android.app.Dialog;
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.support.v4.app.DialogFragment;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,15 +11,15 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
  */
 public class AptoideDialog {
 
-    public static SherlockDialogFragment addStoreDialog(){
+    public static DialogFragment addStoreDialog(){
         return new AddStoreDialog();
     }
 
-    public static SherlockDialogFragment pleaseWaitDialog(){
+    public static DialogFragment pleaseWaitDialog(){
         return new ProgressDialogFragment();
     }
 
-    public static SherlockDialogFragment passwordDialog(){
+    public static DialogFragment passwordDialog(){
         return new PasswordDialog();
     }
 

@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -18,7 +19,6 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.otto.Subscribe;
 
@@ -29,7 +29,7 @@ import com.squareup.otto.Subscribe;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentUpdates extends SherlockListFragment {
+public class FragmentUpdates extends ListFragment {
 
     private InstalledAdapter installedAdapter;
     private UpdatesAdapter updatesAdapter;
@@ -58,13 +58,13 @@ public class FragmentUpdates extends SherlockListFragment {
 
         this.db = new Database(Aptoide.getDb());
 
-        updatesAdapter = new UpdatesAdapter(getSherlockActivity());
+        updatesAdapter = new UpdatesAdapter(getActivity());
         adapter.addAdapter(updatesAdapter);
 
-        recentUpdates = new RecentlyUpdated(getSherlockActivity());
+        recentUpdates = new RecentlyUpdated(getActivity());
         adapter.addAdapter(recentUpdates);
 
-        installedAdapter = new InstalledAdapter(getSherlockActivity());
+        installedAdapter = new InstalledAdapter(getActivity());
         adapter.addAdapter(installedAdapter);
 
         setHasOptionsMenu(true);
@@ -78,7 +78,7 @@ public class FragmentUpdates extends SherlockListFragment {
         super.onListItemClick(l, v, position, id);
 
         if(id>0){
-            Intent i = new Intent(getSherlockActivity(), AppViewActivity.class);
+            Intent i = new Intent(getActivity(), AppViewActivity.class);
             i.putExtra("id", id);
             startActivity(i);
         }
@@ -119,7 +119,7 @@ public class FragmentUpdates extends SherlockListFragment {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-                return new SimpleCursorLoader(getSherlockActivity()) {
+                return new SimpleCursorLoader(getActivity()) {
                     @Override
                     public Cursor loadInBackground() {
                         counter++;
@@ -147,7 +147,7 @@ public class FragmentUpdates extends SherlockListFragment {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-                return new SimpleCursorLoader(getSherlockActivity()) {
+                return new SimpleCursorLoader(getActivity()) {
                     @Override
                     public Cursor loadInBackground() {
                         counter++;

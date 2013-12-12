@@ -1,23 +1,22 @@
 package cm.aptoide.ptdev;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.commonsware.cwac.merge.MergeAdapter;
 
 /**
@@ -27,8 +26,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
  * Time: 15:54
  * To change this template use File | Settings | File Templates.
  */
-public class SearchManager extends SherlockFragmentActivity {
-
+public class SearchManager extends ActionBarActivity {
 
     private CursorAdapter adapter;
 
@@ -37,6 +35,7 @@ public class SearchManager extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         adapter = new SearchAdapter(this);
         setContentView(R.layout.page_search);
+
         Bundle args = new Bundle();
         String query;
 
@@ -76,7 +75,7 @@ public class SearchManager extends SherlockFragmentActivity {
 
 
 
-    public static class SearchFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>   {
+    public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>   {
 
 
         private MergeAdapter adapter;
@@ -87,10 +86,10 @@ public class SearchManager extends SherlockFragmentActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             adapter = new MergeAdapter();
-            View v = LayoutInflater.from(getSherlockActivity()).inflate(R.layout.separator_search, null);
+            View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
             adapter.addView(v);
 
-            cursorAdapter = new SearchAdapter(getSherlockActivity());
+            cursorAdapter = new SearchAdapter(getActivity());
             adapter.addAdapter(cursorAdapter);
             query = getArguments().getString("query");
             getLoaderManager().initLoader(60, getArguments(), this);
@@ -104,7 +103,7 @@ public class SearchManager extends SherlockFragmentActivity {
 
 
 
-            return new SimpleCursorLoader(getSherlockActivity()) {
+            return new SimpleCursorLoader(getActivity()) {
                 @Override
                 public Cursor loadInBackground() {
                     return new Database(Aptoide.getDb()).getSearchResults(args.getString("query"));

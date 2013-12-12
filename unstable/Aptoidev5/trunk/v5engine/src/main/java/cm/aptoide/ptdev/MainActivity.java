@@ -11,11 +11,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -37,10 +42,6 @@ import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -56,7 +57,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MainActivity extends SherlockFragmentActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
+public class MainActivity extends ActionBarActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
+
     private static final String TAG = MainActivity.class.getName();
     static Toast toast;
     private ArrayList<Server> server;
@@ -122,7 +124,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
-        if (i == R.id.abs__home || i == android.R.id.home){
+        if (i == R.id.home || i == android.R.id.home){
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
             } else {
@@ -164,7 +166,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -235,7 +237,6 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         mDrawerList.setAdapter(mMenuAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        //getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -341,7 +342,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
 
     @Override
     public void showAddStoreDialog() {
-        SherlockDialogFragment newFragment = AptoideDialog.addStoreDialog();
+        DialogFragment newFragment = AptoideDialog.addStoreDialog();
         newFragment.show(getSupportFragmentManager(), "addStoreDialog");
     }
 

@@ -7,7 +7,12 @@
  ******************************************************************************/
 package cm.aptoide.ptdev.social;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -15,15 +20,13 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 
-public class WebViewTwitter extends SherlockActivity {
-
+public class WebViewTwitter extends ActionBarActivity {
 	private String url;
 	private WebView TwitterWebView;
 	private TextView waitingText;
 	private ProgressBar waitingBar;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,7 @@ public class WebViewTwitter extends SherlockActivity {
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

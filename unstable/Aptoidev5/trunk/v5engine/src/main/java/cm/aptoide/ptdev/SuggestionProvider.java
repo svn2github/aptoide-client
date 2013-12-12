@@ -1,9 +1,7 @@
 package cm.aptoide.ptdev;
 
 
-import android.app.*;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.database.MatrixCursor;

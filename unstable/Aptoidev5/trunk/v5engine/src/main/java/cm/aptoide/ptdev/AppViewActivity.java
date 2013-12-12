@@ -13,7 +13,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,8 +33,6 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
@@ -52,7 +52,7 @@ import java.util.ArrayList;
  * Time: 15:04
  * To change this template use File | Settings | File Templates.
  */
-public class AppViewActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
@@ -234,7 +234,7 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
 
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.abs__home) {
+        } else if (i == R.id.home) {
             finish();
         }
 

@@ -1,7 +1,8 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_search"
-          android:showAsAction="ifRoom"
+          app:showAsAction="always"
           android:title="@string/search"
           android:orderInCategory="1"
           android:icon="@drawable/ic_search"/>

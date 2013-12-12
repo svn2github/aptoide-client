@@ -148,6 +148,8 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="settingsActionBar">
+    </style>
 
     <!--<style name="CheckBoxAptoide" parent="android:Widget.CompoundButton.CheckBox">-->
         <!--<item name="android:button">@drawable/aptoide_btn_check_holo_light</item>-->
@@ -170,7 +172,7 @@
         <item name="android:drawableLeft">@drawable/ic_ab_back_holo_light</item>
     </style>
 
-    <style name="AppTheme.TranslucentActionBar">
+    <style name="TranslucentActionBar" parent="AppTheme">
         <!--<item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
         <item name="android:windowActionBarOverlay" tools:ignore="NewApi">true</item>
         <!--<item name="actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
@@ -187,12 +189,11 @@
         <item name="background">@android:color/transparent</item>
     </style>
 
-    <style name="Widget.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
     </style>
 
-    <style name="Widget.Light" />
 
-    <style name="Widget.Light.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
+    <style name="Widget.Light.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
     </style>
 
     <style name="Widget.Button.Custom.Gray" parent="@android:style/Widget.Button">
@@ -262,9 +263,27 @@
         <item name="@android:windowExitAnimation">@anim/disappear</item>
     </style>
 
-    <style name="Settings" parent="@style/Theme.Sherlock">
+    <style name="Settings" parent="@style/Theme.AppCompat">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
     </style>
 
+    <style name="transparent" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="transparent_black" parent="@style/Theme.AppCompat">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_dark</item>
+    </style>
+
+    <style name="alert_dialog_style_light" parent="android:Theme.Dialog"/>
+    <style name="alert_dialog_style_dark" parent="android:Theme.Dialog"/>
 </resources>
