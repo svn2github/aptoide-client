@@ -80,9 +80,9 @@ public class FragmentDownloadManager extends SherlockListFragment {
 
     @Override
     public void onDetach() {
+        getSherlockActivity().unbindService(conn);
         super.onDetach();
         this.callback = null;
-        getSherlockActivity().unbindService(conn);
     }
 
     @Override

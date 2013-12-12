@@ -300,6 +300,18 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
             }
         });
 
+        findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(json!=null && service != null){
+                    service.stopDownload(id);
+                }
+
+
+            }
+        });
+
     }
 
     @Subscribe

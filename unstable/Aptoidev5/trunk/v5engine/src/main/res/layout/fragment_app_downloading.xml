@@ -45,7 +45,7 @@
     <View android:layout_width="1dip"
           android:layout_height="36dp"
           android:background="@android:color/darker_gray"
-          android:layout_toLeftOf="@+id/manage_icon"
+          android:layout_toLeftOf="@+id/ic_action_cancel"
           android:layout_marginTop="10dp"
           android:layout_marginBottom="10dp"
           android:layout_marginLeft="15dp"
@@ -54,7 +54,7 @@
           android:layout_centerVertical="true"/>
 
     <ImageView
-            android:id="@+id/manage_icon"
+            android:id="@+id/ic_action_cancel"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@drawable/ic_action_cancel"

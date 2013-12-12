@@ -143,6 +143,14 @@ public class DownloadService extends Service {
         return allDownloads2;
     }
 
+    public void stopDownload(long id) {
+
+        DownloadInfo info = getDownload(id);
+
+        info.remove();
+
+    }
+
     public class LocalBinder extends Binder {
 
         public DownloadService getService(){
