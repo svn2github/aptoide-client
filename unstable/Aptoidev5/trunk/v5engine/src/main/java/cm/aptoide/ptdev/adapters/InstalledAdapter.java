@@ -82,8 +82,6 @@ public class InstalledAdapter extends CursorAdapter {
 
 
                 AppViewHolder holder = (AppViewHolder) view.getTag();
-
-                int count = cursor.getInt(cursor.getColumnIndex("count"));
                 if(holder==null){
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
@@ -108,7 +106,7 @@ public class InstalledAdapter extends CursorAdapter {
                 holder.actionIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UninstallHelper.uninstall(context, packageName);
+                        UninstallHelper.uninstall((SherlockFragmentActivity) context, packageName);
                     }
                 });
                 break;

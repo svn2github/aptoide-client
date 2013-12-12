@@ -77,7 +77,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     }
 
     public void setRefreshing(boolean bool){
-        mPullToRefreshLayout.setRefreshing(bool);
+        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshing(bool);
         getSherlockActivity().invalidateOptionsMenu();
     }
 
@@ -130,6 +130,7 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
 
     }
+    int counter;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -199,8 +200,10 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
 
                 switch (id) {
                     case 20:
+                        counter++;
                         return database.getCategories(args.getLong("storeid"), args.getLong("parentid"));
                     case 21:
+                        counter++;
                         return database.getApks(args.getLong("storeid"), args.getLong("parentid"), sort);
 
                 }
@@ -214,14 +217,16 @@ public class FragmentStoreListCategories extends SherlockListFragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
             case 20:
+                counter--;
                 categoryAdapter.swapCursor(data);
                 break;
             case 21:
+                counter--;
                 apkAdapter.swapCursor(data);
                 break;
         }
 
-        if(getListView().getAdapter()==null)
+        if(getListView().getAdapter()==null && counter == 0)
             setListAdapter(mainAdapter);
 
 

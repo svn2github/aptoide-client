@@ -179,5 +179,21 @@
     <string name="restore_updates">Restore Updates</string>
     <string name="loading">Loading</string>
     <string name="one_account_allowed">Only one account allowed</string>
+    <string name="crash_text">Reinstall older versions</string>
+    <string name="timeout">network connection timeout</string>
+    <string name="ip_blacklisted">Blacklisted IP</string>
+    <string name="apk_not_found">Apk not found</string>
+    <string name="invalid_apk">Invalid apk</string>
+    <string name="remote_in_nospace">not enough space on your device.</string>
+    <string name="server_error">Server error</string>
+    <string name="paidapp_not_found">Error downloading app. Please try again or contact support.</string>
+    <string name="finished_install">%s has been installed.</string>
+    <string name="installing">%s is installing...</string>
+    <string name="no_permissions_required">No permissions required for this app.</string>
+    <string name="connection_error">no network connection</string>
+    <string name="restore">Install</string>
+    <string name="x_app">%d app</string>
+    <string name="x_apps">%d apps</string>
+    <string name="aptoide_downloading">%s is downloading</string>
 
 </resources>

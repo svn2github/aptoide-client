@@ -37,6 +37,7 @@ public class FragmentUpdates extends SherlockListFragment {
     private RecentlyUpdated recentUpdates;
 
     private MergeAdapter adapter;
+    private int counter;
 
     @Subscribe
     public void RefreshStoresEvent(RepoCompleteEvent event){
@@ -121,6 +122,7 @@ public class FragmentUpdates extends SherlockListFragment {
                 return new SimpleCursorLoader(getSherlockActivity()) {
                     @Override
                     public Cursor loadInBackground() {
+                        counter++;
                         return db.getUpdates();
                     }
                 };
@@ -129,7 +131,8 @@ public class FragmentUpdates extends SherlockListFragment {
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 updatesAdapter.swapCursor(data);
-                if (getListView().getAdapter() == null)
+                counter--;
+                if (getListView().getAdapter() == null && counter == 0)
                     setListAdapter(adapter);
             }
 
@@ -147,6 +150,7 @@ public class FragmentUpdates extends SherlockListFragment {
                 return new SimpleCursorLoader(getSherlockActivity()) {
                     @Override
                     public Cursor loadInBackground() {
+                        counter++;
                         return db.getInstalled();
                     }
                 };
@@ -155,7 +159,8 @@ public class FragmentUpdates extends SherlockListFragment {
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 installedAdapter.swapCursor(data);
-                if (getListView().getAdapter() == null)
+                counter --;
+                if (getListView().getAdapter() == null && counter == 0)
                     setListAdapter(adapter);
 
             }

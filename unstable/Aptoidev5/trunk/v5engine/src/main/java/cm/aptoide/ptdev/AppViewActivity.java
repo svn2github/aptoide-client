@@ -1,7 +1,11 @@
 package cm.aptoide.ptdev;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,13 +14,19 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
 import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
@@ -31,6 +41,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -57,13 +68,34 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
             publishEvents();
+
+
+
+
         }
     };
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
+    private long id;
     private int downloads;
     private String repoName;
+    private DownloadService service;
+    private ServiceConnection downloadConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder downloadService) {
+            service = ((DownloadService.LocalBinder)downloadService).getService();
+            if(service.getDownload(id).getDownload()!=null){
+                onDownloadUpdate(service.getDownload(id).getDownload());
+            }
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
 
     @Produce
@@ -90,6 +122,12 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
 
         return new DetailsEvent(details);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(downloadConnection);
     }
 
     @Produce
@@ -133,33 +171,41 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         BusProvider.getInstance().register(this);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
-        BusProvider.getInstance().unregister(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
-
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);
         appVersionName = (TextView) findViewById(R.id.app_version);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-
+        id = getIntent().getExtras().getLong("id");
         if(pager == null){
 
         }else{
             PagerAdapter adapter = new AppViewPager(getSupportFragmentManager());
-
             pager.setAdapter(adapter);
             PagerSlidingTabStrip slidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             slidingTabStrip.setViewPager(pager);
@@ -174,7 +220,12 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
 
         getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
 
+
+
+
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -207,11 +258,11 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
         repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
-        String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
+        final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
         String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
-        String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
+        final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
         String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
-        String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
+        final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
         downloads = apkCursor.getInt(apkCursor.getColumnIndex("downloads"));
 
 
@@ -229,10 +280,77 @@ public class AppViewActivity extends SherlockFragmentActivity implements LoaderM
         request.setRepoName(repoName);
         request.setPackageName(package_name);
         request.setVersionName(versionName);
-        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name+repoName, DurationInMillis.ONE_HOUR, requestListener);
+        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
+        bindService(new Intent(this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+        final String finalIcon = icon;
+        findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(json!=null && service != null){
+                    Download download = new Download();
+                    download.setId(id);
+                    download.setName(name);
+                    download.setVersion(versionName);
+                    download.setIcon(iconpath + finalIcon);
+                    service.startDownloadFromJson(json, id, download);
+                }
+
+
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void onDownloadStatusUpdate(DownloadStatusEvent download) {
+
+        if (download.getId() == id) {
+            onDownloadUpdate(service.getDownload(id).getDownload());
+        }
+
+    }
+
+    @Subscribe
+    public void onDownloadUpdate(Download download) {
+
+
+        if (download.getId() == id) {
+
+            TextView progressText = (TextView) findViewById(R.id.progress);
+            ProgressBar pb = (ProgressBar) findViewById(R.id.downloading_progress);
+            findViewById(R.id.download_progress).setVisibility(View.VISIBLE);
+            findViewById(R.id.btinstall).setVisibility(View.GONE);
+            findViewById(R.id.badge_layout).setVisibility(View.GONE);
+
+            switch(download.getDownloadState()){
+
+                case ACTIVE:
+                    pb.setIndeterminate(false);
+                    pb.setProgress(download.getProgress());
+                    progressText.setText(download.getProgress() + "% - " + Utils.formatBytes((long) download.getSpeed()));
+                    break;
+                case INACTIVE:
+                    break;
+                case COMPLETE:
+                    findViewById(R.id.download_progress).setVisibility(View.GONE);
+                    findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                    findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                    pb.setProgress(download.getProgress());
+                    progressText.setText(download.getDownloadState().name());
+                    break;
+                case NOSTATE:
+                    break;
+                case PENDING:
+                    break;
+                case ERROR:
+                    progressText.setText(download.getDownloadState().name());
+                    break;
+            }
 
 
 
+        }
 
 
     }

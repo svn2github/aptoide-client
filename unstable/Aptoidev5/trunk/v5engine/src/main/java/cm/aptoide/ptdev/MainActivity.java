@@ -168,7 +168,7 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
         return super.onCreateOptionsMenu(menu);
     }
 
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -303,6 +303,18 @@ public class MainActivity extends SherlockFragmentActivity implements StoresCall
             });
         }
         return super.onSearchRequested();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 20:
+
+                Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
+                break;
+        }
+
     }
 
     protected void waitForServiceToBeBound() throws InterruptedException {

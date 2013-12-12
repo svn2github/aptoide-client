@@ -39,9 +39,14 @@ public class FragmentHome extends SherlockListFragment implements LoaderManager.
     @Override
     public void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
         getLoaderManager().initLoader(50, null, this);
         getLoaderManager().initLoader(51, null, this);
+    }
+
+    @Override
+    public void onStart() {
+        BusProvider.getInstance().register(this);
+        super.onStart();
     }
 
     @Override

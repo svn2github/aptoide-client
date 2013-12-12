@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
+
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
@@ -19,7 +19,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 

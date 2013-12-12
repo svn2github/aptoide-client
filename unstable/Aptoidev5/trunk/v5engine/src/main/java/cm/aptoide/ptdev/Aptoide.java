@@ -11,6 +11,11 @@ import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.ACRAConfigurationException;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +29,16 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Time: 15:19
  * To change this template use File | Settings | File Templates.
  */
+@ReportsCrashes(
+        formKey = "",
+        reportType = org.acra.sender.HttpSender.Type.JSON,
+        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        formUriBasicAuthLogin="mmorthemysisserealstandl",
+        formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
+        // Your usual ACRA configuration
 
+        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+)
 public class Aptoide extends Application {
 
 
@@ -59,7 +73,16 @@ public class Aptoide extends Application {
         super.onCreate();
         context = getApplicationContext();
 
+        ACRA.init(this);
+        ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
+        try {
+            acraConfiguration.setMode(ReportingInteractionMode.TOAST);
+        } catch (ACRAConfigurationException e) {
+            e.printStackTrace();
+        }
+        acraConfiguration.setResDialogText(R.string.crash_text);
 
+        ACRA.setConfig(acraConfiguration);
 
         db = DatabaseHelper.getInstance(getApplicationContext());
 

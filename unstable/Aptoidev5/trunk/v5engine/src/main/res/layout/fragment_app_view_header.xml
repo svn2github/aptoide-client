@@ -47,6 +47,7 @@
             layout="@layout/fragment_app_downloading"
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/app_icon"
+            android:visibility="gone"
             android:layout_below="@+id/app_version"/>
 
     <Button

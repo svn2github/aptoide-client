@@ -1,0 +1,108 @@
+package cm.aptoide.ptdev.downloadmanager;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: rmateus
+ * Date: 17-09-2013
+ * Time: 17:48
+ * To change this template use File | Settings | File Templates.
+ */
+public class FinishedApk implements Parcelable{
+    private String path;
+    private String name;
+    private String apkid;
+    private long appHashId;
+    private String iconpath;
+    private ArrayList<String> permissionsList;
+
+
+    public FinishedApk(String name, String apkid, long appHashId, String iconpath, String path) {
+        this.name = name;
+        this.apkid = apkid;
+        this.appHashId = appHashId;
+        this.iconpath = iconpath;
+        this.path = path;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getApkid() {
+        return apkid;
+    }
+
+    public void setApkid(String apkid) {
+        this.apkid = apkid;
+    }
+
+    public long getAppHashId() {
+        return appHashId;
+    }
+
+    public void setAppHashId(int appHashId) {
+        this.appHashId = appHashId;
+    }
+
+    public String getIconPath() {
+        return iconpath;
+    }
+
+    public void setIconPath(String iconpath) {
+        this.iconpath = iconpath;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(apkid);
+        dest.writeLong(appHashId);
+        dest.writeString(iconpath);
+        dest.writeString(path);
+    }
+
+    public static final Creator<FinishedApk> CREATOR
+            = new Creator<FinishedApk>() {
+        public FinishedApk createFromParcel(Parcel in) {
+            return new FinishedApk(in);
+        }
+
+        public FinishedApk[] newArray(int size) {
+            return new FinishedApk[size];
+        }
+    };
+
+    private FinishedApk(Parcel in) {
+        name = in.readString();
+        apkid = in.readString();
+        appHashId = in.readInt();
+        iconpath = in.readString();
+        path = in.readString();
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public ArrayList<String> getPermissionsList() {
+        return permissionsList;
+    }
+
+    public void setPermissionsList(ArrayList<String> permissionsList) {
+        this.permissionsList = permissionsList;
+    }
+}
