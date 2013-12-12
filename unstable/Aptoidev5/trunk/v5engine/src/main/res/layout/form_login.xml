@@ -106,7 +106,6 @@
                     android:id="@+id/button_login"
                     style="@style/Widget.Button.Custom"
                     android:layout_gravity="right"
-                    android:onClick="login"
                     android:text="@string/login"
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"/>

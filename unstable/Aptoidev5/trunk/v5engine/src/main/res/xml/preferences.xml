@@ -88,7 +88,7 @@
                                 android:title="@string/pref_acra_user_email"
                                 android:summary="@string/pref_acra_user_email_summary"/>
             <CheckBoxPreference android:key="acra.alwaysaccept"
-                                android:title="@string/pref_acra_alwaysaccept"
+                                android:title="d@string/pref_acra_alwaysaccept"
                                 android:summary="@string/pref_acra_alwaysaccept_enabled"
                                 android:defaultValue="false"/>
         </PreferenceScreen>

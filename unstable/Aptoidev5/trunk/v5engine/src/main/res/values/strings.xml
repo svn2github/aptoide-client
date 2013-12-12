@@ -178,5 +178,6 @@
     <string name="no_excluded_updates_selected">No Excluded Updates selected</string>
     <string name="restore_updates">Restore Updates</string>
     <string name="loading">Loading</string>
+    <string name="one_account_allowed">Only one account allowed</string>
 
 </resources>

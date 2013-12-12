@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.format.DateUtils;
 
 import android.util.DisplayMetrics;
@@ -20,6 +21,7 @@ import android.util.TypedValue;
 import android.view.WindowManager;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.InstalledAppsHelper;
+import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import org.json.JSONException;
@@ -67,6 +69,10 @@ public class AptoideUtils {
 
 
         private static String cpuAbi2;
+
+        public static String getDeviceId(Context context) {
+            return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
 
         /**
          * @return the sdkVer
@@ -122,7 +128,6 @@ public class AptoideUtils {
 
         public static final String TERMINAL_INFO = android.os.Build.MODEL + "("+ android.os.Build.PRODUCT + ")"
                 +";v"+android.os.Build.VERSION.RELEASE+";"+System.getProperty("os.arch");
-
 
     }
 
