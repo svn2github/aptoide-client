@@ -69,7 +69,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_update"
+            style="?attr/icUpdateDrawable"
             android:layout_alignParentRight="true"/>
 
 

@@ -169,11 +169,16 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
             String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
+            if(theme!=null){
+                theme = theme.toUpperCase();
+            }else{
+                theme="DEFAULT";
+            }
             stores.add(new StoreItem(
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
-                    EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT"),
+                    EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme),
                     "list".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );

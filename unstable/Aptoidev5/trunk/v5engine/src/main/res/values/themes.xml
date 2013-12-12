@@ -25,6 +25,9 @@
         <item name="icRatingBadDrawable">@style/ratingBadLight</item>
         <item name="icWebSiteDrawable">@style/webSiteLight</item>
         <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AppTheme.Dark" parent="AppBaseThemeDark">
@@ -42,7 +45,9 @@
         <item name="icRatingBadDrawable">@style/ratingBadDark</item>
         <item name="icWebSiteDrawable">@style/webSiteDark</item>
         <item name="icEmailDrawable">@style/emailDark</item>
-
+        <item name="icCancelDrawable">@style/cancelDark</item>
+        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">

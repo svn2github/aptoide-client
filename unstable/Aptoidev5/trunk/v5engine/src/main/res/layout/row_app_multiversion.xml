@@ -18,8 +18,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_gravity="center_horizontal"
-        android:padding="2dp"
-        android:src="@drawable/top_candycrush" />
+        android:padding="2dp"/>
 
     <TextView
         android:id="@+id/name"
