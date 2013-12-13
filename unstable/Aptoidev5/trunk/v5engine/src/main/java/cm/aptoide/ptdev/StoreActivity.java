@@ -48,6 +48,7 @@ public class StoreActivity extends ActionBarActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             downloadService = ((DownloadService.LocalBinder)binder).getService();
+
         }
 
         @Override
@@ -96,7 +97,7 @@ public class StoreActivity extends ActionBarActivity {
         storeid = getIntent().getLongExtra("storeid", 0);
         //themeordinal = getIntent().getIntExtra("theme", 0);
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
-        isRefreshing = getIntent().getExtras().getBoolean("isrefreshing");
+
 
         if (savedInstanceState == null) {
             setFragment();
@@ -107,10 +108,8 @@ public class StoreActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        //bindService(i, conn, BIND_AUTO_CREATE);
+        bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
-        BusProvider.getInstance().register(this);
-
 
     }
 
@@ -123,7 +122,7 @@ public class StoreActivity extends ActionBarActivity {
 
         Bundle args = new Bundle();
         args.putLong("storeid", storeid);
-        args.putBoolean("isrefreshing", isRefreshing );
+
 
         fragment.setArguments(args);
         fragmentHeader.setArguments(args);
@@ -131,12 +130,23 @@ public class StoreActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").replace(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BusProvider.getInstance().unregister(this);
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BusProvider.getInstance().unregister(this);
         if (serviceIsBound) unbindService(conn);
+        if(downloadService!=null)unbindService(conn2);
     }
 
     @Override
@@ -182,7 +192,7 @@ public class StoreActivity extends ActionBarActivity {
         } else if (i == R.id.home) {
             finish();
         } else if( i == R.id.refresh_store){
-            refreshList(isRefreshing);
+            refreshList();
         }
         else if( i == R.id.name){
             sort = Sort.NAME;
@@ -213,7 +223,7 @@ public class StoreActivity extends ActionBarActivity {
 
     private void setSort(MenuItem item) {
         item.setChecked(!item.isChecked());
-        refreshList(isRefreshing);
+        refreshList();
     }
 
     public static class SortObject {
@@ -238,17 +248,15 @@ public class StoreActivity extends ActionBarActivity {
     @Subscribe
     public void onStoreCompleted(RepoCompleteEvent event) {
         if (event.getRepoId() == storeid) {
-            isRefreshing = false;
-
-            refreshList(isRefreshing);
+            refreshList();
         }
     }
 
     @Subscribe
     public void onStoreError(RepoErrorEvent event) {
         if (event.getRepoId() == storeid) {
-            isRefreshing = false;
-            refreshList(isRefreshing);
+
+            refreshList();
         }
     }
 
@@ -256,8 +264,9 @@ public class StoreActivity extends ActionBarActivity {
         return new SortObject(sort, noCategories);
     }
 
-    private void refreshList(boolean isRefreshing) {
+    private void refreshList() {
 
+        isRefreshing = service.repoIsParsing(storeid);
         FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
         fragStore.onRefresh();
         fragStore.setRefreshing(isRefreshing);

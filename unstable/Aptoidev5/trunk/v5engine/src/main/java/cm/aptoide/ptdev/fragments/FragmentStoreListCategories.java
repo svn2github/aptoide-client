@@ -161,20 +161,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         getLoaderManager().initLoader(20, bundle, this);
         getLoaderManager().initLoader(21, bundle, this);
 
-        final View v = getActivity().getWindow().getDecorView();
 
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                if (v.getWindowToken() != null) {
-                    // The Decor View has a Window Token, so we can add the HeaderView!
-                    mPullToRefreshLayout.setRefreshing(getArguments().getBoolean("isrefreshing"));
-                } else {
-                    // The Decor View doesn't have a Window Token yet, post ourselves again...
-                    v.post(this);
-                }
-            }
-        });
 
     }
 
@@ -280,8 +267,21 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     }
 
     @Override
-    public void setRefreshing(boolean bool) {
+    public void setRefreshing(final boolean bool) {
+        final View v = getActivity().getWindow().getDecorView();
 
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (v.getWindowToken() != null) {
+                    // The Decor View has a Window Token, so we can add the HeaderView!
+                    mPullToRefreshLayout.setRefreshing(bool);
+                } else {
+                    // The Decor View doesn't have a Window Token yet, post ourselves again...
+                    v.post(this);
+                }
+            }
+        });
     }
 
     @Override
