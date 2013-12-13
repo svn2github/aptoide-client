@@ -1,15 +1,19 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.text.method.PasswordTransformationMethod;
 
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
@@ -26,7 +30,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends FragmentActivity {
 
     private Login login = new Login();
 
@@ -101,6 +105,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
             if (username.length() > 0 && password.length() > 0) {
 
+                android.support.v4.app.DialogFragment pd = AptoideDialog.pleaseWaitDialog();
+                pd.setCancelable(false);
+                pd.show(getSupportFragmentManager(), "pleaseWaitDialogRemove");
+
                 CheckUserCredentialsRequest checkUserCredentialsRequest = new CheckUserCredentialsRequest().setUser(username).setPassword(password);
 
 
@@ -118,10 +126,18 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 spiceManager.execute(checkUserCredentialsRequest, new RequestListener<CheckUserCredentialsJson>() {
                     @Override
                     public void onRequestFailure(SpiceException e) {
+                        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
+                        pd.dismiss();
 
                         Toast toast = Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
                         toast.show();
+
+                        if(getIntent().hasExtra("login")) {
+                            Intent result = new Intent();
+                            setResult(RESULT_CANCELED, result);
+                        }
+                        finish();
                     }
 
                     @Override
@@ -142,14 +158,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                     authenticatorResponse.onResult(bundle);
                                 }
 
-                                //Log.d("QUEUENAME", checkUserCredentialsJson.getQueueName());
-
-                                /*
-                                Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-                                AccountManagerFuture<Bundle> futur ;
-                                futur = accountManager.getAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE , null, LoginActivity, mycallback, null);
-                                Log.d("AUTHTOKEN", authToken);
-                                */
+                                if(getIntent().hasExtra("login")) {
+                                    Intent result = new Intent();
+                                    setResult(RESULT_OK, result);
+                                }
                                 finish();
 
                             } else {
@@ -163,6 +175,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
                             toast.show();
                         }
+
+                        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
+                        pd.dismiss();
                     }
                 });
 

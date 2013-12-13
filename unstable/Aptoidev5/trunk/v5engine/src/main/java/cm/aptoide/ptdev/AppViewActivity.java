@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
@@ -54,6 +57,7 @@ import java.util.ArrayList;
  */
 public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final int LOGIN_REQUEST_CODE = 123;
 
     private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
 
@@ -545,4 +549,33 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private static class Related {
     }
 
+    private Account getCurrentAccount() {
+        Account[] account = AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+
+        if(account.length != 0) {
+            return account[0];
+
+        } else {
+
+            Intent i = new Intent(this, LoginActivity.class);
+            i.putExtra("login", true);
+            startActivityForResult(i, LOGIN_REQUEST_CODE);
+        }
+
+        return null;
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == LOGIN_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+
+            } else {
+
+            }
+        }
+    }
 }
