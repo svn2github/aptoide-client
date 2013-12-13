@@ -24,17 +24,16 @@
                 android:text="@string/version_info"/>
 
 
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/version_info_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
+                android:layout_margin="5dp">
 
 
             <TextView
                     android:id="@+id/downloads_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -49,10 +48,10 @@
 
             <TextView
                     android:id="@+id/store_label"
-                    android:layout_width="match_parent"
+                    android:layout_toRightOf="@+id/downloads_label"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
@@ -64,7 +63,8 @@
 
             <TextView
                     android:id="@+id/publisher_label"
-                    android:layout_width="match_parent"
+                    android:layout_below="@+id/downloads_label"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -78,25 +78,25 @@
 
             <TextView
                     android:id="@+id/size_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
                     android:singleLine="true"
+                    android:layout_toRightOf="@+id/publisher_label"
                     android:textAppearance="?android:attr/textAppearanceSmall" android:text="Size: 51,34M"
-                    android:layout_gravity="center_horizontal|left"/>
+                    android:layout_gravity="center_horizontal|left" android:layout_below="@+id/store_label"
+                    android:layout_centerHorizontal="true"/>
 
             <TextView
                     android:id="@+id/rating_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
@@ -105,14 +105,15 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Rating: 4.5/5"
-                    android:layout_gravity="center_horizontal|left"/>
+                    android:layout_gravity="center_horizontal|left"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@id/publisher_label"/>
 
             <TextView
                     android:id="@+id/likes_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
@@ -121,14 +122,14 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Likes: 45"
-                    android:layout_gravity="center_horizontal|left"/>
+                    android:layout_gravity="center_horizontal|left"
+                    android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/rating_label"/>
 
             <TextView
                     android:id="@+id/dont_likes_label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
@@ -137,8 +138,9 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Don't Likes: 2"
-                    android:layout_gravity="center_horizontal|left"/>
-        </LinearLayout>
+                    android:layout_gravity="center_horizontal|left"
+                    android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/likes_label"/>
+        </RelativeLayout>
 
 
         <TextView

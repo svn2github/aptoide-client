@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -32,6 +33,7 @@ import cm.aptoide.ptdev.fragments.FragmentAppView;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
@@ -85,6 +87,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private long id;
     private int downloads;
     private String repoName;
+    private int minSdk;
     private DownloadService service;
     private ServiceConnection downloadConnection = new ServiceConnection() {
         @Override
@@ -101,6 +104,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         }
     };
+    private String screen;
 
 
     @Produce
@@ -146,11 +150,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Produce
-    public SpecsEvent publishSpecs(){
+    public SpecsEvent publishSpecs() {
 
-        Specs specs = new Specs();
-
-        return new SpecsEvent(specs);
+        SpecsEvent specs = new SpecsEvent();
+        if (json != null) {
+            specs.setPermissions(new ArrayList<String>(json.getPermissions()));
+            specs.setMinSdk(minSdk);
+            specs.setMinScreen(Filters.Screen.valueOf(screen));
+        }
+        return specs;
 
     }
 
@@ -264,13 +272,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
         repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
-        final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
+        final String name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
         String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
-        final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
-        String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
+        final String versionName = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERNAME));
+        String icon = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_ICON));
         final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
-        downloads = apkCursor.getInt(apkCursor.getColumnIndex("downloads"));
-
+        downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
+        minSdk = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SDK));
+        screen = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
 
         appName.setText(name);
         appVersionName.setText(versionName);
@@ -452,6 +461,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getScreenshots();
         }
 
+
     }
 
 
@@ -473,9 +483,25 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public static class SpecsEvent {
-        private SpecsEvent(Specs specs) {
+        private ArrayList<String> permissions;
+        private Filters.Screen minScreen= Filters.Screen.normal;
+        private int minSdk;
+
+        private SpecsEvent() {
 
         }
+
+        public ArrayList getPermissions(){ return permissions; }
+
+        public void setPermissions(ArrayList<String> permissions) { this.permissions = permissions; }
+
+        public Filters.Screen getMinScreen() { return minScreen; }
+
+        public int getMinSdk() { return minSdk; }
+
+        public void setMinSdk(int minSdk) { this.minSdk = minSdk; }
+
+        public void setMinScreen(Filters.Screen minScreen) { this.minScreen = minScreen; }
     }
 
     public static class RelatedAppsEvent {
@@ -547,6 +573,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public List<String> getScreenshots() { return screenshots; }
 
         public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
+
     }
 
     private static class Rating {

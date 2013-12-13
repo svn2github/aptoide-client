@@ -13,13 +13,13 @@
             android:paddingTop="5dp"
             android:paddingLeft="10dp"
             android:paddingBottom="1dp"
-            android:id="@+id/permission"/>
+            android:id="@+id/permission_name"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
             android:textStyle="italic"
-            android:id="@+id/description"/>
+            android:id="@+id/permission_description"/>
 
 
 </LinearLayout>

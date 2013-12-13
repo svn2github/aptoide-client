@@ -375,7 +375,7 @@ public class Database {
 
     public Cursor getApkInfo(long id) {
 
-        Cursor c = database.rawQuery("select apk.package_name, apk.name as name, apk.version_name, apk.downloads, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
+        Cursor c = database.rawQuery("select apk.package_name, apk.name as name, apk.version_name, apk.downloads, apk.sdk, apk.screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
         c.moveToFirst();
 
         return c;

@@ -64,7 +64,7 @@ public class PermissionsActivity extends Activity {
                 DownloadExecutorImpl.installWithRoot(apk);
                 finish();
             }else{
-                ArrayList<ApkPermission> descriptionList = permissions(permissionsList);
+                ArrayList<ApkPermission> descriptionList = permissions(context, permissionsList);
                 if(!descriptionList.isEmpty()){
                     permissionsDialog(apk, descriptionList);
                 }else{
@@ -77,7 +77,7 @@ public class PermissionsActivity extends Activity {
         } catch (PackageManager.NameNotFoundException e) {
 
             try{
-                permissionsDialog(apk, permissions(permissionsList));
+                permissionsDialog(apk, permissions(context, permissionsList));
             }catch (NullPointerException ignore){
                 DownloadExecutorImpl.installWithRoot(apk);
                 finish();
@@ -90,8 +90,8 @@ public class PermissionsActivity extends Activity {
         }
     }
 
-    public ArrayList<ApkPermission> permissions(ArrayList<String> permissionArray) {
-        PackageManager pm = getPackageManager();
+    public static ArrayList<ApkPermission> permissions(Context context, ArrayList<String> permissionArray) {
+        PackageManager pm = context.getPackageManager();
 
         CharSequence csPermissionGroupLabel;
         CharSequence csPermissionLabel;
@@ -141,11 +141,11 @@ public class PermissionsActivity extends Activity {
 
                     View permissionView = LayoutInflater.from(context).inflate(R.layout.row_permission, null);
                     if(i==0 || !permissions.get(i-1).getName().equals(permission.getName())){
-                        ((TextView) permissionView.findViewById(R.id.permission)).setText(permission.getName());
+                        ((TextView) permissionView.findViewById(R.id.permission_name)).setText(permission.getName());
                     }else{
-                        permissionView.findViewById(R.id.permission).setVisibility(View.GONE);
+                        permissionView.findViewById(R.id.permission_name).setVisibility(View.GONE);
                     }
-                    ((TextView) permissionView.findViewById(R.id.description)).setText(permission.getDescription());
+                    ((TextView) permissionView.findViewById(R.id.permission_description)).setText(permission.getDescription());
                     layout.addView(permissionView);
                 }
             }else{

@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -123,6 +125,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private CharSequence mDrawerTitle;
 
     private boolean isDisconnect;
+    private AccountManager accountManager;
 
     @Override
     protected void onStop() {
@@ -255,8 +258,11 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mMenuAdapter = new MenuListAdapter(mContext);
 
         //Login Header
-//        View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-//        mDrawerList.addHeaderView(header, null, false);
+        accountManager=AccountManager.get(this);
+        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+            mDrawerList.addHeaderView(header, null, false);
+        }
 
         mDrawerList.setAdapter(mMenuAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -441,29 +447,31 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         // Locate Position
         switch (position){
             case 0:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
+                Intent loginIntent = new Intent(mContext, LoginActivity.class);
+                startActivity(loginIntent);
                 break;
             case 1:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                 startActivity(rollbackIntent);
                 break;
             case 2:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
                 startActivity(scheduledIntent);
                 break;
             case 3:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
                 startActivity(excludedIntent);
                 break;
             case 5:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
                 showFacebook();
                 break;
             case 6:
-                Log.d("MenuDrawer-position", "pos: "+position);
+//                Log.d("MenuDrawer-position", "pos: "+position);
                 showTwitter();
                 break;
             default: break;

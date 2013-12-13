@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.method.PasswordTransformationMethod;
 
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -30,7 +32,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends FragmentActivity {
+public class LoginActivity extends ActionBarActivity {
 
     private Login login = new Login();
 
@@ -41,51 +43,64 @@ public class LoginActivity extends FragmentActivity {
     private EditText passwordField;
     private CheckBox showPasswordCheck;
 
+    private TextView loggedUsername;
+
     SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setContentView(R.layout.form_login);
 
         accountManager = AccountManager.get(this);
 
-        usernameField = (EditText) findViewById(R.id.username);
-        passwordField = (EditText) findViewById(R.id.password);
-        showPasswordCheck = (CheckBox) findViewById(R.id.show_login_passwd);
-        showPasswordCheck.setEnabled(true);
+//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            setContentView(R.layout.form_login);
+            usernameField = (EditText) findViewById(R.id.username);
+            passwordField = (EditText) findViewById(R.id.password);
+            showPasswordCheck = (CheckBox) findViewById(R.id.show_login_passwd);
+            showPasswordCheck.setEnabled(true);
 
-        showPasswordCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    passwordField.setTransformationMethod(null);
-                } else {
-                    passwordField.setTransformationMethod(new PasswordTransformationMethod());
+            showPasswordCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (!isChecked) {
+                        passwordField.setTransformationMethod(null);
+                    } else {
+                        passwordField.setTransformationMethod(new PasswordTransformationMethod());
+                    }
                 }
-            }
-        });
+            });
 
-        findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    login(usernameField.getText().toString().trim(), AptoideUtils.Algorithms.computeSHA1sum(passwordField.getText().toString().trim()));
+            findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        login(usernameField.getText().toString().trim(), AptoideUtils.Algorithms.computeSHA1sum(passwordField.getText().toString().trim()));
 
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }
+            });
+
+            Bundle extras = getIntent().getExtras();
+
+            if(extras != null && extras.containsKey(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE)) {
+                authenticatorResponse = extras.getParcelable(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
             }
-        });
+//        }else{
+//            setContentView(R.layout.form_logout);
+//            loggedUsername = (TextView) findViewById(R.id.username);
+//            loggedUsername.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+//        }
 
-        Bundle extras = getIntent().getExtras();
 
-        if(extras != null && extras.containsKey(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE)) {
-            authenticatorResponse = extras.getParcelable(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
-        }
+        getSupportActionBar().setTitle(getString(R.string.login));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -193,6 +208,20 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+
+        if (i == android.R.id.home) {
+            finish();
+        } else if (i == R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

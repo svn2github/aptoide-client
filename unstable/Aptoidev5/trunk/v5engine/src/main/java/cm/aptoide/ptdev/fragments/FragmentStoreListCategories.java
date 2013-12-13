@@ -206,10 +206,10 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 switch (id) {
                     case 20:
                         counter++;
-                        return database.getCategories(args.getLong("storeid"), args.getLong("parentid"));
+                        return database.getCategories(storeId, parentId);
                     case 21:
                         counter++;
-                        return database.getApks(args.getLong("storeid"), args.getLong("parentid"), sort);
+                        return database.getApks(storeId, parentId, sort);
 
                 }
                 return null;

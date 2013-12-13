@@ -10,16 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Gallery;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.ScreenshotsViewer;
 import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
+import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.model.ApkPermission;
 import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.utils.Filters;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public abstract class FragmentAppView extends Fragment {
 
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         BusProvider.getInstance().unregister(this);
     }
 
@@ -119,10 +119,65 @@ public abstract class FragmentAppView extends Fragment {
     }
 
     public static class FragmentAppViewSpecs extends FragmentAppView{
+
+        private LinearLayout permissionsContainer;
+        private TextView min_sdk;
+        private TextView min_screen;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.fragment_specifications, container, false);
 
-            return inflater.inflate(R.layout.fragment_specifications, container, false);
+            permissionsContainer = (LinearLayout) v.findViewById(R.id.permissionsContainer);
+            min_sdk = (TextView) v.findViewById(R.id.min_sdk);
+            min_screen = (TextView) v.findViewById(R.id.min_screen);
+
+            return v;
+        }
+
+        @Subscribe
+        public void refreshDetails(final AppViewActivity.SpecsEvent event) {
+
+
+            if (event.getPermissions() != null) {
+
+                min_sdk.setText(getString(R.string.min_sdk) + ": " + event.getMinSdk());
+                min_screen.setText(getString(R.string.min_screen) + ": " + event.getMinScreen().name());
+
+                        final ArrayList<ApkPermission> permissions = PermissionsActivity.permissions(getActivity(), event.getPermissions());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FillPermissions.fillPermissions(getActivity(), permissionsContainer, permissions);
+                            }
+                        });
+            }
+
+
+
+        }
+
+        public static class FillPermissions{
+
+            public static void fillPermissions(Context context, LinearLayout permissionsContainer, ArrayList<ApkPermission> permissions) {
+
+                View v;
+
+                for(ApkPermission permission : permissions){
+
+                    v = LayoutInflater.from(context).inflate(R.layout.row_permission, permissionsContainer, false);
+
+                    TextView name = (TextView) v.findViewById(R.id.permission_name);
+                    TextView description = (TextView) v.findViewById(R.id.permission_description);
+
+                    name.setText(permission.getName());
+                    description.setText(permission.getDescription());
+                    permissionsContainer.addView(v);
+                }
+
+
+
+            }
         }
     }
 
@@ -146,6 +201,7 @@ public abstract class FragmentAppView extends Fragment {
 
             return v;
         }
+
         public static class FillComments{
 
             public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
@@ -170,6 +226,8 @@ public abstract class FragmentAppView extends Fragment {
 
             }
         }
+
+
     }
 
 

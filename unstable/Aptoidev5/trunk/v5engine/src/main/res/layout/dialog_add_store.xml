@@ -41,7 +41,6 @@
                     android:maxLines="1"
                     android:inputType="textUri"
                     android:singleLine="true"
-
                     android:layout_weight="0.2"/>
 
 

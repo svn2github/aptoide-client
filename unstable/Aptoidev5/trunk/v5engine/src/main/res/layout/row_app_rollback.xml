@@ -3,11 +3,11 @@
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"
              android:orientation="horizontal"
-             android:foreground="@drawable/highlight_overlay">
+             style="?attr/customRowForeground">
 
     <RelativeLayout android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_card_light"
+                    style="?attr/backgroundCard"
                     android:padding="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -27,7 +27,8 @@
                 android:drawableTop="@drawable/ic_revert"
                 android:textColor="@android:color/darker_gray"
                 android:layout_gravity="right|center_vertical"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:layout_alignParentRight="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
 
 
@@ -49,20 +50,8 @@
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
                 android:text="Application with very big name"
-                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_toRightOf="@+id/app_icon" android:layout_toLeftOf="@+id/view"/>
-        <TextView
-                android:id="@+id/app_timestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:layout_marginLeft="5dp"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="2013-08-19"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:layout_below="@+id/app_version"
-                android:layout_toRightOf="@+id/app_icon"/>
         <TextView
                 android:id="@+id/app_state"
                 android:layout_width="wrap_content"
@@ -73,8 +62,9 @@
                 android:singleLine="true"
                 android:text="Installed"
                 android:textColor="@color/custom_color"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:layout_below="@+id/app_timestamp"
-                android:layout_toRightOf="@+id/app_icon"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_below="@+id/app_version"/>
         <TextView
                 android:id="@+id/app_version"
                 android:layout_width="wrap_content"
@@ -84,8 +74,9 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="Version 1.15.0"
-                android:textAppearance="?android:attr/textAppearanceSmall" android:layout_weight="0"
-                android:layout_below="@+id/app_name" android:layout_toRightOf="@+id/app_icon"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/app_name"
+                android:layout_toRightOf="@+id/app_icon"
                 android:layout_toLeftOf="@+id/view"/>
 
     </RelativeLayout>

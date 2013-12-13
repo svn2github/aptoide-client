@@ -195,5 +195,7 @@
     <string name="x_app">%d app</string>
     <string name="x_apps">%d apps</string>
     <string name="aptoide_downloading">%s is downloading</string>
+    <string name="min_sdk">Min SDK</string>
+    <string name="min_screen">Min Screen</string>
 
 </resources>

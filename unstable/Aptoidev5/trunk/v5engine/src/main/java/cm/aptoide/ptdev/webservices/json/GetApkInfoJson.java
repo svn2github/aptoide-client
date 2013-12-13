@@ -1,6 +1,7 @@
 
 package cm.aptoide.ptdev.webservices.json;
 
+import cm.aptoide.ptdev.model.ApkPermission;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Obb;
 import com.google.api.client.util.Key;
