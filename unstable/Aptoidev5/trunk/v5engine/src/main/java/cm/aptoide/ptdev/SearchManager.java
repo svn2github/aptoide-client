@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -97,6 +99,13 @@ public class SearchManager extends ActionBarActivity {
         }
 
 
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            super.onListItemClick(l, v, position, id);
+            Intent i = new Intent(getActivity(), AppViewActivity.class);
+            i.putExtra("id", id);
+            startActivity(i);
+        }
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, final Bundle args) {

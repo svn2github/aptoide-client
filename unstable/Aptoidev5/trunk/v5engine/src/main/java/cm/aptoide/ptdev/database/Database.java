@@ -368,7 +368,7 @@ public class Database {
 
     public Cursor getSearchResults(String searchQuery) {
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%"+ searchQuery+"%' group by apk.package_name order by apk.name ", null);
+        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%"+ searchQuery+"%' group by apk.package_name order by apk.name ", null);
         c.getCount();
         return c;
     }
