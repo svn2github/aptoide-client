@@ -48,6 +48,9 @@
                   android:launchMode="standard"
                   android:configChanges="keyboardHidden|orientation"/>
 
+        <activity
+                android:name="cm.aptoide.ptdev.ScreenshotsViewer"
+                android:launchMode="singleTask"/>
 
         <activity
                 android:name="cm.aptoide.ptdev.social.WebViewFacebook"

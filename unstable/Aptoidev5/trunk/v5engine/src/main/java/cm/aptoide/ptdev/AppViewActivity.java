@@ -47,6 +47,7 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -116,6 +117,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setSize(json.getApk().getSize().longValue());
                 details.setStore(repoName);
                 details.setDownloads(downloads);
+                details.setScreenshots(json.getSshots());
             } else {
 
                 for(String error : json.getErrors()){
@@ -446,6 +448,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getDownloads();
         }
 
+        public List getScreenshots(){
+            return details.getScreenshots();
+        }
 
     }
 
@@ -533,11 +538,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String publisher;
         private String version;
         private long size;
+        private List<String> screenshots;
 
         public String getDescription() {
             return description;
         }
 
+        public List<String> getScreenshots() { return screenshots; }
+
+        public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
     }
 
     private static class Rating {
