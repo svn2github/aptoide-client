@@ -50,9 +50,11 @@
                 android:key="showUpdatesNotification"
                 android:summary="@string/setting_updates_notification_sum"
                 android:defaultValue="true"
+                android:enabled="false"
                 android:title="@string/setting_updates_notification_title"/>
         <CheckBoxPreference
                 android:key="auto_update"
+                android:enabled="false"
                 android:summary="@string/setting_auto_update_sum"
                 android:title="@string/setting_auto_update_title"/>
     </PreferenceCategory>
@@ -68,6 +70,7 @@
 
         <EditTextPreference
                 android:key="maxFileCache"
+                android:enabled="false"
                 android:summary="@string/settings_maxFileCache_sum"
                 android:title="@string/settings_maxFileCache_title"/>
     </PreferenceCategory>
@@ -88,24 +91,24 @@
                                 android:title="@string/pref_acra_user_email"
                                 android:summary="@string/pref_acra_user_email_summary"/>
             <CheckBoxPreference android:key="acra.alwaysaccept"
-                                android:title="d@string/pref_acra_alwaysaccept"
+                                android:title="@string/pref_acra_alwaysaccept"
                                 android:summary="@string/pref_acra_alwaysaccept_enabled"
                                 android:defaultValue="false"/>
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:key="devmode"
-            android:title="@string/dev_mode">
-        <Preference
-                android:key="devmode"
+    <!--<PreferenceCategory-->
+            <!--android:key="devmode"-->
+            <!--android:title="@string/dev_mode">-->
+        <!--<Preference-->
+                <!--android:key="devmode"-->
 
-                android:title="@string/dev_mode">
-            <intent
-                    android:action="android.intent.action.VIEW"
-                    android:targetPackage="cm.aptoide.pt"
-                    android:targetClass="cm.aptoide.pt.DeveloperMode"/>
-        </Preference>
-    </PreferenceCategory>
+                <!--android:title="@string/dev_mode">-->
+            <!--<intent-->
+                    <!--android:action="android.intent.action.VIEW"-->
+                    <!--android:targetPackage="cm.aptoide.pt"-->
+                    <!--android:targetClass="cm.aptoide.pt.DeveloperMode"/>-->
+        <!--</Preference>-->
+    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>

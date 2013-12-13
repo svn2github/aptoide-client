@@ -7,7 +7,7 @@
             android:title="@string/reload"/>
     <item
             android:id="@+id/menu_discard"
-            android:icon="@drawable/ic_action_discard"
+            android:icon="@drawable/ic_action_discard_dark"
             android:showAsAction="ifRoom"
             android:title="@string/menu_discard"/>
 
