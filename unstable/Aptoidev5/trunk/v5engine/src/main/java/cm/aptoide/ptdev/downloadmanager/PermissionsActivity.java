@@ -158,7 +158,7 @@ public class PermissionsActivity extends Activity {
 
         AlertDialog dialog = new AlertDialog.Builder(context).setView(v).create();
         dialog.setTitle(context.getString(R.string.restore) + " " + viewApk.getName() + "?");
-        String path = apk.getIconPath();
+        String path = viewApk.getIconPath();
 
         dialog.setIcon(BitmapDrawable.createFromPath(ImageLoader.getInstance().getDiscCache().get(path).getAbsolutePath()));
 
@@ -170,7 +170,7 @@ public class PermissionsActivity extends Activity {
                 executor.submit(new Runnable(){
                     @Override
                     public void run() {
-                        DownloadExecutorImpl.installWithRoot(apk);
+                        DownloadExecutorImpl.installWithRoot(viewApk);
                     }
                 });
                 finish();

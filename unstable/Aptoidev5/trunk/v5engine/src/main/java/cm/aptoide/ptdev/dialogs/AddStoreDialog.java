@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 import cm.aptoide.ptdev.R;
@@ -16,6 +15,7 @@ import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
@@ -225,7 +225,27 @@ public class AddStoreDialog extends DialogFragment {
                     store.setBaseUrl(url);
                     store.setName(repositoryInfoJson.getListing().getName());
                     store.setDownloads(repositoryInfoJson.getListing().getDownloads());
-                    store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+
+
+
+
+                    if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+
+                        String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
+
+
+                        String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+                        String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                        avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+
+                        store.setAvatar(avatar);
+
+                    }else{
+                        store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+                    }
+
+
+
                     store.setDescription(repositoryInfoJson.getListing().getDescription());
                     store.setTheme(repositoryInfoJson.getListing().getTheme());
                     store.setView(repositoryInfoJson.getListing().getView());

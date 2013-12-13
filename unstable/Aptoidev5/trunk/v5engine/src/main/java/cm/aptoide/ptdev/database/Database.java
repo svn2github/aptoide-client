@@ -100,7 +100,7 @@ public class Database {
 
     public Cursor getCategories(long storeid, long parentid) {
 
-        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? ", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
         c.getCount();
 
         return c;
@@ -131,7 +131,7 @@ public class Database {
                 break;
         }
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by " + sort, new String[]{String.valueOf(parentid) });
+        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by " + sort, new String[]{String.valueOf(parentid) });
         c.getCount();
 
         return c;
@@ -443,6 +443,12 @@ public class Database {
     public void deleteApk(String packageName, int versionCode, long repoId) {
 
         database.delete(Schema.Apk.getName(), "package_name = ? and version_code = ? and id_repo = ?", new String[]{packageName, String.valueOf(versionCode), String.valueOf(repoId)});
+
+    }
+
+    public void deleteInstalledApk(String packageName) {
+
+        database.delete(Schema.Installed.getName(), "package_name = ?", new String[]{packageName});
 
     }
 }

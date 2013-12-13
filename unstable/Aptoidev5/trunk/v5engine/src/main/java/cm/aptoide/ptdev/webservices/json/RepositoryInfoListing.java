@@ -11,6 +11,8 @@ import com.google.api.client.util.Key;
  */
 public class RepositoryInfoListing{
     @Key
+    private String avatar_hd;
+    @Key
     private String avatar;
     @Key private String description;
     @Key private String downloads;
@@ -19,11 +21,11 @@ public class RepositoryInfoListing{
     @Key private String theme;
     @Key private String view;
 
-    public String getAvatar(){
-        return this.avatar;
+    public String getAvatar_hd(){
+        return this.avatar_hd;
     }
-    public void setAvatar(String avatar){
-        this.avatar = avatar;
+    public void setAvatar_hd(String avatar_hd){
+        this.avatar_hd = avatar_hd;
     }
     public String getDescription(){
         return this.description;
@@ -60,5 +62,13 @@ public class RepositoryInfoListing{
     }
     public void setView(String view){
         this.view = view;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

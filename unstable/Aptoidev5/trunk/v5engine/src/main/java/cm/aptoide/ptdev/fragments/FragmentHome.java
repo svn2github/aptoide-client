@@ -88,7 +88,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter.addView(View.inflate(getActivity(), R.layout.separator_home_header, null));
         editorsChoiceBucketSize = homeBucketAdapter.getBucketSize();
         adapter.addAdapter(homeBucketAdapter);
-
+        getListView().setCacheColorHint(0);
 
         HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);

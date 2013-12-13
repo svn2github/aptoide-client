@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -70,7 +71,7 @@ public class UpdatesAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
         int type = getItemViewType(cursor.getPosition());
 
@@ -87,11 +88,11 @@ public class UpdatesAdapter extends CursorAdapter {
 
                 AppViewHolder holder = (AppViewHolder) view.getTag();
 
-                int count = cursor.getInt(cursor.getColumnIndex("count"));
+
                 if(holder==null){
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
+                    holder.overFlow = (ImageView) view.findViewById(R.id.manage_icon);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
@@ -109,6 +110,14 @@ public class UpdatesAdapter extends CursorAdapter {
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
 
+                final long id = cursor.getLong(cursor.getColumnIndex("_id"));
+
+                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)context).installApp(id);
+                    }
+                });
                 break;
 
         }

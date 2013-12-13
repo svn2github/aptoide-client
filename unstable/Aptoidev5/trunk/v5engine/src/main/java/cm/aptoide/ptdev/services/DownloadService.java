@@ -6,18 +6,28 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
-import android.util.LongSparseArray;
+
 import android.util.SparseArray;
+import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -148,6 +158,85 @@ public class DownloadService extends Service {
         DownloadInfo info = getDownload(id);
 
         info.remove();
+
+    }
+
+    public class DownloadRequest implements RequestListener<GetApkInfoJson> {
+
+        private final long id;
+        private final Download download;
+
+        public DownloadRequest(long id, Download download) {
+
+
+            this.id = id;
+            this.download = download;
+        }
+
+        @Override
+        public void onRequestFailure(SpiceException e) {
+
+        }
+
+        @Override
+        public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+
+            startDownloadFromJson(getApkInfoJson, id, download);
+
+        }
+    }
+
+
+    public void startDownloadFromAppId(final long id){
+
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+        mBuilder = setNotification();
+        startForeground(-3, mBuilder.build());
+
+        final SpiceManager manager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+        if(!manager.isStarted()) manager.start(getApplicationContext());
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Cursor apkCursor = new Database(Aptoide.getDb()).getApkInfo(id);
+
+                if(apkCursor.moveToFirst()){
+
+
+                    String repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
+                    final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
+                    String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
+                    final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
+                    String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
+                    final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
+
+
+                    GetApkInfoRequest request = new GetApkInfoRequest();
+
+                    request.setRepoName(repoName);
+                    request.setPackageName(package_name);
+                    request.setVersionName(versionName);
+
+                    Download download = new Download();
+                    download.setId(id);
+                    download.setName(name);
+                    download.setPackageName(package_name);
+                    download.setVersion(versionName);
+                    download.setIcon(iconpath + icon);
+
+                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));
+                    apkCursor.close();
+                }
+
+
+            }
+        }).start();
+
+
+
 
     }
 

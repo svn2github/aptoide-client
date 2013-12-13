@@ -16,5 +16,6 @@ public interface StoresCallback {
 
     void reloadStores(Set<Long> checkedItems);
 
+    boolean isRefreshing(long id);
 
 }

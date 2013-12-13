@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.database.schema.OnConflict;
 import cm.aptoide.ptdev.database.schema.SQLType;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.database.schema.anotations.ColumnDefinition;
@@ -231,6 +232,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (column_definition.notNull()) {
             column_constraints += " NOT NULL";
+        }
+        if(!column_definition.onConflict().equals(OnConflict.NONE)){
+            column_constraints += " ON CONFLICT " + column_definition.onConflict().name();
         }
         return column_constraints;
     }

@@ -5,12 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
+import android.widget.*;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.model.Download;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -53,8 +52,11 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
         }else{
             v = convertView;
         }
+
         Download download = getItem(position);
 
+        ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
+        ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setIndeterminate(false);
 

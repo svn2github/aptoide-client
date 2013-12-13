@@ -19,7 +19,7 @@ import java.util.Locale;
 public class GetRepositoryInfoRequest extends GoogleHttpClientSpiceRequest<RepositoryInfoJson> {
 
     private final String storeName;
-    String baseUrl = "http://webservices.aptoide.com/webservices/getRepositoryInfo/%s/json";
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/getRepositoryInfo/%s/json";
 
 
     public GetRepositoryInfoRequest(String storeName) {

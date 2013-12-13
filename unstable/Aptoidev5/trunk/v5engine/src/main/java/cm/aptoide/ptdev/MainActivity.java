@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
@@ -35,9 +36,11 @@ import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
@@ -66,9 +69,28 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private boolean parserServiceIsBound;
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
+    private ViewPager pager;
 
+    public DownloadService getDownloadService() {
+        return downloadService;
+    }
 
-    private ServiceConnection conn = new ServiceConnection() {
+    private DownloadService downloadService;
+
+    private ServiceConnection conn2 = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            downloadService = ((DownloadService.LocalBinder)binder).getService();
+            BusProvider.getInstance().post(new DownloadServiceConnected());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+        private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
@@ -116,6 +138,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         super.onDestroy();
         if (parserServiceIsBound){
             unbindService(conn);
+            unbindService(conn2);
         }
     }
 
@@ -179,7 +202,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mContext = this;
         setContentView(R.layout.activity_main);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
 
         AptoidePagerAdapter adapter = new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
         pager.setAdapter(adapter);
@@ -192,6 +215,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         database = new Database(db);
 
         bindService(i, conn, BIND_AUTO_CREATE);
+        bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
 
         if (savedInstanceState == null) {
@@ -360,6 +384,48 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     @Override
     public void reloadStores(Set<Long> checkedItems) {
 
+
+        for (final Long storeid : checkedItems) {
+
+
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    final Database db = new Database(Aptoide.getDb());
+                    final Store store = new Store();
+                    Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
+                    Cursor c = db.getStore(storeid);
+
+                    if (c.moveToFirst()) {
+                        store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                        store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                        store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                        store.setDelta(c.getString(c.getColumnIndex("hash")));
+                        store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                        if (c.getString(c.getColumnIndex("username")) != null) {
+                            Login login = new Login();
+                            login.setUsername(c.getString(c.getColumnIndex("username")));
+                            login.setPassword(c.getString(c.getColumnIndex("password")));
+                            store.setLogin(login);
+                        }
+
+                    }
+                    service.startParse(db, store, false);
+                }
+            };
+            executorService.submit(runnable);
+        }
+
+
+
+    }
+
+    @Override
+    public boolean isRefreshing(long id) {
+        return service.repoIsParsing(id);
+    }
+
+    public void installApp(long id) {
+        downloadService.startDownloadFromAppId(id);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

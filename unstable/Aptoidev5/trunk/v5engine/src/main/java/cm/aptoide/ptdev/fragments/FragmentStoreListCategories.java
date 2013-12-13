@@ -3,7 +3,9 @@ package cm.aptoide.ptdev.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -19,7 +21,9 @@ import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
+
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -42,9 +46,20 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     private MergeAdapter mainAdapter;
     private CategoryAdapter apkAdapter;
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         ViewGroup viewGroup = (ViewGroup) view;
         setEmptyText("Please wait while store is loading.");
 
@@ -52,6 +67,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         // We need to create a PullToRefreshLayout manually
         mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
 
         // We can now setup the PullToRefreshLayout
         ActionBarPullToRefresh.from(getActivity())
@@ -66,19 +82,24 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                         // We can now complete the setup as desired
 
                 .listener(this)
-                .options(Options.create().scrollDistance(0.5f).build())
+
+                .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
                 .setup(mPullToRefreshLayout);
 
-        mPullToRefreshLayout.setRefreshing(((StoreActivity)getActivity()).isRefreshing());
     }
 
-    public void setRefreshing(boolean bool){
-        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshing(bool);
-        getActivity().supportInvalidateOptionsMenu();
-    }
+
+
 
 
     StoreActivity.SortObject sort;
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        sort = ((StoreActivity)getActivity()).getSort();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +113,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         mainAdapter.addAdapter(apkAdapter);
         setHasOptionsMenu(true);
 
-        sort = ((StoreActivity)getActivity()).getSort();
         if(savedInstanceState==null){
             parentId = getArguments().getLong("parentid");
             storeId = getArguments().getLong("storeid");
@@ -105,20 +125,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         if(parentId==0){
             setListAdapter(mainAdapter);
         }
-        Bundle bundle = new Bundle();
 
-        bundle.putLong("storeid", storeId);
-        bundle.putLong("parentid", parentId);
 
-        if(savedInstanceState==null){
-            getLoaderManager().restartLoader(20, bundle, this);
-            getLoaderManager().restartLoader(21, bundle, this);
-
-        }else{
-            getLoaderManager().initLoader(20, bundle, this);
-            getLoaderManager().initLoader(21, bundle, this);
-
-        }
 
 
         Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
@@ -146,13 +154,28 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void onResume() {
         super.onResume();
+        Bundle bundle = new Bundle();
 
+        bundle.putLong("storeid", storeId);
+        bundle.putLong("parentid", parentId);
+        getLoaderManager().initLoader(20, bundle, this);
+        getLoaderManager().initLoader(21, bundle, this);
 
-    }
+        final View v = getActivity().getWindow().getDecorView();
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                if (v.getWindowToken() != null) {
+                    // The Decor View has a Window Token, so we can add the HeaderView!
+                    mPullToRefreshLayout.setRefreshing(getArguments().getBoolean("isrefreshing"));
+                } else {
+                    // The Decor View doesn't have a Window Token yet, post ourselves again...
+                    v.post(this);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -212,14 +235,16 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
             case 20:
-                counter--;
+                if(counter>0)counter--;
                 categoryAdapter.swapCursor(data);
                 break;
             case 21:
-                counter--;
+                if(counter>0)counter--;
                 apkAdapter.swapCursor(data);
                 break;
         }
+
+        Log.d("Aptoide-StoreListCategories", "Counter is " + counter);
 
         if(getListView().getAdapter()==null && counter == 0)
             setListAdapter(mainAdapter);
@@ -251,6 +276,11 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
     @Override
     public void onError() {
+
+    }
+
+    @Override
+    public void setRefreshing(boolean bool) {
 
     }
 

@@ -50,13 +50,18 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         @Override
         public void reloadStores(Set<Long> checkedItems) {}
 
+        @Override
+        public boolean isRefreshing(long id) {
+            return false;
+        }
+
     };
 
 
 
     private StoreAdapter storeAdapter;
     private ArrayList<StoreItem> stores = new ArrayList<StoreItem>();
-    ;
+
     private GridView gridViewMyStores;
 
     @Override
@@ -132,7 +137,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 StoreItem store = (StoreItem) parent.getItemAtPosition(position);
 
                 i.putExtra("storeid", id);
-
+                i.putExtra("isrefreshing", callback.isRefreshing(id));
                 startActivity(i);
 
 
@@ -230,7 +235,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 pd.dismiss();
                 setRetainInstance(false);
                 loader.forceLoad();
-                BusProvider.getInstance().post(new RepoCompleteEvent(0));
+                //BusProvider.getInstance().post(new RepoCompleteEvent(0));
             }
         }.execute(checkedItems);
 
@@ -241,21 +246,31 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         int id = item.getItemId();
 
         if (id == R.id.menu_reload) {
-            callback.reloadStores(storeAdapter.getCheckedItems());
-            return true;
-        } else if (id == R.id.menu_discard) {
+
             HashSet<Long> longs = new HashSet<Long>();
             for(Long aLong : storeAdapter.getCheckedItems()){
                 longs.add(storeAdapter.getItemId(aLong.intValue()));
             }
+            mode.finish();
+            callback.reloadStores(longs);
 
+            return true;
+        } else if (id == R.id.menu_discard) {
+
+            HashSet<Long> longs = new HashSet<Long>();
+            for(Long aLong : storeAdapter.getCheckedItems()){
+                longs.add(storeAdapter.getItemId(aLong.intValue()));
+            }
+            mode.finish();
             removeStores(longs);
             return true;
         } else if( id == R.id.menu_select_all){
             storeAdapter.selectAll();
             return true;
         }
+
         return false;
+
     }
 }
 

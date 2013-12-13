@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -21,6 +22,7 @@ import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
 import com.squareup.otto.Subscribe;
 
@@ -38,25 +40,39 @@ public class StoreActivity extends ActionBarActivity {
 
 
     private long storeid;
-    private int themeordinal;
-    private String storeName;
-    private String storeAvatarUrl;
     private ParserService service;
     private boolean serviceIsBound;
     private boolean isRefreshing;
+    private DownloadService downloadService;
+    private ServiceConnection conn2 = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            downloadService = ((DownloadService.LocalBinder)binder).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     public enum Sort{ NAME, DATE, DOWNLOADS, RATING, PRICE}
     public boolean noCategories;
     public Sort sort;
+
+
+
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((ParserService.MainServiceBinder) binder).getService();
             isRefreshing = service.repoIsParsing(storeid);
 
-            Toast.makeText(getApplicationContext(), "Is repo parsing? " + service.repoIsParsing(storeid), Toast.LENGTH_LONG).show();
-            FragmentStoreListCategories fragmentStoreListCategories = (FragmentStoreListCategories) getSupportFragmentManager().findFragmentByTag("fragStore");
-            if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
+            final FragmentStoreListCategories fragmentStoreListCategories = (FragmentStoreListCategories) getSupportFragmentManager().findFragmentByTag("fragStore");
+            if(isRefreshing){
+                if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
+            }
+
             serviceIsBound = true;
         }
 
@@ -74,19 +90,27 @@ public class StoreActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = new Intent(this, ParserService.class);
-        bindService(i, conn, BIND_AUTO_CREATE);
         setContentView(R.layout.page_store_list);
-        storeName = getIntent().getStringExtra("storename");
+        sort = Sort.NAME;
+        //storeName = getIntent().getStringExtra("storename");
         storeid = getIntent().getLongExtra("storeid", 0);
-        themeordinal = getIntent().getIntExtra("theme", 0);
-        storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
+        //themeordinal = getIntent().getIntExtra("theme", 0);
+        //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
+        isRefreshing = getIntent().getExtras().getBoolean("isrefreshing");
+
         if (savedInstanceState == null) {
             setFragment();
         }
 
+        Toast.makeText(getApplicationContext(), "Is repo parsing? " +isRefreshing, Toast.LENGTH_LONG).show();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sort = Sort.NAME;
+
+        //bindService(i, conn, BIND_AUTO_CREATE);
+        bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
+        BusProvider.getInstance().register(this);
+
 
     }
 
@@ -99,6 +123,7 @@ public class StoreActivity extends ActionBarActivity {
 
         Bundle args = new Bundle();
         args.putLong("storeid", storeid);
+        args.putBoolean("isrefreshing", isRefreshing );
 
         fragment.setArguments(args);
         fragmentHeader.setArguments(args);
@@ -106,21 +131,11 @@ public class StoreActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").replace(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        BusProvider.getInstance().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        BusProvider.getInstance().unregister(this);
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BusProvider.getInstance().unregister(this);
         if (serviceIsBound) unbindService(conn);
     }
 
@@ -167,7 +182,7 @@ public class StoreActivity extends ActionBarActivity {
         } else if (i == R.id.home) {
             finish();
         } else if( i == R.id.refresh_store){
-            refreshList();
+            refreshList(isRefreshing);
         }
         else if( i == R.id.name){
             sort = Sort.NAME;
@@ -198,7 +213,7 @@ public class StoreActivity extends ActionBarActivity {
 
     private void setSort(MenuItem item) {
         item.setChecked(!item.isChecked());
-        refreshList();
+        refreshList(isRefreshing);
     }
 
     public static class SortObject {
@@ -223,14 +238,17 @@ public class StoreActivity extends ActionBarActivity {
     @Subscribe
     public void onStoreCompleted(RepoCompleteEvent event) {
         if (event.getRepoId() == storeid) {
-            refreshList();
+            isRefreshing = false;
+
+            refreshList(isRefreshing);
         }
     }
 
     @Subscribe
     public void onStoreError(RepoErrorEvent event) {
         if (event.getRepoId() == storeid) {
-            refreshList();
+            isRefreshing = false;
+            refreshList(isRefreshing);
         }
     }
 
@@ -238,8 +256,7 @@ public class StoreActivity extends ActionBarActivity {
         return new SortObject(sort, noCategories);
     }
 
-    private void refreshList() {
-        isRefreshing = service.repoIsParsing(storeid);
+    private void refreshList(boolean isRefreshing) {
 
         FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
         fragStore.onRefresh();
@@ -283,5 +300,9 @@ public class StoreActivity extends ActionBarActivity {
 
 
 
+    }
+
+    public void installApp(long id){
+        downloadService.startDownloadFromAppId(id);
     }
 }

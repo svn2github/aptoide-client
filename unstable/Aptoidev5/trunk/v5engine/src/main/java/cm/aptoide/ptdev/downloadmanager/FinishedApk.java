@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,11 +14,12 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class FinishedApk implements Parcelable{
-    private String path;
+
     private String name;
     private String apkid;
     private long appHashId;
     private String iconpath;
+    private String path;
     private ArrayList<String> permissionsList;
 
 
@@ -73,6 +75,8 @@ public class FinishedApk implements Parcelable{
         dest.writeLong(appHashId);
         dest.writeString(iconpath);
         dest.writeString(path);
+        Log.d("Aptoide-FinishedApkParcel", "" + path);
+
     }
 
     public static final Creator<FinishedApk> CREATOR
@@ -89,9 +93,13 @@ public class FinishedApk implements Parcelable{
     private FinishedApk(Parcel in) {
         name = in.readString();
         apkid = in.readString();
-        appHashId = in.readInt();
+        appHashId = in.readLong();
         iconpath = in.readString();
         path = in.readString();
+
+        Log.d("Aptoide-FinishedApkParceOut", "Path" + path);
+
+
     }
 
     public String getPath() {

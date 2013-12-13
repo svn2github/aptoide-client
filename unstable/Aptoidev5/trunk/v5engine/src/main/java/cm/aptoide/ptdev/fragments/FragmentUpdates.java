@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.InstalledApkEvent;
+import cm.aptoide.ptdev.UnInstalledApkEvent;
 import cm.aptoide.ptdev.adapters.InstalledAdapter;
 import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -39,11 +41,77 @@ public class FragmentUpdates extends ListFragment {
     private MergeAdapter adapter;
     private int counter;
 
+
     @Subscribe
-    public void RefreshStoresEvent(RepoCompleteEvent event){
+    public void newAppEvent(InstalledApkEvent event){
+        refreshStoresEvent(null);
+    }
+
+    @Subscribe
+    public void removedAppEvent(UnInstalledApkEvent event){
+        refreshStoresEvent(null);
+    }
+
+    @Subscribe
+    public void refreshStoresEvent(RepoCompleteEvent event){
 
         Log.d("Aptoide-", "OnEvent");
+        getLoaderManager().restartLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                return new SimpleCursorLoader(getActivity()) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        counter++;
+                        return db.getUpdates();
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                updatesAdapter.swapCursor(data);
+                if (counter > 0) counter--;
+                if (getListView().getAdapter() == null && counter == 0)
+                    setListAdapter(adapter);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        });
+
+
+        getLoaderManager().restartLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                return new SimpleCursorLoader(getActivity()) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        counter++;
+                        return db.getInstalled();
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                installedAdapter.swapCursor(data);
+                if (counter > 0) counter--;
+                if (getListView().getAdapter() == null && counter == 0)
+                    setListAdapter(adapter);
+
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        });
 
     }
 
@@ -83,24 +151,20 @@ public class FragmentUpdates extends ListFragment {
             startActivity(i);
         }
 
+  }
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        BusProvider.getInstance().register(this);
-    }
+   
 
     @Override
     public void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
 
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         BusProvider.getInstance().unregister(this);
     }
 
@@ -160,7 +224,7 @@ public class FragmentUpdates extends ListFragment {
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 installedAdapter.swapCursor(data);
                 counter --;
-                if (getListView().getAdapter() == null && counter == 0)
+                if (getListView().getAdapter() == null && counter <= 0)
                     setListAdapter(adapter);
 
             }

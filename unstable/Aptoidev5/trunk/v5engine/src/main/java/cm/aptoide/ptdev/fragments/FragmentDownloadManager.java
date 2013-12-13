@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
+import cm.aptoide.ptdev.DownloadServiceConnected;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
@@ -31,14 +33,41 @@ import java.util.ArrayList;
 public class FragmentDownloadManager extends ListFragment {
 
 
-    DownloadManagerCallback callback;
+    MainActivity callback;
     DownloadService service;
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = ((DownloadService.LocalBinder)binder).getService();
 
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.callback = (MainActivity) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.callback = null;
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initAdapters(null);
+    }
+
+    @Subscribe
+    public void initAdapters(DownloadServiceConnected event) {
+
+        service = callback.getDownloadService();
+
+        if(service!=null){
             ongoingList = new ArrayList<Download>();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList = new ArrayList<Download>();
@@ -49,42 +78,15 @@ public class FragmentDownloadManager extends ListFragment {
             notOngoingAdapter = new NotOngoingAdapter(getActivity(), notOngoingList);
 
 
-
-
             adapter.addAdapter(ongoingAdapter);
 
 
             adapter.addAdapter(notOngoingAdapter);
 
             setListAdapter(adapter);
-
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
 
-        }
-    };
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.callback = (DownloadManagerCallback) activity;
-        activity.bindService(new Intent(activity, DownloadService.class), conn, activity.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        this.callback = null;
-        getActivity().unbindService(conn);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        BusProvider.getInstance().register(this);
     }
 
     @Override

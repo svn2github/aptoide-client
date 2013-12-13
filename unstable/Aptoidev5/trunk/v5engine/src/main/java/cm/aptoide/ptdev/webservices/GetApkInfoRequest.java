@@ -30,7 +30,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
     @Override
     public GetApkInfoJson loadDataFromNetwork() throws Exception {
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/getApkInfo/"+repoName+"/"+packageName+"/"+versionName+"/json";
+        String baseUrl = "http://webservices.aptoide.com/webservices/getApkInfo/"+repoName+"/"+packageName+"/"+versionName+"/options=(cmtlimit=5;)/json";
         GenericUrl url = new GenericUrl(baseUrl);
 
         Log.e("Aptoide-Request", baseUrl);

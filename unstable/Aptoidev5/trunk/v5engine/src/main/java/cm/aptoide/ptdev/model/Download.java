@@ -16,6 +16,11 @@ public class Download {
     private long timeLeft;
     private double speed;
     private String icon;
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
     private String packageName;
 
 
@@ -108,5 +113,7 @@ public class Download {
 
 
     }
+
+
 }
 
