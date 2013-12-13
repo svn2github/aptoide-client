@@ -24,6 +24,7 @@ import cm.aptoide.ptdev.InstalledAppsHelper;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.model.Apk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +39,8 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -49,6 +52,33 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class AptoideUtils {
+
+    private final static int sdk = HWSpecifications.getSdkVer();
+    private final static String gles = HWSpecifications.getGlEsVer(Aptoide.getContext());
+    private final static int screen = HWSpecifications.getScreenSize(Aptoide.getContext());
+    private final static String screenSpec = HWSpecifications.getNumericScreenSize(Aptoide.getContext())+ "/" + HWSpecifications.getDensityDpi(Aptoide.getContext());
+    private final static String cpu = HWSpecifications.getCpuAbi();
+    private final static String cpu2 = HWSpecifications.getCpuAbi2();
+    private final static String cpu3 = cpu2.equals("armeabi-v7a") ? "armeabi" : "";
+
+
+    public static boolean isCompatible(Apk apk) {
+        return apk.getMinSdk() <= sdk &&
+                apk.getMinScreen().ordinal() <= screen &&
+                Float.parseFloat(apk.getMinGlEs()) <= Float.parseFloat(gles) &&
+                (apk.getScreenCompat() == null || apk.getScreenCompat().contains(screenSpec)) &&
+                (apk.getCpuAbi()==null || checkCpuCompatibility(apk.getCpuAbi()));
+    }
+
+    private static boolean checkCpuCompatibility(String cpuAbi) {
+
+        ArrayList<String> cpus = new ArrayList<String>(Arrays.asList(cpuAbi.split(",")));
+        for(String cpuToCompare : cpus){
+            if((cpuToCompare.equals(cpu) || (cpu2.length()>0 && cpuToCompare.equals(cpu2)) || (cpu3.length()>0 && cpuToCompare.equals(cpu3))))
+                return true;
+        }
+        return false;
+    }
 
     public static String checkStoreUrl(String uri_str){
         uri_str = uri_str.trim();

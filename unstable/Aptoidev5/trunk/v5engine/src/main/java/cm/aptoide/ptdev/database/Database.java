@@ -232,13 +232,13 @@ public class Database {
     }
 
     public Cursor getInstalled() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo where apk.is_compatible='1' group by apk.package_name", null);
         c.getCount();
         return c;
     }
 
     public Cursor getUpdates() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code group by apk.package_name",null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and apk.is_compatible='1' group by apk.package_name",null);
         c.getCount();
         return c;
     }
@@ -343,7 +343,7 @@ public class Database {
 
     public ArrayList<HomeItem> getFeatured(int type, int editorsChoiceBucketSize) {
 
-        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ?", new String[]{String.valueOf(type)});
+        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? and apk.is_compatible = '1'", new String[]{String.valueOf(type)});
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
         int size = c.getCount();
         int itemsToAdd = size - ( size % editorsChoiceBucketSize);
@@ -368,7 +368,7 @@ public class Database {
 
     public Cursor getSearchResults(String searchQuery) {
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%"+ searchQuery+"%' group by apk.package_name order by apk.name ", null);
+        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%"+ searchQuery+"%' and apk.is_compatible=1 group by apk.package_name order by apk.name ", null);
         c.getCount();
         return c;
     }

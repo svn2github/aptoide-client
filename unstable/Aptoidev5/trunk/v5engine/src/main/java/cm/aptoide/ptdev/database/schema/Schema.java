@@ -30,6 +30,8 @@ public class Schema {
             })
     public static class Apk {
 
+
+
         public static String getName(){
             return "apk";
         }
@@ -63,6 +65,10 @@ public class Schema {
         @ColumnDefinition(type = SQLType.TEXT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
 
         @ColumnDefinition(type = SQLType.INTEGER) public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
+
+
+        @ColumnDefinition(type = SQLType.BOOLEAN) public static final String COLUMN_IS_COMPATIBLE = "is_compatible";
+
 
 
     }

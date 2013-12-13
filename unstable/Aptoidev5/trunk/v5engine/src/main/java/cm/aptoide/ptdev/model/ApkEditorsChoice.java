@@ -8,6 +8,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class ApkEditorsChoice extends Apk {
         values.add(Schema.Apk.COLUMN_SCREEN);
         values.add(Schema.Apk.COLUMN_GLES);
         values.add(Schema.Apk.COLUMN_ICON);
+        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
 
 
 
@@ -92,7 +94,8 @@ public class ApkEditorsChoice extends Apk {
                             String.valueOf(getMinSdk()),
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
-                            getIconPath()
+                            getIconPath(),
+                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

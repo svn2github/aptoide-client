@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.parser.handlers;
 
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.model.ApkFeaturedTopXml;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

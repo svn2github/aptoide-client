@@ -7,6 +7,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class ApkLatestXml extends Apk {
         values.add(Schema.Apk.COLUMN_SCREEN);
         values.add(Schema.Apk.COLUMN_GLES);
         values.add(Schema.Apk.COLUMN_ICON);
+        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
+
+
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
@@ -87,7 +91,8 @@ public class ApkLatestXml extends Apk {
                             String.valueOf(getMinSdk()),
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
-                            getIconPath()
+                            getIconPath(),
+                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

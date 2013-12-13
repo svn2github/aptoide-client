@@ -1,4 +1,4 @@
-package cm.aptoide.ptdev.parser.handlers;
+package cm.aptoide.ptdev.model;
 
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
@@ -9,6 +9,7 @@ import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkTopXML;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class ApkFeaturedTopXml extends Apk{
         values.add(Schema.Apk.COLUMN_SCREEN);
         values.add(Schema.Apk.COLUMN_GLES);
         values.add(Schema.Apk.COLUMN_ICON);
+        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
 
 
 
@@ -94,7 +96,9 @@ public class ApkFeaturedTopXml extends Apk{
                             String.valueOf(getMinSdk()),
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
-                            getIconPath()
+                            getIconPath(),
+                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
+
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

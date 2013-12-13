@@ -99,6 +99,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         sort = ((StoreActivity)getActivity()).getSort();
+        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
     }
 
     @Override
@@ -158,8 +159,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        getLoaderManager().initLoader(20, bundle, this);
-        getLoaderManager().initLoader(21, bundle, this);
+        getLoaderManager().restartLoader(20, bundle, this);
+        getLoaderManager().restartLoader(21, bundle, this);
 
 
 
@@ -205,10 +206,10 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
                 switch (id) {
                     case 20:
-                        counter++;
+
                         return database.getCategories(storeId, parentId);
                     case 21:
-                        counter++;
+
                         return database.getApks(storeId, parentId, sort);
 
                 }
@@ -222,18 +223,16 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
             case 20:
-                if(counter>0)counter--;
                 categoryAdapter.swapCursor(data);
                 break;
             case 21:
-                if(counter>0)counter--;
                 apkAdapter.swapCursor(data);
                 break;
         }
 
         Log.d("Aptoide-StoreListCategories", "Counter is " + counter);
 
-        if(getListView().getAdapter()==null && counter == 0)
+        if(getListView().getAdapter()==null)
             setListAdapter(mainAdapter);
 
 
@@ -282,6 +281,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 }
             }
         });
+        onRefresh();
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     @Override

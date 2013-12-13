@@ -40,12 +40,12 @@ public abstract class Apk {
     private String category2 = "";
     private long size;
     private Filters.Age age = Filters.Age.All;
-    private int minSdk;
+    private int minSdk = 0;
     private Filters.Screen minScreen = Filters.Screen.notfound;
-    private String screenCompat = "";
+    private String screenCompat;
     private Date date;
     private double price;
-    private String minGlEs = "";
+    private String minGlEs = "0.0";
     private Server server = new Server() {
         @Override
         public String getApkpath() {
