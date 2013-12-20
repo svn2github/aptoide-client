@@ -7,14 +7,9 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ListView;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.InstalledApkEvent;
-import cm.aptoide.ptdev.UnInstalledApkEvent;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.InstalledAdapter;
 import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -139,7 +134,11 @@ public class FragmentUpdates extends ListFragment {
 
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_rollback, menu);
+    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {

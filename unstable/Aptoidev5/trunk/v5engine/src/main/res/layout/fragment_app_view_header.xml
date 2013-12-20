@@ -30,13 +30,17 @@
 
     <TextView
             android:id="@+id/app_version"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/app_name"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:singleLine="true" android:layout_below="@+id/app_name" android:layout_toLeftOf="@+id/badge_layout"/>
+            android:singleLine="true"
+            android:layout_below="@+id/app_name"
+            android:layout_toLeftOf="@+id/badge_layout"/>
+
+
 
 
     <include

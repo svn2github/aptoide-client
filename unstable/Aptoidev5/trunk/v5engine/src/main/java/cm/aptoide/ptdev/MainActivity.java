@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
@@ -143,6 +144,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             unbindService(conn);
             unbindService(conn2);
         }
+        unregisterReceiver(newRepoReceiver);
     }
 
     @Override
@@ -219,6 +221,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
+        registerReceiver(newRepoReceiver, new IntentFilter("pt.caixamagica.aptoide.NEWREPO"));
 
 
         if (savedInstanceState == null) {
@@ -258,11 +261,18 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mMenuAdapter = new MenuListAdapter(mContext);
 
         //Login Header
-        accountManager=AccountManager.get(this);
-        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-            mDrawerList.addHeaderView(header, null, false);
-        }
+//        TextView login_email, login_store;
+//        accountManager=AccountManager.get(this);
+//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+//            mDrawerList.addHeaderView(header, null, false);
+//
+//            login_email = (TextView) header.findViewById(R.id.login_email);
+//            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+//
+//            login_store = (TextView) header.findViewById(R.id.login_store);
+//            login_store.setText("");
+//        }
 
         mDrawerList.setAdapter(mMenuAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -287,6 +297,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
     }
 
     @Override
@@ -530,4 +542,22 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         });
         aboutDialog.show();
     }
+
+    private BroadcastReceiver newRepoReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("newrepo")) {
+                ArrayList<String> repos = intent.getExtras().getStringArrayList("newrepo");
+                for (final String uri2 : repos) {
+//                    if (Database.Instance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
+//                        Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
+//                    } else {
+                          showAddStoreDialog();
+//                    }
+                }
+            }
+
+        }
+    };
 }

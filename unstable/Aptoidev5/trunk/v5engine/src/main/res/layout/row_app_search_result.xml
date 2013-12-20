@@ -66,8 +66,10 @@
                 android:layout_height="wrap_content"
                 android:numStars="5" />
 
-        <ImageView android:id="@+id/ic_action"
-                   style="@style/overflowMenuButton"/>
+        <ImageButton
+                android:onClick="showPopup"
+                android:id="@+id/ic_action"
+                style="@style/overflowMenuButton"/>
 
     </RelativeLayout>
 

@@ -19,10 +19,31 @@
                 android:visibility="gone"
                 android:paddingBottom="5dp" />
 
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/version_info"/>
+        <!--<TextView-->
+                <!--style="@style/titleLabel"-->
+                <!--android:text="@string/version_info"/>-->
 
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+            <HorizontalScrollView android:layout_width="fill_parent"
+                                  android:layout_height="wrap_content">
+
+                <LinearLayout android:id="@+id/_linearLayout"
+                              android:layout_width="fill_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"/>
+
+            </HorizontalScrollView>
+
+            <android.support.v4.view.ViewPager android:id="@+id/_viewPager"
+                                               android:layout_width="fill_parent"
+                                               android:layout_height="fill_parent"
+                                               android:background="#000000"
+                                               android:visibility="gone"/>
+
+        </RelativeLayout>
 
         <RelativeLayout
                 android:id="@+id/version_info_container"
@@ -89,7 +110,7 @@
                     android:singleLine="true"
                     android:layout_toRightOf="@+id/publisher_label"
                     android:textAppearance="?android:attr/textAppearanceSmall" android:text="Size: 51,34M"
-                    android:layout_gravity="center_horizontal|left" android:layout_below="@+id/store_label"
+                    android:layout_gravity="center_horizontal|left" android:layout_below="@+id/downloads_label"
                     android:layout_centerHorizontal="true"/>
 
             <TextView
@@ -106,7 +127,6 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Rating: 4.5/5"
                     android:layout_gravity="center_horizontal|left"
-                    android:layout_alignParentBottom="true"
                     android:layout_below="@id/publisher_label"/>
 
             <TextView
@@ -122,8 +142,9 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Likes: 45"
+                    android:layout_below="@+id/publisher_label"
                     android:layout_gravity="center_horizontal|left"
-                    android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/rating_label"/>
+                    android:layout_toRightOf="@+id/rating_label"/>
 
             <TextView
                     android:id="@+id/dont_likes_label"
@@ -139,8 +160,24 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Don't Likes: 2"
                     android:layout_gravity="center_horizontal|left"
-                    android:layout_alignParentBottom="true" android:layout_toRightOf="@+id/likes_label"/>
+                    android:layout_below="@+id/size_label" android:layout_toRightOf="@+id/likes_label"/>
+
+            <TextView
+                    android:id="@+id/app_get_latest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_below="@+id/rating_label"
+                    android:textColor="?attr/customColor"
+                    android:visibility="gone"
+                    android:layout_alignParentLeft="true" />
         </RelativeLayout>
+
 
 
         <TextView
@@ -228,97 +265,97 @@
         <!--</LinearLayout>-->
         <!--</HorizontalScrollView>-->
 
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/whats_new"/>
+        <!--<TextView-->
+                <!--style="@style/titleLabel"-->
+                <!--android:text="@string/whats_new"/>-->
 
-        <LinearLayout
-                android:id="@+id/whats_new_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:clickable="true"
-                android:orientation="vertical">
+        <!--<LinearLayout-->
+                <!--android:id="@+id/whats_new_container"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:clickable="true"-->
+                <!--android:orientation="vertical">-->
 
-            <TextView
-                    android:id="@+id/whats_new_descript"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:paddingLeft="5.0sp"
-                    android:paddingRight="5.0sp"
-                    android:paddingTop="10.0dip"
-                    android:text="Tiffi tries to teach somebody a lesson in Cherry Chateau, the latest Candy Crush episode for players on the go! - With 485 sugary sweet levels."/>
-        </LinearLayout>
+            <!--<TextView-->
+                    <!--android:id="@+id/whats_new_descript"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="left"-->
+                    <!--android:paddingLeft="5.0sp"-->
+                    <!--android:paddingRight="5.0sp"-->
+                    <!--android:paddingTop="10.0dip"-->
+                    <!--android:text="Tiffi tries to teach somebody a lesson in Cherry Chateau, the latest Candy Crush episode for players on the go! - With 485 sugary sweet levels."/>-->
+        <!--</LinearLayout>-->
 
-        <ImageView
-                android:id="@+id/show_all_whats_new"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_arrow_down"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:contentDescription="@null"
-                android:layout_gravity="right|center_vertical"/>
-
-
+        <!--<ImageView-->
+                <!--android:id="@+id/show_all_whats_new"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ic_more_arrow_down"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:contentDescription="@null"-->
+                <!--android:layout_gravity="right|center_vertical"/>-->
 
 
 
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/publisher"/>
 
-        <TextView
-                android:id="@+id/publisher_website"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                style="?attr/icWebSiteDrawable"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:gravity="center|left"
-                android:clickable="true"
-                android:focusable="true"
-                android:autoLink="web"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Visit web page: http://about.king.com/candy-crush-saga-faqs"/>
 
-        <TextView
-                android:id="@+id/publisher_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                style="?attr/icEmailDrawable"
-                android:gravity="center|left"
-                android:clickable="true"
-                android:focusable="true"
-                android:autoLink="email"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Email: ccsmfeedback@king.com"/>
+        <!--<TextView-->
+                <!--style="@style/titleLabel"-->
+                <!--android:text="@string/publisher"/>-->
 
-        <TextView
-                android:id="@+id/publisher_privacy_policy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                style="?attr/icWebSiteDrawable"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center|left"
-                android:autoLink="web"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Privacy Policy: http://about.king.com/consumer-terms/terms/privacy"/>
+        <!--<TextView-->
+                <!--android:id="@+id/publisher_website"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--style="?attr/icWebSiteDrawable"-->
+                <!--android:paddingBottom="2dp"-->
+                <!--android:paddingLeft="8dp"-->
+                <!--android:paddingRight="2dp"-->
+                <!--android:gravity="center|left"-->
+                <!--android:clickable="true"-->
+                <!--android:focusable="true"-->
+                <!--android:autoLink="web"-->
+                <!--android:background="@drawable/highlight_overlay"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:text="Visit web page: http://about.king.com/candy-crush-saga-faqs"/>-->
+
+        <!--<TextView-->
+                <!--android:id="@+id/publisher_email"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--android:paddingBottom="2dp"-->
+                <!--android:paddingLeft="8dp"-->
+                <!--android:paddingRight="2dp"-->
+                <!--style="?attr/icEmailDrawable"-->
+                <!--android:gravity="center|left"-->
+                <!--android:clickable="true"-->
+                <!--android:focusable="true"-->
+                <!--android:autoLink="email"-->
+                <!--android:background="@drawable/highlight_overlay"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:text="Email: ccsmfeedback@king.com"/>-->
+
+        <!--<TextView-->
+                <!--android:id="@+id/publisher_privacy_policy"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--android:paddingBottom="2dp"-->
+                <!--android:paddingLeft="8dp"-->
+                <!--android:paddingRight="2dp"-->
+                <!--style="?attr/icWebSiteDrawable"-->
+                <!--android:clickable="true"-->
+                <!--android:focusable="true"-->
+                <!--android:gravity="center|left"-->
+                <!--android:autoLink="web"-->
+                <!--android:background="@drawable/highlight_overlay"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:text="Privacy Policy: http://about.king.com/consumer-terms/terms/privacy"/>-->
 
     </LinearLayout>
 </ScrollView>

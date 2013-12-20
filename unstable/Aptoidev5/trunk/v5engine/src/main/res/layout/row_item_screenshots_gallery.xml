@@ -16,6 +16,7 @@
             android:id="@+id/screenshot_image_item"
             android:layout_width="120dp"
             android:layout_height="178dp"
+            android:layout_margin="1dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />

@@ -61,10 +61,12 @@
                 android:layout_toRightOf="@+id/app_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:numStars="5" />
+                android:numStars="5"/>
 
-        <ImageView android:id="@+id/ic_action"
-                   style="@style/overflowMenuButton"/>
+        <ImageButton
+                android:onClick="showPopup"
+                android:id="@+id/ic_action"
+                style="@style/overflowMenuButton"/>
 
 
     </RelativeLayout>

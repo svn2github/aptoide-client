@@ -197,5 +197,11 @@
     <string name="aptoide_downloading">%s is downloading</string>
     <string name="min_sdk">Min SDK</string>
     <string name="min_screen">Min Screen</string>
+    <string name="found_results">Found %s result(s)</string>
+    <string name="no_search_result">You don\'t have &#8216;%s&#8217; in your added stores.</string>
+    <string name="error_occured">An error occurred. Please try again</string>
+    <string name="installapp_alrt">Do you wish to install: \n\n</string>
+    <string name="starting_download">Starting download</string>
+    <string name="newrepo_alrt">Do you want to add this store to your list?\n\n</string>
 
 </resources>

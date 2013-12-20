@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
@@ -11,13 +12,17 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
 
@@ -96,6 +101,27 @@ public class SearchManager extends ActionBarActivity {
             query = getArguments().getString("query");
             getLoaderManager().initLoader(60, getArguments(), this);
 
+            TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
+            searchOtherStores.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
+                    Log.d("TAG", "Searching for:" + url);
+
+
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    url = url.replaceAll(" ", "%20");
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+
+//            TextView foundResults = (TextView) v.findViewById(android.R.id.text1);
+//            if(adapter.getCount()>0){
+//                foundResults.setText(getString(R.string.found_results, adapter.getCount()));
+//            }else{
+//                foundResults.setText(getString(R.string.no_search_result, query));
+//            }
         }
 
 

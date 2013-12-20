@@ -92,7 +92,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT");
 
             //store_background.setBackgroundResource( storeTheme.getStoreHeader() );
-            ImageLoader.getInstance().displayImage(url, avatar );
+            ImageLoader.getInstance().displayImage(url, avatar);
             banner_store_name.setText(store_name);
             banner_description.setText(description);
         }

@@ -8,8 +8,7 @@
 
     <TextView style="@style/separatorLabel"
               android:id="@android:id/text1"
-              android:layout_weight="0.2"
-              android:text="Category"/>
+              android:layout_weight="0.2"/>
 
     <TextView
             style="@style/headerSeparatorButton"

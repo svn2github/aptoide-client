@@ -10,20 +10,9 @@
               android:layout_weight="0.2"
               android:text="Editors' Choice"/>
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+    <TextView style="@style/headerSeparatorButton"
               android:text="+ more"
-              android:gravity="center"
-              android:background="@color/custom_color"
-              android:paddingRight="10dp"
-              android:textAppearance="@android:style/TextAppearance.Small"
-              android:paddingLeft="10dp"
-              android:layout_marginRight="5dp"
-              android:layout_marginLeft="5dp"
-              android:textColor="@android:color/white"
-              android:id="@+id/more"
-              android:textStyle="italic"
-              android:layout_gravity="center_vertical|right"/>
+              android:id="@+id/more"/>
 
 
 </LinearLayout>

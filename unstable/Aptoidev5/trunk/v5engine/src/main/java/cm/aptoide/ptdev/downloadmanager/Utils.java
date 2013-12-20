@@ -1,5 +1,10 @@
 package cm.aptoide.ptdev.downloadmanager;
 
+import android.content.Context;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.utils.Filters;
+
 import java.util.Locale;
 
 /**
@@ -58,6 +63,30 @@ public class Utils {
         String pre = ("KMGTPE").charAt(exp-1)+"";
         return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
+
+    public static String filters(Context context) {
+
+        int minSdk = AptoideUtils.HWSpecifications.getSdkVer();
+        String minScreen = Filters.Screen.values()
+                [AptoideUtils.HWSpecifications.getScreenSize(context)]
+                .name()
+                .toLowerCase(Locale.ENGLISH);
+        String minGlEs = AptoideUtils.HWSpecifications.getGlEsVer(context);
+
+
+        final int density = AptoideUtils.HWSpecifications.getDensityDpi(context);
+
+        String cpuAbi = AptoideUtils.HWSpecifications.getCpuAbi();
+
+        if(AptoideUtils.HWSpecifications.getCpuAbi2().length()>0){
+            cpuAbi += ","+ AptoideUtils.HWSpecifications.getCpuAbi2();
+        }
+
+        String filters = "maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density;
+
+        return Base64.encodeToString(filters.getBytes(), 0).replace("=","").replace("/","*").replace("+","_").replace("\n", "");
+    }
+
 
 }
 

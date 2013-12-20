@@ -17,6 +17,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -84,6 +85,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
+
     private long id;
     private int downloads;
     private String repoName;
@@ -106,6 +108,26 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     };
     private String screen;
 
+    @Produce
+    public ScreenshotsEvent publishScreenshots(){
+
+        Screenshots screenshots = new Screenshots();
+        Log.d("Aptoide-AppView", "PublishScreenshots");
+        if (json != null) {
+
+            if (!json.getStatus().equals("FAIL")) {
+                screenshots.setScreenshots(json.getSshots());
+            } else {
+                for(String error : json.getErrors()){
+                    Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        return new ScreenshotsEvent(screenshots);
+
+    }
+
 
     @Produce
     public DetailsEvent publishDetails(){
@@ -122,6 +144,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setStore(repoName);
                 details.setDownloads(downloads);
                 details.setScreenshots(json.getSshots());
+                details.setLatestVersion(json.getLatest());
             } else {
 
                 for(String error : json.getErrors()){
@@ -175,6 +198,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
     private void publishEvents() {
+        BusProvider.getInstance().post(publishScreenshots());
         BusProvider.getInstance().post(publishDetails());
         BusProvider.getInstance().post(publishRelatedApps());
         BusProvider.getInstance().post(publishSpecs());
@@ -239,6 +263,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_app_view, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
     @Override
@@ -250,6 +279,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if (i == R.id.menu_schedule) {
+
+        } else if (i == R.id.menu_share) {
+
+        } else if (i == R.id.menu_uninstall) {
+
+        } else if (i == R.id.menu_search_other) {
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -429,6 +466,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
+    public class ScreenshotsEvent {
+
+        Screenshots screenshots;
+
+        public ScreenshotsEvent(Screenshots screenshots) {
+            this.screenshots = screenshots;
+        }
+
+        public List getScreenshots(){
+            return screenshots.getScreenshots();
+        }
+    }
+
     public static class DetailsEvent {
 
         Details details;
@@ -443,6 +493,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public String getVersionName(){
             return details.getVersion();
+        }
+
+        public String getLatestVersion(){
+            return details.getLatestVersion();
         }
 
         public String getPublisher(){
@@ -510,6 +564,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
+    private static class Screenshots {
+        private List<String> screenshots;
+
+        public List<String> getScreenshots() { return screenshots; }
+
+        public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
+    }
+
     private static class Details {
 
         public void setDescription(String description) {
@@ -563,6 +625,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String store;
         private String publisher;
         private String version;
+        private String latestVersion;
         private long size;
         private List<String> screenshots;
 
@@ -570,10 +633,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return description;
         }
 
+        public String getLatestVersion() { return latestVersion; }
+
+        public void setLatestVersion(String latestVersion) { this.latestVersion = latestVersion; }
+
         public List<String> getScreenshots() { return screenshots; }
 
         public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
-
     }
 
     private static class Rating {
@@ -614,4 +680,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         }
     }
+
+
 }

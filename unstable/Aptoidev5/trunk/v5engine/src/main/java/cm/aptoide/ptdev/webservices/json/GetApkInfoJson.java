@@ -62,9 +62,7 @@ public class GetApkInfoJson {
         this.comments = comments;
     }
 
-    public String getLatest() {
-        return this.latest;
-    }
+    public String getLatest() { return this.latest; }
 
     public void setLatest(String latest) {
         this.latest = latest;

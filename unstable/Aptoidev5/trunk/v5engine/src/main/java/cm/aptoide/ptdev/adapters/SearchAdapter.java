@@ -3,12 +3,15 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -20,14 +23,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Time: 16:36
  * To change this template use File | Settings | File Templates.
  */
-public class SearchAdapter extends CursorAdapter {
+public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuItemClickListener{
 
     final private String sizeString;
-
+    private Context mContext;
 
     public SearchAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
         sizeString = IconSizes.generateSizeString(context);
+        this.mContext = context;
     }
 
     @Override
@@ -49,11 +53,12 @@ public class SearchAdapter extends CursorAdapter {
             view.setTag(holder);
         }
 
+        long id = cursor.getLong(cursor.getColumnIndex("_id"));
 
         holder.overFlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showPopup(v);
             }
         });
         holder.appName.setText(Html.fromHtml(name).toString());
@@ -76,5 +81,25 @@ public class SearchAdapter extends CursorAdapter {
         TextView versionName;
         TextView downloads;
         TextView rating;
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(mContext, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.menu_actions);
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.menu_install) {
+//            ((MainActivity)mContext).installApp(id);
+            return true;
+        } else if (i == R.id.menu_schedule) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

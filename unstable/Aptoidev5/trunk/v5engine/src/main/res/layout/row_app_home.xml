@@ -24,7 +24,8 @@
                 android:layout_height="96dp"
                 android:layout_centerHorizontal="true"/>
 
-        <ImageView
+        <ImageButton
+                android:onClick="showPopup"
                 android:id="@+id/ic_action"
                 style="@style/overflowMenuButton"
                 android:layout_below="@+id/home_icon"/>

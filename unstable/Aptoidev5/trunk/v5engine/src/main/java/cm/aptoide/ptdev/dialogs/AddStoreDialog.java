@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.dialogs;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -306,6 +307,15 @@ public class AddStoreDialog extends DialogFragment {
                 String url = ((EditText)view.findViewById(R.id.edit_store_uri)).getText().toString();
                 get(url, null);
                 showDialog();
+            }
+        });
+
+        view.findViewById(R.id.button_top_stores).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
     }

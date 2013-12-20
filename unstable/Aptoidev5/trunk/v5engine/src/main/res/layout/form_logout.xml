@@ -47,7 +47,7 @@
         </LinearLayout>
 
         <Button
-                android:id="@+id/logout"
+                android:id="@+id/button_logout"
                 style="@style/Widget.Button.Custom.Gray"
                 android:layout_weight="1"
                 android:text="@string/sign_out"/>
