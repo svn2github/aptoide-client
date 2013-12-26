@@ -119,8 +119,8 @@
     <string name="by_rating">Rating</string>
     <string name="by_download">Download Number</string>
     <string name="by_price">Price</string>
-    <string name="show_all_applications">Show all applications</string>
-    <string name="merge_stores">Merge</string>
+    <string name="show_all_applications">List all applications</string>
+    <string name="merge_stores">Merge stores</string>
     <string name="reload">Reload</string>
     <string name="menu_discard">Remove</string>
     <string name="menu_select_all">Select All</string>
@@ -203,5 +203,9 @@
     <string name="installapp_alrt">Do you wish to install: \n\n</string>
     <string name="starting_download">Starting download</string>
     <string name="newrepo_alrt">Do you want to add this store to your list?\n\n</string>
+    <string name="downloads">Downloads</string>
+    <string name="size">Size</string>
+    <string name="likes">Likes</string>
+    <string name="dont_likes">Don\'t likes</string>
 
 </resources>

@@ -10,6 +10,7 @@ public class RollbackActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_rollback);
 

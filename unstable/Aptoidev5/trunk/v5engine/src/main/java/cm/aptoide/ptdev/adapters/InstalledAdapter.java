@@ -54,7 +54,7 @@ public class InstalledAdapter extends CursorAdapter {
         View v = null;
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.separator_updates, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.separator_installed, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
@@ -85,7 +85,7 @@ public class InstalledAdapter extends CursorAdapter {
                 if(holder==null){
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
+//                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
@@ -103,12 +103,12 @@ public class InstalledAdapter extends CursorAdapter {
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
                 final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
-                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UninstallHelper.uninstall((FragmentActivity) context, packageName);
-                    }
-                });
+//                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        UninstallHelper.uninstall((FragmentActivity) context, packageName);
+//                    }
+//                });
                 break;
 
         }

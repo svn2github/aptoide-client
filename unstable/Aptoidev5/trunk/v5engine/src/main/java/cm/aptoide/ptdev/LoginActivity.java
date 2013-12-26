@@ -50,6 +50,7 @@ public class LoginActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle icicle) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(icicle);
 
 

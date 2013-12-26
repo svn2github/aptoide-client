@@ -89,6 +89,7 @@ public class StoreActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         Intent i = new Intent(this, ParserService.class);
         setContentView(R.layout.page_store_list);

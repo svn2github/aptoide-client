@@ -1,1 +1,1 @@
-include ':Aptoide', ':pagerslidertabstrip', ':v5engine', ':multichoiceadapter', ':multichoiceadapter-actionbarcompat', ':hanselandgretel', 'android-websockets'
+include ':Aptoide', ':pagerslidertabstrip', ':v5engine', ':multichoiceadapter', ':multichoiceadapter-actionbarcompat', ':hanselandgretel', ':Partners', ':ex', 'android-websockets'

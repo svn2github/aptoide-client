@@ -31,7 +31,7 @@
 
     <Button
         android:id="@+id/restore_update"
-        style="@style/Widget.Button.Custom.Gray"
+        style="@style/WidgetButtonCustomGray"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

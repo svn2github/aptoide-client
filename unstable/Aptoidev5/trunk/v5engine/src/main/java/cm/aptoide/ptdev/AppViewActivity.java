@@ -20,10 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
@@ -85,6 +82,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
+    private RatingBar ratingBar;
 
     private long id;
     private int downloads;
@@ -145,6 +143,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setDownloads(downloads);
                 details.setScreenshots(json.getSshots());
                 details.setLatestVersion(json.getLatest());
+                details.setLikes("" + json.getLikevotes().getLikes());
+                details.setDontLikes("" + json.getLikevotes().getDislikes());
             } else {
 
                 for(String error : json.getErrors()){
@@ -232,11 +232,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);
         appVersionName = (TextView) findViewById(R.id.app_version);
+        ratingBar = (RatingBar) findViewById(R.id.ratingbar);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         id = getIntent().getExtras().getLong("id");
@@ -317,9 +319,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
         minSdk = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SDK));
         screen = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
+        float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
 
         appName.setText(name);
         appVersionName.setText(versionName);
+//        ratingBar.setRating(rating);
         String sizeString = IconSizes.generateSizeString(this);
         if(icon.contains("_icon")){
             String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
@@ -515,6 +519,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getScreenshots();
         }
 
+        public String getLikes(){
+            return details.getLikes();
+        }
+
+        public String getDontLikes(){
+            return details.getDontLikes();
+        }
 
     }
 
@@ -628,6 +639,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String latestVersion;
         private long size;
         private List<String> screenshots;
+        private String likes;
+        private String dontLikes;
 
         public String getDescription() {
             return description;
@@ -640,6 +653,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public List<String> getScreenshots() { return screenshots; }
 
         public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
+
+        public String getLikes() { return likes; }
+
+        public void setLikes(String likes) { this.likes = likes; }
+
+        public String getDontLikes() { return dontLikes; }
+
+        public void setDontLikes(String dontLikes) { this.dontLikes = dontLikes; }
     }
 
     private static class Rating {

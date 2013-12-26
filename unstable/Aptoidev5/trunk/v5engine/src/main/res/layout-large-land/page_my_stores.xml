@@ -19,7 +19,7 @@
 
     <Button android:id="@+id/button_add_store"
             android:layout_width="match_parent"
-            style="@style/Widget.Button.Custom"
+            style="@style/WidgetButtonCustom"
             android:drawableLeft="@drawable/ic_add"
             android:text="@string/add_store"
             android:layout_margin="10dp" android:layout_alignParentBottom="true"/>

@@ -3,6 +3,8 @@
 
     <attr name="customColor" format="color" />
 
+    <attr name="customButtonColor" format="reference"/>
+
     <attr name="customRowForeground" format="reference"/>
 
     <attr name="backgroundCard" format="reference"/>
@@ -10,6 +12,8 @@
     <attr name="backgroundTabs" format="reference"/>
 
     <attr name="apkInfoBackgroundHeader" format="reference"/>
+
+    <attr name="headerSeparatorButton" format="reference"/>
 
     <attr name="secondaryTextColor" format="color" />
 

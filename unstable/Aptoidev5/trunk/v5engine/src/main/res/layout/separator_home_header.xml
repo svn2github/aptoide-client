@@ -10,7 +10,7 @@
               android:layout_weight="0.2"
               android:text="Editors' Choice"/>
 
-    <TextView style="@style/headerSeparatorButton"
+    <TextView style="?attr/headerSeparatorButton"
               android:text="+ more"
               android:id="@+id/more"/>
 

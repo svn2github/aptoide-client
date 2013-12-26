@@ -65,6 +65,9 @@ public abstract class FragmentAppView extends Fragment {
 
 
         private TextView description;
+        private TextView downloads;
+        private TextView likes;
+        private TextView dontLikes;
         private TextView size;
         private TextView latestVersion;
         private TextView publisher;
@@ -99,8 +102,11 @@ public abstract class FragmentAppView extends Fragment {
             }else{
                 latestVersion.setVisibility(View.GONE);
             }
-            publisher.setText("Publisher " + event.getPublisher());
-            size.setText("Size: " + AptoideUtils.formatBytes(event.getSize()));
+            publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
+            size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
+            downloads.setText(getString(R.string.downloads) + ": " + event.getDownloads());
+            likes.setText(getString(R.string.likes) + ": " + event.getLikes());
+            dontLikes.setText(getString(R.string.dont_likes) + ": " + event.getDontLikes());
 //            galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
 //
 //            if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
@@ -163,6 +169,9 @@ public abstract class FragmentAppView extends Fragment {
             View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
 
             description = (TextView) v.findViewById(R.id.descript);
+            downloads = (TextView) v.findViewById(R.id.downloads_label);
+            likes = (TextView) v.findViewById(R.id.likes_label);
+            dontLikes = (TextView) v.findViewById(R.id.dont_likes_label);
             size = (TextView) v.findViewById(R.id.size_label);
             publisher = (TextView) v.findViewById(R.id.publisher_label);
 //            screenshots = (Gallery) v.findViewById(R.id.gallery);

@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

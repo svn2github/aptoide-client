@@ -18,7 +18,7 @@
 
 
     <Button android:id="@+id/button_add_comment"
-            style="@style/Widget.Button.Custom"
+            style="@style/WidgetButtonCustom"
             android:layout_width="fill_parent"
             android:text="@string/add_comment"
             android:layout_margin="10dp"/>

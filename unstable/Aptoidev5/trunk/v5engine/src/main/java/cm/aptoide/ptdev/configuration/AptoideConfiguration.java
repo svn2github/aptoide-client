@@ -35,8 +35,7 @@ public class AptoideConfiguration {
 
     private String webservicesPath;
     private static String MARKETNAME = "Aptoide";
-    private static String brand;
-
+    private static String BRAND;
 
 
 
@@ -49,17 +48,16 @@ public class AptoideConfiguration {
     }
 
     public static String getBrand() {
-        return brand;
+        return BRAND;
     }
 
     public static void setBrand(String brand) {
-        AptoideConfiguration.brand = brand;
+        AptoideConfiguration.BRAND = brand;
     }
 
     public static Class getShortcutClass() {
         return MainActivity.class;
     }
-
 
     public String getAutoUpdateUrl() {
         return sPref.getString(PREF_AUTO_UPDATE_URL, Defaults.AUTO_UPDATE_URL);
@@ -161,5 +159,22 @@ public class AptoideConfiguration {
     public void setDefaultStore(String store) {
         sPref.edit().putString(PREF_DEFAULT_STORE, store).commit();
     }
+
+//    public ActivitiesClasses getClasses(){
+//        return new ActivitiesClasses();
+//
+//    }
+//
+//    public static class ActivitiesClasses {
+//
+//
+//        public Class getAppViewActivity() {
+//            return AppViewActivity;
+//        }
+//
+//        private final Class AppViewActivity = cm.aptoide.ptdev.AppViewActivity.class;
+//
+//    }
+
 
 }

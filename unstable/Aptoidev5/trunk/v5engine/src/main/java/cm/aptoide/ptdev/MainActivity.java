@@ -202,6 +202,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         mContext = this;

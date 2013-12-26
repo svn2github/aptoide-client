@@ -39,6 +39,7 @@ public class SearchManager extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         adapter = new SearchAdapter(this);
         setContentView(R.layout.page_search);

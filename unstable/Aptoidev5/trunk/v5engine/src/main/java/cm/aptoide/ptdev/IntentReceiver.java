@@ -83,11 +83,11 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState==null){
-            Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("newrepo", "");
-            startActivity(i);
-        }
+//        if(savedInstanceState==null){
+//            Intent i = new Intent(this, MainActivity.class);
+//            i.putExtra("newrepo", "");
+//            startActivity(i);
+//        }
 
 //        Intent a2 = new Intent(this, RabbitMqService.class);
 //        bindService(a2, wConnection, Context.BIND_AUTO_CREATE);

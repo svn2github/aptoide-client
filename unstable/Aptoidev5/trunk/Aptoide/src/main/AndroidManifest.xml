@@ -19,7 +19,7 @@
     <application android:icon="@drawable/ic_launcher"
                  android:name="cm.aptoide.ptdev.Aptoide"
                  android:label="AptoideDev"
-                 android:theme="@style/AppTheme"
+                 android:theme="@style/AptoideThemeDefault"
                  android:hardwareAccelerated="true">
 
         <activity android:name="cm.aptoide.ptdev.MainActivity"

@@ -11,7 +11,7 @@
 
     </style>
 
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AptoideThemeDefault" parent="AppBaseTheme">
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
@@ -19,7 +19,9 @@
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
         <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
@@ -31,15 +33,17 @@
         <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="AppBaseThemeDark">
+    <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideDark</item>
-        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="actionBarStyle">@style/WidgetButtonCustomAptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
         <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
@@ -51,6 +55,494 @@
         <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
+
+    <style name="AptoideThemeDefaultMidnight" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
+        <item name="customColor">@color/midnight</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+
+    <style name="AptoideThemeDefaultMidnightDark" parent="AppBaseThemeDark">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightDark</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
+        <item name="customColor">@color/midnight</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
+        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
+        <item name="icWebSiteDrawable">@style/webSiteDark</item>
+        <item name="icEmailDrawable">@style/emailDark</item>
+        <item name="icCancelDrawable">@style/cancelDark</item>
+        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icUpdateDrawable">@style/updateDark</item>
+    </style>
+
+
+    <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlackLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Black</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Black</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
+        <item name="customColor">@color/black</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlackDark</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
+        <item name="customColor">@color/black</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
+        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
+        <item name="icWebSiteDrawable">@style/webSiteDark</item>
+        <item name="icEmailDrawable">@style/emailDark</item>
+        <item name="icCancelDrawable">@style/cancelDark</item>
+        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icUpdateDrawable">@style/updateDark</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMaroon" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMaroonLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Maroon</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Maroon</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomMaroon</item>
+        <item name="customColor">@color/maroon</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMaroon</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMaroonDark" parent="AppBaseThemeDark">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightDark</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Midnight</item>
+        <item name="android:windowBackground">@color/transparent_black</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
+        <item name="customColor">@color/midnight</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
+        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
+        <item name="icWebSiteDrawable">@style/webSiteDark</item>
+        <item name="icEmailDrawable">@style/emailDark</item>
+        <item name="icCancelDrawable">@style/cancelDark</item>
+        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icUpdateDrawable">@style/updateDark</item>
+    </style>
+
+    <style name="AptoideThemeDefaultGold" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGoldLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Gold</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Gold</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomGold</item>
+        <item name="customColor">@color/gold</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGold</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleOrangeLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Orange</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Orange</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomOrange</item>
+        <item name="customColor">@color/orange</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleOrange</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSpringgreen" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSpringgreenLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Springgreen</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Springgreen</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomSpringgreen</item>
+        <item name="customColor">@color/springgreen</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSpringgreen</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultLightsky" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleLightskyLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Lightsky</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Lightsky</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomLightsky</item>
+        <item name="customColor">@color/lightsky</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleLightsky</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStylePinkLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Pink</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Pink</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomPink</item>
+        <item name="customColor">@color/pink</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStylePink</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultBlue" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlueLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Blue</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Blue</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomBlue</item>
+        <item name="customColor">@color/blue</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlue</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleRedLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Red</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Red</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomRed</item>
+        <item name="customColor">@color/red</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleRed</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMagenta" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMagentaLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Magenta</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Magenta</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomMagenta</item>
+        <item name="customColor">@color/magenta</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyle</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSlategray" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSlategrayLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Slategray</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Slategray</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomSlategray</item>
+        <item name="customColor">@color/slategray</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSlategray</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSeagreen" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSeagreenLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Seagreen</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Seagreen</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomSeagreen</item>
+        <item name="customColor">@color/seagreen</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSeagreen</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSilver" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSilverLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Silver</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Silver</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomSilver</item>
+        <item name="customColor">@color/silver</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSilver</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultDimgray" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleDimgrayLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Dimgray</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Dimgray</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomDimgray</item>
+        <item name="customColor">@color/dimgray</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleDimgray</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+
+    <style name="AptoideThemeDefaultGreenApple" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGreenAppleLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.GreenApple</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.GreenApple</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomGreenApple</item>
+        <item name="customColor">@color/greenapple</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreenApple</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultHappyBlue" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleHappyBlueLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.HappyBlue</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.HappyBlue</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomHappyBlue</item>
+        <item name="customColor">@color/happyblue</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleHappyBlue</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGreenLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Green</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Green</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomGreen</item>
+        <item name="customColor">@color/green</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreen</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultYellow" parent="AppBaseTheme">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleYellowLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide.Yellow</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide.Yellow</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomYellow</item>
+        <item name="customColor">@color/yellow</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleYellow</item>
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
+        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+    </style>
+
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_aptoide</item>
@@ -60,6 +552,174 @@
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
+    <style name="Widget.Styled.ActionBar.Aptoide.Midnight" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_midnight</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_midnight</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
 
+    <style name="Widget.Styled.ActionBar.Aptoide.Black" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_black</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_black</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
 
+    <style name="Widget.Styled.ActionBar.Aptoide.Maroon" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_maroon</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_maroon</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Gold" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_gold</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_gold</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Orange" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_orange</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_orange</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Springgreen" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_springgreen</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_springgreen</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Lightsky" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_lightsky</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_lightsky</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Pink" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_pink</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_pink</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Blue" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_blue</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_blue</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Red" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_red</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_red</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Magenta" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_magenta</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_magenta</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Slategray" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_slategray</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_slategray</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Seagreen" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_seagreen</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_seagreen</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Silver" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_silver</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_silver</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Dimgray" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_dimgray</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_dimgray</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.GreenApple" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_greenapple</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_greenapple</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.HappyBlue" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_happyblue</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_happyblue</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Green" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_green</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_green</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.Aptoide.Yellow" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="background">@drawable/ab_background_yellow</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:background">@drawable/ab_background_yellow</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
+    </style>
 </resources>

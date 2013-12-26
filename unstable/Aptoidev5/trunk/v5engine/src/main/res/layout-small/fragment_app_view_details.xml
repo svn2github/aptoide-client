@@ -109,7 +109,7 @@
                 android:layout_centerHorizontal="true"/>
 
         <TextView
-                android:id="@+id/rating_label"
+                android:id="@+id/ratingbar"
                 android:layout_width="wrap_content"
                 android:gravity="center"
                 android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                 android:text="Likes: 45"
                 android:layout_below="@+id/publisher_label"
                 android:layout_gravity="center_horizontal|left"
-                android:layout_toRightOf="@+id/rating_label"/>
+                android:layout_toRightOf="@+id/ratingbar"/>
 
         <TextView
                 android:id="@+id/dont_likes_label"
@@ -167,7 +167,7 @@
                 android:paddingBottom="2dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
-                android:layout_below="@+id/rating_label"
+                android:layout_below="@+id/ratingbar"
                 android:textColor="?attr/customColor"
                 android:visibility="gone"
                 android:layout_alignParentLeft="true" />

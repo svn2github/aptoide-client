@@ -19,6 +19,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_sch_downloads);
 

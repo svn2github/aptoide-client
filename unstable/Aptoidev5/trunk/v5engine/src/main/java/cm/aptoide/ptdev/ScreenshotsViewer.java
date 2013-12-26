@@ -30,7 +30,8 @@ public class ScreenshotsViewer extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle arg0) {
-		super.onCreate(arg0);
+        Aptoide.getThemePicker().setAptoideTheme(this);
+        super.onCreate(arg0);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

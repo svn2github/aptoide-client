@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/sch_down"
-        style="@style/Widget.Button.Custom.Gray"
+        style="@style/WidgetButtonCustomGray"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:text="@string/schDown_installselected" />

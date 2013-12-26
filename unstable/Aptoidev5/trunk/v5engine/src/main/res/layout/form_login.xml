@@ -105,7 +105,7 @@
 
             <Button
                     android:id="@+id/button_login"
-                    style="@style/Widget.Button.Custom"
+                    style="?attr/customButtonColor"
                     android:layout_gravity="right"
                     android:text="@string/login"
                     android:layout_margin="10dp"

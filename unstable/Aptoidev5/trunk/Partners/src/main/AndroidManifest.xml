@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.aptoide.partners"
+          android:versionCode="415"
+          android:versionName="5.0.0 Dev Version">
+
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="18"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+
+
+    <application android:icon="@drawable/ic_launcher"
+                 android:name="com.aptoide.partners.AptoidePartner"
+                 android:label="AptoidePartner"
+                 android:theme="@style/AppBaseTheme"
+                 android:hardwareAccelerated="true">
+
+        <activity android:name="cm.aptoide.ptdev.MainActivity"
+                  android:launchMode="singleTask"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.default_searchable"
+                    android:value="cm.aptoide.ptdev.SearchManager"/>
+        </activity>
+
+        <activity android:name="cm.aptoide.ptdev.LoginActivity"
+                  android:launchMode="singleTask"/>
+
+        <activity android:name="cm.aptoide.ptdev.StoreActivity"
+                  android:launchMode="singleTask"/>
+
+        <activity android:name="cm.aptoide.ptdev.AppViewActivity"
+                  android:launchMode="singleTask"/>
+
+        <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
+                  android:theme="@style/transparent"
+                  android:launchMode="standard"
+                  android:configChanges="keyboardHidden|orientation"/>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ScreenshotsViewer"
+                android:launchMode="singleTask"/>
+
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewFacebook"
+                android:configChanges="orientation|keyboardHidden"/>
+        <activity
+                android:name="cm.aptoide.ptdev.social.WebViewTwitter"
+                android:configChanges="orientation|keyboardHidden"/>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.RollbackActivity"
+                android:configChanges="orientation|keyboardHidden">
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.Settings"
+                android:configChanges="orientation|keyboardHidden"
+                android:label="@string/settings_title_bar"
+                android:theme="@style/Settings"/>
+
+
+        <activity
+                android:name="cm.aptoide.ptdev.SearchManager"
+                android:configChanges="orientation|keyboardHidden"
+                android:exported="false"
+                android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <meta-data
+                    android:name="android.app.searchable"
+                    android:resource="@xml/find"/>
+        </activity>
+
+        <activity
+                android:name="cm.aptoide.ptdev.IntentReceiver"
+                android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.myapp" />
+                <data android:mimeType="application/vnd.cm.aptoide.pt" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="aptoiderepo" />
+                <data android:scheme="aptoidexml" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="market" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:host="market.android.com"
+                        android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:host="play.google.com"
+                        android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="cm.aptoide.ptdev.services.RabbitMqService"
+                 android:label="WebInstallService"
+                 android:exported="false"/>
+
+        <service android:name="cm.aptoide.ptdev.services.ParserService"
+                 android:label="ParserService"
+                 android:exported="false"/>
+
+        <service android:name="cm.aptoide.ptdev.services.ParserHttp"
+                 android:label="ParserHttp"
+                 android:exported="false"/>
+
+        <service android:name="com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService"
+                 android:label="HttpService"
+                 android:exported="false"/>
+
+        <service android:name="cm.aptoide.ptdev.services.DownloadService"
+                 android:label="DownloadService"
+                 android:exported="false"/>
+
+        <provider android:name="com.aptoide.partners.SuggestionProviderPartners"
+                  android:authorities="com.aptoide.partners.SuggestionProviderPartners" android:exported="false"/>
+
+        <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator"/>
+        </service>
+
+        <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+
+    </application>
+</manifest>
