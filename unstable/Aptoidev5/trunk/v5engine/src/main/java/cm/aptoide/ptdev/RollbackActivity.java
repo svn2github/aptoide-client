@@ -1,12 +1,33 @@
 package cm.aptoide.ptdev;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.widget.ListView;
+import cm.aptoide.ptdev.adapters.RollBackAdapter;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import com.squareup.otto.Subscribe;
 
 
-public class RollbackActivity extends ActionBarActivity {
+public class RollbackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private Database database;
+    private RollBackAdapter rollBackAdapter;
+
+    @Subscribe
+    public void onInstalledApkEvent(InstalledApkEvent event) {
+        refreshRollbackList();
+    }
+
+    @Subscribe
+    public void onUnistalledApkEvent(UnInstalledApkEvent event) {
+        refreshRollbackList();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -14,12 +35,34 @@ public class RollbackActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_rollback);
 
+        rollBackAdapter = new RollBackAdapter(this);
+
+        ListView lView = (ListView) findViewById(R.id.rollback_list);
+        lView.setAdapter(rollBackAdapter);
+
+        /*
+        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+        */
+
+
         getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        final SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
+        database = new Database(db);
+
+
+        getSupportLoaderManager().initLoader(17, null, this);
+
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -34,4 +77,31 @@ public class RollbackActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new SimpleCursorLoader(this) {
+            @Override
+            public Cursor loadInBackground() {
+                return database.getRollbackActions();
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        rollBackAdapter.swapCursor(cursor);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        rollBackAdapter.swapCursor(null);
+    }
+
+    public void refreshRollbackList() {
+        getSupportLoaderManager().restartLoader(17, null, this);
+    }
+
 }

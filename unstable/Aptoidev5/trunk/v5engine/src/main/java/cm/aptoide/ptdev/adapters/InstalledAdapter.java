@@ -2,7 +2,6 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,7 +35,7 @@ public class InstalledAdapter extends CursorAdapter {
     @Override
     public int getItemViewType(int position) {
 
-        if(position==0){
+        if (position == 0) {
             return 0;
         }
 
@@ -52,13 +52,13 @@ public class InstalledAdapter extends CursorAdapter {
 
         int type = getItemViewType(cursor.getPosition());
         View v = null;
-        switch (type){
+        switch (type) {
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.separator_installed, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.separator_updates, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
-            break;
+                break;
         }
 
         return v;
@@ -69,9 +69,9 @@ public class InstalledAdapter extends CursorAdapter {
 
         int type = getItemViewType(cursor.getPosition());
 
-        String name = cursor.getString(cursor.getColumnIndex("name"));
+        final String name = cursor.getString(cursor.getColumnIndex("name"));
 
-        switch (type){
+        switch (type) {
             case 0:
 
                 TextView tv = (TextView) view.findViewById(R.id.separator_label);
@@ -82,42 +82,42 @@ public class InstalledAdapter extends CursorAdapter {
 
 
                 AppViewHolder holder = (AppViewHolder) view.getTag();
-                if(holder==null){
+                if (holder == null) {
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-//                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
+                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
                 }
 
 
-
                 holder.appName.setText(Html.fromHtml(name).toString());
                 String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
                 String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
-                if(icon1.contains("_icon")){
+                if (icon1.contains("_icon")) {
                     String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
-                    icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                    icon1 = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
                 }
-                ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
-                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
+                final String iconPath = iconpath + icon1;
+                ImageLoader.getInstance().displayImage(iconPath, holder.appIcon);
+                final String versionName = cursor.getString(cursor.getColumnIndex("version_name"));
+                holder.versionName.setText(versionName);
                 final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
-//                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        UninstallHelper.uninstall((FragmentActivity) context, packageName);
-//                    }
-//                });
+                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) context).uninstallApp(name, packageName, versionName, iconPath);
+                    }
+                });
                 break;
 
         }
 
 
-
     }
 
-    public static class AppViewHolder{
+    public static class AppViewHolder {
         ImageView appIcon;
         ImageView actionIcon;
         TextView appName;

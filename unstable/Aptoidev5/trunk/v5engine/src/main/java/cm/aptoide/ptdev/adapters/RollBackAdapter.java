@@ -3,12 +3,14 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.schema.Schema;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,11 +26,12 @@ public class RollBackAdapter extends CursorAdapter {
 
     }
 
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int type = getItemViewType(cursor.getPosition());
         View v = null;
-        switch (type){
+        switch (type) {
             case 0:
                 v = LayoutInflater.from(context).inflate(R.layout.separator_rollback, parent, false);
                 break;
@@ -42,16 +45,43 @@ public class RollBackAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        int type = getItemViewType(cursor.getPosition());
+
+        switch (type) {
+            case 1:
+                RollBackViewHolder holder = (RollBackViewHolder) view.getTag();
+                if (holder == null) {
+                    holder = new RollBackViewHolder();
+                    holder.name = (TextView) view.findViewById(R.id.app_name);
+                    holder.icon = (ImageView) view.findViewById(R.id.app_icon);
+                    holder.version = (TextView) view.findViewById(R.id.app_version);
+                    holder.action = (TextView) view.findViewById(R.id.ic_action);
+                    //holder.timestamp = view.findViewById(R.id.)
+                    view.setTag(holder);
+                }
+
+
+                // holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION)));
+
+                holder.name.setText(Html.fromHtml(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME))));
+
+
+                //holder.icon.setImageBitmap(bitmap);
+
+                holder.version.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION)));
+                holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_TIMESTAMP)));
+                break;
+        }
 
     }
 
     public static class RollBackViewHolder {
 
-
+        public TextView action;
         public TextView name;
-        public  ImageView icon;
-        public  TextView version;
-        public  TextView timestamp;
+        public ImageView icon;
+        public TextView version;
+        public TextView timestamp;
 
     }
 }

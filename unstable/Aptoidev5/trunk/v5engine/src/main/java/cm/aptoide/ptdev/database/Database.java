@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import android.widget.Toast;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.InstalledPackage;
+import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 
@@ -35,12 +35,11 @@ public class Database {
     }
 
 
-
     public List<SQLiteStatement> compileStatements(List<String> statements) {
 
         ArrayList<SQLiteStatement> SQLiteStatements = new ArrayList<SQLiteStatement>(statements.size());
 
-        for(String string : statements){
+        for (String string : statements) {
             Log.d("TAG1", "Compiling statement: " + string);
             SQLiteStatements.add(database.compileStatement(string));
         }
@@ -60,11 +59,11 @@ public class Database {
     }
 
     public void yield() {
-        if(database.yieldIfContendedSafely(1000)){
+        if (database.yieldIfContendedSafely(1000)) {
             Log.d("TAG1", "Database yielded");
-        };
+        }
+        ;
     }
-
 
 
     public Cursor getServers() {
@@ -72,7 +71,6 @@ public class Database {
         c.getCount();
         return c;
     }
-
 
 
     public long insertStore(Store store) {
@@ -91,7 +89,7 @@ public class Database {
             values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
         }
 
-        Log.d("Aptoide-Inserting store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
+        Log.d("Aptoide-Inserting store", String.valueOf(store.getBaseUrl() + " " + store.getLogin() != null));
 
         values.put(Schema.Repo.COLUMN_IS_USER, true);
 
@@ -100,7 +98,7 @@ public class Database {
 
     public Cursor getCategories(long storeid, long parentid) {
 
-        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+        Cursor c = database.rawQuery("select name as name, id_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid)});
         c.getCount();
 
         return c;
@@ -112,7 +110,7 @@ public class Database {
 
         String sort = "apk.name";
 
-        switch (sortObject.getSort()){
+        switch (sortObject.getSort()) {
 
             case NAME:
                 sort = "apk.name collate nocase";
@@ -131,13 +129,12 @@ public class Database {
                 break;
         }
 
-        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by " + sort, new String[]{String.valueOf(parentid) });
+        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_category = ? order by " + sort, new String[]{String.valueOf(parentid)});
         c.getCount();
 
         return c;
 
     }
-
 
 
     public Cursor getStore(long storeid) {
@@ -150,7 +147,7 @@ public class Database {
 
         Cursor c = database.rawQuery("select id_category from category where id_category_parent = 0 and id_repo = ?", new String[]{String.valueOf(repoId)});
 
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             getAppsCount(c.getLong(0), repoId);
         }
 
@@ -162,13 +159,13 @@ public class Database {
 
         long apps = 0;
         Cursor c = database.rawQuery("select id_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_category), String.valueOf(id_repo)});
-        if(c.getCount()>0){
-            while (c.moveToNext()){
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
                 apps += getAppsCount(c.getLong(0), id_repo);
             }
-        }else{
+        } else {
             c = database.rawQuery("select count(id_category) from category_apk where id_category = ?", new String[]{String.valueOf(id_category)});
-            if(c.moveToFirst()){
+            if (c.moveToFirst()) {
                 apps = c.getInt(0);
             }
         }
@@ -188,19 +185,18 @@ public class Database {
 
         database.beginTransaction();
 
-            Cursor c = database.rawQuery("select id_category, name from category where id_repo = ? ", new String[]{String.valueOf(id_store)});
+        Cursor c = database.rawQuery("select id_category, name from category where id_repo = ? ", new String[]{String.valueOf(id_store)});
 
-            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 
-                if((c.getString(1).equals("Top Apps") && c.getString(1).equals("Latest Apps"))){
-                    database.delete("category_apk", "id_category=?", new String[]{String.valueOf(c.getLong(0))});
-                    Log.d("Aptoide-", "Deleting " + c.getLong(0));
-                }
+            if ((c.getString(1).equals("Top Apps") && c.getString(1).equals("Latest Apps"))) {
+                database.delete("category_apk", "id_category=?", new String[]{String.valueOf(c.getLong(0))});
+                Log.d("Aptoide-", "Deleting " + c.getLong(0));
             }
-            c.close();
+        }
+        c.close();
 
-            //database.delete("apk"," id_repo = ?", new String[]{String.valueOf(id_store)});
-
+        //database.delete("apk"," id_repo = ?", new String[]{String.valueOf(id_store)});
 
 
         database.setTransactionSuccessful();
@@ -213,17 +209,17 @@ public class Database {
         Log.d("Aptoide-", "Deleting " + checkedItems);
 
         database.beginTransaction();
-        for(Long id_store : checkedItems){
+        for (Long id_store : checkedItems) {
             Cursor c = database.rawQuery("select id_category from category where id_repo = ?", new String[]{String.valueOf(id_store)});
 
-            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
-                database.delete("category_apk","id_category=?", new String[]{String.valueOf(c.getLong(0))});
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                database.delete("category_apk", "id_category=?", new String[]{String.valueOf(c.getLong(0))});
                 Log.d("Aptoide-", "Deleting " + c.getLong(0));
             }
             c.close();
-            database.delete("category"," id_repo = ? ", new String[]{String.valueOf(id_store)});
-            database.delete("apk"," id_repo = ? ", new String[]{String.valueOf(id_store)});
-            database.delete("repo","id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("category", " id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("apk", " id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("repo", "id_repo = ? ", new String[]{String.valueOf(id_store)});
 
         }
         database.setTransactionSuccessful();
@@ -238,7 +234,7 @@ public class Database {
     }
 
     public Cursor getUpdates() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and apk.is_compatible='1' group by apk.package_name",null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id, apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and apk.is_compatible='1' group by apk.package_name", null);
         c.getCount();
         return c;
     }
@@ -265,6 +261,10 @@ public class Database {
         values.put(Schema.Installed.COLUMN_NAME, apk.getName());
         values.put(Schema.Installed.COLUMN_VERCODE, apk.getVersion_code());
         values.put(Schema.Installed.COLUMN_VERNAME, apk.getVersion_name());
+        if (apk.getMd5() != null) {
+            values.put(Schema.Installed.COLUMN_MD5SUM, apk.getMd5());
+        }
+
         database.insert(Schema.Installed.getName(), null, values);
 
     }
@@ -286,10 +286,10 @@ public class Database {
         values.put(Schema.Repo.COLUMN_URL, server.getUrl());
         long id;
 
-        try{
+        try {
             id = database.insert(Schema.Repo.getName(), null, values);
-        }catch (SQLiteException e){
-            Cursor c = database.query(Schema.Repo.getName(), new String[]{Schema.Repo.COLUMN_ID}, "url = ?", new String[]{server.getUrl()}, null, null,null );
+        } catch (SQLiteException e) {
+            Cursor c = database.query(Schema.Repo.getName(), new String[]{Schema.Repo.COLUMN_ID}, "url = ?", new String[]{server.getUrl()}, null, null, null);
             id = c.getLong(0);
             c.close();
         }
@@ -297,24 +297,23 @@ public class Database {
         return id;
     }
 
-    public void deleteFeatured(int type){
+    public void deleteFeatured(int type) {
 
 
         database.beginTransaction();
 
         Cursor c = database.query(Schema.Featured_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, "type = ?", new String[]{String.valueOf(type)}, null, null, null);
 
-        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 
-            Cursor appsCursor = database.query(Schema.Apk.getName(), new String[]{"id_repo"}, "id_apk = ?", new String[]{c.getString(0)}, null,null,null);
+            Cursor appsCursor = database.query(Schema.Apk.getName(), new String[]{"id_repo"}, "id_apk = ?", new String[]{c.getString(0)}, null, null, null);
 
-            if(appsCursor.moveToFirst()){
+            if (appsCursor.moveToFirst()) {
                 database.delete(Schema.Repo.getName(), "id_repo = ?", new String[]{appsCursor.getString(0)});
                 database.delete(Schema.Apk.getName(), "id_apk = ?", new String[]{c.getString(0)});
             }
             appsCursor.close();
         }
-
 
 
         c.close();
@@ -346,9 +345,9 @@ public class Database {
         Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? and apk.is_compatible = '1'", new String[]{String.valueOf(type)});
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
         int size = c.getCount();
-        int itemsToAdd = size - ( size % editorsChoiceBucketSize);
+        int itemsToAdd = size - (size % editorsChoiceBucketSize);
         int i = 0;
-        for(c.moveToFirst();!c.isAfterLast() && i <  itemsToAdd;c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast() && i < itemsToAdd; c.moveToNext()) {
             i++;
             String name = c.getString(c.getColumnIndex("name"));
             String category = c.getString(c.getColumnIndex("category"));
@@ -361,14 +360,12 @@ public class Database {
         c.close();
 
 
-
-
         return items;
     }
 
     public Cursor getSearchResults(String searchQuery) {
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%"+ searchQuery+"%' and apk.is_compatible=1 group by apk.package_name order by apk.name ", null);
+        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' and apk.is_compatible=1 group by apk.package_name order by apk.name ", null);
         c.getCount();
         return c;
     }
@@ -401,8 +398,8 @@ public class Database {
 
     public void deleteLatest(long id) {
 
-        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"} );
-        if(c.moveToFirst()){
+        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"});
+        if (c.moveToFirst()) {
             long id_category = c.getLong(0);
 
             c.close();
@@ -416,9 +413,9 @@ public class Database {
 
     public void deleteTop(long id) {
 
-        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"} );
+        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"});
 
-        if(c.moveToFirst()){
+        if (c.moveToFirst()) {
             long id_category = c.getLong(0);
 
             c.close();
@@ -434,7 +431,7 @@ public class Database {
         Cursor c = database.rawQuery("select name, id_category from category where id_repo = ? ", new String[]{String.valueOf(repoId)});
 
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             categoriesIds.put(c.getString(0), c.getLong(1));
         }
 
@@ -451,6 +448,56 @@ public class Database {
         database.delete(Schema.Installed.getName(), "package_name = ?", new String[]{packageName});
 
     }
+
+    public void insertRollbackAction(RollBackItem rollBackItem) {
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Rollback.COLUMN_NAME, rollBackItem.getName());
+        values.put(Schema.Rollback.COLUMN_APKID, rollBackItem.getPackageName());
+        values.put(Schema.Rollback.COLUMN_VERSION, rollBackItem.getVersion());
+        values.put(Schema.Rollback.COLUMN_ICONPATH, rollBackItem.getIconPath());
+        values.put(Schema.Rollback.COLUMN_MD5, rollBackItem.getMd5());
+        values.put(Schema.Rollback.COLUMN_ACTION, rollBackItem.getAction().toString());
+        values.put(Schema.Rollback.COLUMN_CONFIRMED, 0);
+
+        Cursor cursor = database.rawQuery("select 1 from rollback where package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
+        if (cursor.getCount() == 0) {
+            database.insert(Schema.Rollback.getName(), null, values);
+        } else {
+            database.update(Schema.Rollback.getName(), values, "package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
+        }
+        cursor.close();
+    }
+
+
+    public void confirmRollBackAction(String packageName, String oldAction, String newAction) {
+        ContentValues values = new ContentValues();
+        values.put(Schema.Rollback.COLUMN_TIMESTAMP, Long.toString(System.currentTimeMillis() / 1000));
+        values.put(Schema.Rollback.COLUMN_ACTION, newAction);
+        values.put(Schema.Rollback.COLUMN_CONFIRMED, 1);
+
+        int result = database.update(Schema.Rollback.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
+        Log.d("InstalledBroadcastReceiver", "Trying to update " + packageName + " with action completed " + newAction + " RESULT: " + ((result == 1) ? "Success" : "Fail"));
+
+    }
+
+    public String getUnistallingActionMd5(String packageName) {
+        Cursor cursor = database.rawQuery("select md5 from rollback where package_name = ? and action = ?", new String[]{packageName, RollBackItem.Action.UNINSTALLING.toString()});
+        int resultsCount = cursor.getCount();
+
+        String md5 = null;
+        if (resultsCount != 0) {
+            cursor.moveToFirst();
+            md5 = cursor.getString(0);
+        }
+        cursor.close();
+        return md5;
+    }
+
+    public Cursor getRollbackActions() {
+        Cursor c = database.rawQuery("", null);
+
+        c.getCount();
+        return c;
+    }
 }
-
-
