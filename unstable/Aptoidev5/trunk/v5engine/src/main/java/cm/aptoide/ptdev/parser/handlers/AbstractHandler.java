@@ -424,6 +424,19 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
+        elements.put("md5", new ElementHandler() {
+
+
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setMd5h(sb.toString());
+
+            }
+        });
     }
 
     protected abstract Apk getApk();

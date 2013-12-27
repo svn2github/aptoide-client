@@ -88,7 +88,7 @@ public class DownloadService extends Service {
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
 
-        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(),id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk")));
+        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk")));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 

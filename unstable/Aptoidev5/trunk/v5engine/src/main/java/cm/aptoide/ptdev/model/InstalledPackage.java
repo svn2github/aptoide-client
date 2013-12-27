@@ -39,6 +39,8 @@ public class InstalledPackage {
         return version_name;
     }
 
+
+
     private String package_name;
     private String name;
     private Drawable icon;
@@ -57,4 +59,6 @@ public class InstalledPackage {
     public int hashCode() {
         return package_name.hashCode();
     }
+
+
 }

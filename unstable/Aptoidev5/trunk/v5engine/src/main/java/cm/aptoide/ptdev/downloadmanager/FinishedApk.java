@@ -17,15 +17,17 @@ public class FinishedApk implements Parcelable{
 
     private String name;
     private String apkid;
+    private String version;
     private long appHashId;
     private String iconpath;
     private String path;
     private ArrayList<String> permissionsList;
 
 
-    public FinishedApk(String name, String apkid, long appHashId, String iconpath, String path) {
+    public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path) {
         this.name = name;
         this.apkid = apkid;
+        this.version = version;
         this.appHashId = appHashId;
         this.iconpath = iconpath;
         this.path = path;
@@ -42,6 +44,8 @@ public class FinishedApk implements Parcelable{
     public String getApkid() {
         return apkid;
     }
+
+    public String getVersion() { return version; }
 
     public void setApkid(String apkid) {
         this.apkid = apkid;

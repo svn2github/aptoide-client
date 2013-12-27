@@ -4,15 +4,20 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.*;
@@ -40,29 +45,57 @@ public class DownloadExecutorImpl implements DownloadExecutor {
 
     @Override
     public void execute() {
-        final Context context = Aptoide.getContext();
+        new AsyncTask<Void, Void, Void>() {
 
-        if(canRunRootCommands()){
+            private Context context = Aptoide.getContext();
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                RollBackItem rollBackItem;
+                try {
+                    // Update
+                    ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(apk.getApkid(), 0);
+
+                    File apkFile = new File(appInfo.sourceDir);
+                    String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
+
+                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING);
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    // New Installation
+                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING);
+                }
+
+                new Database(Aptoide.getDb()).insertRollbackAction(rollBackItem);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                if(canRunRootCommands()){
 
 
-            Intent i = new Intent(context, PermissionsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-            i.putExtra("apk", apk);
-            i.putStringArrayListExtra("permissions", apk.getPermissionsList());
-            context.startActivity(i);
+                    Intent i = new Intent(context, PermissionsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    i.putExtra("apk", apk);
+                    i.putStringArrayListExtra("permissions", apk.getPermissionsList());
+                    context.startActivity(i);
 
 
-        }else{
+                }else{
 
-            Intent install = new Intent(Intent.ACTION_VIEW);
-            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            install.setDataAndType(Uri.fromFile(new File(path)),"application/vnd.android.package-archive");
-            Log.d("Aptoide", "Installing app: "+path);
-            Aptoide.getContext().startActivity(install);
+                    Intent install = new Intent(Intent.ACTION_VIEW);
+                    install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    install.setDataAndType(Uri.fromFile(new File(path)),"application/vnd.android.package-archive");
+                    Log.d("Aptoide", "Installing app: "+path);
+                    Aptoide.getContext().startActivity(install);
 
-        }
-
-
+                }
+            }
+        }.execute();
     }
 
 
