@@ -28,6 +28,7 @@ public class Schema {
                             keys = @TableDefinition.Key(field = Apk.COLUMN_REPO_ID))
 
             })
+
     public static class Apk {
 
 
@@ -85,6 +86,8 @@ public class Schema {
         @ColumnDefinition(type = SQLType.TEXT ) public final static String COLUMN_NAME = "name";
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "0") public final static String COLUMN_VERCODE = "version_code";
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "") public final static String COLUMN_VERNAME = "version_name";
+
+        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_MD5SUM = "md5";
 
         public static String getName() {
             return "installed";
@@ -230,5 +233,42 @@ public class Schema {
         }
     }
 
+    @TableDefinition(
+            indexes = {
+                    @TableDefinition.Index(index_name = "RollbackIdx",
+                            keys = @TableDefinition.Key(field = Rollback.COLUMN_APKID))
+            })
+    public static class Rollback {
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_ACTION = "action";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_TIMESTAMP = "timestamp";
+
+        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "")
+        public final static String COLUMN_MD5 = "md5";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_ICONPATH = "icon_path";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_APKID = "package_name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_VERSION = "version";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_NAME = "name";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_CONFIRMED = "confirmed";
+
+
+        public static String getName() {
+            return "rollback";
+        }
+
+    }
 
 }
