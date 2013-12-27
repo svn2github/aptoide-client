@@ -11,29 +11,56 @@ import android.graphics.drawable.Drawable;
  */
 public class RollBackItem {
 
+    public enum Action {
+        INSTALLING("Installing"),
+        UNINSTALLING("Unistalling"),
+        UPDATING("Updating"),
+        INSTALLED("Installed"),
+        UNINSTALLED("Unistalled"),
+        UPDATED("Updated");
+
+        private String action;
+
+        private Action(String action) {
+            this.action = action;
+        }
+
+        @Override
+        public String toString() {
+            return action;
+        }
+    }
+
+    private final String md5;
+
     private String name;
 
-    private Drawable pathIcon;
+    private String pathIcon;
 
     private String timestamp;
 
     private String version;
 
+    private String packageName;
 
-    public RollBackItem(String name, Drawable pathIcon, String timestamp, String version){
+    private Action action;
+
+
+    public RollBackItem(String name, String packageName, String version, String pathIcon, String timestamp, String md5, Action action){
         this.name = name;
+        this.packageName = packageName;
         this.version = version;
         this.pathIcon = pathIcon;
         this.timestamp = timestamp;
+        this.md5 = md5;
+        this.action = action;
     }
 
     public String getName() {
         return name;
     }
 
-    public Drawable getPathIcon() {
-        return pathIcon;
-    }
+    public String getIconPath() { return pathIcon; }
 
     public String getTimestamp() {
         return timestamp;
@@ -43,4 +70,11 @@ public class RollBackItem {
         return version;
     }
 
+    public String getMd5() { return md5; }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public Action getAction() { return action; }
 }
