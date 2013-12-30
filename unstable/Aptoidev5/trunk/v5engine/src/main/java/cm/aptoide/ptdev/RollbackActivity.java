@@ -10,13 +10,15 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import cm.aptoide.ptdev.adapters.RollBackAdapter;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.squareup.otto.Subscribe;
+import pl.polidea.sectionedlist.SectionListAdapter;
 
 
 public class RollbackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private Database database;
+
     private RollBackAdapter rollBackAdapter;
 
     @Subscribe
@@ -38,7 +40,12 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         rollBackAdapter = new RollBackAdapter(this);
 
         ListView lView = (ListView) findViewById(R.id.rollback_list);
-        lView.setAdapter(rollBackAdapter);
+
+
+
+        SectionListAdapter adapter = new SectionListAdapter(getLayoutInflater(), rollBackAdapter);
+
+        lView.setAdapter(adapter);
 
         /*
         lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,8 +61,8 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
-        database = new Database(db);
+
+
 
 
         getSupportLoaderManager().initLoader(17, null, this);
@@ -84,7 +91,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         return new SimpleCursorLoader(this) {
             @Override
             public Cursor loadInBackground() {
-                return database.getRollbackActions();
+                return new Database(Aptoide.getDb()).getRollbackActions();
             }
         };
     }
@@ -104,4 +111,16 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         getSupportLoaderManager().restartLoader(17, null, this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+
+    }
 }
