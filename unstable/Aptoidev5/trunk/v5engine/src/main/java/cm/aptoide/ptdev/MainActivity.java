@@ -558,12 +558,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         aboutDialog.show();
     }
 
-    public void uninstallApp(String appName, String packageName, String versionName, String iconPath) {
-        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(appName, packageName, versionName, iconPath);
-        getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, appName + "UnistallTask").commit();
-
-    }
-
 
     private BroadcastReceiver newRepoReceiver = new BroadcastReceiver() {
 

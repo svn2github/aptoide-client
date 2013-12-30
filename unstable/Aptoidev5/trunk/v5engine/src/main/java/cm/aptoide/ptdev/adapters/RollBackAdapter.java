@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.model.RollBackItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -33,7 +35,7 @@ public class RollBackAdapter extends CursorAdapter {
         int type = getItemViewType(cursor.getPosition());
         View v = null;
 
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_rollback, parent, false);
+        v = LayoutInflater.from(context).inflate(R.layout.row_app_rollback, parent, false);
 
 
         return v;
@@ -50,34 +52,44 @@ public class RollBackAdapter extends CursorAdapter {
                     holder.name = (TextView) view.findViewById(R.id.app_name);
                     holder.icon = (ImageView) view.findViewById(R.id.app_icon);
                     holder.version = (TextView) view.findViewById(R.id.app_version);
+                    holder.appState = (TextView) view.findViewById(R.id.app_state);
                     holder.action = (TextView) view.findViewById(R.id.ic_action);
-                    //holder.timestamp = view.findViewById(R.id.)
                     view.setTag(holder);
                 }
 
 
-                // holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION)));
-
                 holder.name.setText(Html.fromHtml(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME))));
 
-
                 ImageLoader.getInstance().displayImage(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ICONPATH)), holder.icon);
-                //holder.icon.setImageBitmap(bitmap);
 
                 holder.version.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION)));
-                //holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_TIMESTAMP)));
 
+                String appState = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION));
+                holder.appState.setText(appState);
 
+                holder.action.setText(getActionFromState(appState));
 
     }
 
     public static class RollBackViewHolder {
 
-        public TextView action;
         public TextView name;
         public ImageView icon;
         public TextView version;
-        public TextView timestamp;
+        public TextView appState;
+        public TextView action;
 
+    }
+
+    private static String getActionFromState(String appState) {
+        if(RollBackItem.Action.INSTALLED.toString().equals(appState)) {
+            return "Uninstall";
+        } else if(RollBackItem.Action.UNINSTALLED.toString().equals(appState)) {
+            return "Reinstall";
+        } else if(RollBackItem.Action.UPDATED.toString().equals(appState)) {
+            return "Revert";
+        } else {
+            return "";
+        }
     }
 }

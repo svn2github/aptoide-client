@@ -1,17 +1,14 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.*;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -47,7 +44,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +71,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
             publishEvents();
+
+
+
 
         }
     };
@@ -106,6 +105,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String screen;
     private String package_name;
     private String versionName;
+    private String iconPath;
     private Object cacheKey;
     private String token;
 
@@ -296,17 +296,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             slidingTabStrip.setViewPager(pager);
         }
 
-
-
         getSupportActionBar().setTitle("");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
-
-
-
 
     }
 
@@ -331,7 +326,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.menu_share) {
 
         } else if (i == R.id.menu_uninstall) {
-
+            getSupportFragmentManager().beginTransaction().add(new UninstallRetainFragment(appName.getText().toString(), package_name, versionName, iconPath), package_name+"UninstallRetainFragment").commit();
         } else if (i == R.id.menu_search_other) {
 
         }
@@ -355,7 +350,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
-
         repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
         final String name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
         package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
@@ -376,7 +370,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             icon = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
 
-        ImageLoader.getInstance().displayImage(iconpath + icon, appIcon);
+        iconPath = iconpath + icon;
+        ImageLoader.getInstance().displayImage(iconPath, appIcon);
         GetApkInfoRequest request = new GetApkInfoRequest();
 
         request.setRepoName(repoName);
@@ -409,8 +404,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             }
         });
-
-
 
         findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

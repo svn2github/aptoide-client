@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import cm.aptoide.ptdev.adapters.UninstallHelper;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
@@ -18,7 +19,7 @@ import java.io.File;
 public class UninstallRetainFragment extends Fragment {
 
 
-    private MainActivity mainActivity;
+    private ActionBarActivity activity;
 
     private String appName;
     private String packageName;
@@ -44,13 +45,13 @@ public class UninstallRetainFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mainActivity = (MainActivity) activity;
+        this.activity = (ActionBarActivity) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mainActivity = null;
+        activity = null;
     }
 
     private class UninstallTask extends AsyncTask<Void, Void, Void> {
@@ -63,7 +64,7 @@ public class UninstallRetainFragment extends Fragment {
                 String apkMd5 = db.getUnistallingActionMd5(packageName);
 
                 if (db.getUnistallingActionMd5(packageName) == null) {
-                    String sourceDir = mainActivity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
+                    String sourceDir = activity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
                     File apkFile = new File(sourceDir);
                     apkMd5 = AptoideUtils.Algorithms.md5Calc(apkFile);
                 }
@@ -79,8 +80,8 @@ public class UninstallRetainFragment extends Fragment {
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
-            if (mainActivity != null) {
-                UninstallHelper.uninstall(mainActivity, packageName);
+            if (activity != null) {
+                UninstallHelper.uninstall(activity, packageName);
             }
         }
     }

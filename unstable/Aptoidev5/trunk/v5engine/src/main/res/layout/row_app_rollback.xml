@@ -49,7 +49,6 @@
                 android:maxLines="1"
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
-                android:text="Application with very big name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_toRightOf="@+id/app_icon" android:layout_toLeftOf="@+id/view"/>
         <TextView
@@ -60,7 +59,6 @@
                 android:maxLines="1"
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
-                android:text="Installed"
                 android:textColor="@color/custom_color"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_toRightOf="@+id/app_icon"
@@ -73,7 +71,6 @@
                 android:layout_marginLeft="5dp"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Version 1.15.0"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_below="@+id/app_name"
                 android:layout_toRightOf="@+id/app_icon"
