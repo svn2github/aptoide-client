@@ -52,6 +52,7 @@ dependencies {
     compile project (':multichoiceadapter-actionbarcompat')
     compile project (':hanselandgretel')
     compile project (':android-websockets')
+    compile project (':android-section-list')
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 
