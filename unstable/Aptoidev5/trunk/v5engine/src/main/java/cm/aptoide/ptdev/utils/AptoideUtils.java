@@ -373,6 +373,8 @@ public class AptoideUtils {
         public static long getLastModified(URL url) throws IOException {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
+            connection.setReadTimeout(TIME_OUT);
             long lastModified = connection.getLastModified();
             connection.disconnect();
             return lastModified;

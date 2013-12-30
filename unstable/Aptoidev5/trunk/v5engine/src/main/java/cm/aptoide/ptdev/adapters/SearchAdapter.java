@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
@@ -50,11 +51,12 @@ public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuIte
             holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
             holder.appName = (TextView) view.findViewById(R.id.app_name);
             holder.versionName = (TextView) view.findViewById(R.id.app_version);
+            holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
             view.setTag(holder);
         }
 
         long id = cursor.getLong(cursor.getColumnIndex("_id"));
-
+        holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
         holder.overFlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +82,7 @@ public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuIte
         TextView appName;
         TextView versionName;
         TextView downloads;
-        TextView rating;
+        RatingBar rating;
     }
 
     public void showPopup(View v) {

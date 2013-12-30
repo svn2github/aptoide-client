@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteStatement;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.Filters;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,8 @@ public abstract class Apk {
     private double rating;
     private String category1 = "";
     private String category2 = "";
+
+    private List<Integer> categoryId = new ArrayList<Integer>();
     private long size;
     private Filters.Age age = Filters.Age.All;
     private int minSdk = 0;
@@ -233,7 +236,7 @@ public abstract class Apk {
 
     public abstract void databaseDelete(Database db);
 
-    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<String, Long> categoriesIds);
+    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds);
 
     public Server getServer() {
         return server;
@@ -241,5 +244,17 @@ public abstract class Apk {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public List<Integer> getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(List<Integer> categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void addCategoryId(int id) {
+        categoryId.add(id);
     }
 }

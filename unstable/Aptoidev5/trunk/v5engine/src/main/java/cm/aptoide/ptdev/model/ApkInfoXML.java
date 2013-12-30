@@ -58,22 +58,23 @@ public class ApkInfoXML extends Apk {
 
         values.add(Schema.Category_Apk.COLUMN_APK_ID);
         values.add(Schema.Category_Apk.COLUMN_CATEGORY_ID);
+        values.add(Schema.Category_Apk.COLUMN_REPO_ID);
 
         statements.add(2, StatementHelper.getInsertStatment(Schema.Category_Apk.getName(), values));
 
 
         statements.add(3, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
-        statements.add(4, "select id_category from category where name = ? and id_repo = ? and id_category_parent = ?");
+
 
 
         return statements;
     }
 
     @Override
-    public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<String, Long> categoriesIds) {
+    public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds) {
 
         long apkid;
-        long category1id;
+        int categoryId;
         long category2id;
 
         try {
@@ -101,7 +102,11 @@ public class ApkInfoXML extends Apk {
             //e.printStackTrace();
 
             Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{ String.valueOf(getRepoId()), getPackageName(), String.valueOf(getVersionCode()) });
+            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{
+                    String.valueOf(getRepoId()),
+                    getPackageName(),
+                    String.valueOf(getVersionCode())
+            });
             apkid = sqLiteStatements.get(3).simpleQueryForLong();
 
         }
@@ -110,65 +115,20 @@ public class ApkInfoXML extends Apk {
             Log.d("RepoParser", "yelded");
         }
 
-        if (categoriesIds.containsKey(getCategory1())) {
 
-            category1id = categoriesIds.get(getCategory1());
-
-        } else {
-
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{getCategory1(), String.valueOf(getRepoId()), "0"});
+        for (Integer catid : getCategoryId()) {
 
             try {
-                category1id = sqLiteStatements.get(1).executeInsert();
-
-                if (Aptoide.getDb().yieldIfContendedSafely(1000)) {
-                    Log.d("RepoParser", "yelded");
-                }
+                StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(2), new String[]{String.valueOf(apkid), String.valueOf(catid), String.valueOf(getRepoId()),});
+                sqLiteStatements.get(2).executeInsert();
 
             } catch (SQLiteException e) {
                 e.printStackTrace();
-                StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(4), new String[]{getCategory1(), String.valueOf(getRepoId()), "0"});
-                category1id = sqLiteStatements.get(4).simpleQueryForLong();
             }
-            categoriesIds.put(getCategory1(), category1id);
 
-        }
-
-        if (categoriesIds.containsKey(getCategory2())) {
-
-            category2id = categoriesIds.get(getCategory2());
-
-        } else {
-
-
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{getCategory2(), String.valueOf(getRepoId()), String.valueOf(category1id)});
-
-            try {
-                category2id = sqLiteStatements.get(1).executeInsert();
-
-                if (Aptoide.getDb().yieldIfContendedSafely(1000)) {
-                    Log.d("RepoParser", "yelded");
-                }
-
-            } catch (SQLiteException e) {
-                e.printStackTrace();
-                StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(4), new String[]{getCategory2(), String.valueOf(getRepoId()), String.valueOf(category1id)});
-                category2id = sqLiteStatements.get(4).simpleQueryForLong();
+            if (Aptoide.getDb().yieldIfContendedSafely(1000)) {
+                Log.d("RepoParser", "yelded");
             }
-            categoriesIds.put(getCategory2(), category2id);
-
-        }
-
-        try{
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(2), new String[]{ String.valueOf(apkid), String.valueOf(category2id)});
-            sqLiteStatements.get(2).executeInsert();
-
-        } catch (SQLiteException e){
-            e.printStackTrace();
-        }
-
-        if (Aptoide.getDb().yieldIfContendedSafely(1000)) {
-            Log.d("RepoParser", "yelded");
         }
 
 

@@ -79,6 +79,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                     Intent i = new Intent(context, RollbackActivity.class);
                     context.startActivity(i);
 */
+
+                BusProvider.getInstance().post(new InstalledApkEvent(apk));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,6 +98,9 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 Log.d("InstalledBroadcastReceiver", "unistalled rollback action");
 
             }
+
+            BusProvider.getInstance().post(new UnInstalledApkEvent(intent.getData().getEncodedSchemeSpecificPart()));
+
 
 
         }

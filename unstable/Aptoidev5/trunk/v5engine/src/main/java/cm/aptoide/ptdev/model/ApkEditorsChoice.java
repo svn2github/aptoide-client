@@ -73,7 +73,7 @@ public class ApkEditorsChoice extends Apk {
     }
 
     @Override
-    public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<String, Long> categoriesIds) {
+    public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds) {
 
         long apkid;
         long category1id;

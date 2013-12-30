@@ -26,7 +26,8 @@ import java.util.HashMap;
  */
 public class HandlerLatestXml extends AbstractHandler {
 
-    private final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
+
+    private static final int LATESTAPPS_ID = 501;
     private long timestamp;
 
 
@@ -48,13 +49,21 @@ public class HandlerLatestXml extends AbstractHandler {
     }
 
     @Override
+    public void startDocument() throws SAXException {
+        super.startDocument();
+
+        getDb().insertCategory("Latest Apps", 0, LATESTAPPS_ID, 0, getRepoId());
+
+    }
+
+    @Override
     protected void loadSpecificElements() {
         elements.put("package", new ElementHandler() {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
                 apk = getApk();
                 ((ApkLatestXml)apk).setRepoId(repoId);
-                apk.setCategory1("Latest Apps");
+                apk.addCategoryId(LATESTAPPS_ID);
             }
 
             @Override

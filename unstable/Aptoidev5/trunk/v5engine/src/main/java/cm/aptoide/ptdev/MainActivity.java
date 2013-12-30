@@ -17,6 +17,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
@@ -81,7 +83,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private ServiceConnection conn2 = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            downloadService = ((DownloadService.LocalBinder) binder).getService();
+            downloadService = ((DownloadService.LocalBinder)binder).getService();
             BusProvider.getInstance().post(new DownloadServiceConnected());
         }
 
@@ -91,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     };
 
-    private ServiceConnection conn = new ServiceConnection() {
+        private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
@@ -99,9 +101,9 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             parserServiceIsBound = true;
 
             lock.lock();
-            try {
+            try{
                 boundCondition.signalAll();
-            } finally {
+            }finally {
                 lock.unlock();
             }
         }
@@ -138,10 +140,11 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (parserServiceIsBound) {
+        if (parserServiceIsBound){
             unbindService(conn);
             unbindService(conn2);
         }
+        unregisterReceiver(newRepoReceiver);
     }
 
     @Override
@@ -149,18 +152,18 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
-        if (i == R.id.home || i == android.R.id.home) {
+        if (i == R.id.home || i == android.R.id.home){
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
             } else {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
-        } else if (i == R.id.menu_settings) {
+        }else if (i == R.id.menu_settings) {
             Intent settingsIntent = new Intent(this, Settings.class);
             startActivityForResult(settingsIntent, 0);
-        } else if (i == R.id.menu_about) {
+        }else if (i == R.id.menu_about) {
             showAbout();
-        } else if (i == R.id.menu_search) {
+        }else if (i == R.id.menu_search) {
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");
 
@@ -170,21 +173,21 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     }
 
     @Subscribe
-    public void onRepoErrorEvent(RepoErrorEvent event) {
+    public void onRepoErrorEvent(RepoErrorEvent event){
 
         Exception e = event.getE();
         long repoId = event.getRepoId();
 
-        if (e instanceof ParseStoppedException) {
+        if(e instanceof ParseStoppedException){
             Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-        } else {
+        }else{
             Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
         }
 
     }
 
     @Subscribe
-    public void onRepoComplete(RepoCompleteEvent event) {
+    public void onRepoComplete(RepoCompleteEvent event){
         long repoId = event.getRepoId();
         Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
     }
@@ -199,6 +202,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         mContext = this;
@@ -218,6 +222,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
+        registerReceiver(newRepoReceiver, new IntentFilter("pt.caixamagica.aptoide.NEWREPO"));
 
 
         if (savedInstanceState == null) {
@@ -247,6 +252,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             });
 
 
+
         }
 
 
@@ -256,9 +262,30 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mMenuAdapter = new MenuListAdapter(mContext);
 
         //Login Header
-        accountManager = AccountManager.get(this);
-        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+//        TextView login_email, login_store;
+//        accountManager=AccountManager.get(this);
+//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+//            mDrawerList.addHeaderView(header, null, false);
+//
+//            login_email = (TextView) header.findViewById(R.id.login_email);
+//            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+//
+//            login_store = (TextView) header.findViewById(R.id.login_store);
+//            login_store.setText("");
+//        }
+
+        TextView login_email, login_store;
+        accountManager=AccountManager.get(this);
+
+        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+
+            login_email = (TextView) header.findViewById(R.id.login_email);
+            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+
+            login_store = (TextView) header.findViewById(R.id.login_store);
+            login_store.setText("");
             mDrawerList.addHeaderView(header, null, false);
         }
 
@@ -285,6 +312,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
     }
 
     @Override
@@ -337,7 +366,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch (requestCode){
             case 20:
 
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
@@ -420,6 +449,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
 
 
+
     }
 
     @Override
@@ -442,7 +472,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
 
         // Locate Position
-        switch (position) {
+        switch (position){
             case 0:
 //                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent loginIntent = new Intent(mContext, LoginActivity.class);
@@ -471,8 +501,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 //                Log.d("MenuDrawer-position", "pos: "+position);
                 showTwitter();
                 break;
-            default:
-                break;
+            default: break;
         }
 
         mDrawerList.setItemChecked(position, true);
@@ -503,7 +532,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     }
 
-    private void showTwitter() {
+    private void showTwitter(){
         if (AptoideUtils.isAppInstalled(mContext, "com.twitter.android")) {
             String url = "http://www.twitter.com/aptoide";
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -514,7 +543,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     }
 
-    private void showAbout() {
+    private void showAbout(){
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_about, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext).setView(view);
         final AlertDialog aboutDialog = alertDialogBuilder.create();
@@ -546,7 +575,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 //                    if (Database.Instance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
 //                        Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
 //                    } else {
-                    showAddStoreDialog();
+                          showAddStoreDialog();
 //                    }
                 }
             }

@@ -16,7 +16,6 @@
             android:layout_marginBottom="2dp"
             android:padding="5dp"
             style="?attr/backgroundCard"
-            android:focusable="true"
             android:orientation="horizontal">
 
         <ImageView

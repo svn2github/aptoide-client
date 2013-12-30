@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.schema.Schema;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,24 +32,18 @@ public class RollBackAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int type = getItemViewType(cursor.getPosition());
         View v = null;
-        switch (type) {
-            case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.separator_rollback, parent, false);
-                break;
-            case 1:
+
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_rollback, parent, false);
-                break;
-        }
+
 
         return v;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        int type = getItemViewType(cursor.getPosition());
 
-        switch (type) {
-            case 1:
+
+
                 RollBackViewHolder holder = (RollBackViewHolder) view.getTag();
                 if (holder == null) {
                     holder = new RollBackViewHolder();
@@ -66,12 +61,13 @@ public class RollBackAdapter extends CursorAdapter {
                 holder.name.setText(Html.fromHtml(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME))));
 
 
+                ImageLoader.getInstance().displayImage(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ICONPATH)), holder.icon);
                 //holder.icon.setImageBitmap(bitmap);
 
                 holder.version.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION)));
-                holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_TIMESTAMP)));
-                break;
-        }
+                //holder.timestamp.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_TIMESTAMP)));
+
+
 
     }
 

@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"
-             style="?attr/customRowForeground"
-             android:orientation="horizontal">
+             style="?attr/customRowForeground" >
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -15,7 +14,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            android:layout_gravity="left">
+            android:layout_gravity="left" >
 
 
         <ImageView
@@ -35,7 +34,6 @@
                 android:maxLines="1"
                 android:layout_toRightOf="@+id/app_icon"
                 android:singleLine="true"
-                android:text="Search Name"
                 android:drawablePadding="5dp"
                 android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -51,7 +49,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Version 1.15.0"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_alignRight="@+id/app_name"/>
 
@@ -66,10 +63,8 @@
                 android:layout_height="wrap_content"
                 android:numStars="5" />
 
-        <ImageButton
-                android:onClick="showPopup"
-                android:id="@+id/ic_action"
-                style="@style/overflowMenuButton"/>
+        <ImageView android:id="@+id/ic_action"
+                     style="@style/overflowMenuButton"/>
 
     </RelativeLayout>
 

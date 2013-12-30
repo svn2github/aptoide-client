@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.animation.Animator;
+import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +10,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.InstalledAdapter;
@@ -17,6 +21,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -176,7 +181,24 @@ public class FragmentUpdates extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        ImageLoader.getInstance().resume();
+                        break;
+                    default:
+                        ImageLoader.getInstance().pause();
+                        break;
+                }
+            }
 
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
         getLoaderManager().initLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 
             @Override
@@ -193,17 +215,27 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                updatesAdapter.swapCursor(data);
+                if(data.getCount()>1){
+                    updatesAdapter.swapCursor(data);
+                }else{
+                    updatesAdapter.swapCursor(null);
+                }
+
                 counter--;
-                if (getListView().getAdapter() == null && counter == 0)
+                if (getListView().getAdapter() == null){
                     setListAdapter(adapter);
+                }
+
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
-
+                updatesAdapter.swapCursor(null);
             }
         });
+
+
+
 
 
         getLoaderManager().initLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -221,16 +253,21 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                installedAdapter.swapCursor(data);
+                if(data.getCount()>1){
+                    installedAdapter.swapCursor(data);
+                }else{
+                    installedAdapter.swapCursor(null);
+                }
+
                 counter --;
-                if (getListView().getAdapter() == null && counter <= 0)
+                if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
 
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
-
+                installedAdapter.swapCursor(null);
             }
         });
 

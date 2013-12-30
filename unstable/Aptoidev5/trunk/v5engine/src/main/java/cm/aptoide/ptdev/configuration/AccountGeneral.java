@@ -7,5 +7,5 @@ public class AccountGeneral {
 
     public static final String ACCOUNT_TYPE = "cm.aptoide.ptdev";
 
-    public static final String AUTHTOKEN_TYPE = "Access to an Aptoide account";
+    public static final String AUTHTOKEN_TYPE = "login";
 }

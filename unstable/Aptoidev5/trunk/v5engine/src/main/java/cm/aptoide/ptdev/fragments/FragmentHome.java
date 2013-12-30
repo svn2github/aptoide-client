@@ -7,6 +7,9 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
@@ -16,6 +19,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -100,7 +104,26 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 //        adapter.addView(View.inflate(getSherlockActivity(), R.layout.separator_home_header, null));
 //        adapter.addAdapter(homeBucketAdapter3);
 
+        //getListView().setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_anim));
 
+        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        ImageLoader.getInstance().resume();
+                        break;
+                    default:
+                        ImageLoader.getInstance().pause();
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
 
@@ -131,7 +154,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
                 switch (id){
                     case 50:
-
                         return new Database(Aptoide.getDb()).getFeatured(2, editorsChoiceBucketSize);
                     case 51:
                         return new Database(Aptoide.getDb()).getFeatured(1, editorsChoiceBucketSize);

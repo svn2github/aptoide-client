@@ -1,11 +1,14 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.text.Html;
 import android.util.Log;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+import java.net.URLEncoder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +23,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
     private String repoName;
     private String packageName;
     private String versionName;
-
+    private String token;
 
 
     public GetApkInfoRequest() {
@@ -30,7 +33,9 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
     @Override
     public GetApkInfoJson loadDataFromNetwork() throws Exception {
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/getApkInfo/"+repoName+"/"+packageName+"/"+versionName+"/options=(cmtlimit=5;)/json";
+        versionName = URLEncoder.encode(versionName, "UTF-8");
+
+        String baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/"+packageName+"/"+versionName+"/options=(cmtlimit=5;)/json";
         GenericUrl url = new GenericUrl(baseUrl);
 
         Log.e("Aptoide-Request", baseUrl);
@@ -63,5 +68,13 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
 
     public String getVersionName() {
         return versionName;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

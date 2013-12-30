@@ -168,14 +168,15 @@ public class DownloadService extends Service {
 
         public DownloadRequest(long id, Download download) {
 
-
             this.id = id;
             this.download = download;
         }
 
         @Override
         public void onRequestFailure(SpiceException e) {
-
+            stopSelf();
+            stopForeground(true);
+            isStopped = true;
         }
 
         @Override

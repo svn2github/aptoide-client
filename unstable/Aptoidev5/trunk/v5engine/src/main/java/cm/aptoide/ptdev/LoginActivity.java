@@ -3,8 +3,11 @@ package cm.aptoide.ptdev;
 import android.accounts.*;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -16,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
@@ -27,15 +32,16 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AccountAuthenticatorActivity {
 
-    private Login login = new Login();
+
 
     private AccountManager accountManager;
     private AccountAuthenticatorResponse authenticatorResponse;
@@ -53,6 +59,7 @@ public class LoginActivity extends ActionBarActivity {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(icicle);
 
+        Log.d("LoginActivity-before", "starting");
 
         accountManager = AccountManager.get(this);
 
@@ -107,7 +114,26 @@ public class LoginActivity extends ActionBarActivity {
             findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+                    accountManager.removeAccount(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0], new AccountManagerCallback<Boolean>() {
+                        @Override
+                        public void run(AccountManagerFuture<Boolean> future) {
+                            try {
+                                if(future.getResult().booleanValue()){
+                                    ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                                    pd.dismiss();
+                                    setContentView(R.layout.form_login);
+                                }
+                            } catch (OperationCanceledException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (AuthenticatorException e) {
+                                e.printStackTrace();
+                            }
 
+                        }
+                    }, null);
                 }
             });
         }
@@ -178,20 +204,18 @@ public class LoginActivity extends ActionBarActivity {
                         boolean accountCreated = accountManager.addAccountExplicitly(account, password, null);
 
                         if (accountCreated) {
-                            accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE, checkUserCredentialsJson.getToken());
-                            accountManager.setPassword(account, password);
+                            //accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE, checkUserCredentialsJson.getToken());
 
-                            if (authenticatorResponse != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putString(AccountManager.KEY_ACCOUNT_NAME, username);
-                                bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
-                                authenticatorResponse.onResult(bundle);
-                            }
 
-                            if (getIntent().hasExtra("login")) {
-                                Intent result = new Intent();
-                                setResult(RESULT_OK, result);
-                            }
+                            // Now we tell our caller, could be the Andreoid Account Manager or even our own application
+                            // that the process was successful
+
+                            final Intent intent = new Intent();
+                            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
+                            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
+                            intent.putExtra(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
+                            setAccountAuthenticatorResult(intent.getExtras());
+                            setResult(RESULT_OK, intent);
                             finish();
 
                         } else {
@@ -238,6 +262,16 @@ public class LoginActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public static boolean isLoggedIn(Context context){
+
+        AccountManager manager = AccountManager.get(context);
+
+        return manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length!=0;
+
+    }
+
+
 }
 
 

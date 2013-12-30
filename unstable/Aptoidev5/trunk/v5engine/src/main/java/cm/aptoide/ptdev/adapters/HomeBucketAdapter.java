@@ -27,7 +27,7 @@ import java.util.List;
  * Time: 15:26
  * To change this template use File | Settings | File Templates.
  */
-public class HomeBucketAdapter extends BucketListAdapter<HomeItem> implements PopupMenu.OnMenuItemClickListener{
+public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
     public HomeBucketAdapter(Activity ctx, List<HomeItem> elements) {
 
@@ -75,7 +75,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> implements Po
         v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(v);
+                showPopup(v, item.getId());
             }
         });
         v.setOnClickListener(new View.OnClickListener() {
@@ -97,31 +97,45 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> implements Po
         return v;
     }
 
-    public void showPopup(View v) {
+    public void showPopup(View v, long id) {
         PopupMenu popup = new PopupMenu(getContext(), v);
-        popup.setOnMenuItemClickListener(this);
+        popup.setOnMenuItemClickListener(new MenuListener(getContext(), id));
         popup.inflate(R.menu.menu_actions);
         popup.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.menu_install) {
-//            Log.d("HomeBucketAdapter-onMenuItemClick", "installId: "+installId);
-//            ((MainActivity)getContext()).installApp(installId);
-            return true;
-        } else if (i == R.id.menu_schedule) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     static class ViewHolder{
         TextView name;
         TextView category;
         ImageView icon;
+    }
+
+    static class MenuListener implements PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_install) {
+
+            ((MainActivity)context).installApp(id);
+                return true;
+            } else if (i == R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
 }

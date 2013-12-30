@@ -4,20 +4,14 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Category;
-import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -30,14 +24,14 @@ import java.util.ArrayList;
  * Time: 16:00
  * To change this template use File | Settings | File Templates.
  */
-public class CategoryAdapter extends CursorAdapter {
+public class CategoryGridAdapter extends CursorAdapter {
 
 
     private final Context context;
     ArrayList<Category> items;
     final private String sizeString;
 
-    public CategoryAdapter(Context context) {
+    public CategoryGridAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
         this.context = context;
         sizeString = IconSizes.generateSizeString(context);
@@ -53,10 +47,10 @@ public class CategoryAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_home, parent, false);
                 break;
             case 1:
-                v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_list, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_grid, parent, false);
                 break;
         }
 
@@ -81,7 +75,7 @@ public class CategoryAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, final Cursor cursor) {
+    public void bindView(View view, Context context, Cursor cursor) {
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         int count = cursor.getInt(cursor.getColumnIndex("count"));
@@ -95,18 +89,21 @@ public class CategoryAdapter extends CursorAdapter {
 
                 if(holder==null){
                     holder = new AppViewHolder();
-                    holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
+                    holder.appIcon = (ImageView) view.findViewById(R.id.home_icon);
                     holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
-                    holder.versionName = (TextView) view.findViewById(R.id.app_version);
-                    holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
+                    holder.versionName = (TextView) view.findViewById(R.id.app_category);
                     view.setTag(holder);
                 }
 
 
+                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                    }
+                });
                 holder.appName.setText(Html.fromHtml(name).toString());
-                holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
                 String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
                 String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
                 if(icon1.contains("_icon")){
@@ -117,13 +114,7 @@ public class CategoryAdapter extends CursorAdapter {
                 }
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
-                final long id = cursor.getLong(cursor.getColumnIndex("_id"));
-                holder.overFlow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showPopup(v, id);
-                    }
-                });
+
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
@@ -218,19 +209,10 @@ public class CategoryAdapter extends CursorAdapter {
                 }  else {
                     icon.setImageResource(R.drawable.custom_categ_green);
                 }
-
-
                 break;
 
 
         }
-    }
-
-    public void showPopup(View v, long id) {
-        PopupMenu popup = new PopupMenu(context, v);
-        popup.setOnMenuItemClickListener(new MenuListener(context, id));
-        popup.inflate(R.menu.menu_actions);
-        popup.show();
     }
 
     public static class AppViewHolder{
@@ -239,40 +221,12 @@ public class CategoryAdapter extends CursorAdapter {
         TextView appName;
         TextView versionName;
         TextView downloads;
-        RatingBar rating;
+        TextView rating;
     }
 
     public static class CategoryViewHolder{
         ImageView catIcon;
         TextView catName;
         TextView appsCount;
-    }
-
-    static class MenuListener implements PopupMenu.OnMenuItemClickListener{
-
-        Context context;
-        long id;
-
-        MenuListener(Context context, long id) {
-            this.context = context;
-            this.id = id;
-
-
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            int i = menuItem.getItemId();
-
-            if (i == R.id.menu_install) {
-
-                ((StoreActivity)context).installApp(id);
-                return true;
-            } else if (i == R.id.menu_schedule) {
-                return true;
-            } else {
-                return false;
-            }
-        }
     }
 }

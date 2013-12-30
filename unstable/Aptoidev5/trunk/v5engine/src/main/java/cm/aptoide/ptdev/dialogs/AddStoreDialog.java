@@ -214,9 +214,6 @@ public class AddStoreDialog extends DialogFragment {
 
                 if ("FAIL".equals(repositoryInfoJson.getStatus())) {
 
-
-
-
                     message = "Store doesn't exist.";
                     dismissDialog(message);
 

@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.util.Log;
+import cm.aptoide.ptdev.Category;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
@@ -31,6 +32,7 @@ public class HandlerInfoXml extends AbstractHandler {
     private boolean isDelta;
     private File file;
     private boolean isRemove;
+    private boolean insideCat;
 
     public HandlerInfoXml(Database db, long repoId) {
         super(db, repoId);
@@ -48,6 +50,16 @@ public class HandlerInfoXml extends AbstractHandler {
     }
 
 
+    protected static class Category{
+
+        int real_id;
+        String name;
+        int parent;
+        int order;
+
+    }
+
+    Category category;
 
     @Override
     protected void loadSpecificElements() {
@@ -120,10 +132,8 @@ public class HandlerInfoXml extends AbstractHandler {
             @Override
             public void endElement() throws SAXException {
 
-                if (!isDelta) {
-                    getDb().clearStore(getRepoId());
-                }
-                getDb().putCategoriesIds(categoriesIds, getRepoId());
+
+                //getDb().putCategoriesIds(categoriesIds, getRepoId());
                 getDb().updateServer(server, getRepoId());
             }
         });
@@ -135,6 +145,104 @@ public class HandlerInfoXml extends AbstractHandler {
             @Override
             public void endElement() throws SAXException {
 
+            }
+        });
+
+        elements.put("categories", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+                if (!isDelta) {
+                    getDb().clearStore(getRepoId());
+                }
+
+                getDb().clearCategories(getRepoId());
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+            }
+        });
+
+        elements.put("cat", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                category = new Category();
+                insideCat = true;
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                getDb().insertCategory(category.name, category.parent, category.real_id, category.order, getRepoId());
+                insideCat = false;
+                Log.d("Aptoide-", "Inserting category");
+            }
+        });
+
+        elements.put("catids", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                for(String catid : sb.toString().split(",")){
+                    apk.addCategoryId(Integer.parseInt(catid));
+                }
+            }
+        });
+
+        elements.put("name", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(insideCat){
+                    category.name = sb.toString();
+                }else{
+                    apk.setName(sb.toString());
+                }
+
+            }
+        });
+
+        elements.put("parent", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                try{
+                    category.parent= Integer.parseInt(sb.toString());
+                }catch (NumberFormatException e){
+                    category.parent= 0;
+                }
+
+
+            }
+        });
+
+        elements.put("order", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                category.order= Integer.parseInt(sb.toString());
+
+            }
+        });
+
+        elements.put("id", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                category.real_id= Integer.parseInt(sb.toString());
             }
         });
     }

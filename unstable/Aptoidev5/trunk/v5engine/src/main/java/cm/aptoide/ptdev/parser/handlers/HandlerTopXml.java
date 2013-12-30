@@ -26,9 +26,10 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class HandlerTopXml extends AbstractHandler {
-    private final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
+
     boolean insidePackage;
     private long timestamp;
+    private static final int TOPAPPS_ID = 500;
 
 
     public HandlerTopXml(Database db, long repoId) {
@@ -47,13 +48,21 @@ public class HandlerTopXml extends AbstractHandler {
     }
 
     @Override
+    public void startDocument() throws SAXException {
+        super.startDocument();
+
+        getDb().insertCategory("Top Apps", 0, TOPAPPS_ID, 0, getRepoId());
+
+    }
+
+    @Override
     protected void loadSpecificElements() {
         elements.put("package", new ElementHandler() {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
                 apk = getApk();
                 apk.setRepoId(repoId);
-                apk.setCategory1("Top Apps");
+                apk.addCategoryId(TOPAPPS_ID);
                 insidePackage = true;
             }
 

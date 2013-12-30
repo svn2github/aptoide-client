@@ -24,7 +24,7 @@ import java.util.HashMap;
 public abstract class AbstractHandler extends DefaultHandler2 {
 
 
-    protected final HashMap<String, Long> categoriesIds = new HashMap<String, Long>();
+    protected final HashMap<Integer, Integer> categoriesIds = new HashMap<Integer, Integer>();
 
 
     public boolean isRunning() {

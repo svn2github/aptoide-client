@@ -126,12 +126,16 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             id = store.getId();
         }
 
+        Log.d("Aptoide-Parser", "Creating Objects");
+
         HandlerLatestXml handlerLatestXml = new HandlerLatestXml(db, id);
         HandlerTopXml handlerTopXml = new HandlerTopXml(db, id);
         HandlerInfoXml handlerInfoXml = new HandlerInfoXml(db, id);
 
         HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
+        handlerBundleSparseArray.append((int) id, bundle);
 
+        Log.d("Aptoide-Parser", "Checking timestamps");
 
         long currentLatestTimestamp = 0;
         try {
@@ -148,6 +152,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
 
 
+        Log.d("Aptoide-Parser", "Delete");
         if (currentLatestTimestamp>store.getLatestTimestamp()) {
             handlerLatestXml.setTimestamp(currentLatestTimestamp);
             parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new Runnable() {
@@ -167,9 +172,8 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }
-
+        Log.d("Aptoide-Parser", "Parse");
         parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, null);
-        handlerBundleSparseArray.append((int) id, bundle);
     }
 
 

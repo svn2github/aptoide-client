@@ -103,13 +103,8 @@ public class InstalledAdapter extends CursorAdapter {
                 ImageLoader.getInstance().displayImage(iconPath, holder.appIcon);
                 final String versionName = cursor.getString(cursor.getColumnIndex("version_name"));
                 holder.versionName.setText(versionName);
-                final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
-                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((MainActivity) context).uninstallApp(name, packageName, versionName, iconPath);
-                    }
-                });
+
+
                 break;
 
         }

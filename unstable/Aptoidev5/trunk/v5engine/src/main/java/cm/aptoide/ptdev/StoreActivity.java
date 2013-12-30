@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentBreadCrumbs;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
@@ -69,7 +72,7 @@ public class StoreActivity extends ActionBarActivity {
             service = ((ParserService.MainServiceBinder) binder).getService();
             isRefreshing = service.repoIsParsing(storeid);
 
-            final FragmentStoreListCategories fragmentStoreListCategories = (FragmentStoreListCategories) getSupportFragmentManager().findFragmentByTag("fragStore");
+            final FragmentStore fragmentStoreListCategories = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
             if(isRefreshing){
                 if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
             }
@@ -98,7 +101,10 @@ public class StoreActivity extends ActionBarActivity {
         storeid = getIntent().getLongExtra("storeid", 0);
         //themeordinal = getIntent().getIntExtra("theme", 0);
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
+        FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
 
+        breadCrumbs.setActivity(this);
+        breadCrumbs.setTitle("Home", null);
 
         if (savedInstanceState == null) {
             setFragment();
@@ -115,7 +121,16 @@ public class StoreActivity extends ActionBarActivity {
     }
 
     private void setFragment() {
-        Fragment fragment = new FragmentStoreListCategories();
+
+        Fragment fragment;
+
+
+        if(getIntent().getBooleanExtra("list", false)){
+            fragment = new FragmentStoreListCategories();
+        }else{
+            fragment = new FragmentStoreGridCategories();
+        }
+
         Fragment fragmentHeader = new FragmentStoreHeader();
 
         Log.d("Aptoide-", "StoreActivity id" + storeid);
@@ -125,10 +140,13 @@ public class StoreActivity extends ActionBarActivity {
         args.putLong("storeid", storeid);
 
 
+
         fragment.setArguments(args);
         fragmentHeader.setArguments(args);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment, "fragStore").replace(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").commit();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
     }
 
     @Override
@@ -213,7 +231,7 @@ public class StoreActivity extends ActionBarActivity {
         }else if( i == R.id.show_all){
 
             noCategories = !noCategories;
-
+            getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             setSort(item);
         }
 

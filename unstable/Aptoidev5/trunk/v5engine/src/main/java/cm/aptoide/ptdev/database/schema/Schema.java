@@ -99,7 +99,7 @@ public class Schema {
     @TableDefinition(
             uniques = @TableDefinition.Composite_Unique(
                     fields = {
-                            Category.COLUMN_NAME,
+                            Category.COLUMN_RID,
                             Category.COLUMN_REPO_ID,
                             Category.COLUMN_ID_PARENT
                     })
@@ -107,8 +107,11 @@ public class Schema {
 
     public static class Category {
 
-        @ColumnDefinition(type = SQLType.INTEGER, autoIncrement = true, primaryKey = true)
-        public final static String COLUMN_ID = "id_category";
+
+
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_RID = "id_real_category";
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
@@ -131,16 +134,19 @@ public class Schema {
     @TableDefinition(
 
             uniques = @TableDefinition.Composite_Unique(
-                    fields = {Category_Apk.COLUMN_CATEGORY_ID, Category_Apk.COLUMN_APK_ID})
+                    fields = {Category_Apk.COLUMN_CATEGORY_ID, Category_Apk.COLUMN_APK_ID, Category_Apk.COLUMN_REPO_ID})
     )
 
     public static class Category_Apk {
 
         @ColumnDefinition(type = SQLType.INTEGER)
-        public final static String COLUMN_CATEGORY_ID = Category.COLUMN_ID;
+        public final static String COLUMN_CATEGORY_ID = Category.COLUMN_RID;
 
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_APK_ID = Apk.COLUMN_ID;
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_REPO_ID = Repo.COLUMN_ID;
 
         public static String getName() {
             return "category_apk";

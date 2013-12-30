@@ -496,4 +496,6 @@
 
     <style name="alert_dialog_style_light" parent="android:Theme.Dialog"/>
     <style name="alert_dialog_style_dark" parent="android:Theme.Dialog"/>
+
+
 </resources>
