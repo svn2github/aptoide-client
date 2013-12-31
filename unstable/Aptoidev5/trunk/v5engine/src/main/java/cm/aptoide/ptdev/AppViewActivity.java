@@ -1,14 +1,17 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.accounts.*;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.*;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -29,6 +32,7 @@ import cm.aptoide.ptdev.fragments.FragmentAppView;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -44,6 +48,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +63,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     private static final int LOGIN_REQUEST_CODE = 123;
 
-    private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+    private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
     private GetApkInfoJson json;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
@@ -71,9 +76,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
             publishEvents();
-
-
-
 
         }
     };
@@ -105,7 +107,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String screen;
     private String package_name;
     private String versionName;
-    private String iconPath;
     private Object cacheKey;
     private String token;
 
@@ -279,7 +280,40 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 //            }, null);
 
 
+            AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
+        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+
+            Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    try {
+                        token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        e.printStackTrace();
+                    }
+                    continueLoading();
+                }
+            }, null);
+
+        }else{
+            continueLoading();
+
+        }
+
+
+
+
+
+
+    }
+
+    private void continueLoading() {
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);
         appVersionName = (TextView) findViewById(R.id.app_version);
@@ -296,12 +330,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             slidingTabStrip.setViewPager(pager);
         }
 
+
+
         getSupportActionBar().setTitle("");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
+
+
+
 
     }
 
@@ -326,7 +365,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.menu_share) {
 
         } else if (i == R.id.menu_uninstall) {
-            getSupportFragmentManager().beginTransaction().add(new UninstallRetainFragment(appName.getText().toString(), package_name, versionName, iconPath), package_name+"UninstallRetainFragment").commit();
+
         } else if (i == R.id.menu_search_other) {
 
         }
@@ -350,6 +389,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
+
         repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
         final String name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
         package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
@@ -370,9 +410,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             icon = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
 
-        iconPath = iconpath + icon;
-        ImageLoader.getInstance().displayImage(iconPath, appIcon);
-        GetApkInfoRequest request = new GetApkInfoRequest();
+        ImageLoader.getInstance().displayImage(iconpath + icon, appIcon);
+        GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
         request.setRepoName(repoName);
         request.setPackageName(package_name);
@@ -405,6 +444,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         });
 
+
+
         findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -431,11 +472,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Subscribe
     public void onRefresh(AppViewRefresh event) {
 
-        GetApkInfoRequest request = new GetApkInfoRequest();
+        GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
         request.setRepoName(repoName);
         request.setPackageName(package_name);
         request.setVersionName(versionName);
+        if(token!=null)request.setToken(token);
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
 
 
@@ -458,7 +500,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 case ACTIVE:
                     pb.setIndeterminate(false);
                     pb.setProgress(download.getProgress());
-                    progressText.setText(download.getProgress() + "% - " + Utils.formatBytes((long) download.getSpeed()));
+                    progressText.setText(download.getProgress() + "% - " + Utils.formatBits((long) download.getSpeed())+"/s");
                     break;
                 case INACTIVE:
                     break;
@@ -500,6 +542,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public String getToken() {
         return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 

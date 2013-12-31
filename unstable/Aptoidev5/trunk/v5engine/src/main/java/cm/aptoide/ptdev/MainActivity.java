@@ -44,6 +44,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
@@ -73,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
     private ViewPager pager;
+
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -115,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     };
     private Database database;
     private Context mContext;
-    private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+    private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
 
     private ListView mDrawerList;
@@ -171,6 +173,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Subscribe
     public void onRepoErrorEvent(RepoErrorEvent event){
@@ -275,19 +279,19 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 //            login_store.setText("");
 //        }
 
-        TextView login_email, login_store;
-        accountManager=AccountManager.get(this);
-
-        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-
-            login_email = (TextView) header.findViewById(R.id.login_email);
-            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
-
-            login_store = (TextView) header.findViewById(R.id.login_store);
-            login_store.setText("");
-            mDrawerList.addHeaderView(header, null, false);
-        }
+//        TextView login_email, login_store;
+//        accountManager=AccountManager.get(this);
+//
+//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+//
+//            login_email = (TextView) header.findViewById(R.id.login_email);
+//            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+//
+//            login_store = (TextView) header.findViewById(R.id.login_store);
+//            login_store.setText("");
+//            mDrawerList.addHeaderView(header, null, false);
+//        }
 
         mDrawerList.setAdapter(mMenuAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -475,7 +479,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         switch (position){
             case 0:
 //                Log.d("MenuDrawer-position", "pos: "+position);
-                Intent loginIntent = new Intent(mContext, LoginActivity.class);
+                Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                 startActivity(loginIntent);
                 break;
             case 1:

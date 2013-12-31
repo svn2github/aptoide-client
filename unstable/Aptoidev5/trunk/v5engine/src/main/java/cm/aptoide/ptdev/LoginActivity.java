@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.PasswordTransformationMethod;
@@ -23,6 +24,7 @@ import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
@@ -43,112 +45,73 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
 
 
-    private AccountManager accountManager;
-    private AccountAuthenticatorResponse authenticatorResponse;
+    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+    public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
+    public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
+    public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
-    private EditText usernameField;
-    private EditText passwordField;
-    private CheckBox showPasswordCheck;
+    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
-    private TextView loggedUsername;
+    public final static String PARAM_USER_PASS = "USER_PASS";
 
-    SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+    private final int REQ_SIGNUP = 1;
 
+    private final String TAG = "Login";
+
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
+    private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
-    protected void onCreate(Bundle icicle) {
-        Aptoide.getThemePicker().setAptoideTheme(this);
-        super.onCreate(icicle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.form_login);
+        mAccountManager = AccountManager.get(getBaseContext());
 
-        Log.d("LoginActivity-before", "starting");
+        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+        if (mAuthTokenType == null)
+            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-        accountManager = AccountManager.get(this);
-
-        Log.d("LoginActivity-before", "length: " + accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length);
-
-        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length == 0) {
-            setContentView(R.layout.form_login);
-            Log.d("LoginActivity-login", "length: " + accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length);
-
-            usernameField = (EditText) findViewById(R.id.username);
-            passwordField = (EditText) findViewById(R.id.password);
-            showPasswordCheck = (CheckBox) findViewById(R.id.show_login_passwd);
-            passwordField = (EditText) findViewById(R.id.password);
-            showPasswordCheck = (CheckBox) findViewById(R.id.show_login_passwd);
-            showPasswordCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        passwordField.setTransformationMethod(null);
-                    } else {
-                        passwordField.setTransformationMethod(new PasswordTransformationMethod());
-                    }
-                }
-            });
-            showPasswordCheck.setEnabled(true);
-
-            findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        login(usernameField.getText().toString().trim(), AptoideUtils.Algorithms.computeSHA1sum(passwordField.getText().toString().trim()));
-
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            Bundle extras = getIntent().getExtras();
-
-            if (extras != null && extras.containsKey(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE)) {
-                authenticatorResponse = extras.getParcelable(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
-            }
-        } else {
-            setContentView(R.layout.form_logout);
-            Log.d("LoginActivity-logout", "length: " + accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length);
-
-            loggedUsername = (TextView) findViewById(R.id.username);
-            loggedUsername.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
-
-            findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
-                    accountManager.removeAccount(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0], new AccountManagerCallback<Boolean>() {
-                        @Override
-                        public void run(AccountManagerFuture<Boolean> future) {
-                            try {
-                                if(future.getResult().booleanValue()){
-                                    ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                                    pd.dismiss();
-                                    setContentView(R.layout.form_login);
-                                }
-                            } catch (OperationCanceledException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (AuthenticatorException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }, null);
-                }
-            });
+        if (accountName != null) {
+            ((EditText)findViewById(R.id.username)).setText(accountName);
         }
 
+        findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit();
+            }
+        });
+        findViewById(R.id.new_to_aptoide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
+                // and return them in setAccountAuthenticatorResult(). See finishLogin().
+                Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
+                signup.putExtras(getIntent().getExtras());
+                startActivityForResult(signup, REQ_SIGNUP);
+            }
+        });
+    }
 
-        getSupportActionBar().setTitle(getString(R.string.login));
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        // The sign up activity returned that the user has successfully created an account
+        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
+            finishLogin(data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(this);
+        spiceManager.start(getBaseContext());
     }
 
     @Override
@@ -157,96 +120,85 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         spiceManager.shouldStop();
     }
 
-    public void login(final String username, final String password) {
+    public void submit() {
 
-        if (username.length() > 0 && password.length() > 0) {
+        final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
+        final String userPass = ((EditText) findViewById(R.id.password)).getText().toString();
 
-            android.support.v4.app.DialogFragment pd = AptoideDialog.pleaseWaitDialog();
-            pd.setCancelable(false);
-            pd.show(getSupportFragmentManager(), "pleaseWaitDialogRemove");
+        final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
-            CheckUserCredentialsRequest checkUserCredentialsRequest = new CheckUserCredentialsRequest().setUser(username).setPassword(password);
+        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 
+        request.setUser(userName);
+        try {
+            request.setPassword(AptoideUtils.Algorithms.computeSHA1sum(userPass));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-            if (false) { //isCheckBox checked)
-                checkUserCredentialsRequest.setDeviceId(AptoideUtils.HWSpecifications.getDeviceId(this))
-                        .setModel(AptoideUtils.HWSpecifications.TERMINAL_INFO)
-                        .setSdk(Integer.toString(AptoideUtils.HWSpecifications.getSdkVer()))
-                        .setDensity(Integer.toString(AptoideUtils.HWSpecifications.getDensityDpi(this)))
-                        .setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2())
-                        .setScreenSize(Integer.toString(AptoideUtils.HWSpecifications.getScreenSize(this)))
-                        .setOpenGl(AptoideUtils.HWSpecifications.getGlEsVer(this));
-                checkUserCredentialsRequest.setRegisterDevice(true);
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Toast.makeText(getBaseContext(), "An error ocurred.", Toast.LENGTH_SHORT).show();
+                android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(pd!=null){
+                    pd.dismiss();
+                }
             }
 
-            spiceManager.execute(checkUserCredentialsRequest, new RequestListener<CheckUserCredentialsJson>() {
-                @Override
-                public void onRequestFailure(SpiceException e) {
-                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
-                    pd.dismiss();
+            @Override
+            public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
 
-                    Toast toast = Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
-                    toast.show();
-
-                    if (getIntent().hasExtra("login")) {
-                        Intent result = new Intent();
-                        setResult(RESULT_CANCELED, result);
-                    }
-                    finish();
-                }
-
-                @Override
-                public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
-                    if ("OK".equals(checkUserCredentialsJson.getStatus())) {
-
-                        Account account = new Account(username, AccountGeneral.ACCOUNT_TYPE);
-                        boolean accountCreated = accountManager.addAccountExplicitly(account, password, null);
-
-                        if (accountCreated) {
-                            //accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE, checkUserCredentialsJson.getToken());
-
-
-                            // Now we tell our caller, could be the Andreoid Account Manager or even our own application
-                            // that the process was successful
-
-                            final Intent intent = new Intent();
-                            intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
-                            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
-                            intent.putExtra(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
-                            setAccountAuthenticatorResult(intent.getExtras());
-                            setResult(RESULT_OK, intent);
-                            finish();
-
-                        } else {
-                            Toast toast = Toast.makeText(LoginActivity.this, "error creating account", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
-                            toast.show();
-                        }
-
-                    } else {
-                        Toast toast = Toast.makeText(LoginActivity.this, checkUserCredentialsJson.getErrors().get(0), Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
-                        toast.show();
-                    }
-
-                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
+                android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(pd!=null){
                     pd.dismiss();
                 }
-            });
+
+                Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
 
-        } else {
-            Toast toast = Toast.makeText(this, getString(R.string.check_your_credentials), Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 30);
-            toast.show();
-        }
+                Bundle data = new Bundle();
+                data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
+                data.putString(PARAM_USER_PASS, userPass);
+                final Intent res = new Intent();
+                res.putExtras(data);
+                finishLogin(res);
+
+
+            }
+        });
+
     }
 
+    private void finishLogin(Intent intent) {
+        Log.d("udinic", TAG + "> finishLogin");
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+
+        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+            Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly");
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
+
+            // Creating the account on the device and setting the auth token we got
+            // (Not setting the auth token will cause another call to the server to authenticate the user)
+            mAccountManager.addAccountExplicitly(account, accountPassword, null);
+            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+        } else {
+            Log.d("udinic", TAG + "> finishLogin > setPassword");
+            mAccountManager.setPassword(account, accountPassword);
+        }
+
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override

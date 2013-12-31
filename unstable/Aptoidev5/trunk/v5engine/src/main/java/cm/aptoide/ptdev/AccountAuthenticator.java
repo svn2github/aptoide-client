@@ -4,11 +4,13 @@ import android.accounts.*;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
+
+import static cm.aptoide.ptdev.configuration.AccountGeneral.*;
+import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 
 /**
@@ -16,11 +18,103 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
  */
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
-    private Context context;
+    private String TAG = "UdinicAuthenticator";
+    private final Context mContext;
 
     public AccountAuthenticator(Context context) {
         super(context);
-        this.context = context;
+
+        // I hate you! Google - set mContext as protected!
+        this.mContext = context;
+    }
+
+    @Override
+    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+        Log.d("udinic", TAG + "> addAccount");
+
+        final Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.putExtra(LoginActivity.ARG_ACCOUNT_TYPE, accountType);
+        intent.putExtra(LoginActivity.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(LoginActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
+    }
+
+    @Override
+    public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
+
+        Log.d("udinic", TAG + "> getAuthToken");
+
+        // If the caller requested an authToken type we don't support, then
+        // return an error
+        if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY) && !authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)) {
+            final Bundle result = new Bundle();
+            result.putString(AccountManager.KEY_ERROR_MESSAGE, "invalid authTokenType");
+            return result;
+        }
+
+        // Extract the username and password from the Account Manager, and ask
+        // the server for an appropriate AuthToken.
+        final AccountManager am = AccountManager.get(mContext);
+
+        String authToken = am.peekAuthToken(account, authTokenType);
+
+        Log.d("udinic", TAG + "> peekAuthToken returned - " + authToken);
+
+        // Lets give another try to authenticate the user
+        if (TextUtils.isEmpty(authToken)) {
+            final String password = am.getPassword(account);
+            if (password != null) {
+                try {
+                    Log.d("udinic", TAG + "> re-authenticating with the existing password");
+                    //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // If we get an authToken - we return it
+        if (!TextUtils.isEmpty(authToken)) {
+            final Bundle result = new Bundle();
+            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+            return result;
+        }
+
+        // If we get here, then we couldn't access the user's password - so we
+        // need to re-prompt them for their credentials. We do that by creating
+        // an intent to display our AuthenticatorActivity.
+        final Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        intent.putExtra(LoginActivity.ARG_ACCOUNT_TYPE, account.type);
+        intent.putExtra(LoginActivity.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(LoginActivity.ARG_ACCOUNT_NAME, account.name);
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
+    }
+
+
+    @Override
+    public String getAuthTokenLabel(String authTokenType) {
+        if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
+            return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+        else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
+            return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+        else
+            return authTokenType + " (Label)";
+    }
+
+    @Override
+    public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
+        final Bundle result = new Bundle();
+        result.putBoolean(KEY_BOOLEAN_RESULT, false);
+        return result;
     }
 
     @Override
@@ -29,75 +123,12 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        Log.d("Account-Authenticator", "Adding new account");
-
-        Bundle bundle = new Bundle();
-
-        if(AccountManager.get(context).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length == 0) {
-            Intent i = new Intent(context, LoginActivity.class);
-            i.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-            i.putExtra(AccountGeneral.AUTHTOKEN_TYPE, authTokenType);
-            bundle.putParcelable(AccountManager.KEY_INTENT, i);
-
-        } else {
-            bundle.putInt(AccountManager.KEY_ERROR_CODE, 11/*ERROR_CODE_ONE_ACCOUNT_ALLOWED*/);
-            bundle.putString(AccountManager.KEY_ERROR_MESSAGE, context.getString(R.string.one_account_allowed));
-
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context, context.getString(R.string.one_account_allowed), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        return bundle;
-    }
-
-    @Override
     public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account, Bundle options) throws NetworkErrorException {
         return null;
     }
 
     @Override
-    public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        String authToken = AccountManager.get(context).peekAuthToken(account, authTokenType);
-
-
-        Log.d("Account_Authenticator", "AuthToken = " + authToken);
-
-        Bundle result = new Bundle();
-
-        if(authToken != null) {
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-            return result;
-        }
-
-        // When an authToken isn't stored, the CheckUserCredentials class should be called
-        Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AccountGeneral.ACCOUNT_TYPE, account.type);
-        intent.putExtra(AccountGeneral.AUTHTOKEN_TYPE, authTokenType);
-        result.putParcelable(AccountManager.KEY_INTENT, intent);
-        return result;
-
-    }
-
-    @Override
-    public String getAuthTokenLabel(String authTokenType) {
-        return null;
-    }
-
-    @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        return null;
-    }
-
-    @Override
-    public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
         return null;
     }
 }

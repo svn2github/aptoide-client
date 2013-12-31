@@ -1,11 +1,14 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -13,6 +16,7 @@ import cm.aptoide.ptdev.model.InstalledPackage;
 import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.*;
 
@@ -99,8 +103,12 @@ public class Database {
 
     public Cursor getCategories(long storeid, long parentid) {
 
-        Cursor c = database.rawQuery("select name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
-        c.getCount();
+
+        Cursor c = null;
+        if(storeid>0){
+            c = database.rawQuery("select name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath  from category as cat where id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+            c.getCount();
+        }
 
         return c;
 
@@ -130,7 +138,16 @@ public class Database {
                 break;
         }
 
-        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+        Cursor c;
+        if(storeid>0){
+
+            c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+        }else{
+            c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk, repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, null);
+        }
         c.getCount();
 
         return c;
@@ -161,7 +178,9 @@ public class Database {
                 break;
         }
 
-        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? order by " + sort, new String[]{String.valueOf(storeid)  });
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(storeid)  });
         c.getCount();
 
         return c;
@@ -188,16 +207,16 @@ public class Database {
 
     }
 
-    private long getAppsCount(long id_category, long id_repo) {
+    private long getAppsCount(long id_real_category, long id_repo) {
 
         long apps = 0;
-        Cursor c = database.rawQuery("select id_real_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_category), String.valueOf(id_repo)});
+        Cursor c = database.rawQuery("select id_real_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id_repo)});
         if(c.getCount()>0){
             while (c.moveToNext()){
                 apps += getAppsCount(c.getLong(0), id_repo);
             }
         }else{
-            c = database.rawQuery("select count(id_real_category) from category_apk where id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_category),String.valueOf(id_repo)});
+            c = database.rawQuery("select count(id_real_category) from category_apk where id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category),String.valueOf(id_repo)});
             if(c.moveToFirst()){
                 apps = c.getInt(0);
             }
@@ -206,7 +225,7 @@ public class Database {
 
         ContentValues values = new ContentValues();
         values.put(Schema.Category.COLUMN_APPS_COUNT, apps);
-        database.update(Schema.Category.getName(), values, "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_category),String.valueOf(id_repo)});
+        database.update(Schema.Category.getName(), values, "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category),String.valueOf(id_repo)});
 
         return apps;
     }
@@ -264,7 +283,9 @@ public class Database {
                 Log.d("Aptoide-", "Deleting " + c.getLong(0));
             }
             c.close();
-            
+            database.delete("category"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("apk"," id_repo = ? ", new String[]{String.valueOf(id_store)});
+            database.delete("repo","id_repo = ? ", new String[]{String.valueOf(id_store)});
 
         }
         database.setTransactionSuccessful();
@@ -273,13 +294,19 @@ public class Database {
     }
 
     public Cursor getInstalled() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo where apk.is_compatible='1' group by apk.package_name", null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
         c.getCount();
         return c;
     }
 
     public Cursor getUpdates() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and apk.is_compatible='1' group by apk.package_name",null);
+
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
+
+
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name",null);
         c.getCount();
         return c;
     }
@@ -382,8 +409,10 @@ public class Database {
     }
 
     public ArrayList<HomeItem> getFeatured(int type, int editorsChoiceBucketSize) {
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? and apk.is_compatible = '1'", new String[]{String.valueOf(type)});
+        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + "", new String[]{String.valueOf(type)});
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
         int size = c.getCount();
         int itemsToAdd = size - ( size % editorsChoiceBucketSize);
@@ -406,7 +435,12 @@ public class Database {
 
     public Cursor getSearchResults(String searchQuery) {
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' and apk.is_compatible=1 group by apk.package_name order by apk.name ", null);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+
+
+        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by apk.name ", null);
         c.getCount();
         return c;
     }
@@ -439,14 +473,14 @@ public class Database {
 
     public void deleteLatest(long id) {
 
-        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"});
+        Cursor c = database.rawQuery("select id_real_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"});
         if (c.moveToFirst()) {
-            long id_category = c.getLong(0);
+            long id_real_category = c.getLong(0);
 
             c.close();
-            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_category)});
+            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
 
-            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_category)});
+            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
         }
 
 
@@ -454,15 +488,15 @@ public class Database {
 
     public void deleteTop(long id) {
 
-        Cursor c = database.rawQuery("select id_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"});
+        Cursor c = database.rawQuery("select id_real_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"});
 
         if (c.moveToFirst()) {
-            long id_category = c.getLong(0);
+            long id_real_category = c.getLong(0);
 
             c.close();
-            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_category)});
+            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
 
-            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_category)});
+            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
         }
 
 

@@ -15,6 +15,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.CheckServerRequest;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
@@ -35,9 +36,9 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * To change this template use File | Settings | File Templates.
  */
 public class AddStoreDialog extends DialogFragment {
-    private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+    private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
-    private String store;
+
 
     private Callback callback;
     public Callback dummyCallback = new Callback() {
@@ -86,9 +87,12 @@ public class AddStoreDialog extends DialogFragment {
         spiceManager.start(getActivity());
 
         if(url!=null){
+            spiceManager.addListenerIfPending(Integer.class, (url+"rc"),new CheckStoreListener(login));
+            spiceManager.addListenerIfPending(RepositoryInfoJson.class, (url+"repositoryInfo"), new RepositoryRequestListener(url, login));
             spiceManager.getFromCache(Integer.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
             spiceManager.getFromCache(RepositoryInfoJson.class, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
         }
+
     }
 
 
@@ -265,7 +269,6 @@ public class AddStoreDialog extends DialogFragment {
     }
 
     void dismissDialog(){
-        setRetainInstance(false);
         DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null)
                 pd.dismiss();
@@ -282,7 +285,7 @@ public class AddStoreDialog extends DialogFragment {
 
 
     public void get(String s, final Login login) {
-        setRetainInstance(true);
+
         url = AptoideUtils.checkStoreUrl(s);
         this.login = login;
         repoName = AptoideUtils.RepoUtils.split(url);
@@ -337,7 +340,7 @@ public class AddStoreDialog extends DialogFragment {
 
             if(checkServerRequest!=null)checkServerRequest.cancel();
             if(getRepoInfoRequest!=null)getRepoInfoRequest.cancel();
-            setRetainInstance(false);
+
             Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();
         }
     };
@@ -354,7 +357,7 @@ public class AddStoreDialog extends DialogFragment {
                 pd.setOnCancelListener(cancelListener);
             }
         }
-        //setRetainInstance(true);
+
     }
 
     @Override

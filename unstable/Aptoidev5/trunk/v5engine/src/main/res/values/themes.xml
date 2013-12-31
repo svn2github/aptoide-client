@@ -39,8 +39,8 @@
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
+        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
         <item name="icWebSiteDrawable">@style/webSiteLight</item>
         <item name="icEmailDrawable">@style/emailLight</item>
         <item name="icCancelDrawable">@style/cancelLight</item>

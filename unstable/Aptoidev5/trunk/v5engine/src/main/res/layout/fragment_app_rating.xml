@@ -38,7 +38,7 @@
                 android:layout_gravity="center">
 
             <Button android:id="@+id/button_like"
-                    style="?attr/icRatingGoodDrawable"
+                    android:drawableLeft="?attr/icRatingGoodDrawable"
                     android:layout_width="fill_parent"
                     android:text="@string/like"
                     android:background="@drawable/highlight_overlay"
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"/>
 
             <Button android:id="@+id/button_dont_like"
-                    style="?attr/icRatingBadDrawable"
+                    android:drawableLeft="?attr/icRatingBadDrawable"
                     android:layout_width="fill_parent"
                     android:text="@string/dont_like"
                     android:background="@drawable/highlight_overlay"

@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -11,7 +12,7 @@ import com.octo.android.robospice.SpiceManager;
  */
 public class AllComments extends ActionBarActivity {
 
-    private SpiceManager spiceManager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+    private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

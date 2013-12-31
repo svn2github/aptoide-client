@@ -194,7 +194,7 @@ public class DownloadService extends Service {
         mBuilder = setNotification();
         startForeground(-3, mBuilder.build());
 
-        final SpiceManager manager = new SpiceManager(Jackson2GoogleHttpClientSpiceService.class);
+        final SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         if(!manager.isStarted()) manager.start(getApplicationContext());
 
 
@@ -215,7 +215,7 @@ public class DownloadService extends Service {
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
 
-                    GetApkInfoRequest request = new GetApkInfoRequest();
+                    GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
                     request.setRepoName(repoName);
                     request.setPackageName(package_name);

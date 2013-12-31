@@ -68,25 +68,29 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         getListView().setDivider(null);
 
         // We need to create a PullToRefreshLayout manually
-        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 
         // We can now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
+        if (storeId > 0) {
+            mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
-                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                .insertLayoutInto(viewGroup)
 
-                        // We need to mark the ListView and it's Empty View as pullable
-                        // This is because they are not dirent children of the ViewGroup
-                .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
+            ActionBarPullToRefresh.from(getActivity())
 
-                        // We can now complete the setup as desired
+                    // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
+                    .insertLayoutInto(viewGroup)
 
-                .listener(this)
+                            // We need to mark the ListView and it's Empty View as pullable
+                            // This is because they are not dirent children of the ViewGroup
+                    .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
 
-                .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
-                .setup(mPullToRefreshLayout);
+                            // We can now complete the setup as desired
+
+                    .listener(this)
+
+                    .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
+                    .setup(mPullToRefreshLayout);
+        }
 
     }
 
@@ -286,20 +290,24 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
     @Override
     public void setRefreshing(final boolean bool) {
-        final View v = getActivity().getWindow().getDecorView();
 
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                if (v.getWindowToken() != null) {
-                    // The Decor View has a Window Token, so we can add the HeaderView!
-                    mPullToRefreshLayout.setRefreshing(bool);
-                } else {
-                    // The Decor View doesn't have a Window Token yet, post ourselves again...
-                    v.post(this);
+        if(mPullToRefreshLayout!=null){
+            final View v = getActivity().getWindow().getDecorView();
+
+            v.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (v.getWindowToken() != null) {
+                        // The Decor View has a Window Token, so we can add the HeaderView!
+                        mPullToRefreshLayout.setRefreshing(bool);
+                    } else {
+                        // The Decor View doesn't have a Window Token yet, post ourselves again...
+                        v.post(this);
+                    }
                 }
-            }
-        });
+            });
+        }
+
         onRefresh();
         getActivity().supportInvalidateOptionsMenu();
     }

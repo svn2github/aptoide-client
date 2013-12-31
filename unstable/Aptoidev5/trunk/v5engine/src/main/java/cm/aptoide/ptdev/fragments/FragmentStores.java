@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.view.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -63,11 +62,15 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     private ArrayList<StoreItem> stores = new ArrayList<StoreItem>();
 
     private GridView gridViewMyStores;
+    private boolean isMergeStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if(savedInstanceState!=null){
+            isMergeStore = savedInstanceState.getBoolean("isMerge");
+        }
     }
 
 
@@ -80,11 +83,11 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Subscribe
-    public void RefreshStoresEvent(RepoAddedEvent event){
+    public void refreshStoresEvent(RepoAddedEvent event){
 
         Log.d("Aptoide-", "OnEvent");
 
-        loader.forceLoad();
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -111,7 +114,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         inflater.inflate(R.menu.menu_stores, menu);
     }
 
-    Loader<Cursor> loader;
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -128,7 +131,9 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
 
 
+
         storeAdapter.setAdapterView(gridViewMyStores);
+
 
         storeAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -145,7 +150,13 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
-        loader = getLoaderManager().restartLoader(0, null, this);
+        if(isMergeStore){
+            stores.clear();
+            stores.add(new StoreItem("All Stores", "", "", EnumStoreTheme.APTOIDE_STORE_THEME_DEFAULT, true, -1));
+            storeAdapter.notifyDataSetChanged();
+        }else{
+            getLoaderManager().restartLoader(0, null, this);
+        }
 
 
 
@@ -155,6 +166,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         storeAdapter.save(outState);
+        outState.putBoolean("isMerge", isMergeStore);
     }
 
     @Override
@@ -235,8 +247,8 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
                 pd.dismiss();
                 setRetainInstance(false);
-                loader.forceLoad();
-                //BusProvider.getInstance().post(new RepoCompleteEvent(0));
+                getLoaderManager().restartLoader(0,null,FragmentStores.this);
+                BusProvider.getInstance().post(new RepoCompleteEvent(0));
             }
         }.execute(checkedItems);
 
@@ -273,5 +285,33 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         return false;
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+
+        if (i == R.id.menu_merge) {
+            setMergeStore(!isMergeStore);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setMergeStore(boolean mergeStore) {
+
+        isMergeStore = mergeStore;
+
+        if(mergeStore){
+            stores.clear();
+            stores.add(new StoreItem("All Stores", "", "", EnumStoreTheme.APTOIDE_STORE_THEME_DEFAULT, true, -1));
+            storeAdapter.notifyDataSetChanged();
+        }else{
+            refreshStoresEvent(null);
+        }
+
+    }
+
+
 }
 

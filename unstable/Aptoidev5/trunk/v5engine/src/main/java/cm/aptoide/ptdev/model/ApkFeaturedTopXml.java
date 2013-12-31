@@ -92,7 +92,7 @@ public class ApkFeaturedTopXml extends Apk{
                             String.valueOf(getDate().getTime()),
                             String.valueOf(getDownloads()),
                             String.valueOf(getRating()),
-                            String.valueOf(getAge().equals(Filters.Age.Mature)),
+                            String.valueOf(getAge().equals(Filters.Age.Mature)?1:0),
                             String.valueOf(getMinSdk()),
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),

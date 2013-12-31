@@ -131,6 +131,7 @@ public class StoreActivity extends ActionBarActivity {
             fragment = new FragmentStoreGridCategories();
         }
 
+
         Fragment fragmentHeader = new FragmentStoreHeader();
 
         Log.d("Aptoide-", "StoreActivity id" + storeid);
@@ -139,14 +140,15 @@ public class StoreActivity extends ActionBarActivity {
         Bundle args = new Bundle();
         args.putLong("storeid", storeid);
 
-
-
         fragment.setArguments(args);
         fragmentHeader.setArguments(args);
 
         getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").commit();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
+        if(storeid>0){
+            getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
+        }
+
     }
 
     @Override

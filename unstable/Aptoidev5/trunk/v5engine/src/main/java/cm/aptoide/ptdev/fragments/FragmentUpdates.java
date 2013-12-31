@@ -72,9 +72,13 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                updatesAdapter.swapCursor(data);
-                if (counter > 0) counter--;
-                if (getListView().getAdapter() == null && counter == 0)
+
+                if(data.getCount()>1){
+                    updatesAdapter.swapCursor(data);
+                }else{
+                    updatesAdapter.swapCursor(null);
+                }
+                if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
             }
 
@@ -100,9 +104,13 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                installedAdapter.swapCursor(data);
-                if (counter > 0) counter--;
-                if (getListView().getAdapter() == null && counter == 0)
+
+                if(data.getCount()>1){
+                    installedAdapter.swapCursor(data);
+                }else{
+                    installedAdapter.swapCursor(null);
+                }
+                if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
 
             }
@@ -221,7 +229,7 @@ public class FragmentUpdates extends ListFragment {
                     updatesAdapter.swapCursor(null);
                 }
 
-                counter--;
+
                 if (getListView().getAdapter() == null){
                     setListAdapter(adapter);
                 }

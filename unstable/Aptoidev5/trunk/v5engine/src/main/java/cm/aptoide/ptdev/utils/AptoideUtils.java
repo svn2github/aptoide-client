@@ -25,6 +25,8 @@ import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.model.IconDownloadPermissions;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,6 +70,10 @@ public class AptoideUtils {
                 Float.parseFloat(apk.getMinGlEs()) <= Float.parseFloat(gles) &&
                 (apk.getScreenCompat() == null || apk.getScreenCompat().contains(screenSpec)) &&
                 (apk.getCpuAbi()==null || checkCpuCompatibility(apk.getCpuAbi()));
+    }
+
+    public static SharedPreferences getSharedPreferences(){
+        return PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
     }
 
     private static boolean checkCpuCompatibility(String cpuAbi) {
@@ -367,6 +373,38 @@ public class AptoideUtils {
             } catch (Exception e) {
             }
 
+            return connectionAvailable;
+        }
+
+        public static boolean isPermittedConnectionAvailable(Context context, IconDownloadPermissions permissions){
+            ConnectivityManager connectivityState = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            boolean connectionAvailable = false;
+            if(permissions.isWiFi()){
+                try {
+                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
+                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wifi: "+connectionAvailable);
+                } catch (Exception ignore) { }
+            }
+            if(permissions.isWiMax()){
+                try {
+                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(6).getState() == NetworkInfo.State.CONNECTED;
+                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wimax: "+connectionAvailable);
+                } catch (Exception ignore) { }
+            }
+            if(permissions.isMobile()){
+                try {
+                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED;
+                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable mobile: "+connectionAvailable);
+                } catch (Exception ignore) { }
+            }
+            if(permissions.isEthernet()){
+                try {
+                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(9).getState() == NetworkInfo.State.CONNECTED;
+                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable ethernet: "+connectionAvailable);
+                } catch (Exception ignore) { }
+            }
+
+            //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable: "+connectionAvailable+"  permissions: "+permissions);
             return connectionAvailable;
         }
 

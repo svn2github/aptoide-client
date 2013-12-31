@@ -1,8 +1,10 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.accounts.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.AllComments;
@@ -19,6 +22,7 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.ScreenshotsViewer;
 import cm.aptoide.ptdev.adapters.GalleryPagerAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
@@ -28,6 +32,7 @@ import cm.aptoide.ptdev.model.ApkPermission;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
+import cm.aptoide.ptdev.webservices.AddLikeRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -35,6 +40,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -321,9 +327,17 @@ public abstract class FragmentAppView extends Fragment {
                 if(event.getUservote()!=null){
 
                     if(event.getUservote().equals("like")){
-                        likeBtn.setBackgroundResource(R.drawable.ic_action_good_pressed);
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_good_pressed, 0, 0, 0);
+
+                        TypedValue outValue = new TypedValue();
+                        getActivity().getTheme().resolveAttribute( R.attr.icRatingBadDrawable, outValue, true );
+
+                        dontLikeBtn.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                     }else if(event.getUservote().equals("dislike")){
-                        dontLikeBtn.setBackgroundResource(R.drawable.ic_action_bad_pressed);
+                        dontLikeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_bad_pressed, 0,0,0);
+                        TypedValue outValue = new TypedValue();
+                        getActivity().getTheme().resolveAttribute( R.attr.icRatingBadDrawable, outValue, true );
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0,0,0);
                     }
 
                 }
@@ -344,12 +358,103 @@ public abstract class FragmentAppView extends Fragment {
             editText = (EditText) v.findViewById(R.id.editText_addcomment);
             addComment = (Button) v.findViewById(R.id.button_add_comment);
             dontLikeBtn = (Button) v.findViewById(R.id.button_dont_like);
+            dontLikeBtn.setOnClickListener(new AddLikeListener(false));
             likeBtn = (Button) v.findViewById(R.id.button_like);
+            likeBtn.setOnClickListener(new AddLikeListener(true));
             addComment.setOnClickListener(new AddCommentListener());
 
 
             return v;
 
+        }
+        public class AddLikeListener implements View.OnClickListener {
+
+            private final boolean isLike;
+            RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    Toast.makeText(getActivity(), "Post failed", Toast.LENGTH_LONG).show();
+                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    pd.dismiss();
+                }
+
+                @Override
+                public void onRequestSuccess(GenericResponse genericResponse) {
+
+                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    pd.dismiss();
+
+                    if(genericResponse.getStatus().equals("OK")){
+                        Toast.makeText(getActivity(), "Comment success", Toast.LENGTH_LONG).show();
+                        editText.setText("");
+                        editText.setEnabled(false);
+                        editText.setEnabled(true);
+                        manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
+                        BusProvider.getInstance().post(new AppViewRefresh());
+                    }else{
+                        for(String error :  genericResponse.getErrors()){
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }
+            };
+            private SpiceManager manager;
+
+            public AddLikeListener(boolean isLike) {
+                this.isLike = isLike;
+            }
+
+
+            @Override
+            public void onClick(View v) {
+                final AccountManager manager = AccountManager.get(getActivity());
+
+                if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+                    addLike();
+                } else {
+                    manager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+
+                            Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                @Override
+                                public void run(AccountManagerFuture<Bundle> future) {
+                                    try {
+                                        ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                    } catch (OperationCanceledException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (AuthenticatorException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }, null);
+
+
+                        }
+                    }, null);
+                }
+
+            }
+
+            private void addLike() {
+                manager = ((AppViewActivity)getActivity()).getSpice();
+
+                AddLikeRequest request = new AddLikeRequest(getActivity());
+                request.setApkversion(((AppViewActivity)getActivity()).getVersionName());
+                request.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
+                request.setRepo(((AppViewActivity) getActivity()).getRepoName());
+                request.setToken(((AppViewActivity) getActivity()).getToken());
+                request.setLike(isLike);
+
+
+                manager.execute(request, requestListener);
+                AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
+            }
         }
 
         public class AddCommentListener implements View.OnClickListener {
@@ -389,6 +494,45 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
+
+                final AccountManager manager = AccountManager.get(getActivity());
+
+                if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+                    addComment();
+                } else {
+                    manager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+
+                            Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                @Override
+                                public void run(AccountManagerFuture<Bundle> future) {
+                                    try {
+
+                                        ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                        addComment();
+                                    } catch (OperationCanceledException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (AuthenticatorException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            }, null);
+
+
+                        }
+                    }, null);
+                }
+
+
+
+            }
+
+            private void addComment() {
                 manager = ((AppViewActivity)getActivity()).getSpice();
 
                 AddCommentRequest request = new AddCommentRequest(getActivity());
@@ -401,7 +545,6 @@ public abstract class FragmentAppView extends Fragment {
 
                 manager.execute(request, requestListener);
                 AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
-
             }
 
         }
