@@ -265,6 +265,9 @@ public class Schema {
         public final static String COLUMN_VERSION = "version";
 
         @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_PREVIOUS_VERSION = "previous_version";
+
+        @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
 
         @ColumnDefinition(type = SQLType.INTEGER)

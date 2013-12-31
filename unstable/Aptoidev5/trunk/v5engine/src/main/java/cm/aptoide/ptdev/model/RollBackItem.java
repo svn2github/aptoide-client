@@ -41,15 +41,18 @@ public class RollBackItem {
 
     private String version;
 
+    private String previousVersion;
+
     private String packageName;
 
     private Action action;
 
 
-    public RollBackItem(String name, String packageName, String version, String pathIcon, String timestamp, String md5, Action action){
+    public RollBackItem(String name, String packageName, String version, String previousVersion, String pathIcon, String timestamp, String md5, Action action){
         this.name = name;
         this.packageName = packageName;
         this.version = version;
+        this.previousVersion = previousVersion;
         this.pathIcon = pathIcon;
         this.timestamp = timestamp;
         this.md5 = md5;
@@ -69,6 +72,8 @@ public class RollBackItem {
     public String getVersion() {
         return version;
     }
+
+    public String getPreviousVersion() { return previousVersion; }
 
     public String getMd5() { return md5; }
 

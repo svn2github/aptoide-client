@@ -4,7 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,17 +54,18 @@ public class DownloadExecutorImpl implements DownloadExecutor {
                 RollBackItem rollBackItem;
                 try {
                     // Update
-                    ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(apk.getApkid(), 0);
+                    PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
 
-                    File apkFile = new File(appInfo.sourceDir);
+                    File apkFile = new File(pkgInfo.applicationInfo.sourceDir);
                     String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
 
-                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING);
+                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), pkgInfo.versionName, apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING);
 
                 } catch (PackageManager.NameNotFoundException e) {
                     // New Installation
-                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING);
+                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING);
                 }
+
 
                 new Database(Aptoide.getDb()).insertRollbackAction(rollBackItem);
 

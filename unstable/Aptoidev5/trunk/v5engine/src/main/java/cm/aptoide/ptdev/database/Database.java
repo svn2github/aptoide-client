@@ -518,6 +518,7 @@ public class Database {
         values.put(Schema.Rollback.COLUMN_NAME, rollBackItem.getName());
         values.put(Schema.Rollback.COLUMN_APKID, rollBackItem.getPackageName());
         values.put(Schema.Rollback.COLUMN_VERSION, rollBackItem.getVersion());
+        values.put(Schema.Rollback.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
         values.put(Schema.Rollback.COLUMN_ICONPATH, rollBackItem.getIconPath());
         values.put(Schema.Rollback.COLUMN_MD5, rollBackItem.getMd5());
         values.put(Schema.Rollback.COLUMN_ACTION, rollBackItem.getAction().toString());

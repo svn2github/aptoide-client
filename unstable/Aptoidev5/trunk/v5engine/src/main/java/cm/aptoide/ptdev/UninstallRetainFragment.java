@@ -69,7 +69,7 @@ public class UninstallRetainFragment extends Fragment {
                     apkMd5 = AptoideUtils.Algorithms.md5Calc(apkFile);
                 }
 
-                RollBackItem rollBackItem = new RollBackItem(appName, packageName, versionName, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING);
+                RollBackItem rollBackItem = new RollBackItem(appName, packageName, versionName, null, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING);
                 db.insertRollbackAction(rollBackItem);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
