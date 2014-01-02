@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
@@ -10,10 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.RollBackItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,9 +30,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 public class RollBackAdapter extends CursorAdapter {
 
+    private final Context context;
+
     public RollBackAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
-
+        this.context = context;
     }
 
 
@@ -42,32 +50,58 @@ public class RollBackAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
 
+        RollBackViewHolder holder = (RollBackViewHolder) view.getTag();
+        if (holder == null) {
+            holder = new RollBackViewHolder();
+            holder.name = (TextView) view.findViewById(R.id.app_name);
+            holder.icon = (ImageView) view.findViewById(R.id.app_icon);
+            holder.version = (TextView) view.findViewById(R.id.app_version);
+            holder.appState = (TextView) view.findViewById(R.id.app_state);
+            holder.action = (TextView) view.findViewById(R.id.ic_action);
+            view.setTag(holder);
+        }
 
-                RollBackViewHolder holder = (RollBackViewHolder) view.getTag();
-                if (holder == null) {
-                    holder = new RollBackViewHolder();
-                    holder.name = (TextView) view.findViewById(R.id.app_name);
-                    holder.icon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.version = (TextView) view.findViewById(R.id.app_version);
-                    holder.appState = (TextView) view.findViewById(R.id.app_state);
-                    holder.action = (TextView) view.findViewById(R.id.ic_action);
-                    view.setTag(holder);
+
+        final String name = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME));
+        holder.name.setText(Html.fromHtml(name));
+        final String icon = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ICONPATH));
+        ImageLoader.getInstance().displayImage(icon, holder.icon);
+        final String versionName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION));
+        holder.version.setText(versionName);
+
+        final String appState = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION));
+        holder.appState.setText(appState);
+        final String packageName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_APKID));
+        final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_MD5));
+        holder.action.setText(getActionFromState(appState));
+        holder.action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RollBackItem.Action action = RollBackItem.Action.valueOf(appState.toUpperCase(Locale.ENGLISH));
+
+                switch (action){
+                    case INSTALLED:
+                        UninstallHelper.uninstall(context, packageName);
+                        new Database(Aptoide.getDb()).insertRollbackAction(new RollBackItem(name, packageName, versionName, null, icon , null, md5sum, RollBackItem.Action.UNINSTALLING ));
+                        break;
+                    case UPDATED:
+                    case UNINSTALLED:
+
+                        Intent i = new Intent(context, AppViewActivity.class);
+                        i.putExtra("fromRollback", true);
+                        i.putExtra("md5sum", md5sum);
+                        context.startActivity(i);
+
+                        break;
                 }
 
 
-                holder.name.setText(Html.fromHtml(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME))));
 
-                ImageLoader.getInstance().displayImage(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ICONPATH)), holder.icon);
-
-                holder.version.setText(cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION)));
-
-                String appState = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION));
-                holder.appState.setText(appState);
-
-                holder.action.setText(getActionFromState(appState));
+            }
+        });
 
     }
 

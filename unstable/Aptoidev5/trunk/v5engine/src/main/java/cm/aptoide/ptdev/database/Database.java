@@ -594,7 +594,7 @@ public class Database {
 
     public Cursor getRollbackActions() {
 
-        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as timestamp, action  from rollback where rollback.confirmed = 1", null);
+        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as timestamp, action, package_name, md5  from rollback where rollback.confirmed = 1", null);
 
         c.getCount();
         return c;

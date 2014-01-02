@@ -70,7 +70,6 @@ public class MyAccountActivity extends ActionBarActivity {
                         finish();
                     }
 
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     //showMessage(e.getMessage());

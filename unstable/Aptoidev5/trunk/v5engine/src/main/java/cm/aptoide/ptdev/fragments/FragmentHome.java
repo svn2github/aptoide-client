@@ -177,7 +177,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         switch (loader.getId()) {
             case 50:
                 editorsChoice.clear();
-
                 editorsChoice.addAll(data);
                 break;
             case 51:
@@ -188,7 +187,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         }
 
         if(getListView().getAdapter()==null){
-            setListAdapter(adapter);
+            if(!data.isEmpty()) setListAdapter(adapter);
         }else{
             adapter.notifyDataSetChanged();
         }

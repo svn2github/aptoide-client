@@ -419,7 +419,7 @@ public class GetApkInfoJson {
         private Number id;
         @Key
         private String md5sum;
-        @Key
+        @Key("package")
         private String packageName;
         @Key
         private String path;
@@ -433,6 +433,8 @@ public class GetApkInfoJson {
         private Number vercode;
         @Key
         private String vername;
+        @Key
+        private String icon_hd;
 
 
         public String getIcon(){
@@ -495,6 +497,12 @@ public class GetApkInfoJson {
         public void setVername(String vername){
             this.vername = vername;
         }
+
+        public String getIconHd() {
+            return icon_hd;
+        }
+
+
     }
 
 

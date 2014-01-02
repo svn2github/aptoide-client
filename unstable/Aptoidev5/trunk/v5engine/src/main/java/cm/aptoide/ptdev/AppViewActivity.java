@@ -37,6 +37,7 @@ import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -73,8 +74,41 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
 
         @Override
-        public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+        public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
+
+            String icon;
+            String name = getApkInfoJson.getMeta().getTitle();
+            versionName = getApkInfoJson.getApk().getVername();
+            package_name = getApkInfoJson.getApk().getPackage();
+            if (getApkInfoJson.getApk().getIconHd() != null) {
+                icon = getApkInfoJson.getApk().getIconHd();
+                String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
+                String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+                icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+            } else {
+                icon = getApkInfoJson.getApk().getIcon();
+            }
+            appName.setText(name);
+            appVersionName.setText(versionName);
+            ImageLoader.getInstance().displayImage(icon, appIcon);
+            bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+
+
+            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name ));
+
+
+            findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (service != null) {
+                        service.stopDownload(id);
+                    }
+
+
+                }
+            });
             publishEvents();
 
         }
@@ -89,6 +123,34 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String repoName;
     private int minSdk;
     private DownloadService service;
+
+
+    public class InstallListener implements View.OnClickListener{
+
+        private String icon;
+        private String name;
+        private String versionName;
+        private String package_name;
+
+        public InstallListener(String icon, String name, String versionName, String package_name) {
+            this.icon = icon;
+            this.name = name;
+            this.versionName = versionName;
+            this.package_name = package_name;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Download download = new Download();
+            download.setId(id);
+            download.setName(this.name);
+            download.setVersion(this.versionName);
+            download.setIcon(this.icon);
+            download.setPackageName(this.package_name);
+            service.startDownloadFromJson(json, id, download);
+        }
+    }
+
     private ServiceConnection downloadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder downloadService) {
@@ -337,7 +399,21 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
+        if(getIntent().getBooleanExtra("fromRollback", false)){
+
+            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+
+
+            request.setMd5Sum(getIntent().getStringExtra("md5sum"));
+
+            if(token!=null){
+                request.setToken(token);
+            }
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
+
+        }else{
+            getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
+        }
 
 
 
@@ -424,39 +500,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
 
-        bindService(new Intent(this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
-        final String finalIcon = icon;
-        findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if(json!=null && service != null){
-                    Download download = new Download();
-                    download.setId(id);
-                    download.setName(name);
-                    download.setVersion(versionName);
-                    download.setIcon(iconpath + finalIcon);
-                    download.setPackageName(package_name);
-                    service.startDownloadFromJson(json, id, download);
-                }
-
-
-            }
-        });
-
-
-
-        findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(json!=null && service != null){
-                    service.stopDownload(id);
-                }
-
-
-            }
-        });
 
     }
 

@@ -16,7 +16,7 @@ public class RollBackItem {
         UNINSTALLING("Unistalling"),
         UPDATING("Updating"),
         INSTALLED("Installed"),
-        UNINSTALLED("Unistalled"),
+        UNINSTALLED("Uninstalled"),
         UPDATED("Updated");
 
         private String action;
