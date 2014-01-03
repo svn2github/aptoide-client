@@ -50,6 +50,7 @@ public class ApkFeaturedTopXml extends Apk{
 
 
 
+
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
 
@@ -97,7 +98,7 @@ public class ApkFeaturedTopXml extends Apk{
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
                             getIconPath(),
-                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
+                            String.valueOf(AptoideUtils.isCompatible(this) ? 1 :0)
 
 
                     });

@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -112,6 +113,12 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_stores, menu);
+
+        if(isMergeStore){
+            menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
+        }else{
+            menu.findItem(R.id.menu_merge).setTitle(R.string.merge_stores);
+        }
     }
 
 
@@ -310,6 +317,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             refreshStoresEvent(null);
         }
 
+        getActivity().supportInvalidateOptionsMenu();
     }
 
 

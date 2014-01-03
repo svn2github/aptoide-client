@@ -46,6 +46,7 @@ public class ApkInfoXML extends Apk {
         values.add(Schema.Apk.COLUMN_GLES);
         values.add(Schema.Apk.COLUMN_ICON);
         values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
+        values.add(Schema.Apk.COLUMN_SIGNATURE);
 
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
@@ -93,7 +94,8 @@ public class ApkInfoXML extends Apk {
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
                             getIconPath(),
-                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
+                            String.valueOf(AptoideUtils.isCompatible(this)?1:0),
+                            getSignature()
                     });
 
             apkid = sqLiteStatements.get(0).executeInsert();

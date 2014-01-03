@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import cm.aptoide.ptdev.adapters.UninstallHelper;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
@@ -38,6 +41,7 @@ public class UninstallRetainFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+        Log.d("Aptoide-Uninstaller", "Uninstalling");
 
         new UninstallTask().execute();
     }
@@ -55,6 +59,13 @@ public class UninstallRetainFragment extends Fragment {
     }
 
     private class UninstallTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -83,6 +94,9 @@ public class UninstallRetainFragment extends Fragment {
             if (activity != null) {
                 UninstallHelper.uninstall(activity, packageName);
             }
+            DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
+            pd.dismiss();
+            getFragmentManager().beginTransaction().remove(UninstallRetainFragment.this).commit();
         }
     }
 }

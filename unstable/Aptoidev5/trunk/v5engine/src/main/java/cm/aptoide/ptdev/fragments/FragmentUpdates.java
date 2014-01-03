@@ -154,6 +154,19 @@ public class FragmentUpdates extends ListFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id == R.id.menu_rollback){
+            Intent i = new Intent(getActivity(), RollbackActivity.class);
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
@@ -170,6 +183,7 @@ public class FragmentUpdates extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshStoresEvent(null);
         BusProvider.getInstance().register(this);
 
     }

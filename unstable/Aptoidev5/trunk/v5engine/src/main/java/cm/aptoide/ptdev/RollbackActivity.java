@@ -47,26 +47,11 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
 
         lView.setAdapter(adapter);
 
-        /*
-        lView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
-        */
 
 
         getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
-
-
-        getSupportLoaderManager().initLoader(17, null, this);
-
 
     }
 
@@ -115,6 +100,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
     protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
+        getSupportLoaderManager().restartLoader(17, null, this);
     }
 
     @Override

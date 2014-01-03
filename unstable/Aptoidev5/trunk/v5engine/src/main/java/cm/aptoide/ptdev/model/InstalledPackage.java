@@ -11,17 +11,22 @@ import android.graphics.drawable.Drawable;
  */
 public class InstalledPackage {
 
-    public InstalledPackage(Drawable icon, String name, String package_name, int version_code, String version_name) {
-        this.icon = icon;
+    public String getSignature() {
+        return signature;
+    }
+
+    private final String signature;
+
+    public InstalledPackage(String name, String package_name, int version_code, String versionName, String signature) {
+
         this.name = name;
         this.package_name = package_name;
         this.version_code = version_code;
-        this.version_name = version_name;
+        this.version_name = versionName;
+        this.signature = signature;
     }
 
-    public Drawable getIcon() {
-        return icon;
-    }
+
 
     public String getName() {
         return name;
@@ -43,7 +48,7 @@ public class InstalledPackage {
 
     private String package_name;
     private String name;
-    private Drawable icon;
+
     private String version_name;
     private int version_code;
 

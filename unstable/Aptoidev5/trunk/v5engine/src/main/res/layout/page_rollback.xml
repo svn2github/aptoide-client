@@ -7,7 +7,7 @@
 
 <pl.polidea.sectionedlist.SectionListView
           android:id="@+id/rollback_list"
-          android:padding="5dp"
+
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
 

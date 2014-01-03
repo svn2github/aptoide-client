@@ -48,6 +48,7 @@ public class ApkEditorsChoice extends Apk {
 
 
 
+
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
 
@@ -95,7 +96,8 @@ public class ApkEditorsChoice extends Apk {
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
                             getIconPath(),
-                            String.valueOf(AptoideUtils.isCompatible(this)?1:0)
+                            String.valueOf(AptoideUtils.isCompatible(this) ? 1 : 0),
+
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

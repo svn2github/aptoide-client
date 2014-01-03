@@ -137,6 +137,17 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
+        elements.put("signature", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setSignature(sb.toString());
+            }
+        });
+
         elements.put("localize", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
             }

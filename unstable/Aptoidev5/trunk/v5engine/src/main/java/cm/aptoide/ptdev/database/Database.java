@@ -1,14 +1,11 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.ContentValues;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -304,9 +301,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-
-
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name",null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and installed.signature = apk.signature " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name",null);
         c.getCount();
         return c;
     }
@@ -318,7 +313,7 @@ public class Database {
         Cursor c = database.rawQuery("select package_name, version_code from installed", null);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            installedPackages.add(new InstalledPackage(null, null, c.getString(0), c.getInt(1), null));
+            installedPackages.add(new InstalledPackage(null, c.getString(0), c.getInt(1), null, null));
         }
         c.close();
 
@@ -333,6 +328,7 @@ public class Database {
         values.put(Schema.Installed.COLUMN_NAME, apk.getName());
         values.put(Schema.Installed.COLUMN_VERCODE, apk.getVersion_code());
         values.put(Schema.Installed.COLUMN_VERNAME, apk.getVersion_name());
+        values.put(Schema.Installed.COLUMN_SIGNATURE, apk.getSignature());
         database.insert(Schema.Installed.getName(), null, values);
 
     }
@@ -594,9 +590,9 @@ public class Database {
 
     public Cursor getRollbackActions() {
 
-        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as timestamp, action, package_name, md5  from rollback where rollback.confirmed = 1", null);
-
+        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as cat_timestamp, action, package_name, md5, rollback.timestamp as real_timestamp from rollback where rollback.confirmed = 1 order by rollback.timestamp desc", null);
         c.getCount();
+
         return c;
     }
 }

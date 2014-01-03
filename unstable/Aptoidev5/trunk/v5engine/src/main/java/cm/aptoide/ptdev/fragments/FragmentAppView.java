@@ -88,6 +88,12 @@ public abstract class FragmentAppView extends Fragment {
         private View cell;
         private ViewPager viewPager;
         private ImageLoader imageLoader;
+        private TextView publisherWebsite;
+        private TextView publisherEmail;
+        private TextView publisherPrivacyPolicy;
+        private View publisherContainer;
+        private View whatsNewContainer;
+        private TextView whatsNew;
 
 
         @Subscribe
@@ -95,6 +101,9 @@ public abstract class FragmentAppView extends Fragment {
             Log.d("Aptoide-AppView", "getting event");
             Log.d("Aptoide-AppView", "Setting description");
             description.setText(event.getDescription());
+
+
+
             if (event.getLatestVersion() != null) {
                 latestVersion.setVisibility(View.VISIBLE);
                 SpannableString spanString = new SpannableString(getString(R.string.get_latest));
@@ -113,11 +122,29 @@ public abstract class FragmentAppView extends Fragment {
             }else{
                 latestVersion.setVisibility(View.GONE);
             }
+
             publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
             downloads.setText(getString(R.string.downloads) + ": " + event.getDownloads());
             likes.setText(getString(R.string.likes) + ": " + event.getLikes());
             dontLikes.setText(getString(R.string.dont_likes) + ": " + event.getDontLikes());
+
+            if(event.getDeveloper() != null){
+                publisherContainer.setVisibility(View.VISIBLE);
+
+                if(((AppViewActivity)getActivity()).isUpdate()){
+                    whatsNewContainer.setVisibility(View.VISIBLE);
+                    whatsNew.setText(event.getNews());
+                }
+
+                publisherContainer.setVisibility(View.VISIBLE);
+                publisherEmail.setText("E-Mail: " + event.getDeveloper().getInfo().getEmail());
+                publisherPrivacyPolicy.setText("Privacy Policy: " + event.getDeveloper().getInfo().getPrivacy_policy());
+                publisherWebsite.setText("Website: " + event.getDeveloper().getInfo().getWebsite());
+            }
+
+
+
 //            galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
 //
 //            if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
@@ -189,6 +216,12 @@ public abstract class FragmentAppView extends Fragment {
             latestVersion = (TextView) v.findViewById(R.id.app_get_latest);
             viewPager = (ViewPager) v.findViewById(R.id._viewPager);
             mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
+            publisherContainer = v.findViewById(R.id.publisher_container);
+            publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
+            publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
+            publisherPrivacyPolicy = (TextView) v.findViewById(R.id.publisher_privacy_policy);
+            whatsNew = (TextView) v.findViewById(R.id.whats_new_descript);
+            whatsNewContainer = v.findViewById(R.id.whats_new_container);
             imageLoader = ImageLoader.getInstance();
 
             return v;

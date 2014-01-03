@@ -180,10 +180,20 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             String param = uri.split("=")[1];
             startMarketIntent(param);
 
-        }else{
-//            if(ApplicationAptoide.SEARCHSTORES){
-                new MyAppDownloader().execute(getIntent().getDataString());
-//            }
+        }else if(uri.contains("imgs.aptoide.com")){
+
+
+            String[] strings = uri.split("-");
+            String[] strings1 = uri.split("/");
+            String id = strings[strings.length-1].split("\\.myapp")[0];
+            String repoName = strings1[strings1.length-2];
+
+            Intent i = new Intent(this, AppViewActivity.class);
+            i.putExtra("fromMyapp", true);
+            i.putExtra("id", id);
+            i.putExtra("repoName", repoName);
+            startActivity(i);
+            finish();
 
         }
 

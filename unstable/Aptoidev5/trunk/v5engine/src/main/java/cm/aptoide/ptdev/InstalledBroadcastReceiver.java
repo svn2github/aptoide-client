@@ -10,6 +10,9 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.InstalledPackage;
 import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
+import java.util.Locale;
 
 /**
  * Created by rmateus on 13-12-2013.
@@ -34,11 +37,12 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), 0);
 
                 apk = new InstalledPackage(
-                        pkg.applicationInfo.loadIcon(context.getPackageManager()),
+
                         (String) pkg.applicationInfo.loadLabel(context.getPackageManager()),
                         pkg.packageName,
                         pkg.versionCode,
-                        pkg.versionName);
+                        pkg.versionName,
+                        AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH));
 
 
                 db.insertInstalled(apk);

@@ -1,7 +1,7 @@
 
 package cm.aptoide.ptdev.webservices.json;
 
-import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.*;
 import com.google.api.client.util.Key;
 
 import java.util.List;
@@ -26,6 +26,9 @@ public class GetApkInfoJson {
     private Signature signature;
     @Key
     private String status;
+
+    @Key
+    private List<cm.aptoide.ptdev.model.Error> errors;
 
     public Apk getApk() {
         return apk;
@@ -57,6 +60,10 @@ public class GetApkInfoJson {
 
     public String getStatus() {
         return status;
+    }
+
+    public List<cm.aptoide.ptdev.model.Error> getErrors() {
+        return errors;
     }
 
     public static class Media{

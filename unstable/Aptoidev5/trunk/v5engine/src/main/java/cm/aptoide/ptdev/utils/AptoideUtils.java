@@ -209,6 +209,15 @@ public class AptoideUtils {
             return convToHex(sha1hash);
         }
 
+        public static String computeSHA1sumFromBytes(byte[] bytes)
+                throws NoSuchAlgorithmException, UnsupportedEncodingException {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] sha1hash;
+            md.update(bytes, 0, bytes.length);
+            sha1hash = md.digest();
+            return convToHex(sha1hash);
+        }
+
         public static String md5Calc(File f) {
             int i;
 

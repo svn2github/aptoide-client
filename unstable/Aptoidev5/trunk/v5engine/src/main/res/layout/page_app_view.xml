@@ -9,10 +9,13 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" style="?android:attr/progressBarStyleLarge"/>
+
     <RelativeLayout android:id="@+id/pager_host"
                     android:layout_below="@+id/app_view_header"
                     android:layout_above="@+id/adview"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="match_parent">
 
         <com.astuetz.viewpager.extensions.PagerSlidingTabStrip

@@ -55,6 +55,8 @@
 
     <Button
             android:id="@+id/btinstall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             style="?attr/customButtonColor"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/app_name"

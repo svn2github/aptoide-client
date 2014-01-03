@@ -19,6 +19,8 @@ import java.util.List;
 public abstract class Apk {
 
 
+    private String signature = "";
+
     public long getRepoId() {
         return repoId;
     }
@@ -256,5 +258,13 @@ public abstract class Apk {
 
     public void addCategoryId(int id) {
         categoryId.add(id);
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getSignature() {
+        return signature.replaceAll(":", "");
     }
 }

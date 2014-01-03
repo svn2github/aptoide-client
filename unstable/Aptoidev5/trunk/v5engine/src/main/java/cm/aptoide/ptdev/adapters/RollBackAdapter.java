@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.util.Log;
@@ -11,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.RollBackItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -30,11 +31,11 @@ import java.util.Locale;
  */
 public class RollBackAdapter extends CursorAdapter {
 
-    private final Context context;
+    private final RollbackActivity activity;
 
-    public RollBackAdapter(Context context) {
+    public RollBackAdapter(RollbackActivity context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
-        this.context = context;
+        this.activity = context;
     }
 
 
@@ -71,9 +72,12 @@ public class RollBackAdapter extends CursorAdapter {
         ImageLoader.getInstance().displayImage(icon, holder.icon);
         final String versionName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION));
         holder.version.setText(versionName);
+        final long timeStamp = cursor.getLong(cursor.getColumnIndex("real_timestamp"));
 
+        DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
+        Date date = new Date(timeStamp * 1000);
         final String appState = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION));
-        holder.appState.setText(appState);
+        holder.appState.setText(appState + " at " + timeFormat.format(date));
         final String packageName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_APKID));
         final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_MD5));
         holder.action.setText(getActionFromState(appState));
@@ -84,8 +88,8 @@ public class RollBackAdapter extends CursorAdapter {
 
                 switch (action){
                     case INSTALLED:
-                        UninstallHelper.uninstall(context, packageName);
-                        new Database(Aptoide.getDb()).insertRollbackAction(new RollBackItem(name, packageName, versionName, null, icon , null, md5sum, RollBackItem.Action.UNINSTALLING ));
+                        Fragment fragment = new UninstallRetainFragment(name, packageName, versionName, icon);
+                        activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
                         break;
                     case UPDATED:
                     case UNINSTALLED:

@@ -69,6 +69,8 @@ public class Schema {
 
 
         @ColumnDefinition(type = SQLType.BOOLEAN) public static final String COLUMN_IS_COMPATIBLE = "is_compatible";
+        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_SIGNATURE = "signature";
+
 
 
 
@@ -87,7 +89,7 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "0") public final static String COLUMN_VERCODE = "version_code";
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "") public final static String COLUMN_VERNAME = "version_name";
 
-        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_MD5SUM = "md5";
+        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_SIGNATURE = "signature";
 
         public static String getName() {
             return "installed";

@@ -5,7 +5,7 @@ public class Filters {
     public static enum Screen {
         notfound,small,normal,large,xlarge;
 
-        static Screen lookup(String screen){
+        public static Screen lookup(String screen){
             try{
                 return valueOf(screen);
             }catch (Exception e) {
