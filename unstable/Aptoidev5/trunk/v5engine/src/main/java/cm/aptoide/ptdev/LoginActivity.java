@@ -65,6 +65,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     private String mAuthTokenType;
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
+    EditText password_box;
+    CheckBox checkShowPass;
     /**
      * Called when the activity is first created.
      */
@@ -90,6 +92,18 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 submit();
             }
         });
+        password_box = (EditText) findViewById(R.id.password);
+        checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
+        checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    password_box.setTransformationMethod(null);
+                } else {
+                    password_box.setTransformationMethod(new PasswordTransformationMethod());
+                }
+            }
+        });
+        checkShowPass.setEnabled(true);
 
         TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
         SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
