@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -20,6 +21,7 @@ import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.widget.Toast;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
@@ -183,7 +185,13 @@ public class Settings extends PreferenceActivity {
 //        getActionBar().setHomeButtonEnabled(true);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
+
+
+
     }
+
 
 	public class DeleteDir extends AsyncTask<File, Void, Void> {
 		ProgressDialog pd;

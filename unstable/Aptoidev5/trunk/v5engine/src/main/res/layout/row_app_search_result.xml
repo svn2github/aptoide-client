@@ -35,7 +35,6 @@
                 android:layout_toRightOf="@+id/app_icon"
                 android:singleLine="true"
                 android:drawablePadding="5dp"
-                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_toLeftOf="@+id/ic_action"/>
 

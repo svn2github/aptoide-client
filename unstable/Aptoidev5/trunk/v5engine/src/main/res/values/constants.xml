@@ -32,4 +32,15 @@
 
 
     <string name="app_id">477114135645153</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+
+    <array name="themes">
+        <item>dark</item>
+        <item>light</item>
+    </array>
+    <array name="theme_names">
+        <item>@string/dark</item>
+        <item>@string/light</item>
+    </array>
 </resources>

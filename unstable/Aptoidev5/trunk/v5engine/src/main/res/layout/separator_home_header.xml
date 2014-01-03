@@ -7,8 +7,7 @@
 
     <TextView style="@style/separatorLabel"
               android:id="@+id/separator_label"
-              android:layout_weight="0.2"
-              android:text="Editors' Choice"/>
+              android:layout_weight="0.2"/>
 
     <TextView style="?attr/headerSeparatorButton"
               android:text="+ more"

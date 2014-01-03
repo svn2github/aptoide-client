@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -89,7 +91,17 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter = new MergeAdapter();
 
         HomeBucketAdapter homeBucketAdapter = new HomeBucketAdapter(getActivity(), editorsChoice);
-        adapter.addView(View.inflate(getActivity(), R.layout.separator_home_header, null));
+        View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
+        ((TextView) editorsView.findViewById(R.id.separator_label)).setText("Editors' Choice");
+        editorsView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://m.aptoide.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+        adapter.addView(editorsView);
         editorsChoiceBucketSize = homeBucketAdapter.getBucketSize();
         adapter.addAdapter(homeBucketAdapter);
         getListView().setCacheColorHint(0);
@@ -97,6 +109,14 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView)v.findViewById(R.id.separator_label)).setText("Top Apps");
+        v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://m.aptoide.com/more/topapps");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
         adapter.addView(v);
         adapter.addAdapter(homeBucketAdapter2);
 //

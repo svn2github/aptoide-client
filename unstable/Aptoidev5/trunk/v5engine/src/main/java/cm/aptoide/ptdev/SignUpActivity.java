@@ -22,6 +22,7 @@ public class SignUpActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);

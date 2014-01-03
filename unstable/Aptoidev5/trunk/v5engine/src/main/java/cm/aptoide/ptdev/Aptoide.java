@@ -106,7 +106,7 @@ public class Aptoide extends Application {
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .resetViewBeforeLoading(true)
-                .showStubImage(R.drawable.ic_launcher)
+                .showStubImage(R.drawable.icon_non_available)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(options)

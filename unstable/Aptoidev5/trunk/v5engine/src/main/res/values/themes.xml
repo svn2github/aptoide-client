@@ -11,7 +11,7 @@
         <item name="sectionListView.sectionTextViewTextSize" >18dip</item>
 
         <item name="sectionListView.sectionItemPadding" >2dip</item>
-        <item name="sectionListView.sectionItemBackground" >#AA234523</item>
+        <item name="sectionListView.sectionItemBackground" >@null</item>
 
         <item name="sectionListView.listTextViewPadding" >2dip</item>
         <item name="sectionListView.listTextViewTextColor" >@android:color/white</item>
@@ -20,10 +20,29 @@
         <item name="sectionListView.listItemPadding" >2dip</item>
         <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
 
+        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
+        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
     </style>
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
         <item name="android:cacheColorHint">@null</item>
+        <item name="hagDividerVertical">@drawable/hag__divider_dark</item>
+        <item name="hagSelectableItemBackground">@drawable/hag__background_dark</item>
+        <item name="sectionListView.sectionTextViewPadding" >2dip</item>
+        <item name="sectionListView.sectionTextViewTextColor" >@android:color/black</item>
+        <item name="sectionListView.sectionTextViewTextSize" >18dip</item>
 
+        <item name="sectionListView.sectionItemPadding" >2dip</item>
+        <item name="sectionListView.sectionItemBackground" >@null</item>
+
+        <item name="sectionListView.listTextViewPadding" >2dip</item>
+        <item name="sectionListView.listTextViewTextColor" >@android:color/white</item>
+        <item name="sectionListView.listTextViewTextSize" >22dip</item>
+
+        <item name="sectionListView.listItemPadding" >2dip</item>
+        <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
+
+        <item name="icRatingGoodDrawable">@drawable/ic_action_good_dark</item>
+        <item name="icRatingBadDrawable">@drawable/ic_action_bad_dark</item>
     </style>
 
     <style name="AptoideThemeDefault" parent="AppBaseTheme">
@@ -39,8 +58,7 @@
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
-        <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+
         <item name="icWebSiteDrawable">@style/webSiteLight</item>
         <item name="icEmailDrawable">@style/emailLight</item>
         <item name="icCancelDrawable">@style/cancelLight</item>
@@ -61,8 +79,7 @@
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
-        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
+
         <item name="icWebSiteDrawable">@style/webSiteDark</item>
         <item name="icEmailDrawable">@style/emailDark</item>
         <item name="icCancelDrawable">@style/cancelDark</item>

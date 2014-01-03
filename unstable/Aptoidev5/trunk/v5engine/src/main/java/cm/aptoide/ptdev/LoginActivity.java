@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -12,8 +13,10 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
 
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -67,6 +70,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_login);
         mAccountManager = AccountManager.get(getBaseContext());
@@ -86,7 +90,12 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 submit();
             }
         });
-        findViewById(R.id.new_to_aptoide).setOnClickListener(new View.OnClickListener() {
+
+        TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
+        SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
+        newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
+        new_to_aptoide.setText(newToAptoideString);
+        new_to_aptoide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
@@ -96,6 +105,23 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 startActivityForResult(signup, REQ_SIGNUP);
             }
         });
+
+        TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
+        SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
+        forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
+        forgot_password.setText(forgetString);
+        forgot_password.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
+                startActivity(passwordRecovery);
+            }
+        });
+
+        getSupportActionBar().setTitle(getString(R.string.login));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

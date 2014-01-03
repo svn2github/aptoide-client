@@ -54,7 +54,7 @@ public class InstalledAdapter extends CursorAdapter {
         View v = null;
         switch (type) {
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.separator_updates, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.separator_installed, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);

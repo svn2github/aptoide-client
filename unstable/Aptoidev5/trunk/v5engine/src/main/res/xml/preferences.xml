@@ -97,6 +97,11 @@
         </PreferenceScreen>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/change_theme">
+    <ListPreference android:key="theme" android:title="@string/theme"
+                    android:entries="@array/theme_names" android:entryValues="@array/themes" />
+    </PreferenceCategory>
+
     <!--<PreferenceCategory-->
             <!--android:key="devmode"-->
             <!--android:title="@string/dev_mode">-->

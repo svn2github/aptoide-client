@@ -208,5 +208,7 @@
     <string name="likes">Likes</string>
     <string name="dont_likes">Don\'t likes</string>
     <string name="split_stores">Split Stores</string>
+    <string name="change_theme">Change theme</string>
+    <string name="theme">Themes</string>
 
 </resources>
