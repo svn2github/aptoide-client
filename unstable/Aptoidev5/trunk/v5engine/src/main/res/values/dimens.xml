@@ -17,4 +17,6 @@
     <dimen name="label_padding">16.0dip</dimen>
     <!-- Height of the tab indicator (colorstrip) -->
     <dimen name="carousel_indicator_height">5.0dip</dimen>
+
+    <dimen name="widget_margin">8dp</dimen>
 </resources>

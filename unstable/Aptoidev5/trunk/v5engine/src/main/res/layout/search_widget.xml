@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/widget_margin"  >
+
+
+    <LinearLayout
+                  android:layout_width="fill_parent"
+                  android:layout_height="match_parent"
+                  android:weightSum="4"
+                  android:orientation="horizontal"
+                  android:background="@color/black" >
+
+
+        <TextView android:id="@+id/search_widget_text"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/ic_launcher"
+                android:drawablePadding="7dp"
+                android:hint="Search for apps..." />
+
+
+        <Button android:id="@+id/search_widget_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/search" />
+
+
+    </LinearLayout>
+
+
+</FrameLayout>
