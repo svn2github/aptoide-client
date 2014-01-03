@@ -73,9 +73,9 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         for (int i = 0; i < count; i++) {
             final Cursor item = (Cursor) linkedAdapter
                     .getItem(i);
-            if (!isTheSame(currentSection, item.getString(item.getColumnIndex("timestamp")))) {
-                sectionPositions.put(currentPosition, item.getString(item.getColumnIndex("timestamp")));
-                currentSection = item.getString(item.getColumnIndex("timestamp"));
+            if (!isTheSame(currentSection, item.getString(item.getColumnIndex("cat_timestamp")))) {
+                sectionPositions.put(currentPosition, item.getString(item.getColumnIndex("cat_timestamp")));
+                currentSection = item.getString(item.getColumnIndex("cat_timestamp"));
                 currentPosition++;
             }
             itemPositions.put(currentPosition, i);
