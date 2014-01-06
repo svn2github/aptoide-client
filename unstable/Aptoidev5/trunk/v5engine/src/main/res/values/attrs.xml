@@ -37,4 +37,16 @@
 
     <attr name="icUpdateDrawable" format="reference"/>
 
+    <attr name="icAboutDrawable" format="reference"/>
+
+    <attr name="icDownloadsDrawable" format="reference"/>
+
+    <attr name="icLikeDrawable" format="reference"/>
+
+    <attr name="icDontLikeDrawable" format="reference"/>
+
+    <attr name="icStoreDrawable" format="reference"/>
+
+    <attr name="icRatingFloatDrawable" format="reference"/>
+
 </resources>

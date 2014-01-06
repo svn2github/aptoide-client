@@ -14,21 +14,40 @@
         <item name="sectionListView.sectionItemBackground" >@null</item>
 
         <item name="sectionListView.listTextViewPadding" >2dip</item>
-        <item name="sectionListView.listTextViewTextColor" >@android:color/white</item>
+        <item name="sectionListView.listTextViewTextColor" >@android:color/black</item>
         <item name="sectionListView.listTextViewTextSize" >22dip</item>
 
         <item name="sectionListView.listItemPadding" >2dip</item>
         <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
 
+        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
+
         <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
         <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
+
+        <item name="icWebSiteDrawable">@style/webSiteLight</item>
+        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icCancelDrawable">@style/cancelLight</item>
+        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icUpdateDrawable">@style/updateLight</item>
+
+        <item name="icAboutDrawable">@style/aboutLight</item>
+        <item name="icDownloadsDrawable">@style/downloadsLight</item>
+        <item name="icLikeDrawable">@style/likesLight</item>
+        <item name="icDontLikeDrawable">@style/dontLikesLight</item>
+        <item name="icStoreDrawable">@style/storeLight</item>
+        <item name="icRatingFloatDrawable">@style/ratingLight</item>
+
     </style>
+
+
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
         <item name="android:cacheColorHint">@null</item>
         <item name="hagDividerVertical">@drawable/hag__divider_dark</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_dark</item>
         <item name="sectionListView.sectionTextViewPadding" >2dip</item>
-        <item name="sectionListView.sectionTextViewTextColor" >@android:color/black</item>
+        <item name="sectionListView.sectionTextViewTextColor" >@android:color/white</item>
         <item name="sectionListView.sectionTextViewTextSize" >18dip</item>
 
         <item name="sectionListView.sectionItemPadding" >2dip</item>
@@ -41,8 +60,25 @@
         <item name="sectionListView.listItemPadding" >2dip</item>
         <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
 
+        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
+
         <item name="icRatingGoodDrawable">@drawable/ic_action_good_dark</item>
         <item name="icRatingBadDrawable">@drawable/ic_action_bad_dark</item>
+
+        <item name="icWebSiteDrawable">@style/webSiteDark</item>
+        <item name="icEmailDrawable">@style/emailDark</item>
+        <item name="icCancelDrawable">@style/cancelDark</item>
+        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icUpdateDrawable">@style/updateDark</item>
+
+        <item name="icAboutDrawable">@style/aboutDark</item>
+        <item name="icDownloadsDrawable">@style/downloadsDark</item>
+        <item name="icLikeDrawable">@style/likesDark</item>
+        <item name="icDontLikeDrawable">@style/dontLikesDark</item>
+        <item name="icStoreDrawable">@style/storeDark</item>
+        <item name="icRatingFloatDrawable">@style/ratingDark</item>
+
     </style>
 
     <style name="AptoideThemeDefault" parent="AppBaseTheme">
@@ -56,14 +92,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
@@ -77,14 +105,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
-
-        <item name="icWebSiteDrawable">@style/webSiteDark</item>
-        <item name="icEmailDrawable">@style/emailDark</item>
-        <item name="icCancelDrawable">@style/cancelDark</item>
-        <item name="icUninstallDrawable">@style/uninstallDark</item>
-        <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
 
@@ -99,15 +119,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
 
@@ -122,15 +133,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
-        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
-        <item name="icWebSiteDrawable">@style/webSiteDark</item>
-        <item name="icEmailDrawable">@style/emailDark</item>
-        <item name="icCancelDrawable">@style/cancelDark</item>
-        <item name="icUninstallDrawable">@style/uninstallDark</item>
-        <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
 
@@ -145,15 +147,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
         <item name="customColor">@color/black</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
@@ -167,15 +160,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
         <item name="customColor">@color/black</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
-        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
-        <item name="icWebSiteDrawable">@style/webSiteDark</item>
-        <item name="icEmailDrawable">@style/emailDark</item>
-        <item name="icCancelDrawable">@style/cancelDark</item>
-        <item name="icUninstallDrawable">@style/uninstallDark</item>
-        <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
     <style name="AptoideThemeDefaultMaroon" parent="AppBaseTheme">
@@ -189,15 +173,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMaroon</item>
         <item name="customColor">@color/maroon</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMaroon</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultMaroonDark" parent="AppBaseThemeDark">
@@ -211,15 +186,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodDark</item>
-        <item name="icRatingBadDrawable">@style/ratingBadDark</item>
-        <item name="icWebSiteDrawable">@style/webSiteDark</item>
-        <item name="icEmailDrawable">@style/emailDark</item>
-        <item name="icCancelDrawable">@style/cancelDark</item>
-        <item name="icUninstallDrawable">@style/uninstallDark</item>
-        <item name="icUpdateDrawable">@style/updateDark</item>
     </style>
 
     <style name="AptoideThemeDefaultGold" parent="AppBaseTheme">
@@ -233,15 +199,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGold</item>
         <item name="customColor">@color/gold</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGold</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
@@ -255,15 +212,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomOrange</item>
         <item name="customColor">@color/orange</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleOrange</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultSpringgreen" parent="AppBaseTheme">
@@ -277,15 +225,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSpringgreen</item>
         <item name="customColor">@color/springgreen</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSpringgreen</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultLightsky" parent="AppBaseTheme">
@@ -299,15 +238,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomLightsky</item>
         <item name="customColor">@color/lightsky</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleLightsky</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
@@ -321,15 +251,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomPink</item>
         <item name="customColor">@color/pink</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStylePink</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultBlue" parent="AppBaseTheme">
@@ -343,15 +264,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlue</item>
         <item name="customColor">@color/blue</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlue</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
@@ -365,15 +277,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomRed</item>
         <item name="customColor">@color/red</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleRed</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultMagenta" parent="AppBaseTheme">
@@ -387,15 +290,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMagenta</item>
         <item name="customColor">@color/magenta</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyle</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultSlategray" parent="AppBaseTheme">
@@ -409,15 +303,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSlategray</item>
         <item name="customColor">@color/slategray</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSlategray</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultSeagreen" parent="AppBaseTheme">
@@ -431,15 +316,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSeagreen</item>
         <item name="customColor">@color/seagreen</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSeagreen</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultSilver" parent="AppBaseTheme">
@@ -453,15 +329,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSilver</item>
         <item name="customColor">@color/silver</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSilver</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultDimgray" parent="AppBaseTheme">
@@ -475,15 +342,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomDimgray</item>
         <item name="customColor">@color/dimgray</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleDimgray</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
 
@@ -498,15 +356,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGreenApple</item>
         <item name="customColor">@color/greenapple</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreenApple</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultHappyBlue" parent="AppBaseTheme">
@@ -520,15 +369,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomHappyBlue</item>
         <item name="customColor">@color/happyblue</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleHappyBlue</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
@@ -542,15 +382,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGreen</item>
         <item name="customColor">@color/green</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreen</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="AptoideThemeDefaultYellow" parent="AppBaseTheme">
@@ -564,15 +395,6 @@
         <item name="customButtonColor">@style/WidgetButtonCustomYellow</item>
         <item name="customColor">@color/yellow</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleYellow</item>
-        <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
-        <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
-        <item name="icRatingGoodDrawable">@style/ratingGoodLight</item>
-        <item name="icRatingBadDrawable">@style/ratingBadLight</item>
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
-        <item name="icUpdateDrawable">@style/updateLight</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,6 +21,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.*;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,6 +123,27 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
                 });
                 publishEvents();
+
+                latestVersion = (TextView) findViewById(R.id.app_get_latest);
+                if (json.getLatest() != null) {
+                    latestVersion.setVisibility(View.VISIBLE);
+                    SpannableString spanString = new SpannableString(getString(R.string.get_latest));
+                    spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
+                    latestVersion.setText(spanString);
+                    latestVersion.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String url = json.getLatest();
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            url = url.replaceAll(" ", "%20");
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        }
+                    });
+                }else{
+                    latestVersion.setVisibility(View.GONE);
+                }
+
             } else {
                 for (Error error : json.getErrors()) {
                     Toast.makeText(AppViewActivity.this, error.getMsg(), Toast.LENGTH_LONG).show();
@@ -133,7 +157,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
-    private RatingBar ratingBar;
+    private TextView latestVersion;
 
     private long id;
     private int downloads;
@@ -244,7 +268,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setStore(repoName);
                 details.setDownloads(downloads);
                 details.setScreenshots(json.getMedia().getSshots());
-                details.setLatestVersion(json.getLatest());
+                details.setRating("" + json.getMeta().getLikevotes().getRating());
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
                 details.setDontLikes("" + json.getMeta().getLikevotes().getDislikes());
             } else {
@@ -405,7 +429,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);
         appVersionName = (TextView) findViewById(R.id.app_version);
-        ratingBar = (RatingBar) findViewById(R.id.ratingbar);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         id = getIntent().getExtras().getLong("id");
@@ -726,10 +749,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getVersion();
         }
 
-        public String getLatestVersion(){
-            return details.getLatestVersion();
-        }
-
         public String getPublisher(){
 
             if(details.getDeveloper()!=null){
@@ -767,6 +786,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getNews();
         }
 
+        public String getRating() {
+            return details.rating;
+        }
     }
 
 
@@ -845,6 +867,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         private GetApkInfoJson.Meta.Developer developer;
         private String news;
+        public String rating;
 
         public void setDescription(String description) {
             this.description = description;
@@ -897,7 +920,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String store;
         private String publisher;
         private String version;
-        private String latestVersion;
         private long size;
         private List<String> screenshots;
         private String likes;
@@ -906,10 +928,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public String getDescription() {
             return description;
         }
-
-        public String getLatestVersion() { return latestVersion; }
-
-        public void setLatestVersion(String latestVersion) { this.latestVersion = latestVersion; }
 
         public List<String> getScreenshots() { return screenshots; }
 
@@ -937,6 +955,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public String getNews() {
             return news;
+        }
+
+        public void setRating(String rating) {
+            this.rating = rating;
+        }
+
+        public String getRating() {
+            return rating;
         }
     }
 

@@ -17,11 +17,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:paddingBottom="5dp" />
+                android:paddingBottom="5dp"/>
 
         <!--<TextView-->
-                <!--style="@style/titleLabel"-->
-                <!--android:text="@string/version_info"/>-->
+        <!--style="@style/titleLabel"-->
+        <!--android:text="@string/version_info"/>-->
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="fill_parent"
@@ -63,8 +63,8 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
                     android:singleLine="true"
+                    style="?attr/icDownloadsDrawable"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Downloads: 16334"
                     android:layout_gravity="center_horizontal|left"/>
 
             <TextView
@@ -76,45 +76,16 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
+                    style="?attr/icStoreDrawable"
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
                     android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Store: apps"
-                    android:layout_gravity="center_horizontal|left"/>
-
-            <TextView
-                    android:id="@+id/publisher_label"
-                    android:layout_below="@+id/downloads_label"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="2dp"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Publisher: King.com"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_gravity="center_horizontal|left"/>
 
             <TextView
                     android:id="@+id/size_label"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="2dp"
-                    android:singleLine="true"
-                    android:layout_toRightOf="@+id/publisher_label"
-                    android:textAppearance="?android:attr/textAppearanceSmall" android:text="Size: 51,34M"
-                    android:layout_gravity="center_horizontal|left" android:layout_below="@+id/downloads_label"
-                    android:layout_centerHorizontal="true"/>
-
-            <TextView
-                    android:id="@+id/rating_label"
+                    style="?attr/icAboutDrawable"
                     android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
@@ -125,7 +96,38 @@
                     android:paddingRight="2dp"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Rating: 4.5/5"
+                    android:layout_gravity="center_horizontal|left"
+                    android:layout_below="@+id/downloads_label"/>
+
+            <TextView
+                    android:id="@+id/publisher_label"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:layout_toRightOf="@+id/size_label"
+                    android:layout_below="@+id/downloads_label"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    style="?attr/icWebSiteDrawable"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                    android:id="@+id/rating_label"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="2dp"
+                    style="?attr/icRatingFloatDrawable"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_gravity="center_horizontal|left"
                     android:layout_below="@id/publisher_label"/>
 
@@ -137,11 +139,11 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="2dp"
+                    style="?attr/icLikeDrawable"
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Likes: 45"
                     android:layout_below="@+id/publisher_label"
                     android:layout_gravity="center_horizontal|left"
                     android:layout_toRightOf="@+id/rating_label"/>
@@ -153,36 +155,22 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    style="?attr/icDontLikeDrawable"
                     android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Don't Likes: 2"
                     android:layout_gravity="center_horizontal|left"
                     android:layout_below="@+id/size_label" android:layout_toRightOf="@+id/likes_label"/>
 
-            <TextView
-                    android:id="@+id/app_get_latest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="2dp"
-                    android:layout_below="@+id/rating_label"
-                    android:textColor="?attr/customColor"
-                    android:visibility="gone"
-                    android:layout_alignParentLeft="true" />
-        </RelativeLayout>
 
+        </RelativeLayout>
 
 
         <TextView
                 style="@style/titleLabel"
-                android:text="@string/description" />
+                android:text="@string/description"/>
 
         <LinearLayout
                 android:id="@+id/description_container"
@@ -266,98 +254,104 @@
         <!--</HorizontalScrollView>-->
 
 
-        <LinearLayout android:orientation="vertical" android:id="@+id/whats_new_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone">
-
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/whats_new"/>
-
-        <LinearLayout
-                android:id="@+id/whats_new_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:clickable="true"
-                android:orientation="vertical">
+        <LinearLayout android:orientation="vertical" android:id="@+id/whats_new_container"
+                      android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:visibility="gone">
 
             <TextView
-                    android:id="@+id/whats_new_descript"
+                    style="@style/titleLabel"
+                    android:text="@string/whats_new"/>
+
+            <LinearLayout
+                    android:id="@+id/whats_new_container"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:paddingLeft="5.0sp"
-                    android:paddingRight="5.0sp"
-                    android:paddingTop="10.0dip"/>
+                    android:layout_margin="5dp"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/whats_new_descript"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingLeft="5.0sp"
+                        android:paddingRight="5.0sp"
+                        android:paddingTop="10.0dip"/>
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/show_all_whats_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_more_arrow_down"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:contentDescription="@null"
+                    android:layout_gravity="right|center_vertical"/>
+
         </LinearLayout>
 
-        <ImageView
-                android:id="@+id/show_all_whats_new"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_arrow_down"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:contentDescription="@null"
-                android:layout_gravity="right|center_vertical"/>
 
-        </LinearLayout>
+        <LinearLayout android:orientation="vertical"
+                      android:id="@+id/publisher_container"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:visibility="gone">
 
+            <TextView
+                    style="@style/titleLabel"
+                    android:text="@string/publisher"/>
 
-        <LinearLayout android:orientation="vertical" android:id="@+id/publisher_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone">
-
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/publisher"/>
-
-        <TextView
-                android:id="@+id/publisher_website"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                style="?attr/icWebSiteDrawable"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                android:gravity="center|left"
-                android:clickable="true"
-                android:focusable="true"
-                android:autoLink="web"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TextView
+                    android:id="@+id/publisher_website"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    style="?attr/icWebSiteDrawable"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:gravity="center|left"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:autoLink="web"
+                    android:background="@drawable/highlight_overlay"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
-        <TextView
-                android:id="@+id/publisher_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                style="?attr/icEmailDrawable"
-                android:gravity="center|left"
-                android:clickable="true"
-                android:focusable="true"
-                android:autoLink="email"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TextView
+                    android:id="@+id/publisher_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    style="?attr/icEmailDrawable"
+                    android:gravity="center|left"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:autoLink="email"
+                    android:background="@drawable/highlight_overlay"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
-        <TextView
-                android:id="@+id/publisher_privacy_policy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingBottom="2dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="2dp"
-                style="?attr/icWebSiteDrawable"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center|left"
-                android:autoLink="web"
-                android:background="@drawable/highlight_overlay"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TextView
+                    android:id="@+id/publisher_privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    style="?attr/icWebSiteDrawable"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center|left"
+                    android:autoLink="web"
+                    android:background="@drawable/highlight_overlay"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

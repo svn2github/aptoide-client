@@ -9,14 +9,10 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <!--<fragment android:name="com.astuetz.viewpager.extensions.sample.AppView$AppViewDetailsFragment"-->
-    <!--android:id="@+id/frag_app_view_details"-->
-    <!--android:layout_below="@+id/app_view_header"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_above="@+id/adview"/>-->
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" style="?android:attr/progressBarStyleLarge"/>
 
-    <ScrollView android:layout_width="match_parent"
+    <ScrollView android:id="@+id/pager_host"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/app_view_header"
                 android:layout_above="@+id/adview">

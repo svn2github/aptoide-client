@@ -76,11 +76,13 @@ public abstract class FragmentAppView extends Fragment {
 
 
         private TextView description;
+        private TextView store;
         private TextView downloads;
+        private TextView rating;
         private TextView likes;
         private TextView dontLikes;
         private TextView size;
-        private TextView latestVersion;
+//        private TextView latestVersion;
         private TextView publisher;
 //        private Gallery screenshots;
 //        private ImageGalleryAdapter galleryAdapter;
@@ -104,30 +106,32 @@ public abstract class FragmentAppView extends Fragment {
 
 
 
-            if (event.getLatestVersion() != null) {
-                latestVersion.setVisibility(View.VISIBLE);
-                SpannableString spanString = new SpannableString(getString(R.string.get_latest));
-                spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
-                latestVersion.setText(spanString);
-                latestVersion.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String url = event.getLatestVersion();
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        url = url.replaceAll(" ", "%20");
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
-                });
-            }else{
-                latestVersion.setVisibility(View.GONE);
-            }
+//            if (event.getLatestVersion() != null) {
+//                latestVersion.setVisibility(View.VISIBLE);
+//                SpannableString spanString = new SpannableString(getString(R.string.get_latest));
+//                spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
+//                latestVersion.setText(spanString);
+//                latestVersion.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        String url = event.getLatestVersion();
+//                        Intent i = new Intent(Intent.ACTION_VIEW);
+//                        url = url.replaceAll(" ", "%20");
+//                        i.setData(Uri.parse(url));
+//                        startActivity(i);
+//                    }
+//                });
+//            }else{
+//                latestVersion.setVisibility(View.GONE);
+//            }
 
             publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
+            store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
             downloads.setText(getString(R.string.downloads) + ": " + event.getDownloads());
-            likes.setText(getString(R.string.likes) + ": " + event.getLikes());
-            dontLikes.setText(getString(R.string.dont_likes) + ": " + event.getDontLikes());
+            rating.setText(getString(R.string.rating) +": "+ event.getRating()+ "/5");
+            likes.setText("" + event.getLikes());
+            dontLikes.setText("" + event.getDontLikes());
 
             if(event.getDeveloper() != null){
                 publisherContainer.setVisibility(View.VISIBLE);
@@ -208,12 +212,14 @@ public abstract class FragmentAppView extends Fragment {
 
             description = (TextView) v.findViewById(R.id.descript);
             downloads = (TextView) v.findViewById(R.id.downloads_label);
+            store = (TextView) v.findViewById(R.id.store_label);
+            rating = (TextView) v.findViewById(R.id.rating_label);
             likes = (TextView) v.findViewById(R.id.likes_label);
             dontLikes = (TextView) v.findViewById(R.id.dont_likes_label);
             size = (TextView) v.findViewById(R.id.size_label);
             publisher = (TextView) v.findViewById(R.id.publisher_label);
 //            screenshots = (Gallery) v.findViewById(R.id.gallery);
-            latestVersion = (TextView) v.findViewById(R.id.app_get_latest);
+//            latestVersion = (TextView) v.findViewById(R.id.app_get_latest);
             viewPager = (ViewPager) v.findViewById(R.id._viewPager);
             mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
             publisherContainer = v.findViewById(R.id.publisher_container);

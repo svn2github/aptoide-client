@@ -210,5 +210,7 @@
     <string name="split_stores">Split Stores</string>
     <string name="change_theme">Change theme</string>
     <string name="theme">Themes</string>
+    <string name="rating">Rating</string>
+    <string name="store">Store</string>
 
 </resources>

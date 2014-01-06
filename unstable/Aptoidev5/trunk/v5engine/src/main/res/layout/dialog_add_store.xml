@@ -47,7 +47,7 @@
             <Button android:id="@+id/button_dialog_add_store"
                     style="@style/WidgetButtonCustomGray"
                     android:text="@string/add"
-                    android:drawableLeft="@drawable/ic_accept"
+                    android:drawableLeft="@drawable/ic_action_accept"
                     android:drawablePadding="4dp"/>
 
         </LinearLayout>
