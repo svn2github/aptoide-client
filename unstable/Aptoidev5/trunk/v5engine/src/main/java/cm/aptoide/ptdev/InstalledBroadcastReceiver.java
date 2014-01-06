@@ -34,7 +34,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
             InstalledPackage apk;
             try {
                 PackageManager mPm = context.getPackageManager();
-                PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), 0);
+                PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), PackageManager.GET_SIGNATURES);
 
                 apk = new InstalledPackage(
 

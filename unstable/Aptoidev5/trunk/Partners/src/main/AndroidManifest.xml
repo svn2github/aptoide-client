@@ -4,7 +4,7 @@
           android:versionCode="415"
           android:versionName="5.0.0 Dev Version">
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="18"/>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

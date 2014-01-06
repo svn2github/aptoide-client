@@ -2,7 +2,7 @@
     package="com.manuelpeinado.multichoiceadapter">
 
     <uses-sdk
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="18" />
     <application/>
 
 </manifest>
