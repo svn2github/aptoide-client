@@ -115,7 +115,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         mainAdapter = new MergeAdapter();
         database = new Database(Aptoide.getDb());
         categoryAdapter = new CategoryAdapter(getActivity());
-        apkAdapter = new ApkAdapter(getActivity());
+        apkAdapter = new CategoryAdapter(getActivity());
         mainAdapter.addAdapter(categoryAdapter);
         mainAdapter.addAdapter(apkAdapter);
         setHasOptionsMenu(true);

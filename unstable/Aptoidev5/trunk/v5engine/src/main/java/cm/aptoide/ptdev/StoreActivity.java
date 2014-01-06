@@ -59,6 +59,11 @@ public class StoreActivity extends ActionBarActivity {
 
         }
     };
+    private EnumStoreTheme storeTheme;
+
+    public EnumStoreTheme getStoreTheme() {
+        return storeTheme;
+    }
 
     public enum Sort{ NAME, DATE, DOWNLOADS, RATING, PRICE}
     public boolean noCategories;

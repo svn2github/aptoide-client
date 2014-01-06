@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ public class MyAccountActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         mAccountManager = AccountManager.get(this);
 
@@ -52,7 +54,9 @@ public class MyAccountActivity extends ActionBarActivity {
             finish();
         }
 
-
+        getSupportActionBar().setTitle(getString(R.string.login));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void addAccount() {
@@ -76,5 +80,19 @@ public class MyAccountActivity extends ActionBarActivity {
                 }
             }
         }, null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+
+        if (i == android.R.id.home) {
+            finish();
+        } else if (i == R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

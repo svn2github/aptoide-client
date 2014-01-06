@@ -89,7 +89,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             String description = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DESCRIPTION));
             String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
 
-            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_DEFAULT");
+            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_GREEN");
 
             //store_background.setBackgroundResource( storeTheme.getStoreHeader() );
             ImageLoader.getInstance().displayImage(url, avatar);
