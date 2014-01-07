@@ -6,6 +6,7 @@ import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
@@ -13,6 +14,7 @@ import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
 import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.services.FileRequest;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -111,6 +113,13 @@ public class Parser{
 
                             parser.parse(inputStream, handler);
                             Log.d("Aptoide-Parser", "Parse ended");
+
+                            if (handler instanceof HandlerInfoXml && !((HandlerInfoXml) handler).isDelta() &&
+                                    ((HandlerInfoXml) handler).getCountriesPermitted() != null &&
+                                    ((HandlerInfoXml) handler).getCountriesPermitted().contains(AptoideUtils.getMyCountry(Aptoide.getContext()))) {
+                                RepoLocaleUpdater localeUpdater = new RepoLocaleUpdater(handler.getRepoId(), AptoideUtils.RepoUtils.split(url), Aptoide.getContext(), handler.getDb());
+                                localeUpdater.parse();
+                            }
 
                             Aptoide.getDb().setTransactionSuccessful();
                             if(completeCallback!=null)completeCallback.onComplete(repoId);

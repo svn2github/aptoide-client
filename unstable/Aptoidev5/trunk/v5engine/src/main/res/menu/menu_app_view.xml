@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_schedule"
-          app:showAsAction="ifRoom"
-          android:title="@string/schedule"
-          android:icon="@drawable/ic_schedule"/>
+    <!--<item android:id="@+id/menu_schedule"-->
+          <!--app:showAsAction="ifRoom"-->
+          <!--android:title="@string/schedule"-->
+          <!--android:icon="@drawable/ic_schedule"/>-->
 
     <item android:id="@+id/menu_share"
           app:showAsAction="ifRoom"

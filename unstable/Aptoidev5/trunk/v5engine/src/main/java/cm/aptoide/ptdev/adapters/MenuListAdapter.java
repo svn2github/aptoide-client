@@ -29,8 +29,8 @@ public class MenuListAdapter extends BaseAdapter {
 
         mItems.add(new Item(context.getString(R.string.my_account), R.drawable.ic_action_accounts));
         mItems.add(new Item(context.getString(R.string.rollback), R.drawable.ic_action_time));
-        mItems.add(new Item(context.getString(R.string.scheduled_downloads), R.drawable.ic_drawer_schedule));
-        mItems.add(new Item(context.getString(R.string.excluded_updates), R.drawable.ic_action_cancel));
+        //mItems.add(new Item(context.getString(R.string.scheduled_downloads), R.drawable.ic_drawer_schedule));
+        //mItems.add(new Item(context.getString(R.string.excluded_updates), R.drawable.ic_action_cancel));
 
         mItems.add(new Category(context.getString(R.string.social_networks)));
         mItems.add(new Item(context.getString(R.string.facebook), R.drawable.ic_action_facebook));

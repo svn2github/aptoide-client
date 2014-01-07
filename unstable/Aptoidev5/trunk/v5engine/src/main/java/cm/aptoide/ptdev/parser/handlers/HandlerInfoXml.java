@@ -6,6 +6,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
 import cm.aptoide.ptdev.model.Server;
+import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
 import org.apache.commons.io.IOUtils;
@@ -29,6 +30,12 @@ import java.util.Date;
 public class HandlerInfoXml extends AbstractHandler {
 
 
+    private String countriesPermitted;
+
+    public boolean isDelta() {
+        return isDelta;
+    }
+
     private boolean isDelta;
     private File file;
     private boolean isRemove;
@@ -49,6 +56,10 @@ public class HandlerInfoXml extends AbstractHandler {
         return new ApkInfoXML();
     }
 
+    public String getCountriesPermitted() {
+        return countriesPermitted;
+    }
+
 
     protected static class Category{
 
@@ -63,16 +74,19 @@ public class HandlerInfoXml extends AbstractHandler {
 
     @Override
     protected void loadSpecificElements() {
+
+
+
         elements.put("package", new ElementHandler() {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
                 apk = getApk();
-                ((ApkInfoXML) apk).setRepoId(repoId);
+                apk.setRepoId(repoId);
             }
 
             @Override
             public void endElement() throws SAXException {
-                if (isRunning()) {
+                if (isRunning() && !multipleApk) {
 
                     if(isRemove){
                         apk.databaseDelete(getDb());
@@ -83,7 +97,7 @@ public class HandlerInfoXml extends AbstractHandler {
 
 
                 }
-
+                multipleApk = false;
             }
         });
 
@@ -108,6 +122,27 @@ public class HandlerInfoXml extends AbstractHandler {
             }
         });
 
+        elements.put("version", new ElementHandler() {
+            @Override
+            public void startElement(Attributes attributes) throws SAXException {
+
+
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+                if(Integer.parseInt(sb.toString())<7){
+                    Log.d("Aptoide-Parser", "Throwing exception");
+                    throw new InvalidVersionException();
+
+                }
+
+
+            }
+        });
+
         elements.put("date", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
 
@@ -124,6 +159,17 @@ public class HandlerInfoXml extends AbstractHandler {
             }
         });
 
+        elements.put("localize", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+               countriesPermitted = sb.toString();
+            }
+        });
+
         elements.put("repository", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
 
@@ -137,6 +183,20 @@ public class HandlerInfoXml extends AbstractHandler {
                 getDb().updateServer(server, getRepoId());
             }
         });
+
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(multipleApk){
+                    apk.databaseInsert(statements, categoriesIds);
+                }
+            }
+        });
+
         elements.put("del", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
                 isRemove = true;

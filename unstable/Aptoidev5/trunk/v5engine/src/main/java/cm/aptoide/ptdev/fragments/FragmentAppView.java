@@ -126,10 +126,13 @@ public abstract class FragmentAppView extends Fragment {
                 publisherWebsite.setText("Website: " + event.getDeveloper().getInfo().getWebsite());
             }
 
-            galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
+
+
+
+
 
             if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
-
+                galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
                 screenshots.setVisibility(View.VISIBLE);
                 screenshots.setAdapter(galleryAdapter);
                 screenshots.setSpacing(1);

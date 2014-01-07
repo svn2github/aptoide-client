@@ -16,6 +16,7 @@ import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.fragments.HomeItem;
+import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -29,10 +30,14 @@ import java.util.List;
  */
 public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
+    private final String sizeString;
+
     public HomeBucketAdapter(Activity ctx, List<HomeItem> elements) {
 
         super(ctx, elements);
         enableAutoMeasure(120);
+        sizeString = IconSizes.generateSizeString(ctx);
+
     }
 
     @Override
@@ -70,7 +75,14 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
         holder.name.setText(item.getName());
         holder.category.setText(item.getCategory());
-        ImageLoader.getInstance().displayImage(item.getIcon(), holder.icon);
+        String icon = item.getIcon();
+
+        if(icon.contains("_icon")){
+            String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+            icon = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+        }
+
+        ImageLoader.getInstance().displayImage(icon, holder.icon);
 
         v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
             @Override

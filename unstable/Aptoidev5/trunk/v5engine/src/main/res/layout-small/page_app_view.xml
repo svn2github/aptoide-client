@@ -40,10 +40,10 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
-            <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRelated"
-                      android:id="@+id/frag_app_view_related"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"/>
+            <!--<fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRelated"-->
+                      <!--android:id="@+id/frag_app_view_related"-->
+                      <!--android:layout_width="match_parent"-->
+                      <!--android:layout_height="wrap_content"/>-->
 
             <fragment android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewSpecs"
                       android:id="@+id/frag_app_view_advanced"

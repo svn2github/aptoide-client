@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,9 +60,23 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 		final View v = LayoutInflater.from(context).inflate(R.layout.row_item_screenshots_big, null);
 		final ProgressBar pb = (ProgressBar) v.findViewById(R.id.screenshots_loading_big);
 
+        String icon;
+        if (hd) {
+            Log.d("Aptoide-Screenshots", "Icon is hd: " + url.get(position));
+
+            if (url.get(position).contains("_screen")) {
+                icon = url.get(position).split("\\|")[1];
+                Log.d("Aptoide-Screenshots" , "Icon is : " + icon);
+            } else {
+                icon = url.get(position);
+            }
+
+        } else {
+            icon = screenshotToThumb(url.get(position));
+        }
 
 
-		imageLoader.displayImage(hd ? url.get(position) : screenshotToThumb(url.get(position)), (ImageView) v.findViewById(R.id.screenshot_image_big), options, new ImageLoadingListener() {
+		imageLoader.displayImage(icon, (ImageView) v.findViewById(R.id.screenshot_image_big), options, new ImageLoadingListener() {
 
             @Override
             public void onLoadingStarted(String uri, View view) {

@@ -9,10 +9,7 @@ import android.util.Log;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
-import cm.aptoide.ptdev.model.InstalledPackage;
-import cm.aptoide.ptdev.model.RollBackItem;
-import cm.aptoide.ptdev.model.Server;
-import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.*;
@@ -26,6 +23,10 @@ import java.util.*;
  */
 public class Database {
 
+
+    public SQLiteDatabase getDatabaseInstance() {
+        return database;
+    }
 
     private final SQLiteDatabase database;
 
@@ -103,7 +104,7 @@ public class Database {
 
         Cursor c = null;
         if(storeid>0){
-            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme, repo.name as repo_name from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
             c.getCount();
         }
 
@@ -443,7 +444,7 @@ public class Database {
 
     public Cursor getApkInfo(long id) {
 
-        Cursor c = database.rawQuery("select apk.package_name, apk.name as name, apk.version_name, apk.rating, apk.downloads, apk.sdk, apk.screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
+        Cursor c = database.rawQuery("select apk.version_code, apk.package_name, apk.name as name, apk.version_name, apk.rating, apk.downloads, apk.sdk, apk.screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
         c.moveToFirst();
 
         return c;
@@ -594,5 +595,10 @@ public class Database {
         c.getCount();
 
         return c;
+    }
+
+    public void updateApkName(Apk apk, SQLiteStatement statement) {
+        statement.bindAllArgsAsStrings(new String[]{apk.getName(), apk.getPackageName(), String.valueOf(apk.getRepoId())});
+        statement.execute();
     }
 }

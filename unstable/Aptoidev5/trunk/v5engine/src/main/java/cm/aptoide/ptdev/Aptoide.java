@@ -7,23 +7,24 @@ import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FlushedInputStream;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.ACRAConfigurationException;
-import org.acra.ReportingInteractionMode;
+import org.acra.*;
 import org.acra.annotation.ReportsCrashes;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static org.acra.ReportField.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,6 +93,10 @@ public class Aptoide extends Application {
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
             acraConfiguration.setMode(ReportingInteractionMode.TOAST);
+
+
+
+                    acraConfiguration.setCustomReportContent(new ReportField[]{ ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID });
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
@@ -101,6 +106,9 @@ public class Aptoide extends Application {
 
         db = DatabaseHelper.getInstance(getApplicationContext());
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
+        bootImpl(managerPreferences);
+        setConfiguration(getAptoideConfiguration());
+        setThemePicker(getNewThemePicker());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
@@ -108,16 +116,28 @@ public class Aptoide extends Application {
                 .resetViewBeforeLoading(true)
                 .showStubImage(R.drawable.icon_non_available)
                 .build();
+
+
+        FileNameGenerator generator = new FileNameGenerator() {
+            @Override
+            public String generate(String s) {
+
+                if(s!=null){
+                    return s.substring(s.lastIndexOf('/') + 1);
+                }else{
+                    return null;
+                }
+            }
+        };
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(options)
+                .discCache(new UnlimitedDiscCache(new File(getConfiguration().getPathCacheIcons()), generator))
                 .imageDownloader(new ImageDownloaderWithPermissions(managerPreferences))
                 .build();
         ImageLoader.getInstance().init(config);
 
 
-        bootImpl(managerPreferences);
-        setConfiguration(getAptoideConfiguration());
-        setThemePicker(getNewThemePicker());
 
 
     }

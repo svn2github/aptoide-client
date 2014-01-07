@@ -38,7 +38,6 @@ public class CategoryAdapter extends CursorAdapter {
     public CategoryAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
         this.context = context;
-
         sizeString = IconSizes.generateSizeString(context);
     }
 
@@ -111,8 +110,6 @@ public class CategoryAdapter extends CursorAdapter {
                 if(icon1.contains("_icon")){
                     String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
                     icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-                }else{
-//                    holder.appIcon.setBackgroundResource(R.drawable.);
                 }
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
@@ -126,9 +123,11 @@ public class CategoryAdapter extends CursorAdapter {
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
-                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(name);
+                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(Html.fromHtml(name));
                 ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
+                String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
+
                 EnumStoreTheme theme;
                 try{
                     theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
@@ -161,7 +160,7 @@ public class CategoryAdapter extends CursorAdapter {
                         break;
 
                     default:
-                        String iconUrl = EnumCategories.categoryIcons.get(id);
+                        String iconUrl = EnumCategories.getCategoryIcon(id, repoName);
                         if (iconUrl != null) {
                             ImageLoader.getInstance().displayImage(iconUrl, icon);
                         } else {

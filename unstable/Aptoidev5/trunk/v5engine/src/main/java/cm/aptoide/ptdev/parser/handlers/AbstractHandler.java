@@ -80,7 +80,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
     static StringBuilder sb = new StringBuilder();
     HashMap<String, ElementHandler> elements = new HashMap<String, ElementHandler>();
 
-    private boolean multipleApk;
+    protected boolean multipleApk;
 
     interface ElementHandler{
 
@@ -145,6 +145,19 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 apk.setSignature(sb.toString());
+            }
+        });
+
+        elements.put("multipleapk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+                multipleApk = true;
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
             }
         });
 

@@ -30,6 +30,12 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
     private String token;
     private Context context;
 
+    public void setVercode(long vercode) {
+        this.vercode = vercode;
+    }
+
+    private long vercode;
+
 
     public GetApkInfoRequest(Context context) {
         super(GetApkInfoJson.class);
@@ -44,6 +50,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
         if(token!=null)options.add(new WebserviceOptions("token", token));
         options.add(new WebserviceOptions("cmtlimit", "5"));
         options.add(new WebserviceOptions("payinfo", "true"));
+        options.add(new WebserviceOptions("vercode", Long.toString(vercode)));
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
 

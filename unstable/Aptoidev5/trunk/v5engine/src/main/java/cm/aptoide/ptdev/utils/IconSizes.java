@@ -72,7 +72,7 @@ public class IconSizes {
 
 
         int size;
-        if(orient.equals("port")){
+        if(orient.equals("portrait")){
             size = Math.round(baseLineScreenshotPort * densityMultiplier);
 
         }else{

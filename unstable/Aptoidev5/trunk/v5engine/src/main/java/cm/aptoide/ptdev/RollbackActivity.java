@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import cm.aptoide.ptdev.adapters.RollBackAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -39,15 +41,13 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
 
         rollBackAdapter = new RollBackAdapter(this);
 
+
         ListView lView = (ListView) findViewById(R.id.rollback_list);
         lView.setDivider(null);
-
 
         SectionListAdapter adapter = new SectionListAdapter(getLayoutInflater(), rollBackAdapter);
 
         lView.setAdapter(adapter);
-
-
 
         getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -84,7 +84,11 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         rollBackAdapter.swapCursor(cursor);
-
+        if(cursor.getCount()==0){
+            findViewById(R.id.empty).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.empty).setVisibility(View.GONE);
+        }
     }
 
     @Override

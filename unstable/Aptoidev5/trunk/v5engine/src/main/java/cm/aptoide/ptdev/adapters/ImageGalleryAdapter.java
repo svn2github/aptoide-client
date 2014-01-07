@@ -120,10 +120,12 @@ public class ImageGalleryAdapter extends BaseAdapter {
     protected String screenshotToThumb(String string) {
 
         String screen;
-        sizeString = IconSizes.generateSizeStringScreenshots(context, "port");
 
         if (string.contains("_screen")) {
-            String[] splittedUrl = string.split("\\.(?=[^\\.]+$)");
+
+            sizeString = IconSizes.generateSizeStringScreenshots(context, string.split("\\|")[0]);
+
+            String[] splittedUrl = string.split("\\|")[1].split("\\.(?=[^\\.]+$)");
             screen = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
         } else {
 
@@ -165,7 +167,25 @@ public class ImageGalleryAdapter extends BaseAdapter {
 
 
 		final ProgressBar pb = (ProgressBar) v.findViewById(R.id.screenshot_loading_item);
-		imageLoader.displayImage(hd?url.get(position):screenshotToThumb(url.get(position)), (ImageView) v.findViewById(R.id.screenshot_image_item), options, new ImageLoadingListener() {
+
+
+        String icon;
+
+        if (hd) {
+            Log.d("Aptoide-Screenshots" , "Icon is hd: " + url.get(position));
+
+            if (url.get(position).contains("_screen")) {
+                icon = url.get(position).split("\\|")[1];
+                Log.d("Aptoide-Screenshots" , "Icon is : " + icon);
+            } else {
+                icon = url.get(position);
+            }
+
+        } else {
+            icon = screenshotToThumb(url.get(position));
+        }
+
+		imageLoader.displayImage(icon,(ImageView) v.findViewById(R.id.screenshot_image_item), options, new ImageLoadingListener() {
 
 			@Override
 			public void onLoadingStarted(String uri, View v) {

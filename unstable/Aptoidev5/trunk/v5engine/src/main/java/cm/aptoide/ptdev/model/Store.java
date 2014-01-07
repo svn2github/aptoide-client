@@ -1,5 +1,8 @@
 package cm.aptoide.ptdev.model;
 
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -66,7 +69,7 @@ public class Store {
 
 
     public String getInfoXmlUrl() {
-        return baseUrl + "info.xml"+(delta!=null?"?hash="+delta:"");
+        return baseUrl + "info.xml"+(delta!=null?"?hash="+delta + ":"+ AptoideUtils.getMyCountryCode(Aptoide.getContext()):"");
     }
 
     public String getLatestXmlUrl() {

@@ -23,6 +23,10 @@ public class AptoideDialog {
         return new PasswordDialog();
     }
 
+    public static DialogFragment wrongVersionXmlDialog(){
+        return new WrongXmlVersionDialog();
+    }
+
 
 
 

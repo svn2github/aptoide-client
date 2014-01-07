@@ -125,6 +125,7 @@ public class CategoryGridAdapter extends CursorAdapter {
                 ((TextView) view.findViewById(R.id.category_first_level_name)).setText(name);
                 ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
+                String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
                 EnumStoreTheme theme;
                 try{
                     theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
@@ -157,7 +158,7 @@ public class CategoryGridAdapter extends CursorAdapter {
                         break;
 
                     default:
-                        String iconUrl = EnumCategories.categoryIcons.get(id);
+                        String iconUrl = EnumCategories.getCategoryIcon(id, repoName);
                         if (iconUrl != null) {
                             ImageLoader.getInstance().displayImage(iconUrl, icon);
                         } else {

@@ -68,17 +68,16 @@ public class GetApkInfoJson {
 
     public static class Media{
         @Key private List<String> sshots;
-        @Key private List<String> sshots_hd;
+        @Key private List<Screenshots> sshots_hd;
         @Key private List<Videos> videos;
 
         public List<String> getSshots(){
 
-
-            if(sshots_hd!=null){
-                return this.sshots_hd;
-            }
-
             return this.sshots;
+        }
+
+        public List<Screenshots> getSshots_hd(){
+            return this.sshots_hd;
         }
         public void setSshots(List<String> sshots){
             this.sshots = sshots;
@@ -106,6 +105,20 @@ public class GetApkInfoJson {
             }
             public void setUrl(String url){
                 this.url = url;
+            }
+        }
+
+        public static class Screenshots {
+            @Key private String path;
+            @Key private String orient;
+
+
+            public String getOrient() {
+                return orient;
+            }
+
+            public String getPath() {
+                return path;
             }
         }
     }

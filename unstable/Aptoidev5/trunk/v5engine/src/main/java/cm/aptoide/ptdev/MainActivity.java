@@ -42,6 +42,7 @@ import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -182,18 +183,20 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         Exception e = event.getE();
         long repoId = event.getRepoId();
 
-        if(e instanceof ParseStoppedException){
-            Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        if(e instanceof InvalidVersionException){
+            AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
         }
+          //  Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        //}else{
+          //  Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        //}
 
     }
 
     @Subscribe
     public void onRepoComplete(RepoCompleteEvent event){
         long repoId = event.getRepoId();
-        Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
     }
 
     @Override

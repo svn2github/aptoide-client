@@ -172,8 +172,15 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }
+
         Log.d("Aptoide-Parser", "Parse");
-        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, null);
+
+        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
 

@@ -197,17 +197,24 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     pd.dismiss();
                 }
 
-                Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
+                if ("OK".equals(checkUserCredentialsJson.getStatus())) {
 
-                Bundle data = new Bundle();
-                data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
-                data.putString(PARAM_USER_PASS, userPass);
-                final Intent res = new Intent();
-                res.putExtras(data);
-                finishLogin(res);
+                    //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
+
+                    Bundle data = new Bundle();
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
+                    data.putString(PARAM_USER_PASS, userPass);
+                    final Intent res = new Intent();
+                    res.putExtras(data);
+                    finishLogin(res);
+                }else{
+                    for(String error: checkUserCredentialsJson.getErrors()){
+                        Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+                    }
+                }
 
 
             }

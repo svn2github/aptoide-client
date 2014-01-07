@@ -4,6 +4,8 @@ import android.accounts.*;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,7 +110,51 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 
 
-                findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+                try{
+                    PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
+
+                    if(getApkInfoJson.getApk().getVercode().intValue()>info.versionCode){
+
+                        ((TextView)findViewById(R.id.btinstall)).setText("Update");
+                        findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+
+                    }else if(getApkInfoJson.getApk().getVercode().intValue()<info.versionCode){
+
+                        ((TextView)findViewById(R.id.btinstall)).setText("Downgrade");
+                        findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+
+                    }else{
+
+
+                        final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
+
+                        ((TextView)findViewById(R.id.btinstall)).setText("Open");
+
+                        if(i!=null){
+                            findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(i);
+                                }
+                            });
+
+                        }else{
+                            findViewById(R.id.btinstall).setEnabled(false);
+                        }
+
+
+                    }
+
+
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+
+                }
+
+
+                findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
 
 
                 findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
@@ -122,6 +168,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     }
                 });
+
+
+                if(getApkInfoJson.getMalware()!=null){
+                    if(getApkInfoJson.getMalware().getStatus().equals("scanned")){
+                        ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
+                        ((TextView)findViewById(R.id.app_badge_text)).setText("Trusted");
+                    }else if(getApkInfoJson.getMalware().getStatus().equals("warn")){
+                        ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
+                        ((TextView)findViewById(R.id.app_badge_text)).setText("Warning");
+                    }
+                    findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+                }
+
+
+
                 publishEvents();
 
                 latestVersion = (TextView) findViewById(R.id.app_get_latest);
@@ -267,7 +329,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setSize(json.getApk().getSize().longValue());
                 details.setStore(repoName);
                 details.setDownloads(downloads);
-                details.setScreenshots(json.getMedia().getSshots());
+
+                if (json.getMedia().getSshots_hd() != null) {
+                    details.setScreenshotsHd(json.getMedia().getSshots_hd());
+                } else {
+                    details.setScreenshots(json.getMedia().getSshots());
+                }
+
                 details.setRating("" + json.getMeta().getLikevotes().getRating());
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
                 details.setDontLikes("" + json.getMeta().getLikevotes().getDislikes());
@@ -369,32 +437,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
+        findViewById(R.id.btinstall).setVisibility(View.GONE);
 
 
+        AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
-//            AccountManager accountManager = AccountManager.get(AppViewActivity.this);
-//            Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-//            accountManager.getAuthToken(account, AccountGeneral.ACCOUNT_TYPE, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
-//                @Override
-//                public void run(AccountManagerFuture<Bundle> future) {
-//                    try {
-//                        token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-//                        Log.d("Aptoide-Login", "Token is" + token);
-//                        Toast.makeText(AppViewActivity.this, "Token is: " + token, Toast.LENGTH_LONG).show();
-//                    } catch (OperationCanceledException e) {
-//                        e.printStackTrace();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (AuthenticatorException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }, null);
-
-
-            AccountManager accountManager = AccountManager.get(AppViewActivity.this);
-
-        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
 
             Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
             accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
@@ -413,7 +461,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 }
             }, null);
 
-        }else{
+        } else {
             continueLoading();
 
         }
@@ -432,16 +480,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         id = getIntent().getExtras().getLong("id");
-        if(pager == null){
-
-        }else{
+        if(pager != null){
             PagerAdapter adapter = new AppViewPager(getSupportFragmentManager());
             pager.setAdapter(adapter);
             PagerSlidingTabStrip slidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             slidingTabStrip.setViewPager(pager);
         }
-
-
 
         getSupportActionBar().setTitle("");
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -480,16 +524,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
         }
 
-
-
-
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_app_view, menu);
-
-
+    public boolean onPrepareOptionsMenu(Menu menu) {
 
         // Locate MenuItem with ShareActionProvider
         SupportMenuItem item = (SupportMenuItem) menu.findItem(R.id.menu_share);
@@ -499,11 +537,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("type/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT,"SUBJECT");
-        shareIntent.putExtra(Intent.EXTRA_TEXT,"TEXT TEXT");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Check this Application from Aptoide!");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,"http://m.aptoide.com/search/view?search_input="+package_name);
 
 
         mShareActionProvider.setShareIntent(shareIntent);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_app_view, menu);
+
+
+
+
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -562,6 +611,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
         minSdk = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SDK));
         screen = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
+        long versionCode = apkCursor.getLong(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
+
         float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
 
         appName.setText(name);
@@ -579,6 +630,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setRepoName(repoName);
         request.setPackageName(package_name);
         request.setVersionName(versionName);
+        request.setVercode(versionCode);
 
         if(token!=null){
             request.setToken(token);
@@ -682,7 +734,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public class AppViewPager extends FixedFragmentStatePagerAdapter{
 
-        private final String[] TITLES = {"Info", "Rating", "Related", "Advanced"};
+        private final String[] TITLES = {"Info", "Rating", "Advanced"};
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -702,9 +754,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 return new FragmentAppView.FragmentAppViewDetails();
                 case 1:
                     return new FragmentAppView.FragmentAppViewRating();
+                //case 2:
+                    //return new FragmentAppView.FragmentAppViewRelated();
                 case 2:
-                    return new FragmentAppView.FragmentAppViewRelated();
-                case 3:
                     return new FragmentAppView.FragmentAppViewSpecs();
                 default:
                     return null;
@@ -716,7 +768,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
     }
 
@@ -770,8 +822,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getDownloads();
         }
 
-        public List getScreenshots(){
-            return details.getScreenshots();
+        public List<String> getScreenshots(){
+
+            if(details.getScreenshotsHd()!=null){
+
+                ArrayList<String> screenshotsPath = new ArrayList<String>();
+
+                for(GetApkInfoJson.Media.Screenshots screenshot : details.getScreenshotsHd()){
+                    screenshotsPath.add(screenshot.getOrient()+"|"+screenshot.getPath());
+                }
+
+                return screenshotsPath;
+            }else{
+                return details.getScreenshots();
+            }
         }
 
         public String getLikes(){
@@ -868,6 +932,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private GetApkInfoJson.Meta.Developer developer;
         private String news;
         public String rating;
+        private List<GetApkInfoJson.Media.Screenshots> screenshotsHd;
 
         public void setDescription(String description) {
             this.description = description;
@@ -963,6 +1028,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public String getRating() {
             return rating;
+        }
+
+        public void setScreenshotsHd(List<GetApkInfoJson.Media.Screenshots> screenshotsHd) {
+            this.screenshotsHd = screenshotsHd;
+        }
+
+        public List<GetApkInfoJson.Media.Screenshots> getScreenshotsHd() {
+            return screenshotsHd;
         }
     }
 

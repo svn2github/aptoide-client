@@ -20,7 +20,7 @@ public class Defaults {
     public static final String PATH_SDCARD       = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String PATH_CACHE        = PATH_SDCARD + "/.aptoide/";
     public static final String PATH_CACHE_APKS   = PATH_CACHE + "apks/";
-    public static final String PATH_CACHE_ICONS  = PATH_CACHE + "icons/";
+    public static final String PATH_CACHE_ICONS  = "icons/";
 
     public static final boolean ALWAYS_UPDATE = false;
     public static final String EDITORS_PATH = "editors.xml";
