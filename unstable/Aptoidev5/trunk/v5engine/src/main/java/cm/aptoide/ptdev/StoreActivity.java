@@ -115,8 +115,6 @@ public class StoreActivity extends ActionBarActivity {
             setFragment();
         }
 
-        Toast.makeText(getApplicationContext(), "Is repo parsing? " +isRefreshing, Toast.LENGTH_LONG).show();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

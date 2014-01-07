@@ -17,10 +17,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
-import cm.aptoide.ptdev.AllComments;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.ScreenshotsViewer;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.GalleryPagerAdapter;
 import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -397,22 +394,24 @@ public abstract class FragmentAppView extends Fragment {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
 
-                            Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                @Override
-                                public void run(AccountManagerFuture<Bundle> future) {
-                                    try {
-                                        ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                    } catch (OperationCanceledException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (AuthenticatorException e) {
-                                        e.printStackTrace();
-                                    }
+                            if (LoginActivity.isLoggedIn(getActivity())) {
+                                Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                    @Override
+                                    public void run(AccountManagerFuture<Bundle> future) {
+                                        try {
+                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                        } catch (OperationCanceledException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (AuthenticatorException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                }
-                            }, null);
+                                    }
+                                }, null);
+                            }
 
 
                         }
@@ -480,28 +479,31 @@ public abstract class FragmentAppView extends Fragment {
                 if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
                     addComment();
                 } else {
+
                     manager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
+                            if (LoginActivity.isLoggedIn(getActivity())) {
 
-                            Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                @Override
-                                public void run(AccountManagerFuture<Bundle> future) {
-                                    try {
+                                Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                    @Override
+                                    public void run(AccountManagerFuture<Bundle> future) {
+                                        try {
 
-                                        ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                        addComment();
-                                    } catch (OperationCanceledException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (AuthenticatorException e) {
-                                        e.printStackTrace();
+                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                            addComment();
+                                        } catch (OperationCanceledException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (AuthenticatorException e) {
+                                            e.printStackTrace();
+                                        }
+
                                     }
-
-                                }
-                            }, null);
+                                }, null);
+                            }
 
 
                         }

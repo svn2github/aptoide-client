@@ -177,7 +177,6 @@ public class DownloadExecutorImpl implements DownloadExecutor {
                     .setContentText(context.getString(R.string.installing, apk.getName()));
 
 
-
             Bitmap bm = BitmapFactory.decodeFile(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath());
 
 

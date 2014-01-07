@@ -113,11 +113,16 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_stores, menu);
 
-        if(isMergeStore){
-            menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
-        }else{
-            menu.findItem(R.id.menu_merge).setTitle(R.string.merge_stores);
+        if(gridViewMyStores!=null && gridViewMyStores.getAdapter().getCount()>1 || isMergeStore){
+            menu.findItem(R.id.menu_merge).setVisible(true);
+            if(isMergeStore){
+                menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
+            }else{
+                menu.findItem(R.id.menu_merge).setTitle(R.string.merge_stores);
+            }
         }
+
+
     }
 
 
@@ -211,7 +216,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         storeAdapter.setAdapterView(gridViewMyStores);
         storeAdapter.notifyDataSetChanged();
-
+        getActivity().supportInvalidateOptionsMenu();
         Log.d("Aptoide-", "OnLoadFinish");
 
     }
