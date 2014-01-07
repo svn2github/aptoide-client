@@ -221,7 +221,9 @@
                     android:resource="@xml/search_widget_info" />
         </receiver>
 
-        <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity" android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
+                  android:launchMode="singleInstance"
+                  android:theme="@android:style/Theme.Dialog"/>
 
 
     </application>

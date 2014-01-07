@@ -7,6 +7,7 @@
     <LinearLayout
                   android:layout_width="fill_parent"
                   android:layout_height="match_parent"
+                  android:layout_gravity="center_vertical"
                   android:weightSum="4"
                   android:orientation="horizontal"
                   android:background="@color/black" >
@@ -18,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:textSize="20sp"
+                android:background="@color/background_window"
                 android:drawableLeft="@drawable/ic_launcher"
                 android:drawablePadding="7dp"
                 android:hint="Search for apps..." />

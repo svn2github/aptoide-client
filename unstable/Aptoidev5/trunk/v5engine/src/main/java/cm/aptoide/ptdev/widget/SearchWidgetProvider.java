@@ -19,6 +19,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
         for(int i = 0; i < n; i++) {
 
             Intent intent = new Intent(context, SearchWidgetActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.search_widget);
