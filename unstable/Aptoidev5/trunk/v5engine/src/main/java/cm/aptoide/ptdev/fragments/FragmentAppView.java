@@ -368,10 +368,7 @@ public abstract class FragmentAppView extends Fragment {
                     pd.dismiss();
 
                     if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), "Comment success", Toast.LENGTH_LONG).show();
-                        editText.setText("");
-                        editText.setEnabled(false);
-                        editText.setEnabled(true);
+                        Toast.makeText(getActivity(), "Add Review success", Toast.LENGTH_LONG).show();
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
                         BusProvider.getInstance().post(new AppViewRefresh());
                     }else{

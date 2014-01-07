@@ -37,7 +37,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="?attr/customButtonColor"
-
                 android:text="@string/add_comment"
                 android:layout_margin="10dp"/>
 
