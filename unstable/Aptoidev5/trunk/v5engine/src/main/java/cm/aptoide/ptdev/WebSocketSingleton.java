@@ -100,7 +100,7 @@ public class WebSocketSingleton {
         return WebSocketHolder.INSTANCE;
     }
 
-    void disconnect() {
+    public void disconnect() {
 
         Log.d("TAG", "onDisconnect");
 
