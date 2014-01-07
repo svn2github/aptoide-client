@@ -40,25 +40,13 @@ public class SearchWidgetActivity extends Activity {
 
         setContentView(R.layout.search_widget_activity);
 
-        //DisplayMetrics metrics = new DisplayMetrics();
-        //getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        //WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        //layoutParams.width = (int) (metrics.widthPixels*0.80);
-        //layoutParams.height = (int) (metrics.heightPixels*0.50);
-
-        //getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        //getWindow().setBackgroundDrawable(new ColorDrawable(0x7f000000));
-        //getWindow().setAttributes(layoutParams);
-
-
-        //searchEditText = (EditText) findViewById(R.id.search_text);
         searchAutoComplete = (AutoCompleteTextView) findViewById(R.id.search_text);
-        searchAutoComplete.setThreshold(2);
+        searchAutoComplete.setThreshold(3);
 
         suggestionAdapter = new WidgetSuggestionsAdapter(this);
 
         searchAutoComplete.setAdapter(suggestionAdapter);
+
         searchAutoComplete.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,12 +55,14 @@ public class SearchWidgetActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                suggestionAdapter.notifyDataSetChanged();
-
                 if(s.toString().length() > 2) {
-                    WebSocketSingleton.getInstance().send(searchAutoComplete.getText().toString());
-                    handler.post(runnable);
+                    try {
+                        searchAutoComplete.setAdapter(null);
+                        WebSocketSingleton.getInstance().send(searchAutoComplete.getText().toString());
+                        handler.post(runnable);
+                    } catch (NullPointerException e) {
 
+                    }
                 }
             }
 
@@ -103,8 +93,6 @@ public class SearchWidgetActivity extends Activity {
         WebSocketSingleton webSocketSingleton = WebSocketSingleton.getInstance();
         webSocketSingleton.connect();
         webSocketSingleton.setBlockingQueue(blockingQueue);
-
-        setFinishOnTouchOutside(true);
     }
 
     final static Handler handler = new Handler();
@@ -117,14 +105,15 @@ public class SearchWidgetActivity extends Activity {
                 for(matrix_cursor.moveToFirst();!matrix_cursor.isAfterLast();matrix_cursor.moveToNext()){
                     Log.d("Cursor", matrix_cursor.getString(matrix_cursor.getColumnIndex(android.app.SearchManager.SUGGEST_COLUMN_TEXT_1)));
                 }
+                suggestionAdapter = new WidgetSuggestionsAdapter(SearchWidgetActivity.this);
+
+                searchAutoComplete.setAdapter(suggestionAdapter);
                 suggestionAdapter.swapCursor(matrix_cursor);
+                suggestionAdapter.notifyDataSetChanged();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
-
         }
     };
 

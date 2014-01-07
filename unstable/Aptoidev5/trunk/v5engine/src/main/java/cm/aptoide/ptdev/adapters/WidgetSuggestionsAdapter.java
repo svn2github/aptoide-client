@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
@@ -54,18 +56,13 @@ public class WidgetSuggestionsAdapter extends CursorAdapter {
         final String suggestion = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
 
         holder.searchSuggestion.setText(Html.fromHtml(suggestion));
-        holder.searchSuggestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = Aptoide.getConfiguration().getUriSearch() + suggestion + "&q=" + Utils.filters(context);
+        Log.d("Widget", "Added to adapter: " + holder.searchSuggestion.getText().toString());
 
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                url = url.replaceAll(" ", "%20");
-                i.setData(Uri.parse(url));
-                context.startActivity(i);
+    }
 
-            }
-        });
+    @Override
+    public CharSequence convertToString(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
     }
 
     public static class WidgetSuggestionHolder {
