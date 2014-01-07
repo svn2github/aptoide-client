@@ -33,7 +33,6 @@
             android:layout_width="0dp"
             android:background="@android:color/transparent"
             android:layout_height="wrap_content"
-            android:src=""
             android:text="@string/search" />
 
 
