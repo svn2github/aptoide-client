@@ -545,20 +545,20 @@ public class Database {
     public void insertRollbackAction(RollBackItem rollBackItem) {
         ContentValues values = new ContentValues();
 
-        values.put(Schema.Rollback.COLUMN_NAME, rollBackItem.getName());
-        values.put(Schema.Rollback.COLUMN_APKID, rollBackItem.getPackageName());
-        values.put(Schema.Rollback.COLUMN_VERSION, rollBackItem.getVersion());
-        values.put(Schema.Rollback.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
-        values.put(Schema.Rollback.COLUMN_ICONPATH, rollBackItem.getIconPath());
-        values.put(Schema.Rollback.COLUMN_MD5, rollBackItem.getMd5());
-        values.put(Schema.Rollback.COLUMN_ACTION, rollBackItem.getAction().toString());
-        values.put(Schema.Rollback.COLUMN_CONFIRMED, 0);
+        values.put(Schema.RollbackTbl.COLUMN_NAME, rollBackItem.getName());
+        values.put(Schema.RollbackTbl.COLUMN_APKID, rollBackItem.getPackageName());
+        values.put(Schema.RollbackTbl.COLUMN_VERSION, rollBackItem.getVersion());
+        values.put(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
+        values.put(Schema.RollbackTbl.COLUMN_ICONPATH, rollBackItem.getIconPath());
+        values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, rollBackItem.getAction().toString());
+        values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 0);
 
-        Cursor cursor = database.rawQuery("select 1 from rollback where package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
+        Cursor cursor = database.rawQuery("select 1 from rollbacktbl  where package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
         if (cursor.getCount() == 0) {
-            database.insert(Schema.Rollback.getName(), null, values);
+            database.insert(Schema.RollbackTbl.getName(), null, values);
         } else {
-            database.update(Schema.Rollback.getName(), values, "package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
+            database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
         }
         cursor.close();
     }
@@ -566,17 +566,17 @@ public class Database {
 
     public void confirmRollBackAction(String packageName, String oldAction, String newAction) {
         ContentValues values = new ContentValues();
-        values.put(Schema.Rollback.COLUMN_TIMESTAMP, Long.toString(System.currentTimeMillis() / 1000));
-        values.put(Schema.Rollback.COLUMN_ACTION, newAction);
-        values.put(Schema.Rollback.COLUMN_CONFIRMED, 1);
+        values.put(Schema.RollbackTbl.COLUMN_TIMESTAMP, Long.toString(System.currentTimeMillis() / 1000));
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, newAction);
+        values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 1);
 
-        int result = database.update(Schema.Rollback.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
+        int result = database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
         Log.d("InstalledBroadcastReceiver", "Trying to update " + packageName + " with action completed " + newAction + " RESULT: " + ((result == 1) ? "Success" : "Fail"));
 
     }
 
     public String getUnistallingActionMd5(String packageName) {
-        Cursor cursor = database.rawQuery("select md5 from rollback where package_name = ? and action = ?", new String[]{packageName, RollBackItem.Action.UNINSTALLING.toString()});
+        Cursor cursor = database.rawQuery("select md5 from rollbacktbl  where package_name = ? and action = ?", new String[]{packageName, RollBackItem.Action.UNINSTALLING.toString()});
         int resultsCount = cursor.getCount();
 
         String md5 = null;
@@ -590,7 +590,7 @@ public class Database {
 
     public Cursor getRollbackActions() {
 
-        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as cat_timestamp, action, package_name, md5, rollback.timestamp as real_timestamp from rollback where rollback.confirmed = 1 order by rollback.timestamp desc", null);
+        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as cat_timestamp, action, package_name, md5, rollbacktbl.timestamp as real_timestamp from rollbacktbl  where rollbacktbl.confirmed = 1 order by rollbacktbl.timestamp desc", null);
         c.getCount();
 
         return c;

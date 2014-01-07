@@ -24,7 +24,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.search_widget);
             remoteViews.setOnClickPendingIntent(R.id.search_widget_text, pendingIntent);
-            remoteViews.setOnClickPendingIntent(R.id.search_widget_button, pendingIntent);
+//            remoteViews.setOnClickPendingIntent(R.id.search_widget_button, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }

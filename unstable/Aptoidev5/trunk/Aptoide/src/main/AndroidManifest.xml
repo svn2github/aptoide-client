@@ -43,6 +43,9 @@
         <activity android:name="cm.aptoide.ptdev.LoginActivity"
                   android:launchMode="singleTask" />
 
+        <activity android:name="cm.aptoide.ptdev.SignUpActivity"
+                  android:launchMode="singleTask" />
+
         <activity android:name="cm.aptoide.ptdev.StoreActivity"
                   android:launchMode="singleTask"/>
 

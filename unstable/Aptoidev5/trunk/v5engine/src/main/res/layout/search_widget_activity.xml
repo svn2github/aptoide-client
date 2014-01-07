@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -22,25 +28,12 @@
                           android:drawablePadding="7dp"
                           android:hint="Search for apps..." />/>
 
-    <!--
-    <EditText android:id="@+id/search_text"
-              android:layout_width="0dp"
-              android:layout_weight="3"
-              android:layout_height="wrap_content"
-              android:layout_marginRight="10dp"
-              android:focusable="true"
-              android:selectAllOnFocus="true"
-              android:singleLine="true"
-              android:textSize="18sp"
-              android:drawableLeft="@drawable/ic_launcher"
-              android:drawablePadding="7dp"
-              android:hint="Search for apps..." />
-              -->
-
     <Button android:id="@+id/search_button"
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:background="@android:color/transparent"
             android:layout_height="wrap_content"
+            android:src=""
             android:text="@string/search" />
 
 

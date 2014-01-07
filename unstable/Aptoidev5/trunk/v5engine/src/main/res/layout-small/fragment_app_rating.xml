@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2013 tdeus.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Public License v2.0
+which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
@@ -14,7 +21,8 @@
             android:layout_width="fill_parent"
             android:layout_height="60dp"
             android:hint="Insert your comment"
-            android:id="@+id/editText" android:inputType="text"/>
+            android:id="@+id/editText"
+            android:inputType="textMultiLine"/>
 
 
     <Button android:id="@+id/button_add_comment"
@@ -33,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:text="@string/like"
                 android:background="@drawable/highlight_overlay"
-                style="?attr/icRatingGoodDrawable"
+                android:drawableLeft="?attr/icRatingGoodDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
 
@@ -41,7 +49,7 @@
                 android:layout_width="fill_parent"
                 android:text="@string/dont_like"
                 android:background="@drawable/highlight_overlay"
-                style="?attr/icRatingBadDrawable"
+                android:drawableLeft="?attr/icRatingBadDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
 

@@ -1,7 +1,6 @@
 package cm.aptoide.ptdev.database.schema;
 
 
-import cm.aptoide.ptdev.database.schema.SQLType;
 import cm.aptoide.ptdev.database.schema.anotations.ColumnDefinition;
 import cm.aptoide.ptdev.database.schema.anotations.TableDefinition;
 
@@ -244,9 +243,9 @@ public class Schema {
     @TableDefinition(
             indexes = {
                     @TableDefinition.Index(index_name = "RollbackIdx",
-                            keys = @TableDefinition.Key(field = Rollback.COLUMN_APKID))
+                            keys = @TableDefinition.Key(field = RollbackTbl.COLUMN_APKID))
             })
-    public static class Rollback {
+    public static class RollbackTbl {
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_ACTION = "action";
@@ -277,7 +276,7 @@ public class Schema {
 
 
         public static String getName() {
-            return "rollback";
+            return "rollbacktbl";
         }
 
     }

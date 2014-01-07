@@ -22,6 +22,7 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.ScreenshotsViewer;
 import cm.aptoide.ptdev.adapters.GalleryPagerAdapter;
+import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
@@ -84,8 +85,8 @@ public abstract class FragmentAppView extends Fragment {
         private TextView size;
 //        private TextView latestVersion;
         private TextView publisher;
-//        private Gallery screenshots;
-//        private ImageGalleryAdapter galleryAdapter;
+        private Gallery screenshots;
+        private ImageGalleryAdapter galleryAdapter;
         private LinearLayout mainLayout;
         private View cell;
         private ViewPager viewPager;
@@ -103,28 +104,6 @@ public abstract class FragmentAppView extends Fragment {
             Log.d("Aptoide-AppView", "getting event");
             Log.d("Aptoide-AppView", "Setting description");
             description.setText(event.getDescription());
-
-
-
-//            if (event.getLatestVersion() != null) {
-//                latestVersion.setVisibility(View.VISIBLE);
-//                SpannableString spanString = new SpannableString(getString(R.string.get_latest));
-//                spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
-//                latestVersion.setText(spanString);
-//                latestVersion.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        String url = event.getLatestVersion();
-//                        Intent i = new Intent(Intent.ACTION_VIEW);
-//                        url = url.replaceAll(" ", "%20");
-//                        i.setData(Uri.parse(url));
-//                        startActivity(i);
-//                    }
-//                });
-//            }else{
-//                latestVersion.setVisibility(View.GONE);
-//            }
-
             publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
             store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
@@ -147,63 +126,25 @@ public abstract class FragmentAppView extends Fragment {
                 publisherWebsite.setText("Website: " + event.getDeveloper().getInfo().getWebsite());
             }
 
-
-
-//            galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
-//
-//            if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
-//                screenshots.setVisibility(View.VISIBLE);
-//                screenshots.setAdapter(galleryAdapter);
-//                screenshots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
-//                        Intent intent = new Intent(getActivity(), ScreenshotsViewer.class);
-//                        intent.putStringArrayListExtra("url", new ArrayList<String>(event.getScreenshots()));
-//                        intent.putExtra("position", position);
-//                        startActivity(intent);
-//                    }
-//                });
-//                screenshots.setSelection(galleryAdapter.getCount() / 2);
-//            }
+            galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
 
             if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
 
-                for (int i = 0; i < event.getScreenshots().size(); i++) {
-
-                    cell = getActivity().getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
-
-                    final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-
-                            viewPager.setVisibility(View.VISIBLE);
-                            viewPager.setAdapter
-                                    (new GalleryPagerAdapter(getActivity(), event.getScreenshots()));
-                            viewPager.setCurrentItem(v.getId());
-
-                        }
-                    });
-
-                    imageView.setId(i);
-
-                    Log.d("screenshots","ss: "+event.getScreenshots().get(i).toString());
-                    imageLoader.displayImage(event.getScreenshots().get(i).toString(), imageView);
-
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), ScreenshotsViewer.class);
-                            intent.putStringArrayListExtra("url", new ArrayList<String>(event.getScreenshots()));
-                            intent.putExtra("position", 0);
-                            startActivity(intent);
-                        }
-                    });
-
-                    mainLayout.addView(cell);
-                }
+                screenshots.setVisibility(View.VISIBLE);
+                screenshots.setAdapter(galleryAdapter);
+                screenshots.setSpacing(1);
+                screenshots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getActivity(), ScreenshotsViewer.class);
+                        intent.putStringArrayListExtra("url", new ArrayList<String>(event.getScreenshots()));
+                        intent.putExtra("position", position);
+                        startActivity(intent);
+                    }
+                });
+                screenshots.setSelection(galleryAdapter.getCount() / 2);
             }
+
         }
 
         @Override
@@ -211,17 +152,16 @@ public abstract class FragmentAppView extends Fragment {
             View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
 
             description = (TextView) v.findViewById(R.id.descript);
-            downloads = (TextView) v.findViewById(R.id.downloads_label);
             store = (TextView) v.findViewById(R.id.store_label);
+            downloads = (TextView) v.findViewById(R.id.downloads_label);
             rating = (TextView) v.findViewById(R.id.rating_label);
             likes = (TextView) v.findViewById(R.id.likes_label);
             dontLikes = (TextView) v.findViewById(R.id.dont_likes_label);
             size = (TextView) v.findViewById(R.id.size_label);
             publisher = (TextView) v.findViewById(R.id.publisher_label);
-//            screenshots = (Gallery) v.findViewById(R.id.gallery);
-//            latestVersion = (TextView) v.findViewById(R.id.app_get_latest);
-            viewPager = (ViewPager) v.findViewById(R.id._viewPager);
-            mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
+            screenshots = (Gallery) v.findViewById(R.id.gallery);
+//            viewPager = (ViewPager) v.findViewById(R.id._viewPager);
+//            mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
@@ -229,6 +169,7 @@ public abstract class FragmentAppView extends Fragment {
             whatsNew = (TextView) v.findViewById(R.id.whats_new_descript);
             whatsNewContainer = v.findViewById(R.id.whats_new_container);
             imageLoader = ImageLoader.getInstance();
+
 
             return v;
         }

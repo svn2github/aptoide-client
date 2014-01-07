@@ -249,27 +249,27 @@
     </style>
 
     <style name="cancelLight">
-        <item name="android:drawableLeft">@drawable/ic_action_cancel</item>
+        <item name="android:src">@drawable/ic_action_cancel</item>
     </style>
 
     <style name="cancelDark">
-        <item name="android:drawableLeft">@drawable/ic_action_cancel_dark</item>
+        <item name="android:src">@drawable/ic_action_cancel_dark</item>
     </style>
 
     <style name="uninstallLight">
-        <item name="android:drawableLeft">@drawable/ic_action_discard</item>
+        <item name="android:src">@drawable/ic_action_discard</item>
     </style>
 
     <style name="uninstallDark">
-        <item name="android:drawableLeft">@drawable/ic_action_discard_dark</item>
+        <item name="android:src">@drawable/ic_action_discard_dark</item>
     </style>
 
     <style name="updateLight">
-        <item name="android:drawableLeft">@drawable/ic_action_upload</item>
+        <item name="android:src">@drawable/ic_action_upload</item>
     </style>
 
     <style name="updateDark">
-        <item name="android:drawableLeft">@drawable/ic_action_upload_dark</item>
+        <item name="android:src">@drawable/ic_action_upload_dark</item>
     </style>
 
     <style name="aboutLight">

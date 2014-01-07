@@ -6,14 +6,12 @@ import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.RollBackItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -66,20 +64,20 @@ public class RollBackAdapter extends CursorAdapter {
         }
 
 
-        final String name = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_NAME));
+        final String name = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_NAME));
         holder.name.setText(Html.fromHtml(name));
-        final String icon = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ICONPATH));
+        final String icon = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ICONPATH));
         ImageLoader.getInstance().displayImage(icon, holder.icon);
-        final String versionName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_VERSION));
+        final String versionName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_VERSION));
         holder.version.setText(versionName);
         final long timeStamp = cursor.getLong(cursor.getColumnIndex("real_timestamp"));
 
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
         Date date = new Date(timeStamp * 1000);
-        final String appState = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_ACTION));
+        final String appState = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION));
         holder.appState.setText(appState + " at " + timeFormat.format(date));
-        final String packageName = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_APKID));
-        final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.Rollback.COLUMN_MD5));
+        final String packageName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID));
+        final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_MD5));
         holder.action.setText(getActionFromState(appState));
         holder.action.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,9 +6,9 @@
         <item name="android:cacheColorHint">@null</item>
         <item name="hagDividerVertical">@drawable/hag__divider_light</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_light</item>
-        <item name="sectionListView.sectionTextViewPadding" >2dip</item>
-        <item name="sectionListView.sectionTextViewTextColor" >@android:color/white</item>
-        <item name="sectionListView.sectionTextViewTextSize" >18dip</item>
+        <item name="sectionListView.sectionTextViewPadding">2dip</item>
+        <item name="sectionListView.sectionTextViewTextColor">@android:color/black</item>
+        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
 
         <item name="sectionListView.sectionItemPadding" >2dip</item>
         <item name="sectionListView.sectionItemBackground" >@null</item>
@@ -46,9 +46,9 @@
         <item name="android:cacheColorHint">@null</item>
         <item name="hagDividerVertical">@drawable/hag__divider_dark</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_dark</item>
-        <item name="sectionListView.sectionTextViewPadding" >2dip</item>
-        <item name="sectionListView.sectionTextViewTextColor" >@android:color/white</item>
-        <item name="sectionListView.sectionTextViewTextSize" >18dip</item>
+        <item name="sectionListView.sectionTextViewPadding">2dip</item>
+        <item name="sectionListView.sectionTextViewTextColor">@android:color/white</item>
+        <item name="sectionListView.sectionTextViewTextSize">18dip</item>
 
         <item name="sectionListView.sectionItemPadding" >2dip</item>
         <item name="sectionListView.sectionItemBackground" >@null</item>

@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -15,6 +17,9 @@ public class IconSizes {
 
     static final private int baseLine = 96;
     static final private int baseLineAvatar = 150;
+    private static float baseLineScreenshotLand = 256;
+    private static float baseLineScreenshotPort = 96;
+
 
 
     public static String generateSizeString(Context context){
@@ -53,4 +58,34 @@ public class IconSizes {
 
         return size+"x"+size;
     }
+
+    public static String generateSizeStringScreenshots(Context context, String orient) {
+        int density = context.getResources().getDisplayMetrics().densityDpi;
+        float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+
+//        switch (density){
+//            case 213:
+//                densityMultiplier = 1.5f;
+//                break;
+//        }
+
+
+        int size;
+        if(orient.equals("port")){
+            size = Math.round(baseLineScreenshotPort * densityMultiplier);
+
+        }else{
+
+            size = Math.round(baseLineScreenshotLand * densityMultiplier);
+
+        }
+
+        Log.d("Aptoide-IconSize", "Size is " + size);
+
+        return size+"x"+AptoideUtils.HWSpecifications.getDensityDpi(context);
+    }
+
+
+
 }

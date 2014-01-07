@@ -40,7 +40,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         rollBackAdapter = new RollBackAdapter(this);
 
         ListView lView = (ListView) findViewById(R.id.rollback_list);
-
+        lView.setDivider(null);
 
 
         SectionListAdapter adapter = new SectionListAdapter(getLayoutInflater(), rollBackAdapter);

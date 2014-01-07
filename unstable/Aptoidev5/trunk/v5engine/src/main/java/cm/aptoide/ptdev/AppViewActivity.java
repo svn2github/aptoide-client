@@ -332,7 +332,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
     private void publishEvents() {
-        BusProvider.getInstance().post(publishScreenshots());
+//        BusProvider.getInstance().post(publishScreenshots());
         BusProvider.getInstance().post(publishDetails());
         BusProvider.getInstance().post(publishRelatedApps());
         BusProvider.getInstance().post(publishSpecs());

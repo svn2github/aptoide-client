@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/app_info_scroller"
             android:layout_width="fill_parent"
@@ -23,27 +30,27 @@
         <!--style="@style/titleLabel"-->
         <!--android:text="@string/version_info"/>-->
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
+        <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+                        <!--android:layout_width="fill_parent"-->
+                        <!--android:layout_height="fill_parent">-->
 
-            <HorizontalScrollView android:layout_width="fill_parent"
-                                  android:layout_height="wrap_content">
+            <!--<HorizontalScrollView android:layout_width="fill_parent"-->
+                                  <!--android:layout_height="wrap_content">-->
 
-                <LinearLayout android:id="@+id/_linearLayout"
-                              android:layout_width="fill_parent"
-                              android:layout_height="wrap_content"
-                              android:orientation="horizontal"/>
+                <!--<LinearLayout android:id="@+id/_linearLayout"-->
+                              <!--android:layout_width="fill_parent"-->
+                              <!--android:layout_height="wrap_content"-->
+                              <!--android:orientation="horizontal"/>-->
 
-            </HorizontalScrollView>
+            <!--</HorizontalScrollView>-->
 
-            <android.support.v4.view.ViewPager android:id="@+id/_viewPager"
-                                               android:layout_width="fill_parent"
-                                               android:layout_height="fill_parent"
-                                               android:background="#000000"
-                                               android:visibility="gone"/>
+            <!--<android.support.v4.view.ViewPager android:id="@+id/_viewPager"-->
+                                               <!--android:layout_width="fill_parent"-->
+                                               <!--android:layout_height="fill_parent"-->
+                                               <!--android:background="#000000"-->
+                                               <!--android:visibility="gone"/>-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
         <RelativeLayout
                 android:id="@+id/version_info_container"

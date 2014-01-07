@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -33,8 +34,9 @@ public class ImageGalleryAdapter extends BaseAdapter {
 //	private String hashCode;
 	private boolean hd;
 	DisplayImageOptions options;
+    private String sizeString;
 
-	public ImageGalleryAdapter(Context context, List<String> imagesurl, boolean hd) {
+    public ImageGalleryAdapter(Context context, List<String> imagesurl, boolean hd) {
 
 		this.context=context;
 		imageLoader = ImageLoader.getInstance();
@@ -117,16 +119,27 @@ public class ImageGalleryAdapter extends BaseAdapter {
 //
     protected String screenshotToThumb(String string) {
 
-        String[] splitedString = string.split("/");
-        StringBuilder db = new StringBuilder();
-        for (int i = 0; i != splitedString.length - 1; i++) {
-            db.append(splitedString[i]);
-            db.append("/");
-        }
-        db.append("thumbs/mobile/");
-        db.append(splitedString[splitedString.length - 1]);
+        String screen;
+        sizeString = IconSizes.generateSizeStringScreenshots(context, "port");
 
-        return db.toString();
+        if (string.contains("_screen")) {
+            String[] splittedUrl = string.split("\\.(?=[^\\.]+$)");
+            screen = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+        } else {
+
+
+            String[] splitedString = string.split("/");
+            StringBuilder db = new StringBuilder();
+            for (int i = 0; i != splitedString.length - 1; i++) {
+                db.append(splitedString[i]);
+                db.append("/");
+            }
+            db.append("thumbs/mobile/");
+            db.append(splitedString[splitedString.length - 1]);
+            screen = db.toString();
+        }
+
+        return screen;
     }
 
 	@Override
