@@ -58,7 +58,6 @@ public class SearchWidgetActivity extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.toString().length() > 2) {
                     try {
-                        searchAutoComplete.setAdapter(null);
                         WebSocketSingleton.getInstance().send(searchAutoComplete.getText().toString());
                         handler.post(runnable);
                     } catch (NullPointerException e) {
