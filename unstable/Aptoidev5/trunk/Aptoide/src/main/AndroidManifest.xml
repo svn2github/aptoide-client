@@ -225,8 +225,7 @@
         </receiver>
 
         <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
-                  android:launchMode="singleInstance"
-                  android:theme="@android:style/Theme.Dialog"/>
+                  android:launchMode="singleInstance"/>
 
 
     </application>

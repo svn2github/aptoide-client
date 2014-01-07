@@ -54,7 +54,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             <Button android:id="@+id/button_dialog_add_store"
                     style="@style/WidgetButtonCustomGray"
                     android:text="@string/add"
-                    android:drawableLeft="@drawable/ic_action_accept"
+                    android:drawableLeft="?attr/icAddDrawable"
                     android:drawablePadding="4dp"/>
 
         </LinearLayout>

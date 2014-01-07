@@ -38,6 +38,12 @@
         <item name="icDontLikeDrawable">@style/dontLikesLight</item>
         <item name="icStoreDrawable">@style/storeLight</item>
         <item name="icRatingFloatDrawable">@style/ratingLight</item>
+        <item name="icSearchDrawable">@style/searchLight</item>
+        <item name="icAddDrawable">@drawable/ic_action_accept</item>
+        <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
+        <item name="icRollbackDrawable">@drawable/ic_action_time</item>
+        <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
+        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
 
     </style>
 
@@ -78,6 +84,12 @@
         <item name="icDontLikeDrawable">@style/dontLikesDark</item>
         <item name="icStoreDrawable">@style/storeDark</item>
         <item name="icRatingFloatDrawable">@style/ratingDark</item>
+        <item name="icSearchDrawable">@style/searchDark</item>
+        <item name="icAddDrawable">@drawable/ic_action_accept_dark</item>
+        <item name="icMyAccountDrawable">@drawable/ic_action_accounts_dark</item>
+        <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
+        <item name="icScheduledDrawable">@drawable/ic_action_go_to_today_dark</item>
+        <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
 
     </style>
 

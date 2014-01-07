@@ -49,4 +49,16 @@
 
     <attr name="icRatingFloatDrawable" format="reference"/>
 
+    <attr name="icSearchDrawable" format="reference"/>
+
+    <attr name="icAddDrawable" format="reference"/>
+
+    <attr name="icMyAccountDrawable" format="reference"/>
+
+    <attr name="icRollbackDrawable" format="reference"/>
+
+    <attr name="icScheduledDrawable" format="reference"/>
+
+    <attr name="icExcludedUpdatesDrawable" format="reference"/>
+
 </resources>

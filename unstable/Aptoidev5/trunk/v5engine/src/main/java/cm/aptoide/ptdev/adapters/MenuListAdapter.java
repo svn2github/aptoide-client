@@ -1,12 +1,14 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 
 import java.util.ArrayList;
@@ -23,14 +25,26 @@ public class MenuListAdapter extends BaseAdapter {
 
     public MenuListAdapter(Context context) {
         this.context = context;
-//        mTitle = new String[] { context.getString(R.string.my_account), context.getString(R.string.rollback), context.getString(R.string.scheduled_downloads), context.getString(R.string.facebook), context.getString(R.string.twitter)};
-//        mSubTitle = new String[] { context.getString(R.string.login_or_register), context.getString(R.string.rollback_sum), context.getString(R.string.setting_schdwninstallsum) , context.getString(R.string.find_us_on_facebook), context.getString(R.string.follow_twitter)};
-//        mIcon = new int[] { android.R.drawable.ic_menu_edit, R.drawable.ic_action_time, R.drawable.ic_drawer_schedule, R.drawable.ic_action_facebook, R.drawable.ic_action_twitter};
 
-        mItems.add(new Item(context.getString(R.string.my_account), R.drawable.ic_action_accounts));
-        mItems.add(new Item(context.getString(R.string.rollback), R.drawable.ic_action_time));
-        //mItems.add(new Item(context.getString(R.string.scheduled_downloads), R.drawable.ic_drawer_schedule));
-        //mItems.add(new Item(context.getString(R.string.excluded_updates), R.drawable.ic_action_cancel));
+        TypedArray myAccountTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icMyAccountDrawable});
+        int myAccountRes = myAccountTypedArray.getResourceId(0, 0);
+        myAccountTypedArray.recycle();
+        mItems.add(new Item(context.getString(R.string.my_account), myAccountRes));
+
+        TypedArray rollbackTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icRollbackDrawable});
+        int rollbackRes = rollbackTypedArray.getResourceId(0, 0);
+        rollbackTypedArray.recycle();
+        mItems.add(new Item(context.getString(R.string.rollback), rollbackRes));
+
+//        TypedArray scheduleTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icScheduledDrawable});
+//        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
+//        scheduleTypedArray.recycle();
+//        mItems.add(new Item(context.getString(R.string.scheduled_downloads), scheduleRes));
+
+//        TypedArray excludedUpdatesTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icExcludedUpdatesDrawable});
+//        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
+//        excludedUpdatesTypedArray.recycle();
+//        mItems.add(new Item(context.getString(R.string.excluded_updates), excludedUpdatesRes));
 
         mItems.add(new Category(context.getString(R.string.social_networks)));
         mItems.add(new Item(context.getString(R.string.facebook), R.drawable.ic_action_facebook));

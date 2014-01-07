@@ -7,6 +7,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by brutus on 02-01-2014.
  */
-public class SearchWidgetActivity extends Activity {
+public class SearchWidgetActivity extends ActionBarActivity {
 
     private AutoCompleteTextView searchAutoComplete;
     private WidgetSuggestionsAdapter suggestionAdapter;
@@ -90,6 +91,10 @@ public class SearchWidgetActivity extends Activity {
             }
         });
 
+        getSupportActionBar().setTitle(getString(R.string.search));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         WebSocketSingleton webSocketSingleton = WebSocketSingleton.getInstance();
         webSocketSingleton.connect();
         webSocketSingleton.setBlockingQueue(blockingQueue);
@@ -135,7 +140,19 @@ public class SearchWidgetActivity extends Activity {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        int i = item.getItemId();
+
+        if (i == android.R.id.home) {
+            finish();
+        } else if (i == R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 

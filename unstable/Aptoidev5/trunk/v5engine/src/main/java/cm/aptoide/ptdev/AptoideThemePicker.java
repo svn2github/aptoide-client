@@ -27,4 +27,12 @@ public class AptoideThemePicker {
 
     }
 
+    public int getAptoideTheme(Context activity) {
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        if(sPref.getString("theme", "light").equals("dark")){
+            return R.style.AptoideThemeDefaultDark;
+        }else{
+            return R.style.AptoideThemeDefault;
+        }
+    }
 }
