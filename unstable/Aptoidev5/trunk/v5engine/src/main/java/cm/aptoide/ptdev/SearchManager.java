@@ -102,6 +102,7 @@ public class SearchManager extends ActionBarActivity {
             query = getArguments().getString("query");
             getLoaderManager().initLoader(60, getArguments(), this);
 
+            getListView().setDivider(null);
             TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
             searchOtherStores.setOnClickListener(new View.OnClickListener() {
                 @Override
