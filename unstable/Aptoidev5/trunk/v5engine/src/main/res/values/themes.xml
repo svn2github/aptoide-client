@@ -115,7 +115,7 @@
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideDark</item>
-        <item name="actionBarStyle">@style/WidgetButtonCustomAptoide</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:windowBackground">@color/transparent_black</item>
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
