@@ -20,6 +20,7 @@
         <item name="sectionListView.listItemPadding" >2dip</item>
         <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
 
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
         <item name="secondaryTextColor">@android:color/tertiary_text_light</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
 
@@ -67,7 +68,8 @@
         <item name="sectionListView.listItemPadding" >2dip</item>
         <item name="sectionListView.listItemBackground" >@drawable/list_selector_background</item>
 
-        <item name="secondaryTextColor">@android:color/tertiary_text_dark</item>
+        <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
+        <item name="android:textColorSecondary">@android:color/secondary_text_dark</item>
         <item name="navigationDrawerColor">@style/navigationDrawerColorDark</item>
 
         <item name="icRatingGoodDrawable">@drawable/ic_action_good_dark</item>
