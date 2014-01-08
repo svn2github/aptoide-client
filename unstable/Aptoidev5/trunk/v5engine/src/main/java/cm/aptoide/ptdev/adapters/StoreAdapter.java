@@ -67,7 +67,12 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
         storeName.setText(storeItem.getName());
         storeDwn.setText(storeItem.getDwnNumber());
 
-        ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
+        if(getItemId(position)>0){
+            ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
+        }else{
+            avatarImage.setImageResource(R.drawable.avatar_apps);
+        }
+
 
         alphaView.setBackgroundResource(storeItem.getTheme().getStoreAlphaColor());
         Log.d("Aptoide-", "BindView " + storeItem.getName());

@@ -1,9 +1,13 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.schema.OnConflict;
 import cm.aptoide.ptdev.database.schema.SQLType;
@@ -251,6 +255,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } catch (IllegalAccessException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
+        removeSharedPreferences();
+
+    }
+
+    private void removeSharedPreferences() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+        preferences.edit().remove("editorschoiceTimestamp").remove("topappsTimestamp").commit();
+
     }
 
     private void dropIndexes(SQLiteDatabase db) {

@@ -196,7 +196,7 @@ public class ImageGalleryAdapter extends BaseAdapter {
 			public void onLoadingFailed(String uri, View v,FailReason failReason) {
 				((ImageView) v.findViewById(R.id.screenshot_image_item)).setImageResource(android.R.drawable.ic_delete);
 				pb.setVisibility(View.GONE);
-				Log.d("onLoadingFailed", "Failed to load screenshot");
+				Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
 			}
 
 			@Override

@@ -50,13 +50,13 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_DATE = "date";
 
-        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_DOWNLOADS = "downloads";
+        @ColumnDefinition(type = SQLType.INTEGER) public final static String COLUMN_DOWNLOADS = "downloads";
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_RATING = "rating";
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_MATURE = "mature";
 
-        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SDK = "sdk";
+        @ColumnDefinition(type = SQLType.INTEGER) public final static String COLUMN_SDK = "sdk";
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SCREEN = "screen";
 

@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.model;
 
+import com.google.api.client.util.Key;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -8,9 +10,18 @@ package cm.aptoide.ptdev.model;
  * To change this template use File | Settings | File Templates.
  */
 public class Obb {
+
+
+    @Key
     private String filename;
+
+    @Key
     private Number filesize;
+
+    @Key
     private String md5sum;
+
+    @Key
     private String path;
 
     public String getFilename(){

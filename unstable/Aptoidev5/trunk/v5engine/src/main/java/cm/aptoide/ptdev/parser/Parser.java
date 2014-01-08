@@ -71,13 +71,17 @@ public class Parser{
     }
 
     public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback, final Runnable runnable) {
+
+        Log.d("Aptoide-Parser", "Starting parse: " + url);
         int key = url.hashCode();
         AptoideConfiguration configuration = Aptoide.getConfiguration();
+
 
         String path = configuration.getPathCache();
         final File file = new File(path+key+".xml");
         i++;
         final long repoId = handler.getRepoId();
+        Log.d("Aptoide-Parser", "Starting request: " + url);
 
         spiceManager.execute(new FileRequest(url,file, login), Math.abs(key), DurationInMillis.ALWAYS_EXPIRED, new RequestListener<InputStream>() {
             @Override

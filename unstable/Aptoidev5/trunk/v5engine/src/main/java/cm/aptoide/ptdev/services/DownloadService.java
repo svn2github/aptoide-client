@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
@@ -78,9 +79,20 @@ public class DownloadService extends Service {
 
     }
 
+    private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
+
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
 
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
+
+        if(json.getObb()!=null){
+            DownloadModel mainObbDownload = new DownloadModel(json.getObb().getMain().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getMain().getFilename(), json.getObb().getMain().getFilename(), json.getObb().getMain().getFilesize().longValue());
+            filesToDownload.add(mainObbDownload);
+            if(json.getObb().getPatch()!=null){
+                DownloadModel patchObbDownload = new DownloadModel(json.getObb().getPatch().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getPatch().getFilename(), json.getObb().getPatch().getFilename(), json.getObb().getPatch().getFilesize().longValue());
+                filesToDownload.add(patchObbDownload);
+            }
+        }
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());

@@ -2,7 +2,10 @@ package cm.aptoide.ptdev;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
@@ -23,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.UUID;
 
 import static org.acra.ReportField.*;
 
@@ -93,10 +97,8 @@ public class Aptoide extends Application {
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
             acraConfiguration.setMode(ReportingInteractionMode.TOAST);
-
-
-
-                    acraConfiguration.setCustomReportContent(new ReportField[]{ ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID });
+            acraConfiguration.setCustomReportContent(new ReportField[]{ APP_VERSION_CODE, APP_VERSION_NAME,
+                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID });
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
@@ -106,6 +108,7 @@ public class Aptoide extends Application {
 
         db = DatabaseHelper.getInstance(getApplicationContext());
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
+
         bootImpl(managerPreferences);
         setConfiguration(getAptoideConfiguration());
         setThemePicker(getNewThemePicker());
@@ -141,6 +144,7 @@ public class Aptoide extends Application {
 
 
     }
+
 
 
 

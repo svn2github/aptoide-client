@@ -27,6 +27,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
 
+import cm.aptoide.ptdev.preferences.EnumPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -340,8 +341,8 @@ public class AptoideUtils {
 
         public static String getUserAgentString(Context mctx) {
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mctx);
-            String myid = sPref.getString("myId", "NoInfo");
-            String myscr = sPref.getInt("scW", 0) + "x" + sPref.getInt("scH", 0);
+            String myid = sPref.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
+            String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
             String verString = null;
             try {
                 verString = mctx.getPackageManager().getPackageInfo(mctx.getPackageName(), 0).versionName;
@@ -353,7 +354,7 @@ public class AptoideUtils {
 //                partnerid = "PartnerID:" + Aptoide.PARTNERID + ";";
 //            }
 
-            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
+            return "aptoidedev-5.0.0;" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
         }
 
 

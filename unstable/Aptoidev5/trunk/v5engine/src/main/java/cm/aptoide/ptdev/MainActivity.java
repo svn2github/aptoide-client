@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +47,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
+import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
@@ -234,7 +238,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         if (savedInstanceState == null) {
 
-            executorService.submit(new Runnable() {
+            executorService.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -251,7 +255,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 }
             });
 
-            executorService.submit(new Runnable() {
+            executorService.execute(new Runnable() {
                 @Override
                 public void run() {
                     AptoideUtils.syncInstalledApps(mContext, db);
@@ -259,6 +263,12 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             });
 
 
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            editor.putInt(EnumPreferences.SCREEN_WIDTH.name(), dm.widthPixels);
+            editor.putInt(EnumPreferences.SCREEN_HEIGHT.name(), dm.heightPixels);
+            editor.commit();
 
         }
 

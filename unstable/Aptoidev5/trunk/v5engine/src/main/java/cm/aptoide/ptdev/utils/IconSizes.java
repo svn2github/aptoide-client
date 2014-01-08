@@ -27,11 +27,11 @@ public class IconSizes {
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
 
-        switch (density){
-            case 213:
-                densityMultiplier = 1.5f;
-                break;
-        }
+//        switch (density){
+//            case 213:
+//                densityMultiplier = 1.5f;
+//                break;
+//        }
 
         int size = (int) (baseLine * densityMultiplier);
 
@@ -64,24 +64,18 @@ public class IconSizes {
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
 
-//        switch (density){
-//            case 213:
-//                densityMultiplier = 1.5f;
-//                break;
-//        }
-
 
         int size;
         if(orient.equals("portrait")){
-            size = Math.round(baseLineScreenshotPort * densityMultiplier);
+            size = (int) (baseLineScreenshotPort * densityMultiplier);
 
         }else{
 
-            size = Math.round(baseLineScreenshotLand * densityMultiplier);
+            size = (int) (baseLineScreenshotLand * densityMultiplier);
 
         }
 
-        Log.d("Aptoide-IconSize", "Size is " + size);
+        Log.d("Aptoide-IconSize", "Size is " + size + " baseline is " + baseLineScreenshotPort + " with multiplier " +densityMultiplier );
 
         return size+"x"+AptoideUtils.HWSpecifications.getDensityDpi(context);
     }

@@ -25,9 +25,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
+
+import java.util.UUID;
 
 /**
  * ManagerPreferences, manages aptoide's preferences I/O
@@ -45,6 +48,12 @@ public class ManagerPreferences {
         public ManagerPreferences(Context context) {
             getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             setPreferences = getPreferences.edit();
+            if(getAptoideClientUUID() == null){
+//    			createLauncherShortcut(context);
+                setAptoideClientUUID( UUID.randomUUID().toString() );
+            }
+
+
         }
 
 

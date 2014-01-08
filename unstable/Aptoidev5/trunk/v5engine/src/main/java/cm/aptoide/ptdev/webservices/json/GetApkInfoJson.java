@@ -27,6 +27,9 @@ public class GetApkInfoJson {
     @Key
     private String status;
 
+    @Key("obb")
+    private ObbObject obb;
+
     @Key
     private List<cm.aptoide.ptdev.model.Error> errors;
 
@@ -64,6 +67,10 @@ public class GetApkInfoJson {
 
     public List<cm.aptoide.ptdev.model.Error> getErrors() {
         return errors;
+    }
+
+    public ObbObject getObb() {
+        return obb;
     }
 
     public static class Media{
@@ -526,4 +533,20 @@ public class GetApkInfoJson {
     }
 
 
+    public static class ObbObject {
+
+        @Key("main")
+        private Obb main;
+
+        public Obb getMain() {
+            return main;
+        }
+
+        public Obb getPatch() {
+            return patch;
+        }
+
+        @Key("patch")
+        private Obb patch;
+    }
 }

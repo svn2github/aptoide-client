@@ -11,4 +11,5 @@ public class HttpClientSpiceService extends Jackson2GoogleHttpClientSpiceService
     public int getThreadCount() {
         return 4;
     }
+
 }

@@ -61,7 +61,7 @@ public class DownloadConnectionImpl extends DownloadConnection {
             throw new IOException("Cannot retrieve file from server.");
         }
 
-        if(!connection.getHeaderField("Content-Type").equals("application/vnd.android.package-archive")){
+        if("application/json".equals(connection.getHeaderField("Content-Type"))){
             throw new ContentTypeNotApkException();
         }
 

@@ -209,18 +209,19 @@ public abstract class FragmentAppView extends Fragment {
         }
 
         @Override
-        public void onDetach() {
-            super.onDetach();
-            if(task!=null){
+        public void onStop() {
+            super.onStop();
+            Log.d("Aptoide-AppView-Permissions", "On Stop");
+            if (task != null) {
+                Log.d("Aptoide-AppView-Permissions", "Canceling task " + System.identityHashCode(task));
                 task.cancel(true);
             }
         }
 
+
+
         @Subscribe
         public void refreshDetails(final AppViewActivity.SpecsEvent event) {
-
-
-
 
 
             if (event.getPermissions() != null) {
@@ -228,6 +229,7 @@ public abstract class FragmentAppView extends Fragment {
                 min_sdk.setText(getString(R.string.min_sdk) + ": " + event.getMinSdk());
                 min_screen.setText(getString(R.string.min_screen) + ": " + event.getMinScreen().name());
                 task = new PermissionGetter().execute(event.getPermissions());
+
             }
 
 
@@ -250,8 +252,9 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             protected void onPostExecute(ArrayList<ApkPermission> apkPermissions) {
                 super.onPostExecute(apkPermissions);
-                setRetainInstance(false);
+                Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
                 FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
+                setRetainInstance(false);
             }
         }
 
@@ -260,6 +263,9 @@ public abstract class FragmentAppView extends Fragment {
             public static void fillPermissions(Context context, LinearLayout permissionsContainer, ArrayList<ApkPermission> permissions) {
 
                 View v;
+
+                assert context != null: "Context is null";
+                assert permissionsContainer != null: "container is null";
 
                 for(ApkPermission permission : permissions){
 
