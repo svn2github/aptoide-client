@@ -44,6 +44,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
         <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+        <item name="icRevertDrawable">@drawable/ic_action_undo</item>
 
     </style>
 
@@ -90,6 +91,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
         <item name="icScheduledDrawable">@drawable/ic_action_go_to_today_dark</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icRevertDrawable">@drawable/ic_action_undo_dark</item>
 
     </style>
 

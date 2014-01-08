@@ -61,4 +61,6 @@
 
     <attr name="icExcludedUpdatesDrawable" format="reference"/>
 
+    <attr name="icRevertDrawable" format="reference"/>
+
 </resources>

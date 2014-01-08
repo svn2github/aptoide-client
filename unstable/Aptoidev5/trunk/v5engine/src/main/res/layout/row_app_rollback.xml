@@ -30,19 +30,14 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="@string/rollback"
-                android:drawableTop="@drawable/ic_revert"
+                android:drawableTop="?attr/icRevertDrawable"
                 android:textColor="@android:color/darker_gray"
-                android:layout_gravity="right|center_vertical"
+                android:layout_gravity="center|center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
 
 
-        <View android:layout_width="1dip"
-              android:layout_height="match_parent"
-              android:background="@android:color/darker_gray"
-              android:layout_toLeftOf="@+id/ic_action" android:id="@+id/view"/>
         <ImageView
                 android:id="@+id/app_icon"
                 android:layout_width="72dp"
@@ -57,7 +52,7 @@
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_toRightOf="@+id/app_icon" android:layout_toLeftOf="@+id/view"/>
+                android:layout_toRightOf="@+id/app_icon" android:layout_toLeftOf="@+id/ic_action"/>
         <TextView
                 android:id="@+id/app_state"
                 android:layout_width="wrap_content"
@@ -81,7 +76,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_below="@+id/app_name"
                 android:layout_toRightOf="@+id/app_icon"
-                android:layout_toLeftOf="@+id/view"/>
+                android:layout_toLeftOf="@+id/ic_action"/>
 
     </RelativeLayout>
 </FrameLayout>

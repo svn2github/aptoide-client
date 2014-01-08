@@ -35,6 +35,7 @@
                 android:onClick="showPopup"
                 android:id="@+id/ic_action"
                 style="@style/overflowMenuButton"
+                android:layout_marginLeft="-8dp"
                 android:layout_below="@+id/home_icon"/>
 
         <TextView
