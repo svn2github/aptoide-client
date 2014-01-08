@@ -430,14 +430,36 @@ public class Database {
         return items;
     }
 
-    public Cursor getSearchResults(String searchQuery) {
+    public Cursor getSearchResults(String searchQuery, StoreActivity.Sort sortEnum) {
 
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
 
 
-        Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath, apk.rating from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by apk.name ", null);
+        String sort = "apk.name";
+
+        switch (sortEnum){
+
+            case NAME:
+                sort = "apk.name collate nocase";
+                break;
+            case DATE:
+                sort = "apk.date desc";
+                break;
+            case DOWNLOADS:
+                sort = "apk.downloads desc";
+                break;
+            case RATING:
+                sort = "apk.rating desc";
+                break;
+            case PRICE:
+                sort = "apk.price desc";
+                break;
+        }
+
+
+        Cursor c = database.rawQuery("select  apk.price, apk.date, apk.name as name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath, apk.rating from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by " + sort, null);
         c.getCount();
         return c;
     }

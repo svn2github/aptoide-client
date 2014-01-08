@@ -181,30 +181,7 @@ public class StoreActivity extends ActionBarActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.show_all).setChecked(noCategories);
 
-        switch (sort){
-            case NAME:
-                menu.findItem(R.id.name).setChecked(true);
-                break;
-            case DATE:
-                menu.findItem(R.id.date).setChecked(true);
-                break;
-            case DOWNLOADS:
-                menu.findItem(R.id.download).setChecked(true);
-                break;
-            case PRICE:
-                menu.findItem(R.id.price).setChecked(true);
-                break;
-            case RATING:
-                menu.findItem(R.id.rating).setChecked(true);
-                break;
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -239,6 +216,7 @@ public class StoreActivity extends ActionBarActivity {
             getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             setSort(item);
         }
+
 
 
 

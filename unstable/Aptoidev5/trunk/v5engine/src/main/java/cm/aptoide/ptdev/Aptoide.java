@@ -134,9 +134,10 @@ public class Aptoide extends Application {
         };
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-                .defaultDisplayImageOptions(options)
+
                 .discCache(new UnlimitedDiscCache(new File(getConfiguration().getPathCacheIcons()), generator))
                 .imageDownloader(new ImageDownloaderWithPermissions(managerPreferences))
+                .defaultDisplayImageOptions(options)
                 .build();
         ImageLoader.getInstance().init(config);
 

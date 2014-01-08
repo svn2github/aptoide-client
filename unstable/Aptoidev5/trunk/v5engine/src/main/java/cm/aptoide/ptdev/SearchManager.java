@@ -13,9 +13,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +87,7 @@ public class SearchManager extends ActionBarActivity {
         private MergeAdapter adapter;
         private String query;
         private CursorAdapter cursorAdapter;
+        private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,7 @@ public class SearchManager extends ActionBarActivity {
             adapter.addAdapter(cursorAdapter);
             query = getArguments().getString("query");
             getLoaderManager().initLoader(60, getArguments(), this);
-
+            setHasOptionsMenu(true);
 
             TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
             searchOtherStores.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +125,40 @@ public class SearchManager extends ActionBarActivity {
 //            }
         }
 
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            super.onCreateOptionsMenu(menu, inflater);
+
+            inflater.inflate(R.menu.menu_categories, menu);
+            menu.findItem(R.id.show_all).setVisible(false);
+            menu.findItem(R.id.download).setChecked(true);
+
+        }
+
+
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+
+
+            int id = item.getItemId();
+
+            if(id == R.id.name){
+                sort = StoreActivity.Sort.NAME;
+            }else if(id == R.id.date){
+                sort = StoreActivity.Sort.DATE;
+            }else if(id == R.id.download){
+                sort = StoreActivity.Sort.DOWNLOADS;
+            }else if(id == R.id.rating){
+                sort = StoreActivity.Sort.RATING;
+            }else if(id == R.id.price){
+                sort = StoreActivity.Sort.PRICE;
+            }
+
+            getLoaderManager().restartLoader(60, getArguments(), this);
+            item.setChecked(true);
+            return super.onOptionsItemSelected(item);
+        }
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
@@ -143,7 +176,7 @@ public class SearchManager extends ActionBarActivity {
             return new SimpleCursorLoader(getActivity()) {
                 @Override
                 public Cursor loadInBackground() {
-                    return new Database(Aptoide.getDb()).getSearchResults(args.getString("query"));
+                    return new Database(Aptoide.getDb()).getSearchResults(args.getString("query"), sort);
                 }
             };
         }
