@@ -511,7 +511,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             default: break;
         }
 
-        mDrawerList.setItemChecked(position, false);
+        //mDrawerList.setItemChecked(position, false);
 
         mDrawerLayout.closeDrawer(mDrawerList);
     }
