@@ -26,14 +26,19 @@ public class MenuListAdapter extends BaseAdapter {
     public MenuListAdapter(Context context) {
         this.context = context;
 
-        TypedArray myAccountTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icMyAccountDrawable});
-        int myAccountRes = myAccountTypedArray.getResourceId(0, 0);
-        myAccountTypedArray.recycle();
+        int[] attrs = new int[] {
+                R.attr.icMyAccountDrawable /* index 0 */,
+                R.attr.icRollbackDrawable /* index 1 */,
+                R.attr.icScheduledDrawable /* index 2 */,
+                R.attr.icExcludedUpdatesDrawable /* index 3 */
+        };
+
+        TypedArray typedArray =  context.getTheme().obtainStyledAttributes(attrs);
+
+        int myAccountRes = typedArray.getResourceId(0, R.drawable.ic_action_accounts_dark);
         mItems.add(new Item(context.getString(R.string.my_account), myAccountRes));
 
-        TypedArray rollbackTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icRollbackDrawable});
-        int rollbackRes = rollbackTypedArray.getResourceId(0, 0);
-        rollbackTypedArray.recycle();
+        int rollbackRes = typedArray.getResourceId(1, R.drawable.ic_action_time_dark);
         mItems.add(new Item(context.getString(R.string.rollback), rollbackRes));
 
 //        TypedArray scheduleTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[] {R.attr.icScheduledDrawable});
@@ -49,6 +54,8 @@ public class MenuListAdapter extends BaseAdapter {
         mItems.add(new Category(context.getString(R.string.social_networks)));
         mItems.add(new Item(context.getString(R.string.facebook), R.drawable.ic_action_facebook));
         mItems.add(new Item(context.getString(R.string.twitter), R.drawable.ic_action_twitter));
+
+        typedArray.recycle();
     }
 
     @Override

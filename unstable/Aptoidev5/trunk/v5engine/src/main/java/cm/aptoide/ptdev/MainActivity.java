@@ -481,37 +481,37 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         // Locate Position
         switch (position){
             case 0:
-//                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                 startActivity(loginIntent);
                 break;
             case 1:
-//                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: "+position);
                 Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                 startActivity(rollbackIntent);
                 break;
-            case 2:
+//            case 2:
 //                Log.d("MenuDrawer-position", "pos: "+position);
-                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
-                startActivity(scheduledIntent);
-                break;
+//                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
+//                startActivity(scheduledIntent);
+//                break;
+//            case 3:
+//                Log.d("MenuDrawer-position", "pos: "+position);
+//                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
+//                startActivity(excludedIntent);
+//                break;
             case 3:
-//                Log.d("MenuDrawer-position", "pos: "+position);
-                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
-                startActivity(excludedIntent);
-                break;
-            case 5:
-//                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: "+position);
                 showFacebook();
                 break;
-            case 6:
-//                Log.d("MenuDrawer-position", "pos: "+position);
+            case 4:
+                Log.d("MenuDrawer-position", "pos: "+position);
                 showTwitter();
                 break;
             default: break;
         }
 
-        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setItemChecked(position, false);
 
         mDrawerLayout.closeDrawer(mDrawerList);
     }
