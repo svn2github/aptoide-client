@@ -137,7 +137,7 @@ public class Database {
         }
 
 
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", false);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         Cursor c;
         if(storeid>0){
@@ -177,7 +177,7 @@ public class Database {
         }
 
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", false);
         Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(storeid)  });
         c.getCount();
 
@@ -299,7 +299,7 @@ public class Database {
 
     public Cursor getUpdates() {
 
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", false);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
         Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and installed.signature = apk.signature " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name",null);
@@ -406,7 +406,7 @@ public class Database {
     }
 
     public ArrayList<HomeItem> getFeatured(int type, int editorsChoiceBucketSize) {
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", false);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
         Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + "", new String[]{String.valueOf(type)});
@@ -434,7 +434,7 @@ public class Database {
 
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", false);
 
 
         Cursor c = database.rawQuery("select apk.name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath, apk.rating from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by apk.name ", null);

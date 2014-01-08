@@ -41,6 +41,7 @@
                 android:title="@string/setting_appfiltertitle"/>
         <CheckBoxPreference
                 android:key="matureChkBox"
+                android:defaultValue="true"
                 android:summary="@string/setting_dont_show_mature_content"
                 android:title="@string/setting_mature_filtering"/>
     </PreferenceCategory>
@@ -99,6 +100,7 @@
 
     <PreferenceCategory android:title="@string/change_theme">
     <ListPreference android:key="theme" android:title="@string/theme"
+                    android:defaultValue="light"
                     android:entries="@array/theme_names" android:entryValues="@array/themes" />
     </PreferenceCategory>
 
