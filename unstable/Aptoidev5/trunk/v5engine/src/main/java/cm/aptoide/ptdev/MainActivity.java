@@ -27,10 +27,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -54,6 +51,7 @@ import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.BadgeView;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -79,6 +77,9 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
     private ViewPager pager;
+    private BadgeView badge;
+    private int updates = 0;
+    private SharedPreferences sPref;
 
 
     public DownloadService getDownloadService() {
@@ -227,6 +228,9 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(pager);
 
+        badge = new BadgeView(mContext, ((LinearLayout)tabStrip.getChildAt(0)).getChildAt(2));
+
+
         Intent i = new Intent(this, ParserService.class);
         final SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
         database = new Database(db);
@@ -269,6 +273,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             editor.putInt(EnumPreferences.SCREEN_WIDTH.name(), dm.widthPixels);
             editor.putInt(EnumPreferences.SCREEN_HEIGHT.name(), dm.heightPixels);
             editor.commit();
+
+            updateBadge(PreferenceManager.getDefaultSharedPreferences(this));
 
         }
 
@@ -330,6 +336,18 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+
+    }
+
+    public void updateBadge(SharedPreferences sPref){
+        badge.setTextSize(12);
+        int size = sPref.getInt("updates", 0);
+        if(size!=0) {
+            badge.setText(String.valueOf(size));
+            badge.show(true);
+        }else{
+            badge.hide(true);
+        }
 
     }
 

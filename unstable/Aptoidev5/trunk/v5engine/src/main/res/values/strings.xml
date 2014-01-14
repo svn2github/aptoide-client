@@ -214,5 +214,6 @@
     <string name="store">Store</string>
     <string name="search_for_apps">Search for apps...</string>
     <string name="restart_aptoide">Please restart the application to change theme</string>
+    <string name="exclude_update">Ignore Update</string>
 
 </resources>

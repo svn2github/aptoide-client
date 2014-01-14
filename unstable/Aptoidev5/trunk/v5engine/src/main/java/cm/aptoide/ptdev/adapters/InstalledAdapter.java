@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.UninstallRetainFragment;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -102,8 +103,17 @@ public class InstalledAdapter extends CursorAdapter {
                 final String iconPath = iconpath + icon1;
                 ImageLoader.getInstance().displayImage(iconPath, holder.appIcon);
                 final String versionName = cursor.getString(cursor.getColumnIndex("version_name"));
-                holder.versionName.setText(versionName);
 
+                holder.versionName.setText(versionName);
+                final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
+
+                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(name, packageName, versionName, iconPath);
+                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
+                    }
+                });
 
                 break;
 

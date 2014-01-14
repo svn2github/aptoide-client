@@ -265,11 +265,11 @@
     </style>
 
     <style name="updateLight">
-        <item name="android:src">@drawable/ic_action_upload</item>
+        <item name="android:src">@drawable/ic_action_update</item>
     </style>
 
     <style name="updateDark">
-        <item name="android:src">@drawable/ic_action_upload_dark</item>
+        <item name="android:src">@drawable/ic_action_update_dark</item>
     </style>
 
     <style name="aboutLight">

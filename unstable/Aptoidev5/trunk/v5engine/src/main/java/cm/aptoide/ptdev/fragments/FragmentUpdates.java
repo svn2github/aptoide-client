@@ -3,8 +3,11 @@ package cm.aptoide.ptdev.fragments;
 import android.animation.Animator;
 import android.animation.LayoutTransition;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -12,11 +15,14 @@ import android.util.Log;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.InstalledAdapter;
 import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -43,17 +49,17 @@ public class FragmentUpdates extends ListFragment {
 
 
     @Subscribe
-    public void newAppEvent(InstalledApkEvent event){
+    public void newAppEvent(InstalledApkEvent event) {
         refreshStoresEvent(null);
     }
 
     @Subscribe
-    public void removedAppEvent(UnInstalledApkEvent event){
+    public void removedAppEvent(UnInstalledApkEvent event) {
         refreshStoresEvent(null);
     }
 
     @Subscribe
-    public void refreshStoresEvent(RepoCompleteEvent event){
+    public void refreshStoresEvent(RepoCompleteEvent event) {
 
         Log.d("Aptoide-", "OnEvent");
         getLoaderManager().restartLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -72,12 +78,20 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = sPref.edit();
 
-                if(data.getCount()>1){
+                if (data.getCount() > 1) {
+
+                    editor.putInt("updates", data.getCount() - 1);
                     updatesAdapter.swapCursor(data);
-                }else{
+                } else {
                     updatesAdapter.swapCursor(null);
+                    editor.remove("updates");
                 }
+                editor.commit();
+
+                ((MainActivity) getActivity()).updateBadge(sPref);
                 if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
             }
@@ -105,9 +119,9 @@ public class FragmentUpdates extends ListFragment {
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-                if(data.getCount()>1){
+                if (data.getCount() > 1) {
                     installedAdapter.swapCursor(data);
-                }else{
+                } else {
                     installedAdapter.swapCursor(null);
                 }
                 if (getListView().getAdapter() == null)
@@ -122,8 +136,6 @@ public class FragmentUpdates extends ListFragment {
         });
 
     }
-
-
 
 
     @Override
@@ -158,7 +170,7 @@ public class FragmentUpdates extends ListFragment {
 
         int id = item.getItemId();
 
-        if(id == R.id.menu_rollback){
+        if (id == R.id.menu_rollback) {
             Intent i = new Intent(getActivity(), RollbackActivity.class);
             startActivity(i);
         }
@@ -170,15 +182,14 @@ public class FragmentUpdates extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if(id>0){
+        if (id > 0) {
             Intent i = new Intent(getActivity(), AppViewActivity.class);
             i.putExtra("id", id);
             startActivity(i);
         }
 
-  }
+    }
 
-   
 
     @Override
     public void onResume() {
@@ -202,6 +213,8 @@ public class FragmentUpdates extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        getListView().setDivider(null);
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -237,14 +250,24 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                if(data.getCount()>1){
+                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = sPref.edit();
+
+
+                if (data.getCount() > 1) {
+                    editor.putInt("updates", data.getCount() - 1);
                     updatesAdapter.swapCursor(data);
-                }else{
+                } else {
                     updatesAdapter.swapCursor(null);
+                    editor.remove("updates");
                 }
 
+                editor.commit();
 
-                if (getListView().getAdapter() == null){
+                ((MainActivity) getActivity()).updateBadge(sPref);
+
+
+                if (getListView().getAdapter() == null) {
                     setListAdapter(adapter);
                 }
 
@@ -255,9 +278,6 @@ public class FragmentUpdates extends ListFragment {
                 updatesAdapter.swapCursor(null);
             }
         });
-
-
-
 
 
         getLoaderManager().initLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -275,13 +295,13 @@ public class FragmentUpdates extends ListFragment {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                if(data.getCount()>1){
+                if (data.getCount() > 1) {
                     installedAdapter.swapCursor(data);
-                }else{
+                } else {
                     installedAdapter.swapCursor(null);
                 }
 
-                counter --;
+                counter--;
                 if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
 
@@ -296,5 +316,47 @@ public class FragmentUpdates extends ListFragment {
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
 
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        int type = getListView().getAdapter().getItemViewType(info.position);
+        MenuInflater inflater = this.getActivity().getMenuInflater();
+        Toast.makeText(getActivity(), "" + type, Toast.LENGTH_LONG).show();
+        switch (type){
+            case 1:
+                inflater.inflate(R.menu.menu_updates_context, menu);
+                break;
+            case 5:
+                inflater.inflate(R.menu.menu_installed_context, menu);
+                break;
+        }
+
+    }
+
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int i = item.getItemId();
+        if (i == R.id.menu_ignore_update) {
+            Toast.makeText(getActivity(), "Ignoring update...", Toast.LENGTH_LONG).show();
+
+            return true;
+        } else if (i == R.id.menu_discard) {
+            Toast.makeText(getActivity(), "Uninstalling...", Toast.LENGTH_LONG).show();
+
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        registerForContextMenu(getListView());
+    }
 }

@@ -146,4 +146,11 @@ public class FragmentDownloadManager extends ListFragment {
         }
 
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setDivider(null);
+
+    }
 }
