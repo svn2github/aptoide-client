@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
@@ -21,7 +20,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.*;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -52,7 +50,6 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -79,6 +76,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     private GetApkInfoJson json;
     private String name;
+    private String wUrl;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -96,6 +94,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 versionName = getApkInfoJson.getApk().getVername();
                 package_name = getApkInfoJson.getApk().getPackage();
                 repoName = getApkInfoJson.getApk().getRepo();
+                wUrl = getApkInfoJson.getMeta().getWUrl();
+                Log.d("AppView","wUrl "+ wUrl);
                 if (getApkInfoJson.getApk().getIconHd() != null) {
                     icon = getApkInfoJson.getApk().getIconHd();
                     String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
@@ -115,12 +115,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if(getApkInfoJson.getApk().getVercode().intValue()>info.versionCode){
 
-                        ((TextView)findViewById(R.id.btinstall)).setText("Update");
+                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.update));
                         findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                     }else if(getApkInfoJson.getApk().getVercode().intValue()<info.versionCode){
 
-                        ((TextView)findViewById(R.id.btinstall)).setText("Downgrade");
+                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
                         findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                     }else{
@@ -128,7 +128,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
 
-                        ((TextView)findViewById(R.id.btinstall)).setText("Open");
+                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.open));
 
                         if(i!=null){
                             findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
@@ -173,10 +173,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 if(getApkInfoJson.getMalware()!=null){
                     if(getApkInfoJson.getMalware().getStatus().equals("scanned")){
                         ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
-                        ((TextView)findViewById(R.id.app_badge_text)).setText("Trusted");
+                        ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
                     }else if(getApkInfoJson.getMalware().getStatus().equals("warn")){
                         ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
-                        ((TextView)findViewById(R.id.app_badge_text)).setText("Warning");
+                        ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.warning));
                     }
                     findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
                     findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
@@ -185,6 +185,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                 publishEvents();
+                invalidateOptionsMenu();
 
                 latestVersion = (TextView) findViewById(R.id.app_get_latest);
                 if (json.getLatest() != null) {
@@ -537,11 +538,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("type/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Check this Application from Aptoide!");
-        shareIntent.putExtra(Intent.EXTRA_TEXT,"http://m.aptoide.com/search/view?search_input="+package_name);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install)+" \""+name+"\"!");
+        Log.d("AppView-share","wUrl "+ wUrl);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_this_app) +": "+ wUrl);
 
-
-        mShareActionProvider.setShareIntent(shareIntent);
+        if(wUrl !=null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }

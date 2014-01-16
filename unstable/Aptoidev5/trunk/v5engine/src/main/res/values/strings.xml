@@ -215,5 +215,11 @@
     <string name="search_for_apps">Search for apps...</string>
     <string name="restart_aptoide">Please restart the application to change theme</string>
     <string name="exclude_update">Ignore Update</string>
+    <string name="check_this_app">Check this application from Aptoide</string>
+    <string name="trusted">Trusted</string>
+    <string name="warning">Warning</string>
+    <string name="unknown">Unknown</string>
+    <string name="downgrade">Downgrade</string>
+    <string name="open">Open</string>
 
 </resources>

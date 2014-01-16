@@ -155,6 +155,7 @@ public class GetApkInfoJson {
         @Key private Likevotes likevotes;
         @Key private String news;
         @Key private String title;
+        @Key private String wurl;
 
         public List<Comment> getComments(){
             return this.comments;
@@ -192,6 +193,7 @@ public class GetApkInfoJson {
         public void setTitle(String title){
             this.title = title;
         }
+        public String getWUrl() { return wurl; }
 
         public static class Likevotes{
             @Key private Number dislikes;
