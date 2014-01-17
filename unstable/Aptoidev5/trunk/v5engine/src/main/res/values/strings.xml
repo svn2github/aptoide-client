@@ -109,7 +109,6 @@
     <string name="clear_dwn_title">Icons</string>
     <string name="new_choices">New Choices</string>
     <string name="recommended_for_you">Recommended For You</string>
-    <string name="previous_choices">Previous Choices</string>
     <string name="description">Description</string>
     <string name="add_store">Add Store</string>
     <string name="new_store">Add New Store</string>
@@ -218,8 +217,19 @@
     <string name="check_this_app">Check this application from Aptoide</string>
     <string name="trusted">Trusted</string>
     <string name="warning">Warning</string>
-    <string name="unknown">Unknown</string>
     <string name="downgrade">Downgrade</string>
     <string name="open">Open</string>
+    <string name="scanned_with_av">Scanned with Anti-Virus:</string>
+    <string name="compared_with_another_marketplace">Compared with another Android Marketplace:</string>
+    <string name="application_signature_analysis">Application signature compared with developer signature:</string>
+    <string name="scanned_manually_by_aptoide_team">Scanned manually by Aptoide Team:</string>
+    <string name="about_aptoide_antimalware">Aptoide Anti-Malware platform analyses applications in run-time and disables potential threats across all stores. This system scans all the new application files from the stores and certificates them by comparison against other Android Marketplaces.</string>
+    <string name="app_trusted">%s is Trusted</string>
+    <string name="app_warning">%s is Warn</string>
+    <string name="application_signature_matched">Application signature match with signature related to the application developer.</string>
+    <string name="application_signature_not_matched">Application signature do not match with signature related to the application developer. Application may have been adulterated.</string>
+    <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because have been used to sign anothers applications that not match to the signature related to the legit developer.</string>
+    <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
+    <string name="get_latest_and_latest">Get Latest &amp; Trusted></string>
 
 </resources>

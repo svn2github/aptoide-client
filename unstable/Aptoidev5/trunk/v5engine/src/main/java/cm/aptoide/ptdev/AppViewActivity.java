@@ -32,6 +32,7 @@ import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
@@ -96,6 +97,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 repoName = getApkInfoJson.getApk().getRepo();
                 wUrl = getApkInfoJson.getMeta().getWUrl();
                 Log.d("AppView","wUrl "+ wUrl);
+                boolean trusted = false;
                 if (getApkInfoJson.getApk().getIconHd() != null) {
                     icon = getApkInfoJson.getApk().getIconHd();
                     String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
@@ -169,17 +171,29 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
                 });
 
-
                 if(getApkInfoJson.getMalware()!=null){
+                    boolean showBadgeLayout = false;
                     if(getApkInfoJson.getMalware().getStatus().equals("scanned")){
                         ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
                         ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
+                        showBadgeLayout = true;
+                         trusted = true;
                     }else if(getApkInfoJson.getMalware().getStatus().equals("warn")){
                         ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
                         ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.warning));
+                        showBadgeLayout = true;
                     }
-                    findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
-                    findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+                    if(showBadgeLayout){
+                        findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+                        findViewById(R.id.badge_layout).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AptoideDialog.badgeDialog(name, getApkInfoJson.getMalware().getStatus(), getApkInfoJson.getMalware().getReason()).show(getSupportFragmentManager(), "badgeDialog");
+
+                            }
+                        });
+                    }
                 }
 
 
@@ -190,7 +204,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 latestVersion = (TextView) findViewById(R.id.app_get_latest);
                 if (json.getLatest() != null) {
                     latestVersion.setVisibility(View.VISIBLE);
-                    SpannableString spanString = new SpannableString(getString(R.string.get_latest));
+
+                    String getLatestString;
+                    if(trusted){
+                        getLatestString = getString(R.string.get_latest);
+                    }else{
+                        getLatestString = getString(R.string.get_latest_and_latest);
+                    }
+
+                    SpannableString spanString = new SpannableString(getLatestString);
                     spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
                     latestVersion.setText(spanString);
                     latestVersion.setOnClickListener(new View.OnClickListener() {

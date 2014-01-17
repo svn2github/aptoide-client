@@ -302,6 +302,7 @@ public class GetApkInfoJson {
             @Key private List<String> av;
             @Key private String date;
             @Key private String status;
+            @Key private List<String> av_info;
 
             public List<String> getAv(){
                 return this.av;
@@ -321,12 +322,15 @@ public class GetApkInfoJson {
             public void setStatus(String status){
                 this.status = status;
             }
+            public List<String> getAv_info() { return av_info; }
+            public void setAv_info(List<String> av_info) { this.av_info = av_info; }
         }
 
         public static class Reason{
             @Key private Scanned scanned;
             @Key private Signature_validated signature_validated;
             @Key private Thirdparty_validated thirdparty_validated;
+            @Key private Manual_qa manual_qa;
 
             public Scanned getScanned(){
                 return this.scanned;
@@ -346,6 +350,8 @@ public class GetApkInfoJson {
             public void setThirdparty_validated(Thirdparty_validated thirdparty_validated){
                 this.thirdparty_validated = thirdparty_validated;
             }
+            public Manual_qa getManual_qa() { return manual_qa; }
+            public void setManual_qa(Manual_qa manual_qa) { this.manual_qa = manual_qa; }
 
             public static class Signature_validated{
                 @Key private String date;
@@ -388,6 +394,25 @@ public class GetApkInfoJson {
                 public void setStore(String store){
                     this.store = store;
                 }
+            }
+
+            public static class Manual_qa{
+                @Key private String date;
+                @Key private String tester;
+                @Key private String status;
+
+
+                public String getDate(){
+                    return this.date;
+                }
+                public void setDate(String date){
+                    this.date = date;
+                }
+                public void setTester(String tester) { this.tester = tester; }
+                public String getTester() { return tester; }
+                public String getStatus() { return status; }
+                public void setStatus(String status) { this.status = status; }
+
             }
         }
 

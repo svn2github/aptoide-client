@@ -45,13 +45,11 @@
 
     <attr name="icDontLikeDrawable" format="reference"/>
 
-    <attr name="icStoreDrawable" format="reference"/>
+    <attr name="icStoreInfoDrawable" format="reference"/>
 
     <attr name="icRatingFloatDrawable" format="reference"/>
 
     <attr name="icSearchDrawable" format="reference"/>
-
-    <attr name="icAddDrawable" format="reference"/>
 
     <attr name="icMyAccountDrawable" format="reference"/>
 
@@ -62,5 +60,11 @@
     <attr name="icExcludedUpdatesDrawable" format="reference"/>
 
     <attr name="icRevertDrawable" format="reference"/>
+
+    <attr name="icErrorDrawable" format="reference"/>
+
+    <attr name="icAcceptDrawable" format="reference"/>
+
+    <attr name="icAddStoreDrawable" format="reference"/>
 
 </resources>

@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.dialogs;
 
 import android.support.v4.app.DialogFragment;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +11,10 @@ import android.support.v4.app.DialogFragment;
  * To change this template use File | Settings | File Templates.
  */
 public class AptoideDialog {
+
+    public static DialogFragment badgeDialog(String appName, String status, GetApkInfoJson.Malware.Reason reason){
+        return new DialogBadge(appName, status, reason);
+    }
 
     public static DialogFragment addStoreDialog(){
         return new AddStoreDialog();

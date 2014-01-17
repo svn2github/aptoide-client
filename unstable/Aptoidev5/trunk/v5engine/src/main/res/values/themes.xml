@@ -37,15 +37,17 @@
         <item name="icDownloadsDrawable">@style/downloadsLight</item>
         <item name="icLikeDrawable">@style/likesLight</item>
         <item name="icDontLikeDrawable">@style/dontLikesLight</item>
-        <item name="icStoreDrawable">@style/storeLight</item>
+        <item name="icStoreInfoDrawable">@style/storeLight</item>
         <item name="icRatingFloatDrawable">@style/ratingLight</item>
         <item name="icSearchDrawable">@style/searchLight</item>
-        <item name="icAddDrawable">@drawable/ic_action_accept</item>
+        <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
         <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
         <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo</item>
+        <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
+        <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
 
     </style>
 
@@ -85,15 +87,17 @@
         <item name="icDownloadsDrawable">@style/downloadsDark</item>
         <item name="icLikeDrawable">@style/likesDark</item>
         <item name="icDontLikeDrawable">@style/dontLikesDark</item>
-        <item name="icStoreDrawable">@style/storeDark</item>
+        <item name="icStoreInfoDrawable">@style/storeDark</item>
         <item name="icRatingFloatDrawable">@style/ratingDark</item>
         <item name="icSearchDrawable">@style/searchDark</item>
-        <item name="icAddDrawable">@drawable/ic_action_accept_dark</item>
+        <item name="icErrorDrawable">@drawable/ic_action_cancel_dark</item>
         <item name="icMyAccountDrawable">@drawable/ic_action_accounts_dark</item>
         <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
         <item name="icScheduledDrawable">@drawable/ic_action_go_to_today_dark</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo_dark</item>
+        <item name="icAddStoreDrawable">@drawable/ic_action_new_dark</item>
+        <item name="icAcceptDrawable">@drawable/ic_action_accept_dark</item>
 
     </style>
 

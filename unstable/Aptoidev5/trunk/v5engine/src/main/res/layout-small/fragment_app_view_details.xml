@@ -76,7 +76,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="2dp"
-                style="?attr/icStoreDrawable"
+                style="?attr/icStoreInfoDrawable"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
                 android:singleLine="true"
