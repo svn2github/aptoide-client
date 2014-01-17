@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,9 +12,9 @@ import android.support.v4.app.FragmentActivity;
 public class UninstallHelper {
 
 
-    public static void uninstall(Context context, String package_name) {
+    public static void uninstall(Activity context, String package_name) {
         Uri uri = Uri.fromParts("package", package_name, null);
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, 150);
     }
 }

@@ -67,6 +67,37 @@ public class Database {
         ;
     }
 
+    public void addToExcludeUpdate(long itemId) {
+        ContentValues values = new ContentValues();
+        Cursor c = null;
+        try{
+            c = getApkInfo(itemId);
+            if(c.moveToFirst()){
+                String apkid = c.getString(c.getColumnIndex("package_name"));
+                int vercode = c.getInt(c.getColumnIndex("version_code"));
+                String name = c.getString(c.getColumnIndex("name"));
+                values.put(Schema.Excluded.COLUMN_PACKAGE_NAME, apkid);
+                values.put(Schema.Excluded.COLUMN_VERCODE, vercode);
+                values.put(Schema.Excluded.COLUMN_NAME, name);
+                database.insert(Schema.Excluded.getName(), null, values);
+            }
+        }finally {
+            if(c!=null) c.close();
+        }
+
+
+    }
+
+    public void deleteFromExcludeUpdate(String apkid, int vercode) {
+        database.delete(Schema.Excluded.getName(),
+                "package_name = ? and vercode = ?",
+                new String[] { apkid, vercode + "" });
+    }
+
+    public Cursor getExcludedApks() {
+        return database.query(Schema.Excluded.getName(), null, null, null, null, null, null);
+    }
+
 
     public Cursor getServers() {
         Cursor c = database.rawQuery("select * from repo where is_user = 1", null);
@@ -141,7 +172,6 @@ public class Database {
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         Cursor c;
         if(storeid>0){
-
             c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
         }else{
             c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk, repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, null);
@@ -237,16 +267,18 @@ public class Database {
 
             Cursor c = database.rawQuery("select id_real_category, name from category where id_repo = ? ", new String[]{String.valueOf(id_store)});
 
+
             for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
 
                 if((c.getString(1).equals("Top Apps") && c.getString(1).equals("Latest Apps"))){
-                    database.delete("category_apk", "id_real_category=?", new String[]{String.valueOf(c.getLong(0))});
+                    database.delete("category_apk", "id_real_category=? and id_repo = ?", new String[]{String.valueOf(c.getLong(0)),String.valueOf(id_store)});
                     Log.d("Aptoide-", "Deleting " + c.getLong(0));
                 }
+
             }
             c.close();
 
-        //database.delete("apk"," id_repo = ?", new String[]{String.valueOf(id_store)});
+
 
 
         database.setTransactionSuccessful();
@@ -302,7 +334,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code and installed.signature = apk.signature " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name",null);
+        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " and not exists (select 1 from excluded as d where apk.package_name = d.package_name and apk.version_code = d.vercode ) and installed.signature = apk.signature  group by apk.package_name",null);
         c.getCount();
         return c;
     }
@@ -626,4 +658,92 @@ public class Database {
         statement.execute();
 
     }
+
+    public boolean existsServer(String repoName) {
+        Cursor c = null;
+        try {
+            c = database.rawQuery("select 1 from repo where url = ?", new String[]{repoName});
+            return c.moveToFirst();
+        } finally {
+            if (c != null) c.close();
+        }
+    }
+
+    public long getApkFromPackage(String param) {
+
+        Cursor c = null;
+        try {
+
+            c = database.rawQuery("select id_apk from apk where package_name = ?", new String[]{param});
+            if(c.moveToFirst()){
+                return c.getInt(0);
+            }else{
+                return 0;
+            }
+        } finally {
+            if (c != null) c.close();
+        }
+    }
+    public Cursor getScheduledDownloads() {
+
+        Cursor c = null;
+
+        try {
+            c = database.rawQuery("select rowid as _id, * from scheduled", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return c;
+    }
+
+    public boolean isScheduledDownload(String repo_name, String md5) {
+
+        Cursor c = null;
+        yield();
+        try {
+            c = database.query(Schema.Scheduled.getName(), new String[]{"1"}, "repo_name = ? and md5 = ?", new String[]{repo_name, md5},null, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        boolean isScheduledDOwnload = c != null && c.moveToFirst();
+
+        if (c != null) {
+            c.close();
+        }
+
+        return isScheduledDOwnload;
+
+    }
+
+    public void insertScheduledDownload(String apkid, String md5, String vername, String repoName, String name, String icon) {
+
+        Cursor c = database.query(Schema.Scheduled.getName(), null,
+                "repo_name = ? and md5 = ?",
+                new String[] { repoName, md5 + "" }, null, null, null);
+
+        if (c.moveToFirst()) {
+            c.close();
+            return;
+        }
+        c.close();
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.Scheduled.COLUMN_NAME, name);
+        values.put(Schema.Scheduled.COLUMN_PACKAGE_NAME, apkid);
+        values.put(Schema.Scheduled.COLUMN_VERSION_NAME, vername);
+        values.put(Schema.Scheduled.COLUMN_REPO, repoName);
+        values.put(Schema.Scheduled.COLUMN_ICON, icon);
+
+        database.insert(Schema.Scheduled.getName(), null, values);
+
+
+    }
+
+    public void deleteScheduledDownload(String id) {
+        database.delete(Schema.Scheduled.getName(), "md5 = ?",
+                new String[] { id });
+    }
+
 }

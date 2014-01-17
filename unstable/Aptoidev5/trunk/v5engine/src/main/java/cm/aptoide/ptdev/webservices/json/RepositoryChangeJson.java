@@ -2,6 +2,8 @@ package cm.aptoide.ptdev.webservices.json;
 
 import com.google.api.client.util.Key;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -12,7 +14,8 @@ import com.google.api.client.util.Key;
 public class RepositoryChangeJson {
 
     @Key
-    public Listing listing;
+    public List<Listing> listing;
+
     @Key
     String status;
 
@@ -25,80 +28,35 @@ public class RepositoryChangeJson {
     }
 
 
-    public static class Listing {
+    public static class Listing{
 
         @Key
-        public String name;
+        private Number appscount;
+
         @Key
-        public String avatar;
+        private String hasupdates;
+
         @Key
-        public int downloads;
-        @Key
-        public String theme;
-        @Key
-        public String description;
-        @Key
-        public String items;
-        @Key
-        public String view;
+        private String repo;
 
-        public String getAvatar() {
-            return avatar;
+        public Number getAppscount(){
+            return this.appscount;
         }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
+        public void setAppscount(Number appscount){
+            this.appscount = appscount;
         }
-
-        public String getDescription() {
-            return description;
+        public String getHasupdates(){
+            return this.hasupdates;
         }
-
-        public void setDescription(String description) {
-            this.description = description;
+        public void setHasupdates(String hasupdates){
+            this.hasupdates = hasupdates;
         }
-
-        public int getDownloads() {
-            return downloads;
+        public String getRepo(){
+            return this.repo;
         }
-
-        public void setDownloads(int downloads) {
-            this.downloads = downloads;
+        public void setRepo(String repo){
+            this.repo = repo;
         }
-
-        public String getItems() {
-            return items;
-        }
-
-        public void setItems(String items) {
-            this.items = items;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getTheme() {
-            return theme;
-        }
-
-        public void setTheme(String theme) {
-            this.theme = theme;
-        }
-
-        public String getView() {
-            return view;
-        }
-
-        public void setView(String view) {
-            this.view = view;
-        }
-
-
     }
 
 

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -22,6 +23,7 @@ import java.io.File;
 public class UninstallRetainFragment extends Fragment {
 
 
+    private long id;
     private ActionBarActivity activity;
 
     private String appName;
@@ -36,6 +38,9 @@ public class UninstallRetainFragment extends Fragment {
         this.iconPath = iconPath;
     }
 
+    public UninstallRetainFragment(long id) {
+        this.id = id;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,17 @@ public class UninstallRetainFragment extends Fragment {
 
             try {
                 Database db = new Database(Aptoide.getDb());
+
+                if(id>0){
+                    Cursor c = db.getApkInfo(id);
+                    packageName = c.getString(c.getColumnIndex("package_name"));
+                    appName = c.getString(c.getColumnIndex("name"));
+                    versionName = c.getString(c.getColumnIndex("version_name"));
+                    String icon = c.getString(c.getColumnIndex("icon"));
+                    String repoIconPath = c.getString(c.getColumnIndex("iconpath"));
+                    iconPath = repoIconPath + icon;
+                }
+
                 String apkMd5 = db.getUnistallingActionMd5(packageName);
 
                 if (db.getUnistallingActionMd5(packageName) == null) {

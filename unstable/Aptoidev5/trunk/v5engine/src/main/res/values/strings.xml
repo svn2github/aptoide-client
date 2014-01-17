@@ -109,6 +109,7 @@
     <string name="clear_dwn_title">Icons</string>
     <string name="new_choices">New Choices</string>
     <string name="recommended_for_you">Recommended For You</string>
+    <string name="previous_choices">Previous Choices</string>
     <string name="description">Description</string>
     <string name="add_store">Add Store</string>
     <string name="new_store">Add New Store</string>
@@ -231,5 +232,7 @@
     <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because have been used to sign anothers applications that not match to the signature related to the legit developer.</string>
     <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
     <string name="get_latest_and_latest">Get Latest &amp; Trusted></string>
+    <string name="schDown_nodownloadselect">No Downloads Selected</string>
+    <string name="addSchDown">Added to Scheduled Downloads</string>
 
 </resources>

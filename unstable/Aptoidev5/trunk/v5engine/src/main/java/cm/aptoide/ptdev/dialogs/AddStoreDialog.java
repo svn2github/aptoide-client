@@ -229,8 +229,6 @@ public class AddStoreDialog extends DialogFragment {
                     store.setDownloads(repositoryInfoJson.getListing().getDownloads());
 
 
-
-
                     if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
 
                         String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
@@ -245,8 +243,6 @@ public class AddStoreDialog extends DialogFragment {
                     }else{
                         store.setAvatar(repositoryInfoJson.getListing().getAvatar());
                     }
-
-
 
                     store.setDescription(repositoryInfoJson.getListing().getDescription());
                     store.setTheme(repositoryInfoJson.getListing().getTheme());

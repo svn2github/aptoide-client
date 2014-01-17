@@ -3,7 +3,6 @@
 
     <item android:id="@+id/menu_schedule"
           app:showAsAction="ifRoom"
-          android:visible="false"
           android:title="@string/schedule"
           android:icon="@drawable/ic_schedule"/>
 

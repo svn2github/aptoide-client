@@ -45,7 +45,7 @@ public class ApkEditorsChoice extends Apk {
         values.add(Schema.Apk.COLUMN_GLES);
         values.add(Schema.Apk.COLUMN_ICON);
         values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
-
+        values.add(Schema.Apk.COLUMN_SIGNATURE);
 
 
 
@@ -97,6 +97,7 @@ public class ApkEditorsChoice extends Apk {
                             getMinGlEs(),
                             getIconPath(),
                             String.valueOf(AptoideUtils.isCompatible(this) ? 1 : 0),
+                            getSignature()
 
 
                     });

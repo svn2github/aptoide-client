@@ -192,28 +192,20 @@ public class FragmentUpdates extends ListFragment {
 
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshStoresEvent(null);
-        BusProvider.getInstance().register(this);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        BusProvider.getInstance().unregister(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        BusProvider.getInstance().register(this);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        BusProvider.getInstance().unregister(this);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getListView().setDivider(null);
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -329,7 +321,7 @@ public class FragmentUpdates extends ListFragment {
                 inflater.inflate(R.menu.menu_updates_context, menu);
                 break;
             case 5:
-                inflater.inflate(R.menu.menu_installed_context, menu);
+                //inflater.inflate(R.menu.menu_installed_context, menu);
                 break;
         }
 
@@ -342,12 +334,14 @@ public class FragmentUpdates extends ListFragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int i = item.getItemId();
         if (i == R.id.menu_ignore_update) {
-            Toast.makeText(getActivity(), "Ignoring update...", Toast.LENGTH_LONG).show();
 
+            db.addToExcludeUpdate(info.id);
+            //Toast.makeText(getActivity(), "Ignoring update...", Toast.LENGTH_LONG).show();
+            refreshStoresEvent(null);
             return true;
         } else if (i == R.id.menu_discard) {
-            Toast.makeText(getActivity(), "Uninstalling...", Toast.LENGTH_LONG).show();
-
+            UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(info.id);
+            getFragmentManager().beginTransaction().add(uninstallRetainFragment, "UnistallTask").commit();
             return true;
         } else {
             return super.onContextItemSelected(item);

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.accounts.*;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
@@ -51,6 +52,7 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -78,6 +80,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private GetApkInfoJson json;
     private String name;
     private String wUrl;
+    private String md5;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -96,7 +99,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 package_name = getApkInfoJson.getApk().getPackage();
                 repoName = getApkInfoJson.getApk().getRepo();
                 wUrl = getApkInfoJson.getMeta().getWUrl();
-                Log.d("AppView","wUrl "+ wUrl);
+                Log.d("AppView", "wUrl " + wUrl);
                 boolean trusted = false;
                 if (getApkInfoJson.getApk().getIconHd() != null) {
                     icon = getApkInfoJson.getApk().getIconHd();
@@ -153,6 +156,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                 }
+
 
 
                 findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
@@ -229,13 +233,32 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     latestVersion.setVisibility(View.GONE);
                 }
 
+                if(getIntent().getBooleanExtra("fromMyapp", false)){
+                    AptoideDialog.myappInstall(new InstallListener(icon, name, versionName, package_name), name , new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_LONG).show();
+                            AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }, repoName + ".store.aptoide.com/").show(getSupportFragmentManager(), "myAppStore");
+                        }
+                    }).show(getSupportFragmentManager(), "myApp");
+                }
+
             } else {
                 for (Error error : json.getErrors()) {
                     Toast.makeText(AppViewActivity.this, error.getMsg(), Toast.LENGTH_LONG).show();
                 }
             }
 
+            md5 = json.getApk().getMd5sum();
+
+
             show(true, true);
+
 
         }
     };
@@ -257,7 +280,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
 
-    public class InstallListener implements View.OnClickListener{
+    public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
         private String icon;
         private String name;
@@ -273,13 +296,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onClick(View v) {
+
             Download download = new Download();
+
             download.setId(id);
             download.setName(this.name);
             download.setVersion(this.versionName);
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
+
             service.startDownloadFromJson(json, id, download);
+
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            onClick(null);
         }
     }
 
@@ -393,7 +425,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public SpecsEvent publishSpecs() {
 
         SpecsEvent specs = new SpecsEvent();
-        if (json != null) {
+        if (json != null && !json.getStatus().equals("FAIL")) {
 
             specs.setPermissions(new ArrayList<String>(json.getApk().getPermissions()));
             specs.setMinSdk(minSdk);
@@ -408,7 +440,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public RatingEvent publishRating() {
 
         RatingEvent event = new RatingEvent();
-        if (json != null) {
+        if (json != null && !json.getStatus().equals("FAIL")) {
+
             event.setComments(new ArrayList<Comment>(json.getMeta().getComments()));
             event.setCacheString(json.getApk().getPackage() + json.getApk().getVername());
 
@@ -560,9 +593,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("type/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install)+" \""+name+"\"!");
-        Log.d("AppView-share","wUrl "+ wUrl);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_this_app) +": "+ wUrl);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"!");
+        Log.d("AppView-share", "wUrl " + wUrl);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_this_app) + ": " + wUrl);
 
         if(wUrl !=null) {
             mShareActionProvider.setShareIntent(shareIntent);
@@ -595,7 +628,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             finish();
         } else if (i == R.id.menu_schedule) {
 
-        } else if (i == R.id.menu_share) {
+            new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
+            Toast.makeText(this, R.string.addSchDown, Toast.LENGTH_SHORT).show();
 
         } else if (i == R.id.menu_uninstall) {
 
@@ -604,6 +638,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             getSupportFragmentManager().beginTransaction().add(uninstallFragment, "uninstallFrag").commit();
 
         } else if (i == R.id.menu_search_other) {
+
+
 
         }
 

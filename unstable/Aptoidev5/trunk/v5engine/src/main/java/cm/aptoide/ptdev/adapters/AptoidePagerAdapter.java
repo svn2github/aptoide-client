@@ -1,14 +1,20 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentHome;
 import cm.aptoide.ptdev.fragments.FragmentStores;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
+
+import java.lang.reflect.Field;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +23,7 @@ import cm.aptoide.ptdev.fragments.FragmentUpdates;
  * Time: 11:30
  * To change this template use File | Settings | File Templates.
  */
-public class AptoidePagerAdapter extends FixedFragmentStatePagerAdapter {
+public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
 
     private String[] TITLES;
@@ -38,6 +44,22 @@ public class AptoidePagerAdapter extends FixedFragmentStatePagerAdapter {
         return TITLES.length;
     }
 
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        final Object fragment = super.instantiateItem(container, position);
+        try {
+            final Field saveFragmentStateField = Fragment.class.getDeclaredField("mSavedFragmentState");
+            saveFragmentStateField.setAccessible(true);
+            final Bundle savedFragmentState = (Bundle) saveFragmentStateField.get(fragment);
+            if (savedFragmentState != null) {
+                savedFragmentState.setClassLoader(Fragment.class.getClassLoader());
+            }
+        } catch (Exception e) {
+            Log.w("CustomFragmentStatePagerAdapter", "Could not get mSavedFragmentState field: " + e);
+        }
+        return fragment;
+    }
 
     @Override
     public Fragment getItem(int position) {

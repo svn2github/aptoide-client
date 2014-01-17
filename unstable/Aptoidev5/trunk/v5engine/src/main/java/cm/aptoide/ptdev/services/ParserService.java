@@ -112,10 +112,14 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
     public void startParse(final Database db, Store store, boolean newStore) {
+        if(handlerBundleSparseArray.get((int) store.getId())!=null){
+            return;
+        }
         if (!spiceManager.isStarted()) {
             Log.d("Aptoide-Parser", "Starting spice");
             spiceManager.start(getApplicationContext());
         }
+
         startService(new Intent(getApplicationContext(), ParserService.class));
         startForeground(45, createDefaultNotification());
         final long id;
@@ -146,7 +150,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         long currentTopTimestamp = 0;
         try {
-            currentTopTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
+            currentTopTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getTopXmlUrl()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,6 +176,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }
+
 
         Log.d("Aptoide-Parser", "Parse");
 
@@ -223,7 +228,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     @Override
     public void onComplete(long repoId) {
         handlerBundleSparseArray.remove((int) repoId);
-
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
 
     }

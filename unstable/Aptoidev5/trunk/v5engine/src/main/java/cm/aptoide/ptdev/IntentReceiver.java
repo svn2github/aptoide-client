@@ -118,11 +118,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         if(server!=null){
             Intent i = new Intent(IntentReceiver.this,MainActivity.class);
             i.putExtra("newrepo", server);
-            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            i.addFlags(12345);
             startActivity(i);
-            i = new Intent("pt.caixamagica.aptoide.NEWREPO");
-            i.putExtra("newrepo", server);
-            sendBroadcast(i);
             finish();
         }else{
             Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
@@ -139,11 +136,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             repo.add(uri.substring(14));
             Intent i = new Intent(IntentReceiver.this,MainActivity.class);
             i.putExtra("newrepo", repo);
-            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            i.addFlags(12345);
             startActivity(i);
-            i = new Intent("pt.caixamagica.aptoide.NEWREPO");
-            i.putExtra("newrepo", repo);
-            sendBroadcast(i);
             finish();
 
         }else if(uri.startsWith("aptoidexml")){
@@ -151,12 +145,13 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             parseXmlString(repo);
             Intent i = new Intent(IntentReceiver.this,MainActivity.class);
             i.putExtra("newrepo", repo);
-            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            i.addFlags(12345);
             startActivity(i);
-            i = new Intent("pt.caixamagica.aptoide.NEWREPO");
-            i.putExtra("newrepo", repo);
-            sendBroadcast(i);
             finish();
+
+        }else if(uri.startsWith("aptoidesearch://")){
+
+            startMarketIntent(uri.split("aptoidesearch://")[1]);
 
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
@@ -195,6 +190,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             startActivity(i);
             finish();
 
+        }else if(uri.startsWith("file://")){
+            new MyAppDownloader().execute(getIntent().getDataString());
         }
 
     }
@@ -294,20 +291,19 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     }
 
     private void startMarketIntent(String param) {
-//        System.out.println(param);
-//        long id = db.getApkId(param);
-//        Intent i;
-//        if(id>0){
-//            i = new Intent(this,ApkInfo.class);
-//            i.putExtra("_id", id);
-//            i.putExtra("category", Category.INFOXML.ordinal());
-//        }else{
-//            i = new Intent(this,SearchManager.class);
-//            i.putExtra("search", param);
-//        }
-//
-//        startActivity(i);
-//        finish();
+        System.out.println(param);
+        long id = db.getApkFromPackage(param);
+        Intent i;
+        if(id > 0){
+            i = new Intent(this,AppViewActivity.class);
+            i.putExtra("id", id);
+        }else{
+            i = new Intent(this,SearchManager.class);
+            i.putExtra("search", param);
+        }
+
+        startActivity(i);
+        finish();
     }
 
     class MyAppDownloader extends AsyncTask<String, Void, Void> {

@@ -21,10 +21,20 @@ import java.util.HashMap;
 public class RepositoryChangeRequest extends GoogleHttpClientSpiceRequest<RepositoryChangeJson> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/getRepositoryInfo/";
+    String baseUrl = "http://webservices.aptoide.com/webservices/listRepositoryChange";
+    private String repos;
+    private String hashes;
 
     public RepositoryChangeRequest() {
         super(RepositoryChangeJson.class);
+    }
+
+    public void setRepos(String repos){
+        this.repos = repos;
+    }
+
+    public void setHashes(String hashes){
+        this.hashes = hashes;
     }
 
     @Override
@@ -35,7 +45,8 @@ public class RepositoryChangeRequest extends GoogleHttpClientSpiceRequest<Reposi
         HashMap<String, String > parameters = new HashMap<String, String>();
 
         parameters.put("mode", "json");
-        parameters.put("repo", "apps");
+        parameters.put("repo", repos);
+        parameters.put("hash", hashes);
 
         HttpContent content = new UrlEncodedContent(parameters);
 

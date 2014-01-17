@@ -281,4 +281,50 @@ public class Schema {
 
     }
 
+
+    public static class Excluded {
+
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_PACKAGE_NAME = "package_name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_NAME = "name";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_VERCODE = "vercode";
+
+
+        public static String getName() {
+            return "excluded";
+        }
+
+    }
+
+    public static class Scheduled {
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_PACKAGE_NAME = "package_name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_NAME = "name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_VERSION_NAME = "version_name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_MD5 = "md5";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_REPO = "repo_name";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_ICON = "icon";
+
+        public static String getName() {
+            return "scheduled";
+        }
+
+    }
+
 }

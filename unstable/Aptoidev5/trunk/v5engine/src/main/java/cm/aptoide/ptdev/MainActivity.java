@@ -23,6 +23,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,18 +54,30 @@ import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.BadgeView;
+import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
+import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
+import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
+import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
+import org.apache.http.message.BasicNameValuePair;
 import roboguice.util.temp.Ln;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -91,7 +105,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private ServiceConnection conn2 = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            downloadService = ((DownloadService.LocalBinder)binder).getService();
+            downloadService = ((DownloadService.LocalBinder) binder).getService();
             BusProvider.getInstance().post(new DownloadServiceConnected());
         }
 
@@ -101,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     };
 
-        private ServiceConnection conn = new ServiceConnection() {
+    private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
@@ -109,9 +123,9 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             parserServiceIsBound = true;
 
             lock.lock();
-            try{
+            try {
                 boundCondition.signalAll();
-            }finally {
+            } finally {
                 lock.unlock();
             }
         }
@@ -148,11 +162,14 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (parserServiceIsBound){
+        if (parserServiceIsBound) {
             unbindService(conn);
             unbindService(conn2);
         }
         unregisterReceiver(newRepoReceiver);
+        if(executorService!=null){
+            executorService.shutdownNow();
+        }
     }
 
     @Override
@@ -160,18 +177,18 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
-        if (i == R.id.home || i == android.R.id.home){
+        if (i == R.id.home || i == android.R.id.home) {
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
             } else {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
-        }else if (i == R.id.menu_settings) {
+        } else if (i == R.id.menu_settings) {
             Intent settingsIntent = new Intent(this, Settings.class);
             startActivityForResult(settingsIntent, 0);
-        }else if (i == R.id.menu_about) {
+        } else if (i == R.id.menu_about) {
             showAbout();
-        }else if (i == R.id.menu_search) {
+        } else if (i == R.id.menu_search) {
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");
 
@@ -181,25 +198,24 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     }
 
 
-
     @Subscribe
-    public void onRepoErrorEvent(RepoErrorEvent event){
+    public void onRepoErrorEvent(RepoErrorEvent event) {
 
         Exception e = event.getE();
         long repoId = event.getRepoId();
 
-        if(e instanceof InvalidVersionException){
+        if (e instanceof InvalidVersionException) {
             AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
         }
-          //  Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        //  Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
         //}else{
-          //  Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
+        //  Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
         //}
 
     }
 
     @Subscribe
-    public void onRepoComplete(RepoCompleteEvent event){
+    public void onRepoComplete(RepoCompleteEvent event) {
         long repoId = event.getRepoId();
         //Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
     }
@@ -266,6 +282,88 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 }
             });
 
+            Cursor c = database.getServers();
+
+
+
+
+
+            ArrayList<BasicNameValuePair> storesToCheck = new ArrayList<BasicNameValuePair>();
+            final HashMap<String, Long> storesIds = new HashMap<String, Long>();
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                storesToCheck.add(new BasicNameValuePair(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("hash"))));
+                storesIds.put(c.getString(c.getColumnIndex("name")), c.getLong(c.getColumnIndex("id_repo")));
+            }
+
+            c.close();
+
+
+
+            StringBuffer repos = new StringBuffer();
+            StringBuffer hashes = new StringBuffer();
+            Iterator<?> it = storesToCheck.iterator();
+            while (it.hasNext()) {
+                BasicNameValuePair next = (BasicNameValuePair) it.next();
+                repos.append(next.getName());
+                hashes.append(next.getValue());
+
+                if (it.hasNext()) {
+                    repos.append(",");
+                    hashes.append(",");
+                }
+            }
+
+            RepositoryChangeRequest request = new RepositoryChangeRequest();
+            request.setRepos(repos.toString());
+            request.setHashes(hashes.toString());
+
+            if (!storesToCheck.isEmpty()) {
+                spiceManager.execute(request, (repos.toString() + hashes.toString()).hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<RepositoryChangeJson>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        Toast.makeText(MainActivity.this, "RequestFailed " + spiceException, Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onRequestSuccess(RepositoryChangeJson repositoryChangeJson) {
+                        for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
+                            if (Boolean.parseBoolean(changes.getHasupdates())) {
+                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
+                                spiceManager.removeDataFromCache(RepositoryChangeJson.class);
+                                final Store store = new Store();
+                                Cursor c = database.getStore(storesIds.get(changes.getRepo()));
+                                if (c.moveToFirst()) {
+                                    store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                                    store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                                    store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                                    store.setDelta(c.getString(c.getColumnIndex("hash")));
+                                    store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                                    if (c.getString(c.getColumnIndex("username")) != null) {
+                                        Login login = new Login();
+                                        login.setUsername(c.getString(c.getColumnIndex("username")));
+                                        login.setPassword(c.getString(c.getColumnIndex("password")));
+                                        store.setLogin(login);
+                                    }
+
+                                }
+                                try {
+                                    executorService.submit(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            service.startParse(database, store, false);
+                                        }
+                                    });
+                                } catch (RejectedExecutionException e) {
+                                }
+
+                            }
+
+                        }
+
+                    }
+                });
+            }
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             DisplayMetrics dm = new DisplayMetrics();
@@ -334,8 +432,60 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             }
         };
 
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        if(getIntent().hasExtra("newrepo") && getIntent().getFlags()==12345){
+
+            ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
+            for (final String repoUrl : repos) {
+
+                if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
+                    Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
+                } else {
+                    AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            GetRepositoryInfoRequest request = new GetRepositoryInfoRequest(AptoideUtils.RepoUtils.split(repoUrl));
+                            spiceManager.execute(request, new RequestListener<RepositoryInfoJson>() {
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {
+
+                                }
+
+                                @Override
+                                public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
+                                    Store store = new Store();
+                                    store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                                    store.setName(repositoryInfoJson.getListing().getName());
+                                    store.setDownloads(repositoryInfoJson.getListing().getDownloads());
+
+                                    if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+                                        String sizeString = IconSizes.generateSizeStringAvatar(MainActivity.this);
+                                        String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+                                        String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                                        avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                                        store.setAvatar(avatar);
+                                    }else{
+                                        store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+                                    }
+
+                                    store.setDescription(repositoryInfoJson.getListing().getDescription());
+                                    store.setTheme(repositoryInfoJson.getListing().getTheme());
+                                    store.setView(repositoryInfoJson.getListing().getView());
+                                    store.setItems(repositoryInfoJson.getListing().getItems());
+                                    startParse(store);
+
+                                }
+                            });
+
+                        }
+                    },repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                }
+
+            }
+        }
 
     }
 
@@ -344,12 +494,14 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         int size = sPref.getInt("updates", 0);
         if(size!=0) {
             badge.setText(String.valueOf(size));
-            badge.show(true);
+            if(!badge.isShown())badge.show(true);
         }else{
-            badge.hide(true);
+            if(badge.isShown())badge.hide(true);
         }
 
     }
+
+
 
     @Override
     public boolean onSearchRequested() {
@@ -401,7 +553,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 20:
 
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
@@ -484,7 +636,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
 
 
-
     }
 
     @Override
@@ -499,7 +650,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
+            selectItem((int) id);
         }
     }
 
@@ -507,36 +658,37 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
 
         // Locate Position
-        switch (position){
+        switch (position) {
             case 0:
-                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: " + position);
                 Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                 startActivity(loginIntent);
                 break;
             case 1:
-                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: " + position);
                 Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                 startActivity(rollbackIntent);
                 break;
-//            case 2:
-//                Log.d("MenuDrawer-position", "pos: "+position);
-//                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
-//                startActivity(scheduledIntent);
-//                break;
-//            case 3:
-//                Log.d("MenuDrawer-position", "pos: "+position);
-//                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
-//                startActivity(excludedIntent);
-//                break;
+            case 2:
+                Log.d("MenuDrawer-position", "pos: "+position);
+                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
+                startActivity(scheduledIntent);
+                break;
             case 3:
                 Log.d("MenuDrawer-position", "pos: "+position);
-                showFacebook();
+                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
+                startActivity(excludedIntent);
                 break;
             case 4:
-                Log.d("MenuDrawer-position", "pos: "+position);
+                Log.d("MenuDrawer-position", "pos: " + position);
+                showFacebook();
+                break;
+            case 5:
+                Log.d("MenuDrawer-position", "pos: " + position);
                 showTwitter();
                 break;
-            default: break;
+            default:
+                break;
         }
 
         //mDrawerList.setItemChecked(position, false);
@@ -567,7 +719,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     }
 
-    private void showTwitter(){
+    private void showTwitter() {
         if (AptoideUtils.isAppInstalled(mContext, "com.twitter.android")) {
             String url = "http://www.twitter.com/aptoide";
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -578,7 +730,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         }
     }
 
-    private void showAbout(){
+    private void showAbout() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_about, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext).setView(view);
         final AlertDialog aboutDialog = alertDialogBuilder.create();
@@ -604,7 +756,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 //                    if (Database.Instance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
 //                        Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
 //                    } else {
-                          showAddStoreDialog();
+                    showAddStoreDialog();
 //                    }
                 }
             }

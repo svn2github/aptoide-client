@@ -302,6 +302,7 @@ public class StoreActivity extends ActionBarActivity {
                         }
 
                     }
+                    c.close();
                     service.startParse(db, store, false);
                 }
             });
