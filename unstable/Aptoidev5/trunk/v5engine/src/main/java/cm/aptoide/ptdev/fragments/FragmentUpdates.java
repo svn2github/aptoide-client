@@ -320,7 +320,7 @@ public class FragmentUpdates extends ListFragment {
                 inflater.inflate(R.menu.menu_updates_context, menu);
                 break;
             case 5:
-                //inflater.inflate(R.menu.menu_installed_context, menu);
+                inflater.inflate(R.menu.menu_installed_context, menu);
                 break;
         }
 

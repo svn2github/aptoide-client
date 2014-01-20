@@ -590,39 +590,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        // Locate MenuItem with ShareActionProvider
-        SupportMenuItem item = (SupportMenuItem) menu.findItem(R.id.menu_share);
-
-        // Fetch and store ShareActionProvider
-        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("type/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"!");
-        Log.d("AppView-share", "wUrl " + wUrl);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_this_app) + ": " + wUrl);
-
-        if(wUrl !=null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_app_view, menu);
-
-
-
-
-
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -658,6 +629,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
 
+        } else if (i == R.id.menu_share) {
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"!");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, wUrl);
+
+            if (wUrl != null) {
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+            }
         }
 
         return super.onOptionsItemSelected(item);

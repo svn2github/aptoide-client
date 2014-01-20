@@ -76,9 +76,12 @@ public class Database {
                 String apkid = c.getString(c.getColumnIndex("package_name"));
                 int vercode = c.getInt(c.getColumnIndex("version_code"));
                 String name = c.getString(c.getColumnIndex("name"));
+                String iconpath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
                 values.put(Schema.Excluded.COLUMN_PACKAGE_NAME, apkid);
                 values.put(Schema.Excluded.COLUMN_VERCODE, vercode);
                 values.put(Schema.Excluded.COLUMN_NAME, name);
+                values.put(Schema.Excluded.COLUMN_ICONPATH, iconpath+icon);
                 database.insert(Schema.Excluded.getName(), null, values);
             }
         }finally {

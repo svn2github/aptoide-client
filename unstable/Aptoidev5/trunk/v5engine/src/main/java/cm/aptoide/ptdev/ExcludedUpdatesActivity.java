@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         lv = (ListView) findViewById(R.id.excluded_updates_list);
+        lv.setDivider(null);
         tv_no_excluded_downloads = (TextView) findViewById(R.id.tv_no_excluded_downloads);
         adapter = new ArrayAdapter<ExcludedUpdate>(this, 0, excludedUpdates) {
 
@@ -55,39 +57,44 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
             public long getItemId(int position) {
                 return position;
             }
+
             public void bindView(View convertView, int c) {
                 ExcludedUpdate excludedUpdate = getItem(c);
 
                 CheckBox cb_exclude;
+                ImageView icon;
                 TextView tv_name;
                 TextView tv_vercode;
                 TextView tv_apkid;
 
-                if ( convertView.getTag() == null ) {
+                if (convertView.getTag() == null) {
+                    icon = (ImageView) convertView.findViewById(R.id.app_icon);
                     tv_name = (TextView) convertView.findViewById(R.id.tv_name);
                     tv_vercode = (TextView) convertView.findViewById(R.id.tv_vercode);
                     tv_apkid = (TextView) convertView.findViewById(R.id.tv_apkid);
                     cb_exclude = (CheckBox) convertView.findViewById(R.id.cb_exclude);
-                    convertView.setTag(new ExcludedUpdatesHolder(tv_name, tv_apkid, tv_vercode, cb_exclude));
+                    convertView.setTag(new ExcludedUpdatesHolder(icon, tv_name, tv_apkid, tv_vercode, cb_exclude));
 
-                    cb_exclude.setOnClickListener( new View.OnClickListener() {
+                    cb_exclude.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            CheckBox cb = (CheckBox) v ;
+                            CheckBox cb = (CheckBox) v;
                             ExcludedUpdate excludedUpdateItem = (ExcludedUpdate) cb.getTag();
                             excludedUpdateItem.setChecked(cb.isChecked());
                         }
                     });
-                }else {
+                } else {
                     ExcludedUpdatesHolder viewHolder = (ExcludedUpdatesHolder) convertView.getTag();
                     cb_exclude = viewHolder.cb_exclude;
+                    icon = viewHolder.icon;
                     tv_vercode = viewHolder.tv_vercode;
                     tv_name = viewHolder.tv_name;
                     tv_apkid = viewHolder.tv_apkid;
                 }
                 cb_exclude.setTag(excludedUpdate);
                 cb_exclude.setChecked(cb_exclude.isChecked());
+                ImageLoader.getInstance().displayImage(excludedUpdate.getIcon(), icon);
                 tv_name.setText(excludedUpdate.getName());
-                tv_vercode.setText(""+excludedUpdate.getVercode());
+                tv_vercode.setText("" + excludedUpdate.getVercode());
                 tv_apkid.setText(excludedUpdate.getApkid());
             }
         };
@@ -136,11 +143,13 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
         private int vercode = 0;
         private String apkid = "";
         private boolean checked = false;
+        private String icon;
 
-        public ExcludedUpdate(String name, String apkid, int vercode) {
+        public ExcludedUpdate(String name, String apkid, String icon, int vercode) {
             this.name = name;
             this.apkid = apkid;
             this.vercode = vercode;
+            this.icon = icon;
         }
 
         public boolean isChecked() {
@@ -162,18 +171,16 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
             return apkid;
         }
 
-        public String toString(){
-            return "Name: " + name + ", vercode: " + vercode + ", apkid: " + apkid;
-        }
+        public String toString(){ return "Name: " + name + ", vercode: " + vercode + ", apkid: " + apkid; }
 
-
+        public String getIcon() { return icon; }
     }
 
     private void redraw() {
         Cursor c = db.getExcludedApks();
         excludedUpdates.clear();
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
-            ExcludedUpdate excludedUpdate = new ExcludedUpdate(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("package_name")), c.getInt(c.getColumnIndex("vercode")));
+            ExcludedUpdate excludedUpdate = new ExcludedUpdate(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("package_name")), c.getString(c.getColumnIndex("iconpath")), c.getInt(c.getColumnIndex("vercode")));
             excludedUpdates.add(excludedUpdate);
         }
         c.close();
@@ -205,8 +212,11 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
         public TextView tv_name;
         public TextView tv_apkid;
         public TextView tv_vercode;
-        public ExcludedUpdatesHolder(TextView tv_name, TextView tv_apkid, TextView tv_vercode, CheckBox cb_exclude) {
+        public ImageView icon;
+
+        public ExcludedUpdatesHolder(ImageView icon, TextView tv_name, TextView tv_apkid, TextView tv_vercode, CheckBox cb_exclude) {
             this.cb_exclude = cb_exclude;
+            this.icon = icon;
             this.tv_name = tv_name;
             this.tv_apkid = tv_apkid;
             this.tv_vercode = tv_vercode;

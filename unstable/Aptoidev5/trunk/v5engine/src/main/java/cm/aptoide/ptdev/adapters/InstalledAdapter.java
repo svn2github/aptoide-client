@@ -86,7 +86,7 @@ public class InstalledAdapter extends CursorAdapter {
                 if (holder == null) {
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
+//                    holder.actionIcon = (ImageView) view.findViewById(R.id.manage_icon);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     view.setTag(holder);
@@ -107,13 +107,13 @@ public class InstalledAdapter extends CursorAdapter {
                 holder.versionName.setText(versionName);
                 final String packageName = cursor.getString(cursor.getColumnIndex("package_name"));
 
-                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(name, packageName, versionName, iconPath);
-                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
-                    }
-                });
+//                holder.actionIcon.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(name, packageName, versionName, iconPath);
+//                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
+//                    }
+//                });
 
                 break;
 
@@ -124,7 +124,7 @@ public class InstalledAdapter extends CursorAdapter {
 
     public static class AppViewHolder {
         ImageView appIcon;
-        ImageView actionIcon;
+//        ImageView actionIcon;
         TextView appName;
         TextView versionName;
         TextView downloads;

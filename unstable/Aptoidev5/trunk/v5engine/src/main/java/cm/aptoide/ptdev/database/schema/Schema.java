@@ -291,6 +291,9 @@ public class Schema {
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
 
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_ICONPATH = "iconpath";
+
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_VERCODE = "vercode";
 

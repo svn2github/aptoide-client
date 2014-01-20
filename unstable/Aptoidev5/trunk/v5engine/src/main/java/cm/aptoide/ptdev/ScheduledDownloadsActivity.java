@@ -19,10 +19,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
@@ -82,6 +79,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv = (ListView) findViewById(android.R.id.list);
+        lv.setDivider(null);
         db = new Database(Aptoide.getDb());
         bindService(new Intent(this, DownloadService.class), conn, Context.BIND_AUTO_CREATE);
 
@@ -254,14 +252,35 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_scheduled_downloads, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int i = item.getItemId();
+
 
         if (i == android.R.id.home) {
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if (i == R.id.menu_remove){
+
+            for(Long scheduledDownload : scheduledDownloadsHashMap.keySet()){
+                if (scheduledDownloadsHashMap.get(scheduledDownload).checked){
+                    db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
+                }
+            }
+            getSupportLoaderManager().restartLoader(0, null, this);
+        } else if (i == R.id.menu_invert){
+            for(Long scheduledDownload : scheduledDownloadsHashMap.keySet()){
+                scheduledDownloadsHashMap.get(scheduledDownload).checked =
+                        !scheduledDownloadsHashMap.get(scheduledDownload).checked;
+            }
+            adapter.notifyDataSetChanged();
         }
 
         return super.onOptionsItemSelected(item);

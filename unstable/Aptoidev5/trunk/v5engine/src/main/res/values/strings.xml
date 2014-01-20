@@ -235,5 +235,7 @@
     <string name="schDown_nodownloadselect">No Downloads Selected</string>
     <string name="addSchDown">Added to Scheduled Downloads</string>
     <string name="error_no_market">You don\'t have Google Market installed!</string>
+    <string name="schDown_invertselection">Invert Selection</string>
+    <string name="schDown_removeselected">Remove Selected</string>
 
 </resources>
