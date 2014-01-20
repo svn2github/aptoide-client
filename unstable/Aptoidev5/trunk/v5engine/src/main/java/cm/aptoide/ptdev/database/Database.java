@@ -735,6 +735,7 @@ public class Database {
         values.put(Schema.Scheduled.COLUMN_VERSION_NAME, vername);
         values.put(Schema.Scheduled.COLUMN_REPO, repoName);
         values.put(Schema.Scheduled.COLUMN_ICON, icon);
+        values.put(Schema.Scheduled.COLUMN_MD5, md5);
 
         database.insert(Schema.Scheduled.getName(), null, values);
 

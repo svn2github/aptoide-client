@@ -315,7 +315,6 @@ public class FragmentUpdates extends ListFragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         int type = getListView().getAdapter().getItemViewType(info.position);
         MenuInflater inflater = this.getActivity().getMenuInflater();
-        Toast.makeText(getActivity(), "" + type, Toast.LENGTH_LONG).show();
         switch (type){
             case 1:
                 inflater.inflate(R.menu.menu_updates_context, menu);

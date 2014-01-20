@@ -119,8 +119,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:scheme="file" android:mimeType="application/vnd.cm.aptoide.pt"/>
                 <data android:scheme="http" android:mimeType="application/vnd.cm.aptoide.pt"/>
-                <data android:scheme="https" android:mimeType="application/vnd.cm.aptoide.pt"/>
+
 
             </intent-filter>
             <intent-filter>
@@ -139,6 +140,15 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="market" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="aptoidesearch" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -167,8 +177,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
+                        android:scheme="http"
                         android:host="imgs.aptoide.com"
-                        android:scheme="http" />
+                        android:pathPattern="*//.myapp"/>
             </intent-filter>
         </activity>
 

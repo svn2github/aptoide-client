@@ -1,10 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -43,6 +40,7 @@ import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -237,13 +235,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     AptoideDialog.myappInstall(new InstallListener(icon, name, versionName, package_name), name , new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_LONG).show();
-                            AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            }, repoName + ".store.aptoide.com/").show(getSupportFragmentManager(), "myAppStore");
+                            if (!new Database(Aptoide.getDb()).existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoName + ".store.aptoide.com/"))) {
+                                AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ArrayList<String> repo = new ArrayList<String>();
+                                        repo.add("http://"+repoName + ".store.aptoide.com/");
+                                        Intent i = new Intent(AppViewActivity.this, MainActivity.class);
+                                        i.putExtra("nodialog", true);
+                                        i.putExtra("newrepo", repo);
+                                        i.addFlags(12345);
+                                        startActivity(i);
+
+                                    }
+                                }, "http://" +repoName + ".store.aptoide.com/").show(getSupportFragmentManager(), "myAppStore");
+                            }
                         }
                     }).show(getSupportFragmentManager(), "myApp");
                 }
@@ -639,6 +646,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         } else if (i == R.id.menu_search_other) {
 
+            Intent intent = new Intent();
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=" + package_name));
+
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast toast = Toast.makeText(this, getString(R.string.error_no_market), Toast.LENGTH_SHORT);
+                toast.show();
+            }
 
 
         }

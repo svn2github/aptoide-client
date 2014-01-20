@@ -166,7 +166,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             unbindService(conn);
             unbindService(conn2);
         }
-        unregisterReceiver(newRepoReceiver);
         if(executorService!=null){
             executorService.shutdownNow();
         }
@@ -253,7 +252,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
-        registerReceiver(newRepoReceiver, new IntentFilter("pt.caixamagica.aptoide.NEWREPO"));
+
 
 
         if (savedInstanceState == null) {
@@ -442,16 +441,17 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
                 if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
-                } else {
+                } else if (!getIntent().getBooleanExtra("nodialog", true)) {
                     AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitAddStore");
                             GetRepositoryInfoRequest request = new GetRepositoryInfoRequest(AptoideUtils.RepoUtils.split(repoUrl));
                             spiceManager.execute(request, new RequestListener<RepositoryInfoJson>() {
                                 @Override
                                 public void onRequestFailure(SpiceException spiceException) {
-
+                                    DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitAddStore");
+                                    pd.dismiss();
                                 }
 
                                 @Override
@@ -461,13 +461,13 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                                     store.setName(repositoryInfoJson.getListing().getName());
                                     store.setDownloads(repositoryInfoJson.getListing().getDownloads());
 
-                                    if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+                                    if (repositoryInfoJson.getListing().getAvatar_hd() != null) {
                                         String sizeString = IconSizes.generateSizeStringAvatar(MainActivity.this);
                                         String avatar = repositoryInfoJson.getListing().getAvatar_hd();
                                         String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                                        avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                                        avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
                                         store.setAvatar(avatar);
-                                    }else{
+                                    } else {
                                         store.setAvatar(repositoryInfoJson.getListing().getAvatar());
                                     }
 
@@ -475,13 +475,53 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                                     store.setTheme(repositoryInfoJson.getListing().getTheme());
                                     store.setView(repositoryInfoJson.getListing().getView());
                                     store.setItems(repositoryInfoJson.getListing().getItems());
+                                    DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitAddStore");
+                                    pd.dismiss();
                                     startParse(store);
 
                                 }
                             });
 
                         }
-                    },repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                    }, repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                } else {
+                    AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitAddStore");
+
+                    GetRepositoryInfoRequest request = new GetRepositoryInfoRequest(AptoideUtils.RepoUtils.split(repoUrl));
+                    spiceManager.execute(request, new RequestListener<RepositoryInfoJson>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitAddStore");
+                            pd.dismiss();
+                        }
+
+                        @Override
+                        public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
+                            Store store = new Store();
+                            store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                            store.setName(repositoryInfoJson.getListing().getName());
+                            store.setDownloads(repositoryInfoJson.getListing().getDownloads());
+
+                            if (repositoryInfoJson.getListing().getAvatar_hd() != null) {
+                                String sizeString = IconSizes.generateSizeStringAvatar(MainActivity.this);
+                                String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+                                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                                store.setAvatar(avatar);
+                            } else {
+                                store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+                            }
+
+                            store.setDescription(repositoryInfoJson.getListing().getDescription());
+                            store.setTheme(repositoryInfoJson.getListing().getTheme());
+                            store.setView(repositoryInfoJson.getListing().getView());
+                            store.setItems(repositoryInfoJson.getListing().getItems());
+                            DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitAddStore");
+                            pd.dismiss();
+                            startParse(store);
+
+                        }
+                    });
                 }
 
             }
@@ -746,21 +786,5 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     }
 
 
-    private BroadcastReceiver newRepoReceiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.hasExtra("newrepo")) {
-                ArrayList<String> repos = intent.getExtras().getStringArrayList("newrepo");
-                for (final String uri2 : repos) {
-//                    if (Database.Instance().getServer(RepoUtils.formatRepoUri(uri2)) != null) {
-//                        Toast.makeText(MainActivity.this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
-//                    } else {
-                    showAddStoreDialog();
-//                    }
-                }
-            }
-
-        }
-    };
 }

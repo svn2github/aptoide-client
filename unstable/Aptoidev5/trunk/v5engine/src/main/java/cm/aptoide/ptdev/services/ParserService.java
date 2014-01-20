@@ -217,11 +217,14 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         } else {
             notification.icon = 0;
         }
+
         notification.tickerText = null;
         notification.when = System.currentTimeMillis();
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = Notification.PRIORITY_MIN;
         }
+
         return notification;
     }
 

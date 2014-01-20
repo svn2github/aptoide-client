@@ -134,14 +134,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                     imageViewIcon = viewHolder.imageViewIcon ;
                 }
 
-                // Tag the CheckBox with the Planet it is displaying, so that we can
-                // access the planet in onClick() when the CheckBox is toggled.
-                checkBoxScheduled.setTag( scheduledDownload );
 
-                // Display planet data
-                checkBoxScheduled.setChecked( scheduledDownload.isChecked() );
-                textViewName.setText( scheduledDownload.getName() );
-                textViewVersion.setText( scheduledDownload.getVername() );
 
                 // Tag the CheckBox with the Planet it is displaying, so that we can
                 // access the planet in onClick() when the CheckBox is toggled.
@@ -216,6 +209,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         });
 
 
+        lv.setAdapter(adapter);
     }
 
     @Override
@@ -244,7 +238,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
             scheduledDownload.setApkid(c.getString(c.getColumnIndex("package_name")));
             scheduledDownload.setMd5(c.getString(c.getColumnIndex("md5")));
-
+            scheduledDownload.setName(c.getString(c.getColumnIndex("name")));
             scheduledDownload.setVername(c.getString(c.getColumnIndex("version_name")));
             scheduledDownload.setRepoName(c.getString(c.getColumnIndex("repo_name")));
             scheduledDownload.setIconPath(c.getString(c.getColumnIndex("icon")));
@@ -368,6 +362,10 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         public void setId(long id) {
             this.id = id;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 

@@ -434,6 +434,7 @@ public class AptoideUtils {
     public static class RepoUtils {
 
         public static String split(String repo) {
+            Log.d("Aptoide-RepoUtils", "Splitting " + repo);
             return repo.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
         }
 
