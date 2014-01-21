@@ -8,17 +8,14 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
-import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.Parser;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
@@ -27,6 +24,7 @@ import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.parser.handlers.*;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.octo.android.robospice.SpiceManager;
@@ -36,10 +34,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,6 +47,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
+    private SpiceManager spiceManager2 = new SpiceManager(ParserHttp.class);
 
 
 
@@ -111,7 +107,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
-    public void startParse(final Database db, Store store, boolean newStore) {
+    public void startParse(final Database db, final Store store, boolean newStore) {
         if(handlerBundleSparseArray.get((int) store.getId())!=null){
             return;
         }
@@ -120,17 +116,98 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             spiceManager.start(getApplicationContext());
         }
 
+        if (!spiceManager2.isStarted()) {
+            Log.d("Aptoide-Parser", "Starting spice");
+            spiceManager2.start(getApplicationContext());
+        }
+
         startService(new Intent(getApplicationContext(), ParserService.class));
         startForeground(45, createDefaultNotification());
         final long id;
         if(newStore){
             id = insertStoreDatabase(db, store);
+            store.setId(id);
             BusProvider.getInstance().post(produceRepoAddedEvent());
         }else{
             id = store.getId();
         }
 
+        if(store.getBaseUrl().contains("store.aptoide.com")){
+            store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));
+        }
+
+        GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
+
+
+        spiceManager2.execute(getRepoInfoRequest, new RequestListener<RepositoryInfoJson>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+
+            @Override
+            public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
+
+
+                String message = null;
+
+                Log.i("Aptoide-", "success");
+                if (repositoryInfoJson != null) {
+
+
+                    if ("FAIL".equals(repositoryInfoJson.getStatus())) {
+
+                        message = "Store doesn't exist.";
+
+
+                    } else {
+
+
+                        store.setName(repositoryInfoJson.getListing().getName());
+                        store.setDownloads(repositoryInfoJson.getListing().getDownloads());
+
+
+                        if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+
+                            String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
+
+
+                            String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+                            String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                            avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+
+                            store.setAvatar(avatar);
+
+                        }else{
+                            store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+                        }
+
+                        store.setDescription(repositoryInfoJson.getListing().getDescription());
+                        store.setTheme(repositoryInfoJson.getListing().getTheme());
+                        store.setView(repositoryInfoJson.getListing().getView());
+                        store.setItems(repositoryInfoJson.getListing().getItems());
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                beginParse(db, store, id);
+                            }
+                        }).start();
+
+                    }
+                }
+
+            }
+        });
+
+
+    }
+
+    private void beginParse(Database db, Store store, long id) {
         Log.d("Aptoide-Parser", "Creating Objects");
+
+        db.updateStore(store);
+        BusProvider.getInstance().post(produceRepoAddedEvent());
 
         HandlerLatestXml handlerLatestXml = new HandlerLatestXml(db, id);
         HandlerTopXml handlerTopXml = new HandlerTopXml(db, id);
@@ -158,23 +235,13 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         Log.d("Aptoide-Parser", "Delete");
         if (currentLatestTimestamp>store.getLatestTimestamp()) {
-            handlerLatestXml.setTimestamp(currentLatestTimestamp);
-            parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new Runnable() {
-                @Override
-                public void run() {
-                    db.deleteLatest(id);
-                }
-            });
+
+            parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new LatestPreParseRunnable(handlerLatestXml, currentTopTimestamp, db, id) );
         }
 
         if (currentTopTimestamp>store.getTopTimestamp()) {
             handlerTopXml.setTimestamp(currentTopTimestamp);
-            parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new Runnable() {
-                @Override
-                public void run() {
-                    db.deleteTop(id);
-                }
-            });
+            parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new TopPreParseRunnable(handlerTopXml, currentLatestTimestamp, db, id));
         }
 
 
@@ -187,6 +254,50 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             }
         });
     }
+
+    public class TopPreParseRunnable implements Runnable{
+
+
+        private HandlerTopXml handlerTopXml;
+        private long currentTopTimestamp;
+        private Database db;
+        private long id;
+
+        public TopPreParseRunnable(HandlerTopXml handlerLatestXml, long currentTopTimestamp, Database db, long id) {
+            this.handlerTopXml = handlerLatestXml;
+            this.currentTopTimestamp = currentTopTimestamp;
+            this.db = db;
+            this.id = id;
+        }
+
+        public void run() {
+            handlerTopXml.setTimestamp(currentTopTimestamp);
+            db.deleteTop(id);
+        }
+    }
+
+    public class LatestPreParseRunnable implements Runnable{
+
+
+        private HandlerLatestXml handlerLatestXml;
+        private long currentLatestTimestamp;
+        private Database db;
+        private long id;
+
+        public LatestPreParseRunnable(HandlerLatestXml handlerLatestXml, long currentLatestTimestamp, Database db, long id) {
+            this.handlerLatestXml = handlerLatestXml;
+            this.currentLatestTimestamp = currentLatestTimestamp;
+            this.db = db;
+            this.id = id;
+        }
+
+        public void run() {
+            handlerLatestXml.setTimestamp(currentLatestTimestamp);
+            db.deleteLatest(id);
+        }
+    }
+
+
 
 
     @Subscribe

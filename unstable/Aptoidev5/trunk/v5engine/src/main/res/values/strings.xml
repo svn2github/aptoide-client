@@ -237,5 +237,7 @@
     <string name="error_no_market">You don\'t have Google Market installed!</string>
     <string name="schDown_invertselection">Invert Selection</string>
     <string name="schDown_removeselected">Remove Selected</string>
+    <string name="schDwnBtn">Schedule Download</string>
+    <string name="schDown_install">Do you want to install all scheduled downloads?</string>
 
 </resources>

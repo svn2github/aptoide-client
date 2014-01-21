@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FlushedInputStream;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import org.acra.*;
 import org.acra.annotation.ReportsCrashes;
@@ -136,7 +137,7 @@ public class Aptoide extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
 
                 .discCache(new UnlimitedDiscCache(new File(getConfiguration().getPathCacheIcons()), generator))
-                .imageDownloader(new ImageDownloaderWithPermissions(managerPreferences))
+                .imageDownloader(new ImageDownloaderWithPermissions(getContext(),managerPreferences))
                 .defaultDisplayImageOptions(options)
                 .build();
         ImageLoader.getInstance().init(config);
@@ -161,7 +162,7 @@ public class Aptoide extends Application {
         return new AptoideThemePicker();
     }
 
-    public static class ImageDownloaderWithPermissions implements ImageDownloader{
+    public static class ImageDownloaderWithPermissions extends BaseImageDownloader{
 
         /** {@value} */
         public static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5 * 1000; // milliseconds
@@ -172,30 +173,45 @@ public class Aptoide extends Application {
         private int readTimeout;
         private ManagerPreferences managerPreferences;
 
-        public ImageDownloaderWithPermissions(ManagerPreferences managerPreferences) {
-            this(DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
+        public ImageDownloaderWithPermissions(Context context, ManagerPreferences managerPreferences) {
+            this(context, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
             this.managerPreferences = managerPreferences;
         }
 
-        public ImageDownloaderWithPermissions(int connectTimeout, int readTimeout) {
+        public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {
+            super(context, connectTimeout, readTimeout);
 
             this.connectTimeout = connectTimeout;
             this.readTimeout = readTimeout;
         }
 
         @Override
-        public InputStream getStream(String imageUri, Object o) throws IOException {
+        public InputStream getStream(String imageUri, Object extra) throws IOException {
 
             boolean download = AptoideUtils.NetworkUtils.isPermittedConnectionAvailable(context, managerPreferences.getIconDownloadPermissions());
 
-            if(download){
-                URLConnection conn = new URL(imageUri).openConnection();
-                conn.setConnectTimeout(connectTimeout);
-                conn.setReadTimeout(readTimeout);
-                return new FlushedInputStream(new BufferedInputStream(conn.getInputStream(), 8192));
-            }else{
-                return null;
+
+
+            switch (Scheme.ofUri(imageUri)) {
+                case HTTP:
+                case HTTPS:
+                    if(download){
+                        return getStreamFromNetwork(imageUri, extra);
+                    }
+                case FILE:
+                    return getStreamFromFile(imageUri, extra);
+                case CONTENT:
+                    return getStreamFromContent(imageUri, extra);
+                case ASSETS:
+                    return getStreamFromAssets(imageUri, extra);
+                case DRAWABLE:
+                    return getStreamFromDrawable(imageUri, extra);
+                case UNKNOWN:
+                default:
+                    return getStreamFromOtherSource(imageUri, extra);
             }
+
+
         }
 
 

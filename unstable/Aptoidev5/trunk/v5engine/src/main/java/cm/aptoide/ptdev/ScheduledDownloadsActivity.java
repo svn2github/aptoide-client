@@ -7,13 +7,13 @@
  ******************************************************************************/
 package cm.aptoide.ptdev;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.*;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -46,7 +47,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            downloadService = ((DownloadService.LocalBinder)binder).getService();
+            downloadService = ((DownloadService.LocalBinder) binder).getService();
         }
 
         @Override
@@ -54,6 +55,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         }
     };
+    private int i;
 
     @Override
     protected void onStart() {
@@ -66,7 +68,6 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         super.onStop();
         spiceManager.shouldStop();
     }
-
 
 
     @Override
@@ -83,6 +84,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         db = new Database(Aptoide.getDb());
         bindService(new Intent(this, DownloadService.class), conn, Context.BIND_AUTO_CREATE);
 
+
         adapter = new CursorAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
 
             @Override
@@ -96,13 +98,13 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 ScheduledDownload scheduledDownload = scheduledDownloadsHashMap.get(c.getLong(c.getColumnIndex("_id")));
 
                 // The child views in each row.
-                CheckBox checkBoxScheduled ;
-                TextView textViewName ;
-                TextView textViewVersion ;
-                ImageView imageViewIcon ;
+                CheckBox checkBoxScheduled;
+                TextView textViewName;
+                TextView textViewVersion;
+                ImageView imageViewIcon;
 
                 // Create a new row view
-                if ( convertView.getTag() == null ) {
+                if (convertView.getTag() == null) {
 
                     // Find the child views.
                     textViewName = (TextView) convertView.findViewById(R.id.name);
@@ -111,14 +113,14 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                     imageViewIcon = (ImageView) convertView.findViewById(R.id.appicon);
                     // Optimization: Tag the row with it's child views, so we don't have to
                     // call findViewById() later when we reuse the row.
-                    convertView.setTag( new Holder(textViewName,textViewVersion,checkBoxScheduled,imageViewIcon) );
+                    convertView.setTag(new Holder(textViewName, textViewVersion, checkBoxScheduled, imageViewIcon));
 
                     // If CheckBox is toggled, update the planet it is tagged with.
-                    checkBoxScheduled.setOnClickListener( new View.OnClickListener() {
+                    checkBoxScheduled.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            CheckBox cb = (CheckBox) v ;
+                            CheckBox cb = (CheckBox) v;
                             ScheduledDownload schDownload = (ScheduledDownload) cb.getTag();
-                            schDownload.setChecked( cb.isChecked() );
+                            schDownload.setChecked(cb.isChecked());
                         }
                     });
                 }
@@ -126,22 +128,21 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 else {
                     // Because we use a ViewHolder, we avoid having to call findViewById().
                     Holder viewHolder = (Holder) convertView.getTag();
-                    checkBoxScheduled = viewHolder.checkBoxScheduled ;
+                    checkBoxScheduled = viewHolder.checkBoxScheduled;
                     textViewVersion = viewHolder.textViewVersion;
-                    textViewName = viewHolder.textViewName ;
-                    imageViewIcon = viewHolder.imageViewIcon ;
+                    textViewName = viewHolder.textViewName;
+                    imageViewIcon = viewHolder.imageViewIcon;
                 }
-
 
 
                 // Tag the CheckBox with the Planet it is displaying, so that we can
                 // access the planet in onClick() when the CheckBox is toggled.
-                checkBoxScheduled.setTag( scheduledDownload );
+                checkBoxScheduled.setTag(scheduledDownload);
 
                 // Display planet data
-                checkBoxScheduled.setChecked( scheduledDownload.isChecked() );
-                textViewName.setText( scheduledDownload.getName() );
-                textViewVersion.setText( scheduledDownload.getVername() );
+                checkBoxScheduled.setChecked(scheduledDownload.isChecked());
+                textViewName.setText(scheduledDownload.getName());
+                textViewVersion.setText(scheduledDownload.getVername());
 
                 ImageLoader.getInstance().displayImage(scheduledDownload.getIconPath(), imageViewIcon);
 
@@ -154,13 +155,76 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View item, int arg2, long arg3) {
-                ScheduledDownload scheduledDownload = (ScheduledDownload) ((Holder)item.getTag()).checkBoxScheduled.getTag();
+                ScheduledDownload scheduledDownload = (ScheduledDownload) ((Holder) item.getTag()).checkBoxScheduled.getTag();
                 scheduledDownload.toggleChecked();
                 Holder viewHolder = (Holder) item.getTag();
-                viewHolder.checkBoxScheduled.setChecked( scheduledDownload.isChecked() );
+                viewHolder.checkBoxScheduled.setChecked(scheduledDownload.isChecked());
             }
 
         });
+
+
+        DialogFragment pd = new DialogFragment() {
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScheduledDownloadsActivity.this);
+                final AlertDialog scheduleDownloadDialog = dialogBuilder.create();
+                scheduleDownloadDialog.setTitle(getText(R.string.schDwnBtn));
+                scheduleDownloadDialog.setIcon(android.R.drawable.ic_dialog_alert);
+                scheduleDownloadDialog.setCancelable(false);
+                scheduleDownloadDialog.setMessage(getText(R.string.schDown_install));
+                scheduleDownloadDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+                        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+
+                            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
+                            requestFromMd5.setRepoName(schDown.getRepoName());
+                            requestFromMd5.setMd5Sum(schDown.getMd5());
+
+                            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {
+
+                                }
+
+                                @Override
+                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+
+                                    Download download = new Download();
+                                    download.setId(schDown.getId());
+                                    download.setName(schDown.getName());
+                                    download.setVersion(schDown.getVername());
+                                    download.setIcon(schDown.getIconPath());
+                                    download.setPackageName(schDown.getApkid());
+                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                                    i++;
+                                    if(i==scheduledDownloadsHashMap.size()){
+                                        finish();
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                });
+                scheduleDownloadDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                    }
+                });
+
+
+                return scheduleDownloadDialog;
+            }
+        };
+
+        if(getIntent().hasExtra("downloadAll")){
+            pd.show(getSupportFragmentManager(), "installAllScheduled");
+        }
 
         Button installButton = (Button) findViewById(R.id.sch_down);
         installButton.setOnClickListener(new View.OnClickListener() {
@@ -267,16 +331,16 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             finish();
         } else if (i == R.id.home) {
             finish();
-        } else if (i == R.id.menu_remove){
+        } else if (i == R.id.menu_remove) {
 
-            for(Long scheduledDownload : scheduledDownloadsHashMap.keySet()){
-                if (scheduledDownloadsHashMap.get(scheduledDownload).checked){
+            for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
                     db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
                 }
             }
             getSupportLoaderManager().restartLoader(0, null, this);
-        } else if (i == R.id.menu_invert){
-            for(Long scheduledDownload : scheduledDownloadsHashMap.keySet()){
+        } else if (i == R.id.menu_invert) {
+            for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                 scheduledDownloadsHashMap.get(scheduledDownload).checked =
                         !scheduledDownloadsHashMap.get(scheduledDownload).checked;
             }
@@ -286,12 +350,12 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAllChecked(){
-        if(scheduledDownloadsHashMap.isEmpty()){
+    private boolean isAllChecked() {
+        if (scheduledDownloadsHashMap.isEmpty()) {
             return false;
         }
-        for(Long scheduledDownload : scheduledDownloadsHashMap.keySet()){
-            if (scheduledDownloadsHashMap.get(scheduledDownload).checked){
+        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+            if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
                 return true;
             }
         }
@@ -299,13 +363,13 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
     }
 
     private static class ScheduledDownload {
-        private String name = "" ;
+        private String name = "";
 
-        private String apkid = "" ;
+        private String apkid = "";
 
         private String vername = "";
-        private int vercode = 0 ;
-        private boolean checked = false ;
+        private int vercode = 0;
+        private boolean checked = false;
         private String iconPath = "";
 
         private String md5 = "";
@@ -313,38 +377,47 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         private long id;
 
 
-        public ScheduledDownload( long id, boolean checked ) {
+        public ScheduledDownload(long id, boolean checked) {
             this.id = id;
-            this.checked = checked ;
+            this.checked = checked;
         }
+
         public String getIconPath() {
-            return this.iconPath ;
+            return this.iconPath;
         }
+
         public String getName() {
             return name;
         }
+
         public boolean isChecked() {
             return checked;
         }
+
         public void setChecked(boolean checked) {
             this.checked = checked;
         }
+
         public String toString() {
-            return name ;
+            return name;
         }
+
         public void toggleChecked() {
-            checked = !checked ;
+            checked = !checked;
         }
 
         public int getVercode() {
             return vercode;
         }
+
         public void setVercode(int vercode) {
             this.vercode = vercode;
         }
+
         public String getApkid() {
             return apkid;
         }
+
         public void setApkid(String apkid) {
             this.apkid = apkid;
         }
@@ -352,11 +425,13 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         public String getVername() {
             return vername;
         }
+
         public void setVername(String vername) {
             this.vername = vername;
         }
+
         public void setIconPath(String iconPath) {
-            this.iconPath=iconPath;
+            this.iconPath = iconPath;
         }
 
         public void setRepoName(String repoName) {
@@ -389,15 +464,16 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
     }
 
     private static class Holder {
-        public CheckBox checkBoxScheduled ;
-        public TextView textViewName ;
+        public CheckBox checkBoxScheduled;
+        public TextView textViewName;
         public TextView textViewVersion;
-        public ImageView imageViewIcon ;
-        public Holder( TextView textView, TextView textViewVersion, CheckBox checkBox, ImageView imageView ) {
-            this.checkBoxScheduled = checkBox ;
-            this.textViewName = textView ;
+        public ImageView imageViewIcon;
+
+        public Holder(TextView textView, TextView textViewVersion, CheckBox checkBox, ImageView imageView) {
+            this.checkBoxScheduled = checkBox;
+            this.textViewName = textView;
             this.textViewVersion = textViewVersion;
-            this.imageViewIcon = imageView ;
+            this.imageViewIcon = imageView;
         }
     }
 

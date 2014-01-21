@@ -133,6 +133,29 @@ public class Database {
         return database.insert(Schema.Repo.getName(), "error", values);
     }
 
+    public long updateStore(Store store) {
+        ContentValues values = new ContentValues();
+
+
+        values.put(Schema.Repo.COLUMN_AVATAR, store.getAvatar());
+        values.put(Schema.Repo.COLUMN_DOWNLOADS, store.getDownloads());
+        values.put(Schema.Repo.COLUMN_THEME, store.getTheme());
+        values.put(Schema.Repo.COLUMN_DESCRIPTION, store.getDescription());
+        values.put(Schema.Repo.COLUMN_ITEMS, store.getItems());
+        values.put(Schema.Repo.COLUMN_VIEW, store.getView());
+
+        if (store.getLogin() != null) {
+            values.put(Schema.Repo.COLUMN_USERNAME, store.getLogin().getUsername());
+            values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
+        }
+
+        Log.d("Aptoide-Updating store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
+
+        values.put(Schema.Repo.COLUMN_IS_USER, true);
+
+        return database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(store.getId())});
+    }
+
     public Cursor getCategories(long storeid, long parentid) {
 
 
@@ -312,7 +335,7 @@ public class Database {
             Cursor c = database.rawQuery("select id_real_category from category where id_repo = ?", new String[]{String.valueOf(id_store)});
 
             for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
-                database.delete("category_apk","id_real_category=?", new String[]{String.valueOf(c.getLong(0))});
+                database.delete("category_apk","id_real_category=? and id_repo = ?", new String[]{String.valueOf(c.getLong(0)),String.valueOf(id_store)});
                 Log.d("Aptoide-", "Deleting " + c.getLong(0));
             }
             c.close();
@@ -336,8 +359,9 @@ public class Database {
 
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+        //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
+        Cursor c = database.rawQuery("select (installed.version_code < apk.version_code) as is_update, apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where not exists (select 1 from excluded as d where apk.package_name = d.package_name )  " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " and installed.signature = apk.signature  group by is_update , apk.package_name order by is_update desc, apk.package_name collate nocase",null);
 
-        Cursor c = database.rawQuery("select 0 as _id , 'Updates' as name, null as count, null as version_name, null as icon, null as iconpath union select apk.id_apk as _id,apk.name,  apk.downloads as count,apk.version_name , apk.icon as icon, repo.icons_path as iconpath from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo  where installed.version_code < apk.version_code " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " and not exists (select 1 from excluded as d where apk.package_name = d.package_name and apk.version_code = d.vercode ) and installed.signature = apk.signature  group by apk.package_name",null);
         c.getCount();
         return c;
     }
@@ -527,14 +551,17 @@ public class Database {
 
     public void deleteLatest(long id) {
 
+
+        Log.e("Aptoide-Database", "Delete latest on repo " + id);
+
         Cursor c = database.rawQuery("select id_real_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Latest Apps"});
         if (c.moveToFirst()) {
             long id_real_category = c.getLong(0);
 
             c.close();
-            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
+            database.delete(Schema.Category_Apk.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
 
-            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
+            database.delete(Schema.Category.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
         }
 
 
@@ -542,15 +569,17 @@ public class Database {
 
     public void deleteTop(long id) {
 
+        Log.e("Aptoide-Database", "Delete top on repo " + id);
+
         Cursor c = database.rawQuery("select id_real_category from category where id_repo = ? and name = ?", new String[]{String.valueOf(id), "Top Apps"});
 
         if (c.moveToFirst()) {
             long id_real_category = c.getLong(0);
 
             c.close();
-            database.delete(Schema.Category_Apk.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
+            database.delete(Schema.Category_Apk.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
 
-            database.delete(Schema.Category.getName(), "id_real_category = ?", new String[]{String.valueOf(id_real_category)});
+            database.delete(Schema.Category.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
         }
 
 
@@ -586,6 +615,7 @@ public class Database {
 
     public void insertCategory(String name, int parent, int real_id, int order, long repoId) {
 
+        Log.e("Aptoide-Database", "Inserting category " +  name + " on " + repoId );
 
         ContentValues values = new ContentValues();
 
@@ -746,8 +776,11 @@ public class Database {
     }
 
     public void deleteScheduledDownload(String id) {
-        database.delete(Schema.Scheduled.getName(), "md5 = ?",
-                new String[] { id });
+        database.delete(Schema.Scheduled.getName(), "md5 = ?", new String[] { id });
+    }
+
+    public void deleteScheduledDownloadByPackageName(String id) {
+        database.delete(Schema.Scheduled.getName(), "package_name = ?", new String[] { id });
     }
 
 }

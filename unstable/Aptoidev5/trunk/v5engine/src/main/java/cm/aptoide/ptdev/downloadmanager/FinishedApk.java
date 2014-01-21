@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,13 +25,14 @@ public class FinishedApk implements Parcelable{
     private ArrayList<String> permissionsList;
 
 
-    public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path) {
+    public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
         this.name = name;
         this.apkid = apkid;
         this.version = version;
         this.appHashId = appHashId;
         this.iconpath = iconpath;
         this.path = path;
+        this.permissionsList = permissions;
     }
 
     public String getName() {
@@ -79,6 +81,7 @@ public class FinishedApk implements Parcelable{
         dest.writeLong(appHashId);
         dest.writeString(iconpath);
         dest.writeString(path);
+        dest.writeStringList(permissionsList);
         Log.d("Aptoide-FinishedApkParcel", "" + path);
 
     }
@@ -101,6 +104,8 @@ public class FinishedApk implements Parcelable{
         iconpath = in.readString();
         path = in.readString();
 
+        permissionsList = new ArrayList<String>();
+        in.readStringList(permissionsList);
         Log.d("Aptoide-FinishedApkParceOut", "Path" + path);
 
 

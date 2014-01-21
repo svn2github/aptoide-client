@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentBreadCrumbs;
 import android.support.v4.app.FragmentManager;
@@ -65,7 +67,7 @@ public class StoreActivity extends ActionBarActivity {
         return storeTheme;
     }
 
-    public enum Sort{ NAME, DATE, DOWNLOADS, RATING, PRICE}
+    public enum Sort{ 	NAME, DOWNLOADS, DATE, PRICE, RATING}
     public boolean noCategories;
     public Sort sort;
 
@@ -101,9 +103,11 @@ public class StoreActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Intent i = new Intent(this, ParserService.class);
         setContentView(R.layout.page_store_list);
-        sort = Sort.NAME;
+
+        sort = Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         //storeName = getIntent().getStringExtra("storename");
         storeid = getIntent().getLongExtra("storeid", 0);
+        noCategories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", false);
         //themeordinal = getIntent().getIntExtra("theme", 0);
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
         FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
@@ -178,6 +182,28 @@ public class StoreActivity extends ActionBarActivity {
 
         getMenuInflater().inflate(R.menu.menu_categories, menu);
 
+        switch(sort){
+            case NAME:
+                menu.findItem(R.id.name).setChecked(true);
+                break;
+            case DOWNLOADS:
+                menu.findItem(R.id.download).setChecked(true);
+                break;
+            case DATE:
+                menu.findItem(R.id.date).setChecked(true);
+                break;
+            case PRICE:
+                menu.findItem(R.id.price).setChecked(true);
+                break;
+            case RATING:
+                menu.findItem(R.id.rating).setChecked(true);
+                break;
+        }
+
+        if(noCategories){
+            menu.findItem(R.id.show_all).setChecked(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -210,21 +236,22 @@ public class StoreActivity extends ActionBarActivity {
         }else if( i == R.id.price){
             sort = Sort.PRICE;
             setSort(item);
+
         }else if( i == R.id.show_all){
 
             noCategories = !noCategories;
             getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             setSort(item);
+
         }
 
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("orderByCategory", noCategories).putInt("order_list", sort.ordinal()).commit();
 
-
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void setSort(MenuItem item) {
-        item.setChecked(!item.isChecked());
+        supportInvalidateOptionsMenu();
         refreshList();
     }
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.InstalledAdapter;
 import cm.aptoide.ptdev.adapters.UpdatesAdapter;
+import cm.aptoide.ptdev.adapters.UpdatesSectionListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -44,7 +45,7 @@ public class FragmentUpdates extends ListFragment {
     private Database db;
     private RecentlyUpdated recentUpdates;
 
-    private MergeAdapter adapter;
+    private UpdatesSectionListAdapter adapter;
     private int counter;
 
 
@@ -103,37 +104,7 @@ public class FragmentUpdates extends ListFragment {
         });
 
 
-        getLoaderManager().restartLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-                return new SimpleCursorLoader(getActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        counter++;
-                        return db.getInstalled();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-                if (data.getCount() > 1) {
-                    installedAdapter.swapCursor(data);
-                } else {
-                    installedAdapter.swapCursor(null);
-                }
-                if (getListView().getAdapter() == null)
-                    setListAdapter(adapter);
-
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-
-            }
-        });
 
     }
 
@@ -142,18 +113,13 @@ public class FragmentUpdates extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new MergeAdapter();
 
         this.db = new Database(Aptoide.getDb());
 
         updatesAdapter = new UpdatesAdapter(getActivity());
-        adapter.addAdapter(updatesAdapter);
 
-        recentUpdates = new RecentlyUpdated(getActivity());
-        adapter.addAdapter(recentUpdates);
+        adapter = new UpdatesSectionListAdapter(getLayoutInflater(savedInstanceState), updatesAdapter);
 
-        installedAdapter = new InstalledAdapter(getActivity());
-        adapter.addAdapter(installedAdapter);
 
         setHasOptionsMenu(true);
 
@@ -270,41 +236,6 @@ public class FragmentUpdates extends ListFragment {
                 updatesAdapter.swapCursor(null);
             }
         });
-
-
-        getLoaderManager().initLoader(90, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-                return new SimpleCursorLoader(getActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        counter++;
-                        return db.getInstalled();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                if (data.getCount() > 1) {
-                    installedAdapter.swapCursor(data);
-                } else {
-                    installedAdapter.swapCursor(null);
-                }
-
-                counter--;
-                if (getListView().getAdapter() == null)
-                    setListAdapter(adapter);
-
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-                installedAdapter.swapCursor(null);
-            }
-        });
-
 
     }
 

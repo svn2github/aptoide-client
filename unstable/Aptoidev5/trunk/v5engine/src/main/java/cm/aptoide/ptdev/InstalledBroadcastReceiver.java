@@ -46,6 +46,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 
                 db.insertInstalled(apk);
+                db.deleteScheduledDownloadByPackageName(intent.getData().getEncodedSchemeSpecificPart());
                 BusProvider.getInstance().post(new InstalledApkEvent(apk));
 
 

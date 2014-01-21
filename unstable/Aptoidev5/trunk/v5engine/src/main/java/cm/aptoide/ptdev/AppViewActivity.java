@@ -241,7 +241,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         ArrayList<String> repo = new ArrayList<String>();
-                                        repo.add("http://"+repoName + ".store.aptoide.com/");
+                                        repo.add("http://" + repoName + ".store.aptoide.com/");
                                         Intent i = new Intent(AppViewActivity.this, MainActivity.class);
                                         i.putExtra("nodialog", true);
                                         i.putExtra("newrepo", repo);

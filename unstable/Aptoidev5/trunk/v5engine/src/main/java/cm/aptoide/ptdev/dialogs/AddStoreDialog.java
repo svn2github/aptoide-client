@@ -146,12 +146,14 @@ public class AddStoreDialog extends DialogFragment {
                             dismissDialog();
 
                         } else {
-                            Log.i("Aptoide-", "Request:" +(url+"repositoryInfo") );
-                            getRepoInfoRequest = new GetRepositoryInfoRequest(repoName);
-                            RepositoryRequestListener repositoryRequestListener = new RepositoryRequestListener(url, login);
-                            getRepoInfoRequest.setRequestCancellationListener(repositoryRequestListener);
-                            spiceManager.execute(getRepoInfoRequest, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, repositoryRequestListener);
 
+                            Store store = new Store();
+                            store.setLogin(login);
+                            store.setBaseUrl(url);
+                            store.setName(AptoideUtils.RepoUtils.split(url));
+                            callback.startParse(store);
+                            dismissDialog();
+                            dismiss();
                         }
                         break;
                 }
@@ -224,7 +226,6 @@ public class AddStoreDialog extends DialogFragment {
                 } else {
                     final Store store = new Store();
 
-                    store.setBaseUrl(url);
                     store.setName(repositoryInfoJson.getListing().getName());
                     store.setDownloads(repositoryInfoJson.getListing().getDownloads());
 
@@ -248,10 +249,9 @@ public class AddStoreDialog extends DialogFragment {
                     store.setTheme(repositoryInfoJson.getListing().getTheme());
                     store.setView(repositoryInfoJson.getListing().getView());
                     store.setItems(repositoryInfoJson.getListing().getItems());
-                    store.setLogin(login);
 
-                    dismissDialog();
-                    dismiss();
+
+
                     callback.startParse(store);
 
                 }
