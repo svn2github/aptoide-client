@@ -21,28 +21,20 @@ import java.util.ArrayList;
  */
 public class Wizard {
 
-    public static ArrayList<Fragment> getWizard() {
+    public static ArrayList<Fragment> getWizardNewToAptoide() {
         ArrayList<Fragment> wizard = new ArrayList<Fragment>();
+        wizard.add(NewToAptoide1.newInstace());
+        wizard.add(NewToAptoide2.newInstace());
+        wizard.add(NewToAptoide3.newInstace());
+        return wizard;
+    }
 
-        /*
-        Class[] fragments = Wizard.class.getClasses();
-        for (Class fragment : fragments) {
-            try {
-                wizard.add(fragments); add((SherlockFragment) fragments[i].newInstance());
-            } catch (InstantiationException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        */
-
-        wizard.add(Fragment1.newInstace());
-        wizard.add(Fragment2.newInstace());
-        wizard.add(Fragment3.newInstace());
-        wizard.add(Fragment4.newInstace());
-        wizard.add(Fragment5.newInstace());
-
+    public static ArrayList<Fragment> getWizardUpdate() {
+        ArrayList<Fragment> wizard = new ArrayList<Fragment>();
+        wizard.add(NewFeature1.newInstace());
+        wizard.add(NewFeature2.newInstace());
+        wizard.add(NewFeature3.newInstace());
+        wizard.add(NewFeature4.newInstace());
         return wizard;
     }
 
@@ -51,78 +43,45 @@ public class Wizard {
         public void getActions(ArrayList<Action> actions);
     }
 
-    public static class Fragment1 extends Fragment implements WizardCallback {
+    public static class NewToAptoide1 extends Fragment implements WizardCallback {
 
-        CheckBox checkBox1;
-        CheckBox checkBox2;
-        CheckBox checkBox3;
-
-        public static Fragment1 newInstace() {
-            Fragment1 fragment = new Fragment1();
-
+        public static NewToAptoide1 newInstace() {
+            NewToAptoide1 fragment = new NewToAptoide1();
             Bundle args = new Bundle();
-            args.putString("name", "Fragment 1");
+            args.putString("name", "NewToAptoide1");
             fragment.setArguments(args);
-
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 1");
-            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
-            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
-            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+            TextView new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
+            new_to_aptoide_description.setText("1 - Welcome to Aptoide");
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-                if (checkBox1.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
-                        }
-                    });
-                }
-                if (checkBox2.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
-                        }
-                    });
-                }
-                if (checkBox3.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
-                        }
-                    });
 
-            }
         }
     }
 
-    public static class Fragment2 extends Fragment implements WizardCallback {
+    public static class NewToAptoide2 extends Fragment implements WizardCallback {
 
-        CheckBox checkBox1;
-        CheckBox checkBox2;
-        CheckBox checkBox3;
+        CheckBox cb_add_apps;
+        TextView new_to_aptoide_description;
 
-        public static Fragment2 newInstace() {
-            Fragment2 fragment = new Fragment2();
+        public static NewToAptoide2 newInstace() {
+            NewToAptoide2 fragment = new NewToAptoide2();
 
             Bundle args = new Bundle();
-            args.putString("name", "Fragment 2");
+            args.putString("name", "NewToAptoide2");
             fragment.setArguments(args);
 
             return fragment;
@@ -130,61 +89,42 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 2");
 
-            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
-            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
-            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+            cb_add_apps = (CheckBox) view.findViewById(R.id.cb_add_apps);
+            cb_add_apps.setVisibility(View.VISIBLE);
+            cb_add_apps.setChecked(true);
+            new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
+            new_to_aptoide_description.setText("2 - Add more stores");
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-                if (checkBox1.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
-                        }
-                    });
-                }
-                if (checkBox2.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
-                        }
-                    });
-                }
-                if (checkBox3.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
-                        }
-                    });
-
+            if (cb_add_apps.isChecked()) {
+                actions.add(new Action() {
+                    @Override
+                    public void run() {
+                        Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
+                    }
+                });
             }
+
         }
     }
 
-    public static class Fragment3 extends Fragment implements WizardCallback {
+    public static class NewToAptoide3 extends Fragment implements WizardCallback {
 
-        CheckBox checkBox1;
-        CheckBox checkBox2;
-        CheckBox checkBox3;
-
-        public static Fragment3 newInstace() {
-            Fragment3 fragment = new Fragment3();
+        public static NewToAptoide3 newInstace() {
+            NewToAptoide3 fragment = new NewToAptoide3();
 
             Bundle args = new Bundle();
-            args.putString("name", "Fragment 3");
+            args.putString("name", "NewToAptoide3");
             fragment.setArguments(args);
 
             return fragment;
@@ -192,173 +132,138 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 3");
-
-            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
-            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
-            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+            TextView new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
+            new_to_aptoide_description.setText("3 - Search thousands of apps");
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-                if (checkBox1.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
-                        }
-                    });
-                }
-                if (checkBox2.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
-                        }
-                    });
-                }
-                if (checkBox3.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
-                        }
-                    });
 
-            }
         }
     }
 
-    public static class Fragment4 extends Fragment implements WizardCallback {
+    public static class NewFeature1 extends Fragment implements WizardCallback {
 
-        private CheckBox checkBox1;
-        private CheckBox checkBox2;
-        private CheckBox checkBox3;
-
-        public static Fragment4 newInstace() {
-            Fragment4 fragment = new Fragment4();
-
+        public static NewFeature1 newInstace() {
+            NewFeature1 fragment = new NewFeature1();
             Bundle args = new Bundle();
-            args.putString("name", "Fragment 4");
+            args.putString("name", "NewFeature1");
             fragment.setArguments(args);
-
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 4");
-
-            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
-            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
-            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+            TextView main_description = (TextView) view.findViewById(R.id.main_description);
+            main_description.setText("1- New Layout");
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-                if (checkBox1.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
-                        }
-                    });
-                }
-                if (checkBox2.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
-                        }
-                    });
-                }
-                if (checkBox3.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
-                        }
-                    });
 
-            }
         }
     }
 
-    public static class Fragment5 extends Fragment implements WizardCallback {
-        private CheckBox checkBox1;
-        private CheckBox checkBox2;
-        private CheckBox checkBox3;
+    public static class NewFeature2 extends Fragment implements WizardCallback {
 
-        public static Fragment5 newInstace() {
-            Fragment5 fragment = new Fragment5();
-
+        public static NewFeature2 newInstace() {
+            NewFeature2 fragment = new NewFeature2();
             Bundle args = new Bundle();
-            args.putString("name", "Fragment 5");
+            args.putString("name", "NewFeature2");
             fragment.setArguments(args);
-
             return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.tutorial_fragment_layout, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
             return view;
         }
 
         @Override
-        public void onViewCreated(View view, Bundle
-                savedInstanceState) {
+        public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ((TextView) view.findViewById(R.id.tutorialpage)).setText("Fragment 5");
 
-            checkBox1 = (CheckBox) view.findViewById(R.id.checkbox1);
-            checkBox2 = (CheckBox) view.findViewById(R.id.checkbox2);
-            checkBox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+            TextView main_description = (TextView) view.findViewById(R.id.main_description);
+            main_description.setText("2- Rollback");
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-                if (checkBox1.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
-                        }
-                    });
-                }
-                if (checkBox2.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox2 was checked!");
-                        }
-                    });
-                }
-                if (checkBox3.isChecked()) {
-                    actions.add(new Action() {
-                        @Override
-                        public void run() {
-                            Log.d("Wizard", getArguments().getString("name") + " CheckBox3 was checked!");
-                        }
-                    });
 
-                }
         }
     }
 
+    public static class NewFeature3 extends Fragment implements WizardCallback {
+
+        public static NewFeature3 newInstace() {
+            NewFeature3 fragment = new NewFeature3();
+            Bundle args = new Bundle();
+            args.putString("name", "NewFeature3");
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+
+            TextView main_description = (TextView) view.findViewById(R.id.main_description);
+            main_description.setText("2- Widget");
+        }
+
+        @Override
+        public void getActions(ArrayList<Action> actions) {
+
+        }
+    }
+
+    public static class NewFeature4 extends Fragment implements WizardCallback {
+
+        public static NewFeature4 newInstace() {
+            NewFeature4 fragment = new NewFeature4();
+            Bundle args = new Bundle();
+            args.putString("name", "NewFeature4");
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            return view;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            TextView main_description = (TextView) view.findViewById(R.id.main_description);
+            main_description.setText("4- Account Manager");
+        }
+
+        @Override
+        public void getActions(ArrayList<Action> actions) {
+
+        }
+    }
 }

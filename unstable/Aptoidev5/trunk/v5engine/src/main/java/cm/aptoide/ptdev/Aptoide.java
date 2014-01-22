@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -217,4 +218,7 @@ public class Aptoide extends Application {
 
     }
 
+    public static boolean isUpdate() throws PackageManager.NameNotFoundException {
+        return PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("version", 0) < getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionCode;
+    }
 }

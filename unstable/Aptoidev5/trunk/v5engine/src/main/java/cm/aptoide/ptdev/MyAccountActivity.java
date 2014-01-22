@@ -54,7 +54,7 @@ public class MyAccountActivity extends ActionBarActivity {
             finish();
         }
 
-        getSupportActionBar().setTitle(getString(R.string.login));
+        getSupportActionBar().setTitle(getString(R.string.setcredentials));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

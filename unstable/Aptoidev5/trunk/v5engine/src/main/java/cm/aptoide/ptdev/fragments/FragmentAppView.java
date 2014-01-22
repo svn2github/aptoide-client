@@ -108,7 +108,7 @@ public abstract class FragmentAppView extends Fragment {
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
             store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
             downloads.setText(getString(R.string.downloads) + ": " + event.getDownloads());
-            rating.setText(getString(R.string.rating) +": "+ event.getRating()+ "/5");
+            rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
             likes.setText("" + event.getLikes());
             dontLikes.setText("" + event.getDontLikes());
 
@@ -242,7 +242,7 @@ public abstract class FragmentAppView extends Fragment {
                         itemBasedElements.addAll(relatedApkJson.getItembased());
                     }
                     View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
-                    ((TextView)v.findViewById(R.id.separator_label)).setText("Related");
+                    ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -273,7 +273,7 @@ public abstract class FragmentAppView extends Fragment {
                     }
 
                     View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
-                    ((TextView)v.findViewById(R.id.separator_label)).setText("More From Developer");
+                    ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.more_from_publisher));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -305,7 +305,7 @@ public abstract class FragmentAppView extends Fragment {
                     }
 
                     View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
-                    ((TextView)v.findViewById(R.id.separator_label)).setText("Other versions");
+                    ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.multiversion));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

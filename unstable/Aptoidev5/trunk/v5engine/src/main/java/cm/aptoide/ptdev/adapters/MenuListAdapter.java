@@ -44,7 +44,7 @@ public class MenuListAdapter extends BaseAdapter {
         TypedArray scheduleTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[]{R.attr.icScheduledDrawable});
         int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
         scheduleTypedArray.recycle();
-        mItems.add(new Item(context.getString(R.string.scheduled_downloads), scheduleRes, 2));
+        mItems.add(new Item(context.getString(R.string.setting_schdwntitle), scheduleRes, 2));
 
         TypedArray excludedUpdatesTypedArray = context.getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(context), new int[]{R.attr.icExcludedUpdatesDrawable});
         int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);

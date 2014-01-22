@@ -4,9 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.tutorial.Wizard.WizardCallback;
 
@@ -20,19 +25,26 @@ import java.util.Iterator;
  * Time: 13:11
  * To change this template use File | Settings | File Templates.
  */
-public class Tutorial extends FragmentActivity {
+public class Tutorial extends ActionBarActivity {
 
     private int currentFragment;
     private int lastFragment;
     private ArrayList<Fragment> wizard_fragments;
     private ArrayList<Action> actionsToExecute = new ArrayList<Action>();
+    private Button next, back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tutorial_layout);
+        setContentView(R.layout.page_tutorial);
 
-        wizard_fragments = Wizard.getWizard();
+        if(getIntent().hasExtra("isUpdate")){
+            wizard_fragments = Wizard.getWizardUpdate();
+        }else{
+            wizard_fragments = Wizard.getWizardNewToAptoide();
+        }
+
         if (wizard_fragments.isEmpty()) {
             Log.e("Wizard", "The wizard doesn't have fragments");
             finish();
@@ -47,7 +59,8 @@ public class Tutorial extends FragmentActivity {
         wPager.setAdapter(wAdapter);
         */
 
-        ((Button) findViewById(R.id.next)).setOnClickListener(new View.OnClickListener() {
+        next = (Button) findViewById(R.id.next);
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentFragment != lastFragment) {
@@ -56,7 +69,8 @@ public class Tutorial extends FragmentActivity {
             }
         });
 
-        ((Button) findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
+        back = (Button) findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentFragment != 0) {
@@ -65,19 +79,19 @@ public class Tutorial extends FragmentActivity {
             }
         });
 
-        ((Button) findViewById(R.id.finish)).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (currentFragment == lastFragment) {
-                    getFragmentsActions();
-
-                    runFragmentsActions();
-                }
-
-                finish();
-            }
-        });
+//        ((Button) findViewById(R.id.finish)).setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                if (currentFragment == lastFragment) {
+//                    getFragmentsActions();
+//
+//                    runFragmentsActions();
+//                }
+//
+//                finish();
+//            }
+//        });
 
 
         if (savedInstanceState == null) {
@@ -149,4 +163,22 @@ public class Tutorial extends FragmentActivity {
 
     } */
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_wizard, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.menu_skip) {
+            if (currentFragment == lastFragment) {
+                getFragmentsActions();
+                runFragmentsActions();
+            }
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

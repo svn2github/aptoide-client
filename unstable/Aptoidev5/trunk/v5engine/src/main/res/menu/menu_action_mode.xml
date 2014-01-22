@@ -5,12 +5,12 @@
             android:id="@+id/menu_reload"
             android:icon="@drawable/ic_refresh"
             app:showAsAction="always"
-            android:title="@string/reload"/>
+            android:title="@string/menu_context_reparse"/>
     <item
             android:id="@+id/menu_discard"
             android:icon="@drawable/ic_action_discard_dark"
             app:showAsAction="ifRoom"
-            android:title="@string/menu_discard"/>
+            android:title="@string/menu_context_remove"/>
 
     <item android:id="@+id/menu_select_all"
           app:showAsAction="never"

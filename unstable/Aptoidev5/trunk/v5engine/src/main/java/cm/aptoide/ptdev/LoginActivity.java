@@ -133,7 +133,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
 
-        getSupportActionBar().setTitle(getString(R.string.login));
+        getSupportActionBar().setTitle(getString(R.string.setcredentials));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

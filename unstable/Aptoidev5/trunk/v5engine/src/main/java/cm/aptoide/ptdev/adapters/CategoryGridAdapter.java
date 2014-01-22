@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,7 +123,15 @@ public class CategoryGridAdapter extends CursorAdapter {
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
-                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(name);
+                String categoryName;
+                try {
+                    categoryName = context.getString(EnumCategories.getCategoryName(id));
+                    Log.d("CategoryGridAdapter-categ", "Category Name: " + categoryName);
+                }catch (Exception e){
+                    categoryName = name;
+                    Log.d("CategoryGridAdapter-categ", "Untranslated Category Name: " + categoryName);
+                }
+                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
                 ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);

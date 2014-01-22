@@ -18,7 +18,8 @@
               android:id="@+id/separator_label"
               android:layout_weight="0.2"
               android:padding="5dp"
-              android:gravity="center|left" android:layout_width="0dp"/>
+              android:gravity="center|left"
+              android:layout_width="0dp"/>
 
     <TextView
             style="?attr/headerSeparatorButton"

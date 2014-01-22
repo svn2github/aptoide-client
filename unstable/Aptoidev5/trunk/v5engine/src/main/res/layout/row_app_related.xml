@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="125dp"
-             android:layout_height="190dp"
+             android:layout_height="160dp"
              style="?attr/customRowForeground"
              android:layout_gravity="center_horizontal">
 
@@ -19,32 +19,41 @@
         <ImageView
                 android:contentDescription="@null"
                 android:id="@+id/app_icon"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:layout_centerHorizontal="true"/>
 
         <TextView
-                android:id="@+id/app_version"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:lines="2"
-                android:ellipsize="start"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="top|left"
-                android:layout_below="@+id/app_name"
-                android:layout_alignLeft="@+id/app_name"
-                android:textColor="@android:color/darker_gray"
-                android:layout_gravity="left|center_vertical"
-                android:layout_toLeftOf="@+id/ic_action"/>
-        <TextView
                 android:id="@+id/app_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/app_icon"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_horizontal|bottom"/>
+        <TextView
+                android:id="@+id/app_version"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:gravity="top|left"
+                android:maxLines="1"
+                android:layout_below="@+id/app_name"
+                android:layout_alignLeft="@+id/app_name"
+                android:layout_gravity="left|center_vertical"/>
+
+        <TextView
+                android:id="@+id/app_repo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@android:color/darker_gray"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/app_version"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_gravity="center_horizontal|bottom"/>
 

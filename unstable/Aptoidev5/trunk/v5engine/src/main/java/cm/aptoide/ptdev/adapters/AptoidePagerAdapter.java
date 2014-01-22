@@ -30,7 +30,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
     public AptoidePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates), context.getString(R.string.download_manager)};
+        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
 
     }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.adapters;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
         };
     };
 
+    private Context context;
     private final ListAdapter linkedAdapter;
     private final Map<Integer, String> sectionPositions = new LinkedHashMap<Integer, String>();
     private final Map<Integer, Integer> itemPositions = new LinkedHashMap<Integer, Integer>();
@@ -49,8 +51,9 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
 
     private OnItemClickListener linkedListener;
 
-    public UpdatesSectionListAdapter(final LayoutInflater inflater,
+    public UpdatesSectionListAdapter(Context context, final LayoutInflater inflater,
                                      final ListAdapter linkedAdapter) {
+        this.context = context;
         this.linkedAdapter = linkedAdapter;
         this.inflater = inflater;
         linkedAdapter.registerDataSetObserver(dataSetObserver);
@@ -152,10 +155,10 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
         String sectionLabel = "";
         switch (Integer.parseInt(section)){
             case 0:
-                sectionLabel = "Installed";
+                sectionLabel = context.getString(R.string.installed_tab);
                 break;
             case 1:
-                sectionLabel = "Updates";
+                sectionLabel = context.getString(R.string.updates_tab);
                 break;
             case 2:
                 break;

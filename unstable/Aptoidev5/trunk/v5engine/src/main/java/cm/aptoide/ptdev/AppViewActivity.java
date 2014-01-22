@@ -212,9 +212,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     String getLatestString;
                     if(trusted){
-                        getLatestString = getString(R.string.get_latest);
+                        getLatestString = getString(R.string.get_latest_version);
                     }else{
-                        getLatestString = getString(R.string.get_latest_and_latest);
+                        getLatestString = getString(R.string.get_latest_version_and_trusted);
                     }
 
                     SpannableString spanString = new SpannableString(getLatestString);
@@ -872,7 +872,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public class AppViewPager extends FixedFragmentStatePagerAdapter{
 
-        private final String[] TITLES = {"Info", "Rating", "Related", "Advanced"};
+        private final String[] TITLES = { getString(R.string.info), getString(R.string.review), getString(R.string.related), getString(R.string.advanced)};
 
         @Override
         public CharSequence getPageTitle(int position) {

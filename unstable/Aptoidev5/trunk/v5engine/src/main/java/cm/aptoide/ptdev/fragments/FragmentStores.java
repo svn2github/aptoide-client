@@ -118,7 +118,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             if(isMergeStore){
                 menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
             }else{
-                menu.findItem(R.id.menu_merge).setTitle(R.string.merge_stores);
+                menu.findItem(R.id.menu_merge).setTitle(R.string.merge_all_stores);
             }
         }
 

@@ -63,7 +63,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
 
         ViewGroup viewGroup = (ViewGroup) view;
-        setEmptyText("Please wait while store is loading.");
+        setEmptyText(getString(R.string.preparing_to_load));
 
         getListView().setDivider(null);
 

@@ -92,7 +92,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         HomeBucketAdapter homeBucketAdapter = new HomeBucketAdapter(getActivity(), editorsChoice);
         View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
-        ((TextView) editorsView.findViewById(R.id.separator_label)).setText("Editors' Choice");
+        ((TextView) editorsView.findViewById(R.id.separator_label)).setText(getString(R.string.editors_choice));
         editorsView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +108,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
-        ((TextView)v.findViewById(R.id.separator_label)).setText("Top Apps");
+        ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
         v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

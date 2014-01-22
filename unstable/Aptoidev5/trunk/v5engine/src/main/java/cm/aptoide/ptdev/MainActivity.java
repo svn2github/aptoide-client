@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import android.widget.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -52,6 +54,7 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
+import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.BadgeView;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -92,8 +95,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private Condition boundCondition = lock.newCondition();
     private ViewPager pager;
     private BadgeView badge;
-    private int updates = 0;
-    private SharedPreferences sPref;
 
 
     public DownloadService getDownloadService() {
@@ -257,6 +258,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         if (savedInstanceState == null) {
 
+            executeWizard();
+
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -327,7 +330,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                     public void onRequestSuccess(RepositoryChangeJson repositoryChangeJson) {
                         for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
                             if (Boolean.parseBoolean(changes.getHasupdates())) {
-                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
                                 spiceManager.removeDataFromCache(RepositoryChangeJson.class);
                                 final Store store = new Store();
                                 Cursor c = database.getStore(storesIds.get(changes.getRepo()));
@@ -462,6 +465,35 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             }
         }
 
+    }
+
+    public void executeWizard() {
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        if (sPref.getBoolean("firstRun", true)) {
+            Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
+            startActivity(newToAptoideTutorial);
+            sPref.edit().putBoolean("firstRun", false).commit();
+            try {
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+
+            try {
+                if (Aptoide.isUpdate()) {
+                    PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+                    Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
+                    whatsNewTutorial.putExtra("isUpdate", true);
+                    startActivity(whatsNewTutorial);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public void updateBadge(SharedPreferences sPref){

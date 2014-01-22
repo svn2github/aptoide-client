@@ -118,7 +118,7 @@ public class FragmentUpdates extends ListFragment {
 
         updatesAdapter = new UpdatesAdapter(getActivity());
 
-        adapter = new UpdatesSectionListAdapter(getLayoutInflater(savedInstanceState), updatesAdapter);
+        adapter = new UpdatesSectionListAdapter(getActivity(),getLayoutInflater(savedInstanceState), updatesAdapter);
 
 
         setHasOptionsMenu(true);

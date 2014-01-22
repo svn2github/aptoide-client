@@ -75,7 +75,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_sch_downloads);
-        getSupportActionBar().setTitle(getString(R.string.scheduled_downloads));
+        getSupportActionBar().setTitle(getString(R.string.setting_schdwntitle));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -37,6 +37,9 @@ public class MoreRelatedActivity extends ActionBarActivity {
         Fragment fragment = new FragmentRelatedMore();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static class FragmentRelatedMore extends ListFragment {

@@ -59,6 +59,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
             holder.version = (TextView) v.findViewById(R.id.app_version);
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
+            holder.repo = (TextView) v.findViewById(R.id.app_repo);
             v.setTag(holder);
         } else {
             v = convertView;
@@ -68,6 +69,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         final RelatedApkJson.Item item = getItem(position);
         holder.name.setText(item.getName());
         holder.version.setText(item.getVername());
+        holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
         ImageLoader.getInstance().displayImage(item.getIcon(), holder.icon);
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +90,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         TextView name;
         TextView version;
         ImageView icon;
+        TextView repo;
     }
 
 }

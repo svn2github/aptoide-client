@@ -23,12 +23,12 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
         <TextView
                 style="@style/titleLabel"
-                android:text="@string/review"/>
+                android:text="@string/rate_this_app"/>
 
         <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
-                android:hint="Insert your comment"
+                android:hint="@string/write_your_comment"
                 android:inputType="textMultiLine"
                 android:id="@+id/editText_addcomment" />
 

@@ -7,18 +7,18 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <TextView android:id="@+id/main_description"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:background="@drawable/highlight_overlay">
-
-    <TextView style="@style/separatorLabel"
-              android:id="@+id/separator_label"
-              android:layout_weight="0.2"/>
-
-    <TextView style="?attr/headerSeparatorButton"
-              android:text="@string/more"
-              android:id="@+id/more"/>
+              android:padding="20dp"
+              android:gravity="center"
+              android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,7 +124,17 @@ public class CategoryAdapter extends CursorAdapter {
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
-                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(Html.fromHtml(name));
+
+                String categoryName;
+                try {
+                    categoryName = context.getString(EnumCategories.getCategoryName(id));
+                    Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
+                }catch (Exception e){
+                    categoryName = name;
+                    Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
+                }
+                ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
+
                 ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);

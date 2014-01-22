@@ -42,7 +42,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
             <EditText
                     android:id="@+id/edit_store_uri"
-                    android:hint="@string/name_of_the_store"
+                    android:hint="@string/store_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -53,7 +53,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
             <Button android:id="@+id/button_dialog_add_store"
                     style="@style/WidgetButtonCustomGray"
-                    android:text="@string/add"
+                    android:text="@string/add_store"
                     android:drawableLeft="?attr/icAddStoreDrawable"
                     android:drawablePadding="4dp"/>
 

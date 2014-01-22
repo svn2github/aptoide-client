@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     style="?attr/customButtonColor"
                     android:layout_gravity="right"
-                    android:text="@string/login"
+                    android:text="@string/setcredentials"
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"/>
         </LinearLayout>
