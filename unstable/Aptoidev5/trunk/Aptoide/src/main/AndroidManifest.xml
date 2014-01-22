@@ -40,6 +40,9 @@
         <activity android:name="cm.aptoide.ptdev.MyAccountActivity"
                   android:launchMode="singleTask" />
 
+        <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity"
+                  android:launchMode="singleTask" />
+
         <activity android:name="cm.aptoide.ptdev.LoginActivity"
                   android:launchMode="singleTask" />
 
@@ -53,49 +56,40 @@
 
         <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
                   android:theme="@style/transparent"
-                  android:launchMode="standard"
-                  android:configChanges="keyboardHidden|orientation"/>
+                  android:launchMode="standard"/>
 
         <activity
                 android:name="cm.aptoide.ptdev.ScreenshotsViewer"
                 android:launchMode="singleTask"/>
 
         <activity
-                android:name="cm.aptoide.ptdev.AllComments"
-                android:configChanges="orientation|keyboardHidden"/>
+                android:name="cm.aptoide.ptdev.AllComments"/>
 
         <activity
-                android:name="cm.aptoide.ptdev.social.WebViewFacebook"
-                android:configChanges="orientation|keyboardHidden"/>
+                android:name="cm.aptoide.ptdev.social.WebViewFacebook"/>
         <activity
-                android:name="cm.aptoide.ptdev.social.WebViewTwitter"
-                android:configChanges="orientation|keyboardHidden"/>
+                android:name="cm.aptoide.ptdev.social.WebViewTwitter"/>
 
         <activity
-                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity"
-                android:configChanges="orientation|keyboardHidden">
+                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity">
         </activity>
 
         <activity
-                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity"
-                android:configChanges="orientation|keyboardHidden">
+                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity">
         </activity>
 
         <activity
-                android:name="cm.aptoide.ptdev.RollbackActivity"
-                android:configChanges="orientation|keyboardHidden">
+                android:name="cm.aptoide.ptdev.RollbackActivity">
         </activity>
 
         <activity
                 android:name="cm.aptoide.ptdev.Settings"
-                android:configChanges="orientation|keyboardHidden"
                 android:label="@string/settings_title_bar"
                 android:theme="@style/Settings"/>
 
 
         <activity
                 android:name="cm.aptoide.ptdev.SearchManager"
-                android:configChanges="orientation|keyboardHidden"
                 android:exported="false"
                 android:launchMode="singleTask">
             <intent-filter>
@@ -110,9 +104,7 @@
         </activity>
 
         <activity
-                android:name="cm.aptoide.ptdev.IntentReceiver"
-
-                android:configChanges="orientation|keyboardHidden" >
+                android:name="cm.aptoide.ptdev.IntentReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -233,6 +225,12 @@
             <meta-data
                     android:name="android.appwidget.provider"
                     android:resource="@xml/search_widget_info" />
+        </receiver>
+
+        <receiver android:name="cm.aptoide.ptdev.WifiStateListener" >
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
         </receiver>
 
         <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"

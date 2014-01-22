@@ -83,7 +83,7 @@ public class Parser{
         final long repoId = handler.getRepoId();
         Log.d("Aptoide-Parser", "Starting request: " + url);
 
-        spiceManager.execute(new FileRequest(url,file, login), Math.abs(key), DurationInMillis.ALWAYS_EXPIRED, new RequestListener<InputStream>() {
+        spiceManager.execute(new FileRequest(url,file, login), new RequestListener<InputStream>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.d("Aptoide-Parser", "onRequestFailure");

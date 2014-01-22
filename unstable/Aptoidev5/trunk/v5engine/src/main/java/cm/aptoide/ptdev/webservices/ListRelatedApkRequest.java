@@ -1,53 +1,66 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
-import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
- * Date: 06-11-2013
- * Time: 10:48
+ * Date: 04-11-2013
+ * Time: 11:29
  * To change this template use File | Settings | File Templates.
  */
-public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetApkInfoJson> {
+
+public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedApkJson> {
 
 
-    private String repoName;
-    private String packageName;
-    private String versionName;
-    private String token;
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/listRelatedApks";
+    private String repos;
+    private int limit;
     private Context context;
+    private String packageName;
+    private int vercode;
+    private String mode;
 
-    public void setMd5Sum(String md5Sum) {
-        this.md5Sum = md5Sum;
-    }
-
-    private String md5Sum;
-
-
-    public GetApkInfoRequestFromMd5(Context context) {
-        super(GetApkInfoJson.class);
+    public ListRelatedApkRequest(Context context) {
+        super(RelatedApkJson.class);
         this.context = context;
     }
 
+    public void setRepos(String repos) {
+        this.repos = repos;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
     @Override
-    public GetApkInfoJson loadDataFromNetwork() throws Exception {
-
-
+    public RelatedApkJson loadDataFromNetwork() throws Exception {
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        if(token!=null)options.add(new WebserviceOptions("token", token));
-        options.add(new WebserviceOptions("cmtlimit", "5"));
-        options.add(new WebserviceOptions("payinfo", "true"));
+
+        GenericUrl url = new GenericUrl(baseUrl);
+
+        HashMap<String, String > parameters = new HashMap<String, String>();
+
+        parameters.put("mode", "json");
+        parameters.put("apkid", packageName);
+
+        if(repos!=null)options.add(new WebserviceOptions("repo", repos));
+        if(mode!=null)options.add(new WebserviceOptions("type", mode));
+        options.add(new WebserviceOptions("limit", String.valueOf(limit)));
+        options.add(new WebserviceOptions("vercode", String.valueOf(vercode)));
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
 
@@ -59,53 +72,28 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
             sb.append(";");
         }
         sb.append(")");
-        String baseUrl;
-        if(repoName!=null){
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }else{
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        parameters.put("options", sb.toString());
 
-        Log.e("Aptoide-Request", baseUrl);
-        HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return request.execute().parseAs(getResultType());
-    }
-
-    public void setRepoName(String repoName) {
-        this.repoName = repoName;
-    }
-
-    public String getRepoName() {
-        return repoName;
+        return request.execute().parseAs( getResultType() );
     }
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public void setVercode(int vercode) {
+        this.vercode = vercode;
     }
 
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public class WebserviceOptions {
@@ -137,5 +125,4 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
         }
 
     }
-
 }

@@ -4,22 +4,19 @@ import android.accounts.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.GalleryPagerAdapter;
 import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
+import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
@@ -28,18 +25,24 @@ import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.ApkPermission;
 import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
 import cm.aptoide.ptdev.webservices.AddLikeRequest;
+import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -187,7 +190,171 @@ public abstract class FragmentAppView extends Fragment {
     public static class FragmentAppViewRelated extends ListFragment {
 
 
+        private RelatedBucketAdapter multiVersionAdapter;
+        private RelatedBucketAdapter develBasedAdapter;
+        private RelatedBucketAdapter itemBasedAdapter;
+        private MergeAdapter adapter;
+        private List<RelatedApkJson.Item> itemBasedElements = new ArrayList<RelatedApkJson.Item>();
+        private List<RelatedApkJson.Item> develBasedElements = new ArrayList<RelatedApkJson.Item>();
+        private List<RelatedApkJson.Item> multiVersionElements = new ArrayList<RelatedApkJson.Item>();
 
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            adapter = new MergeAdapter();
+            itemBasedAdapter = new RelatedBucketAdapter(getActivity(), itemBasedElements);
+            develBasedAdapter = new RelatedBucketAdapter(getActivity(), develBasedElements);
+            multiVersionAdapter = new RelatedBucketAdapter(getActivity(), multiVersionElements);
+        }
+
+        SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+
+        RequestListener<RelatedApkJson> request = new RequestListener<RelatedApkJson>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Toast.makeText(getActivity(), "Error listRelated", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRequestSuccess(RelatedApkJson relatedApkJson) {
+
+
+
+                //Toast.makeText(getActivity(), "ItemBased size " + relatedApkJson.getItembased().size(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "DevelBased size " + relatedApkJson.getDevelbased().size(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "MultiVersion size " + relatedApkJson.getMultiversion().size(), Toast.LENGTH_SHORT).show();
+
+
+
+                if(relatedApkJson.getItembased().size()>0){
+                    itemBasedElements.clear();
+                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){
+
+
+                        for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
+                            if(!item.getAge().equals("Mature")){
+                                itemBasedElements.add(item);
+                            }
+                        }
+
+                    }else{
+                        itemBasedElements.addAll(relatedApkJson.getItembased());
+                    }
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    ((TextView)v.findViewById(R.id.separator_label)).setText("Related");
+                    v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
+                            i.putExtra("item", true);
+                            i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
+                            i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            startActivity(i);
+                        }
+                    });
+                    adapter.addView(v);
+                    adapter.addAdapter(itemBasedAdapter);
+                }
+
+                if(relatedApkJson.getDevelbased().size()>0){
+                    develBasedElements.clear();
+                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true)){
+
+
+                        for (RelatedApkJson.Item item : relatedApkJson.getDevelbased()) {
+                            if(!item.getAge().equals("Mature")){
+                                develBasedElements.add(item);
+                            }
+                        }
+
+                    }else{
+                        develBasedElements.addAll(relatedApkJson.getDevelbased());
+                    }
+
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    ((TextView)v.findViewById(R.id.separator_label)).setText("More From Developer");
+                    v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
+                            i.putExtra("developer", true);
+                            i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
+                            i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            startActivity(i);
+                        }
+                    });
+                    adapter.addView(v);
+                    adapter.addAdapter(develBasedAdapter);
+                }
+
+                if(relatedApkJson.getMultiversion().size()>0){
+                    multiVersionElements.clear();
+
+                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){
+
+
+                        for (RelatedApkJson.Item item : relatedApkJson.getMultiversion()) {
+                            if(!item.getAge().equals("Mature")){
+                                multiVersionElements.add(item);
+                            }
+                        }
+
+                    }else{
+                        multiVersionElements.addAll(relatedApkJson.getMultiversion());
+                    }
+
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    ((TextView)v.findViewById(R.id.separator_label)).setText("Other versions");
+                    v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
+                            i.putExtra("version", true);
+                            i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
+                            i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            startActivity(i);
+                        }
+                    });
+                    adapter.addView(v);
+                    adapter.addAdapter(multiVersionAdapter);
+                }
+
+                itemBasedAdapter.notifyDataSetChanged();
+                develBasedAdapter.notifyDataSetChanged();
+                multiVersionAdapter.notifyDataSetChanged();
+
+                setListAdapter(adapter);
+            }
+        };
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            spiceManager.start(getActivity());
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            if(spiceManager.isStarted()){
+                spiceManager.shouldStop();
+            }
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
+
+            //listRelatedApkRequest.setRepos("apps");
+            listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
+            listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
+            listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
+            spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
+
+
+        }
     }
 
     public static class FragmentAppViewSpecs extends FragmentAppView{

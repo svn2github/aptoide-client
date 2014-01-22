@@ -202,7 +202,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 publishEvents();
                 invalidateOptionsMenu();
-
+                versionCode = json.getApk().getVercode().intValue();
                 latestVersion = (TextView) findViewById(R.id.app_get_latest);
                 if (json.getLatest() != null) {
                     latestVersion.setVisibility(View.VISIBLE);
@@ -281,9 +281,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private DownloadService service;
     private String icon;
     private boolean isUpdate;
+    private int versionCode;
 
     public boolean isUpdate() {
         return isUpdate;
+    }
+
+    public int getVersionCode() {
+        return versionCode;
     }
 
 
@@ -496,12 +501,21 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("packageName", package_name);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
         findViewById(R.id.btinstall).setVisibility(View.GONE);
 
+        if(savedInstanceState!=null){
+            package_name = savedInstanceState.getString("packageName");
+        }
 
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
@@ -583,7 +597,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
-        }else{
+        }else if(getIntent().getBooleanExtra("fromRelated", false)){
+
+            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+            repoName = getIntent().getStringExtra("repoName");
+            String md5sum = getIntent().getStringExtra("md5sum");
+            request.setMd5Sum(md5sum);
+            request.setRepoName(repoName);
+            if(token!=null){
+                request.setToken(token);
+            }
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
+
+        } else {
             getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
         }
 
@@ -792,7 +818,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public class AppViewPager extends FixedFragmentStatePagerAdapter{
 
-        private final String[] TITLES = {"Info", "Rating", "Advanced"};
+        private final String[] TITLES = {"Info", "Rating", "Related", "Advanced"};
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -812,9 +838,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 return new FragmentAppView.FragmentAppViewDetails();
                 case 1:
                     return new FragmentAppView.FragmentAppViewRating();
-                //case 2:
-                    //return new FragmentAppView.FragmentAppViewRelated();
                 case 2:
+                    return new FragmentAppView.FragmentAppViewRelated();
+                case 3:
                     return new FragmentAppView.FragmentAppViewSpecs();
                 default:
                     return null;
@@ -826,7 +852,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public int getCount() {
-            return 3;
+            return TITLES.length;
         }
     }
 

@@ -141,6 +141,7 @@ public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
         
         int j = 0;
         final int childCount = bucket.getChildCount();
+
         for (int i = (bucketPosition * bucketSize); i < ((bucketPosition * bucketSize) + bucketSize); i++) {
             FrameLayout bucketElementFrame;
             if (j < childCount) {
