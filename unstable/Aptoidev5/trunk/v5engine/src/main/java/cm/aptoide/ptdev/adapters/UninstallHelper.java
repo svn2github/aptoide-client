@@ -20,7 +20,7 @@ public class UninstallHelper {
         if(isDowngrade) {
             context.startActivityForResult(intent, AppViewActivity.DOWGRADE_REQUEST_CODE);
         } else {
-            context.startActivityForResult(intent, 150);
+            context.startActivity(intent);
         }
     }
 }
