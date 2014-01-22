@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,11 +116,21 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         if (isSection(position)) {
             return sectionPositions.get(position).hashCode();
         } else {
+
+            if(linkedAdapter==null){
+
+                Log.d("Aptoide-Section", "linked adapter is null");
+            }
+
             return linkedAdapter.getItemId(getLinkedPosition(position));
         }
     }
 
     protected Integer getLinkedPosition(final int position) {
+
+        if(itemPositions.get(position) == null) {
+            return 0;
+        }
         return itemPositions.get(position);
     }
 

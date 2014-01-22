@@ -23,7 +23,6 @@ import java.io.File;
 public class UninstallRetainFragment extends Fragment {
 
 
-    private long id;
     private ActionBarActivity activity;
 
     private String appName;
@@ -31,16 +30,31 @@ public class UninstallRetainFragment extends Fragment {
     private String versionName;
     private String iconPath;
 
+    private String versionToDowngrade;
+    private RollBackItem.Action rollBackAction;
+
+    private long id;
+
     public UninstallRetainFragment(String appName, String packageName, String versionName, String iconPath) {
         this.appName = appName;
         this.packageName = packageName;
         this.versionName = versionName;
         this.iconPath = iconPath;
+        this.rollBackAction = RollBackItem.Action.UNINSTALLING;
     }
 
     public UninstallRetainFragment(long id) {
         this.id = id;
     }
+    public UninstallRetainFragment(String appName, String packageName, String versionName, String versionToDowngrade, String iconPath) {
+        this.appName = appName;
+        this.packageName = packageName;
+        this.versionName = versionName;
+        this.versionToDowngrade = versionToDowngrade;
+        this.iconPath = iconPath;
+        this.rollBackAction = RollBackItem.Action.DOWNGRADING;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +89,11 @@ public class UninstallRetainFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
+            Database db = new Database(Aptoide.getDb());
+            RollBackItem rollBackItem;
+            String apkMd5;
+
             try {
-                Database db = new Database(Aptoide.getDb());
 
                 if(id>0){
                     Cursor c = db.getApkInfo(id);
@@ -88,16 +105,27 @@ public class UninstallRetainFragment extends Fragment {
                     iconPath = repoIconPath + icon;
                 }
 
-                String apkMd5 = db.getUnistallingActionMd5(packageName);
 
-                if (db.getUnistallingActionMd5(packageName) == null) {
-                    String sourceDir = activity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
-                    File apkFile = new File(sourceDir);
-                    apkMd5 = AptoideUtils.Algorithms.md5Calc(apkFile);
+                switch (rollBackAction) {
+                    case DOWNGRADING:
+
+                        apkMd5 = calcApkMd5(packageName);
+
+                        rollBackItem = new RollBackItem(appName, packageName, versionToDowngrade, versionName, iconPath, null, apkMd5, null);
+                        break;
+
+                    default:
+                        apkMd5 = db.getUnistallingActionMd5(packageName);
+
+                        if (db.getUnistallingActionMd5(packageName) == null) {
+                            apkMd5 = calcApkMd5(packageName);
+                        }
+                        rollBackItem = new RollBackItem(appName, packageName, versionName, null, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING);
+                        break;
                 }
 
-                RollBackItem rollBackItem = new RollBackItem(appName, packageName, versionName, null, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING);
                 db.insertRollbackAction(rollBackItem);
+
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -108,11 +136,22 @@ public class UninstallRetainFragment extends Fragment {
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
             if (activity != null) {
-                UninstallHelper.uninstall(activity, packageName);
+                if(rollBackAction == RollBackItem.Action.DOWNGRADING) {
+                    UninstallHelper.uninstall(activity, packageName, true);
+                } else {
+                    UninstallHelper.uninstall(activity, packageName, false);
+                }
             }
             DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
             pd.dismiss();
             getFragmentManager().beginTransaction().remove(UninstallRetainFragment.this).commit();
         }
+
+        private String calcApkMd5(String packageName) throws PackageManager.NameNotFoundException {
+                String sourceDir = activity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
+                File apkFile = new File(sourceDir);
+                return AptoideUtils.Algorithms.md5Calc(apkFile);
+        }
+
     }
 }

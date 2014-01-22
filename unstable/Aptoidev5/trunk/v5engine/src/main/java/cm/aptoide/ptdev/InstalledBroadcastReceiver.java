@@ -8,10 +8,8 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.InstalledPackage;
-import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-
 import java.util.Locale;
 
 /**
@@ -51,39 +49,17 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 
                 if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
-                    db.confirmRollBackAction(pkg.packageName, RollBackItem.Action.INSTALLING.toString(), RollBackItem.Action.INSTALLED.toString());
-
-
-                    Log.d("InstalledBroadcastReceiver", "Installed rollback action");
-
-                }
-
-
-                /*
-                Cursor c = db.getInstalledMd5(apk.getPackage_name());
-                c.moveToFirst();
-                String existentMd5 = c.getString(1);
-
-                    File file = new File(pkg.applicationInfo.sourceDir);
-                    String apk_md5 = AptoideUtils.Algorithms.md5Calc(file);
-                    apk.setMd5(apk_md5);
-
-
-                    RollBackItem rollBackItem;
-                    if(existentMd5 != null) {
-                        db.insertInstalled(apk);
-
-                        rollBackItem = new RollBackItem(apk.getPackage_name(), apk.getIcon(), timestamp, apk.getVersion_name(), existentMd5);
-                        db.insertRollbackAction(rollBackItem, RollBackItem.UPDATED);
-                    } else {
-                        db.insertInstalled(apk);
-
-                        rollBackItem = new RollBackItem(apk.getPackage_name(), apk.getIcon(), timestamp, apk.getVersion_name(), apk_md5);
-                        db.insertRollbackAction(rollBackItem, RollBackItem.INSTALLED);
+                    String action = db.getNotConfirmedRollbackAction(pkg.packageName);
+                    if(action != null) {
+                        if(action.equals(RollBackItem.Action.INSTALLING.toString())) {
+                            db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.INSTALLED.toString());
+                            Log.d("InstalledBroadcastReceiver", "Installed rollback action");
+                        } else if(action.equals(RollBackItem.Action.DOWNGRADING.toString())) {
+                            db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.DOWNGRADED.toString());
+                            Log.d("InstalledBroadcastReceiver", "Downgraded rollback action");
+                        }
                     }
-                    Intent i = new Intent(context, RollbackActivity.class);
-                    context.startActivity(i);
-*/
+                }
 
                 BusProvider.getInstance().post(new InstalledApkEvent(apk));
 
@@ -94,20 +70,24 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
         } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
 
-            db.deleteInstalledApk(intent.getData().getEncodedSchemeSpecificPart());
-            BusProvider.getInstance().post(new UnInstalledApkEvent(intent.getData().getEncodedSchemeSpecificPart()));
+            String packageName = intent.getData().getEncodedSchemeSpecificPart();
+
+            db.deleteInstalledApk(packageName);
+            BusProvider.getInstance().post(new UnInstalledApkEvent(packageName));
 
             if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
-                db.confirmRollBackAction(intent.getData().getEncodedSchemeSpecificPart(), RollBackItem.Action.UNINSTALLING.toString(), RollBackItem.Action.UNINSTALLED.toString());
 
-                Log.d("InstalledBroadcastReceiver", "unistalled rollback action");
+                String action = db.getNotConfirmedRollbackAction(packageName);
+                if(action != null) {
+                    if(action.equals(RollBackItem.Action.UNINSTALLING.toString())) {
+                        db.confirmRollBackAction(packageName, action, RollBackItem.Action.UNINSTALLED.toString());
+                        Log.d("InstalledBroadcastReceiver", "unistalled rollback action");
+
+                    }
+                }
+
+                BusProvider.getInstance().post(new UnInstalledApkEvent(intent.getData().getEncodedSchemeSpecificPart()));
 
             }
-
-            BusProvider.getInstance().post(new UnInstalledApkEvent(intent.getData().getEncodedSchemeSpecificPart()));
-
-
-
-        }
     }
-}
+ }}

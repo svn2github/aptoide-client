@@ -72,11 +72,13 @@ import java.util.List;
 public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOGIN_REQUEST_CODE = 123;
+    public static final int DOWGRADE_REQUEST_CODE = 456;
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
     private GetApkInfoJson json;
     private String name;
+    private boolean isFromActivityResult;
     private String wUrl;
     private String md5;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
@@ -89,6 +91,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
 
+            if(json != null) {
             if ("OK".equals(json.getStatus())) {
 
 
@@ -123,8 +126,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     }else if(getApkInfoJson.getApk().getVercode().intValue()<info.versionCode){
 
-                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
-                        findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+                        ((TextView)findViewById(R.id.btinstall)).setText("Downgrade");
+                        findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
 
                     }else{
 
@@ -266,7 +269,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             show(true, true);
 
+            if(isFromActivityResult){
 
+                Log.d("Downgrade", "iffromactivityresult");
+                Download download = new Download();
+                download.setId(id);
+                download.setName(name);
+                download.setVersion(versionName);
+                download.setIcon(icon);
+                download.setPackageName(package_name);
+                service.startDownloadFromJson(json, id, download);
+
+                isFromActivityResult = false;
+            }
+            }
         }
     };
     private ImageView appIcon;
@@ -327,6 +343,31 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
+    public class DowngradeListener implements  View.OnClickListener{
+
+        private String icon;
+        private String name;
+        private String versionName;
+        private String downgradeVersion;
+        private String package_name;
+
+
+        public DowngradeListener(String icon, String name, String versionName, String downgradeVersion, String package_name) {
+            this.icon = icon;
+            this.name = name;
+            this.versionName = versionName;
+            this.downgradeVersion = downgradeVersion;
+            this.package_name = package_name;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Fragment downgrade = new UninstallRetainFragment(name, package_name, versionName, downgradeVersion, icon);
+            getSupportFragmentManager().beginTransaction().add(downgrade, "downgrade").commit();
+
+        }
+    }
+
     private ServiceConnection downloadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder downloadService) {
@@ -345,7 +386,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String screen;
     private String package_name;
     private String versionName;
-    private Object cacheKey;
+    private String cacheKey;
     private String token;
 
     public String getRepoName() {
@@ -476,6 +517,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("cacheKey", cacheKey);
+        outState.putString("packageName", package_name);
+    }
+    
+    @Override
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
@@ -485,7 +533,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
-
+        spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
+        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
     }
 
     @Override
@@ -500,11 +549,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         BusProvider.getInstance().unregister(this);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("packageName", package_name);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -517,6 +562,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             package_name = savedInstanceState.getString("packageName");
         }
 
+        if(savedInstanceState!=null){
+            cacheKey = savedInstanceState.getString("cacheKey");
+        }
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
         if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
@@ -579,6 +627,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(token!=null){
                 request.setToken(token);
             }
+            cacheKey = md5sum;
+
             spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
 
         }else if(getIntent().getBooleanExtra("fromMyapp", false)){
@@ -594,6 +644,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(token!=null){
                 request.setToken(token);
             }
+            cacheKey = id;
 
             spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
@@ -719,6 +770,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if(token!=null){
             request.setToken(token);
         }
+        cacheKey = package_name + repoName;
+
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
 
 
@@ -745,6 +798,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setPackageName(package_name);
         request.setVersionName(versionName);
         if(token!=null)request.setToken(token);
+        cacheKey = package_name + repoName;
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
 
 
@@ -1159,6 +1213,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             } else {
 
             }
+        } else if(requestCode == DOWGRADE_REQUEST_CODE) {
+
+            Log.d("Downgrade", "OnactivityResult");
+            try {
+                getPackageManager().getPackageInfo(package_name, 0);
+
+                Toast.makeText(this, "Downgrade requires Application uninstall", Toast.LENGTH_SHORT).show();
+
+            } catch (PackageManager.NameNotFoundException e) {
+                isFromActivityResult = true;
+            }
+
+
         }
     }
 

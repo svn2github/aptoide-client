@@ -639,7 +639,7 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
         values.put(Schema.RollbackTbl.COLUMN_ICONPATH, rollBackItem.getIconPath());
         values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
-        values.put(Schema.RollbackTbl.COLUMN_ACTION, rollBackItem.getAction().toString());
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, (rollBackItem.getAction() == null ? "" : rollBackItem.getAction().toString()));
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 0);
 
         Cursor cursor = database.rawQuery("select 1 from rollbacktbl  where package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
@@ -676,9 +676,42 @@ public class Database {
         return md5;
     }
 
+    public boolean updateDowngradingAction(String packageName) {
+
+        //boolean success = false;
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, RollBackItem.Action.DOWNGRADING.toString());
+        int updatedRows = database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and action = ?", new String[]{packageName, ""});
+
+        //Cursor cursor = database.rawQuery("UPDATE rollbacktbl SET action = ? WHERE package_name = ? and action = ?", new String[]{RollBackItem.Action.DOWNGRADING.toString(), packageName, "''"});
+
+/*
+        if(updatedRows > 0) {
+            success = true;
+        }
+        */
+
+        return updatedRows > 0;
+
+    }
+
+    public String getNotConfirmedRollbackAction(String packageName) {
+        Cursor cursor = database.rawQuery("select action from rollbacktbl where package_name = ? and confirmed = ?", new String[]{packageName, Integer.toString(0)});
+        int resultsCount = cursor.getCount();
+
+        String action = null;
+        if(resultsCount != 0) {
+            cursor.moveToFirst();
+            action = cursor.getString(0);
+        }
+        cursor.close();
+        return action;
+    }
+
     public Cursor getRollbackActions() {
 
-        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as cat_timestamp, action, package_name, md5, rollbacktbl.timestamp as real_timestamp from rollbacktbl  where rollbacktbl.confirmed = 1 order by rollbacktbl.timestamp desc", null);
+        Cursor c = database.rawQuery("select rowid as _id, icon_path, version, previous_version, name, strftime('%d-%m-%Y', datetime(timestamp, 'unixepoch')) as cat_timestamp, action, package_name, md5, rollbacktbl.timestamp as real_timestamp from rollbacktbl  where rollbacktbl.confirmed = 1 order by rollbacktbl.timestamp desc", null);
         c.getCount();
 
         return c;

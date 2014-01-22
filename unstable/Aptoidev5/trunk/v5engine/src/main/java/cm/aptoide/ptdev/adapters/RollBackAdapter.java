@@ -49,7 +49,7 @@ public class RollBackAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
 
 
         RollBackViewHolder holder = (RollBackViewHolder) view.getTag();
@@ -78,6 +78,8 @@ public class RollBackAdapter extends CursorAdapter {
         holder.appState.setText(appState + " at " + timeFormat.format(date));
         final String packageName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID));
         final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_MD5));
+        final String previousVersion = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION));
+
         holder.action.setText(getActionFromState(appState));
         holder.action.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,19 +91,14 @@ public class RollBackAdapter extends CursorAdapter {
                         Fragment fragment = new UninstallRetainFragment(name, packageName, versionName, icon);
                         activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
                         break;
-                    case UPDATED:
-                    case UNINSTALLED:
 
-                        Intent i = new Intent(context, AppViewActivity.class);
-                        i.putExtra("fromRollback", true);
-                        i.putExtra("md5sum", md5sum);
-                        context.startActivity(i);
-
+                    default:
+                        Intent intent = new Intent(context, AppViewActivity.class);
+                        intent.putExtra("fromRollback", true);
+                        intent.putExtra("md5sum", md5sum);
+                        context.startActivity(intent);
                         break;
                 }
-
-
-
             }
         });
 
@@ -123,9 +120,12 @@ public class RollBackAdapter extends CursorAdapter {
         } else if(RollBackItem.Action.UNINSTALLED.toString().equals(appState)) {
             return "Reinstall";
         } else if(RollBackItem.Action.UPDATED.toString().equals(appState)) {
-            return "Revert";
+            return "Downgrade";
+        } else if(RollBackItem.Action.DOWNGRADED.toString().equals(appState)) {
+            return "Update";
         } else {
             return "";
         }
     }
+
 }

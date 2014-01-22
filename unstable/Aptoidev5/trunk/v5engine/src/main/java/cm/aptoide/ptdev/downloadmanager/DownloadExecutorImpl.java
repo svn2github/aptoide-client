@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -43,41 +42,37 @@ public class DownloadExecutorImpl implements DownloadExecutor {
 
 
 
+
     @Override
     public void execute() {
-        new AsyncTask<Void, Void, Void>() {
 
-            private Context context = Aptoide.getContext();
+        final Context context = Aptoide.getContext();
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                RollBackItem rollBackItem;
+                Database db = new Database(Aptoide.getDb());
+                RollBackItem rollBackItem = null;
+
                 try {
-                    // Update
+
                     PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
 
+                    // Update
                     File apkFile = new File(pkgInfo.applicationInfo.sourceDir);
                     String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
 
-                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), pkgInfo.versionName, apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING);
+                    db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), pkgInfo.versionName, apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING));
+
 
                 } catch (PackageManager.NameNotFoundException e) {
-                    // New Installation
-                    rollBackItem = new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING);
+
+                    // Check if its a downgrade
+                    if(!db.updateDowngradingAction(apk.getApkid())) {
+                        // New Installation
+                        db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING));
+
+                    }
                 }
 
-
-                new Database(Aptoide.getDb()).insertRollbackAction(rollBackItem);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
                 if(canRunRootCommands()){
-
 
                     Intent i = new Intent(context, PermissionsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -85,18 +80,15 @@ public class DownloadExecutorImpl implements DownloadExecutor {
                     i.putStringArrayListExtra("permissions", apk.getPermissionsList());
                     context.startActivity(i);
 
-
                 }else{
 
                     Intent install = new Intent(Intent.ACTION_VIEW);
                     install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     install.setDataAndType(Uri.fromFile(new File(path)),"application/vnd.android.package-archive");
                     Log.d("Aptoide", "Installing app: "+path);
-                    Aptoide.getContext().startActivity(install);
+                    context.startActivity(install);
 
                 }
-            }
-        }.execute();
     }
 
 
