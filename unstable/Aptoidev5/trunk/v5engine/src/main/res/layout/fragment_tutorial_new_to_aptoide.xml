@@ -16,7 +16,6 @@
               android:layout_height="wrap_content"
               android:gravity="center"
               android:padding="15dp"
-              android:background="@drawable/aptoide_btn_default_normal_holo_light"
               android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
