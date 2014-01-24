@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.R;
 
@@ -62,8 +64,12 @@ public class Wizard {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            TextView new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
-            new_to_aptoide_description.setText("1 - Welcome to Aptoide");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_welcome_to_aptoide));
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_what_is_aptoide));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_aptoide);
         }
 
         @Override
@@ -74,8 +80,10 @@ public class Wizard {
 
     public static class NewToAptoide2 extends Fragment implements WizardCallback {
 
-        CheckBox cb_add_apps;
-        TextView new_to_aptoide_description;
+        CheckBox add_apps;
+        TextView title;
+        TextView description;
+        ImageView image;
 
         public static NewToAptoide2 newInstace() {
             NewToAptoide2 fragment = new NewToAptoide2();
@@ -97,20 +105,30 @@ public class Wizard {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
-            cb_add_apps = (CheckBox) view.findViewById(R.id.cb_add_apps);
-            cb_add_apps.setVisibility(View.VISIBLE);
-            cb_add_apps.setChecked(true);
-            new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
-            new_to_aptoide_description.setText("2 - Add more stores");
+            add_apps = (CheckBox) view.findViewById(R.id.add_apps);
+            add_apps.setVisibility(View.VISIBLE);
+            add_apps.setChecked(true);
+            add_apps.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ((Tutorial)getActivity()).setAddDefaultRepo(isChecked);
+                    Log.d("Wizard-addDefaultRepo", "isChecked? "+ isChecked);
+                }
+            });
+            title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_add_stores));
+            description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_manage_stores));
+            image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_stores);
         }
 
         @Override
         public void getActions(ArrayList<Action> actions) {
-            if (cb_add_apps.isChecked()) {
+            if (add_apps.isChecked()) {
                 actions.add(new Action() {
                     @Override
                     public void run() {
-                        Log.d("Wizard", getArguments().getString("name") + " CheckBox1 was checked!");
                     }
                 });
             }
@@ -139,8 +157,14 @@ public class Wizard {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            TextView new_to_aptoide_description = (TextView) view.findViewById(R.id.new_to_aptoide_description);
-            new_to_aptoide_description.setText("3 - Search thousands of apps");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_search));
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_search_local));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_search);
+            TextView more_text = (TextView) view.findViewById(R.id.more_text);
+            more_text.setText(getString(R.string.wizard_search_online));
         }
 
         @Override
@@ -168,8 +192,10 @@ public class Wizard {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            TextView main_description = (TextView) view.findViewById(R.id.main_description);
-            main_description.setText("1- New Layout");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_new_layout));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_new_layout);
         }
 
         @Override
@@ -198,8 +224,10 @@ public class Wizard {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
-            TextView main_description = (TextView) view.findViewById(R.id.main_description);
-            main_description.setText("2- Rollback");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_rollback));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_rollback);
         }
 
         @Override
@@ -228,8 +256,10 @@ public class Wizard {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
-            TextView main_description = (TextView) view.findViewById(R.id.main_description);
-            main_description.setText("2- Widget");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_widget));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_widget);
         }
 
         @Override
@@ -257,8 +287,10 @@ public class Wizard {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            TextView main_description = (TextView) view.findViewById(R.id.main_description);
-            main_description.setText("4- Account Manager");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            title.setText(getString(R.string.wizard_new_account));
+            ImageView image = (ImageView) view.findViewById(R.id.image);
+            image.setImageResource(R.drawable.wizard_new_account);
         }
 
         @Override

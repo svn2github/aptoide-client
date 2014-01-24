@@ -24,8 +24,7 @@
                  android:theme="@style/AptoideThemeDefault"
                  android:hardwareAccelerated="true">
 
-        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial"
-                  android:launchMode="singleTask"/>
+        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
 
         <activity android:name="cm.aptoide.ptdev.MainActivity"
                   android:launchMode="singleTask"

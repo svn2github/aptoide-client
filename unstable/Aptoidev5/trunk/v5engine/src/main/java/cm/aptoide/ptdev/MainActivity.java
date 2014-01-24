@@ -87,6 +87,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MainActivity extends ActionBarActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
 
     private static final String TAG = MainActivity.class.getName();
+    private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
     private ParserService service;
@@ -472,7 +473,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         if (sPref.getBoolean("firstRun", true)) {
             Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
-            startActivity(newToAptoideTutorial);
+            startActivityForResult(newToAptoideTutorial, WIZARD_REQ_CODE);
             sPref.edit().putBoolean("firstRun", false).commit();
             try {
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
@@ -562,8 +563,17 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 20:
-
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
+                break;
+            case 50:
+                if(resultCode == RESULT_OK){
+                    Store store = new Store();
+                    String repoUrl = "http://apps.store.aptoide.com/";
+                    store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                    store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                    startParse(store);
+                    Log.d("MainActivity-addDefaultRepo", "added default repo "+ repoUrl);
+                }
                 break;
         }
 

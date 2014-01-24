@@ -13,12 +13,21 @@
 
 
 
-    <TextView android:id="@+id/main_description"
+    <TextView android:id="@+id/title"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="20dp"
+              android:padding="15dp"
               android:gravity="center"
+              android:background="@drawable/aptoide_btn_default_normal_holo_light"
               android:textAppearance="?android:attr/textAppearanceLarge" />
 
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image"
+            android:padding="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.3"/>
 
 </LinearLayout>

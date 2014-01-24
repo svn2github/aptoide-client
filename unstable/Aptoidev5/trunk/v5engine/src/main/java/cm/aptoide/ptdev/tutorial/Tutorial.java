@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.tutorial;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -32,6 +33,7 @@ public class Tutorial extends ActionBarActivity {
     private ArrayList<Fragment> wizard_fragments;
     private ArrayList<Action> actionsToExecute = new ArrayList<Action>();
     private Button next, back;
+    private boolean addDefaultRepo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class Tutorial extends ActionBarActivity {
             finish();
         }
 
+
         lastFragment = wizard_fragments.size() - 1;
 
         /*wAdapter = new WizardAdapter(getSupportFragmentManager(), wizard_fragments);
@@ -60,24 +63,10 @@ public class Tutorial extends ActionBarActivity {
         */
 
         next = (Button) findViewById(R.id.next);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentFragment != lastFragment) {
-                    changeFragment(++currentFragment);
-                }
-            }
-        });
+        next.setOnClickListener(getNextListener());
 
         back = (Button) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentFragment != 0) {
-                    changeFragment(--currentFragment);
-                }
-            }
-        });
+        back.setOnClickListener(getBackListener());
 
 //        ((Button) findViewById(R.id.finish)).setOnClickListener(new View.OnClickListener() {
 //
@@ -102,6 +91,44 @@ public class Tutorial extends ActionBarActivity {
 
         }
 
+    }
+
+    @Override
+    public void finish() {
+
+        if(addDefaultRepo){
+            Intent data = new Intent();
+            data.putExtra("addDefaultRepo", true);
+            setResult(RESULT_OK, data);
+            Log.d("Tutorial-addDefaultRepo","true");
+        }
+
+
+        super.finish();
+    }
+
+    private View.OnClickListener getBackListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentFragment != 0) {
+                    changeFragment(--currentFragment);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener getNextListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentFragment != lastFragment) {
+                    changeFragment(++currentFragment);
+                }else{
+                    finish();
+                }
+            }
+        };
     }
 
     @Override
@@ -139,6 +166,11 @@ public class Tutorial extends ActionBarActivity {
             action.run();
         }
 
+    }
+
+
+    public void setAddDefaultRepo(boolean addDefaultRepo){
+        this.addDefaultRepo = addDefaultRepo;
     }
 
     /*

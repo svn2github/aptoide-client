@@ -14,13 +14,13 @@
     <string name="uninstall">Uninstall</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
-    <string name="downloading">Downloading</string>
-    <string name="downloaded">Downloaded</string>
+    <string name="downloading_apps">Downloading</string>
+    <string name="downloaded_apps">Downloaded</string>
     <string name="screenshots">Screenshots</string>
     <string name="about">Description</string>
     <string name="show_more">Show more</string>
     <string name="like">Like</string>
-    <string name="dont_like">Don\'t Like</string>
+    <string name="dont_like">Don\'t like</string>
     <string name="comments">Comments</string>
     <string name="write_your_comment">Write your comment</string>
     <string name="add_comment">Add a comment</string>
@@ -274,10 +274,23 @@
     <string name="sport_games">Sports Games</string>
     <string name="racing">Racing</string>
 
+    <string name="editors_choice">Editors\' Choice</string>
     <string name="top_apps">Top Apps</string>
     <string name="latest_apps">Latest Apps</string>
     <string name="latest_comments">Latest Comments</string>
     <string name="latest_likes">Latest Likes</string>
     <string name="recommended_for_you">Recommended for you</string>
+
+    <string name="wizard_welcome_to_aptoide">1 - Welcome to Aptoide</string>
+    <string name="wizard_what_is_aptoide">Aptoide is an android marketplace</string>
+    <string name="wizard_add_stores">2 - Add stores</string>
+    <string name="wizard_manage_stores">Anyone can create and manage their own store</string>
+    <string name="wizard_search">3 - Search thousands of apps</string>
+    <string name="wizard_search_local">You can search locally on Aptoide-app</string>
+    <string name="wizard_search_online">Or search more on our website</string>
+    <string name="wizard_new_layout">1- New Layout</string>
+    <string name="wizard_rollback">2- Rollback</string>
+    <string name="wizard_widget">3- Widget</string>
+    <string name="wizard_new_account">4- Account Manager</string>
 
 </resources>

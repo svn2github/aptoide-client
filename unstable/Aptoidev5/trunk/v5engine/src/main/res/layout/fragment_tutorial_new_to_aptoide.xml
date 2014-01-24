@@ -11,18 +11,46 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView android:id="@+id/new_to_aptoide_description"
+    <TextView android:id="@+id/title"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:padding="20dp"
-              android:textAppearance="?android:attr/textAppearanceLarge"/>
+              android:padding="15dp"
+              android:background="@drawable/aptoide_btn_default_normal_holo_light"
+              android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <CheckBox android:id="@+id/cb_add_apps"
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/description"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"/>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image"
+            android:layout_gravity="center_horizontal"
+            android:padding="50dp"
+            android:layout_weight="0.2"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/more_text"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"/>
+
+    <CheckBox android:id="@+id/add_apps"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/add_apps_official_store"
+              android:textAppearance="?android:attr/textAppearanceSmall"
               android:visibility="gone"
+              android:gravity="center"
+              android:layout_gravity="center_horizontal"
               android:checked="false"/>
 
 
