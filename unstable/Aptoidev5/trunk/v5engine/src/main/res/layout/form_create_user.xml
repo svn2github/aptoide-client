@@ -25,6 +25,16 @@
                 android:padding="5dp">
 
             <EditText
+                    android:id="@+id/name_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="Nickname"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <EditText
                     android:id="@+id/email_box"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"

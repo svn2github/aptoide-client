@@ -70,7 +70,15 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         holder.name.setText(item.getName());
         holder.version.setText(item.getVername());
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
-        ImageLoader.getInstance().displayImage(item.getIcon(), holder.icon);
+
+        String icon = item.getIcon();
+
+        if (icon.contains("_icon")) {
+            String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+            icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+        }
+
+        ImageLoader.getInstance().displayImage(icon , holder.icon);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -45,7 +45,9 @@ public class UninstallRetainFragment extends Fragment {
 
     public UninstallRetainFragment(long id) {
         this.id = id;
+        this.rollBackAction = RollBackItem.Action.UNINSTALLING;
     }
+
     public UninstallRetainFragment(String appName, String packageName, String versionName, String versionToDowngrade, String iconPath) {
         this.appName = appName;
         this.packageName = packageName;

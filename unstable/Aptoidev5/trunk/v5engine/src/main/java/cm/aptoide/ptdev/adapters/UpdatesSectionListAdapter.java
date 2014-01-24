@@ -221,7 +221,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
     @Override
     public boolean isEnabled(final int position) {
         if (isSection(position)) {
-            return true;
+            return false;
         }
         return linkedAdapter.isEnabled(getLinkedPosition(position));
     }

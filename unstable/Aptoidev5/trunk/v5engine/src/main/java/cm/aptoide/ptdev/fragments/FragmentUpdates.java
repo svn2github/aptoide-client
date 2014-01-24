@@ -81,10 +81,16 @@ public class FragmentUpdates extends ListFragment {
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sPref.edit();
-
+                int updates = 0;
                 if (data.getCount() > 1) {
 
-                    editor.putInt("updates", data.getCount() - 1);
+                    for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                        if(data.getInt(data.getColumnIndex("is_update"))==1){
+                            updates++;
+                        }
+                    }
+
+                    editor.putInt("updates", updates);
                     updatesAdapter.swapCursor(data);
                 } else {
                     updatesAdapter.swapCursor(null);
@@ -210,10 +216,17 @@ public class FragmentUpdates extends ListFragment {
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sPref.edit();
-
+                int updates = 0;
 
                 if (data.getCount() > 1) {
-                    editor.putInt("updates", data.getCount() - 1);
+
+                    for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                        if(data.getInt(data.getColumnIndex("is_update"))==1){
+                            updates++;
+                        }
+                    }
+
+                    editor.putInt("updates", updates);
                     updatesAdapter.swapCursor(data);
                 } else {
                     updatesAdapter.swapCursor(null);
@@ -250,7 +263,7 @@ public class FragmentUpdates extends ListFragment {
             case 1:
                 inflater.inflate(R.menu.menu_updates_context, menu);
                 break;
-            case 5:
+            case 0:
                 inflater.inflate(R.menu.menu_installed_context, menu);
                 break;
         }

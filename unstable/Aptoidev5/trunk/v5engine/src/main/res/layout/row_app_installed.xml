@@ -40,7 +40,7 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_toRightOf="@+id/app_icon"
-                android:text="App Name"
+
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/view"/>
@@ -51,7 +51,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="V 1.15.0.aadsf.13r"
+
                 android:gravity="center|left"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_alignLeft="@+id/app_name"

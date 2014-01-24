@@ -52,7 +52,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         this.apkversion = apkversion;
     }
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/addApkLike/";
+    String baseUrl = "http://webservices.aptoide.com/webservices/addApkLike";
     @Override
     public GenericResponse loadDataFromNetwork() throws Exception {
 

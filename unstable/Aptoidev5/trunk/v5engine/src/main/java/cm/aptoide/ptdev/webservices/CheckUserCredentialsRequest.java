@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.util.Log;
+import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -16,7 +18,7 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/checkUserCredentials/";
+    String baseUrl = "https://webservices.aptoide.com/webservices/checkUserCredentials";
             //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;
@@ -32,6 +34,8 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     private String cpu;
     private String screenSize;
     private String openGl;
+    private String nameForGoogle;
+    private LoginActivity.Mode mode;
 
     public CheckUserCredentialsRequest() {
         super(CheckUserCredentialsJson.class);
@@ -45,7 +49,25 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
         HashMap<String, String > parameters = new HashMap<String, String>();
 
         parameters.put("user", user);
-        parameters.put("passhash", password);
+
+        switch (mode){
+
+            case APTOIDE:
+                parameters.put("passhash", AptoideUtils.Algorithms.computeSHA1sum(password));
+
+                break;
+            case GOOGLE:
+                parameters.put("authMode", "google");
+                parameters.put("oauthUserName", nameForGoogle);
+                parameters.put("oauthToken", password);
+                break;
+            case FACEBOOK:
+                parameters.put("authMode", "facebook");
+                parameters.put("oauthToken", password);
+                break;
+        }
+
+
         if(repo != null) {
             parameters.put("repo", repo);
         }
@@ -134,5 +156,21 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     public CheckUserCredentialsRequest setOpenGl(String openGl) {
         this.openGl = openGl;
         return this;
+    }
+
+    public void setNameForGoogle(String nameForGoogle) {
+        this.nameForGoogle = nameForGoogle;
+    }
+
+    public String getNameForGoogle() {
+        return nameForGoogle;
+    }
+
+    public void setMode(LoginActivity.Mode mode) {
+        this.mode = mode;
+    }
+
+    public LoginActivity.Mode getMode() {
+        return mode;
     }
 }

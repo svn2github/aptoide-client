@@ -30,6 +30,7 @@
 
 
     <string name="app_id">477114135645153</string>
+    <integer name="google_play_services_version">4132500</integer>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
 

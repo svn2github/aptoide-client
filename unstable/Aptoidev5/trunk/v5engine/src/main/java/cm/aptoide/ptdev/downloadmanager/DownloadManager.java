@@ -182,6 +182,9 @@ public class DownloadManager {
 	 * @return <tt>true</tt> if the download could be added, <tt>false</tt> otherwise.
 	 */
 	public boolean addToCompletedList(DownloadInfo downloadInfo) {
+
+
+
 		return mCompletedList.add(downloadInfo);
 	}
 

@@ -201,6 +201,7 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            Log.d("FragmentRelated", "onCreate");
             adapter = new MergeAdapter();
             itemBasedAdapter = new RelatedBucketAdapter(getActivity(), itemBasedElements);
             develBasedAdapter = new RelatedBucketAdapter(getActivity(), develBasedElements);
@@ -220,11 +221,11 @@ public abstract class FragmentAppView extends Fragment {
             public void onRequestSuccess(RelatedApkJson relatedApkJson) {
 
 
+                Log.d("FragmentRelated", "onRequestSuccess");
 
                 //Toast.makeText(getActivity(), "ItemBased size " + relatedApkJson.getItembased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "DevelBased size " + relatedApkJson.getDevelbased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "MultiVersion size " + relatedApkJson.getMultiversion().size(), Toast.LENGTH_SHORT).show();
-
 
 
                 if(relatedApkJson.getItembased().size()>0){
@@ -342,16 +343,26 @@ public abstract class FragmentAppView extends Fragment {
             }
         }
 
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
 
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+            View v = super.onCreateView(inflater, container, savedInstanceState);
+            ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
+            Log.d("FragmentRelated", "onCreateView");
             //listRelatedApkRequest.setRepos("apps");
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
             spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
+            return v;
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+
+            Log.d("FragmentRelated", "onViewCreated");
 
 
         }
@@ -395,6 +406,9 @@ public abstract class FragmentAppView extends Fragment {
 
                 min_sdk.setText(getString(R.string.min_sdk) + ": " + event.getMinSdk());
                 min_screen.setText(getString(R.string.min_screen) + ": " + event.getMinScreen().name());
+                if(task!=null){
+                    task.cancel(true);
+                }
                 task = new PermissionGetter().execute(event.getPermissions());
 
             }
@@ -665,7 +679,7 @@ public abstract class FragmentAppView extends Fragment {
                                         try {
 
                                             ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                            addComment();
+                                            //addComment();
                                         } catch (OperationCanceledException e) {
                                             e.printStackTrace();
                                         } catch (IOException e) {

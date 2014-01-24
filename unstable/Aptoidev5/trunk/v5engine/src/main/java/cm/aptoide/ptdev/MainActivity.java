@@ -438,7 +438,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {
-
             ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
             for (final String repoUrl : repos) {
 
@@ -464,7 +463,44 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 }
 
             }
+            getIntent().removeExtra("newrepo");
         }
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.hasExtra("newrepo")) {
+
+            ArrayList<String> repos = intent.getExtras().getStringArrayList("newrepo");
+            for (final String repoUrl : repos) {
+
+                if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
+                    Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
+                } else if (!intent.getBooleanExtra("nodialog", false)) {
+                    AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Store store = new Store();
+                            store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                            store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                            startParse(store);
+                        }
+                    }, repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                } else {
+
+                    Store store = new Store();
+                    store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                    store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                    startParse(store);
+
+                }
+
+            }
+        }
+
 
     }
 

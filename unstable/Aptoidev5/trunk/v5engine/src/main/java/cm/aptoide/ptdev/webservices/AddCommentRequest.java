@@ -71,6 +71,9 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
+        request.setConnectTimeout(30000);
+        request.setReadTimeout(30000);
+
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs( getResultType() );

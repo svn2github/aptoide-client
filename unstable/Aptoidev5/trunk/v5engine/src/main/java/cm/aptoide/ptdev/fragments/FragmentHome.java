@@ -73,13 +73,13 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     }
 
     private void refreshEditorsList() {
-        //editorsChoice.clear();
+        editorsChoice.clear();
         adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(50, null, this);
     }
 
     private void refreshTopList() {
-        //top.clear();
+        top.clear();
         adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(51, null, this);
     }
@@ -196,11 +196,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         switch (loader.getId()) {
             case 50:
-                //editorsChoice.clear();
+                editorsChoice.clear();
                 editorsChoice.addAll(data);
                 break;
             case 51:
-                //top.clear();
+                top.clear();
 
                 top.addAll(data);
                 break;

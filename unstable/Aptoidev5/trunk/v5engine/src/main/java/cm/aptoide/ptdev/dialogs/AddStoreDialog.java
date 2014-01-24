@@ -311,6 +311,8 @@ public class AddStoreDialog extends DialogFragment {
             public void onClick(View v) {
                 Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                dismiss();
+
                 startActivity(intent);
             }
         });

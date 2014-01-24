@@ -84,205 +84,203 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(AppViewActivity.this , "Error request", Toast.LENGTH_LONG).show();
+            Toast.makeText(AppViewActivity.this, "Error request", Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
             AppViewActivity.this.json = getApkInfoJson;
 
-            if(json != null) {
-            if ("OK".equals(json.getStatus())) {
+            if (json != null) {
+                if ("OK".equals(json.getStatus())) {
 
 
-                name = getApkInfoJson.getMeta().getTitle();
-                versionName = getApkInfoJson.getApk().getVername();
-                package_name = getApkInfoJson.getApk().getPackage();
-                repoName = getApkInfoJson.getApk().getRepo();
-                wUrl = getApkInfoJson.getMeta().getWUrl();
-                Log.d("AppView", "wUrl " + wUrl);
-                boolean trusted = false;
-                if (getApkInfoJson.getApk().getIconHd() != null) {
-                    icon = getApkInfoJson.getApk().getIconHd();
-                    String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
-                    String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
-                } else {
-                    icon = getApkInfoJson.getApk().getIcon();
-                }
-                appName.setText(name);
-                appVersionName.setText(versionName);
-                ImageLoader.getInstance().displayImage(icon, appIcon);
-                bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+                    name = getApkInfoJson.getMeta().getTitle();
+                    versionName = getApkInfoJson.getApk().getVername();
+                    package_name = getApkInfoJson.getApk().getPackage();
+                    repoName = getApkInfoJson.getApk().getRepo();
+                    wUrl = getApkInfoJson.getMeta().getWUrl();
+                    Log.d("AppView", "wUrl " + wUrl);
+                    boolean trusted = false;
+                    if (getApkInfoJson.getApk().getIconHd() != null) {
+                        icon = getApkInfoJson.getApk().getIconHd();
+                        String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
+                        String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+                        icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                    } else {
+                        icon = getApkInfoJson.getApk().getIcon();
+                    }
+                    appName.setText(name);
+                    appVersionName.setText(versionName);
+                    ImageLoader.getInstance().displayImage(icon, appIcon);
+                    bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 
 
-                try{
-                    PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
+                    try {
+                        PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
 
-                    if(getApkInfoJson.getApk().getVercode().intValue()>info.versionCode){
+                        if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
 
-                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.update));
+                            ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
+                            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+
+                        } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
+
+                            ((TextView) findViewById(R.id.btinstall)).setText("Downgrade");
+                            findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
+
+                        } else {
+
+
+                            final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
+
+                            ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.open));
+
+                            if (i != null) {
+                                findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(i);
+                                    }
+                                });
+
+                            } else {
+                                findViewById(R.id.btinstall).setEnabled(false);
+                            }
+
+
+                        }
+
+
+                    } catch (PackageManager.NameNotFoundException e) {
                         findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
-                    }else if(getApkInfoJson.getApk().getVercode().intValue()<info.versionCode){
-
-                        ((TextView)findViewById(R.id.btinstall)).setText("Downgrade");
-                        findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-
-                    }else{
-
-
-                        final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
-
-                        ((TextView)findViewById(R.id.btinstall)).setText(getString(R.string.open));
-
-                        if(i!=null){
-                            findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    startActivity(i);
-                                }
-                            });
-
-                        }else{
-                            findViewById(R.id.btinstall).setEnabled(false);
-                        }
-
-
                     }
 
 
-
-                } catch (PackageManager.NameNotFoundException e) {
-                    findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
-
-                }
+                    findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                    findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
 
 
-
-                findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
-                findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
-
-
-                findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (service != null) {
-                            service.stopDownload(id);
-                        }
-
-
-                    }
-                });
-
-                if(getApkInfoJson.getMalware()!=null){
-                    boolean showBadgeLayout = false;
-                    if(getApkInfoJson.getMalware().getStatus().equals("scanned")){
-                        ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
-                        ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
-                        showBadgeLayout = true;
-                         trusted = true;
-                    }else if(getApkInfoJson.getMalware().getStatus().equals("warn")){
-                        ((ImageView)findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
-                        ((TextView)findViewById(R.id.app_badge_text)).setText(getString(R.string.warning));
-                        showBadgeLayout = true;
-                    }
-                    if(showBadgeLayout){
-                        findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
-                        findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
-                        findViewById(R.id.badge_layout).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                AptoideDialog.badgeDialog(name, getApkInfoJson.getMalware().getStatus(), getApkInfoJson.getMalware().getReason()).show(getSupportFragmentManager(), "badgeDialog");
-
-                            }
-                        });
-                    }
-                }
-
-
-
-                publishEvents();
-                invalidateOptionsMenu();
-                versionCode = json.getApk().getVercode().intValue();
-                latestVersion = (TextView) findViewById(R.id.app_get_latest);
-                if (json.getLatest() != null) {
-                    latestVersion.setVisibility(View.VISIBLE);
-
-                    String getLatestString;
-                    if(trusted){
-                        getLatestString = getString(R.string.get_latest_version);
-                    }else{
-                        getLatestString = getString(R.string.get_latest_version_and_trusted);
-                    }
-
-                    SpannableString spanString = new SpannableString(getLatestString);
-                    spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
-                    latestVersion.setText(spanString);
-                    latestVersion.setOnClickListener(new View.OnClickListener() {
+                    findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String url = json.getLatest();
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            url = url.replaceAll(" ", "%20");
-                            i.setData(Uri.parse(url));
-                            startActivity(i);
+
+                            if (service != null) {
+                                service.stopDownload(id);
+                            }
+
+
                         }
                     });
-                }else{
-                    latestVersion.setVisibility(View.GONE);
-                }
 
-                if(getIntent().getBooleanExtra("fromMyapp", false)){
-                    AptoideDialog.myappInstall(new InstallListener(icon, name, versionName, package_name), name , new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-
-                            if (!new Database(Aptoide.getDb()).existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoName + ".store.aptoide.com/"))) {
-                                AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ArrayList<String> repo = new ArrayList<String>();
-                                        repo.add("http://" + repoName + ".store.aptoide.com/");
-                                        Intent i = new Intent(AppViewActivity.this, MainActivity.class);
-                                        i.putExtra("nodialog", true);
-                                        i.putExtra("newrepo", repo);
-                                        i.addFlags(12345);
-                                        startActivity(i);
-
-                                    }
-                                }, "http://" +repoName + ".store.aptoide.com/").show(getSupportFragmentManager(), "myAppStore");
-                            }
+                    if (getApkInfoJson.getMalware() != null) {
+                        boolean showBadgeLayout = false;
+                        if (getApkInfoJson.getMalware().getStatus().equals("scanned")) {
+                            ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
+                            ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
+                            showBadgeLayout = true;
+                            trusted = true;
+                        } else if (getApkInfoJson.getMalware().getStatus().equals("warn")) {
+                            ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
+                            ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.warning));
+                            showBadgeLayout = true;
                         }
-                    }).show(getSupportFragmentManager(), "myApp");
+                        if (showBadgeLayout) {
+                            findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                            findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+                            findViewById(R.id.badge_layout).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AptoideDialog.badgeDialog(name, getApkInfoJson.getMalware().getStatus(), getApkInfoJson.getMalware().getReason()).show(getSupportFragmentManager(), "badgeDialog");
+
+                                }
+                            });
+                        }
+                    }
+
+
+
+                    versionCode = json.getApk().getVercode().intValue();
+                    latestVersion = (TextView) findViewById(R.id.app_get_latest);
+                    if (json.getLatest() != null) {
+                        latestVersion.setVisibility(View.VISIBLE);
+
+                        String getLatestString;
+                        if (trusted) {
+                            getLatestString = getString(R.string.get_latest_version);
+                        } else {
+                            getLatestString = getString(R.string.get_latest_version_and_trusted);
+                        }
+
+                        SpannableString spanString = new SpannableString(getLatestString);
+                        spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
+                        latestVersion.setText(spanString);
+                        latestVersion.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String url = json.getLatest();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                url = url.replaceAll(" ", "%20");
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                            }
+                        });
+                    } else {
+                        latestVersion.setVisibility(View.GONE);
+                    }
+
+                    if (getIntent().getBooleanExtra("fromMyapp", false)) {
+                        AptoideDialog.myappInstall(new InstallListener(icon, name, versionName, package_name), name, new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+
+                                if (!new Database(Aptoide.getDb()).existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoName + ".store.aptoide.com/"))) {
+                                    AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ArrayList<String> repo = new ArrayList<String>();
+                                            repo.add("http://" + repoName + ".store.aptoide.com/");
+                                            Intent i = new Intent(AppViewActivity.this, MainActivity.class);
+                                            i.putExtra("nodialog", true);
+                                            i.putExtra("newrepo", repo);
+                                            i.addFlags(12345);
+                                            startActivity(i);
+
+                                        }
+                                    }, "http://" + repoName + ".store.aptoide.com/").show(getSupportFragmentManager(), "myAppStore");
+                                }
+                            }
+                        }).show(getSupportFragmentManager(), "myApp");
+                    }
+                    md5 = json.getApk().getMd5sum();
+                    publishEvents();
+                    invalidateOptionsMenu();
+                    if (!isShown) show(true, true);
+
+                    if (isFromActivityResult) {
+
+                        Log.d("Downgrade", "iffromactivityresult");
+                        Download download = new Download();
+                        download.setId(id);
+                        download.setName(name);
+                        download.setVersion(versionName);
+                        download.setIcon(icon);
+                        download.setPackageName(package_name);
+                        service.startDownloadFromJson(json, id, download);
+
+                        isFromActivityResult = false;
+                    }
+
+                } else {
+                    for (Error error : json.getErrors()) {
+                        Toast.makeText(AppViewActivity.this, error.getMsg(), Toast.LENGTH_LONG).show();
+                    }
+                    finish();
                 }
-
-            } else {
-                for (Error error : json.getErrors()) {
-                    Toast.makeText(AppViewActivity.this, error.getMsg(), Toast.LENGTH_LONG).show();
-                }
             }
 
-            md5 = json.getApk().getMd5sum();
 
-
-            show(true, true);
-
-            if(isFromActivityResult){
-
-                Log.d("Downgrade", "iffromactivityresult");
-                Download download = new Download();
-                download.setId(id);
-                download.setName(name);
-                download.setVersion(versionName);
-                download.setIcon(icon);
-                download.setPackageName(package_name);
-                service.startDownloadFromJson(json, id, download);
-
-                isFromActivityResult = false;
-            }
-            }
         }
     };
     private ImageView appIcon;
@@ -298,6 +296,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String icon;
     private boolean isUpdate;
     private int versionCode;
+    private boolean isShown = false;
 
     public boolean isUpdate() {
         return isUpdate;
@@ -364,7 +363,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onClick(View v) {
             Fragment downgrade = new UninstallRetainFragment(name, package_name, versionName, downgradeVersion, icon);
             getSupportFragmentManager().beginTransaction().add(downgrade, "downgrade").commit();
-
         }
     }
 
@@ -534,7 +532,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         super.onResume();
         BusProvider.getInstance().register(this);
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
-        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
     }
 
     @Override
@@ -658,7 +655,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(token!=null){
                 request.setToken(token);
             }
-            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
+            cacheKey = md5sum;
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
         } else {
             getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
@@ -787,6 +785,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             onDownloadUpdate(service.getDownload(id).getDownload());
         }
 
+    }
+
+    @Subscribe
+    public void onInstalledEvent(InstalledApkEvent event){
+        onRefresh(null);
     }
 
     @Subscribe
@@ -1223,16 +1226,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             } catch (PackageManager.NameNotFoundException e) {
                 isFromActivityResult = true;
+                spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
             }
-
-
         }
     }
 
 
     private void show(boolean shown, boolean animate) {
 
-
+        isShown = true;
         View mListContainer = findViewById(R.id.pager_host);
         View mProgressContainer = findViewById(R.id.progressBar);
         if (shown) {

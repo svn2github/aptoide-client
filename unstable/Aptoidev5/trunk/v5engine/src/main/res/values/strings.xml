@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
     <string name="WidgetProvider_timestamp_today">Today</string>
     <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
     <string name="WidgetProvider_timestamp_hour_ago">%s hour ago</string>
@@ -276,6 +277,7 @@
 
     <string name="editors_choice">Editors\' Choice</string>
     <string name="top_apps">Top Apps</string>
+
     <string name="latest_apps">Latest Apps</string>
     <string name="latest_comments">Latest Comments</string>
     <string name="latest_likes">Latest Likes</string>

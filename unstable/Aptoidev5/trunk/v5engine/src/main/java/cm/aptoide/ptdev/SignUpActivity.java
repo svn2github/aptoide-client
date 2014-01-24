@@ -1,14 +1,23 @@
 package cm.aptoide.ptdev;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.EditText;
+import android.widget.Toast;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.webservices.CreateUserRequest;
+import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import static cm.aptoide.ptdev.LoginActivity.ARG_ACCOUNT_TYPE;
 
@@ -25,9 +34,6 @@ public class SignUpActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-
-        mAccountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-
         setContentView(R.layout.form_create_user);
 
 
@@ -47,7 +53,7 @@ public class SignUpActivity extends ActionBarActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(getBaseContext());
+        spiceManager.start(this);
     }
 
     @Override
@@ -60,6 +66,42 @@ public class SignUpActivity extends ActionBarActivity{
 
         // Validation!
 
+
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+
+        final EditText emailBox = (EditText) findViewById(R.id.email_box);
+        EditText nameBox = (EditText) findViewById(R.id.name_box);
+        final EditText passBox = (EditText) findViewById(R.id.password_box);
+
+        createUserRequest.setEmail(emailBox.getText().toString());
+        createUserRequest.setName(nameBox.getText().toString());
+        createUserRequest.setPass(passBox.getText().toString());
+
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        spiceManager.execute(createUserRequest, new RequestListener<CreateUserJson>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(pd!=null) pd.dismiss();
+            }
+
+            @Override
+            public void onRequestSuccess(CreateUserJson createUserJson) {
+                DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(pd!=null) pd.dismiss();
+                if("OK".equals(createUserJson.getStatus())){
+                    Intent data = new Intent();
+                    data.putExtra("password", passBox.getText().toString());
+                    data.putExtra("username", emailBox.getText().toString());
+                    setResult(RESULT_OK, data);
+                    finish();
+                }else{
+                    for(String error : createUserJson.getErrors()){
+                        Toast.makeText(SignUpActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
 //        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 //
@@ -137,11 +179,7 @@ public class SignUpActivity extends ActionBarActivity{
 //        }.execute();
     }
 
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_CANCELED);
-        super.onBackPressed();
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -149,8 +187,10 @@ public class SignUpActivity extends ActionBarActivity{
         int i = item.getItemId();
 
         if (i == android.R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
         } else if (i == R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
         }
 

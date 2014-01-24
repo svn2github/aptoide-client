@@ -340,7 +340,6 @@ public class DownloadInfo implements Runnable{
 
 
 
-
     public void download(){
         mProgress = 0;
         this.mStatusState.download();

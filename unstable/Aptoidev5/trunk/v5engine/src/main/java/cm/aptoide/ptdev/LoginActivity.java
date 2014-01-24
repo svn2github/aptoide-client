@@ -3,9 +3,12 @@ package cm.aptoide.ptdev;
 import android.accounts.*;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -31,6 +34,16 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
+import com.facebook.*;
+import com.facebook.model.GraphUser;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.UserRecoverableException;
+import com.google.android.gms.plus.PlusClient;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -44,10 +57,117 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener {
+
+
+    private ProgressDialog mConnectionProgressDialog;
+    private PlusClient mPlusClient;
+    private ConnectionResult mConnectionResult;
+    private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("Aptoide-", "On Connected");
+
+
+        final String serverId = "316068701674.apps.googleusercontent.com";
 
 
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    final String token = GoogleAuthUtil.getToken(LoginActivity.this, mPlusClient.getAccountName(), "oauth2:server:client_id:" + serverId + ":api_scope:" + Scopes.PLUS_LOGIN);
+
+
+                    final String username = mPlusClient.getAccountName();
+                    final String name = mPlusClient.getCurrentPerson().getDisplayName();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            submit(Mode.GOOGLE, username, token, name);
+                            //Toast.makeText(LoginActivity.this, token, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    if(mPlusClient != null && mPlusClient.isConnected()){
+                        mPlusClient.clearDefaultAccount();
+                        mPlusClient.disconnect();
+                    }
+                    e.printStackTrace();
+                }catch (UserRecoverableAuthException e){
+                    startActivityForResult(e.getIntent(), 90);
+                } catch (GoogleAuthException e) {
+                    e.printStackTrace();
+                    if(mPlusClient != null && mPlusClient.isConnected()){
+                        mPlusClient.clearDefaultAccount();
+                        mPlusClient.disconnect();
+                    }
+                } catch (Exception e){
+                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                    if(mPlusClient != null && mPlusClient.isConnected()){
+                        mPlusClient.clearDefaultAccount();
+                        mPlusClient.disconnect();
+                    }
+                }
+            }
+        }).start();
+
+
+        mConnectionProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (mConnectionProgressDialog.isShowing()) {
+            // The user clicked the sign-in button already. Start to resolve
+            // connection errors. Wait until onConnected() to dismiss the
+            // connection dialog.
+            if (result.hasResolution()) {
+                try {
+                    result.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
+                } catch (IntentSender.SendIntentException e) {
+                    mPlusClient.connect();
+                }
+            }
+        }
+
+        // Save the intent so that we can start an activity when the user clicks
+        // the sign-in button.
+        mConnectionResult = result;
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.g_sign_in_button && !mPlusClient.isConnected()) {
+            if (mConnectionResult == null) {
+                mPlusClient.connect();
+                mConnectionProgressDialog.show();
+            } else {
+                try {
+                    mConnectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
+                } catch (IntentSender.SendIntentException e) {
+                    // Try connecting again.
+                    mConnectionResult = null;
+                    mPlusClient.connect();
+                }
+            }
+        }
+
+    }
+
+    public enum Mode {APTOIDE, GOOGLE, FACEBOOK};
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -67,6 +187,27 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
     EditText password_box;
     CheckBox checkShowPass;
+    private UiLifecycleHelper uiLifecycleHelper;
+    private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+        @Override
+        public void call(final Session session, SessionState state, Exception exception) {
+
+
+            if (state.isOpened()) {
+                Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+                    @Override
+                    public void onCompleted(GraphUser user, Response response) {
+                        submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                    }
+                });
+                request.executeAsync();
+            }
+
+        }
+    };
+
+
+
     /**
      * Called when the activity is first created.
      */
@@ -75,6 +216,17 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_login);
+        findViewById(R.id.g_sign_in_button).setOnClickListener(this);
+        mConnectionProgressDialog = new ProgressDialog(this);
+        mConnectionProgressDialog.setMessage("Signing in...");
+
+        if(Build.VERSION.SDK_INT>=8){
+
+            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+            uiLifecycleHelper.onCreate(savedInstanceState);
+            mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+        }
         mAccountManager = AccountManager.get(getBaseContext());
 
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
@@ -86,12 +238,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             ((EditText)findViewById(R.id.username)).setText(accountName);
         }
 
-        findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
+
         password_box = (EditText) findViewById(R.id.password);
         checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
         checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -105,6 +252,15 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         });
         checkShowPass.setEnabled(true);
 
+        findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = ((EditText)findViewById(R.id.username)).getText().toString();
+                String password = ((EditText)findViewById(R.id.password)).getText().toString();
+                submit(Mode.APTOIDE, username, password, null);
+            }
+        });
+
         TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
         SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
         newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
@@ -112,10 +268,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         new_to_aptoide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
-                // and return them in setAccountAuthenticatorResult(). See finishLogin().
-                Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
-                signup.putExtras(getIntent().getExtras());
+                Intent signup = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivityForResult(signup, REQ_SIGNUP);
             }
         });
@@ -139,44 +292,94 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onDestroy() {
+        super.onDestroy();
+        uiLifecycleHelper.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiLifecycleHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
+            mConnectionResult = null;
+            mPlusClient.connect();
+        }else{
+            if (requestCode == 90 && resultCode == RESULT_OK) {
+                mPlusClient.connect();
+            }
+        }
+            uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+
+
+
 
         // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-            finishLogin(data);
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
+
+            ((EditText) findViewById(R.id.username)).setText(data.getStringExtra("username"));
+            ((EditText) findViewById(R.id.password)).setText(data.getStringExtra("password"));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    submit(Mode.APTOIDE, data.getStringExtra("username"), data.getStringExtra("password"), null);
+                }
+            });
+        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         spiceManager.start(getBaseContext());
+
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uiLifecycleHelper.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        uiLifecycleHelper.onPause();
+    }
+
+
 
     @Override
     protected void onStop() {
         super.onStop();
+        if(mPlusClient!=null && mPlusClient.isConnected()){
+            mPlusClient.disconnect();
+        }
         spiceManager.shouldStop();
     }
 
-    public void submit() {
+    public void submit(Mode mode, final String username, final String passwordOrToken, String nameForGoogle) {
 
-        final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
-        final String userPass = ((EditText) findViewById(R.id.password)).getText().toString();
+        //final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
+        //final String userPass = ((EditText) findViewById(R.id.password)).getText().toString();
 
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
         CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 
-        request.setUser(userName);
-        try {
-            request.setPassword(AptoideUtils.Algorithms.computeSHA1sum(userPass));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        request.setMode(mode);
+
+        request.setUser(username);
+        request.setPassword(passwordOrToken);
+        request.setNameForGoogle(nameForGoogle);
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
         spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
@@ -203,10 +406,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
                     Bundle data = new Bundle();
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
-                    data.putString(PARAM_USER_PASS, userPass);
+                    data.putString(PARAM_USER_PASS, passwordOrToken);
                     final Intent res = new Intent();
                     res.putExtras(data);
                     finishLogin(res);

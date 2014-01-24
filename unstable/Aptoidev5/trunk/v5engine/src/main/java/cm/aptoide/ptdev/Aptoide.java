@@ -11,6 +11,7 @@ import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -146,6 +147,7 @@ public class Aptoide extends Application {
 
 
 
+
     }
 
 
@@ -211,6 +213,7 @@ public class Aptoide extends Application {
                 default:
                     return getStreamFromOtherSource(imageUri, extra);
             }
+
 
 
         }

@@ -35,9 +35,14 @@ public class UpdatesAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-
-        return 1;
+        Cursor c = (Cursor) getItem(position);
+        return getItemViewType(c);
     }
+
+    private int getItemViewType(Cursor cursor){
+        return cursor.getInt(cursor.getColumnIndex("is_update"));
+    }
+
 
     @Override
     public int getViewTypeCount() {
@@ -51,7 +56,7 @@ public class UpdatesAdapter extends CursorAdapter {
         View v = null;
         switch (type){
             case 0:
-               v = LayoutInflater.from(context).inflate(R.layout.separator_updates, parent, false);
+               v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_update, parent, false);
@@ -61,10 +66,7 @@ public class UpdatesAdapter extends CursorAdapter {
         return v;
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        return getItemViewType(position)!=0;
-    }
+
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
@@ -73,38 +75,32 @@ public class UpdatesAdapter extends CursorAdapter {
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
 
+        AppViewHolder holder = (AppViewHolder) view.getTag();
+
+
+        if(holder==null){
+            holder = new AppViewHolder();
+            holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
+            holder.overFlow = (ImageView) view.findViewById(R.id.manage_icon);
+            holder.appName = (TextView) view.findViewById(R.id.app_name);
+            holder.versionName = (TextView) view.findViewById(R.id.app_version);
+            view.setTag(holder);
+        }
+
+
+
+        holder.appName.setText(Html.fromHtml(name).toString());
+        String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
+        String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
+        if(icon1.contains("_icon")){
+            String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
+            icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+        }
+        ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
+        holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
+
         switch (type){
-            case 0:
-
-                TextView tv = (TextView) view.findViewById(R.id.separator_label);
-                tv.setText(name);
-
-                break;
             case 1:
-
-                AppViewHolder holder = (AppViewHolder) view.getTag();
-
-
-                if(holder==null){
-                    holder = new AppViewHolder();
-                    holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.overFlow = (ImageView) view.findViewById(R.id.manage_icon);
-                    holder.appName = (TextView) view.findViewById(R.id.app_name);
-                    holder.versionName = (TextView) view.findViewById(R.id.app_version);
-                    view.setTag(holder);
-                }
-
-
-
-                holder.appName.setText(Html.fromHtml(name).toString());
-                String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
-                String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
-                if(icon1.contains("_icon")){
-                    String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
-                    icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-                }
-                ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
-                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
 
                 final long id = cursor.getLong(cursor.getColumnIndex("_id"));
 
