@@ -40,7 +40,7 @@
                 android:ellipsize="start"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:gravity="top|left"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:layout_below="@+id/app_name"
                 android:layout_alignLeft="@+id/app_name"
                 android:layout_gravity="left|center_vertical"/>
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@android:color/darker_gray"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/app_version"
