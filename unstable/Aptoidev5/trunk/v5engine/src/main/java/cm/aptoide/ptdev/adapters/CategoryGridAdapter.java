@@ -4,17 +4,17 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.ptdev.Category;
-import cm.aptoide.ptdev.EnumCategories;
-import cm.aptoide.ptdev.EnumStoreTheme;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -51,7 +51,7 @@ public class CategoryGridAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_home, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_grid, parent, false);
@@ -94,10 +94,11 @@ public class CategoryGridAdapter extends CursorAdapter {
 
                 if(holder==null){
                     holder = new AppViewHolder();
-                    holder.appIcon = (ImageView) view.findViewById(R.id.home_icon);
+                    holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
                     holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
-                    holder.versionName = (TextView) view.findViewById(R.id.app_category);
+                    holder.versionName = (TextView) view.findViewById(R.id.app_version);
+                    holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
                     view.setTag(holder);
                 }
 
@@ -109,6 +110,7 @@ public class CategoryGridAdapter extends CursorAdapter {
                     }
                 });
                 holder.appName.setText(Html.fromHtml(name).toString());
+                holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
                 String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
                 String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
                 if(icon1.contains("_icon")){
@@ -117,6 +119,12 @@ public class CategoryGridAdapter extends CursorAdapter {
                 }else{
 //                    holder.appIcon.setBackgroundResource(R.drawable.);
                 }
+                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPopup(v, id);
+                    }
+                });
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
 
@@ -183,18 +191,47 @@ public class CategoryGridAdapter extends CursorAdapter {
         }
     }
 
+    public void showPopup(View v, long id) {
+        PopupMenu popup = new PopupMenu(context, v);
+        popup.setOnMenuItemClickListener(new MenuListener(context, id));
+        popup.inflate(R.menu.menu_actions);
+        popup.show();
+    }
+
     public static class AppViewHolder{
         ImageView appIcon;
         ImageView overFlow;
         TextView appName;
         TextView versionName;
         TextView downloads;
-        TextView rating;
+        RatingBar rating;
     }
 
-    public static class CategoryViewHolder{
-        ImageView catIcon;
-        TextView catName;
-        TextView appsCount;
+    static class MenuListener implements PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_install) {
+
+                ((StoreActivity)context).installApp(id);
+                return true;
+            } else if (i == R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

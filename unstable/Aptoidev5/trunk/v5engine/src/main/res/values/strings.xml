@@ -143,8 +143,6 @@
     <string name="download_manager">Download Manager</string>
     <string name="updates_tab">Updates</string>
     <string name="home">Home</string>
-    <string name="facebook">Facebook</string>
-    <string name="twitter">Twitter</string>
     <string name="login_or_register">Login or register</string>
     <string name="rollback_sum">Revert actions</string>
     <string name="update_all">Update all</string>
