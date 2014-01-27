@@ -163,7 +163,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(isMergeStore){
             stores.clear();
-            stores.add(new StoreItem("All Stores", "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
+            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             getLoaderManager().restartLoader(0, null, this);
@@ -315,7 +315,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(mergeStore){
             stores.clear();
-            stores.add(new StoreItem("All Stores", "", "", EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
+            stores.add(new StoreItem(getString(R.string.all_stores), "", "", EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             refreshStoresEvent(null);

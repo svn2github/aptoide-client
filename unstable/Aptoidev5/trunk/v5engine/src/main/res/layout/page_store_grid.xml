@@ -16,7 +16,6 @@
               android:id="@+id/store_gridview"
               android:numColumns="auto_fit"
               android:layout_gravity="center_horizontal"
-              android:background="@color/background_window"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
     </GridView>

@@ -21,9 +21,9 @@ public class WrongXmlVersionDialog extends DialogFragment {
 
         AlertDialog builder = new AlertDialog.Builder(getActivity())
 
-                .setTitle("Incompatible store")
-                .setMessage("This store is not yet incompatible with this version of Aptoide. Please wait some days until we rebuild all stores. ")
-                .setNeutralButton("OK", null)
+                .setTitle(getString(R.string.incompatible_store))
+                .setMessage(getString(R.string.incompatible_store_msg))
+                .setNeutralButton(android.R.string.ok, null)
                 .create();
 
         return builder;

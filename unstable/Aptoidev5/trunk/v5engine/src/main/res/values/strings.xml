@@ -13,8 +13,7 @@
     <string name="installed_tab">Installed</string>
     <string name="update">Update</string>
     <string name="uninstall">Uninstall</string>
-    <string name="drawer_open">Open drawer</string>
-    <string name="drawer_close">Close drawer</string>
+
     <string name="downloading_apps">Downloading</string>
     <string name="downloaded_apps">Downloaded</string>
     <string name="screenshots">Screenshots</string>
@@ -70,7 +69,7 @@
     <string name="setting_screen_size">Screen Size</string>
     <string name="setting_esgl_version">ESGL Version</string>
     <string name="screenCode">Screen code</string>
-    <string name="cpuAbi">Cpu</string>
+    <string name="cpuAbi">CPU</string>
     <string name="setting_schdwninstalltitle">Automatic Install</string>
     <string name="setting_clear_memory">Clear Memory</string>
     <string name="clearcontent_title">Remove data and configurations</string>
@@ -104,8 +103,6 @@
     <string name="setting_updates_notification_title">Updates Notification</string>
     <string name="setting_updates_notification_sum">Show new updates notifications</string>
     <string name="clear_dwn_title">Icons</string>
-    <string name="new_choices">New Choices</string>
-    <string name="previous_choices">Previous Choices</string>
     <string name="description">Description</string>
     <string name="add_store">Add Store</string>
     <string name="new_store">Add New Store</string>
@@ -206,7 +203,6 @@
     <string name="search_for_apps">Search for apps...</string>
     <string name="restart_aptoide">Please restart the application to change theme</string>
     <string name="exclude_update">Ignore Update</string>
-    <string name="check_this_app">Check this application from Aptoide</string>
     <string name="trusted">Trusted</string>
     <string name="warning">Warning</string>
     <string name="downgrade">Downgrade</string>
@@ -294,5 +290,13 @@
     <string name="wizard_rollback">2- Rollback</string>
     <string name="wizard_widget">3- Widget</string>
     <string name="wizard_new_account">4- Account Manager</string>
+    <string name="create_username">Username</string>
+    <string name="all_stores">All Stores</string>
+    <string name="incompatible_store">Incompatible store</string>
+    <string name="incompatible_store_msg">This store is not yet incompatible with this version of Aptoide. Please wait
+        some days until we rebuild all stores.
+    </string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="website">Website</string>
 
 </resources>

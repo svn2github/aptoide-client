@@ -121,9 +121,9 @@ public abstract class FragmentAppView extends Fragment {
                 }
 
                 publisherContainer.setVisibility(View.VISIBLE);
-                publisherEmail.setText("E-Mail: " + event.getDeveloper().getInfo().getEmail());
-                publisherPrivacyPolicy.setText("Privacy Policy: " + event.getDeveloper().getInfo().getPrivacy_policy());
-                publisherWebsite.setText("Website: " + event.getDeveloper().getInfo().getWebsite());
+                publisherEmail.setText(getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail());
+                publisherPrivacyPolicy.setText(getString(R.string.privacy_policy) +": " + event.getDeveloper().getInfo().getPrivacy_policy());
+                publisherWebsite.setText(getString(R.string.website) +": " + event.getDeveloper().getInfo().getWebsite());
             }
 
 
