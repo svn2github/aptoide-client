@@ -545,6 +545,7 @@
 
     <style name="ButtonBarButton">
         <item name="android:minHeight">45dp</item>
+        <item name="android:textColor">?attr/android:textColorPrimary</item>
     </style>
 
     <style name="WizardPageTitle">

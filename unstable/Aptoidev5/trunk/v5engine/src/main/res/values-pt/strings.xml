@@ -71,7 +71,7 @@
   <string name="clear_cache_sucess">O conteúdo foi apagado com sucesso</string>
   <string name="clearcache_sum">Apaga a cache (icons, screenshots) do cartão SD.</string>
   <string name="clearcontent_sum">Apaga a informação do cartão SD.</string>
-  <string name="about_site">Site:</string>
+  <string name="about_site">Página web:</string>
   <string name="about_mail">Contacto:</string>
   <string name="about_us">Acerca de nós</string>
   <string name="settings_maxFileCache_sum">Defina um limite máximo para guardar os seus ficheiros</string>
@@ -268,16 +268,19 @@
   <string name="wizard_welcome_to_aptoide">1 - Bem-vindo ao Aptoide</string>
   <string name="wizard_what_is_aptoide">Aptoide é um marketplace Android</string>
   <string name="wizard_add_stores">2 - Adicionar lojas</string>
-  <string name="wizard_manage_stores">Os utilizadores podem criar e gerir a sua loja.</string>
+  <string name="wizard_manage_stores">Os utilizadores e programadores podem criar e gerir a sua loja.</string>
   <string name="wizard_search">3 - Procurar milhares de aplicações</string>
-  <string name="wizard_search_local">Pode procurar localmente na aplicação Aptoide</string>
-  <string name="wizard_search_online">Ou procurar mais no nosso website</string>
+  <string name="wizard_search_local">Aplicações disponíveis nas lojas locais</string>
+  <string name="wizard_search_online">Procurar noutras lojas na página Aptoide</string>
   <string name="wizard_new_layout">1- Nova apresentação</string>
   <string name="wizard_new_account">4- Gestão de Conta</string>
   <string name="wizard_add_more_stores">Adicionar novas lojas Android</string>
   <string name="wizard_rollback_description">Reinstalar ou reverter as aplicações</string>
   <string name="wizard_widget_description">Procura rápida de aplicações</string>
   <string name="wizard_account_description">As aplicações Aptoide podem usar o mesmo login</string>
+  <string name="wizard_secure_fast_reliable">Seguro. Rápido. Fidedigno.</string>
+  <string name="wizard_next">Seguinte</string>
+  <string name="wizard_prev">Anterior</string>
   <string name="create_username">Nome de utilizador</string>
   <string name="all_stores">Todas as lojas</string>
   <string name="incompatible_store">Loja incompatível</string>
@@ -286,7 +289,4 @@
   <string name="website">Página web</string>
   <string name="downgrade_requires_uninstall">Requer a desinstalação da aplicação</string>
   <string name="rollback_empty">Sem apps para reverter</string>
-  <string name="secure_fast_reliable">Seguro. Rápido. Fidedigno.</string>
-  <string name="next">Seguinte</string>
-  <string name="prev">Anterior.</string>
 </resources>

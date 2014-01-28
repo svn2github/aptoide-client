@@ -255,7 +255,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
                     md5 = json.getApk().getMd5sum();
                     publishEvents();
-                    invalidateOptionsMenu();
+                    supportInvalidateOptionsMenu();
                     if (!isShown) show(true, true);
 
                     if (isFromActivityResult) {

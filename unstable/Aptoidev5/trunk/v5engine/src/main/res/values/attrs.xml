@@ -67,4 +67,6 @@
 
     <attr name="icAddStoreDrawable" format="reference"/>
 
+    <attr name="icWizardArrowDrawable" format="reference"/>
+
 </resources>

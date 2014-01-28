@@ -74,7 +74,7 @@
                android:layout_marginTop="2dp"
                android:layout_marginBottom="2dp"
                android:layout_margin="5dp"
-               android:src="@drawable/wizard_arrow"
+               android:src="?attr/icWizardArrowDrawable"
                android:visibility="gone"
                android:layout_alignParentRight="true"
                android:layout_centerVertical="true"/>

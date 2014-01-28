@@ -7,105 +7,51 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:facebook="http://schemas.android.com/apk/res-auto"
             android:id="@+id/scroller"
             android:layout_width="fill_parent"
             android:layout_height="match_parent">
 
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="20dp"
+                  android:layout_marginBottom="20dp"
+                  android:orientation="vertical">
 
 
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="5dp">
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:padding="5dp">
 
-            <com.facebook.widget.LoginButton
-                    android:id="@+id/fb_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    facebook:confirm_logout="false"
-                    facebook:fetch_user_info="true"
-                    android:layout_margin="4dp"/>
-
-            <com.google.android.gms.common.SignInButton
-                    android:id="@+id/g_sign_in_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-            <View android:layout_width="fill_parent"
-                  android:layout_height="1dip"
-                  android:background="@android:color/darker_gray" android:layout_weight="1"
-                  android:layout_gravity="center"/>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/or"
-                    android:gravity="center"
-                    android:id="@+id/textView" android:layout_gravity="center" android:layout_weight="1"/>
-
-            <View android:layout_width="fill_parent"
-                  android:layout_height="1dip"
-                  android:background="@android:color/darker_gray" android:layout_weight="1"
-                  android:layout_gravity="center"/>
-
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="5dp">
-
-            <EditText
-                    android:id="@+id/username"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/username"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true" />
+            <EditText android:id="@+id/username"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:hint="@string/username"
+                      android:inputType="textEmailAddress"
+                      android:singleLine="true"/>
 
 
-            <EditText
-                    android:id="@+id/password"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:hint="@string/password"
-                    android:singleLine="true"/>
+            <EditText android:id="@+id/password"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:inputType="textPassword"
+                      android:hint="@string/password"
+                      android:singleLine="true"/>
 
-            <CheckBox
-                    android:id="@+id/show_login_passwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/showpass"
-                    android:checked="false"/>
+            <CheckBox android:id="@+id/show_login_passwd"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/showpass"
+                      android:checked="false"/>
 
         </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/login_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <LinearLayout android:id="@+id/login_button"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
 
-            <Button
-                    android:id="@+id/button_login"
-
+            <Button android:id="@+id/button_login"
                     android:layout_height="wrap_content"
                     style="?attr/customButtonColor"
                     android:layout_gravity="right"
@@ -114,28 +60,25 @@
                     android:layout_width="match_parent"/>
         </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/user_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <LinearLayout android:id="@+id/user_layout"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
 
-            <TextView
-                    android:id="@+id/new_to_aptoide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:onClick="createUser"
-                    android:padding="10dp"
-                    android:text="@string/dont_have_an_account"/>
+            <TextView android:id="@+id/new_to_aptoide"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_horizontal"
+                      android:onClick="createUser"
+                      android:padding="10dp"
+                      android:text="@string/dont_have_an_account"/>
 
-            <TextView
-                    android:id="@+id/forgot_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="@string/forgot_passwd"/>
+            <TextView android:id="@+id/forgot_password"
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:layout_gravity="center_horizontal"
+                      android:padding="10dp"
+                      android:text="@string/forgot_passwd"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

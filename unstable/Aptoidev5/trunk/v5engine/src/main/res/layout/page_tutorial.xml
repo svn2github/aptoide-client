@@ -41,7 +41,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackground"
-                android:text="@string/prev" />
+                android:text="@string/wizard_prev" />
 
         <View
                 android:layout_width="1dp"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:text="@string/next" />
+                android:text="@string/wizard_next" />
     </LinearLayout>
 
 

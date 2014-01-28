@@ -71,7 +71,7 @@ public class Wizard {
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_aptoide);
             TextView more_text = (TextView) view.findViewById(R.id.more_text);
-            more_text.setText(getString(R.string.secure_fast_reliable));
+            more_text.setText(getString(R.string.wizard_secure_fast_reliable));
         }
 
         @Override

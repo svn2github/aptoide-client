@@ -74,7 +74,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         final String serverId = "316068701674.apps.googleusercontent.com";
 
 
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -95,22 +94,22 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     });
 
                 } catch (IOException e) {
-                    if(mPlusClient != null && mPlusClient.isConnected()){
+                    if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
                     e.printStackTrace();
-                }catch (UserRecoverableAuthException e){
+                } catch (UserRecoverableAuthException e) {
                     startActivityForResult(e.getIntent(), 90);
                 } catch (GoogleAuthException e) {
                     e.printStackTrace();
-                    if(mPlusClient != null && mPlusClient.isConnected()){
+                    if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
-                    if(mPlusClient != null && mPlusClient.isConnected()){
+                    if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
@@ -167,7 +166,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     }
 
-    public enum Mode {APTOIDE, GOOGLE, FACEBOOK};
+    public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
+
+    ;
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -207,7 +208,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     };
 
 
-
     /**
      * Called when the activity is first created.
      */
@@ -216,11 +216,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_login);
-        findViewById(R.id.g_sign_in_button).setOnClickListener(this);
-        mConnectionProgressDialog = new ProgressDialog(this);
-        mConnectionProgressDialog.setMessage("Signing in...");
 
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
+
+            findViewById(R.id.g_sign_in_button).setOnClickListener(this);
+            mConnectionProgressDialog = new ProgressDialog(this);
+            mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
+
 
             uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
             uiLifecycleHelper.onCreate(savedInstanceState);
@@ -235,7 +237,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
         if (accountName != null) {
-            ((EditText)findViewById(R.id.username)).setText(accountName);
+            ((EditText) findViewById(R.id.username)).setText(accountName);
         }
 
 
@@ -243,7 +245,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
         checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     password_box.setTransformationMethod(null);
                 } else {
                     password_box.setTransformationMethod(new PasswordTransformationMethod());
@@ -255,8 +257,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = ((EditText)findViewById(R.id.username)).getText().toString();
-                String password = ((EditText)findViewById(R.id.password)).getText().toString();
+                String username = ((EditText) findViewById(R.id.username)).getText().toString();
+                String password = ((EditText) findViewById(R.id.password)).getText().toString();
                 submit(Mode.APTOIDE, username, password, null);
             }
         });
@@ -294,13 +296,17 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        uiLifecycleHelper.onDestroy();
+        if (Build.VERSION.SDK_INT >= 8) {
+            uiLifecycleHelper.onDestroy();
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        uiLifecycleHelper.onSaveInstanceState(outState);
+        if(Build.VERSION.SDK_INT>=8){
+            uiLifecycleHelper.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -310,14 +316,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         if (requestCode == REQUEST_CODE_RESOLVE_ERR && resultCode == RESULT_OK) {
             mConnectionResult = null;
             mPlusClient.connect();
-        }else{
+        } else {
             if (requestCode == 90 && resultCode == RESULT_OK) {
                 mPlusClient.connect();
             }
         }
+        if(uiLifecycleHelper!=null){
             uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
-
-
+        }
 
 
         // The sign up activity returned that the user has successfully created an account
@@ -346,21 +352,24 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onResume() {
         super.onResume();
-        uiLifecycleHelper.onResume();
+        if (Build.VERSION.SDK_INT >= 8) {
+            uiLifecycleHelper.onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        uiLifecycleHelper.onPause();
+        if (Build.VERSION.SDK_INT >= 8) {
+            uiLifecycleHelper.onPause();
+        }
     }
-
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(mPlusClient!=null && mPlusClient.isConnected()){
+        if (mPlusClient != null && mPlusClient.isConnected()) {
             mPlusClient.disconnect();
         }
         spiceManager.shouldStop();
@@ -387,7 +396,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             public void onRequestFailure(SpiceException e) {
                 Toast.makeText(getBaseContext(), "An error ocurred.", Toast.LENGTH_SHORT).show();
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                if(pd!=null){
+                if (pd != null) {
                     pd.dismiss();
                 }
             }
@@ -396,7 +405,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
 
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                if(pd!=null){
+                if (pd != null) {
                     pd.dismiss();
                 }
 
@@ -413,8 +422,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     final Intent res = new Intent();
                     res.putExtras(data);
                     finishLogin(res);
-                }else{
-                    for(String error: checkUserCredentialsJson.getErrors()){
+                } else {
+                    for (String error : checkUserCredentialsJson.getErrors()) {
                         Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -465,11 +474,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         return super.onOptionsItemSelected(item);
     }
 
-    public static boolean isLoggedIn(Context context){
+    public static boolean isLoggedIn(Context context) {
 
         AccountManager manager = AccountManager.get(context);
 
-        return manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length!=0;
+        return manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length != 0;
 
     }
 

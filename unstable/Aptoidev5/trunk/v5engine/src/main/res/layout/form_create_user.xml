@@ -61,8 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/accept_terms"
                     android:gravity="center"
-                    android:padding="5dp"
-                    android:checked="true"/>
+                    android:padding="5dp"/>
         </LinearLayout>
 
         <LinearLayout
