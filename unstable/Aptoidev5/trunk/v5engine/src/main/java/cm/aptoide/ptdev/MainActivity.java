@@ -376,8 +376,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 //        TextView login_email, login_store;
 //        accountManager=AccountManager.get(this);
 //        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-            mDrawerList.addHeaderView(header, null, false);
+//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+//            mDrawerList.addHeaderView(header, null, false);
 //
 //            login_email = (TextView) header.findViewById(R.id.login_email);
 //            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
