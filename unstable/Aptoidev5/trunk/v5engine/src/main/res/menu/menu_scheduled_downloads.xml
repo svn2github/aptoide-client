@@ -7,7 +7,7 @@
           android:icon="@drawable/ic_action_cancel_dark" />
 
     <item android:id="@+id/menu_invert"
-          app:showAsAction="never"
+          app:showAsAction="ifRoom"
           android:title="@string/schDown_invertselection"
           android:icon="@drawable/ic_action_undo_dark"/>
 </menu>

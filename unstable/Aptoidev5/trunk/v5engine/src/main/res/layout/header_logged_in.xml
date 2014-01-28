@@ -6,35 +6,32 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="55dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:padding="10dp">
 
-    <ImageView
-            android:id="@+id/image_header"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:background="@color/transparent_black"/>
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/header_blur"/>
+    <cm.aptoide.ptdev.views.RoundedImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_avatar"
+            android:src="@drawable/user_default"
+            android:layout_gravity="left|center"/>
 
     <RelativeLayout
             android:id="@+id/login_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="bottom" android:layout_margin="5dp">
+            android:layout_gravity="center"
+            android:layout_margin="5dp">
 
         <TextView
                 android:id="@+id/login_store"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:text="teresa-deus"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -47,7 +44,6 @@
                 android:layout_gravity="center_horizontal"
                 android:scrollbars="vertical"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
                 android:textStyle="italic"
                 android:text="teresa.deus@aptoide.com"
                 android:singleLine="true"
@@ -56,6 +52,6 @@
                 android:layout_below="@+id/login_store"
                 android:layout_marginLeft="5dp"/>
 
-    </RelativeLayout>
-</FrameLayout>
 
+    </RelativeLayout>
+</LinearLayout>

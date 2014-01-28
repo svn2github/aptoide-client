@@ -198,15 +198,15 @@
                     />
         </LinearLayout>
 
-        <ImageView
-                android:id="@+id/show_all_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_arrow_down"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:contentDescription="@null"
-                android:layout_gravity="right|center_vertical"/>
+        <!--<ImageView-->
+                <!--android:id="@+id/show_all_description"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ic_more_arrow_down"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:contentDescription="@null"-->
+                <!--android:layout_gravity="right|center_vertical"/>-->
 
         <!--<TextView-->
         <!--android:layout_width="fill_parent"-->

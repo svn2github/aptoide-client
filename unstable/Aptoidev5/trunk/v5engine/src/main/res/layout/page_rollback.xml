@@ -16,6 +16,8 @@
               android:layout_height="match_parent"
               android:gravity="center"
               android:visibility="gone"
-              android:textAppearance="?android:attr/textAppearanceLarge" />
+              android:text="@string/rollback_empty"
+              android:layout_margin="5dp"
+              android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </FrameLayout>

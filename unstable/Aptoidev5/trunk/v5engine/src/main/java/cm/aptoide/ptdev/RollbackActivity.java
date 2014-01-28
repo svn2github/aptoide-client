@@ -49,7 +49,6 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
 
         lView.setAdapter(adapter);
 
-        getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

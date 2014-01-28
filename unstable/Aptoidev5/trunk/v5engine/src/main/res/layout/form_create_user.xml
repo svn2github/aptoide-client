@@ -55,12 +55,14 @@
                     android:hint="@string/password"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <CheckBox
-                    android:id="@+id/show_create_passwd"
+            <TextView
+                    android:id="@+id/accept_terms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/accept_terms"
-                    android:checked="false"/>
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:checked="true"/>
         </LinearLayout>
 
         <LinearLayout

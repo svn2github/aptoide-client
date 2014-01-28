@@ -57,7 +57,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -70,6 +70,8 @@ public class Wizard {
             description.setText(getString(R.string.wizard_what_is_aptoide));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_aptoide);
+            TextView more_text = (TextView) view.findViewById(R.id.more_text);
+            more_text.setText(getString(R.string.secure_fast_reliable));
         }
 
         @Override
@@ -84,6 +86,8 @@ public class Wizard {
         TextView title;
         TextView description;
         ImageView image;
+        ImageView arrow;
+        TextView add_more_stores;
 
         public static NewToAptoide2 newInstace() {
             NewToAptoide2 fragment = new NewToAptoide2();
@@ -97,7 +101,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -121,6 +125,12 @@ public class Wizard {
             description.setText(getString(R.string.wizard_manage_stores));
             image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_stores);
+
+            arrow = (ImageView) view.findViewById(R.id.arrow);
+            arrow.setVisibility(View.VISIBLE);
+//            add_more_stores = (TextView) view.findViewById(R.id.add_more_stores);
+//            add_more_stores.setVisibility(View.VISIBLE);
+//            add_more_stores.setText(getString(R.string.wizard_add_more_stores));
         }
 
         @Override
@@ -150,7 +160,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_to_aptoide, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -185,7 +195,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -196,6 +206,7 @@ public class Wizard {
             title.setText(getString(R.string.wizard_new_layout));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_new_layout);
+
         }
 
         @Override
@@ -216,7 +227,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -228,6 +239,8 @@ public class Wizard {
             title.setText(getString(R.string.wizard_rollback));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_rollback);
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_rollback_description));
         }
 
         @Override
@@ -248,7 +261,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -260,6 +273,10 @@ public class Wizard {
             title.setText(getString(R.string.wizard_widget));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_widget);
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_widget_description));
+            ImageView arrow = (ImageView) view.findViewById(R.id.arrow);
+            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -280,7 +297,7 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial_new_feature, container, false);
+            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
             return view;
         }
 
@@ -291,6 +308,8 @@ public class Wizard {
             title.setText(getString(R.string.wizard_new_account));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_new_account);
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_account_description));
         }
 
         @Override

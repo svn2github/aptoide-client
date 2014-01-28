@@ -34,8 +34,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:id="@+id/textView" android:layout_margin="10dp"/>
 
 
-        <LinearLayout
-                android:layout_width="wrap_content"
+        <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal">
@@ -43,21 +43,25 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             <EditText
                     android:id="@+id/edit_store_uri"
                     android:hint="@string/store_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:maxLines="1"
                     android:inputType="textUri"
                     android:singleLine="true"
-                    android:layout_weight="0.2"/>
+                    android:layout_toLeftOf="@+id/button_dialog_add_store"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
 
 
             <Button android:id="@+id/button_dialog_add_store"
                     style="@style/WidgetButtonCustomGray"
-                    android:text="@string/add_store"
+                    android:text="@string/add"
                     android:drawableLeft="?attr/icAddStoreDrawable"
-                    android:drawablePadding="4dp"/>
+                    android:drawablePadding="4dp"
+                    android:layout_width="wrap_content" android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <View android:layout_width="match_parent"
               android:layout_height="1dp"
@@ -71,7 +75,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:layout_marginLeft="10dp"/>
 
         <Button android:id="@+id/button_top_stores"
-
                 android:layout_height="wrap_content"
                 style="?attr/customButtonColor"
                 android:layout_width="match_parent"

@@ -38,7 +38,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
             if (response != null) {
                 String message = new String(response.getBody(), "UTF-8");
-                handleMessage(message);
+                //handleMessage(message);
                 channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
             }
 

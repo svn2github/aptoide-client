@@ -7,11 +7,9 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -81,7 +79,7 @@ public class UpdatesAdapter extends CursorAdapter {
         if(holder==null){
             holder = new AppViewHolder();
             holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            holder.overFlow = (ImageView) view.findViewById(R.id.manage_icon);
+            holder.manageIcon = (ImageView) view.findViewById(R.id.manage_icon);
             holder.appName = (TextView) view.findViewById(R.id.app_name);
             holder.versionName = (TextView) view.findViewById(R.id.app_version);
             view.setTag(holder);
@@ -104,10 +102,11 @@ public class UpdatesAdapter extends CursorAdapter {
 
                 final long id = cursor.getLong(cursor.getColumnIndex("_id"));
 
-                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+                holder.manageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity)context).installApp(id);
+                        ((MainActivity) context).installApp(id);
+                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
                 break;
@@ -120,7 +119,7 @@ public class UpdatesAdapter extends CursorAdapter {
 
     public static class AppViewHolder{
         ImageView appIcon;
-        ImageView overFlow;
+        ImageView manageIcon;
         TextView appName;
         TextView versionName;
         TextView downloads;

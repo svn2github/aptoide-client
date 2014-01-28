@@ -19,6 +19,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
@@ -256,6 +257,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                                     download.setIcon(schDown.getIconPath());
                                     download.setPackageName(schDown.getApkid());
                                     downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -332,7 +334,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         } else if (i == R.id.home) {
             finish();
         } else if (i == R.id.menu_remove) {
-
+            Log.d("ScheduledDownloadsActivity-onOptionsItemSelected", "remove");
             for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                 if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
                     db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);

@@ -264,14 +264,6 @@
         <item name="android:src">@drawable/ic_action_discard_dark</item>
     </style>
 
-    <style name="updateLight">
-        <item name="android:src">@drawable/ic_action_update</item>
-    </style>
-
-    <style name="updateDark">
-        <item name="android:src">@drawable/ic_action_update_dark</item>
-    </style>
-
     <style name="aboutLight">
         <item name="android:drawableLeft">@drawable/ic_action_about</item>
     </style>
@@ -551,5 +543,17 @@
     <style name="alert_dialog_style_light" parent="android:Theme.Dialog"/>
     <style name="alert_dialog_style_dark" parent="android:Theme.Dialog"/>
 
+    <style name="ButtonBarButton">
+        <item name="android:minHeight">45dp</item>
+    </style>
+
+    <style name="WizardPageTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">?attr/customColor</item>
+    </style>
 
 </resources>

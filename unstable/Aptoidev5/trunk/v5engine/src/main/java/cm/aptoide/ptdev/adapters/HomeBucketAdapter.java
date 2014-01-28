@@ -10,6 +10,7 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MainActivity;
@@ -88,6 +89,8 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             @Override
             public void onClick(View v) {
                 showPopup(v, item.getId());
+                Toast.makeText(getContext(), getContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+
             }
         });
         v.setOnClickListener(new View.OnClickListener() {

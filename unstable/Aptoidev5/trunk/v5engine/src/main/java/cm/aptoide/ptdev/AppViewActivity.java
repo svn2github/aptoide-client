@@ -333,7 +333,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setPackageName(this.package_name);
 
             service.startDownloadFromJson(json, id, download);
-
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -707,7 +707,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.menu_share) {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"!");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, wUrl);
 
             if (wUrl != null) {
@@ -1222,7 +1222,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             try {
                 getPackageManager().getPackageInfo(package_name, 0);
 
-                Toast.makeText(this, "Downgrade requires Application uninstall", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.downgrade_requires_uninstall), Toast.LENGTH_SHORT).show();
 
             } catch (PackageManager.NameNotFoundException e) {
                 isFromActivityResult = true;

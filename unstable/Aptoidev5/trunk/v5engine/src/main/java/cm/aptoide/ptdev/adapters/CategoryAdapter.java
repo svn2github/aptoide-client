@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -80,7 +81,7 @@ public class CategoryAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, final Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         int count = cursor.getInt(cursor.getColumnIndex("count"));
@@ -119,6 +120,7 @@ public class CategoryAdapter extends CursorAdapter {
                     @Override
                     public void onClick(View v) {
                         showPopup(v, id);
+                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
                 break;

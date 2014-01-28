@@ -1,4 +1,4 @@
-package cm.aptoide.ptdev.utils;
+package cm.aptoide.ptdev.views;
 
 import android.content.Context;
 import android.content.res.Resources;

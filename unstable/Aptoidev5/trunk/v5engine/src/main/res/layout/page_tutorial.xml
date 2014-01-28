@@ -14,26 +14,51 @@
     <FrameLayout android:id="@+id/wizard_fragment"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:layout_above="@+id/back"/>
+                 android:layout_above="@+id/linearLayout"/>
 
 
-    <Button android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:drawableLeft="@drawable/ic_action_previous_item"
+    <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/linearLayout"
+            android:background="?android:attr/listDivider" />
+
+    <LinearLayout
             android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"/>
-
-    <Button android:id="@+id/next"
-            android:layout_width="wrap_content"
+            android:padding="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Next"
-            android:drawableRight="@drawable/ic_action_next_item"
-            android:background="@android:color/transparent"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout">
+
+        <Button
+                android:id="@+id/back"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackground"
+                android:text="@string/prev" />
+
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?android:attr/listDivider" />
+
+        <Button
+                android:id="@+id/next"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:text="@string/next" />
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>

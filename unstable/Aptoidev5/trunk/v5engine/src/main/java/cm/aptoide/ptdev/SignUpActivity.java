@@ -44,7 +44,6 @@ public class SignUpActivity extends ActionBarActivity{
             }
         });
 
-        getSupportActionBar().setTitle(getString(R.string.new_to_aptoide));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
