@@ -26,17 +26,17 @@
 
         <ImageView
                 android:contentDescription="@null"
-                android:id="@+id/home_icon"
+                android:id="@+id/app_icon"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:layout_centerHorizontal="true"/>
 
-        <ImageButton
-                android:onClick="showPopup"
-                android:id="@+id/ic_action"
-                style="@style/overflowMenuButton"
-                android:layout_marginLeft="-8dp"
-                android:layout_below="@+id/home_icon"/>
+        <!--<ImageButton-->
+                <!--android:onClick="showPopup"-->
+                <!--android:id="@+id/ic_action"-->
+                <!--style="@style/overflowMenuButton"-->
+                <!--android:layout_marginLeft="-8dp"-->
+                <!--android:layout_below="@+id/home_icon"/>-->
 
         <TextView
                 android:id="@+id/app_category"
@@ -59,7 +59,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/home_icon"
+                android:layout_below="@+id/app_icon"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_toLeftOf="@+id/ic_action"/>

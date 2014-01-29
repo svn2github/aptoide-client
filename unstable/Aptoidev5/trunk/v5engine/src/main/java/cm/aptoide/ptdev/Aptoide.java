@@ -91,10 +91,15 @@ public class Aptoide extends Application {
         Aptoide.configuration = configuration;
     }
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+
+
+
 
         ACRA.init(this);
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);

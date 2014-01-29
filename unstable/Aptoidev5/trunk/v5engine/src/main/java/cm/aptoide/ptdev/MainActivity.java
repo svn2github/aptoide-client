@@ -44,6 +44,7 @@ import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
+import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
@@ -159,6 +160,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         if(executorService!=null){
             executorService.shutdownNow();
         }
+        stopService(new Intent(this, RabbitMqService.class));
     }
 
     @Override
@@ -222,6 +224,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
+
+
         mContext = this;
         setContentView(R.layout.activity_main);
 
@@ -247,6 +251,21 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
         if (savedInstanceState == null) {
 
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String queueName = sharedPreferences.getString("queueName", null);
+
+
+            if(queueName!=null){
+                Intent serviceIntent = new Intent(this, RabbitMqService.class);
+                serviceIntent.putExtra("host", "frontend6.aptoide.com");
+                serviceIntent.putExtra("queueName", queueName);
+                startService(serviceIntent);
+            }
+
+
+
+
+
             executeWizard();
 
             executorService.execute(new Runnable() {
@@ -254,7 +273,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 public void run() {
                     try {
                         waitForServiceToBeBound();
-                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors.xml");
+                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=us");
                         service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -368,40 +387,12 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mMenuAdapter = new MenuListAdapter(mContext);
 
         //Login Header
-//        TextView login_email, login_store;
-//        accountManager=AccountManager.get(this);
-//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-//            mDrawerList.addHeaderView(header, null, false);
-//
-//            login_email = (TextView) header.findViewById(R.id.login_email);
-//            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
-//
-//            login_store = (TextView) header.findViewById(R.id.login_store);
-//            login_store.setText("");
-//        }
 
-//        TextView login_email, login_store;
-//        accountManager=AccountManager.get(this);
-//
-//        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-//            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-//
-//            login_email = (TextView) header.findViewById(R.id.login_email);
-//            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
-//
-//            login_store = (TextView) header.findViewById(R.id.login_store);
-//            login_store.setText("");
-//            mDrawerList.addHeaderView(header, null, false);
-//        }
 
-        mDrawerList.setAdapter(mMenuAdapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -410,13 +401,10 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-                // TODO Auto-generated method stub
                 super.onDrawerClosed(view);
             }
 
             public void onDrawerOpened(View drawerView) {
-                // TODO Auto-generated method stub
-                // Set the title on the action when drawer open
                 getSupportActionBar().setTitle(mDrawerTitle);
                 super.onDrawerOpened(drawerView);
             }
@@ -604,8 +592,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     }
 
     protected void waitForServiceToBeBound() throws InterruptedException {
-
-
         lock.lock();
         try {
             while (service == null) {
@@ -690,50 +676,77 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem((int) id);
+
+            int switchId = (int) id;
+
+            switch (switchId) {
+                case 0:
+                    Log.d("MenuDrawer-position", "pos: " + position);
+                    Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
+                    startActivity(loginIntent);
+                    break;
+                case 1:
+                    Log.d("MenuDrawer-position", "pos: " + position);
+                    Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
+                    startActivity(rollbackIntent);
+                    break;
+                case 2:
+                    Log.d("MenuDrawer-position", "pos: "+position);
+                    Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
+                    startActivity(scheduledIntent);
+                    break;
+                case 3:
+                    Log.d("MenuDrawer-position", "pos: "+position);
+                    Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
+                    startActivity(excludedIntent);
+                    break;
+                case 4:
+                    Log.d("MenuDrawer-position", "pos: " + position);
+                    showFacebook();
+                    break;
+                case 5:
+                    Log.d("MenuDrawer-position", "pos: " + position);
+                    showTwitter();
+                    break;
+                default:
+                    break;
+            }
+
+            mDrawerLayout.closeDrawer(mDrawerList);
+
         }
+
     }
 
-    private void selectItem(int position) {
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // Locate Position
-        switch (position) {
-            case 0:
-                Log.d("MenuDrawer-position", "pos: " + position);
-                Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
-                startActivity(loginIntent);
-                break;
-            case 1:
-                Log.d("MenuDrawer-position", "pos: " + position);
-                Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
-                startActivity(rollbackIntent);
-                break;
-            case 2:
-                Log.d("MenuDrawer-position", "pos: "+position);
-                Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
-                startActivity(scheduledIntent);
-                break;
-            case 3:
-                Log.d("MenuDrawer-position", "pos: "+position);
-                Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
-                startActivity(excludedIntent);
-                break;
-            case 4:
-                Log.d("MenuDrawer-position", "pos: " + position);
-                showFacebook();
-                break;
-            case 5:
-                Log.d("MenuDrawer-position", "pos: " + position);
-                showTwitter();
-                break;
-            default:
-                break;
+        TextView login_email, login_store;
+        accountManager = AccountManager.get(this);
+
+        if(mDrawerList.getHeaderViewsCount()>0){
+            View v = mDrawerList.getChildAt(0);
+            mDrawerList.removeHeaderView(v);
         }
+        mDrawerList.setAdapter(null);
+        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
 
-        //mDrawerList.setItemChecked(position, false);
+            mDrawerList.addHeaderView(header, null, false);
 
-        mDrawerLayout.closeDrawer(mDrawerList);
+            login_email = (TextView) header.findViewById(R.id.login_email);
+            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+
+            //login_store = (TextView) header.findViewById(R.id.login_store);
+            //login_store.setText("");
+
+        }
+        mDrawerList.setAdapter(mMenuAdapter);
+
     }
 
     @Override

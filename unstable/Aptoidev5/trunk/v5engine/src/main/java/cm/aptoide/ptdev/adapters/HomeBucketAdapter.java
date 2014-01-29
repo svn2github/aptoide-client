@@ -65,7 +65,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
             holder.category= (TextView) v.findViewById(R.id.app_category);
             holder.name = (TextView) v.findViewById(R.id.app_name);
-            holder.icon = (ImageView) v.findViewById(R.id.home_icon);
+            holder.icon = (ImageView) v.findViewById(R.id.app_icon);
             v.setTag(holder);
         } else {
             v = convertView;

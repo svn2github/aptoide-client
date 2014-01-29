@@ -122,7 +122,7 @@ public class AptoideUtils {
          * @return the screenSize
          */
         static public int getScreenSize(Context context) {
-            return context.getResources().getConfiguration().screenLayout& Configuration.SCREENLAYOUT_SIZE_MASK;
+            return context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         }
 
         static public int getNumericScreenSize(Context context) {

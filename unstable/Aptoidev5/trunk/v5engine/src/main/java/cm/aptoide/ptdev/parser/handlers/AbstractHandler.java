@@ -23,6 +23,16 @@ import java.util.HashMap;
  */
 public abstract class AbstractHandler extends DefaultHandler2 {
 
+    protected static class Category{
+
+        int real_id;
+        String name;
+        int parent;
+        int order;
+
+    }
+
+    Category category;
 
     protected final HashMap<Integer, Integer> categoriesIds = new HashMap<Integer, Integer>();
 

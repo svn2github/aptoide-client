@@ -135,7 +135,12 @@ public class Schema {
     @TableDefinition(
 
             uniques = @TableDefinition.Composite_Unique(
-                    fields = {Category_Apk.COLUMN_CATEGORY_ID, Category_Apk.COLUMN_APK_ID, Category_Apk.COLUMN_REPO_ID})
+                    fields = {Schema.Category_Apk.COLUMN_CATEGORY_ID, Schema.Category_Apk.COLUMN_APK_ID, Schema.Category_Apk.COLUMN_REPO_ID}),
+            indexes = {
+                    @TableDefinition.Index(index_name = "category_apk_id_apk",
+                            keys = { @TableDefinition.Key (field = Category_Apk.COLUMN_APK_ID) }
+                    )
+            }
     )
 
     public static class Category_Apk {

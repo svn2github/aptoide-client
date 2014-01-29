@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +68,15 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         }
 
         final RelatedApkJson.Item item = getItem(position);
+        Log.d("Aptoide-Related", "adding item " + item.getName() + " " + item.getVername() + " " + item.getRepo());
+
+
         holder.name.setText(item.getName());
         holder.version.setText(item.getVername());
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
+
+        Log.d("Aptoide-Related", " item " + item.getName() + " " + item.getVername() + " " + item.getRepo());
+
 
         String icon = item.getIcon();
 

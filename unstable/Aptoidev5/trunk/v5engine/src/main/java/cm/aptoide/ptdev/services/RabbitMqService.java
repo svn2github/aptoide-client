@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.services;
 
 import android.app.Service;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -30,21 +32,48 @@ public class RabbitMqService extends Service {
     private ExecutorService thread_pool;
     private AMQConnection connection;
 
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String host = intent.getStringExtra("host");
+                String queueName = intent.getStringExtra("queueName");
+                try {
+                    ConnectionFactory factory = new ConnectionFactory();
+                    factory.setHost(host);
+                    factory.setUsername("public");
+                    factory.setPassword("public");
+                    factory.setConnectionTimeout(6000);
+                    factory.setRequestedHeartbeat(5000);
+                    factory.setVirtualHost("webinstall");
+                    connection = (AMQConnection) factory.newConnection();
+                    newChannel(queueName, new AMQHandler() {
+                        @Override
+                        void handleMessage(String body) {
+                            Log.d("Aptoide-WebInstall", body);
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        onStartCommand(intent, 0, startId);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-
-        String host = intent.getStringExtra("host");
-
-        try {
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(host);
-            factory.setConnectionTimeout(20000);
-            connection = (AMQConnection) factory.newConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         return wBinder;
     }
 
@@ -59,7 +88,13 @@ public class RabbitMqService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
-
+        try {
+            if(channel!=null) channel.abort();
+            connection.disconnectChannel(channel);
+            connection.abort();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         thread_pool.shutdownNow();
     }
 
@@ -78,8 +113,10 @@ public class RabbitMqService extends Service {
         channel = (ChannelN) connection.createChannel();
         channel.queueDeclare(queue_id, true, false, false, null);
         channel.basicQos(0);
+
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(queue_id, false, consumer);
+        task.setConsumer(consumer);
         thread_pool.submit(task);
     }
 
@@ -87,10 +124,9 @@ public class RabbitMqService extends Service {
     public abstract class AMQHandler implements Runnable {
 
         private boolean isRunning = true;
-        private final QueueingConsumer consumer;
+        private QueueingConsumer consumer;
 
-        public AMQHandler(QueueingConsumer consumer) {
-            this.consumer = consumer;
+        public AMQHandler() {
         }
 
         @Override
@@ -101,7 +137,10 @@ public class RabbitMqService extends Service {
                     QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                     String body = new String(delivery.getBody(), Charset.forName("UTF-8"));
                     handleMessage(body);
+                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -114,6 +153,9 @@ public class RabbitMqService extends Service {
             isRunning = running;
         }
 
+        public void setConsumer(QueueingConsumer consumer) {
+            this.consumer = consumer;
+        }
     }
 
 }

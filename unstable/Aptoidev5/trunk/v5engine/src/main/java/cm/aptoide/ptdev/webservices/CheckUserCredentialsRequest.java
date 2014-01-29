@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/checkUserCredentials";
+    String baseUrl = "http://dev.aptoide.com/webservices/checkUserCredentials";
             //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;
@@ -75,11 +75,11 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
         if(registerDevice) {
             parameters.put("device_id", deviceId);
             parameters.put("model", model);
-            parameters.put("sdk", sdk);
-            parameters.put("density", density);
-            parameters.put("cpu", cpu);
-            parameters.put("screen_size", screenSize);
-            parameters.put("open_gl", openGl);
+            parameters.put("maxSdk", sdk);
+            parameters.put("myDensity", density);
+            parameters.put("myCpu", cpu);
+            parameters.put("maxScreen", screenSize);
+            parameters.put("maxGles", openGl);
         }
 
         parameters.put("mode", "json");

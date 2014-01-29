@@ -61,16 +61,7 @@ public class HandlerInfoXml extends AbstractHandler {
     }
 
 
-    protected static class Category{
 
-        int real_id;
-        String name;
-        int parent;
-        int order;
-
-    }
-
-    Category category;
 
     @Override
     protected void loadSpecificElements() {

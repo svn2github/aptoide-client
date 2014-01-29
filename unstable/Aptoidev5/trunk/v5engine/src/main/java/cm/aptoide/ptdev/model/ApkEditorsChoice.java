@@ -53,12 +53,12 @@ public class ApkEditorsChoice extends Apk {
 
 
 
-        values.add(Schema.Featured_Apk.COLUMN_APK_ID);
-        values.add(Schema.Featured_Apk.COLUMN_CATEGORY);
-        values.add(Schema.Featured_Apk.COLUMN_TYPE);
+        values.add(Schema.Category_Apk.COLUMN_APK_ID);
+        values.add(Schema.Category_Apk.COLUMN_CATEGORY_ID);
+        values.add(Schema.Category_Apk.COLUMN_REPO_ID);
 
 
-        statements.add(1, StatementHelper.getInsertStatment(Schema.Featured_Apk.getName(), values));
+        statements.add(1, StatementHelper.getInsertStatment(Schema.Category_Apk.getName(), values));
 
 
         statements.add(2, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
@@ -112,11 +112,16 @@ public class ApkEditorsChoice extends Apk {
 
         }
 
-        try{
-            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{String.valueOf(apkid), getCategory2(), String.valueOf(2)});
-            sqLiteStatements.get(1).executeInsert();
-        }catch (SQLiteException e){
-            throw e;
+        for (Integer catid : getCategoryId()) {
+            try {
+                StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(1), new String[]{
+                        String.valueOf(apkid),
+                        String.valueOf(catid),
+                });
+                sqLiteStatements.get(1).executeInsert();
+            } catch (SQLiteException e) {
+                throw e;
+            }
         }
 
 

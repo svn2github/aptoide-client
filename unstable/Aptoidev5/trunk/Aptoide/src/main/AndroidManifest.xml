@@ -31,6 +31,9 @@
         <activity
                 android:name="com.facebook.LoginActivity"  />
 
+        <activity
+                android:name="cm.aptoide.ptdev.MoreEditorsChoice"  />
+
         <activity android:name="cm.aptoide.ptdev.MainActivity"
                   android:launchMode="singleTask"
                   android:label="AptoideDev"
@@ -44,20 +47,15 @@
                     android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
 
-        <activity android:name="cm.aptoide.ptdev.MyAccountActivity"
-                  android:launchMode="singleTask" />
+        <activity android:name="cm.aptoide.ptdev.MyAccountActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity"
-                  android:launchMode="singleTask" />
+        <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.LoginActivity"
-                  android:launchMode="singleTask" />
+        <activity android:name="cm.aptoide.ptdev.LoginActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.SignUpActivity"
-                  android:launchMode="singleTask" />
+        <activity android:name="cm.aptoide.ptdev.SignUpActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.StoreActivity"
-                  android:launchMode="singleTask"/>
+        <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 
         <activity android:name="cm.aptoide.ptdev.AppViewActivity" />
 
@@ -66,8 +64,7 @@
                   android:launchMode="standard"/>
 
         <activity
-                android:name="cm.aptoide.ptdev.ScreenshotsViewer"
-                android:launchMode="singleTask"/>
+                android:name="cm.aptoide.ptdev.ScreenshotsViewer"/>
 
         <activity
                 android:name="cm.aptoide.ptdev.AllComments"/>
@@ -97,8 +94,7 @@
 
         <activity
                 android:name="cm.aptoide.ptdev.SearchManager"
-                android:exported="false"
-                android:launchMode="singleTask">
+                android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
 

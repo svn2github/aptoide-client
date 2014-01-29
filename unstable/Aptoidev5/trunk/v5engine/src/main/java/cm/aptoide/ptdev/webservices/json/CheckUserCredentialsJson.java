@@ -16,11 +16,9 @@ public class CheckUserCredentialsJson {
     @Key
     private String token;
 
-    @Key
-    private String repo;
 
     @Key
-    private String avatar;
+    private String queueName;
 
     @Key
     private List<String> errors;
@@ -44,28 +42,16 @@ public class CheckUserCredentialsJson {
         this.token = token;
     }
 
-    public String getRepo() {
-        return repo;
-    }
-
-    public void setRepo(String repo) {
-        this.repo = repo;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public List<String> getErrors() {
         return errors;
     }
 
     public void setErrors(List<String> errors) {
         this.errors = errors;
+    }
+
+    public String getQueue() {
+        return queueName;
     }
 
     /*

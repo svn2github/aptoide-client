@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.parser.handlers;
 
+import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkEditorsChoice;
@@ -20,6 +21,8 @@ import java.util.Date;
  */
 public class HandlerEditorsChoiceXml extends AbstractHandler {
 
+
+    private boolean insideCat;
 
     public HandlerEditorsChoiceXml(Database db, long repoId) {
         super(db, repoId);
@@ -64,9 +67,9 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
                 insidePackage = true;
 
                 apk = getApk();
+                apk.addCategoryId(510);
                 repoId = getDb().insertServer(server);
-
-                ((ApkEditorsChoice)apk).setRepoId(getRepoId());
+                apk.setRepoId(getRepoId());
             }
 
             @Override
@@ -78,21 +81,91 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             }
         });
 
-        elements.put("name", new ElementHandler() {
-            @Override
-            public void startElement(Attributes attributes) throws SAXException {
+        elements.put("cat", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+                category = new Category();
+                insideCat = true;
             }
 
             @Override
             public void endElement() throws SAXException {
-                if(insidePackage){
+                getDb().insertCategory(category.name, category.parent, category.real_id, category.order, 0);
+                insideCat = false;
+                Log.d("Aptoide-", "Inserting category");
+            }
+        });
+
+        elements.put("catids", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                for(String catid : sb.toString().split(",")){
+                    apk.addCategoryId(Integer.parseInt(catid));
+                }
+            }
+        });
+
+
+        elements.put("name", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(insideCat){
+                    category.name = sb.toString();
+                }else if(insidePackage){
                     apk.setName(sb.toString());
                 }else{
                     server.setName(sb.toString());
                 }
+            }
+        });
+
+        elements.put("parent", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                try{
+                    category.parent= Integer.parseInt(sb.toString());
+                }catch (NumberFormatException e){
+                    category.parent= 0;
+                }
+
 
             }
         });
+
+        elements.put("order", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                category.order= Integer.parseInt(sb.toString());
+
+            }
+        });
+
+        elements.put("id", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                category.real_id= Integer.parseInt(sb.toString());
+            }
+        });
+
+
 
 
     }

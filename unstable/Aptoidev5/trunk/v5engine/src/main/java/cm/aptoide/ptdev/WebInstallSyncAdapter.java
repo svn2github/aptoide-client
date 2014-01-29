@@ -6,6 +6,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
@@ -48,6 +49,10 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         }
 
+    }
+
+    void handleMessage(String body) {
+        Log.d("Aptoide-WebInstall", body);
     }
 
 

@@ -10,6 +10,7 @@ import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.*;
@@ -479,27 +480,121 @@ public class Database {
 
     }
 
-    public ArrayList<HomeItem> getFeatured(int type, int editorsChoiceBucketSize) {
+    public ArrayList<Collection> getFeatured(int type, int editorsChoiceBucketSize) {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        Cursor c = database.rawQuery("select apk.id_apk, featured_apk.category, apk.name, apk.icon, repo.icons_path   from apk join featured_apk on apk.id_apk=featured_apk.id_apk join repo on apk.id_repo = repo.id_repo where featured_apk.type = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + "", new String[]{String.valueOf(type)});
-        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
-        int size = c.getCount();
-        int itemsToAdd = size - ( size % editorsChoiceBucketSize);
-        int i = 0;
-        for(c.moveToFirst();!c.isAfterLast() && i <  itemsToAdd;c.moveToNext()){
-            i++;
-            String name = c.getString(c.getColumnIndex("name"));
-            String category = c.getString(c.getColumnIndex("category"));
-            String icon = c.getString(c.getColumnIndex("icon"));
-            String iconpath = c.getString(c.getColumnIndex("icons_path"));
-            items.add(new HomeItem(name, category, iconpath + icon, c.getLong(c.getColumnIndex(Schema.Apk.COLUMN_ID))));
+        Cursor c = database.rawQuery("select apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 ", null);
+
+
+        HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
+
+        HashMap<String, ArrayList<HomeItem>> tempList = new HashMap<String, ArrayList<HomeItem>>();
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            String collection = c.getString(c.getColumnIndex("catname"));
+            if(!tempList.containsKey(collection)){
+                ArrayList<HomeItem> itemsList = new ArrayList<HomeItem>();
+                tempList.put(collection, itemsList);
+                tempList2.put(collection, c.getInt(c.getColumnIndex("parentid")));
+            }
+        }
+
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+            String collection = c.getString(c.getColumnIndex("catname"));
+
+            if(tempList.get(collection).size() < editorsChoiceBucketSize){
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long id = c.getLong(c.getColumnIndex("id"));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , id));
+            }
 
         }
 
         c.close();
 
+        ArrayList<Collection> items = new ArrayList<Collection>();
+        for(String collection : tempList.keySet()){
+            Collection collection1 = new Collection();
+            collection1.setName(collection);
+            collection1.setAppsList(tempList.get(collection));
+            collection1.setParentId(tempList2.get(collection));
+            items.add(collection1);
+        }
+
+        return items;
+    }
+
+    public ArrayList<HomeItem> getCollectionFeatured(int id, int bucketSize) {
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
+        Cursor c = database.rawQuery("select apk.id_apk as id, repo.icons_path as iconpath, apk.icon as icon, cat1.id_apk, catparentname.id_real_category as parentid, catname.name as catname,catname.id_real_category as catnameid, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catname.id_real_category = ?", new String[]{String.valueOf(id)});
+        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+
+        int i = 0;
+        for(c.moveToFirst();!c.isAfterLast() && i < bucketSize;c.moveToNext()){
+            i++;
+            String iconPath = c.getString(c.getColumnIndex("iconpath"));
+            String icon = c.getString(c.getColumnIndex("icon"));
+            long apkid = c.getLong(c.getColumnIndex("id"));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, apkid));
+        }
+        c.close();
+
+
+        return items;
+    }
+
+
+
+    public ArrayList<Collection> getSpecificFeatured(int id, int editorsChoiceBucketSize) {
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
+        Cursor c = database.rawQuery("select apk.id_apk as id, repo.icons_path as iconpath, apk.icon as icon, catname.id_real_category as parentid, catname.name as catname, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catparentname.id_real_category = ?", new String[]{String.valueOf(id)});
+        HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
+
+        ArrayList<String> tempList3 = new ArrayList<String>();
+
+        HashMap<String, ArrayList<HomeItem>> tempList = new HashMap<String, ArrayList<HomeItem>>();
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            String collection = c.getString(c.getColumnIndex("catname"));
+            if(!tempList.containsKey(collection)){
+                ArrayList<HomeItem> itemsList = new ArrayList<HomeItem>();
+                tempList.put(collection, itemsList);
+                tempList2.put(collection, c.getInt(c.getColumnIndex("parentid")));
+            }
+        }
+
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            String collection = c.getString(c.getColumnIndex("catname"));
+
+            if(tempList.get(collection).size() < editorsChoiceBucketSize){
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long apkid = c.getLong(c.getColumnIndex("id"));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , apkid));
+            }else{
+                tempList3.add(collection);
+            }
+
+        }
+
+        c.close();
+
+        ArrayList<Collection> items = new ArrayList<Collection>();
+        for(String collection : tempList.keySet()){
+            Collection collection1 = new Collection();
+            collection1.setName(collection);
+            collection1.setAppsList(tempList.get(collection));
+            collection1.setParentId(tempList2.get(collection));
+            collection1.setHasMore(tempList3.contains(collection));
+            items.add(collection1);
+        }
 
         return items;
     }

@@ -105,6 +105,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         return handlerBundleSparseArray.get((int) id)!=null;
     }
 
+    public boolean anyRepoParser(){
+        return handlerBundleSparseArray.size()!=0;
+    }
+
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
     public void startParse(final Database db, final Store store, boolean newStore) {

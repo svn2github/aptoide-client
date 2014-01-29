@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import com.facebook.*;
@@ -53,6 +55,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -215,6 +218,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
+
+
+        if(AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            finish();
+            Toast.makeText(this, "Only one account allowed", Toast.LENGTH_SHORT).show();
+        }else{
+
+
         setContentView(R.layout.form_login);
 
         if (Build.VERSION.SDK_INT >= 8) {
@@ -291,6 +302,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         getSupportActionBar().setTitle(getString(R.string.setcredentials));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -384,7 +396,18 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 
+        request.setRegisterDevice(true);
         request.setMode(mode);
+
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
+        request.setDeviceId(deviceId);
+        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi());
+        request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(LoginActivity.this)));
+        request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(LoginActivity.this)));
+        request.setModel(Build.MODEL);
+        request.setScreenSize(Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(LoginActivity.this)].name().toLowerCase(Locale.ENGLISH));
 
         request.setUser(username);
         request.setPassword(passwordOrToken);
@@ -414,11 +437,19 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                     //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
+                    if(checkUserCredentialsJson.getQueue()!=null){
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("queueName", checkUserCredentialsJson.getQueue())
+                                .commit();
+                    }
+
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
+
                     final Intent res = new Intent();
                     res.putExtras(data);
                     finishLogin(res);
