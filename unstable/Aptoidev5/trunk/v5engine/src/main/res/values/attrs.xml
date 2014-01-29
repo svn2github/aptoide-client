@@ -69,4 +69,8 @@
 
     <attr name="icWizardArrowDrawable" format="reference"/>
 
+    <attr name="icCollapseDrawable" format="reference"/>
+
+    <attr name="icExpandDrawable" format="reference"/>
+
 </resources>

@@ -27,8 +27,8 @@
         <item name="icRatingGoodDrawable">@drawable/ic_action_good</item>
         <item name="icRatingBadDrawable">@drawable/ic_action_bad</item>
 
-        <item name="icWebSiteDrawable">@style/webSiteLight</item>
-        <item name="icEmailDrawable">@style/emailLight</item>
+        <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
+        <item name="icEmailDrawable">@drawable/ic_email</item>
         <item name="icCancelDrawable">@style/cancelLight</item>
         <item name="icUninstallDrawable">@style/uninstallLight</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update</item>
@@ -49,7 +49,8 @@
         <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
         <item name="icWizardArrowDrawable">@drawable/wizard_arrow</item>
-
+        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
+        <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
     </style>
 
 
@@ -78,8 +79,8 @@
         <item name="icRatingGoodDrawable">@drawable/ic_action_good_dark</item>
         <item name="icRatingBadDrawable">@drawable/ic_action_bad_dark</item>
 
-        <item name="icWebSiteDrawable">@style/webSiteDark</item>
-        <item name="icEmailDrawable">@style/emailDark</item>
+        <item name="icWebSiteDrawable">@drawable/ic_action_web_site_dark</item>
+        <item name="icEmailDrawable">@drawable/ic_action_email_dark</item>
         <item name="icCancelDrawable">@style/cancelDark</item>
         <item name="icUninstallDrawable">@style/uninstallDark</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update_dark</item>
@@ -100,6 +101,8 @@
         <item name="icAddStoreDrawable">@drawable/ic_action_new_dark</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept_dark</item>
         <item name="icWizardArrowDrawable">@drawable/wizard_arrow_dark</item>
+        <item name="icCollapseDrawable">@drawable/ic_action_home_collapse_dark</item>
+        <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
 
     </style>
 

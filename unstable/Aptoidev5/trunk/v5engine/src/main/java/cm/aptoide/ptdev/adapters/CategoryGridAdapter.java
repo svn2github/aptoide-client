@@ -108,7 +108,6 @@ public class CategoryGridAdapter extends CursorAdapter {
                     @Override
                     public void onClick(View v) {
                         showPopup(v, id);
-                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
                 holder.appName.setText(Html.fromHtml(name).toString());
@@ -221,8 +220,8 @@ public class CategoryGridAdapter extends CursorAdapter {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-
                 ((StoreActivity)context).installApp(id);
+                Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

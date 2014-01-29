@@ -67,26 +67,20 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         }
         gridView.setOnItemClickListener(this);
                 // We need to create a PullToRefreshLayout manually
-        mPullToRefreshLayout = new PullToRefreshLayout(gridView.getContext());
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 
 
         // We can now setup the PullToRefreshLayout
         ActionBarPullToRefresh.from(getActivity())
-
-                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-
-
-                        // We need to mark the ListView and it's Empty View as pullable
-                        // This is because they are not dirent children of the ViewGroup
+                .options(Options.create()
+                        // Here we make the refresh scroll distance to 75% of the GridView height
+                        .scrollDistance(.75f)
+                        .build())
                 .allChildrenArePullable()
-                        // We can now complete the setup as desired
-
                 .listener(this)
+                        // Here we'll set a custom ViewDelegate
                 .useViewDelegate(GridView.class, new AbsListViewDelegate())
-                .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
                 .setup(mPullToRefreshLayout);
-
-
 
     }
 

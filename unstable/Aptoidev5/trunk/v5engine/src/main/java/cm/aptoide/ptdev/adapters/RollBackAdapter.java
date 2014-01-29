@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,13 +75,29 @@ public class RollBackAdapter extends CursorAdapter {
 
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
         Date date = new Date(timeStamp * 1000);
+
         final String appState = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION));
-        holder.appState.setText(appState + " at " + timeFormat.format(date));
+
+        String appStateString = null;
+        int appNameRes = 0;
+        try {
+            appNameRes = EnumRollbackState.states.get(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION)));
+        } catch (Exception e) {
+            appStateString = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION));
+            Log.d("MainActivity-RollbackAdapter", "RollbackAdapter App state " + appStateString);
+        }
+        if (appStateString == null) {
+            appStateString = context.getString(appNameRes);
+        }
+
+
+        holder.appState.setText(appStateString+" "+context.getString(R.string.at_time, timeFormat.format(date)));
+
         final String packageName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_APKID));
         final String md5sum = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_MD5));
         final String previousVersion = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION));
 
-        holder.action.setText(getActionFromState(appState));
+        holder.action.setText(getActionFromState(appState, context));
         holder.action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,15 +131,15 @@ public class RollBackAdapter extends CursorAdapter {
 
     }
 
-    private static String getActionFromState(String appState) {
+    private static String getActionFromState(String appState, Context context) {
         if(RollBackItem.Action.INSTALLED.toString().equals(appState)) {
-            return "Uninstall";
+            return context.getString(R.string.uninstall);
         } else if(RollBackItem.Action.UNINSTALLED.toString().equals(appState)) {
-            return "Reinstall";
+            return context.getString(R.string.reinstall);
         } else if(RollBackItem.Action.UPDATED.toString().equals(appState)) {
-            return "Downgrade";
+            return context.getString(R.string.downgrade);
         } else if(RollBackItem.Action.DOWNGRADED.toString().equals(appState)) {
-            return "Update";
+            return context.getString(R.string.update);
         } else {
             return "";
         }

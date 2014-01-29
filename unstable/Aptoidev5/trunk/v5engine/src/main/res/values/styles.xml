@@ -216,38 +216,6 @@
         <item name="android:background">@android:color/black</item>
     </style>
 
-    <style name="ratingGoodLight">
-        <item name="android:drawableLeft">@drawable/ic_action_good</item>
-    </style>
-
-    <style name="ratingBadLight">
-        <item name="android:drawableLeft">@drawable/ic_action_bad</item>
-    </style>
-
-    <style name="ratingGoodDark">
-        <item name="android:drawableLeft">@drawable/ic_action_good_dark</item>
-    </style>
-
-    <style name="ratingBadDark">
-        <item name="android:drawableLeft">@drawable/ic_action_bad_dark</item>
-    </style>
-
-    <style name="webSiteLight">
-        <item name="android:drawableLeft">@drawable/ic_web_site</item>
-    </style>
-
-    <style name="webSiteDark">
-        <item name="android:drawableLeft">@drawable/ic_action_web_site_dark</item>
-    </style>
-
-    <style name="emailLight">
-        <item name="android:drawableLeft">@drawable/ic_email</item>
-    </style>
-
-    <style name="emailDark">
-        <item name="android:drawableLeft">@drawable/ic_action_email_dark</item>
-    </style>
-
     <style name="cancelLight">
         <item name="android:src">@drawable/ic_action_cancel</item>
     </style>

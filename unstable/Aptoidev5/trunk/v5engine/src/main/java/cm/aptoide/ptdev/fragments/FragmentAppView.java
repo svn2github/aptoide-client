@@ -540,7 +540,7 @@ public abstract class FragmentAppView extends Fragment {
             RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(getActivity(), "Post failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
                     pd.dismiss();
                 }
@@ -552,7 +552,7 @@ public abstract class FragmentAppView extends Fragment {
                     pd.dismiss();
 
                     if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), "Add Review success", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
                         BusProvider.getInstance().post(new AppViewRefresh());
                     }else{
@@ -628,7 +628,7 @@ public abstract class FragmentAppView extends Fragment {
             RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(getActivity(), "Comment failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
                     pd.dismiss();
                 }
@@ -640,7 +640,7 @@ public abstract class FragmentAppView extends Fragment {
                     pd.dismiss();
 
                     if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), "Comment success", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
                         editText.setText("");
                         editText.setEnabled(false);
                         editText.setEnabled(true);

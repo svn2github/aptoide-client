@@ -24,6 +24,8 @@
     <string name="comments">Comments</string>
     <string name="write_your_comment">Write your comment</string>
     <string name="add_comment">Add a comment</string>
+    <string name="opinion_success">Your request was successfully submitted</string>
+    <string name="comment_submitted">Your comment was successfuly submitted</string>
     <string name="comment_see_all">See All</string>
     <string name="related_apps">Related Apps</string>
     <string name="multiversion">Multiversion</string>
@@ -130,6 +132,11 @@
     <string name="see_top_stores">See Top Stores</string>
     <string name="setcredentials">Login</string>
     <string name="rollback">Rollback</string>
+    <string name="rollback_empty">No apps to rollback</string>
+    <string name="rollback_installed">Installed</string>
+    <string name="rollback_uninstalled">Uninstalled</string>
+    <string name="rollback_updated">Updated</string>
+    <string name="rollback_downgraded">Downgraded</string>
     <string name="install">Install</string>
     <string name="get_latest_version">Get Latest</string>
     <string name="get_latest_version_and_trusted">Get Latest &amp; Trusted</string>
@@ -305,8 +312,10 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="website">Website</string>
     <string name="downgrade_requires_uninstall">Downgrade requires Application uninstall</string>
-    <string name="rollback_empty">No apps to rollback</string>
     <string name="signing_in">Signing in&#8230;</string>
+    <string name="search_on_aptoide">Search more on Aptoide website</string>
+    <string name="reinstall">Reinstall</string>
+    <string name="at_time">at %s</string>
 
 
 </resources>

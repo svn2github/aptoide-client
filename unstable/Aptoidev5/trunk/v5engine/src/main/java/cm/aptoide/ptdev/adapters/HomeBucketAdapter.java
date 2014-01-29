@@ -89,7 +89,6 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             @Override
             public void onClick(View v) {
                 showPopup(v, item.getId());
-                Toast.makeText(getContext(), getContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -142,8 +141,8 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-
-            ((MainActivity)context).installApp(id);
+                ((MainActivity)context).installApp(id);
+                Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

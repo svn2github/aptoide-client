@@ -17,10 +17,10 @@
               android:id="@android:id/text1"
               android:layout_weight="0.2"/>
 
-    <TextView
-            style="?attr/headerSeparatorButton"
-            android:text="+ search more"
-            android:id="@+id/search_other_stores"/>
+    <!--<TextView-->
+            <!--style="?attr/headerSeparatorButton"-->
+            <!--android:text="@string/search_more"-->
+            <!--android:id="@+id/search_other_stores"/>-->
 
 
 </LinearLayout>

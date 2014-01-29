@@ -362,9 +362,9 @@ public class Database {
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
         Cursor c = database.rawQuery("select " +
                 "(installed.version_code < apk.version_code) as is_update, " +
-                "apk.id_apk as _id,apk.name,  " +
+                "apk.id_apk as _id, apk.name as name,  " +
                 "apk.downloads as count," +
-                "apk.version_name , " +
+                "apk.version_name as version_name, " +
                 "apk.icon as icon, " +
                 "repo.icons_path as iconpath " +
                     "from apk inner " +
@@ -533,7 +533,7 @@ public class Database {
         }
 
 
-        Cursor c = database.rawQuery("select  apk.price, apk.date, apk.name as name, apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon as icon, repo.icons_path as iconpath, apk.rating from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by " + sort, null);
+        Cursor c = database.rawQuery("select  apk.price, apk.date, apk.name as name, apk.id_apk as _id, apk.downloads as count, apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, apk.rating as rating from apk  join repo on apk.id_repo = repo.id_repo where apk.name LIKE '%" + searchQuery + "%' " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by " + sort, null);
         c.getCount();
         return c;
     }

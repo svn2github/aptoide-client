@@ -20,6 +20,8 @@
   <string name="comments">Comentários</string>
   <string name="write_your_comment">Escrever um comentário</string>
   <string name="add_comment">Adicionar comentário</string>
+  <string name="opinion_success">O seu pedido foi submetido com sucesso</string>
+  <string name="comment_submitted">O seu comentário foi submetido com sucesso</string>
   <string name="comment_see_all">Ver todos</string>
   <string name="related_apps">Apps relacionadas</string>
   <string name="multiversion">Multiversão</string>
@@ -122,6 +124,10 @@
   <string name="search_other_stores">Ou procurar por outras...</string>
   <string name="see_top_stores">Ver Lojas Principais</string>
   <string name="setcredentials">Iniciar sessão</string>
+  <string name="rollback_empty">Sem apps para reverter</string>
+  <string name="rollback_installed">Instalado</string>
+  <string name="rollback_uninstalled">Desinstalado</string>
+  <string name="rollback_updated">Actualizado</string>
   <string name="install">Instalar</string>
   <string name="get_latest_version">Obter Última</string>
   <string name="get_latest_version_and_trusted">Obter Última &amp; Confiável</string>
@@ -288,5 +294,8 @@
   <string name="privacy_policy">Política de privacidade</string>
   <string name="website">Página web</string>
   <string name="downgrade_requires_uninstall">Requer a desinstalação da aplicação</string>
-  <string name="rollback_empty">Sem apps para reverter</string>
+  <string name="signing_in">A iniciar sessão...</string>
+  <string name="search_on_aptoide">Procurar mais na página Aptoide</string>
+  <string name="reinstall">Reinstalar</string>
+  <string name="at_time">às %s</string>
 </resources>

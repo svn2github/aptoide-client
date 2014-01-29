@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.SearchManager;
+import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -24,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Time: 16:36
  * To change this template use File | Settings | File Templates.
  */
-public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuItemClickListener{
+public class SearchAdapter extends CursorAdapter {
 
     final private String sizeString;
     private Context mContext;
@@ -55,12 +58,12 @@ public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuIte
             view.setTag(holder);
         }
 
-        long id = cursor.getLong(cursor.getColumnIndex("_id"));
+        final long id = cursor.getLong(cursor.getColumnIndex("_id"));
         holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
         holder.overFlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(v);
+                showPopup(v, id);
             }
         });
         holder.appName.setText(Html.fromHtml(name).toString());
@@ -85,23 +88,38 @@ public class SearchAdapter extends CursorAdapter  implements PopupMenu.OnMenuIte
         RatingBar rating;
     }
 
-    public void showPopup(View v) {
+    public void showPopup(View v, long id) {
         PopupMenu popup = new PopupMenu(mContext, v);
-        popup.setOnMenuItemClickListener(this);
+        popup.setOnMenuItemClickListener(new MenuListener(mContext, id));
         popup.inflate(R.menu.menu_actions);
         popup.show();
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.menu_install) {
-//            ((MainActivity)mContext).installApp(id);
-            return true;
-        } else if (i == R.id.menu_schedule) {
-            return true;
-        } else {
-            return false;
+    static class MenuListener implements PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_install) {
+                ((SearchManager)context).installApp(id);
+                Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                return true;
+            } else if (i == R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

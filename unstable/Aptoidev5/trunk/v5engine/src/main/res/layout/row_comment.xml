@@ -55,7 +55,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:maxLines="3"
             android:layout_below="@+id/author"
             android:ellipsize="end"
-            android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "/>
+            android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
+            android:paddingBottom="15dp"/>
 
 
 </RelativeLayout>

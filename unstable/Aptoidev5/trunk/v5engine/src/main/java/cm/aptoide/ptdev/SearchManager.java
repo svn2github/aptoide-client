@@ -1,9 +1,12 @@
 package cm.aptoide.ptdev;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -21,6 +24,8 @@ import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
 
@@ -34,6 +39,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 public class SearchManager extends ActionBarActivity {
 
     private CursorAdapter adapter;
+    private DownloadService downloadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,9 @@ public class SearchManager extends ActionBarActivity {
         Fragment fragment = new SearchFragment();
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragment).commit();
+
+        bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
+
     }
 
     @Override
@@ -88,12 +97,13 @@ public class SearchManager extends ActionBarActivity {
         private String query;
         private CursorAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
+        private View v;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             adapter = new MergeAdapter();
-            View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
+            v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
             adapter.addView(v);
 
             cursorAdapter = new SearchAdapter(getActivity());
@@ -102,27 +112,22 @@ public class SearchManager extends ActionBarActivity {
             getLoaderManager().initLoader(60, getArguments(), this);
             setHasOptionsMenu(true);
 
-            TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
-            searchOtherStores.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
-                    Log.d("TAG", "Searching for:" + url);
+//            TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
+//            searchOtherStores.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
+//                    Log.d("TAG", "Searching for:" + url);
+//
+//
+//                    Intent i = new Intent(Intent.ACTION_VIEW);
+//                    url = url.replaceAll(" ", "%20");
+//                    i.setData(Uri.parse(url));
+//                    startActivity(i);
+//                }
+//            });
 
 
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    url = url.replaceAll(" ", "%20");
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
-                }
-            });
-
-//            TextView foundResults = (TextView) v.findViewById(android.R.id.text1);
-//            if(adapter.getCount()>0){
-//                foundResults.setText(getString(R.string.found_results, adapter.getCount()));
-//            }else{
-//                foundResults.setText(getString(R.string.no_search_result, query));
-//            }
         }
 
         @Override
@@ -184,8 +189,14 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             cursorAdapter.swapCursor(data);
+            TextView foundResults = (TextView) v.findViewById(android.R.id.text1);
+            if(data.getCount()>0){
+                foundResults.setText(getString(R.string.found_results, data.getCount()));
+            }else{
+                foundResults.setText(getString(R.string.no_search_result, query));
+            }
             setListAdapter(adapter);
-            setEmptyText("No results for " + query);
+            setEmptyText(getString(R.string.no_search_result, query));
         }
 
         @Override
@@ -198,7 +209,27 @@ public class SearchManager extends ActionBarActivity {
             super.onViewCreated(view, savedInstanceState);
             getListView().setDivider(null);
 
+            View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
+            getListView().addFooterView(footer);
+
         }
     }
+
+    public void installApp(long id) {
+        downloadService.startDownloadFromAppId(id);
+    }
+
+    private ServiceConnection conn2 = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            downloadService = ((DownloadService.LocalBinder) binder).getService();
+            BusProvider.getInstance().post(new DownloadServiceConnected());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
 }

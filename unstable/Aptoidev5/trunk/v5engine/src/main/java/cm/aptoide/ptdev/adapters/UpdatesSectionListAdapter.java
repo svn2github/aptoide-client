@@ -128,6 +128,9 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
     }
 
     protected Integer getLinkedPosition(final int position) {
+        if(itemPositions.get(position) == null) {
+            return 0;
+        }
         return itemPositions.get(position);
     }
 
