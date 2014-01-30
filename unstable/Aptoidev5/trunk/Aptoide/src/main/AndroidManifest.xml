@@ -16,6 +16,9 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+
 
 
     <application android:icon="@drawable/ic_launcher"
@@ -201,12 +204,25 @@
         <provider android:name="cm.aptoide.ptdev.SuggestionProvider"
                   android:authorities="cm.aptoide.ptdev.SuggestionProvider" android:exported="false"/>
 
+        <provider android:name="cm.aptoide.ptdev.StubProvider"
+                  android:authorities="cm.aptoide.ptdev.StubProvider"
+                  android:exported="false"/>
+
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data android:name="android.accounts.AccountAuthenticator"
                        android:resource="@xml/authenticator"/>
+        </service>
+
+        <service android:name="cm.aptoide.ptdev.services.WebInstallSyncService"
+                android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/sync_adapter" />
         </service>
 
         <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >
