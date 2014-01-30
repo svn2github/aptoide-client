@@ -1,12 +1,11 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.Account;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
-import android.content.Context;
-import android.content.SyncResult;
+import android.content.*;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.configuration.Constants;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
@@ -25,28 +24,37 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(extras.getString("host"));
-        factory.setConnectionTimeout(20000);
+        Log.d("syncAdapter", "onPerformSync()");
 
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String queueName = sPref.getString(Constants.WEBINSTALL_QUEUE_NAME, null);
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(Constants.WEBINSTALL_HOST);
+        factory.setConnectionTimeout(20000);
+        factory.setVirtualHost("webinstall");
+        factory.setUsername("public");
+        factory.setPassword("public");
 
         try {
-            Connection connection = factory.newConnection();
+            AMQConnection connection = (AMQConnection) factory.newConnection();
             Channel channel = connection.createChannel();
             channel.basicQos(0);
 
-            GetResponse response = channel.basicGet(extras.getString("queueId"), false);
-
-            if (response != null) {
+            GetResponse response;
+            while((response = channel.basicGet(sPref.getString(Constants.WEBINSTALL_QUEUE_NAME, null), false)) != null) {
                 String message = new String(response.getBody(), "UTF-8");
+                Log.d("syncAdapter", "MESSAGE: " + message);
                 //handleMessage(message);
                 channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
             }
 
             connection.close();
 
+            sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
         }
 
     }
