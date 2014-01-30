@@ -56,6 +56,7 @@ public class Aptoide extends Application {
     public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
     private static Context context;
     private static DatabaseHelper db;
+    private static boolean webInstallServiceRunning;
 
     public static AptoideThemePicker getThemePicker() {
         return themePicker;
@@ -228,5 +229,13 @@ public class Aptoide extends Application {
 
     public static boolean isUpdate() throws PackageManager.NameNotFoundException {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("version", 0) < getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionCode;
+    }
+    
+    public static boolean isWebInstallServiceRunning() {
+        return webInstallServiceRunning;
+    }
+
+    public static void setWebInstallServiceRunning(boolean webInstallServiceRunning) {
+        Aptoide.webInstallServiceRunning = webInstallServiceRunning;
     }
 }

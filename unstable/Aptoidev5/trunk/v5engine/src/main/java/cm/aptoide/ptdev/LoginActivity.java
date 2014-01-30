@@ -4,10 +4,7 @@ import android.accounts.*;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,7 +64,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private PlusClient mPlusClient;
     private ConnectionResult mConnectionResult;
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -171,7 +167,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
 
-    ;
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -302,7 +297,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         getSupportActionBar().setTitle(getString(R.string.setcredentials));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+    }
     }
 
     @Override
@@ -403,7 +398,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
         request.setDeviceId(deviceId);
-        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi());
+        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
         request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(LoginActivity.this)));
         request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(LoginActivity.this)));
         request.setModel(Build.MODEL);
@@ -466,14 +461,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
     private void finishLogin(Intent intent) {
-        Log.d("udinic", TAG + "> finishLogin");
+        Log.d("aptoide", TAG + "> finishLogin");
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("udinic", TAG + "> finishLogin > addAccountExplicitly");
+            Log.d("aptoide", TAG + "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
@@ -482,12 +477,23 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
         } else {
-            Log.d("udinic", TAG + "> finishLogin > setPassword");
+            Log.d("aptoide", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
+
+        /*
+        ContentResolver wiResolver = getContentResolver();
+        wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);
+        wiResolver.setSyncAutomatically(account, STUB_PROVIDER_AUTHORITY, true);
+
+        if(Build.VERSION.SDK_INT >= 8) {
+            wiResolver.addPeriodicSync(account, STUB_PROVIDER_AUTHORITY, new Bundle(), WEB_INSTALL_POLL_FREQUENCY);
+        }
+        */
+
         finish();
     }
 

@@ -1,12 +1,18 @@
 package cm.aptoide.ptdev.services;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Service;
-import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.impl.AMQConnection;
@@ -32,6 +38,7 @@ public class RabbitMqService extends Service {
     private ExecutorService thread_pool;
     private AMQConnection connection;
 
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
 
@@ -45,8 +52,8 @@ public class RabbitMqService extends Service {
                     factory.setHost(host);
                     factory.setUsername("public");
                     factory.setPassword("public");
-                    factory.setConnectionTimeout(6000);
-                    factory.setRequestedHeartbeat(5000);
+                    factory.setConnectionTimeout(20000);
+
                     factory.setVirtualHost("webinstall");
                     connection = (AMQConnection) factory.newConnection();
                     newChannel(queueName, new AMQHandler() {
@@ -56,12 +63,11 @@ public class RabbitMqService extends Service {
                         }
                     });
                 } catch (IOException e) {
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
                     e.printStackTrace();
                 }
             }
         }).start();
-
-
 
         return START_STICKY;
     }
@@ -82,6 +88,13 @@ public class RabbitMqService extends Service {
         super.onCreate();
         Log.d("Aptoide-RabbitMqService", "RabbitMqService created!");
         thread_pool = Executors.newCachedThreadPool();
+
+        Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        if(Build.VERSION.SDK_INT >= 8) {
+            ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+        }
+        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
+
     }
 
     @Override
@@ -96,6 +109,15 @@ public class RabbitMqService extends Service {
             e.printStackTrace();
         }
         thread_pool.shutdownNow();
+
+        Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
+        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
+
+        if(Build.VERSION.SDK_INT >= 8) {
+            ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
+        }
+
     }
 
     public class RabbitMqBinder extends Binder {
@@ -111,11 +133,13 @@ public class RabbitMqService extends Service {
 
     public void newChannel(String queue_id, AMQHandler task) throws IOException {
         channel = (ChannelN) connection.createChannel();
-        channel.queueDeclare(queue_id, true, false, false, null);
+        //channel.queueDeclare(queue_id, true, false, false, null);
         channel.basicQos(0);
-
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(queue_id, false, consumer);
+
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+
         task.setConsumer(consumer);
         thread_pool.submit(task);
     }
@@ -137,6 +161,7 @@ public class RabbitMqService extends Service {
                     QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                     String body = new String(delivery.getBody(), Charset.forName("UTF-8"));
                     handleMessage(body);
+                    Log.d("Aptoide-RabbitMqService", "MESSAGE: " + body);
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

@@ -316,6 +316,7 @@
     <string name="search_on_aptoide">Search more on Aptoide website</string>
     <string name="reinstall">Reinstall</string>
     <string name="at_time">at %s</string>
+    <string name="webinstall_relogin">You need to re-login to activate WebInstall</string>
 
 
 </resources>

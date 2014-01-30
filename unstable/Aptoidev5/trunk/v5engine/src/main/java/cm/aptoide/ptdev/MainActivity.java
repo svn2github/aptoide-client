@@ -29,6 +29,8 @@ import android.widget.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -86,7 +88,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
     private Condition boundCondition = lock.newCondition();
     private ViewPager pager;
     private BadgeView badge;
-
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -744,6 +745,12 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
             //login_store = (TextView) header.findViewById(R.id.login_store);
             //login_store.setText("");
+
+
+
+            if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false)) {
+                toast.makeText(this, getString(R.string.webinstall_relogin), Toast.LENGTH_SHORT).show();
+            }
 
         }
         mDrawerList.setAdapter(mMenuAdapter);
