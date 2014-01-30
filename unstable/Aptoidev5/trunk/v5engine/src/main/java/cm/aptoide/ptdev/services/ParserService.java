@@ -377,7 +377,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), this, this, new Runnable() {
                 @Override
                 public void run() {
-                    db.deleteFeatured(2);
+                    db.deleteFeatured(510);
                     BusProvider.getInstance().post(new RepoCompleteEvent(-2));
                 }
             });
@@ -403,7 +403,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             parser.parse(url, null, 2, new HandlerFeaturedTop(database), this, this, new Runnable() {
                 @Override
                 public void run() {
-                    database.deleteFeatured(1);
+                    database.deleteFeatured(511);
                     BusProvider.getInstance().post(new RepoCompleteEvent(-1));
                 }
             });

@@ -85,13 +85,13 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
         ImageLoader.getInstance().displayImage(icon, holder.icon);
 
-        v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v, item.getId());
-
-            }
-        });
+//        v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPopup(v, item.getId());
+//
+//            }
+//        });
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

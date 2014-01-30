@@ -439,10 +439,11 @@ public class Database {
 
     public void deleteFeatured(int type){
 
+        Log.d("Aptoide-Featured", "Deleting featured " + type);
 
         database.beginTransaction();
 
-        Cursor c = database.query(Schema.Featured_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, "type = ?", new String[]{String.valueOf(type)}, null, null, null);
+        Cursor c = database.query(Schema.Category_Apk.getName(), new String[]{Schema.Featured_Apk.COLUMN_APK_ID}, "id_real_category = ?", new String[]{String.valueOf(type)}, null, null, null);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 
@@ -451,14 +452,13 @@ public class Database {
             if (appsCursor.moveToFirst()) {
                 database.delete(Schema.Repo.getName(), "id_repo = ?", new String[]{appsCursor.getString(0)});
                 database.delete(Schema.Apk.getName(), "id_apk = ?", new String[]{c.getString(0)});
+                database.delete(Schema.Category_Apk.getName(), "id_apk = ?", new String[]{c.getString(0)});
             }
             appsCursor.close();
         }
 
 
         c.close();
-
-        database.delete(Schema.Featured_Apk.getName(), "type = ?", new String[]{String.valueOf(type)});
 
 
         database.setTransactionSuccessful();
@@ -480,9 +480,30 @@ public class Database {
 
     }
 
+    public ArrayList<HomeItem> getTopFeatured(int bucketSize) {
+
+        Cursor c = database.rawQuery("select apk.id_apk as id, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1  join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 511", null);
+
+
+        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+            String iconPath = c.getString(c.getColumnIndex("iconpath"));
+            String icon = c.getString(c.getColumnIndex("icon"));
+            long id = c.getLong(c.getColumnIndex("id"));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id));
+
+        }
+
+        c.close();
+
+        return items;
+    }
+
     public ArrayList<Collection> getFeatured(int type, int editorsChoiceBucketSize) {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
 
         Cursor c = database.rawQuery("select apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 ", null);
 
@@ -490,7 +511,7 @@ public class Database {
         HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
 
         HashMap<String, ArrayList<HomeItem>> tempList = new HashMap<String, ArrayList<HomeItem>>();
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+        for(c.move(editorsChoiceBucketSize);!c.isAfterLast();c.moveToNext()){
             String collection = c.getString(c.getColumnIndex("catname"));
             if(!tempList.containsKey(collection)){
                 ArrayList<HomeItem> itemsList = new ArrayList<HomeItem>();
@@ -500,7 +521,8 @@ public class Database {
         }
 
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+        c.moveToFirst();
+        for(c.move(editorsChoiceBucketSize);!c.isAfterLast();c.moveToNext()){
 
             String collection = c.getString(c.getColumnIndex("catname"));
 
@@ -513,6 +535,26 @@ public class Database {
 
         }
 
+
+        tempList.put("Latest editors choice", new ArrayList<HomeItem>());
+        tempList2.put("Latest editors choice", -1);
+
+        int i=0;
+
+        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize ;c.moveToNext()){
+
+            String collection = "Latest editors choice";
+            i++;
+            if(tempList.get(collection).size() < editorsChoiceBucketSize){
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long id = c.getLong(c.getColumnIndex("id"));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , id));
+            }
+
+        }
+
+
         c.close();
 
         ArrayList<Collection> items = new ArrayList<Collection>();
@@ -523,6 +565,10 @@ public class Database {
             collection1.setParentId(tempList2.get(collection));
             items.add(collection1);
         }
+
+
+
+
 
         return items;
     }

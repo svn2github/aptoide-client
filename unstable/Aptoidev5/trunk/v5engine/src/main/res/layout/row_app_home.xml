@@ -7,9 +7,10 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="125dp"
+             android:layout_width="120dp"
              android:layout_height="190dp"
              style="?attr/customRowForeground"
+             android:clickable="true"
              android:layout_gravity="center_horizontal">
 
     <RelativeLayout
@@ -22,7 +23,7 @@
             android:padding="5dp"
             style="?attr/backgroundCard"
             android:orientation="horizontal"
-            android:layout_gravity="top">
+            android:layout_gravity="start|end">
 
         <ImageView
                 android:contentDescription="@null"
@@ -40,7 +41,7 @@
 
         <TextView
                 android:id="@+id/app_category"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:lines="2"
@@ -52,6 +53,7 @@
                 android:textColor="@android:color/darker_gray"
                 android:layout_gravity="left|center_vertical"
                 android:layout_toLeftOf="@+id/ic_action"/>
+
         <TextView
                 android:id="@+id/app_name"
                 android:layout_width="wrap_content"

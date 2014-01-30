@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -35,13 +38,15 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private MergeAdapter adapter;
     private ArrayList<Collection> editorsChoice = new ArrayList<Collection>();
     private List<HomeItem> top = new ArrayList<HomeItem>();
-    private int editorsChoiceBucketSize;
+    
+    private HomeLayoutAdapter homeBucketAdapter;
+    private HomeBucketAdapter topAdapter;
 
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(50, null, this);
-        //getLoaderManager().initLoader(51, null, this);
+        getLoaderManager().restartLoader(50, null, this);
+        getLoaderManager().restartLoader(51, null, loader);
     }
 
     @Override
@@ -68,16 +73,18 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     }
 
     private void refreshEditorsList() {
-        //editorsChoice.clear();
-        //adapter.notifyDataSetChanged();
-        //getLoaderManager().restartLoader(50, null, this);
+       editorsChoice.clear();
+       adapter.notifyDataSetChanged();
+       getLoaderManager().restartLoader(50, null, this);
     }
 
     private void refreshTopList() {
-        //top.clear();
-        //adapter.notifyDataSetChanged();
-        //getLoaderManager().restartLoader(51, null, this);
+        top.clear();
+        adapter.notifyDataSetChanged();
+        getLoaderManager().restartLoader(51, null, loader);
     }
+
+    TopFeaturedLoader loader = new TopFeaturedLoader();
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -85,7 +92,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         adapter = new MergeAdapter();
 
-        HomeLayoutAdapter homeBucketAdapter = new HomeLayoutAdapter(getActivity(), editorsChoice, true);
+        homeBucketAdapter = new HomeLayoutAdapter(getActivity(), editorsChoice, true);
+        topAdapter = new HomeBucketAdapter(getActivity(), top);
 //        View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
 //        ((TextView) editorsView.findViewById(R.id.separator_label)).setText(getString(R.string.editors_choice));
 //        editorsView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
@@ -100,15 +108,14 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         //editorsChoiceBucketSize = homeBucketAdapter.getBucketSize();
 
 
-
-
-
-
-
-
         adapter.addAdapter(homeBucketAdapter);
+        View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
+        ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
+        adapter.addView(v);
+        adapter.addAdapter(topAdapter);
+
         getListView().setCacheColorHint(0);
-        setListAdapter(adapter);
+
 //        HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
 //        View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
 //        ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
@@ -163,6 +170,47 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
 
 
+
+
+    }
+
+    public class TopFeaturedLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
+
+        @Override
+        public Loader<ArrayList<HomeItem>> onCreateLoader(final int id, final Bundle args) {
+
+
+
+            AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
+                @Override
+                public ArrayList<HomeItem> loadInBackground() {
+                    return new Database(Aptoide.getDb()).getTopFeatured(topAdapter.getBucketSize()*2);
+                }
+            };
+
+            asyncTaskLoader.forceLoad();
+
+            return asyncTaskLoader;
+        }
+        //
+        @Override
+        public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
+            top.clear();
+            top.addAll(data);
+
+            if(getListView().getAdapter()==null){
+                if(!data.isEmpty()) setListAdapter(adapter);
+            }else{
+                adapter.notifyDataSetChanged();
+            }
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
+            top.clear();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -173,8 +221,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         AsyncTaskLoader<ArrayList<Collection>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<Collection>>(getActivity()) {
             @Override
             public ArrayList<Collection> loadInBackground() {
-
-                return new Database(Aptoide.getDb()).getFeatured(6, 6);
+                return new Database(Aptoide.getDb()).getFeatured(6, homeBucketAdapter.getBucketSize()*2);
             }
         };
 
@@ -185,17 +232,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 //
     @Override
     public void onLoadFinished(Loader<ArrayList<Collection>> loader, ArrayList<Collection> data) {
-
-
-        switch (loader.getId()) {
-            case 50:
-                editorsChoice.clear();
-                editorsChoice.addAll(data);
-                break;
-            case 51:
-
-                break;
-        }
+        editorsChoice.clear();
+        editorsChoice.addAll(data);
 
         if(getListView().getAdapter()==null){
             if(!data.isEmpty()) setListAdapter(adapter);
@@ -207,17 +245,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Collection>> loader) {
-
-        switch (loader.getId()) {
-            case 50:
-                editorsChoice.clear();
-                break;
-            case 51:
-                top.clear();
-                break;
-        }
-
+        editorsChoice.clear();
         adapter.notifyDataSetChanged();
-
     }
 }

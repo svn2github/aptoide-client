@@ -36,12 +36,15 @@ public class MoreEditorsChoice extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
 
         Fragment fragment = new MoreEditorsChoiceFragment();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+
 
     }
 
@@ -60,7 +63,7 @@ public class MoreEditorsChoice extends ActionBarActivity {
 
             editorsChoice = new ArrayList<Collection>();
             adapter = new HomeLayoutAdapter(getActivity(), editorsChoice, false);
-            getLoaderManager().initLoader(0, getArguments(), this);
+            getLoaderManager().restartLoader(0, getArguments(), this);
 
         }
 
@@ -82,7 +85,7 @@ public class MoreEditorsChoice extends ActionBarActivity {
                 @Override
                 public ArrayList<Collection> loadInBackground() {
                     Log.d("Aptoide-Home", String.valueOf(args.getInt("parentId")));
-                    return new Database(Aptoide.getDb()).getSpecificFeatured(args.getInt("parentId"), 3);
+                    return new Database(Aptoide.getDb()).getSpecificFeatured(args.getInt("parentId"), adapter.getBucketSize());
 
                 }
             };
