@@ -29,6 +29,7 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
@@ -396,6 +397,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
+
         request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
         request.setDeviceId(deviceId);
         request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
@@ -483,7 +485,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
-
+        startService(new Intent(this, RabbitMqService.class));
         /*
         ContentResolver wiResolver = getContentResolver();
         wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);

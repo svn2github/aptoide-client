@@ -162,7 +162,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         if(executorService!=null){
             executorService.shutdownNow();
         }
-        stopService(new Intent(this, RabbitMqService.class));
+
+        if(isFinishing()) stopService(new Intent(this, RabbitMqService.class));
     }
 
     @Override
@@ -200,10 +201,6 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         if (e instanceof InvalidVersionException) {
             AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
         }
-        //  Toast.makeText(getApplicationContext(), "Parse stopped on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-        //}else{
-        //  Toast.makeText(getApplicationContext(), "Parse error on " + repoId + " with " + e, Toast.LENGTH_LONG).show();
-        //}
 
     }
 
@@ -219,7 +216,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         return super.onCreateOptionsMenu(menu);
     }
 
-    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,14 +256,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
             if(queueName!=null){
                 Intent serviceIntent = new Intent(this, RabbitMqService.class);
-                serviceIntent.putExtra("host", "frontend6.aptoide.com");
-                serviceIntent.putExtra("queueName", queueName);
                 startService(serviceIntent);
             }
-
-
-
-
 
             executeWizard();
 
@@ -621,7 +612,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
     @Override
     public void startParse(final Store store) {
-        executorService.submit(new Runnable() {
+        executorService.execute(new Runnable() {
             @Override
             public void run() {
                 service.startParse(database, store, true);

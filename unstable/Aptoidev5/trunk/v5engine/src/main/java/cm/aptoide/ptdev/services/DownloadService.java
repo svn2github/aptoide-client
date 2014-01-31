@@ -48,6 +48,8 @@ public class DownloadService extends Service {
     private LongSparseArray<DownloadInfo> downloads = new LongSparseArray<DownloadInfo>();
 
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return new LocalBinder();

@@ -4,8 +4,11 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.services.RabbitMqService;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -101,7 +105,10 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                         mPlusClient.disconnect();
                     }
 
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+                    sharedPreferences.edit().remove("queueName").commit();
+                    stopService(new Intent(MyAccountActivity.this, RabbitMqService.class));
                     mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
                         @Override
                         public void run(AccountManagerFuture<Boolean> future) {

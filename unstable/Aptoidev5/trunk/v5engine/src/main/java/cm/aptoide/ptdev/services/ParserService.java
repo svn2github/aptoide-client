@@ -47,7 +47,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
-    private SpiceManager spiceManager2 = new SpiceManager(ParserHttp.class);
+    private SpiceManager spiceManager2 = new SpiceManager(HttpClientSpiceService.class);
 
 
 
@@ -146,13 +146,13 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         spiceManager2.execute(getRepoInfoRequest, new RequestListener<RepositoryInfoJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-
+                spiceManager2.shouldStop();
             }
 
             @Override
             public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
 
-
+                spiceManager2.shouldStop();
                 String message = null;
 
                 Log.i("Aptoide-", "success");

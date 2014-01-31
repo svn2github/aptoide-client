@@ -83,7 +83,7 @@ public class RabbitMqService extends Service {
                                 JSONObject object = new JSONObject(body);
 
                                 Intent i = new Intent(getApplicationContext(), AppViewActivity.class);
-                                String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, null, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
                                 String repo = object.getString("repo");
                                 long id = object.getLong("id");
@@ -160,15 +160,15 @@ public class RabbitMqService extends Service {
 
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
         try {
-            if(channel!=null) channel.abort();
+            isRunning = false;
+            if(channel!=null) channel.close();
             connection.disconnectChannel(channel);
-            connection.abort();
+            connection.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ShutdownSignalException e){
             e.printStackTrace();
         }
-        isRunning = false;
         thread_pool.shutdownNow();
 
         Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];

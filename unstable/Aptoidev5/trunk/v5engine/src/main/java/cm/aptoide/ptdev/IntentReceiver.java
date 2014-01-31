@@ -179,19 +179,29 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
 
             String[] strings = uri.split("-");
-            String[] strings1 = uri.split("/");
-            String id = strings[strings.length-1].split("\\.myapp")[0];
-            String repoName = strings1[strings1.length-2];
+            long id = Long.parseLong(strings[strings.length-1].split("\\.myapp")[0]);
 
             Intent i = new Intent(this, AppViewActivity.class);
             i.putExtra("fromMyapp", true);
             i.putExtra("id", id);
-            i.putExtra("repoName", repoName);
+
             startActivity(i);
             finish();
 
         }else if(uri.startsWith("file://")){
             new MyAppDownloader().execute(getIntent().getDataString());
+        } else if(uri.startsWith("aptoideinstall://")){
+
+            long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
+
+            Intent i = new Intent(this, AppViewActivity.class);
+            i.putExtra("fromMyapp", true);
+            i.putExtra("id", id);
+
+            startActivity(i);
+            finish();
+        }else{
+            finish();
         }
 
     }

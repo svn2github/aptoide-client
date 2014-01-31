@@ -485,9 +485,10 @@ public class Database {
         Cursor c = database.rawQuery("select apk.id_apk as id, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1  join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 511", null);
 
 
+        int i = 0;
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
-
+        for(c.moveToFirst();!c.isAfterLast() && i < bucketSize ;c.moveToNext()){
+            i++;
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long id = c.getLong(c.getColumnIndex("id"));
@@ -566,6 +567,12 @@ public class Database {
             items.add(collection1);
         }
 
+        Collections.sort(items, new Comparator<Collection>() {
+            @Override
+            public int compare(Collection lhs, Collection rhs) {
+                return lhs.getParentId() - rhs.getParentId();
+            }
+        });
 
 
 

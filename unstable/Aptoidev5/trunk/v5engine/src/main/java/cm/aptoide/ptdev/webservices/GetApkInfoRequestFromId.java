@@ -59,7 +59,7 @@ public class GetApkInfoRequestFromId extends GoogleHttpClientSpiceRequest<GetApk
         }
         sb.append(")");
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/id:"+appId+"/options="+sb.toString()+"/json";
+        String baseUrl = "http://dev.aptoide.com/webservices/2/getApkInfo/id:"+appId+"/options="+sb.toString()+"/json";
         GenericUrl url = new GenericUrl(baseUrl);
 
         Log.e("Aptoide-Request", baseUrl);

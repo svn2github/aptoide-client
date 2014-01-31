@@ -22,5 +22,5 @@ public class Constants {
     public static final String WEBINSTALL_SERVICE_RUNNING = "wiServiceRunning";
     public static final String WEBINSTALL_QUEUE_EXCLUDED =  "wiQueueExcluded";
     public static final String WEBINSTALL_SYNC_AUTHORITY = "cm.aptoide.ptdev.StubProvider";
-    public static final long WEBINSTALL_SYNC_POLL_FREQUENCY = 60;
+    public static final long WEBINSTALL_SYNC_POLL_FREQUENCY = 360;
 }

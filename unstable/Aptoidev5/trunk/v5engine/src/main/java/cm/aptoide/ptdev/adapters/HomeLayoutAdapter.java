@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.GridLayout;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -12,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.*;
 
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreEditorsChoice;
 import cm.aptoide.ptdev.R;
@@ -126,7 +128,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             }
         }
         TextView tv = (TextView) v.findViewById(R.id.collectionName);
-        tv.setText(list.get(position).getName());
+        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
 
 
 
@@ -151,7 +153,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
 
         int i = bucketSize;
-        for (HomeItem item : list.get(position).getAppsList()) {
+        for (final HomeItem item : list.get(position).getAppsList()) {
 
 
             if(i % bucketSize == 0){
@@ -170,6 +172,16 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
                 icon = splittedUrl[0] + "_" + iconSize + "."+ splittedUrl[1];
             }
+
+            tvChild.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, AppViewActivity.class);
+                    long id = item.getId();
+                    i.putExtra("id", id);
+                    context.startActivity(i);
+                }
+            });
 
             ImageLoader.getInstance().displayImage(icon, iconIv);
 

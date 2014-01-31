@@ -44,13 +44,9 @@ public class InstalledAppsHelper {
                                 pkg.versionName,
                         AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH));
 
-
                 if (!database_installed_list.contains(apk)) {
                     Log.d("Aptoide-InstalledSync", "Adding " + apk.getPackage_name() + "-" + apk.getVersion_name());
-
-
                     db.insertInstalled(apk);
-
                 }
 
             } catch (Exception e) {

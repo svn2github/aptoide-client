@@ -48,7 +48,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             AMQConnection connection = (AMQConnection) factory.newConnection();
-            Channel channel = connection.createChannel();
+            ChannelN channel = (ChannelN) connection.createChannel();
             channel.basicQos(0);
 
             GetResponse response;
@@ -59,12 +59,10 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                 handleMessage(message);
                 channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
             }
-
+            channel.close();
+            connection.disconnectChannel(channel);
             connection.close();
-
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
-            channel.abort();
-            connection.abort();
         } catch (IOException e) {
             e.printStackTrace();
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();

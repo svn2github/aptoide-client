@@ -85,6 +85,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isFromActivityResult;
     private String wUrl;
     private String md5;
+
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -93,9 +94,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
-            AppViewActivity.this.json = getApkInfoJson;
 
-            if (json != null) {
+            Log.d("Aptoide-AppView", "Json is null? " + String.valueOf(getApkInfoJson==null));
+            if (getApkInfoJson != null) {
+                AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
 
 
@@ -235,6 +237,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
 
                     if (getIntent().getBooleanExtra("fromMyapp", false)) {
+                        getIntent().removeExtra("fromMyapp");
                         AptoideDialog.myappInstall(new InstallListener(icon, name, versionName, package_name), name, new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
@@ -463,11 +466,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(service!=null) unbindService(downloadConnection);
         if (mAdView != null) {
             mAdView.destroy();
         }
+        super.onDestroy();
     }
 
     @Produce
@@ -514,6 +517,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
     private void publishEvents() {
+        Log.d("Aptoide-AppViewActivity", "Publishing revents");
 //        BusProvider.getInstance().post(publishScreenshots());
         BusProvider.getInstance().post(publishDetails());
         BusProvider.getInstance().post(publishRelatedApps());
@@ -531,26 +535,27 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onStart() {
         super.onStart();
+        BusProvider.getInstance().register(this);
         spiceManager.start(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
+        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey,DurationInMillis.ONE_DAY, requestListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
     }
 
 
@@ -570,6 +575,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             cacheKey = savedInstanceState.getString("cacheKey");
         }
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
+
 
         if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
 
@@ -621,6 +627,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         if(getIntent().getBooleanExtra("fromRollback", false)){
 
             GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
@@ -639,16 +646,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
 
-            String id = getIntent().getStringExtra("id");
-            request.setAppId(id);
-
-            repoName = getIntent().getStringExtra("repoName");
-            request.setRepoName(repoName);
+            long id = getIntent().getLongExtra("id", 0);
+            request.setAppId(String.valueOf(id));
 
             if(token!=null){
                 request.setToken(token);
             }
-            cacheKey = id;
+            cacheKey = String.valueOf(id);
 
             spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
@@ -775,9 +779,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if(token!=null){
             request.setToken(token);
         }
-        cacheKey = package_name + repoName;
+        cacheKey = package_name + repoName + appVersionName;
 
-        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
+        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
         mAdView = (MoPubView) findViewById(R.id.adview);
         if (Build.VERSION.SDK_INT > 11) {
@@ -813,8 +817,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setPackageName(package_name);
         request.setVersionName(versionName);
         if(token!=null)request.setToken(token);
-        cacheKey = package_name + repoName;
-        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
+
+        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
 
     }
@@ -873,7 +877,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public String getCacheKey() {
-        return package_name+repoName;
+        return cacheKey;
     }
 
     public String getToken() {
