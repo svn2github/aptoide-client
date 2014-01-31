@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,20 +113,7 @@ public class SearchManager extends ActionBarActivity {
             getLoaderManager().initLoader(60, getArguments(), this);
             setHasOptionsMenu(true);
 
-//            TextView searchOtherStores = (TextView) v.findViewById(R.id.search_other_stores);
-//            searchOtherStores.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
-//                    Log.d("TAG", "Searching for:" + url);
-//
-//
-//                    Intent i = new Intent(Intent.ACTION_VIEW);
-//                    url = url.replaceAll(" ", "%20");
-//                    i.setData(Uri.parse(url));
-//                    startActivity(i);
-//                }
-//            });
+
 
 
         }
@@ -210,6 +198,21 @@ public class SearchManager extends ActionBarActivity {
             getListView().setDivider(null);
 
             View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
+            Button search = (Button) footer.findViewById(R.id.search);
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
+                    Log.d("TAG", "Searching for:" + url);
+
+
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    url = url.replaceAll(" ", "%20");
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+
             getListView().addFooterView(footer);
 
         }

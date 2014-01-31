@@ -392,7 +392,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mMenuAdapter = new MenuListAdapter(mContext);
 
-        //Login Header
+
 
 
 
@@ -735,6 +735,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             mDrawerList.removeHeaderView(v);
         }
         mDrawerList.setAdapter(null);
+
+        //Login Header
         if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
 
@@ -743,8 +745,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             login_email = (TextView) header.findViewById(R.id.login_email);
             login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
 
-            //login_store = (TextView) header.findViewById(R.id.login_store);
-            //login_store.setText("");
+//            login_store = (TextView) header.findViewById(R.id.login_store);
+//            login_store.setText("");
 
 
             /*

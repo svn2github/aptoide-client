@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
@@ -22,6 +23,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +51,7 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -75,6 +78,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static final int DOWGRADE_REQUEST_CODE = 456;
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+    private MoPubView mAdView;
 
     private GetApkInfoJson json;
     private String name;
@@ -461,6 +465,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onDestroy() {
         super.onDestroy();
         if(service!=null) unbindService(downloadConnection);
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
     }
 
     @Produce
@@ -772,7 +779,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, requestListener);
 
-
+        mAdView = (MoPubView) findViewById(R.id.adview);
+        if (Build.VERSION.SDK_INT > 11) {
+            mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        mAdView.setAdUnitId("18947d9a99e511e295fa123138070049");
+        mAdView.loadAd();
 
 
 

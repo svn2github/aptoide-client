@@ -27,15 +27,15 @@
             android:layout_gravity="center"
             android:layout_margin="5dp">
 
-        <TextView
-                android:id="@+id/login_store"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold"
-                android:text="teresa-deus"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginLeft="5dp"/>
+        <!--<TextView-->
+                <!--android:id="@+id/login_store"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:textStyle="bold"-->
+                <!--android:text="teresa-deus"-->
+                <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+                <!--android:layout_marginLeft="5dp"/>-->
 
         <TextView
                 android:id="@+id/login_email"

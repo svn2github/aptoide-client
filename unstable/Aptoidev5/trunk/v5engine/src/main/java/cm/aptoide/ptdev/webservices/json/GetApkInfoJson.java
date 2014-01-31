@@ -299,31 +299,16 @@ public class GetApkInfoJson {
         }
 
         public static class Scanned{
-            @Key private List<String> av;
+            @Key private List<Av_info> av_info;
             @Key private String date;
             @Key private String status;
-            @Key private List<String> av_info;
 
-            public List<String> getAv(){
-                return this.av;
-            }
-            public void setAv(List<String> av){
-                this.av = av;
-            }
-            public String getDate(){
-                return this.date;
-            }
-            public void setDate(String date){
-                this.date = date;
-            }
-            public String getStatus(){
-                return this.status;
-            }
-            public void setStatus(String status){
-                this.status = status;
-            }
-            public List<String> getAv_info() { return av_info; }
-            public void setAv_info(List<String> av_info) { this.av_info = av_info; }
+            public List<Av_info> getAv_info(){ return this.av_info; }
+            public void setAv_info(List<Av_info> av_info){ this.av_info = av_info; }
+            public String getDate(){ return this.date; }
+            public void setDate(String date){ this.date = date; }
+            public String getStatus(){ return this.status; }
+            public void setStatus(String status){ this.status = status; }
         }
 
         public static class Reason{
@@ -414,8 +399,30 @@ public class GetApkInfoJson {
                 public void setStatus(String status) { this.status = status; }
 
             }
+
+
         }
 
+    }
+
+    public static class Av_info{
+        @Key private List<Infection> infections;
+        @Key private String name;
+
+        public List getInfections(){ return this.infections; }
+        public void setInfections(List<Infection> infections){ this.infections = infections; }
+        public String getName(){ return this.name; }
+        public void setName(String name){ this.name = name; }
+    }
+
+    public static class Infection{
+        @Key private String description;
+        @Key private String name;
+
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        public String getName() {return name; }
+        public void setName(String name) { this.name = name; }
     }
 
     public static class Signature{

@@ -201,7 +201,7 @@
   <string name="restart_aptoide">Por favor reinicie a aplicação para mudar o tema</string>
   <string name="exclude_update">Ignorar Actualização</string>
   <string name="trusted">Confiável</string>
-  <string name="warning">Aviso</string>
+  <string name="warning">Crítico</string>
   <string name="open">Abrir</string>
   <string name="scanned_with_av">Verificado com:</string>
   <string name="compared_with_another_marketplace">Comparado com outro Android Marketplace:</string>
@@ -209,7 +209,7 @@
   <string name="scanned_manually_by_aptoide_team">Verificado manualmente pela Equipa Aptoide:</string>
   <string name="about_aptoide_antimalware">A plataforma de Anti-Malware do Aptoide analisa as aplicações em tempo real e remove potenciais ameaças em todas as lojas. Este sistema verifica todas as aplicações de todas as lojas e certifica-as comparando com outros Android Marketplaces.</string>
   <string name="app_trusted">%s é Confiável</string>
-  <string name="app_warning">%s tem um aviso</string>
+  <string name="app_warning">%s é Crítico</string>
   <string name="application_signature_matched">A assinatura da aplicação é a mesma assinatura do programador da aplicação.</string>
   <string name="application_signature_not_matched">A assinatura da aplicação não é a mesma assinatura do programador da aplicação. A aplicação pode ter sido alterada.</string>
   <string name="application_signature_blacklisted">A assinatura da aplicação não é uma assinatura de confiança na plataforma de Anti-Malware da Aptoide, pois tem sido usada ​​para assinar outras aplicações que não correspondem à assinatura relacionada com o programador legítimo.</string>

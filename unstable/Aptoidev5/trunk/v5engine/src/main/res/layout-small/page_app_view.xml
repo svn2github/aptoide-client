@@ -54,6 +54,13 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         </LinearLayout>
     </ScrollView>
 
+    <com.mopub.mobileads.MoPubView
+            android:id="@+id/adview"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentBottom="true" />
+
 
 </RelativeLayout>
 

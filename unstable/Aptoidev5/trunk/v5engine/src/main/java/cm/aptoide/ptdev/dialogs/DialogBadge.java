@@ -12,11 +12,13 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by tdeus on 1/16/14.
  */
 public class DialogBadge extends DialogFragment {
+
 
 
     private String appName;
@@ -46,10 +48,23 @@ public class DialogBadge extends DialogFragment {
 
         if (reason != null) {
             if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && reason.getScanned().getStatus().equals("passed")) {
-                v.findViewById(R.id.reason_scanned_description).setVisibility(View.VISIBLE);
-                v.findViewById(R.id.reason_scanned).setVisibility(View.VISIBLE);
-                ((TextView) v.findViewById(R.id.reason_scanned_description)).setText(getString(R.string.scanned_with_av));
-                ((TextView) v.findViewById(R.id.reason_scanned)).setText(Arrays.toString(reason.getScanned().getAv().toArray()).replace("[", "").replace("]", ""));
+
+                if (reason.getScanned().getAv_info() != null) {
+                    StringBuffer av = new StringBuffer();
+                    Iterator<GetApkInfoJson.Av_info> iterator = reason.getScanned().getAv_info().iterator();
+                    while (iterator.hasNext()) {
+                        GetApkInfoJson.Av_info av_info = iterator.next();
+                        av.append(av_info.getName());
+                        if (iterator.hasNext()) {
+                            av.append(", ");
+                        }
+                    }
+
+                    v.findViewById(R.id.reason_scanned_description).setVisibility(View.VISIBLE);
+                    v.findViewById(R.id.reason_scanned).setVisibility(View.VISIBLE);
+                    ((TextView) v.findViewById(R.id.reason_scanned_description)).setText(getString(R.string.scanned_with_av));
+                    ((TextView) v.findViewById(R.id.reason_scanned)).setText(av.toString());
+                }
             }
 
             if (reason.getThirdparty_validated() != null) {
