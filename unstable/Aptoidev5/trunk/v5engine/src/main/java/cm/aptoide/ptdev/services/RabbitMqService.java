@@ -2,25 +2,38 @@ package cm.aptoide.ptdev.services;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,8 +58,14 @@ public class RabbitMqService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String host = intent.getStringExtra("host");
-                String queueName = intent.getStringExtra("queueName");
+
+                final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String queueName = sharedPreferences.getString("queueName", null);
+
+                String host = Constants.WEBINSTALL_HOST;
+
                 try {
                     ConnectionFactory factory = new ConnectionFactory();
                     factory.setHost(host);
@@ -59,7 +78,45 @@ public class RabbitMqService extends Service {
                     newChannel(queueName, new AMQHandler() {
                         @Override
                         void handleMessage(String body) {
-                            Log.d("Aptoide-WebInstall", body);
+
+                            try {
+                                JSONObject object = new JSONObject(body);
+
+                                Intent i = new Intent(getApplicationContext(), AppViewActivity.class);
+                                String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, null, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
+
+                                String repo = object.getString("repo");
+                                long id = object.getLong("id");
+                                String md5sum = object.getString("md5sum");
+                                i.putExtra("fromMyapp", true);
+                                i.putExtra("repoName", repo);
+                                i.putExtra("id", id);
+                                i.putExtra("md5sum", md5sum);
+                                String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                String hmac = object.getString("hmac");
+                                String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo+id+md5sum, authToken+deviceId);
+                                if(hmac.equals(calculatedHmac)){
+                                    getApplicationContext().startActivity(i);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (AuthenticatorException e) {
+                                e.printStackTrace();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            } catch (OperationCanceledException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeyException e) {
+                                e.printStackTrace();
+                            }
+
+
                         }
                     });
                 } catch (IOException e) {
@@ -100,6 +157,7 @@ public class RabbitMqService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
         try {
             if(channel!=null) channel.abort();
@@ -107,7 +165,10 @@ public class RabbitMqService extends Service {
             connection.abort();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ShutdownSignalException e){
+            e.printStackTrace();
         }
+        isRunning = false;
         thread_pool.shutdownNow();
 
         Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
@@ -138,13 +199,13 @@ public class RabbitMqService extends Service {
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(queue_id, false, consumer);
         task.setConsumer(consumer);
-        thread_pool.submit(task);
+        thread_pool.execute(task);
     }
 
+    private boolean isRunning = true;
 
     public abstract class AMQHandler implements Runnable {
 
-        private boolean isRunning = true;
         private QueueingConsumer consumer;
 
         public AMQHandler() {
@@ -156,14 +217,17 @@ public class RabbitMqService extends Service {
             while(isRunning){
                 try {
                     QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-                    String body = new String(delivery.getBody(), Charset.forName("UTF-8"));
-                    handleMessage(body);
+
+                    String body = new String(delivery.getBody(), "UTF-8");
                     Log.d("Aptoide-RabbitMqService", "MESSAGE: " + body);
+                    handleMessage(body);
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (ShutdownSignalException e){
+                    Log.d("Aptoide-WebInstall", "Connection closed with reason " + e.getReason().toString());
                 }
             }
 
@@ -171,9 +235,7 @@ public class RabbitMqService extends Service {
 
         abstract void handleMessage(String body);
 
-        public void setRunning(boolean running) {
-            isRunning = running;
-        }
+
 
         public void setConsumer(QueueingConsumer consumer) {
             this.consumer = consumer;
