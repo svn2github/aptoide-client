@@ -747,10 +747,11 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
             //login_store.setText("");
 
 
-
+            /*
             if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false)) {
                 toast.makeText(this, getString(R.string.webinstall_relogin), Toast.LENGTH_SHORT).show();
             }
+            */
 
         }
         mDrawerList.setAdapter(mMenuAdapter);

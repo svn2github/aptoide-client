@@ -24,10 +24,9 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        Log.d("syncAdapter", "onPerformSync()");
+        Log.d("Aptoide-WebInstall", "onPerformSync()");
 
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String queueName = sPref.getString(Constants.WEBINSTALL_QUEUE_NAME, null);
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(Constants.WEBINSTALL_HOST);
@@ -44,17 +43,17 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             GetResponse response;
             while((response = channel.basicGet(sPref.getString(Constants.WEBINSTALL_QUEUE_NAME, null), false)) != null) {
                 String message = new String(response.getBody(), "UTF-8");
-                Log.d("syncAdapter", "MESSAGE: " + message);
-                //handleMessage(message);
+                handleMessage(message);
                 channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
             }
 
             connection.close();
 
-            sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+            //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
 
         } catch (IOException e) {
-            sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
+            e.printStackTrace();
+            //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
         }
 
     }

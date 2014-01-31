@@ -217,7 +217,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         if(AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
             finish();
-            Toast.makeText(this, "Only one account allowed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
         }else{
 
 
@@ -412,7 +412,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                Toast.makeText(getBaseContext(), "An error ocurred.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (pd != null) {
                     pd.dismiss();

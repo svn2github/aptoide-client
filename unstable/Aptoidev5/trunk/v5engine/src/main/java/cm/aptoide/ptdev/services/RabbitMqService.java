@@ -137,9 +137,6 @@ public class RabbitMqService extends Service {
         channel.basicQos(0);
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(queue_id, false, consumer);
-
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
-
         task.setConsumer(consumer);
         thread_pool.submit(task);
     }
