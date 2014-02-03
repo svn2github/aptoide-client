@@ -27,7 +27,7 @@ public class StoreItem {
 	}
 
 	public String getDwnNumber() {
-		return storeDwnNumber + " downloads";
+		return storeDwnNumber;
 	}
 
 	public String getStoreAvatar() {

@@ -17,6 +17,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
 public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
 
 	
@@ -65,7 +67,7 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
         }
 
         storeName.setText(storeItem.getName());
-        storeDwn.setText(storeItem.getDwnNumber());
+        storeDwn.setText(storeItem.getDwnNumber()+" "+getContext().getString(R.string.downloads));
 
         if(getItemId(position)>0){
             ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);

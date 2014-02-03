@@ -642,5 +642,14 @@ public class AptoideUtils {
         String pre = ("KMGTPE").charAt(exp-1)+"";
         return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
+
+    public static String withSuffix(String input) {
+        long count = Long.parseLong(input);
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp-1));
+    }
 }
 

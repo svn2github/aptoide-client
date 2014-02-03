@@ -45,7 +45,6 @@
                 android:scrollbars="vertical"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="italic"
-                android:text="teresa.deus@aptoide.com"
                 android:singleLine="true"
                 android:maxLines="1"
                 android:ellipsize="end"

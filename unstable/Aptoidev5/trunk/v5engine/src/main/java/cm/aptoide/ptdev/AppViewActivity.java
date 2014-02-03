@@ -51,6 +51,7 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.google.android.gms.ads.AdView;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
@@ -107,7 +108,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     repoName = getApkInfoJson.getApk().getRepo();
                     wUrl = getApkInfoJson.getMeta().getWUrl();
                     Log.d("AppView", "wUrl " + wUrl);
-                    boolean trusted = false;
+                    boolean showLatestString = false;
                     if (getApkInfoJson.getApk().getIconHd() != null) {
                         icon = getApkInfoJson.getApk().getIconHd();
                         String sizeString = IconSizes.generateSizeString(AppViewActivity.this);
@@ -182,15 +183,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (getApkInfoJson.getMalware() != null) {
                         boolean showBadgeLayout = false;
+                        Log.d("AppViewActivity-malwareStatus","status: "+(getApkInfoJson.getMalware().getStatus()));
                         if (getApkInfoJson.getMalware().getStatus().equals("scanned")) {
                             ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
                             ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
                             showBadgeLayout = true;
-                            trusted = true;
+                            showLatestString = true;
                         } else if (getApkInfoJson.getMalware().getStatus().equals("warn")) {
                             ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_warning);
                             ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.warning));
                             showBadgeLayout = true;
+                            showLatestString = false;
+                        } else if (getApkInfoJson.getMalware().getStatus().equals("unknown")) {
+                            showBadgeLayout = false;
+                            showLatestString = true;
                         }
                         if (showBadgeLayout) {
                             findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
@@ -213,7 +219,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         latestVersion.setVisibility(View.VISIBLE);
 
                         String getLatestString;
-                        if (trusted) {
+                        if (showLatestString) {
                             getLatestString = getString(R.string.get_latest_version);
                         } else {
                             getLatestString = getString(R.string.get_latest_version_and_trusted);
@@ -278,6 +284,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         isFromActivityResult = false;
                     }
+
+                    mAdView = (MoPubView) findViewById(R.id.adview);
+                    if (Build.VERSION.SDK_INT > 11) {
+                        mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    }
+                    mAdView.setVisibility(View.VISIBLE);
+                    mAdView.setAdUnitId("18947d9a99e511e295fa123138070049");
+                    mAdView.loadAd();
 
                 } else {
                     for (Error error : json.getErrors()) {
@@ -783,12 +797,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
-        mAdView = (MoPubView) findViewById(R.id.adview);
-        if (Build.VERSION.SDK_INT > 11) {
-            mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        mAdView.setAdUnitId("18947d9a99e511e295fa123138070049");
-        mAdView.loadAd();
+
 
 
 

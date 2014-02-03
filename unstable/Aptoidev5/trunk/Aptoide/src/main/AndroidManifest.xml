@@ -18,8 +18,8 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application android:icon="@drawable/ic_launcher"
                  android:name="cm.aptoide.ptdev.Aptoide"
@@ -176,6 +176,28 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.mopub.mobileads.MoPubActivity"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:hardwareAccelerated="false" />
+
+        <activity android:name="com.mopub.mobileads.MraidActivity"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:hardwareAccelerated="false" />
+
+        <activity android:name="com.mopub.mobileads.MraidBrowser"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:hardwareAccelerated="false" />
+
+        <activity android:name="com.adsdk.sdk.banner.InAppWebView"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <activity android:name="com.adsdk.sdk.mraid.MraidActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+
+        <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
+                  android:launchMode="singleInstance"/>
+
         <service android:name="cm.aptoide.ptdev.services.RabbitMqService"
                  android:label="WebInstallService"
                  android:exported="false"/>
@@ -247,8 +269,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
-                  android:launchMode="singleInstance"/>
+
 
 
     </application>
