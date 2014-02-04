@@ -1,22 +1,19 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.GridLayout;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.*;
-
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MoreEditorsChoice;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.Collection;
@@ -128,7 +125,18 @@ public class HomeLayoutAdapter extends BaseAdapter {
             }
         }
         TextView tv = (TextView) v.findViewById(R.id.collectionName);
-        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
+
+        String name = list.get(position).getName();
+        String categoryName;
+        try {
+            categoryName = context.getString(EnumCategories.getCategoryName(list.get(position).getParentId()));
+            Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
+        }catch (Exception e){
+            categoryName = name;
+            Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
+        }
+        tv.setText(categoryName);
+//        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
 
 
 

@@ -172,9 +172,17 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
                 switch (id) {
                     case 20:
+                        if(sort.isNoCategories()){
 
+                            return null;
+                        }
                         return database.getCategories(storeId, parentId);
                     case 21:
+
+                        if(sort.isNoCategories()){
+
+                            return database.getAllStoreApks(storeId, sort);
+                        }
 
                         return database.getApks(storeId, parentId, sort);
 

@@ -14,16 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.internal.view.SupportMenuItem;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,10 +47,8 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
-import com.google.android.gms.ads.AdView;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -79,7 +73,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static final int DOWGRADE_REQUEST_CODE = 456;
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
-    private MoPubView mAdView;
+    private MoPubView moPubView;
 
     private GetApkInfoJson json;
     private String name;
@@ -285,13 +279,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         isFromActivityResult = false;
                     }
 
-                    mAdView = (MoPubView) findViewById(R.id.adview);
+                    moPubView = (MoPubView) findViewById(R.id.adview);
                     if (Build.VERSION.SDK_INT > 11) {
-                        mAdView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                        moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     }
-                    mAdView.setVisibility(View.VISIBLE);
-                    mAdView.setAdUnitId("18947d9a99e511e295fa123138070049");
-                    mAdView.loadAd();
+                    moPubView.setVisibility(View.VISIBLE);
+                    moPubView.setAdUnitId("18947d9a99e511e295fa123138070049");
+                    moPubView.loadAd();
 
                 } else {
                     for (Error error : json.getErrors()) {
@@ -481,8 +475,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onDestroy() {
         if(service!=null) unbindService(downloadConnection);
-        if (mAdView != null) {
-            mAdView.destroy();
+        if (moPubView != null) {
+            moPubView.destroy();
         }
         super.onDestroy();
     }

@@ -24,6 +24,7 @@ public class EnumCategories {
 
     private static SparseIntArray categoryNames = new SparseIntArray() {
         {
+            put(-1, R.string.editors_choice_new);
             put(1, R.string.applications);
             put(2, R.string.games);
 

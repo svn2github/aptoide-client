@@ -201,90 +201,43 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             <!--android:contentDescription="@null"-->
             <!--android:layout_gravity="right|center_vertical"/>-->
 
-    <!--<TextView-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textAppearance="@android:style/TextAppearance.Large"-->
-    <!--android:textColor="?attr/custom_color"-->
-    <!--android:paddingBottom="5dp"-->
-    <!--android:paddingLeft="5dp"-->
-    <!--android:paddingRight="5dp"-->
-    <!--android:paddingTop="10dp"-->
-    <!--android:gravity="left"-->
-    <!--android:text="@string/multiversion"/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/more_versions"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="left"-->
-    <!--android:paddingBottom="5.0dp"-->
-    <!--android:paddingLeft="5.0dp"-->
-    <!--android:paddingRight="5.0dp"-->
-    <!--android:text="@string/there_are_more_versions"/>-->
-
-    <!--<HorizontalScrollView-->
-    <!--android:id="@+id/scroller_multiversion"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_weight="2"-->
-    <!--android:fadeScrollbars="true"-->
-    <!--android:orientation="vertical"-->
-    <!--android:scrollbars="none" android:fillViewport="false">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/multiversion_container"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<include layout="@layout/row_app_multiversion"-->
-    <!--android:layout_margin="2dp"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"></include>-->
-    <!--<include layout="@layout/row_app_multiversion"-->
-    <!--android:layout_margin="2dp"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"></include>-->
-    <!--<include layout="@layout/row_app_multiversion"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_margin="2dp"-->
-    <!--android:layout_height="wrap_content"></include>-->
-    <!--</LinearLayout>-->
-    <!--</HorizontalScrollView>-->
-
-    <TextView
-            style="@style/titleLabel"
-            android:text="What's new?"/>
-
-    <LinearLayout
-            android:id="@+id/whats_new_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:clickable="true"
-            android:orientation="vertical">
+    <LinearLayout android:orientation="vertical" android:id="@+id/whats_new_container"
+                  android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:visibility="gone">
 
         <TextView
-                android:id="@+id/whats_new_descript"
+                style="@style/titleLabel"
+                android:text="@string/whats_new"/>
+
+        <LinearLayout
+                android:id="@+id/whats_new_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingLeft="5.0sp"
-                android:paddingRight="5.0sp"
-                android:paddingTop="10.0dip"
-                />
-    </LinearLayout>
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical">
 
-    <ImageView
-            android:id="@+id/show_all_whats_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_more_arrow_down"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:contentDescription="@null"
-            android:layout_gravity="right|center_vertical"/>
+            <TextView
+                    android:id="@+id/whats_new_descript"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingLeft="5.0sp"
+                    android:paddingRight="5.0sp"
+                    android:paddingTop="10.0dip"/>
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/show_all_whats_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_more_arrow_down"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:contentDescription="@null"
+                android:layout_gravity="right|center_vertical"/>
+
+    </LinearLayout>
 
 
     <LinearLayout android:orientation="vertical"

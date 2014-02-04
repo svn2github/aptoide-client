@@ -537,14 +537,14 @@ public class Database {
         }
 
 
-        tempList.put("Latest editors choice", new ArrayList<HomeItem>());
-        tempList2.put("Latest editors choice", -1);
+        tempList.put("New Editors' Choice", new ArrayList<HomeItem>());
+        tempList2.put("New Editors' Choice", -1);
 
         int i=0;
 
         for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize ;c.moveToNext()){
 
-            String collection = "Latest editors choice";
+            String collection = "New Editors' Choice";
             i++;
             if(tempList.get(collection).size() < editorsChoiceBucketSize){
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));

@@ -9,8 +9,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:orientation="vertical">
@@ -31,7 +31,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Daniel Batalha"/>
+            android:text="Daniel Batalha" android:paddingLeft="10dp"/>
 
     <TextView
             android:id="@+id/date"
@@ -56,7 +56,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_below="@+id/author"
             android:ellipsize="end"
             android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
-            android:paddingBottom="15dp"/>
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
 
 </RelativeLayout>

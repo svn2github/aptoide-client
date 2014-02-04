@@ -318,5 +318,21 @@
     <string name="at_time">at %s</string>
     <string name="webinstall_relogin">You need to re-login to activate WebInstall</string>
 
+    <string name="error_MARG_1">Missing repo parameter</string>
+    <string name="error_MARG_2">Missing apkid parameter</string>
+    <string name="error_MARG_3">Missing apkversion parameter</string>
+
+    <string name="error_IARG_1">Invalid repo!</string>
+    <string name="error_IARG_2">Invalid token!</string>
+    <string name="error_IARG_3">Invalid identifier!</string>
+    <string name="error_IARG_100">Invalid comment limit!</string>
+    <string name="error_IARG_102">Invalid types!</string>
+
+    <string name="error_SYS_1">An unknown error occurred, please try again</string>
+    <string name="error_SYS_2">No data found, please try again later</string>
+    <string name="error_SYS_3">System is now in maintenance, please try again later</string>
+    <string name="error_SYS_4">This call is not supported by the current API version</string>
+
+
 
 </resources>

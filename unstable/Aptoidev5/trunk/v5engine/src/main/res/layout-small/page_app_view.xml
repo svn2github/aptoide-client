@@ -54,31 +54,30 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/advertisement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical" >
+            android:layout_alignParentBottom="true">
 
         <com.mopub.mobileads.MoPubView
                 android:id="@+id/adview"
-                android:layout_width="match_parent"
+                android:layout_width="600dp"
                 android:layout_height="50dp"
-                android:fitsSystemWindows="true"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone"/>
+                android:foregroundGravity="center"
+                android:layout_centerHorizontal="true"/>
 
         <com.adsdk.sdk.banner.AdView
                 android:id="@+id/mobFoxView"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:visibility="gone"
                 request_url="http://my.mobfox.com/request.php"
                 publisherId="6a7d6041aec6aa5ea624e7d9ad6fb60e"
+                android:layout_centerHorizontal="true"
                 animation="true" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
 

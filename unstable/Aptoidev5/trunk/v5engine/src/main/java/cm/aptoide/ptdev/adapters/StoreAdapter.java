@@ -67,7 +67,14 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
         }
 
         storeName.setText(storeItem.getName());
-        storeDwn.setText(storeItem.getDwnNumber()+" "+getContext().getString(R.string.downloads));
+
+        String downloadNnr="";
+        if(storeItem.getDwnNumber()!=null && storeItem.getDwnNumber().length()>0){
+            downloadNnr = withSuffix(storeItem.getDwnNumber());
+            storeDwn.setText(downloadNnr+" "+getContext().getString(R.string.downloads));
+        }else{
+            storeDwn.setText("");
+        }
 
         if(getItemId(position)>0){
             ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
