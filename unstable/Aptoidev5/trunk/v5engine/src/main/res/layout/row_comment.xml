@@ -9,8 +9,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:orientation="vertical">
@@ -56,7 +56,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_below="@+id/author"
             android:ellipsize="end"
             android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
-            android:paddingBottom="10dp"
+            android:paddingBottom="12dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"/>
 
