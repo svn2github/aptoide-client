@@ -3,11 +3,13 @@ package cm.aptoide.ptdev.downloadmanager.state;
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.DownloadManager;
 
+import java.io.Serializable;
+
 /**
  * The pending state represents the status of a download object waiting to download.
  * @author Edward Larsson (edward.larsson@gmx.com)
  */
-public class PendingState extends StatusState {
+public class PendingState extends StatusState implements Serializable{
 
 
 

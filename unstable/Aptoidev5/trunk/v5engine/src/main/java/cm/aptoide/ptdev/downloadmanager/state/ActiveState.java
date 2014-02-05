@@ -3,40 +3,44 @@ package cm.aptoide.ptdev.downloadmanager.state;
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.DownloadManager;
 
+import java.io.Serializable;
+
 /**
  * The active state represents the status of a download object in the process of downloading.
+ *
  * @author Edward Larsson (edward.larsson@gmx.com)
  */
-public class ActiveState extends StatusState {
+public class ActiveState extends StatusState implements Serializable {
 
-	/**
-	 * Construct an active state.
-	 * @param downloadInfo The downloadInfo associated with this state.
-	 */
-	public ActiveState(DownloadInfo downloadInfo) {
-		super(downloadInfo);
-	}
+    /**
+     * Construct an active state.
+     *
+     * @param downloadInfo The downloadInfo associated with this state.
+     */
+    public ActiveState(DownloadInfo downloadInfo) {
+        super(downloadInfo);
+    }
 
-	@Override
-	public void changeFrom() {
+    @Override
+    public void changeFrom() {
         manager.removeFromActiveList(mDownloadInfo);
-	}
+    }
 
-	@Override
-	public boolean changeTo() {
-		if (manager.addToActiveList(mDownloadInfo)) {
-			// Set the status state before starting new thread because the while loop in the run method
-			// depends on the status state being active.
+    @Override
+    public boolean changeTo() {
+        if (manager.addToActiveList(mDownloadInfo)) {
+            // Set the status state before starting new thread because the while loop in the run method
+            // depends on the status state being active.
 //            Toast.makeText(ApplicationAptoide.getContext(), ApplicationAptoide.getContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
             mDownloadInfo.setStatusState(this);
-			Thread t = new Thread(mDownloadInfo);
-			t.start();
-			return true;
-		}
+            Thread t = new Thread(mDownloadInfo);
+            t.start();
+            return true;
+        }
 
-		mDownloadInfo.changeStatusState(new PendingState(mDownloadInfo));
-		return false;
-	}
+        mDownloadInfo.changeStatusState(new PendingState(mDownloadInfo));
+        return false;
+    }
 
     @Override
     public int getQueuePosition() {
@@ -49,27 +53,27 @@ public class ActiveState extends StatusState {
     }
 
     @Override
-	public void download() {
-		//do nothing, already active
-	}
+    public void download() {
+        //do nothing, already active
+    }
 
-	@Override
-	public void pause() {
-		mDownloadInfo.changeStatusState(new InactiveState(mDownloadInfo));
-	}
+    @Override
+    public void pause() {
+        mDownloadInfo.changeStatusState(new InactiveState(mDownloadInfo));
+    }
 
 //	@Override
 //	public int getQueuePosition() {
 //		return DownloadManager.INSTANCE.getActiveQueuePosition(mDownloadInfo);
 //	}
 
-	@Override
-	public StatusState getShallowCopy() {
-		return new ActiveState(null);
-	}
+    @Override
+    public StatusState getShallowCopy() {
+        return new ActiveState(null);
+    }
 
-	@Override
-	public void openFile() {
-		// do nothing, can't open a file that's being written to.
-	}
+    @Override
+    public void openFile() {
+        // do nothing, can't open a file that's being written to.
+    }
 }

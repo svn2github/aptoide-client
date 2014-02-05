@@ -169,14 +169,14 @@ public class RabbitMqService extends Service {
         } catch (ShutdownSignalException e){
             e.printStackTrace();
         }
-        thread_pool.shutdownNow();
 
-        Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-        ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
-        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
-
-        if(Build.VERSION.SDK_INT >= 8) {
-            ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
+        if (AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+            Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
+            if (Build.VERSION.SDK_INT >= 8) {
+                ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
+            }
         }
 
     }

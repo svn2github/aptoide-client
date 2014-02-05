@@ -31,6 +31,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Timer;
@@ -41,20 +42,73 @@ import java.util.TimerTask;
  */
 public class DownloadService extends Service {
 
-    DownloadManager manager = new DownloadManager();
+    private DownloadManager manager = new DownloadManager();
     private Timer timer;
     private boolean isStopped = true;
     private NotificationCompat.Builder mBuilder;
     private LongSparseArray<DownloadInfo> downloads = new LongSparseArray<DownloadInfo>();
 
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        String file = getCacheDir().getAbsolutePath();
+        File fileToCheck = new File(file+"/downloadManager");
 
+            try{
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileToCheck));
+                manager = (DownloadManager) in.readObject();
+                in.close();
+
+                for(DownloadInfo info: manager.getmErrorList()){
+                    downloads.put(info.getId(), info);
+                }
+
+                for(DownloadInfo info: manager.getmActiveList()){
+                    downloads.put(info.getId(), info);
+                }
+
+                for(DownloadInfo info: manager.getmCompletedList()){
+                    downloads.put(info.getId(), info);
+                }
+
+                for(DownloadInfo info: manager.getmInactiveList()){
+                    downloads.put(info.getId(), info);
+                }
+
+                for(DownloadInfo info: manager.getmPendingList()){
+                    downloads.put(info.getId(), info);
+                }
+
+
+            }catch (IOException e){
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
         return new LocalBinder();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            String file = getCacheDir().getAbsolutePath();
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file + "/downloadManager"));
+            out.writeObject(manager);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void updateDownload() {
         ArrayList<DownloadInfo> ongoingDownloads = getOngoingDownloads();
@@ -78,6 +132,41 @@ public class DownloadService extends Service {
             DownloadInfo downloadInfo = new DownloadInfo(manager, id);
             return downloadInfo;
         }
+    }
+
+
+
+
+
+    public void startExistingDownload(long id){
+
+
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+        mBuilder = setNotification();
+        startForeground(-3, mBuilder.build());
+
+        if(isStopped){
+            isStopped = false;
+            timer = new Timer();
+            timer.schedule(getTask(), 0, 1000);
+        }
+
+        Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
+        for(DownloadInfo info: manager.getmCompletedList()){
+            if(info.getId()==id){
+                info.download();
+                return;
+            }
+        }
+
+        for(DownloadInfo info: manager.getmErrorList()){
+            if(info.getId()==id){
+                info.download();
+                return;
+            }
+        }
+
+
 
     }
 
@@ -170,7 +259,6 @@ public class DownloadService extends Service {
     public void stopDownload(long id) {
 
         DownloadInfo info = getDownload(id);
-
         info.remove();
 
     }

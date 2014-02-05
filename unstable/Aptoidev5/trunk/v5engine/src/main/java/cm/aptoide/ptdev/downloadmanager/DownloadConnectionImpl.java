@@ -9,6 +9,7 @@ import org.apache.http.HttpStatus;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,7 +20,7 @@ import java.net.URL;
  * Time: 15:44
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadConnectionImpl extends DownloadConnection {
+public class DownloadConnectionImpl extends DownloadConnection implements Serializable {
 
     HttpURLConnection connection;
     private BufferedInputStream mStream;

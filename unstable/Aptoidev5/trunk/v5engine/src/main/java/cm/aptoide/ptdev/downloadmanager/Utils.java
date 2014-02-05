@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.downloadmanager;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.utils.Filters;
@@ -81,8 +82,15 @@ public class Utils {
         if(AptoideUtils.HWSpecifications.getCpuAbi2().length()>0){
             cpuAbi += ","+ AptoideUtils.HWSpecifications.getCpuAbi2();
         }
+        int myversionCode = 0;
+        PackageManager manager = context.getPackageManager();
+         try {
+             myversionCode = manager.getPackageInfo(context.getPackageName(),0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        String filters = "maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density;
+        String filters = "maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density+"&myApt="+myversionCode;
 
         return Base64.encodeToString(filters.getBytes(), 0).replace("=","").replace("/","*").replace("+","_").replace("\n", "");
     }

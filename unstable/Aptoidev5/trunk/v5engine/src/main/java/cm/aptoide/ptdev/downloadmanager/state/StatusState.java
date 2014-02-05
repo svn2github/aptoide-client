@@ -5,11 +5,13 @@ import cm.aptoide.ptdev.downloadmanager.DownloadManager;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
 
+import java.io.Serializable;
+
 /**
  * A StatusState is a state in which a {@link DownloadInfo} can be and helps to perform some status specific actions.
  * @author Edward Larsson (edward.larsson@gmx.com)
  */
-public abstract class StatusState {
+public abstract class StatusState implements Serializable{
 
 	/** The download object this state is associated with. */
 	protected DownloadInfo mDownloadInfo;

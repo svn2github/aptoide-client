@@ -5,9 +5,10 @@ import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 
-public class DownloadModel {
+public class DownloadModel implements Serializable {
 
     private final String destination;
     private final String url;

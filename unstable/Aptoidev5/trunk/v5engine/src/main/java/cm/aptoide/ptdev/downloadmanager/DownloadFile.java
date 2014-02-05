@@ -4,10 +4,7 @@ import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,10 +13,12 @@ import java.io.RandomAccessFile;
  * Time: 11:17
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadFile {
+public class DownloadFile implements Serializable{
 
-    public RandomAccessFile getmFile() {
-        return mFile;
+    private final File file;
+
+    public RandomAccessFile getmFile() throws FileNotFoundException {
+        return new RandomAccessFile(file, "rw");
     }
 
     public void delete(){
@@ -28,23 +27,21 @@ public class DownloadFile {
 
     }
 
-    private RandomAccessFile mFile;
+
     private String mDestination;
     private String md5;
+
 
 
     public DownloadFile(String destination, String md5) throws FileNotFoundException {
         this.md5 = md5;
         this.mDestination = destination;
-        File file = new File(this.mDestination);
+        file = new File(this.mDestination);
 
         File dir = file.getParentFile();
         if ((dir != null) && (!dir.isDirectory())) {
             dir.mkdirs();
         }
-
-        this.mFile = new RandomAccessFile(mDestination, "rw");
-
 
     }
 
@@ -63,23 +60,21 @@ public class DownloadFile {
         return this.mDestination;
     }
 
-    public void write(byte[] buffer) throws IOException
-    {
-        this.mFile.write(buffer);
-    }
 
-    public void close() {
+    public void close(RandomAccessFile file) {
         try {
-            this.mFile.close();
+            file.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void setDownloadedSize(long downloadedSize) throws IOException {
+    public void setDownloadedSize(RandomAccessFile file, long downloadedSize) throws IOException {
+
         Log.d("DownloadFile", "Position is: " + downloadedSize);
-        mFile.seek(downloadedSize);
+        file.getChannel().position(downloadedSize);
+
     }
 
     public String getMd5() {

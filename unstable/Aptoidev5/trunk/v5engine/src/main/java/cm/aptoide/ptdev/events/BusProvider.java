@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import com.squareup.otto.Bus;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -11,7 +13,7 @@ import com.squareup.otto.Bus;
  * Time: 11:42
  * To change this template use File | Settings | File Templates.
  */
-public class BusProvider extends Bus{
+public class BusProvider extends Bus implements Serializable{
 
     private static final BusProvider BUS = new BusProvider();
 

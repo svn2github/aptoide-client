@@ -26,7 +26,6 @@ public class InstalledAdapter extends CursorAdapter {
 
     final private String sizeString;
 
-
     public InstalledAdapter(Context context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
         sizeString = IconSizes.generateSizeString(context);

@@ -666,6 +666,10 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         downloadService.startDownloadFromAppId(id);
     }
 
+    public void installAppFromManager(long id) {
+        downloadService.startExistingDownload(id);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {

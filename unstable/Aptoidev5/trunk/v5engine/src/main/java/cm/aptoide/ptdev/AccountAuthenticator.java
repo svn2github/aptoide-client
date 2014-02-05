@@ -3,14 +3,17 @@ package cm.aptoide.ptdev;
 import android.accounts.*;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import static cm.aptoide.ptdev.configuration.AccountGeneral.*;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
+import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 
 /**
@@ -130,5 +133,17 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         return null;
+    }
+
+    @Override
+    public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
+
+        final Bundle result = new Bundle();
+        result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sPref.edit().remove("queueName").commit();
+
+        return result;
+
     }
 }

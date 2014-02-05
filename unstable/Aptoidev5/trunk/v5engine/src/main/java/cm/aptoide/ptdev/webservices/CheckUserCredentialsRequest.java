@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "http://dev.aptoide.com/webservices/checkUserCredentials";
+    String baseUrl = "http://webservices.aptoide.com/webservices/checkUserCredentials";
             //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;

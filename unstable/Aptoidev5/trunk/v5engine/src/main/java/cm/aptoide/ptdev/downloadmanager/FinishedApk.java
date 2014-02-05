@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Time: 17:48
  * To change this template use File | Settings | File Templates.
  */
-public class FinishedApk implements Parcelable{
+public class FinishedApk implements Parcelable, Serializable{
 
     private String name;
     private String apkid;

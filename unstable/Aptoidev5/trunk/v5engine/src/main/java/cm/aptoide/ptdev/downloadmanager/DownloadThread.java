@@ -8,6 +8,9 @@ import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+
+import java.io.RandomAccessFile;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 
 /**
@@ -17,7 +20,7 @@ import java.net.UnknownHostException;
  * Time: 15:22
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadThread implements Runnable {
+public class DownloadThread implements Runnable, Serializable {
 
     private long mFullSize;
     private long mProgress;
@@ -70,16 +73,18 @@ public class DownloadThread implements Runnable {
     DownloadConnection mConnection = null;
     DownloadFile mDownloadFile = null;
 
+    transient RandomAccessFile file = null;
 
     @Override
     public void run() {
-
         try{
             mDownloadFile = download.createFile();
+            file = mDownloadFile.getmFile();
+
             this.mConnection = download.createConnection();
             this.mDownloadedSize = 0;
             fileSize = DownloadFile.getFileLength(download.getDestination());
-            mDownloadFile.setDownloadedSize(fileSize);
+            mDownloadFile.setDownloadedSize(file, fileSize);
             this.mRemainingSize = mConnection.connect(fileSize);
 
             Log.d("DownloadManager", "Starting Download " + (parent.getStatusState() instanceof ActiveState) + " "+this.mDownloadedSize+fileSize + " " +this.mRemainingSize);
@@ -98,8 +103,9 @@ public class DownloadThread implements Runnable {
                 parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
             }
 
+
             while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
-                mDownloadFile.getmFile().write(bytes, 0 , bytesRead);
+                file.write(bytes, 0, bytesRead);
                 this.mDownloadedSize += bytesRead;
                 this.mProgress += bytesRead;
             }
@@ -143,8 +149,8 @@ public class DownloadThread implements Runnable {
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
         }
 
-        if(mDownloadFile!=null){
-            mDownloadFile.close();
+        if(mDownloadFile!=null && file!=null){
+            mDownloadFile.close(file);
         }
 
         if(mConnection!=null){

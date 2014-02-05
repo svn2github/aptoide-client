@@ -3,10 +3,12 @@ package cm.aptoide.ptdev.model;
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 
+import java.io.Serializable;
+
 /**
  * Created by rmateus on 11-12-2013.
  */
-public class Download {
+public class Download implements Serializable{
 
     private String name;
     private String version;

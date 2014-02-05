@@ -17,7 +17,10 @@ import java.util.ArrayList;
  */
 public class NotOngoingAdapter extends ArrayAdapter<Download>{
 
-
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).getId();
+    }
 
     public NotOngoingAdapter(Context context, ArrayList<Download> notOngoingList) {
         super(context, 0, notOngoingList);

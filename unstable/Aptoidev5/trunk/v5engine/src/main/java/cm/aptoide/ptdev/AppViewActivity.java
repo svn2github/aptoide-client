@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
+import android.annotation.TargetApi;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -87,6 +89,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             Toast.makeText(AppViewActivity.this, "Error request", Toast.LENGTH_LONG).show();
         }
 
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
 
@@ -168,7 +171,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         public void onClick(View v) {
 
                             if (service != null) {
-                                service.stopDownload(id);
+                                service.stopDownload(downloadId);
                             }
 
 
@@ -269,12 +272,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         Log.d("Downgrade", "iffromactivityresult");
                         Download download = new Download();
-                        download.setId(id);
+                        download.setId(downloadId);
                         download.setName(name);
                         download.setVersion(versionName);
                         download.setIcon(icon);
                         download.setPackageName(package_name);
-                        service.startDownloadFromJson(json, id, download);
+                        service.startDownloadFromJson(json, downloadId, download);
 
                         isFromActivityResult = false;
                     }
@@ -286,6 +289,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     moPubView.setVisibility(View.VISIBLE);
                     moPubView.setAdUnitId("18947d9a99e511e295fa123138070049");
                     moPubView.loadAd();
+                    downloadId = json.getApk().getMd5sum().hashCode();
+
+                    if(service !=null && service.getDownload(downloadId).getDownload() != null){
+                        onDownloadUpdate(service.getDownload(downloadId).getDownload());
+                    }
 
                 } else {
                     for (Error error : json.getErrors()) {
@@ -312,6 +320,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isUpdate;
     private int versionCode;
     private boolean isShown = false;
+    private int downloadId;
 
     public boolean isUpdate() {
         return isUpdate;
@@ -329,11 +338,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String versionName;
         private String package_name;
 
+
         public InstallListener(String icon, String name, String versionName, String package_name) {
             this.icon = icon;
             this.name = name;
             this.versionName = versionName;
             this.package_name = package_name;
+
         }
 
         @Override
@@ -341,13 +352,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             Download download = new Download();
 
-            download.setId(id);
+            download.setId(downloadId);
             download.setName(this.name);
             download.setVersion(this.versionName);
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
 
-            service.startDownloadFromJson(json, id, download);
+            service.startDownloadFromJson(json, downloadId, download);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
 
@@ -385,8 +396,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void onServiceConnected(ComponentName name, IBinder downloadService) {
             service = ((DownloadService.LocalBinder)downloadService).getService();
-            if(service.getDownload(id).getDownload()!=null){
-                onDownloadUpdate(service.getDownload(id).getDownload());
+
+            if(service.getDownload(downloadId).getDownload()!=null){
+                onDownloadUpdate(service.getDownload(downloadId).getDownload());
             }
 
         }
@@ -538,32 +550,33 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         super.onSaveInstanceState(outState);
         outState.putString("cacheKey", cacheKey);
         outState.putString("packageName", package_name);
+        outState.putInt("downloadId", downloadId);
     }
     
     @Override
     protected void onStart() {
         super.onStart();
-        BusProvider.getInstance().register(this);
         spiceManager.start(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
-        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey,DurationInMillis.ONE_DAY, requestListener);
+        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        BusProvider.getInstance().unregister(this);
     }
 
 
@@ -577,11 +590,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         if(savedInstanceState!=null){
             package_name = savedInstanceState.getString("packageName");
-        }
-
-        if(savedInstanceState!=null){
+            downloadId = savedInstanceState.getInt("downloadId");
             cacheKey = savedInstanceState.getString("cacheKey");
         }
+
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
 
@@ -787,7 +799,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if(token!=null){
             request.setToken(token);
         }
-        cacheKey = package_name + repoName + appVersionName;
+        cacheKey = package_name + repoName + versionName;
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
@@ -798,10 +810,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Subscribe
-    public void onDownloadStatusUpdate(DownloadStatusEvent download) {
+    public void onDownloadEventUpdate(DownloadEvent download) {
 
-        if (download.getId() == id) {
-            onDownloadUpdate(service.getDownload(id).getDownload());
+        if (download.getId() == downloadId) {
+            onDownloadUpdate(service.getDownload(download.getId()).getDownload());
+        }
+
+    }
+
+    @Subscribe
+    public void onDownloadStatusUpdate(Download download) {
+
+        if (download.getId() == downloadId) {
+            onDownloadUpdate(download);
         }
 
     }
@@ -830,7 +851,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public void onDownloadUpdate(Download download) {
 
 
-        if (download.getId() == id) {
+        if (download.getId() == downloadId) {
 
             TextView progressText = (TextView) findViewById(R.id.progress);
             ProgressBar pb = (ProgressBar) findViewById(R.id.downloading_progress);

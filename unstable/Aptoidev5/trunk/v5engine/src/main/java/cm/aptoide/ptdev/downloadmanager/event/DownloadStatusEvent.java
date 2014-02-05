@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.downloadmanager.event;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -7,7 +9,7 @@ package cm.aptoide.ptdev.downloadmanager.event;
  * Time: 12:22
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadStatusEvent {
+public class DownloadStatusEvent implements Serializable{
 
 
     private long id;

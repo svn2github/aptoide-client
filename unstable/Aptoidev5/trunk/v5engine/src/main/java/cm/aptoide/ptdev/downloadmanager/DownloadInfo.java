@@ -14,6 +14,7 @@ import cm.aptoide.ptdev.model.Download;
 import com.squareup.otto.Produce;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * Time: 10:49
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadInfo implements Runnable{
+public class DownloadInfo implements Runnable, Serializable {
 
 
     public DownloadInfo(DownloadManager manager, long id) {
@@ -91,16 +92,15 @@ public class DownloadInfo implements Runnable{
         return (int) ((mProgress) * 100 / mSize);
     }
 
-    TimerTask task;
-    Timer timer;
+
     @Override
     public void run() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        timer = new Timer();
+        Timer timer = new Timer();
 
         try {
 
-            for(DownloadModel file : mFilesToDownload){
+            for (DownloadModel file : mFilesToDownload) {
                 DownloadThread thread = new DownloadThread(file, this);
                 executor.submit(thread);
                 threads.add(thread);
@@ -111,7 +111,7 @@ public class DownloadInfo implements Runnable{
 
 
             mSize = getAllThreadSize();
-            task = new TimerTask() {
+            TimerTask task = new TimerTask() {
 
 
                 /** How much was downloaded last time. */
@@ -173,18 +173,17 @@ public class DownloadInfo implements Runnable{
             mProgress = getAllProgress();
 
 
-
             Log.d("TAG", "Downloads done " + mSize + " " + mProgress + " " + mStatusState.getEnumState().name());
             download.setSpeed(getSpeed());
             download.setProgress(getPercentDownloaded());
 
-            if(mStatusState instanceof ActiveState){
+            if (mStatusState instanceof ActiveState) {
                 changeStatusState(new CompletedState(this));
                 autoExecute();
             }
 
 
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             changeStatusState(new ErrorState(this, EnumDownloadFailReason.NO_REASON));
             e.printStackTrace();
         } catch (Exception e) {
@@ -211,14 +210,14 @@ public class DownloadInfo implements Runnable{
     double getDirSize(File dir) {
         double size = 0;
         if (dir.isFile()) {
-            if(!downloadingFilenames.contains(dir.getName())){
+            if (!downloadingFilenames.contains(dir.getName())) {
                 size = dir.length();
             }
         } else {
             File[] subFiles = dir.listFiles();
             for (File file : subFiles) {
-                if (file.isFile()){
-                    if(!downloadingFilenames.contains(file.getName())) {
+                if (file.isFile()) {
+                    if (!downloadingFilenames.contains(file.getName())) {
                         size += file.length();
                     }
                 } else {
@@ -233,34 +232,33 @@ public class DownloadInfo implements Runnable{
     private void checkDirectorySize(String dirPath) {
 
 
-
         File dir = new File(dirPath);
 
 
-        if(!dir.exists()){
-            if(!dir.mkdirs()){
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
                 return;
             }
         }
-        double size = getDirSize(dir)/1024/1024;
+        double size = getDirSize(dir) / 1024 / 1024;
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
         long maxFileCache = Long.parseLong((sPref.getString("maxFileCache", "200")));
-        if(maxFileCache < 50) maxFileCache = 50;
-        if(maxFileCache > 0 && size > maxFileCache){
+        if (maxFileCache < 50) maxFileCache = 50;
+        if (maxFileCache > 0 && size > maxFileCache) {
             File[] files = dir.listFiles();
             long latestTime = System.currentTimeMillis();
             long currentTime = 0;
             File fileToDelete = null;
-            for (File file : files){
+            for (File file : files) {
                 currentTime = file.lastModified();
 
-                if(currentTime<latestTime && !downloadingFilenames.contains(file.getName())){
-                    latestTime=currentTime;
+                if (currentTime < latestTime && !downloadingFilenames.contains(file.getName())) {
+                    latestTime = currentTime;
                     fileToDelete = file;
                 }
 
             }
-            if(fileToDelete!=null){
+            if (fileToDelete != null) {
                 Log.d("TAG", "Deleting " + fileToDelete.getName());
                 fileToDelete.delete();
             }
@@ -268,8 +266,8 @@ public class DownloadInfo implements Runnable{
         }
     }
 
-    public EnumDownloadFailReason getFailReason(){
-        return ((ErrorState)mStatusState).getErrorMessage();
+    public EnumDownloadFailReason getFailReason() {
+        return ((ErrorState) mStatusState).getErrorMessage();
     }
 
     public void autoExecute() {
@@ -283,8 +281,7 @@ public class DownloadInfo implements Runnable{
     }
 
 
-
-    public void setDownloadExecutor(DownloadExecutor executor){
+    public void setDownloadExecutor(DownloadExecutor executor) {
         this.downloadExecutor = executor;
     }
 
@@ -292,7 +289,7 @@ public class DownloadInfo implements Runnable{
     private long getAllDownloadedSize() {
 
         long sum = 0;
-        for(DownloadThread thread : threads){
+        for (DownloadThread thread : threads) {
             sum = sum + thread.getmDownloadedSize();
 //            Log.d("DownloadManagerThread", "Downloaded: " + thread.getmDownloadedSize());
         }
@@ -302,7 +299,7 @@ public class DownloadInfo implements Runnable{
     private long getAllProgress() {
 
         long sum = 0;
-        for(DownloadThread thread : threads){
+        for (DownloadThread thread : threads) {
             sum = sum + thread.getmProgress();
 //            Log.d("DownloadManagerThread", "Downloaded: " + thread.getmDownloadedSize());
         }
@@ -311,7 +308,7 @@ public class DownloadInfo implements Runnable{
 
     private long getAllThreadSize() {
         long sum = 0;
-        for(DownloadThread thread : threads){
+        for (DownloadThread thread : threads) {
             sum = sum + thread.getmFullSize();
 //            Log.d("DownloadManagerThread", "Size: " + thread.getmRemainingSize());
         }
@@ -325,22 +322,20 @@ public class DownloadInfo implements Runnable{
 
     }
 
-    public void remove()
-    {
+    public void remove() {
         changeStatusState(new CompletedState(this));
 
-        for(DownloadModel model: mFilesToDownload){
+        for (DownloadModel model : mFilesToDownload) {
             new File(model.getDestination()).delete();
         }
         mProgress = 0;
-        mSize=0;
+        mSize = 0;
         mFilesToDownload.clear();
         downloadManager.removeDownload(this);
     }
 
 
-
-    public void download(){
+    public void download() {
         mProgress = 0;
         this.mStatusState.download();
     }
@@ -374,14 +369,13 @@ public class DownloadInfo implements Runnable{
     }
 
 
-
     public long getId() {
         return id;
     }
 
-  public long getAllSizeRemaining() {
+    public long getAllSizeRemaining() {
         long sum = 0;
-        for(DownloadThread thread : threads){
+        for (DownloadThread thread : threads) {
             sum = sum + thread.getmRemainingSize();
 //            Log.d("DownloadManagerThread", "Size: " + thread.getmRemainingSize());
         }

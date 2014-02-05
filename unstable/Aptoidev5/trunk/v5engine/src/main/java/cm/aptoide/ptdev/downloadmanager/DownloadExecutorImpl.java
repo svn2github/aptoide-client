@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -29,7 +30,7 @@ import java.util.Locale;
  * Time: 14:53
  * To change this template use File | Settings | File Templates.
  */
-public class DownloadExecutorImpl implements DownloadExecutor {
+public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
     private final FinishedApk apk;
@@ -76,7 +77,7 @@ public class DownloadExecutorImpl implements DownloadExecutor {
 
                     Intent i = new Intent(context, PermissionsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    i.putExtra("apk", apk);
+                    i.putExtra("apk", (Parcelable)apk);
                     i.putStringArrayListExtra("permissions", apk.getPermissionsList());
                     context.startActivity(i);
 

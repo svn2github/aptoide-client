@@ -78,6 +78,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
         final int count = linkedAdapter.getCount();
         for (int i = 0; i < count; i++) {
 
+
             final Cursor item = (Cursor) linkedAdapter.getItem(i);
 
             if (!isTheSame(currentSection, item.getString(item.getColumnIndex("is_update")))) {
