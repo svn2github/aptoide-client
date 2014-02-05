@@ -298,4 +298,5 @@
   <string name="search_on_aptoide">Procurar mais na página Aptoide</string>
   <string name="reinstall">Reinstalar</string>
   <string name="at_time">às %s</string>
+  <string name="X_download_number">%s transf.</string>
 </resources>

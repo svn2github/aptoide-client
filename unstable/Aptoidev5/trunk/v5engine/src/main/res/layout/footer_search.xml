@@ -5,9 +5,29 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/search"
-                style="?attr/customButtonColor"
-                android:layout_margin="10dp"
-                android:drawableLeft="@drawable/ic_action_web_site_dark"
-                android:text="@string/search_on_aptoide"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:gravity="right">
+
+    <TextView
+            android:id="@+id/search_in_other_stores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:text="@string/search_on_aptoide"
+            android:paddingRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/search"/>
+    <Button
+            android:id="@+id/search"
+            style="?attr/customButtonColor"
+            android:text="@string/search_more"
+            android:drawableLeft="@drawable/ic_action_web_site_dark"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

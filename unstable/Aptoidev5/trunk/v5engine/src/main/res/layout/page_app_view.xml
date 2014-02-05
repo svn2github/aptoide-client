@@ -55,16 +55,16 @@
                 android:foregroundGravity="center"
                 android:layout_centerHorizontal="true"/>
 
-        <com.adsdk.sdk.banner.AdView
-                android:id="@+id/mobFoxView"
-                android:layout_width="320dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:visibility="gone"
-                request_url="http://my.mobfox.com/request.php"
-                publisherId="6a7d6041aec6aa5ea624e7d9ad6fb60e"
-                android:layout_centerHorizontal="true"
-                animation="true" />
+        <!--<com.adsdk.sdk.banner.AdView-->
+                <!--android:id="@+id/mobFoxView"-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:gravity="center"-->
+                <!--android:visibility="gone"-->
+                <!--request_url="http://my.mobfox.com/request.php"-->
+                <!--publisherId="6a7d6041aec6aa5ea624e7d9ad6fb60e"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--animation="true" />-->
     </RelativeLayout>
 
 </RelativeLayout>

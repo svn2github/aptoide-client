@@ -482,7 +482,7 @@ public class Database {
 
     public ArrayList<HomeItem> getTopFeatured(int bucketSize) {
 
-        Cursor c = database.rawQuery("select apk.id_apk as id, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1  join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 511", null);
+        Cursor c = database.rawQuery("select apk.id_apk as id, apk.name as name, apk.downloads as downloads, apk.rating as rating, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1  join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 511", null);
 
 
         int i = 0;
@@ -492,7 +492,7 @@ public class Database {
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long id = c.getLong(c.getColumnIndex("id"));
-            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
 
         }
 
@@ -506,7 +506,7 @@ public class Database {
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
 
-        Cursor c = database.rawQuery("select apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 ", null);
+        Cursor c = database.rawQuery("select catname.id_real_category as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 ", null);
 
 
         HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
@@ -531,7 +531,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , id));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
             }
 
         }
@@ -550,7 +550,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , id));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
             }
 
         }
@@ -584,7 +584,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        Cursor c = database.rawQuery("select apk.id_apk as id, repo.icons_path as iconpath, apk.icon as icon, cat1.id_apk, catparentname.id_real_category as parentid, catname.name as catname,catname.id_real_category as catnameid, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catname.id_real_category = ?", new String[]{String.valueOf(id)});
+        Cursor c = database.rawQuery("select catname.id_real_category as mycatname, apk.id_apk as id, apk.downloads as downloads, apk.rating as rating, repo.icons_path as iconpath, apk.icon as icon, cat1.id_apk, catparentname.id_real_category as parentid, catname.name as catname,catname.id_real_category as catnameid, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catname.id_real_category = ?", new String[]{String.valueOf(id)});
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
 
         int i = 0;
@@ -593,7 +593,7 @@ public class Database {
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long apkid = c.getLong(c.getColumnIndex("id"));
-            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, apkid));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon, apkid, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
         }
         c.close();
 
@@ -607,7 +607,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
-        Cursor c = database.rawQuery("select apk.id_apk as id, repo.icons_path as iconpath, apk.icon as icon, catname.id_real_category as parentid, catname.name as catname, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catparentname.id_real_category = ?", new String[]{String.valueOf(id)});
+        Cursor c = database.rawQuery("select catname.id_real_category as mycatname, apk.id_apk as id, apk.downloads as downloads, apk.rating as rating, repo.icons_path as iconpath, apk.icon as icon, catname.id_real_category as parentid, catname.name as catname, apk.name as name from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 and catparentname.id_real_category = ?", new String[]{String.valueOf(id)});
         HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
 
         ArrayList<String> tempList3 = new ArrayList<String>();
@@ -630,7 +630,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long apkid = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon , apkid));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , apkid, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
             }else{
                 tempList3.add(collection);
             }

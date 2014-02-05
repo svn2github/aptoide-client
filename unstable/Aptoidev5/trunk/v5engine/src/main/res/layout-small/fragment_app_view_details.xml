@@ -13,37 +13,12 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
               android:orientation="vertical">
 
     <Gallery
-    android:id="@+id/gallery"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:paddingBottom="5dp" />
+        android:id="@+id/gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingBottom="5dp" />
 
-    <!--<TextView-->
-    <!--style="@style/titleLabel"-->
-    <!--android:text="@string/version_info"/>-->
-
-    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="fill_parent">-->
-
-        <!--<HorizontalScrollView android:layout_width="fill_parent"-->
-                              <!--android:layout_height="wrap_content">-->
-
-            <!--<LinearLayout android:id="@+id/_linearLayout"-->
-                          <!--android:layout_width="fill_parent"-->
-                          <!--android:layout_height="wrap_content"-->
-                          <!--android:orientation="horizontal"/>-->
-
-        <!--</HorizontalScrollView>-->
-
-        <!--<android.support.v4.view.ViewPager android:id="@+id/_viewPager"-->
-                                           <!--android:layout_width="fill_parent"-->
-                                           <!--android:layout_height="fill_parent"-->
-                                           <!--android:background="#000000"-->
-                                           <!--android:visibility="gone"/>-->
-
-    <!--</RelativeLayout>-->
 
     <RelativeLayout
             android:id="@+id/version_info_container"
@@ -63,7 +38,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
                 android:singleLine="true"
-                style="?attr/icDownloadsDrawable"
+                android:drawableLeft="?attr/icDownloadsDrawable"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_gravity="center_horizontal|left"/>
 
@@ -76,7 +51,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="2dp"
-                style="?attr/icStoreInfoDrawable"
+                android:drawableLeft="?attr/icStoreInfoDrawable"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
                 android:singleLine="true"
@@ -85,7 +60,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
         <TextView
                 android:id="@+id/size_label"
-                style="?attr/icAboutDrawable"
+                android:drawableLeft="?attr/icAboutDrawable"
                 android:layout_width="wrap_content"
                 android:gravity="center"
                 android:layout_height="wrap_content"
@@ -123,7 +98,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="2dp"
-                style="?attr/icRatingFloatDrawable"
+                android:drawableLeft="?attr/icRatingFloatDrawable"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
                 android:singleLine="true"
@@ -139,7 +114,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="2dp"
-                style="?attr/icLikeDrawable"
+                android:drawableLeft="?attr/icLikeDrawable"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
                 android:singleLine="true"
@@ -155,7 +130,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                style="?attr/icDontLikeDrawable"
+                android:drawableLeft="?attr/icDontLikeDrawable"
                 android:paddingBottom="2dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="2dp"
@@ -191,15 +166,17 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 />
     </LinearLayout>
 
-    <!--<ImageView-->
-            <!--android:id="@+id/show_all_description"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_more_arrow_down"-->
-            <!--android:paddingLeft="5dp"-->
-            <!--android:paddingRight="5dp"-->
-            <!--android:contentDescription="@null"-->
-            <!--android:layout_gravity="right|center_vertical"/>-->
+    <TextView
+            android:id="@+id/show_all_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableRight="?attr/icExpandDrawable"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:visibility="gone"
+            android:text="@string/show_more"/>
 
     <LinearLayout android:orientation="vertical" android:id="@+id/whats_new_container"
                   android:layout_width="match_parent" android:layout_height="wrap_content"

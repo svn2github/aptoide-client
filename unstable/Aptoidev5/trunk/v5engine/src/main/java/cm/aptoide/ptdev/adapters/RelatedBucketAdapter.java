@@ -13,6 +13,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
             holder.repo = (TextView) v.findViewById(R.id.app_repo);
+            holder.timestamp = (TextView) v.findViewById(R.id.app_timestamp);
             v.setTag(holder);
         } else {
             v = convertView;
@@ -74,6 +76,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         holder.name.setText(item.getName());
         holder.version.setText(item.getVername());
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
+        holder.timestamp.setText(item.getTimestamp());
 
         Log.d("Aptoide-Related", " item " + item.getName() + " " + item.getVername() + " " + item.getRepo());
 
@@ -106,6 +109,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         TextView version;
         ImageView icon;
         TextView repo;
+        TextView timestamp;
     }
 
 }

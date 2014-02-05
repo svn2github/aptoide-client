@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -77,6 +79,9 @@ public abstract class FragmentAppView extends Fragment {
 
 
         private TextView description;
+        private TextView showAllDescription;
+        private LinearLayout descriptionContainer;
+        private ScrollView scroller;
         private TextView store;
         private TextView downloads;
         private TextView rating;
@@ -97,17 +102,74 @@ public abstract class FragmentAppView extends Fragment {
         private View publisherContainer;
         private View whatsNewContainer;
         private TextView whatsNew;
-
+        private boolean collapsed = true;
+        int scrollPosition = 0;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
             Log.d("Aptoide-AppView", "getting event");
             Log.d("Aptoide-AppView", "Setting description");
             description.setText(event.getDescription());
+
+            Log.d("Aptoide-description", "lines "+description.getLineCount() );
+            if (description.getLineCount() > 10) {
+                description.setMaxLines(10);
+                showAllDescription.setVisibility(View.VISIBLE);
+                showAllDescription.setOnClickListener(new View.OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View v) {
+
+                        if (collapsed) {
+                            collapsed = false;
+                            scroller.getScrollY();
+                            description.setMaxLines(Integer.MAX_VALUE);
+                            TypedValue outValue = new TypedValue();
+                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
+                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+                            showAllDescription.setText(getString(R.string.show_less));
+                        } else {
+                            collapsed = true;
+                            TypedValue outValue = new TypedValue();
+                            getActivity().getTheme().resolveAttribute(R.attr.icExpandDrawable, outValue, true);
+                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+                            description.setMaxLines(10);
+                            scroller.scrollTo(0, scrollPosition);
+                            showAllDescription.setText(getString(R.string.show_more));
+                        }
+                    }
+                });
+                descriptionContainer.setOnClickListener(new View.OnClickListener() {
+
+
+                    @Override
+                    public void onClick(View v) {
+
+                        if (collapsed) {
+                            collapsed = false;
+                            scroller.getScrollY();
+                            description.setMaxLines(Integer.MAX_VALUE);
+                            TypedValue outValue = new TypedValue();
+                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
+                            showAllDescription.setText(getString(R.string.show_less));
+                        } else {
+                            collapsed = true;
+                            TypedValue outValue = new TypedValue();
+                            getActivity().getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
+                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+                            description.setMaxLines(10);
+                            scroller.scrollTo(0, scrollPosition);
+                            showAllDescription.setText(getString(R.string.show_more));
+                        }
+                    }
+                });
+            }
+
             publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
             store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
-            downloads.setText(getString(R.string.downloads) + ": " + event.getDownloads());
+            downloads.setText(getString(R.string.downloads) + ": " + withSuffix(String.valueOf(event.getDownloads())));
             rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
             likes.setText("" + event.getLikes());
             dontLikes.setText("" + event.getDontLikes());
@@ -155,6 +217,9 @@ public abstract class FragmentAppView extends Fragment {
             View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
 
             description = (TextView) v.findViewById(R.id.descript);
+            showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
+            descriptionContainer = (LinearLayout) v.findViewById(R.id.description_container);
+            scroller = (ScrollView) v.findViewById(R.id.app_info_scroller);
             store = (TextView) v.findViewById(R.id.store_label);
             downloads = (TextView) v.findViewById(R.id.downloads_label);
             rating = (TextView) v.findViewById(R.id.rating_label);
@@ -242,7 +307,7 @@ public abstract class FragmentAppView extends Fragment {
                     }else{
                         itemBasedElements.addAll(relatedApkJson.getItembased());
                     }
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
                     ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -273,7 +338,7 @@ public abstract class FragmentAppView extends Fragment {
                         develBasedElements.addAll(relatedApkJson.getDevelbased());
                     }
 
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
                     ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.more_from_publisher));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -305,7 +370,7 @@ public abstract class FragmentAppView extends Fragment {
                         multiVersionElements.addAll(relatedApkJson.getMultiversion());
                     }
 
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_home_header, null);
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
                     ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.multiversion));
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override

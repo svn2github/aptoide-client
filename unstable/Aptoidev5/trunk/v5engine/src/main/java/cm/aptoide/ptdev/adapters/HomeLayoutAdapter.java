@@ -1,18 +1,18 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.*;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.*;
+import android.widget.PopupMenu;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -21,6 +21,8 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created by rmateus on 28-01-2014.
@@ -130,10 +132,10 @@ public class HomeLayoutAdapter extends BaseAdapter {
         String categoryName;
         try {
             categoryName = context.getString(EnumCategories.getCategoryName(list.get(position).getParentId()));
-            Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
+            Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
         }catch (Exception e){
             categoryName = name;
-            Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
+            Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
         }
         tv.setText(categoryName);
 //        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
@@ -173,13 +175,18 @@ public class HomeLayoutAdapter extends BaseAdapter {
             i++;
             Log.d("Aptoide-HomeLayout", "Adding item " + item.getName() + " " + i);
             FrameLayout tvChild = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.row_app_home, rowLinearLayout, false);
-            ((TextView) tvChild.findViewById(R.id.app_name)).setText(item.getName());
+
+            TextView nameTv = (TextView) tvChild.findViewById(R.id.app_name);
+            nameTv.setText(item.getName());
             ImageView iconIv = (ImageView) tvChild.findViewById(R.id.app_icon);
+            Log.d("Home-Name", "Name length: " + item.getName().length());
+
             String icon = item.getIcon();
             if(icon.contains("_icon")){
                 String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
                 icon = splittedUrl[0] + "_" + iconSize + "."+ splittedUrl[1];
             }
+            ImageLoader.getInstance().displayImage(icon, iconIv);
 
             tvChild.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -191,7 +198,48 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
             });
 
-            ImageLoader.getInstance().displayImage(icon, iconIv);
+            String category;
+            int cat = Integer.parseInt(item.getCategory());
+            try {
+                category = context.getString(EnumCategories.getCategoryName(cat));
+                Log.d("Home-categ", "Category Name: " + categoryName);
+            }catch (Exception e){
+                category = item.getCategory();
+                Log.d("Home-categ", "Untranslated Category Name: " + categoryName);
+            }
+
+            if(list.get(position).getParentId()!=-1){
+                TextView downloadsTv = (TextView) tvChild.findViewById(R.id.app_downloads);
+                downloadsTv.setText(context.getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+                if(item.getName().length()>10){
+                    downloadsTv.setMaxLines(1);
+                }else{
+                    downloadsTv.setMaxLines(2);
+                }
+                downloadsTv.setVisibility(View.VISIBLE);
+            }else{
+                TextView categoryTv = (TextView) tvChild.findViewById(R.id.app_category);
+                categoryTv.setText(category);
+                if(item.getName().length()>10){
+                    categoryTv.setMaxLines(1);
+                }else{
+                    categoryTv.setMaxLines(2);
+                }
+                categoryTv.setVisibility(View.VISIBLE);
+            }
+
+            ImageView overflow = (ImageView) tvChild.findViewById(R.id.ic_action);;
+            overflow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopup(v, item.getId());
+                }
+            });
+            RatingBar rating = (RatingBar) tvChild.findViewById(R.id.app_rating);
+            rating.setRating(item.getRating());
+            rating.setOnRatingBarChangeListener(null);
+            rating.setVisibility(View.VISIBLE);
+
 
             rowLinearLayout.addView(tvChild);
 
@@ -361,5 +409,41 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
     public int getBucketSize() {
         return bucketSize;
+    }
+
+
+    public void showPopup(View v, long id) {
+        android.support.v7.widget.PopupMenu popup = new android.support.v7.widget.PopupMenu(context, v);
+        popup.setOnMenuItemClickListener(new MenuListener(context, id));
+        popup.inflate(R.menu.menu_actions);
+        popup.show();
+    }
+
+    static class MenuListener implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_install) {
+                ((MainActivity)context).installApp(id);
+                Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                return true;
+            } else if (i == R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

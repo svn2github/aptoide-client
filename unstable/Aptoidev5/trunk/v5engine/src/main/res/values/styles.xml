@@ -231,63 +231,6 @@
         <item name="android:src">@drawable/ic_action_discard_dark</item>
     </style>
 
-    <style name="aboutLight">
-        <item name="android:drawableLeft">@drawable/ic_action_about</item>
-    </style>
-
-    <style name="aboutDark">
-        <item name="android:drawableLeft">@drawable/ic_action_about_dark</item>
-    </style>
-
-    <style name="downloadsLight">
-        <item name="android:drawableLeft">@drawable/ic_action_download</item>
-    </style>
-
-    <style name="downloadsDark">
-        <item name="android:drawableLeft">@drawable/ic_action_download_dark</item>
-    </style>
-
-    <style name="likesLight">
-        <item name="android:drawableLeft">@drawable/ic_action_good</item>
-    </style>
-
-    <style name="likesDark">
-        <item name="android:drawableLeft">@drawable/ic_action_good_dark</item>
-    </style>
-
-    <style name="dontLikesLight">
-        <item name="android:drawableLeft">@drawable/ic_action_bad</item>
-    </style>
-
-    <style name="dontLikesDark">
-        <item name="android:drawableLeft">@drawable/ic_action_bad_dark</item>
-    </style>
-
-    <style name="storeLight">
-        <item name="android:drawableLeft">@drawable/ic_action_accept</item>
-    </style>
-
-    <style name="storeDark">
-        <item name="android:drawableLeft">@drawable/ic_action_accept_dark</item>
-    </style>
-
-    <style name="ratingLight">
-        <item name="android:drawableLeft">@drawable/ic_action_important</item>
-    </style>
-
-    <style name="ratingDark">
-        <item name="android:drawableLeft">@drawable/ic_action_important_dark</item>
-    </style>
-
-    <style name="searchLight">
-        <item name="android:src">@drawable/ic_action_search</item>
-    </style>
-
-    <style name="searchDark">
-        <item name="android:src">@drawable/ic_action_search_dark</item>
-    </style>
-
-
     <style name="MenuDrawer" />
 
     <style name="MenuDrawer.Widget" />
@@ -523,5 +466,17 @@
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">?attr/customColor</item>
     </style>
+
+    <style name="RatingBarSmallAptoide">
+        <item name="android:progressDrawable">@drawable/aptoide_ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/aptoide_ratingbar_small_holo_light</item>
+        <item name="android:isIndicator">true</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
 
 </resources>

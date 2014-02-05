@@ -33,13 +33,12 @@
         <item name="icUninstallDrawable">@style/uninstallLight</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update</item>
 
-        <item name="icAboutDrawable">@style/aboutLight</item>
-        <item name="icDownloadsDrawable">@style/downloadsLight</item>
-        <item name="icLikeDrawable">@style/likesLight</item>
-        <item name="icDontLikeDrawable">@style/dontLikesLight</item>
-        <item name="icStoreInfoDrawable">@style/storeLight</item>
-        <item name="icRatingFloatDrawable">@style/ratingLight</item>
-        <item name="icSearchDrawable">@style/searchLight</item>
+        <item name="icAboutDrawable">@drawable/ic_action_about</item>
+        <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
+        <item name="icLikeDrawable">@drawable/ic_action_good</item>
+        <item name="icDontLikeDrawable">@drawable/ic_action_bad</item>
+        <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
+        <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
         <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
         <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
@@ -85,13 +84,12 @@
         <item name="icUninstallDrawable">@style/uninstallDark</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update_dark</item>
 
-        <item name="icAboutDrawable">@style/aboutDark</item>
-        <item name="icDownloadsDrawable">@style/downloadsDark</item>
-        <item name="icLikeDrawable">@style/likesDark</item>
-        <item name="icDontLikeDrawable">@style/dontLikesDark</item>
-        <item name="icStoreInfoDrawable">@style/storeDark</item>
-        <item name="icRatingFloatDrawable">@style/ratingDark</item>
-        <item name="icSearchDrawable">@style/searchDark</item>
+        <item name="icAboutDrawable">@drawable/ic_action_about_dark</item>
+        <item name="icDownloadsDrawable">@drawable/ic_action_download_dark</item>
+        <item name="icLikeDrawable">@drawable/ic_action_good_dark</item>
+        <item name="icDontLikeDrawable">@drawable/ic_action_bad_dark</item>
+        <item name="icStoreInfoDrawable">@drawable/ic_action_accept_dark</item>
+        <item name="icRatingFloatDrawable">@drawable/ic_action_important_dark</item>
         <item name="icErrorDrawable">@drawable/ic_action_cancel_dark</item>
         <item name="icMyAccountDrawable">@drawable/ic_action_accounts_dark</item>
         <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
@@ -117,6 +115,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAptoide</item>
     </style>
 
     <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
@@ -130,6 +129,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAptoide</item>
     </style>
 
 

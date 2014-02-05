@@ -32,27 +32,9 @@
                 android:layout_height="96dp"
                 android:layout_centerHorizontal="true"/>
 
-        <!--<ImageButton-->
-                <!--android:onClick="showPopup"-->
-                <!--android:id="@+id/ic_action"-->
-                <!--style="@style/overflowMenuButton"-->
-                <!--android:layout_marginLeft="-8dp"-->
-                <!--android:layout_below="@+id/home_icon"/>-->
-
-        <TextView
-                android:id="@+id/app_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:lines="2"
-                android:ellipsize="start"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="top|left"
-                android:layout_below="@+id/app_name"
-                android:layout_alignLeft="@+id/app_name"
-                android:textColor="@android:color/darker_gray"
-                android:layout_gravity="left|center_vertical"
-                android:layout_toLeftOf="@+id/ic_action"/>
+        <ImageView android:id="@+id/ic_action"
+                   android:layout_below="@+id/app_icon"
+                   style="@style/overflowMenuButton" />
 
         <TextView
                 android:id="@+id/app_name"
@@ -60,11 +42,50 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:layout_marginRight="-10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/app_icon"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_toLeftOf="@+id/ic_action"/>
+                android:layout_toLeftOf="@+id/ic_action" android:text="NAME"/>
+
+
+        <TextView
+                android:id="@+id/app_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:gravity="center|left"
+                android:layout_marginRight="12dp"
+                android:layout_below="@+id/app_name"
+                android:text="CATEGORY"
+                android:visibility="gone"
+                android:layout_alignLeft="@+id/app_name"
+                android:textColor="@android:color/darker_gray" />
+
+
+        <TextView
+                android:id="@+id/app_downloads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:gravity="center|left"
+                android:layout_marginRight="12dp"
+                android:layout_below="@+id/app_category"
+                android:text="DOWNLOADS"
+                android:visibility="gone"
+                android:layout_alignLeft="@+id/app_name"
+                android:textColor="@android:color/darker_gray"/>
+
+        <RatingBar
+                android:id="@+id/app_rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

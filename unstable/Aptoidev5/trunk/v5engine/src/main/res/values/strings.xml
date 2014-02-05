@@ -19,6 +19,7 @@
     <string name="screenshots">Screenshots</string>
     <string name="about">Description</string>
     <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
     <string name="like">Like</string>
     <string name="dont_like">Don\'t like</string>
     <string name="comments">Comments</string>
@@ -332,7 +333,8 @@
     <string name="error_SYS_2">No data found, please try again later</string>
     <string name="error_SYS_3">System is now in maintenance, please try again later</string>
     <string name="error_SYS_4">This call is not supported by the current API version</string>
-
+    <string name="X_download_number">%s down.</string>
+    <string name="search_more">Search More</string>
 
 
 </resources>

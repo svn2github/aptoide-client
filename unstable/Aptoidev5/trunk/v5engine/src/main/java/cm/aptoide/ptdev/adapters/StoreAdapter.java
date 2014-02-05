@@ -68,10 +68,8 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
 
         storeName.setText(storeItem.getName());
 
-        String downloadNnr="";
         if(storeItem.getDwnNumber()!=null && storeItem.getDwnNumber().length()>0){
-            downloadNnr = withSuffix(storeItem.getDwnNumber());
-            storeDwn.setText(downloadNnr+" "+getContext().getString(R.string.downloads));
+            storeDwn.setText(getContext().getString(R.string.X_download_number, withSuffix(storeItem.getDwnNumber())));
         }else{
             storeDwn.setText("");
         }
