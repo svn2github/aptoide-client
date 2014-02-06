@@ -47,7 +47,8 @@ public class MoreEditorsChoice extends ActionBarActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.more_editors_choice));
     }
 
 
@@ -77,7 +78,7 @@ public class MoreEditorsChoice extends ActionBarActivity {
 
 
 
-            //collection.setExpanded(!collection.isExpanded());
+            //page_collection.setExpanded(!page_collection.isExpanded());
 
         }
 

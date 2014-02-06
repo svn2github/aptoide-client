@@ -81,7 +81,7 @@ public abstract class FragmentAppView extends Fragment {
         private TextView description;
         private TextView showAllDescription;
         private LinearLayout descriptionContainer;
-        private ScrollView scroller;
+//        private ScrollView scroller;
         private TextView store;
         private TextView downloads;
         private TextView rating;
@@ -109,10 +109,12 @@ public abstract class FragmentAppView extends Fragment {
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
             Log.d("Aptoide-AppView", "getting event");
             Log.d("Aptoide-AppView", "Setting description");
+            if(event == null) return;
+
             description.setText(event.getDescription());
 
             Log.d("Aptoide-description", "lines "+description.getLineCount() );
-            if (description.getLineCount() > 10) {
+            if (event.getDescription()!=null && event.getDescription().length() > 250) {
                 description.setMaxLines(10);
                 showAllDescription.setVisibility(View.VISIBLE);
                 showAllDescription.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +125,7 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (collapsed) {
                             collapsed = false;
-                            scroller.getScrollY();
+//                            scroller.getScrollY();
                             description.setMaxLines(Integer.MAX_VALUE);
                             TypedValue outValue = new TypedValue();
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
@@ -135,7 +137,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icExpandDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
-                            scroller.scrollTo(0, scrollPosition);
+//                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
                         }
                     }
@@ -148,10 +150,11 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (collapsed) {
                             collapsed = false;
-                            scroller.getScrollY();
+//                            scroller.getScrollY();
                             description.setMaxLines(Integer.MAX_VALUE);
                             TypedValue outValue = new TypedValue();
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
+                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
                         } else {
                             collapsed = true;
@@ -159,7 +162,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
-                            scroller.scrollTo(0, scrollPosition);
+//                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
                         }
                     }
@@ -219,7 +222,7 @@ public abstract class FragmentAppView extends Fragment {
             description = (TextView) v.findViewById(R.id.descript);
             showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
             descriptionContainer = (LinearLayout) v.findViewById(R.id.description_container);
-            scroller = (ScrollView) v.findViewById(R.id.app_info_scroller);
+//            scroller = (ScrollView) v.findViewById(R.id.app_info_scroller);
             store = (TextView) v.findViewById(R.id.store_label);
             downloads = (TextView) v.findViewById(R.id.downloads_label);
             rating = (TextView) v.findViewById(R.id.rating_label);
@@ -532,6 +535,8 @@ public abstract class FragmentAppView extends Fragment {
     }
 
     public static class FragmentAppViewRating extends FragmentAppView{
+        private LinearLayout commentsLayout;
+        private TextView noComments;
         private LinearLayout commentsContainer;
         private Button seeAllButton;
         private EditText editText;
@@ -543,19 +548,27 @@ public abstract class FragmentAppView extends Fragment {
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
             Log.d("Aptoide-AppView", "getting event");
 
-            if(event.getComments()!=null){
+            if(event.getComments() != null) {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
-                seeAllButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       Intent intent = new Intent(getActivity(), AllComments.class);
-                        intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
-                        intent.putExtra("versionName", ((AppViewActivity)getActivity()).getVersionName());
-                        intent.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
-                        startActivity(intent);
-                    }
-                });
 
+                if (event.getComments().size() == 0) {
+                    commentsLayout.setVisibility(View.GONE);
+                    noComments.setVisibility(View.VISIBLE);
+                }
+                if (event.getComments().size() > 5) {
+                    commentsLayout.setVisibility(View.VISIBLE);
+                    seeAllButton.setVisibility(View.VISIBLE);
+                    seeAllButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), AllComments.class);
+                            intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
+                            intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
+                            intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
+                            startActivity(intent);
+                        }
+                    });
+                }
                 if(event.getUservote()!=null){
 
                     if(event.getUservote().equals("like")){
@@ -585,6 +598,8 @@ public abstract class FragmentAppView extends Fragment {
 
             View v = inflater.inflate(R.layout.fragment_app_rating, container, false);
 
+            commentsLayout = (LinearLayout) v.findViewById(R.id.layout_comments);
+            noComments = (TextView) v.findViewById(R.id.no_comments);
             commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);
             seeAllButton = (Button) v.findViewById(R.id.more_comments);
             editText = (EditText) v.findViewById(R.id.editText_addcomment);

@@ -46,7 +46,8 @@ public class SignUpActivity extends ActionBarActivity{
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.register));
     }
 
     @Override

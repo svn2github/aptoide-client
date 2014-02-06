@@ -212,89 +212,91 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         super.onCreate(savedInstanceState);
 
 
-        if(AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+        if (AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
 
 
-        setContentView(R.layout.form_login);
+            setContentView(R.layout.form_login);
 
-        if (Build.VERSION.SDK_INT >= 8) {
+            if (Build.VERSION.SDK_INT >= 8) {
 
-            findViewById(R.id.g_sign_in_button).setOnClickListener(this);
-            mConnectionProgressDialog = new ProgressDialog(this);
-            mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
-
-
-            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-            uiLifecycleHelper.onCreate(savedInstanceState);
-            mPlusClient = new PlusClient.Builder(this, this, this).build();
-
-        }
-        mAccountManager = AccountManager.get(getBaseContext());
-
-        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
-            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
-        if (accountName != null) {
-            ((EditText) findViewById(R.id.username)).setText(accountName);
-        }
+                findViewById(R.id.g_sign_in_button).setOnClickListener(this);
+                mConnectionProgressDialog = new ProgressDialog(this);
+                mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
 
 
-        password_box = (EditText) findViewById(R.id.password);
-        checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
-        checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    password_box.setTransformationMethod(null);
-                } else {
-                    password_box.setTransformationMethod(new PasswordTransformationMethod());
+                uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+                uiLifecycleHelper.onCreate(savedInstanceState);
+                mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+            }
+            mAccountManager = AccountManager.get(getBaseContext());
+
+            String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+            mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+            if (mAuthTokenType == null)
+                mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
+            if (accountName != null) {
+                ((EditText) findViewById(R.id.username)).setText(accountName);
+            }
+
+
+            password_box = (EditText) findViewById(R.id.password);
+            checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
+            checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        password_box.setTransformationMethod(null);
+                    } else {
+                        password_box.setTransformationMethod(new PasswordTransformationMethod());
+                    }
                 }
-            }
-        });
-        checkShowPass.setEnabled(true);
+            });
+            checkShowPass.setEnabled(true);
 
-        findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = ((EditText) findViewById(R.id.username)).getText().toString();
-                String password = ((EditText) findViewById(R.id.password)).getText().toString();
-                submit(Mode.APTOIDE, username, password, null);
-            }
-        });
+            findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String username = ((EditText) findViewById(R.id.username)).getText().toString();
+                    String password = ((EditText) findViewById(R.id.password)).getText().toString();
+                    submit(Mode.APTOIDE, username, password, null);
+                }
+            });
 
-        TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
-        SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
-        newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
-        new_to_aptoide.setText(newToAptoideString);
-        new_to_aptoide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signup = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivityForResult(signup, REQ_SIGNUP);
-            }
-        });
+            TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
+            SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
+            newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
+            new_to_aptoide.setText(newToAptoideString);
+            new_to_aptoide.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent signup = new Intent(LoginActivity.this, SignUpActivity.class);
+                    startActivityForResult(signup, REQ_SIGNUP);
+                }
+            });
 
-        TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
-        SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
-        forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
-        forgot_password.setText(forgetString);
-        forgot_password.setOnClickListener(new View.OnClickListener() {
+            TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
+            SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
+            forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
+            forgot_password.setText(forgetString);
+            forgot_password.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
-                startActivity(passwordRecovery);
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
+                    startActivity(passwordRecovery);
+                }
+            });
 
-        getSupportActionBar().setTitle(getString(R.string.setcredentials));
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
+            getSupportActionBar().setTitle(getString(R.string.setcredentials));
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle(getString(R.string.login_or_register));
+        }
     }
 
     @Override

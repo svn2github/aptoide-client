@@ -204,6 +204,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:drawableRight="?attr/icExpandDrawable"
+                android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -272,7 +273,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:autoLink="web"
-                    android:background="@drawable/highlight_overlay"
+                    android:background="?attr/selectableItemBackground"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
@@ -289,7 +290,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:autoLink="email"
-                    android:background="@drawable/highlight_overlay"
+                    android:background="?attr/selectableItemBackground"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
@@ -306,7 +307,7 @@
                     android:focusable="true"
                     android:gravity="center|left"
                     android:autoLink="web"
-                    android:background="@drawable/highlight_overlay"
+                    android:background="?attr/selectableItemBackground"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
     </LinearLayout>

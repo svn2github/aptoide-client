@@ -22,9 +22,10 @@ public class AllComments extends ActionBarActivity {
         setContentView(R.layout.all_comments);
 
 
-        getSupportActionBar().setTitle(getString(R.string.comment_see_all));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.comment_see_all));
     }
 
     public SpiceManager getSpice() {

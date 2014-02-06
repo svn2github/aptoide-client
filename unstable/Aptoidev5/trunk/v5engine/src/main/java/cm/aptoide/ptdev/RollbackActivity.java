@@ -51,7 +51,8 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.rollback));
     }
 
 

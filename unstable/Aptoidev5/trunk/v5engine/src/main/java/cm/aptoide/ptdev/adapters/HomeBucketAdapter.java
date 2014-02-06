@@ -7,20 +7,16 @@ import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.*;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MainActivity;
-import cm.aptoide.ptdev.R;
+import android.widget.*;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,6 +62,9 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             holder.category= (TextView) v.findViewById(R.id.app_category);
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
+            holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
+            holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
+
             v.setTag(holder);
         } else {
             v = convertView;
@@ -85,13 +84,25 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
         ImageLoader.getInstance().displayImage(icon, holder.icon);
 
-//        v.findViewById(R.id.ic_action).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showPopup(v, item.getId());
-//
-//            }
-//        });
+        holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+        if(item.getName().length()>10){
+            holder.downloads.setMaxLines(1);
+        }else{
+            holder.downloads.setMaxLines(2);
+        }
+        holder.downloads.setVisibility(View.VISIBLE);
+
+        holder.rating.setRating(item.getRating());
+        holder.rating.setOnRatingBarChangeListener(null);
+
+        ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
+        overflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v, item.getId());
+            }
+        });
+
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +133,8 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         TextView name;
         TextView category;
         ImageView icon;
+        TextView downloads;
+        RatingBar rating;
     }
 
     static class MenuListener implements PopupMenu.OnMenuItemClickListener{

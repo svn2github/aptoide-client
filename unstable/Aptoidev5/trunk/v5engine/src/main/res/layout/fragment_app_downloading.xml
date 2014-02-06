@@ -47,7 +47,7 @@
             android:id="@+id/ic_action_cancel"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            style="?attr/icCancelDrawable"
+            android:src="?attr/icCancelDrawable"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:contentDescription="@null"

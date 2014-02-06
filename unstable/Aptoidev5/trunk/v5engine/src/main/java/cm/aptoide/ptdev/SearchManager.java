@@ -53,6 +53,9 @@ public class SearchManager extends ActionBarActivity {
         String query;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+
         if(getIntent().hasExtra("search")){
             query = getIntent().getExtras().getString("search");
         } else {
@@ -63,8 +66,10 @@ public class SearchManager extends ActionBarActivity {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,"cm.aptoide.ptdev.SuggestionProvider", 1);
         suggestions.saveRecentQuery(query, null);
 
-        Toast.makeText(this, "Searched for : " + query, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Searched: " + query, Toast.LENGTH_LONG).show();
         args.putString("query", query);
+
+        getSupportActionBar().setTitle("'"+query+"'");
 
         Fragment fragment = new SearchFragment();
         fragment.setArguments(args);

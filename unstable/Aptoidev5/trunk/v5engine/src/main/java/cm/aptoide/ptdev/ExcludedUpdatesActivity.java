@@ -30,9 +30,11 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_excluded_uploads);
 
-        getSupportActionBar().setTitle(getString(R.string.excluded_updates));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.excluded_updates));
+
         lv = (ListView) findViewById(R.id.excluded_updates_list);
         lv.setDivider(null);
         tv_no_excluded_downloads = (TextView) findViewById(R.id.tv_no_excluded_downloads);

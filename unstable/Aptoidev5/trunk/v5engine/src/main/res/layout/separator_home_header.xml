@@ -10,10 +10,13 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
-              android:background="@drawable/highlight_overlay">
+              android:layout_marginTop="15dp"
+              android:layout_marginBottom="15dp"
+              android:background="?attr/selectableItemBackground">
 
     <TextView style="@style/separatorLabel"
               android:id="@+id/separator_label"
+              android:textIsSelectable="true"
               android:layout_weight="0.2"/>
 
     <TextView style="?attr/headerSeparatorButton"

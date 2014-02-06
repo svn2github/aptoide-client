@@ -1,18 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="separatorLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingTop">20dp</item>
+        <item name="android:padding">8dp</item>
         <item name="android:maxLines">1</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:gravity">left</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="titleLabel">
@@ -213,22 +209,6 @@
 
     <style name="navigationDrawerColorDark">
         <item name="android:background">@android:color/black</item>
-    </style>
-
-    <style name="cancelLight">
-        <item name="android:src">@drawable/ic_action_cancel</item>
-    </style>
-
-    <style name="cancelDark">
-        <item name="android:src">@drawable/ic_action_cancel_dark</item>
-    </style>
-
-    <style name="uninstallLight">
-        <item name="android:src">@drawable/ic_action_discard</item>
-    </style>
-
-    <style name="uninstallDark">
-        <item name="android:src">@drawable/ic_action_discard_dark</item>
     </style>
 
     <style name="MenuDrawer" />

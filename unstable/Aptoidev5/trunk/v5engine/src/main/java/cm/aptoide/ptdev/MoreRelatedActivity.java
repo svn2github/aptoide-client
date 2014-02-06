@@ -42,6 +42,7 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 
     public static class FragmentRelatedMore extends ListFragment {
@@ -63,10 +64,13 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
             if (getArguments().containsKey("version")) {
                 mode = "multiversion";
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.multiversion));
             } else if (getArguments().containsKey("developer")) {
                 mode = "develbased";
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.more_from_publisher));
             } else if (getArguments().containsKey("item")) {
                 mode = "itembased";
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.related_apps));
             }
             adapter = new MergeAdapter();
             listAdapter = new RelatedBucketAdapter(getActivity(), elements);

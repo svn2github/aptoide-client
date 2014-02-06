@@ -36,12 +36,13 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:id="@+id/layout_likes">
 
         <Button android:id="@+id/button_like"
                 android:layout_width="fill_parent"
                 android:text="@string/like"
-                android:background="@drawable/highlight_overlay"
+                android:background="?attr/selectableItemBackground"
                 android:drawableLeft="?attr/icRatingGoodDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
@@ -49,7 +50,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         <Button android:id="@+id/button_dont_like"
                 android:layout_width="fill_parent"
                 android:text="@string/dont_like"
-                android:background="@drawable/highlight_overlay"
+                android:background="?attr/selectableItemBackground"
                 android:drawableLeft="?attr/icRatingBadDrawable"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"/>
@@ -57,31 +58,51 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
     </LinearLayout>
 
-    <TextView
-            style="@style/titleLabel"
-            android:text="@string/comments"/>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_horizontal"
+                  android:orientation="vertical"
+                  android:id="@+id/layout_comments">
+
+        <TextView
+                style="@style/titleLabel"
+                android:text="@string/comments"/>
 
 
-    <LinearLayout
-            android:id="@+id/commentContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
+        <LinearLayout
+                android:id="@+id/commentContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+        </LinearLayout>
+
+        <Button
+                android:id="@+id/more_comments"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableRight="@drawable/ic_more_arrow_right"
+                android:gravity="fill_vertical|right"
+                android:paddingLeft="5.0sp"
+                android:paddingRight="5.0sp"
+                android:text="@string/comment_see_all"
+                android:visibility="gone"
+                android:textColor="@android:color/darker_gray"/>
+
     </LinearLayout>
 
-    <Button
-            android:id="@+id/more_comments"
-            android:layout_width="fill_parent"
+    <TextView
+            android:id="@+id/no_comments"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/highlight_overlay"
-            android:drawableRight="@drawable/ic_more_arrow_right"
-            android:gravity="fill_vertical|right"
-            android:paddingLeft="5.0sp"
-            android:paddingRight="5.0sp"
-            android:text="@string/comment_see_all"
-            android:textColor="@android:color/darker_gray"/>
-
+            android:gravity="center"
+            android:paddingBottom="5.0dp"
+            android:paddingLeft="5.0dp"
+            android:paddingRight="5.0dp"
+            android:visibility="gone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/no_comments"/>
 
     <!--<TextView-->
     <!--style="@style/titleLabel"-->

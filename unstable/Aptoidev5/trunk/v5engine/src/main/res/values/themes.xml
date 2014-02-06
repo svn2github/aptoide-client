@@ -29,8 +29,9 @@
 
         <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
         <item name="icEmailDrawable">@drawable/ic_email</item>
-        <item name="icCancelDrawable">@style/cancelLight</item>
-        <item name="icUninstallDrawable">@style/uninstallLight</item>
+        <item name="icCancelDrawable">@drawable/ic_action_cancel</item>
+        <item name="icPlayDrawable">@drawable/ic_action_play</item>
+        <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update</item>
 
         <item name="icAboutDrawable">@drawable/ic_action_about</item>
@@ -80,8 +81,9 @@
 
         <item name="icWebSiteDrawable">@drawable/ic_action_web_site_dark</item>
         <item name="icEmailDrawable">@drawable/ic_action_email_dark</item>
-        <item name="icCancelDrawable">@style/cancelDark</item>
-        <item name="icUninstallDrawable">@style/uninstallDark</item>
+        <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icPlayDrawable">@drawable/ic_action_play_dark</item>
+        <item name="icUninstallDrawable">@drawable/ic_action_discard_dark</item>
         <item name="icUpdateDrawable">@drawable/ic_action_update_dark</item>
 
         <item name="icAboutDrawable">@drawable/ic_action_about_dark</item>

@@ -11,7 +11,7 @@
                   android:orientation="horizontal"
                   android:padding="5dp"
                   android:id="@+id/separatorLayout"
-                  android:background="@drawable/highlight_overlay">
+                  android:background="?attr/selectableItemBackground">
 
         <TextView style="@style/separatorLabel"
                   android:id="@+id/collectionName"
@@ -43,7 +43,7 @@
             android:id="@+id/collectionList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            />
+            android:layout_gravity="center_horizontal">
+    </LinearLayout>
 
 </LinearLayout>

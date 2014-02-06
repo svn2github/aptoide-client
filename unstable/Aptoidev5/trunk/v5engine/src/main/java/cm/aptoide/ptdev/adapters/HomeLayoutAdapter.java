@@ -3,8 +3,6 @@ package cm.aptoide.ptdev.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.*;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -12,7 +10,6 @@ import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.*;
-import android.widget.PopupMenu;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -22,6 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.getPixels;
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
@@ -82,7 +80,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
         View v;
         if(convertView==null){
-            v = LayoutInflater.from(context).inflate(R.layout.collection, parent, false);
+            v = LayoutInflater.from(context).inflate(R.layout.page_collection, parent, false);
         }else{
             v = convertView;
         }
@@ -151,16 +149,18 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
 
         LinearLayout containerLinearLayout = (LinearLayout) v.findViewById(R.id.collectionList);
-
+        containerLinearLayout.removeAllViews();
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) containerLinearLayout.getLayoutParams();
         params.bottomMargin = collection.getMarginBottom();
 
         containerLinearLayout.setLayoutParams(params);
 
         containerLinearLayout.removeAllViews();
-        LinearLayout rowLinearLayout = new LinearLayout(context);
-        rowLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
+
+        LinearLayout rowLinearLayout = new LinearLayout(context);
+        rowLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        rowLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         int i = bucketSize;
         for (final HomeItem item : list.get(position).getAppsList()) {
@@ -168,14 +168,19 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
             if(i % bucketSize == 0){
                 rowLinearLayout = new LinearLayout(context);
-                rowLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                rowLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
                 containerLinearLayout.addView(rowLinearLayout);
             }
 
             i++;
             Log.d("Aptoide-HomeLayout", "Adding item " + item.getName() + " " + i);
-            FrameLayout tvChild = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.row_app_home, rowLinearLayout, false);
 
+            FrameLayout tvChild;
+            if(b){
+                tvChild = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.row_app_home, rowLinearLayout, false);
+            }else{
+                tvChild = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.row_app_home_more, rowLinearLayout, false);
+            }
             TextView nameTv = (TextView) tvChild.findViewById(R.id.app_name);
             nameTv.setText(item.getName());
             ImageView iconIv = (ImageView) tvChild.findViewById(R.id.app_icon);
@@ -199,13 +204,13 @@ public class HomeLayoutAdapter extends BaseAdapter {
             });
 
             String category;
-            int cat = Integer.parseInt(item.getCategory());
             try {
+                int cat = Integer.parseInt(item.getCategory());
                 category = context.getString(EnumCategories.getCategoryName(cat));
-                Log.d("Home-categ", "Category Name: " + categoryName);
+                Log.d("Home-categ", "Category Name: " + category);
             }catch (Exception e){
                 category = item.getCategory();
-                Log.d("Home-categ", "Untranslated Category Name: " + categoryName);
+                Log.d("Home-categ", "Untranslated Category Name: " + category);
             }
 
             if(list.get(position).getParentId()!=-1){
@@ -239,6 +244,8 @@ public class HomeLayoutAdapter extends BaseAdapter {
             rating.setRating(item.getRating());
             rating.setOnRatingBarChangeListener(null);
             rating.setVisibility(View.VISIBLE);
+
+
 
 
             rowLinearLayout.addView(tvChild);
