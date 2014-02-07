@@ -121,6 +121,15 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                 startActivity(i);
             }
         });
+
+        ((TextView) v.findViewById(R.id.more)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), MoreTopAppsActivity.class);
+                startActivity(i);
+            }
+        });
+
         adapter.addView(v);
         adapter.addAdapter(topAdapter);
 

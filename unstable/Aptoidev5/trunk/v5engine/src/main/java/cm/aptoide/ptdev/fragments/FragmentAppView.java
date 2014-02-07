@@ -45,6 +45,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -302,7 +303,9 @@ public abstract class FragmentAppView extends Fragment {
                 //Toast.makeText(getActivity(), "MultiVersion size " + relatedApkJson.getMultiversion().size(), Toast.LENGTH_SHORT).show();
 
 
-                if(relatedApkJson.getItembased().size()>0){
+                if(relatedApkJson.getItembased() != null && relatedApkJson.getItembased().size()>0){
+                    Log.d("FragmentRelated", "itembased: "+ Arrays.toString(relatedApkJson.getItembased().toArray()));
+
                     itemBasedElements.clear();
                     if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){
 
@@ -332,7 +335,7 @@ public abstract class FragmentAppView extends Fragment {
                     adapter.addAdapter(itemBasedAdapter);
                 }
 
-                if(relatedApkJson.getDevelbased().size()>0){
+                if(relatedApkJson.getDevelbased() != null && relatedApkJson.getDevelbased().size()>0){
                     develBasedElements.clear();
                     if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true)){
 
@@ -363,7 +366,7 @@ public abstract class FragmentAppView extends Fragment {
                     adapter.addAdapter(develBasedAdapter);
                 }
 
-                if(relatedApkJson.getMultiversion().size()>0){
+                if(relatedApkJson.getMultiversion()!=null && relatedApkJson.getMultiversion().size()>0){
                     multiVersionElements.clear();
 
                     if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){

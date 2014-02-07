@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
+import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
@@ -78,6 +79,8 @@ public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedA
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        Log.d("Aptoide-ApkRelated", url.toString());
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

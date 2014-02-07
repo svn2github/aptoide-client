@@ -8,6 +8,8 @@
     <string name="WidgetProvider_timestamp_hours_ago">%s hours ago</string>
     <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
     <string name="WidgetProvider_timestamp_just_now">Just now</string>
+    <string name="timestamp_months">months</string>
+    <string name="timestamp_days">days</string>
 
     <string name="action_contact">Contact</string>
     <string name="installed_tab">Installed</string>
@@ -337,6 +339,8 @@
     <string name="X_download_number">%s down.</string>
     <string name="search_more">Search More</string>
     <string name="more_editors_choice">More Editors\' Choice</string>
+    <string name="more_top_apps">More Top Apps</string>
+
 
 
 </resources>

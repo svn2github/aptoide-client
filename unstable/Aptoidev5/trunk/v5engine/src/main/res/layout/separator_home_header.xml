@@ -16,7 +16,6 @@
 
     <TextView style="@style/separatorLabel"
               android:id="@+id/separator_label"
-              android:textIsSelectable="true"
               android:layout_weight="0.2"/>
 
     <TextView style="?attr/headerSeparatorButton"

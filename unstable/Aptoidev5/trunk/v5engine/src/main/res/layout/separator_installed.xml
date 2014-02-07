@@ -17,7 +17,6 @@
               android:id="@+id/separator_label"
               android:layout_weight="0.2"
               android:padding="5dp"
-              android:textIsSelectable="true"
               android:gravity="center|left"
               android:layout_width="0dp"/>
 
