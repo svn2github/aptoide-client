@@ -45,7 +45,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -568,7 +567,7 @@ public abstract class FragmentAppView extends Fragment {
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), AllComments.class);
+                            Intent intent = new Intent(getActivity(), AllCommentsActivity.class);
                             intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
                             intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());

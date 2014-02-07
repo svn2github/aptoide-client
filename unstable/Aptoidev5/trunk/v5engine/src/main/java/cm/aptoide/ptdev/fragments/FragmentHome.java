@@ -12,7 +12,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MoreTopApps;
+import cm.aptoide.ptdev.MoreTopAppsActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
@@ -117,7 +117,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), MoreTopApps.class);
+                Intent i = new Intent(getActivity(), MoreTopAppsActivity.class);
                 startActivity(i);
             }
         });

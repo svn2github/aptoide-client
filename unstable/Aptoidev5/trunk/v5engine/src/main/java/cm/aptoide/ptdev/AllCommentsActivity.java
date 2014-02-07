@@ -11,7 +11,7 @@ import com.octo.android.robospice.SpiceManager;
 /**
  * Created by rmateus on 26-12-2013.
  */
-public class AllComments extends ActionBarActivity {
+public class AllCommentsActivity extends ActionBarActivity {
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 

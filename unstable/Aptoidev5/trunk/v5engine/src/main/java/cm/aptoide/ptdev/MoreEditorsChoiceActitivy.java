@@ -2,37 +2,26 @@ package cm.aptoide.ptdev;
 
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
-import android.widget.AdapterView;
-
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.Collection;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by rmateus on 28-01-2014.
  */
-public class MoreEditorsChoice extends ActionBarActivity {
+public class MoreEditorsChoiceActitivy extends ActionBarActivity {
 
 
     @Override

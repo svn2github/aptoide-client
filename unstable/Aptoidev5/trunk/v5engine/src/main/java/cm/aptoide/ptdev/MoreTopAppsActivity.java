@@ -18,11 +18,12 @@ import java.util.ArrayList;
 /**
  * Created by rmateus on 06-02-2014.
  */
-public class MoreTopApps extends ActionBarActivity {
+public class MoreTopAppsActivity extends ActionBarActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
 

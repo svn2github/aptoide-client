@@ -9,14 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.AllComments;
+import cm.aptoide.ptdev.AllCommentsActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.webservices.AllCommentsRequest;
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -45,7 +43,7 @@ public class FragmentComments extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        spiceManager = ((AllComments)getActivity()).getSpice();
+        spiceManager = ((AllCommentsActivity)getActivity()).getSpice();
 
         AllCommentsRequest request = new AllCommentsRequest();
 

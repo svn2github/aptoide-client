@@ -19,7 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-import static cm.aptoide.ptdev.utils.AptoideUtils.getPixels;
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
@@ -92,7 +91,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             v.findViewById(R.id.separatorLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, MoreEditorsChoice.class);
+                    Intent i = new Intent(context, MoreEditorsChoiceActitivy.class);
                     Log.d("Aptoide-HomeLayout", String.valueOf(collection.getParentId()));
                     i.putExtra("parentId", collection.getParentId());
                     context.startActivity(i);
