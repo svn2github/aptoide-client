@@ -12,7 +12,11 @@ import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -492,7 +496,7 @@ public class Database {
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long id = c.getLong(c.getColumnIndex("id"));
-            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating"))));
 
         }
 
@@ -531,7 +535,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating"))));
             }
 
         }
@@ -550,7 +554,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating"))));
             }
 
         }
@@ -593,7 +597,7 @@ public class Database {
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long apkid = c.getLong(c.getColumnIndex("id"));
-            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon, apkid, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon, apkid, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating"))));
         }
         c.close();
 
@@ -602,8 +606,89 @@ public class Database {
     }
 
 
+    public ArrayList<Collection> getNewEditorsFeatured(int id, int editorsChoiceBucketSize) {
+
+        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+
+
+        Cursor c = database.rawQuery("select apk.date as timestamp, catname.id_real_category as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510 ", null);
+        HashMap<String, Integer> tempList2 = new HashMap<String, Integer>();
+
+        ArrayList<String> tempList3 = new ArrayList<String>();
+
+
+
+        HashMap<String, ArrayList<HomeItem>> tempList = new HashMap<String, ArrayList<HomeItem>>();
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            int weeks = 0;
+                weeks = Weeks.weeksBetween(
+                        new DateTime(new Date(c.getLong(c.getColumnIndex("timestamp")))).withDayOfWeek(1),
+                        DateTime.now().withDayOfWeek(1)
+                ).getWeeks();
+
+            String collection = weeks + "";
+            if(!tempList.containsKey(collection)){
+                ArrayList<HomeItem> itemsList = new ArrayList<HomeItem>();
+                tempList.put(collection, itemsList);
+                tempList2.put(collection, -100);
+            }
+        }
+
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            int weeks = 0;
+
+                weeks = Weeks.weeksBetween(
+                        new DateTime(new Date(c.getLong(c.getColumnIndex("timestamp")))).withDayOfWeek(1),
+                        DateTime.now().withDayOfWeek(1)
+                ).getWeeks();
+
+            String collection = weeks + "";
+
+
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long apkid = c.getLong(c.getColumnIndex("id"));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatname")), iconPath + icon , apkid, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating")));
+
+
+
+
+        }
+
+        c.close();
+
+        Log.d("Aptoide-EditorsChoice", tempList.toString());
+
+        ArrayList<Collection> items = new ArrayList<Collection>();
+        for(String collection : tempList.keySet()){
+            Collection collection1 = new Collection();
+            collection1.setName(collection);
+            collection1.setWeeks(Integer.parseInt(collection));
+            collection1.setAppsList(tempList.get(collection));
+            collection1.setParentId(tempList2.get(collection));
+            collection1.setHasMore(false);
+            items.add(collection1);
+        }
+
+        Collections.sort(items, new Comparator<Collection>() {
+            @Override
+            public int compare(Collection lhs, Collection rhs) {
+                return lhs.getWeeks()-rhs.getWeeks();
+            }
+        });
+
+        return items;
+    }
+
 
     public ArrayList<Collection> getSpecificFeatured(int id, int editorsChoiceBucketSize) {
+
+        if(id == -1){
+            return getNewEditorsFeatured(id, editorsChoiceBucketSize);
+        }
+
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 

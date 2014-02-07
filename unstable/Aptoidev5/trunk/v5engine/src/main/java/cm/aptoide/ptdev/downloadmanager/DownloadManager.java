@@ -519,10 +519,7 @@ public class DownloadManager implements Serializable {
     public void removeDownload(DownloadInfo downloadInfo) {
 //		mURLs.remove(downloadInfo.getConnection().getURL());
 //		saveDownloadsFile();
-
         mCompletedList.remove(downloadInfo);
-
-        BusProvider.getInstance().post(new DownloadRemoveEvent(downloadInfo.getId()));
     }
 
 }

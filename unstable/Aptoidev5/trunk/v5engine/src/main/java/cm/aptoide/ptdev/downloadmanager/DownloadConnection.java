@@ -34,9 +34,9 @@ public abstract class DownloadConnection {
         return this.mURL;
     }
 
-    public abstract long connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException;
+    public abstract void connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException;
 
-    public abstract long getSize() throws IOException;
+
 
     public abstract void close();
 

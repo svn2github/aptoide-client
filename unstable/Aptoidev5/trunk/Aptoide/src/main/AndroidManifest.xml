@@ -37,6 +37,9 @@
         <activity
                 android:name="cm.aptoide.ptdev.MoreEditorsChoice"  />
 
+        <activity
+                android:name="cm.aptoide.ptdev.MoreTopApps"  />
+
         <activity android:name="cm.aptoide.ptdev.MainActivity"
                   android:launchMode="singleTask"
                   android:label="AptoideDev"
@@ -238,7 +241,7 @@
         </service>
 
         <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >
-            <intent-filter>
+            <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />

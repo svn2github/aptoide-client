@@ -53,7 +53,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
             v = convertView;
         }
 
-        Download download = getItem(position);
+        final Download download = getItem(position);
 
         ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
         ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
@@ -62,7 +62,12 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
         pb.setProgress(download.getProgress());
 
-
+        v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download.getParent().remove();
+            }
+        });
 
         return v;
     }

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import org.joda.time.*;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -46,6 +51,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         return false;
     }
 
+    final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @Override
     protected View bindBucketElement(int position, RelatedApkJson.Item currentElement, View convertView, ViewGroup parent) {
@@ -76,7 +82,32 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         holder.name.setText(item.getName());
         holder.version.setText(item.getVername());
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
-        holder.timestamp.setText(item.getTimestamp());
+
+        try {
+            boolean month = true;
+            DateTime startDate = new DateTime(dateFormater.parse(item.getTimestamp()));
+            DateTime now = DateTime.now();
+
+            int time = Months.monthsBetween(startDate, now).getMonths();
+
+            if(time == 0){
+                month = false;
+                time = Days.daysBetween(startDate, now).getDays();
+            }
+
+            if(time == 0){
+                time = Hours.hoursBetween(startDate, now).getHours();
+            }
+
+
+            if(month){
+                holder.timestamp.setText(String.valueOf(time) + " months ago");
+            }else{
+                holder.timestamp.setText(String.valueOf(time) + " days ago");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         Log.d("Aptoide-Related", " item " + item.getName() + " " + item.getVername() + " " + item.getRepo());
 

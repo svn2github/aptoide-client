@@ -177,10 +177,10 @@ public class DownloadService extends Service {
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         if(json.getObb()!=null){
-            DownloadModel mainObbDownload = new DownloadModel(json.getObb().getMain().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getMain().getFilename(), json.getObb().getMain().getFilename(), json.getObb().getMain().getFilesize().longValue());
+            DownloadModel mainObbDownload = new DownloadModel(json.getObb().getMain().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getMain().getFilename(), json.getObb().getMain().getMd5sum(), json.getObb().getMain().getFilesize().longValue());
             filesToDownload.add(mainObbDownload);
             if(json.getObb().getPatch()!=null){
-                DownloadModel patchObbDownload = new DownloadModel(json.getObb().getPatch().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getPatch().getFilename(), json.getObb().getPatch().getFilename(), json.getObb().getPatch().getFilesize().longValue());
+                DownloadModel patchObbDownload = new DownloadModel(json.getObb().getPatch().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getPatch().getFilename(), json.getObb().getPatch().getMd5sum(), json.getObb().getPatch().getFilesize().longValue());
                 filesToDownload.add(patchObbDownload);
             }
         }

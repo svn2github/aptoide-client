@@ -30,6 +30,10 @@ public class Download implements Serializable{
         this.parent = parent;
     }
 
+    public DownloadInfo getParent() {
+        return parent;
+    }
+
     private DownloadInfo parent;
 
     public String getName() {

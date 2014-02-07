@@ -78,6 +78,9 @@ public class DownloadThread implements Runnable, Serializable {
     @Override
     public void run() {
         try{
+            if(!(parent.getStatusState() instanceof ActiveState)){
+                return;
+            }
             mDownloadFile = download.createFile();
             file = mDownloadFile.getmFile();
 
@@ -85,7 +88,9 @@ public class DownloadThread implements Runnable, Serializable {
             this.mDownloadedSize = 0;
             fileSize = DownloadFile.getFileLength(download.getDestination());
             mDownloadFile.setDownloadedSize(file, fileSize);
-            this.mRemainingSize = mConnection.connect(fileSize);
+            this.mRemainingSize =  mFullSize - fileSize;
+
+            mConnection.connect(fileSize);
 
             Log.d("DownloadManager", "Starting Download " + (parent.getStatusState() instanceof ActiveState) + " "+this.mDownloadedSize+fileSize + " " +this.mRemainingSize);
             byte[] bytes = new byte[1024];

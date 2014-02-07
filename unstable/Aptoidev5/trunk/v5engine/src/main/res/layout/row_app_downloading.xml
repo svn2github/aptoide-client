@@ -102,6 +102,7 @@
                 android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:src="@drawable/ic_action_cancel"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:contentDescription="@null"

@@ -35,9 +35,23 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         }else{
             v = convertView;
         }
-        Download download = getItem(position);
+        final Download download = getItem(position);
 
         ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
+
+        switch (download.getDownloadState()){
+            case ERROR:
+                break;
+            case COMPLETE:
+                break;
+        }
+
+        v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download.getParent().remove();
+            }
+        });
         ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
 
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);

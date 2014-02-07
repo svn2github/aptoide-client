@@ -41,7 +41,11 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -288,7 +292,10 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onRequestSuccess(RelatedApkJson relatedApkJson) {
 
-
+                if(relatedApkJson == null){
+                    Log.d("FragmentRelated", "Related was null");
+                    return;
+                }
                 Log.d("FragmentRelated", "onRequestSuccess");
 
                 //Toast.makeText(getActivity(), "ItemBased size " + relatedApkJson.getItembased().size(), Toast.LENGTH_SHORT).show();
@@ -801,19 +808,29 @@ public abstract class FragmentAppView extends Fragment {
         public static class FillComments{
 
             public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
+                final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+                final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
 
+                final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 View v;
                 commentsContainer.removeAllViews();
+
                 for(Comment comment : comments){
 
                     v = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
 
                     TextView content = (TextView) v.findViewById(R.id.content);
-                    TextView date = (TextView) v.findViewById(R.id.date);
+                    TextView dateTv = (TextView) v.findViewById(R.id.date);
                     TextView author = (TextView) v.findViewById(R.id.author);
 
                     content.setText(comment.getText());
-                    date.setText(comment.getTimestamp());
+
+                    try {
+                        dateTv.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     author.setText(comment.getUsername());
                     commentsContainer.addView(v);
                 }

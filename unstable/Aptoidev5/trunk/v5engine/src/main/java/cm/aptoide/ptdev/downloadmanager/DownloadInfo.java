@@ -332,11 +332,13 @@ public class DownloadInfo implements Runnable, Serializable {
         mSize = 0;
         mFilesToDownload.clear();
         downloadManager.removeDownload(this);
+        BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));
     }
 
 
     public void download() {
         mProgress = 0;
+        BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));
         this.mStatusState.download();
     }
 

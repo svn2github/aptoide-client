@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -11,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.MoreTopApps;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
@@ -111,6 +113,14 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter.addAdapter(homeBucketAdapter);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
+        v.setClickable(true);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), MoreTopApps.class);
+                startActivity(i);
+            }
+        });
         adapter.addView(v);
         adapter.addAdapter(topAdapter);
 

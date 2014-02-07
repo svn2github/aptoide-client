@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.downloadmanager.state;
 
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.DownloadManager;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
 
@@ -63,7 +64,7 @@ public abstract class StatusState implements Serializable{
         manager.updatePendingList();
 		if (state.changeTo()) {
 			changeFrom();
-            BusProvider.getInstance().post(new DownloadStatusEvent(mDownloadInfo.getId()));
+            BusProvider.getInstance().post(new DownloadEvent(mDownloadInfo.getId(), this));
             mDownloadInfo = null;
 		}
     }

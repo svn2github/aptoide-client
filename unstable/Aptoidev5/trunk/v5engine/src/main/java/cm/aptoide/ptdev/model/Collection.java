@@ -15,6 +15,7 @@ public class Collection {
     private int parentId;
     private boolean hasMore;
     private boolean expanded2;
+    private int weeks = -1;
 
     public boolean isExpanded() {
         return expanded;
@@ -71,5 +72,13 @@ public class Collection {
 
     public void setExpanded2(boolean expanded2) {
         this.expanded2 = expanded2;
+    }
+
+    public void setWeeks(int weeks) {
+        this.weeks = weeks;
+    }
+
+    public int getWeeks() {
+        return weeks;
     }
 }

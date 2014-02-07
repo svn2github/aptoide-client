@@ -24,7 +24,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
 
     HttpURLConnection connection;
     private BufferedInputStream mStream;
-    private final static int TIME_OUT = 10000;
+    private final static int TIME_OUT = 30000;
 
 
     public DownloadConnectionImpl(URL url) throws IOException {
@@ -32,7 +32,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
     }
 
     @Override
-    public long connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
+    public void connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
         connection = (HttpURLConnection) this.mURL.openConnection();
 
 
@@ -46,7 +46,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
             int responseCode = connection.getResponseCode();
             Log.d("DownloadManager", "Response Code is: " + responseCode);
             if(responseCode == HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE){
-                throw new CompletedDownloadException(getSize());
+                throw new CompletedDownloadException();
             }else if (responseCode != HttpStatus.SC_PARTIAL_CONTENT) {
                 throw new IOException("Server doesn't support partial content.");
             }
@@ -68,13 +68,9 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
 
         mStream = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 
-        return getSize();
     }
 
-    @Override
-    public long getSize() throws IOException {
-        return connection.getContentLength();  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 
     @Override
     public void close() {

@@ -9,8 +9,8 @@ package cm.aptoide.ptdev.downloadmanager;
  */
 public class CompletedDownloadException extends Throwable {
 
-    public CompletedDownloadException(long mSize) {
-        this.mSize = mSize;
+    public CompletedDownloadException() {
+
     }
 
     private long mSize;

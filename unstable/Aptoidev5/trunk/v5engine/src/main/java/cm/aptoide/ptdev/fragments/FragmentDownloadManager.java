@@ -16,6 +16,7 @@ import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.adapters.DownloadManagerSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
@@ -116,7 +117,7 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
     @Subscribe
-    public void onDownloadStatus(DownloadStatusEvent event){
+    public void onDownloadStatus(DownloadEvent event){
 
         ongoingList.clear();
         notOngoingList.clear();

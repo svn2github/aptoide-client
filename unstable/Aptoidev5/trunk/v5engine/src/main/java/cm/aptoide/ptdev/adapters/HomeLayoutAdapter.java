@@ -128,12 +128,19 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
         String name = list.get(position).getName();
         String categoryName;
-        try {
-            categoryName = context.getString(EnumCategories.getCategoryName(list.get(position).getParentId()));
-            Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
-        }catch (Exception e){
-            categoryName = name;
-            Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
+
+        if (list.get(position).getWeeks() > -1) {
+            categoryName = list.get(position).getWeeks() + " weeks ago";
+
+        } else {
+
+            try {
+                categoryName = context.getString(EnumCategories.getCategoryName(list.get(position).getParentId()));
+                Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
+            } catch (Exception e) {
+                categoryName = name;
+                Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
+            }
         }
         tv.setText(categoryName);
 //        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
@@ -241,6 +248,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
             });
             RatingBar rating = (RatingBar) tvChild.findViewById(R.id.app_rating);
+            Log.d("Aptoide-Rating", String.valueOf(item.getRating()));
             rating.setRating(item.getRating());
             rating.setOnRatingBarChangeListener(null);
             rating.setVisibility(View.VISIBLE);

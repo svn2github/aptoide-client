@@ -33,6 +33,7 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
+import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
@@ -162,8 +163,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
 
 
-                    findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
-                    findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+
 
 
                     findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
@@ -399,6 +399,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             if(service.getDownload(downloadId).getDownload()!=null){
                 onDownloadUpdate(service.getDownload(downloadId).getDownload());
+            }else{
+                findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
             }
 
         }
@@ -881,6 +884,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     break;
                 case ERROR:
                     progressText.setText(download.getDownloadState().name());
+                    pb.setIndeterminate(false);
+                    pb.setProgress(download.getProgress());
                     break;
             }
 
