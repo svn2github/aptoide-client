@@ -35,10 +35,10 @@
                 android:name="com.facebook.LoginActivity"  />
 
         <activity
-                android:name="cm.aptoide.ptdev.MoreEditorsChoice"  />
+                android:name="cm.aptoide.ptdev.MoreEditorsChoiceActitivy"  />
 
         <activity
-                android:name="cm.aptoide.ptdev.MoreTopApps"  />
+                android:name="cm.aptoide.ptdev.MoreTopAppsActivity"  />
 
         <activity android:name="cm.aptoide.ptdev.MainActivity"
                   android:launchMode="singleTask"
@@ -73,7 +73,7 @@
                 android:name="cm.aptoide.ptdev.ScreenshotsViewer"/>
 
         <activity
-                android:name="cm.aptoide.ptdev.AllComments"/>
+                android:name="cm.aptoide.ptdev.AllCommentsActivity"/>
 
         <activity
                 android:name="cm.aptoide.ptdev.social.WebViewFacebook"/>
