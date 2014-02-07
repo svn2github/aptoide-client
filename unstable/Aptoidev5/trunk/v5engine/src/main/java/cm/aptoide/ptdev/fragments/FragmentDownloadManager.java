@@ -8,14 +8,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.ListView;
 import cm.aptoide.ptdev.DownloadServiceConnected;
 import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.DownloadManagerSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
+import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -87,6 +88,7 @@ public class FragmentDownloadManager extends ListFragment {
             DownloadManagerSectionAdapter adapterDownloads = new DownloadManagerSectionAdapter(getActivity(), LayoutInflater.from(getActivity()), adapter);
 
             setListAdapter(adapterDownloads);
+            getActivity().supportInvalidateOptionsMenu();
 
         }
 
@@ -104,10 +106,34 @@ public class FragmentDownloadManager extends ListFragment {
     OngoingAdapter ongoingAdapter;
     NotOngoingAdapter notOngoingAdapter;
     ArrayList<Download> ongoingList;
-    ArrayList<Download> notOngoingList;
+    ArrayList<Download> notOngoingList = new ArrayList<Download>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_download_manager, menu);
+        if(!notOngoingList.isEmpty()){
+            menu.findItem(R.id.menu_clear_downloads).setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id == R.id.menu_clear_downloads){
+            service.removeNonActiveDownloads();
+        }
+
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -128,6 +154,7 @@ public class FragmentDownloadManager extends ListFragment {
         ongoingAdapter.notifyDataSetChanged();
         notOngoingAdapter.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
+        getActivity().supportInvalidateOptionsMenu();
         Log.d("Aptoide-DownloadManager", "On Download Status");
 
     }

@@ -156,7 +156,6 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     protected void setSectionText(final String section, final View sectionView) {
         final TextView textView = (TextView) sectionView
                 .findViewById(R.id.separator_label);
-
         textView.setText(section);
     }
 
@@ -169,7 +168,7 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     }
 
     protected View createNewSectionView() {
-        return inflater.inflate(R.layout.separator_updates, null);
+        return inflater.inflate(R.layout.separator_installed, null);
     }
 
     @Override

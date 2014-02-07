@@ -39,12 +39,6 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
 
         ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
 
-        switch (download.getDownloadState()){
-            case ERROR:
-                break;
-            case COMPLETE:
-                break;
-        }
 
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override

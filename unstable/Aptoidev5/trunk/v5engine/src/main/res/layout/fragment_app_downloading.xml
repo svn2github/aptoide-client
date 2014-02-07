@@ -35,24 +35,37 @@
     <View android:layout_width="1dip"
           android:layout_height="25dp"
           android:background="@android:color/darker_gray"
-          android:layout_toLeftOf="@+id/ic_action_cancel"
+          android:layout_toLeftOf="@+id/actionContainer"
           android:layout_marginTop="10dp"
           android:layout_marginBottom="10dp"
           android:layout_marginLeft="15dp"
-          android:layout_marginRight="15dp"
           android:id="@+id/view"
           android:layout_centerVertical="true"/>
 
+    <LinearLayout android:layout_alignParentRight="true" android:id="@+id/actionContainer" android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/ic_action_resume"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="?attr/icPlayDrawable"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                android:layout_margin="4dp" />
     <ImageView
             android:id="@+id/ic_action_cancel"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="?attr/icCancelDrawable"
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:contentDescription="@null"
-            android:layout_margin="4dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_margin="4dp" />
+
+
+
+    </LinearLayout>
+
 
 
 </RelativeLayout>

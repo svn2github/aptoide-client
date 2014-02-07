@@ -22,6 +22,7 @@ import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
@@ -186,6 +187,9 @@ public class DownloadService extends Service {
         }
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
+
+
+
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
@@ -226,6 +230,8 @@ public class DownloadService extends Service {
         ArrayList<DownloadInfo> ongoingDownloads = new ArrayList<DownloadInfo>();
 
         ongoingDownloads.addAll(manager.getmActiveList());
+        ongoingDownloads.addAll(manager.getmPendingList());
+
 
         return ongoingDownloads;
     }
@@ -248,6 +254,7 @@ public class DownloadService extends Service {
         allDownloads.addAll(manager.getmErrorList());
         allDownloads.addAll(manager.getmCompletedList());
 
+
         ArrayList<Download> allDownloads2 = new ArrayList<Download>();
         for(DownloadInfo info: allDownloads){
             allDownloads2.add(info.getDownload());
@@ -260,6 +267,34 @@ public class DownloadService extends Service {
 
         DownloadInfo info = getDownload(id);
         info.remove();
+
+    }
+
+    public void resumeDownload(int downloadId) {
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+        mBuilder = setNotification();
+        startForeground(-3, mBuilder.build());
+
+        DownloadInfo info = getDownload(downloadId);
+        info.download();
+
+        if(isStopped){
+            isStopped = false;
+            timer = new Timer();
+            timer.schedule(getTask(), 0, 1000);
+        }
+
+
+    }
+
+    public void removeNonActiveDownloads() {
+        ArrayList<DownloadInfo> allDownloads = new ArrayList<DownloadInfo>();
+        allDownloads.addAll(manager.getmErrorList());
+        allDownloads.addAll(manager.getmCompletedList());
+
+        for(DownloadInfo downloadInfo : allDownloads){
+            downloadInfo.remove();
+        }
 
     }
 
@@ -298,6 +333,7 @@ public class DownloadService extends Service {
 
         final SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         if(!manager.isStarted()) manager.start(getApplicationContext());
+        final String sizeString = IconSizes.generateSizeString(getApplicationContext());
 
 
         new Thread(new Runnable() {
@@ -328,6 +364,12 @@ public class DownloadService extends Service {
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
+
+                    if (icon.contains("_icon")) {
+                        String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+                        icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                    }
+
                     download.setIcon(iconpath + icon);
 
                     manager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));

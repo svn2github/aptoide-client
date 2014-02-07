@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 
 
@@ -160,9 +161,16 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
         switch (Integer.parseInt(section)){
             case 0:
                 sectionLabel = context.getString(R.string.installed_tab);
+                sectionView.findViewById(R.id.more).setVisibility(View.GONE);
                 break;
             case 1:
                 sectionLabel = context.getString(R.string.updates_tab);
+                sectionView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
+                    }
+                });
                 break;
             case 2:
                 break;

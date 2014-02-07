@@ -13,6 +13,8 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -95,11 +97,17 @@ public class UpdatesAdapter extends CursorAdapter {
             icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
         ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
-        holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
+
+
+
 
         switch (type){
-            case 1:
+            case 0:
+                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("installed_version_name")));
 
+                break;
+            case 1:
+                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
                 final long id = cursor.getLong(cursor.getColumnIndex("_id"));
 
                 holder.manageIcon.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +123,22 @@ public class UpdatesAdapter extends CursorAdapter {
 
 
 
+    }
+
+    public ArrayList<Long> getUpdateIds() {
+
+        Cursor c = getCursor();
+
+        ArrayList<Long> ids = new ArrayList<Long>();
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+                if(c.getLong(c.getColumnIndex("is_update"))==1){
+                    ids.add(c.getLong(c.getColumnIndex("_id")));
+                }
+        }
+
+        return ids;
     }
 
     public static class AppViewHolder{

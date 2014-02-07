@@ -206,8 +206,7 @@ public class AddStoreDialog extends DialogFragment {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            dismissDialog("Unable to add store " + spiceException);
-
+            dismissDialog("Unable to add store.");
         }
 
         @Override

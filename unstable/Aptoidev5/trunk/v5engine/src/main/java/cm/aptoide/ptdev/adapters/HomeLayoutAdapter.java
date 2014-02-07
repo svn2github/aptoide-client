@@ -450,7 +450,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-                ((MainActivity)context).installApp(id);
+                ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {

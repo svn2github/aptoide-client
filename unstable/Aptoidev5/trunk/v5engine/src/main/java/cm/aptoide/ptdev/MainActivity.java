@@ -66,17 +66,14 @@ import roboguice.util.temp.Ln;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MainActivity extends ActionBarActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback {
+public class MainActivity extends ActionBarActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback, DownloadInterface {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int WIZARD_REQ_CODE = 50;
@@ -324,7 +321,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 spiceManager.execute(request, (repos.toString() + hashes.toString()).hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<RepositoryChangeJson>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-                        Toast.makeText(MainActivity.this, "RequestFailed " + spiceException, Toast.LENGTH_LONG).show();
+
                     }
 
                     @Override
@@ -615,10 +612,24 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                service.startParse(database, store, true);
+                try {
+                    waitForServiceToBeBound();
+                    service.startParse(database, store, true);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }
+
+
+    public void updateAll(List<Long> ids){
+        for(long id : ids){
+            installApp(id);
+        }
+    }
+
 
     @Override
     public void reloadStores(Set<Long> checkedItems) {

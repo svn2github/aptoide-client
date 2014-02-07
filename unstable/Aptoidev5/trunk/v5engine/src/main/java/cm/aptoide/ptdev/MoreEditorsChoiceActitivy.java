@@ -1,7 +1,11 @@
 package cm.aptoide.ptdev;
 
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -14,15 +18,31 @@ import android.view.View;
 import android.widget.ListView;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Collection;
+import cm.aptoide.ptdev.services.DownloadService;
 
 import java.util.ArrayList;
 
 /**
  * Created by rmateus on 28-01-2014.
  */
-public class MoreEditorsChoiceActitivy extends ActionBarActivity {
+public class MoreEditorsChoiceActitivy extends ActionBarActivity implements DownloadInterface {
 
+
+    private DownloadService downloadService;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            downloadService = ((DownloadService.LocalBinder) binder).getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +53,7 @@ public class MoreEditorsChoiceActitivy extends ActionBarActivity {
         Fragment fragment = new MoreEditorsChoiceFragment();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        bindService(new Intent(this, DownloadService.class), conn, BIND_AUTO_CREATE);
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -101,6 +122,10 @@ public class MoreEditorsChoiceActitivy extends ActionBarActivity {
 
         }
 
+    }
+
+    public void installApp(long id) {
+        downloadService.startDownloadFromAppId(id);
     }
 
     @Override

@@ -61,12 +61,12 @@ public abstract class StatusState implements Serializable{
 	 * @param state The status state to change to.
 	 */
 	public void changeTo(StatusState state) {
-        manager.updatePendingList();
 		if (state.changeTo()) {
 			changeFrom();
             BusProvider.getInstance().post(new DownloadEvent(mDownloadInfo.getId(), this));
             mDownloadInfo = null;
 		}
+        manager.updatePendingList();
     }
 
 	/**

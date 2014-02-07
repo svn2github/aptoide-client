@@ -85,9 +85,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String md5;
 
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
+
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(AppViewActivity.this, "Error request", Toast.LENGTH_LONG).show();
+            showError(true, true);
         }
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -172,6 +173,18 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                             if (service != null) {
                                 service.stopDownload(downloadId);
+                            }
+
+
+                        }
+                    });
+
+                    findViewById(R.id.ic_action_resume).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (service != null) {
+                                service.resumeDownload(downloadId);
                             }
 
 
@@ -714,9 +727,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.home) {
             finish();
         } else if (i == R.id.menu_schedule) {
-
-            new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
-            Toast.makeText(this, R.string.addSchDown, Toast.LENGTH_SHORT).show();
+            if(md5 !=null){
+                new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
+                Toast.makeText(this, R.string.addSchDown, Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, R.string.please_wait, Toast.LENGTH_SHORT).show();
+            }
 
         } else if (i == R.id.menu_uninstall) {
 
@@ -865,6 +881,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             switch(download.getDownloadState()){
 
                 case ACTIVE:
+                    findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     pb.setIndeterminate(false);
                     pb.setProgress(download.getProgress());
                     progressText.setText(download.getProgress() + "% - " + Utils.formatBits((long) download.getSpeed())+"/s");
@@ -872,6 +889,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 case INACTIVE:
                     break;
                 case COMPLETE:
+                    findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     findViewById(R.id.download_progress).setVisibility(View.GONE);
                     findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
                     findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
@@ -881,8 +899,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 case NOSTATE:
                     break;
                 case PENDING:
+                    findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
+                    pb.setIndeterminate(false);
+                    pb.setProgress(download.getProgress());
+                    progressText.setText("Waiting for other downloads.");
                     break;
                 case ERROR:
+                    findViewById(R.id.ic_action_resume).setVisibility(View.VISIBLE);
                     progressText.setText(download.getDownloadState().name());
                     pb.setIndeterminate(false);
                     pb.setProgress(download.getProgress());
@@ -1279,10 +1302,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     private void show(boolean shown, boolean animate) {
 
-        isShown = true;
         View mListContainer = findViewById(R.id.pager_host);
         View mProgressContainer = findViewById(R.id.progressBar);
         if (shown) {
+            isShown = true;
+
             if (animate) {
                 mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
                         this, android.R.anim.fade_out));
@@ -1306,6 +1330,48 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
             mProgressContainer.setVisibility(View.VISIBLE);
             mListContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void showError(boolean shown, boolean animate) {
+
+        View mButtonContainer = findViewById(R.id.repeat_request);
+        mButtonContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isShown = false;
+                showError(false, true);
+                continueLoading();
+
+            }
+        });
+        View mProgressContainer = findViewById(R.id.progressBar);
+        if (shown) {
+            isShown = true;
+
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+                mButtonContainer.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_in));
+            } else {
+                mProgressContainer.clearAnimation();
+                mButtonContainer.clearAnimation();
+            }
+            mProgressContainer.setVisibility(View.GONE);
+            mButtonContainer.setVisibility(View.VISIBLE);
+        } else {
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_in));
+                mButtonContainer.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+            } else {
+                mProgressContainer.clearAnimation();
+                mButtonContainer.clearAnimation();
+            }
+            mProgressContainer.setVisibility(View.VISIBLE);
+            mButtonContainer.setVisibility(View.GONE);
         }
     }
 

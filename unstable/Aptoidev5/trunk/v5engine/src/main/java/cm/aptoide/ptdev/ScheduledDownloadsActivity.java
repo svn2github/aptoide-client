@@ -300,7 +300,6 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             ScheduledDownload scheduledDownload = new ScheduledDownload(c.getLong(c.getColumnIndex("_id")), true);
 
-
             scheduledDownload.setApkid(c.getString(c.getColumnIndex("package_name")));
             scheduledDownload.setMd5(c.getString(c.getColumnIndex("md5")));
             scheduledDownload.setName(c.getString(c.getColumnIndex("name")));

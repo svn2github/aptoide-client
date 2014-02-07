@@ -26,11 +26,15 @@ public class FinishedApk implements Parcelable, Serializable{
     private ArrayList<String> permissionsList;
 
 
+
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
         this.name = name;
         this.apkid = apkid;
         this.version = version;
         this.appHashId = appHashId;
+
+
+
         this.iconpath = iconpath;
         this.path = path;
         this.permissionsList = permissions;

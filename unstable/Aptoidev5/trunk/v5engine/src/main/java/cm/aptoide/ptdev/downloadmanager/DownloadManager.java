@@ -135,7 +135,7 @@ public class DownloadManager implements Serializable {
      * @return <tt>true</tt> if there is room, <tt>false</tt> otherwise.
      */
     private boolean activeListHasRoom() {
-        int maxDownloads = 3;
+        int maxDownloads = 1;
         return maxDownloads == 0 || mActiveList.size() < maxDownloads;
     }
 
