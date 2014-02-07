@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -29,17 +28,6 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
-        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
-
-        <activity
-                android:name="com.facebook.LoginActivity"  />
-
-        <activity
-                android:name="cm.aptoide.ptdev.MoreEditorsChoiceActitivy"  />
-
-        <activity
-                android:name="cm.aptoide.ptdev.MoreTopAppsActivity"  />
-
         <activity android:name="cm.aptoide.ptdev.MainActivity"
                   android:launchMode="singleTask"
                   android:label="AptoideDev"
@@ -52,6 +40,14 @@
                     android:name="android.app.default_searchable"
                     android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
+
+        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
+
+        <activity android:name="com.facebook.LoginActivity"  />
+
+        <activity android:name="cm.aptoide.ptdev.MoreEditorsChoiceActitivy"  />
+
+        <activity android:name="cm.aptoide.ptdev.MoreTopAppsActivity"  />
 
         <activity android:name="cm.aptoide.ptdev.MyAccountActivity" />
 
@@ -69,65 +65,48 @@
                   android:theme="@style/transparent"
                   android:launchMode="standard"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.ScreenshotsViewer"/>
+        <activity android:name="cm.aptoide.ptdev.ScreenshotsViewer"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.AllCommentsActivity"/>
+        <activity android:name="cm.aptoide.ptdev.AllCommentsActivity"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.social.WebViewFacebook"/>
-        <activity
-                android:name="cm.aptoide.ptdev.social.WebViewTwitter"/>
+        <activity android:name="cm.aptoide.ptdev.social.WebViewFacebook"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity">
-        </activity>
+        <activity android:name="cm.aptoide.ptdev.social.WebViewTwitter"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity">
-        </activity>
+        <activity android:name="cm.aptoide.ptdev.ScheduledDownloadsActivity"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.RollbackActivity">
-        </activity>
+        <activity android:name="cm.aptoide.ptdev.ExcludedUpdatesActivity"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.Settings"
-                android:label="@string/settings_title_bar"
-                android:theme="@style/Settings"/>
+        <activity android:name="cm.aptoide.ptdev.RollbackActivity"/>
 
+        <activity android:name="cm.aptoide.ptdev.Settings"
+                  android:label="@string/settings_title_bar"
+                  android:theme="@style/Settings"/>
 
-        <activity
-                android:name="cm.aptoide.ptdev.SearchManager"
-                android:exported="false">
+        <activity android:name="cm.aptoide.ptdev.SearchManager"
+                  android:exported="false">
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
-            <meta-data
-                    android:name="android.app.searchable"
-                    android:resource="@xml/find"/>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/find"/>
         </activity>
 
-        <activity
-                android:name="cm.aptoide.ptdev.IntentReceiver" >
+        <activity android:name="cm.aptoide.ptdev.IntentReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="file" android:mimeType="application/vnd.cm.aptoide.pt"/>
                 <data android:scheme="http" android:mimeType="application/vnd.cm.aptoide.pt"/>
-
-
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -135,8 +114,8 @@
                 <data android:scheme="aptoidexml" />
                 <data android:scheme="aptoideinstall"/>
                 <data android:scheme="aptoidesearch" />
-
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -152,30 +131,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                        android:host="market.android.com"
-                        android:scheme="https" />
+                <data android:host="market.android.com"
+                      android:scheme="https" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                        android:host="play.google.com"
-                        android:scheme="https" />
+                <data android:host="play.google.com"
+                      android:scheme="https" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                        android:scheme="http"
-                        android:host="imgs.aptoide.com"
-                        android:pathPattern="*//.myapp"/>
+                <data android:scheme="http"
+                      android:host="imgs.aptoide.com"
+                      android:pathPattern="*//.myapp"/>
             </intent-filter>
         </activity>
 
@@ -183,15 +161,12 @@
         <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name="com.mopub.mobileads.MraidBrowser" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name="com.google.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
 
         <activity android:name="com.adsdk.sdk.banner.InAppWebView"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <activity android:name="com.adsdk.sdk.mraid.MraidActivity"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-
 
         <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
                   android:launchMode="singleInstance"/>

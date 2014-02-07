@@ -19,27 +19,34 @@
                 style="@style/titleLabel"
                 android:text="@string/specs"/>
 
-
-        <TextView
-                android:id="@+id/min_sdk"
-                android:layout_width="match_parent"
+        <LinearLayout
+                style="?attr/backgroundCard"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingBottom="5.0dp"
-                android:paddingLeft="5.0dp"
-                android:paddingRight="5.0dp"
-                android:text="Min SDK: 16"/>
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/min_screen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:paddingBottom="5.0dp"
-                android:paddingLeft="5.0dp"
-                android:paddingRight="5.0dp"
-                android:text="Min Screen: Small"/>
+            <TextView
+                    android:id="@+id/min_sdk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingBottom="5.0dp"
+                    android:paddingLeft="5.0dp"
+                    android:paddingRight="5.0dp"
+                    android:text="Min SDK: 16"/>
 
+            <TextView
+                    android:id="@+id/min_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:paddingBottom="5.0dp"
+                    android:paddingLeft="5.0dp"
+                    android:paddingRight="5.0dp"
+                    android:text="Min Screen: Small"/>
+        </LinearLayout>
         <TextView
                 style="@style/titleLabel"
                 android:text="@string/permissions"/>
@@ -49,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                style="?attr/backgroundCard"
                 android:orientation="vertical">
         </LinearLayout>
 

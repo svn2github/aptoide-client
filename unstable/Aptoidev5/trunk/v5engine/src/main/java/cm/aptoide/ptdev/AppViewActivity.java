@@ -126,13 +126,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
 
                         if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
-
+                            isUpdate=true;
                             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
                             findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                         } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
 
-                            ((TextView) findViewById(R.id.btinstall)).setText("Downgrade");
+                            ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
                             findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
 
                         } else {
@@ -902,7 +902,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     pb.setIndeterminate(false);
                     pb.setProgress(download.getProgress());
-                    progressText.setText("Waiting for other downloads.");
+                    progressText.setText(getString(R.string.download_pending));
                     break;
                 case ERROR:
                     findViewById(R.id.ic_action_resume).setVisibility(View.VISIBLE);

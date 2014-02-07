@@ -1,8 +1,8 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Download;
 
@@ -156,7 +157,35 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     protected void setSectionText(final String section, final View sectionView) {
         final TextView textView = (TextView) sectionView
                 .findViewById(R.id.separator_label);
-        textView.setText(section);
+        String label="";
+
+        EnumDownloadStates downloadState = EnumDownloadStates.INACTIVE;
+        try{
+            downloadState = EnumDownloadStates.valueOf(section);
+        }catch (Exception e){
+            label=section;
+        }
+        Log.d("DownloadManager", "downloadState "+EnumDownloadStates.valueOf(section));
+
+        switch (downloadState){
+            case ACTIVE:
+                label = context.getString(R.string.download_active);
+                break;
+            case COMPLETE:
+                label= context.getString(R.string.download_completed);
+                break;
+            case PENDING:
+                label= context.getString(R.string.download_pending);
+                break;
+            case INACTIVE:
+                label= context.getString(R.string.download_inactive);
+                break;
+            case ERROR:
+                label= context.getString(R.string.download_error);
+                break;
+        }
+
+        textView.setText(label);
     }
 
     protected synchronized void replaceSectionViewsInMaps(final String section,

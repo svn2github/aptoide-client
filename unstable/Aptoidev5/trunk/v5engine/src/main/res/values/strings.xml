@@ -340,7 +340,14 @@
     <string name="search_more">Search More</string>
     <string name="more_editors_choice">More Editors\' Choice</string>
     <string name="more_top_apps">More Top Apps</string>
-
+    <string name="not_found">Not found</string>
+    <string name="download_active">Active</string>
+    <string name="download_completed">Completed</string>
+    <string name="download_pending">Waiting</string>
+    <string name="download_inactive">Inactive</string>
+    <string name="download_error">Error</string>
+    <string name="try_again">Try again</string>
+    <string name="clear">Clear</string>
 
 
 </resources>

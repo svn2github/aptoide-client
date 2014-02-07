@@ -17,57 +17,67 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             style="@style/titleLabel"
             android:text="@string/review"/>
 
-    <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:hint="Insert your comment"
-            android:id="@+id/editText_addcomment"
-            android:inputType="textMultiLine"/>
-
-
-    <Button android:id="@+id/button_add_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?attr/customButtonColor"
-            android:text="@string/add_comment"
-            android:layout_margin="10dp"/>
 
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:id="@+id/layout_likes">
+            style="?attr/backgroundCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:orientation="vertical">
 
-        <Button android:id="@+id/button_like"
+        <EditText
                 android:layout_width="fill_parent"
-                android:text="@string/like"
-                android:background="?attr/selectableItemBackground"
-                android:drawableLeft="?attr/icRatingGoodDrawable"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content"/>
-
-        <Button android:id="@+id/button_dont_like"
-                android:layout_width="fill_parent"
-                android:text="@string/dont_like"
-                android:background="?attr/selectableItemBackground"
-                android:drawableLeft="?attr/icRatingBadDrawable"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="60dp"
+                android:hint="Insert your comment"
+                android:id="@+id/editText_addcomment"
+                android:inputType="textMultiLine"/>
 
 
+        <Button android:id="@+id/button_add_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?attr/customButtonColor"
+                android:text="@string/add_comment"
+                android:layout_margin="10dp"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:id="@+id/layout_likes">
+
+            <Button android:id="@+id/button_like"
+                    android:layout_width="fill_parent"
+                    android:text="@string/like"
+                    android:background="?attr/selectableItemBackground"
+                    android:drawableLeft="?attr/icRatingGoodDrawable"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content"/>
+
+            <Button android:id="@+id/button_dont_like"
+                    android:layout_width="fill_parent"
+                    android:text="@string/dont_like"
+                    android:background="?attr/selectableItemBackground"
+                    android:drawableLeft="?attr/icRatingBadDrawable"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
+
+    <TextView
+            style="@style/titleLabel"
+            android:text="@string/comments"/>
 
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:gravity="center_horizontal"
                   android:orientation="vertical"
+                  android:layout_margin="5dp"
+                  style="?attr/backgroundCard"
                   android:id="@+id/layout_comments">
-
-        <TextView
-                style="@style/titleLabel"
-                android:text="@string/comments"/>
-
 
         <LinearLayout
                 android:id="@+id/commentContainer"
@@ -90,29 +100,29 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:visibility="gone"
                 android:textColor="@android:color/darker_gray"/>
 
+        <TextView
+                android:id="@+id/no_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5.0dp"
+                android:paddingLeft="5.0dp"
+                android:paddingRight="5.0dp"
+                android:visibility="gone"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/no_comments"/>
     </LinearLayout>
 
-    <TextView
-            android:id="@+id/no_comments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="5.0dp"
-            android:paddingLeft="5.0dp"
-            android:paddingRight="5.0dp"
-            android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/no_comments"/>
 
     <!--<TextView-->
-    <!--style="@style/titleLabel"-->
-    <!--android:text="@string/flag_this_app"/>-->
+            <!--style="@style/titleLabel"-->
+            <!--android:text="@string/flag_this_app"/>-->
 
     <!--<Button android:id="@+id/button_flag"-->
-    <!--style="@style/custom_button_style"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:text="@string/flag"-->
-    <!--android:layout_margin="10dp"/>-->
+            <!--style="?attr/customButtonColor"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:text="@string/flag"-->
+            <!--android:layout_margin="10dp"/>-->
 
 
 </LinearLayout>

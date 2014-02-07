@@ -65,7 +65,7 @@
                 android:singleLine="true"
                 android:textColor="@android:color/darker_gray"
                 android:layout_alignParentLeft="true"
-                android:gravity="center"
+                android:gravity="left"
                 android:layout_below="@+id/app_repo"
                 android:drawableLeft="@drawable/ic_timestamp"
                 android:textAppearance="?android:attr/textAppearanceSmall"

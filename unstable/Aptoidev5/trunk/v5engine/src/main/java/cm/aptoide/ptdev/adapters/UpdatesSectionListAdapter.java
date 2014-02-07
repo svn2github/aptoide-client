@@ -6,11 +6,8 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
 
@@ -169,6 +166,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
                     @Override
                     public void onClick(View v) {
                         ((MainActivity)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
+                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
                 break;

@@ -149,7 +149,7 @@ public class DownloadInfo implements Runnable, Serializable {
 //                    }
 
 //                    Log.d("DownloadManager", "ETA: " + mETA + " AvgSpeed: " + mAvgSpeed / 1000 + " RemainingSize: " + mReaminingSize + " Downloaded: " + mDownloadedSize + " Status: " + mStatusState.toString());
-                    Log.d("DownloadManager", "ETA: " + mETA + " Speed: " + mSpeed / 1000 + " Size: " + Utils.formatBytes(mSize) + " Downloaded: " + Utils.formatBytes(mDownloadedSize) + " Status: " + mStatusState.toString() + " TotalDownloaded: " + Utils.formatBytes(mProgress) + " " + System.identityHashCode(DownloadInfo.this));
+                    Log.d("DownloadManager", "ETA: " + mETA + " Speed: " + mSpeed / 1000 + " Size: " + Utils.formatBytes(mSize) + " Downloaded: " + Utils.formatBytes(mDownloadedSize) + " Status: " + mStatusState + " TotalDownloaded: " + Utils.formatBytes(mProgress) + " " + System.identityHashCode(DownloadInfo.this));
 //                    Log.d("DownloadManager", threads.size() + " on queue.");
 
 //                    notifyListeners(new DownloadProgressEvent(DownloadInfo.this));

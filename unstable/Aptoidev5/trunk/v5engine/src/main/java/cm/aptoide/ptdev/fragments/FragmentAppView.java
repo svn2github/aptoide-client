@@ -86,14 +86,16 @@ public abstract class FragmentAppView extends Fragment {
         private TextView showAllDescription;
         private LinearLayout descriptionContainer;
 //        private ScrollView scroller;
+
+        private RelativeLayout layoutInfoDetails;
         private TextView store;
         private TextView downloads;
         private TextView rating;
         private TextView likes;
         private TextView dontLikes;
         private TextView size;
-//        private TextView latestVersion;
         private TextView publisher;
+
         private Gallery screenshots;
         private ImageGalleryAdapter galleryAdapter;
         private LinearLayout mainLayout;
@@ -107,7 +109,8 @@ public abstract class FragmentAppView extends Fragment {
         private View whatsNewContainer;
         private TextView whatsNew;
         private boolean collapsed = true;
-        int scrollPosition = 0;
+
+
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
@@ -129,7 +132,6 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (collapsed) {
                             collapsed = false;
-//                            scroller.getScrollY();
                             description.setMaxLines(Integer.MAX_VALUE);
                             TypedValue outValue = new TypedValue();
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
@@ -154,7 +156,6 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (collapsed) {
                             collapsed = false;
-//                            scroller.getScrollY();
                             description.setMaxLines(Integer.MAX_VALUE);
                             TypedValue outValue = new TypedValue();
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
@@ -166,7 +167,6 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
-//                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
                         }
                     }
@@ -178,20 +178,30 @@ public abstract class FragmentAppView extends Fragment {
             store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
             downloads.setText(getString(R.string.downloads) + ": " + withSuffix(String.valueOf(event.getDownloads())));
             rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
-            likes.setText("" + event.getLikes());
-            dontLikes.setText("" + event.getDontLikes());
+//            rating.setRating(Float.valueOf(event.getRating()));
+            likes.setText(getString(R.string.likes) +": " + event.getLikes());
+            dontLikes.setText(getString(R.string.dont_likes) +": " + event.getDontLikes());
 
             if(event.getDeveloper() != null){
                 publisherContainer.setVisibility(View.VISIBLE);
 
                 if(((AppViewActivity)getActivity()).isUpdate()){
-                    whatsNewContainer.setVisibility(View.VISIBLE);
-                    whatsNew.setText(event.getNews());
+                    if(event.getNews().length()>0){
+                        whatsNewContainer.setVisibility(View.VISIBLE);
+                        whatsNew.setText(event.getNews());
+                    }
                 }
 
                 publisherContainer.setVisibility(View.VISIBLE);
                 publisherEmail.setText(getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail());
-                publisherPrivacyPolicy.setText(getString(R.string.privacy_policy) +": " + event.getDeveloper().getInfo().getPrivacy_policy());
+
+                String privacyPolicy="";
+                if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
+                    privacyPolicy=getString(R.string.privacy_policy) +": " + event.getDeveloper().getInfo().getPrivacy_policy();
+                }else{
+                    privacyPolicy=getString(R.string.privacy_policy) +": " + getString(R.string.not_found);
+                }
+                publisherPrivacyPolicy.setText(privacyPolicy);
                 publisherWebsite.setText(getString(R.string.website) +": " + event.getDeveloper().getInfo().getWebsite());
             }
 
@@ -226,14 +236,16 @@ public abstract class FragmentAppView extends Fragment {
             description = (TextView) v.findViewById(R.id.descript);
             showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
             descriptionContainer = (LinearLayout) v.findViewById(R.id.description_container);
-//            scroller = (ScrollView) v.findViewById(R.id.app_info_scroller);
-            store = (TextView) v.findViewById(R.id.store_label);
-            downloads = (TextView) v.findViewById(R.id.downloads_label);
-            rating = (TextView) v.findViewById(R.id.rating_label);
-            likes = (TextView) v.findViewById(R.id.likes_label);
-            dontLikes = (TextView) v.findViewById(R.id.dont_likes_label);
-            size = (TextView) v.findViewById(R.id.size_label);
-            publisher = (TextView) v.findViewById(R.id.publisher_label);
+
+            layoutInfoDetails = (RelativeLayout) v.findViewById(R.id.layout_info_details);
+            store = (TextView) layoutInfoDetails.findViewById(R.id.store_label);
+            downloads = (TextView) layoutInfoDetails.findViewById(R.id.downloads_label);
+            rating = (TextView) layoutInfoDetails.findViewById(R.id.rating_label);
+            likes = (TextView) layoutInfoDetails.findViewById(R.id.likes_label);
+            dontLikes = (TextView) layoutInfoDetails.findViewById(R.id.dont_likes_label);
+            size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
+            publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
+
             screenshots = (Gallery) v.findViewById(R.id.gallery);
 //            viewPager = (ViewPager) v.findViewById(R.id._viewPager);
 //            mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
