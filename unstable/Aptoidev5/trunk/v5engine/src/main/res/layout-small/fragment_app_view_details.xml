@@ -16,8 +16,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:id="@+id/gallery"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:paddingBottom="5dp"/>
+            android:visibility="gone"/>
 
 
     <include android:id="@+id/layout_info_details"

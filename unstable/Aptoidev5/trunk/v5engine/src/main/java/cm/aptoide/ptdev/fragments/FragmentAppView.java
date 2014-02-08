@@ -556,6 +556,8 @@ public abstract class FragmentAppView extends Fragment {
     }
 
     public static class FragmentAppViewRating extends FragmentAppView{
+
+        private TextView commentsTitle;
         private LinearLayout commentsLayout;
         private TextView noComments;
         private LinearLayout commentsContainer;
@@ -573,10 +575,12 @@ public abstract class FragmentAppView extends Fragment {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
 
                 if (event.getComments().size() == 0) {
+                    commentsTitle.setVisibility(View.GONE);
                     commentsLayout.setVisibility(View.GONE);
                     noComments.setVisibility(View.VISIBLE);
                 }
                 if (event.getComments().size() > 5) {
+                    commentsTitle.setVisibility(View.VISIBLE);
                     commentsLayout.setVisibility(View.VISIBLE);
                     seeAllButton.setVisibility(View.VISIBLE);
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
@@ -619,6 +623,7 @@ public abstract class FragmentAppView extends Fragment {
 
             View v = inflater.inflate(R.layout.fragment_app_rating, container, false);
 
+            commentsTitle = (TextView) v.findViewById(R.id.title_comments);
             commentsLayout = (LinearLayout) v.findViewById(R.id.layout_comments);
             noComments = (TextView) v.findViewById(R.id.no_comments);
             commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);

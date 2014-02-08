@@ -75,7 +75,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <TextView android:id="@+id/title_comments"
                 style="@style/titleLabel"
                 android:text="@string/comments"/>
 

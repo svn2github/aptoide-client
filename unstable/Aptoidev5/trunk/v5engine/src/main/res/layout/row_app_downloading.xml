@@ -97,15 +97,14 @@
 
         <ImageView
                 android:id="@+id/manage_icon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="?attr/icCancelDrawable"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                android:layout_margin="8dp"
+                android:padding="15dp"
+                android:background="?attr/selectableItemBackground"
                 android:layout_alignParentRight="true"/>
 
 

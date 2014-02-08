@@ -46,20 +46,24 @@
 
         <ImageView
                 android:id="@+id/ic_action_resume"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="?attr/icPlayDrawable"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:contentDescription="@null"
+                android:padding="5dp"
+                android:background="?attr/selectableItemBackground"
                 android:layout_margin="4dp" />
     <ImageView
             android:id="@+id/ic_action_cancel"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="?attr/icCancelDrawable"
             android:layout_gravity="center"
             android:contentDescription="@null"
+            android:padding="5dp"
+            android:background="?attr/selectableItemBackground"
             android:layout_margin="4dp" />
 
 
