@@ -8,8 +8,15 @@
     <string name="WidgetProvider_timestamp_hours_ago">%s hours ago</string>
     <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
     <string name="WidgetProvider_timestamp_just_now">Just now</string>
-    <string name="timestamp_months">months</string>
-    <string name="timestamp_days">days</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
+
+    <string name="timestamp_months">%s months</string>
+    <string name="timestamp_month">%s month</string>
+    <string name="timestamp_weeks">%s weeks</string>
+    <string name="timestamp_week">%s week</string>
+    <string name="timestamp_days">%s days</string>
+    <string name="timestamp_day">%s day</string>
 
     <string name="action_contact">Contact</string>
     <string name="installed_tab">Installed</string>

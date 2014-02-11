@@ -6,6 +6,12 @@
   <string name="WidgetProvider_timestamp_hours_ago">há %s horas</string>
   <string name="WidgetProvider_timestamp_minutes_ago">há %s minutos</string>
   <string name="WidgetProvider_timestamp_just_now">Agora mesmo</string>
+  <string name="timestamp_months">%s meses</string>
+  <string name="timestamp_month">%s mês</string>
+  <string name="timestamp_weeks">%s semanas</string>
+  <string name="timestamp_week">%s semana</string>
+  <string name="timestamp_days">%s dias</string>
+  <string name="timestamp_day">%s dia</string>
   <string name="action_contact">Contacto</string>
   <string name="installed_tab">Instaladas</string>
   <string name="update">Actualizar</string>
@@ -15,6 +21,7 @@
   <string name="screenshots">Capturas de ecrã</string>
   <string name="about">Descrição</string>
   <string name="show_more">Mostrar mais</string>
+  <string name="show_less">Mostrar menos</string>
   <string name="like">Gostar</string>
   <string name="dont_like">Não gostar</string>
   <string name="comments">Comentários</string>
@@ -22,6 +29,7 @@
   <string name="add_comment">Adicionar comentário</string>
   <string name="opinion_success">O seu pedido foi submetido com sucesso</string>
   <string name="comment_submitted">O seu comentário foi submetido com sucesso</string>
+  <string name="no_comments">Não existem comentários. Seja o primeiro!</string>
   <string name="comment_see_all">Ver todos</string>
   <string name="related_apps">Apps relacionadas</string>
   <string name="multiversion">Multiversão</string>
@@ -119,7 +127,7 @@
   <string name="no_sch_downloads">Sem downloads agendados!</string>
   <string name="schDown_installselected">Instalar seleccionados</string>
   <string name="stores">Lojas</string>
-  <string name="insert_store_name">Inserir nome da store:</string>
+  <string name="insert_store_name">Inserir nome da loja:</string>
   <string name="store_name">Nome da Loja</string>
   <string name="search_other_stores">Ou procurar por outras...</string>
   <string name="see_top_stores">Ver Lojas Principais</string>
@@ -128,6 +136,7 @@
   <string name="rollback_installed">Instalado</string>
   <string name="rollback_uninstalled">Desinstalado</string>
   <string name="rollback_updated">Actualizado</string>
+  <string name="rollback_downgraded">Transferido</string>
   <string name="install">Instalar</string>
   <string name="get_latest_version">Obter Última</string>
   <string name="get_latest_version_and_trusted">Obter Última e Verificada</string>
@@ -202,6 +211,7 @@
   <string name="exclude_update">Ignorar Actualização</string>
   <string name="trusted">Verificada</string>
   <string name="warning">Crítico</string>
+  <string name="downgrade">Transferido</string>
   <string name="open">Abrir</string>
   <string name="scanned_with_av">Verificado com:</string>
   <string name="compared_with_another_marketplace">Comparado com outro Android Marketplace:</string>
@@ -266,7 +276,7 @@
   <string name="racing">Corridas</string>
   <string name="editors_choice_new">Novas Escolhas do Editor</string>
   <string name="editors_choice">Escolhas do Editor</string>
-  <string name="top_apps">Principais Aplicações</string>
+  <string name="top_apps">Aplicações Principais</string>
   <string name="latest_apps">Últimas Aplicações</string>
   <string name="latest_comments">Últimos Comentários</string>
   <string name="latest_likes">Últimos Gostos</string>
@@ -298,5 +308,29 @@
   <string name="search_on_aptoide">Procurar mais na página Aptoide</string>
   <string name="reinstall">Reinstalar</string>
   <string name="at_time">às %s</string>
+  <string name="webinstall_relogin">É necessário voltar a iniciar sessão para activar a instalação via web</string>
+  <string name="error_MARG_1">Parâmetro \'repo\' em falta</string>
+  <string name="error_MARG_2">Parâmetro \'apkid\' em falta</string>
+  <string name="error_MARG_3">Parâmetro \'apkversion\' em falta</string>
+  <string name="error_IARG_1">Store inválida!</string>
+  <string name="error_IARG_2">Token inválido!</string>
+  <string name="error_IARG_3">Identificador inválido!</string>
+  <string name="error_IARG_100">Limite de comentário inválido!</string>
+  <string name="error_IARG_102">Tipos inválidos!</string>
+  <string name="error_SYS_1">Ocorreu um erro, por favor tente novamente</string>
+  <string name="error_SYS_2">A informação não está disponível, por favor tente mais tarde</string>
+  <string name="error_SYS_3">O sistema está em manutenção, por favor tente mais tarde novamente</string>
+  <string name="error_SYS_4">Esta chamada não é suportada pela versão de API corrente</string>
   <string name="X_download_number">%s transf.</string>
+  <string name="search_more">Procurar Mais</string>
+  <string name="more_editors_choice">Mais Escolhas do Editor</string>
+  <string name="more_top_apps">Mais Aplicações Principais</string>
+  <string name="not_found">Não encontrado</string>
+  <string name="download_active">Activo</string>
+  <string name="download_completed">Completo</string>
+  <string name="download_pending">À espera</string>
+  <string name="download_inactive">Inactivo</string>
+  <string name="download_error">Erro</string>
+  <string name="try_again">Repetir</string>
+  <string name="clear">Limpar</string>
 </resources>

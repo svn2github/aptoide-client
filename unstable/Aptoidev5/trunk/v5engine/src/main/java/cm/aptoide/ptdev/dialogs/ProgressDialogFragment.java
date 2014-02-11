@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
+import cm.aptoide.ptdev.R;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,7 +27,7 @@ public class ProgressDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         ProgressDialog pd = new ProgressDialog(getActivity());
-        pd.setMessage("Please wait.");
+        pd.setMessage(getString(R.string.please_wait));
         pd.setCanceledOnTouchOutside(false);
         return pd;
     }

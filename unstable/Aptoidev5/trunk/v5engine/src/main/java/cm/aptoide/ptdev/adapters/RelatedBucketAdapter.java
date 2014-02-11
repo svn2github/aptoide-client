@@ -101,9 +101,9 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
 
 
             if(month){
-                holder.timestamp.setText(String.valueOf(time) + " " + getContext().getString(R.string.timestamp_months));
+                holder.timestamp.setText(getContext().getString(R.string.timestamp_months, String.valueOf(time)));
             }else{
-                holder.timestamp.setText(String.valueOf(time) + " " + getContext().getString(R.string.timestamp_days));
+                holder.timestamp.setText(getContext().getString(R.string.timestamp_days, String.valueOf(time)));
             }
         } catch (ParseException e) {
             e.printStackTrace();

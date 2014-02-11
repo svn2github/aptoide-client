@@ -37,7 +37,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"
-                    android:hint="Insert your comment"
+                    android:hint="@string/write_your_comment"
                     android:id="@+id/editText_addcomment"
                     android:inputType="textMultiLine"/>
 
@@ -108,19 +108,20 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     android:visibility="gone"
                     android:textColor="@android:color/darker_gray"/>
 
-            <TextView
-                    android:id="@+id/no_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingBottom="5.0dp"
-                    android:paddingLeft="5.0dp"
-                    android:paddingRight="5.0dp"
-                    android:visibility="gone"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/no_comments"/>
+
         </LinearLayout>
 
+        <TextView
+                android:id="@+id/no_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5.0dp"
+                android:paddingLeft="5.0dp"
+                android:paddingRight="5.0dp"
+                android:visibility="gone"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/no_comments"/>
         <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="wrap_content"-->

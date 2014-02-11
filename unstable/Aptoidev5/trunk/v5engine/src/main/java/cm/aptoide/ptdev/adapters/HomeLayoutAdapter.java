@@ -129,7 +129,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
         String categoryName;
 
         if (list.get(position).getWeeks() > -1) {
-            categoryName = list.get(position).getWeeks() + " weeks ago";
+            categoryName = context.getString(R.string.timestamp_weeks, list.get(position).getWeeks());
 
         } else {
 
