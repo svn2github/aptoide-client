@@ -1,0 +1,474 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="separatorLabel">
+        <item name="android:padding">8dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="titleLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+        <item name="android:textColor">?attr/customColor</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="customRowStyle">
+        <item name="android:foreground">@drawable/highlight_overlay</item>
+    </style>
+
+    <style name="backgroundCardStyleLight">
+        <item name="android:background">@drawable/background_card_light</item>
+    </style>
+
+    <style name="backgroundCardStyleDark">
+        <item name="android:background">@drawable/background_card_dark</item>
+    </style>
+
+    <style name="overflowMenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:src">@drawable/overflow_menu</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="headerSeparatorButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:layout_gravity">center_vertical|right</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="headerSeparatorButtonStyleAptoide" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
+    </style>
+    <style name="headerSeparatorButtonStyleMidnight" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_midnight</item>
+    </style>
+    <style name="headerSeparatorButtonStyleBlack" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_black</item>
+    </style>
+    <style name="headerSeparatorButtonStyleMaroon" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_maroon</item>
+    </style>
+    <style name="headerSeparatorButtonStyleGold" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_gold</item>
+    </style>
+    <style name="headerSeparatorButtonStyleOrange" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_orange</item>
+    </style>
+    <style name="headerSeparatorButtonStyleSpringgreen" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_springgreen</item>
+    </style>
+    <style name="headerSeparatorButtonStyleLightsky" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_lightsky</item>
+    </style>
+    <style name="headerSeparatorButtonStylePink" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_pink</item>
+    </style>
+    <style name="headerSeparatorButtonStyleBlue" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_blue</item>
+    </style>
+    <style name="headerSeparatorButtonStyleRed" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_red</item>
+    </style>
+    <style name="headerSeparatorButtonStyleMagenta" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_magenta</item>
+    </style>
+    <style name="headerSeparatorButtonStyleSlategray" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_slategray</item>
+    </style>
+    <style name="headerSeparatorButtonStyleSeagreen" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_seagreen</item>
+    </style>
+    <style name="headerSeparatorButtonStyleSilver" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_silver</item>
+    </style>
+    <style name="headerSeparatorButtonStyleDimgray" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_dimgray</item>
+    </style>
+    <style name="headerSeparatorButtonStyleGreenApple" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_greenapple</item>
+    </style>
+    <style name="headerSeparatorButtonStyleHappyBlue" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_happyblue</item>
+    </style>
+    <style name="headerSeparatorButtonStyleGreen" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_green</item>
+    </style>
+    <style name="headerSeparatorButtonStyleYellow" parent="headerSeparatorButtonStyle">
+        <item name="android:background">@drawable/custom_color_button_yellow</item>
+    </style>
+
+
+    <style name="backgroundTabsStyleLight">
+        <item name="android:background">@drawable/background_tabs_light</item>
+    </style>
+
+    <style name="backgroundTabsStyleDark">
+        <item name="android:background">@drawable/background_tabs_dark</item>
+    </style>
+
+    <style name="apkInfoBackgroundStyleAptoideLight">
+        <item name="android:background">@drawable/app_header_bgd_aptoide_light</item>
+    </style>
+    <style name="apkInfoBackgroundStyleMidnightLight">
+        <item name="android:background">@drawable/apk_info_separator_midnight</item>
+    </style>
+    <style name="apkInfoBackgroundStyleBlackLight">
+        <item name="android:background">@drawable/apk_info_separator_black</item>
+    </style>
+    <style name="apkInfoBackgroundStyleMaroonLight">
+        <item name="android:background">@drawable/apk_info_separator_maroon</item>
+    </style>
+    <style name="apkInfoBackgroundStyleGoldLight">
+        <item name="android:background">@drawable/apk_info_separator_gold</item>
+    </style>
+    <style name="apkInfoBackgroundStyleOrangeLight">
+        <item name="android:background">@drawable/apk_info_separator_orange</item>
+    </style>
+    <style name="apkInfoBackgroundStyleSpringgreenLight">
+        <item name="android:background">@drawable/apk_info_separator_springgreen</item>
+    </style>
+    <style name="apkInfoBackgroundStyleLightskyLight">
+        <item name="android:background">@drawable/apk_info_separator_lightsky</item>
+    </style>
+    <style name="apkInfoBackgroundStylePinkLight">
+        <item name="android:background">@drawable/apk_info_separator_pink</item>
+    </style>
+    <style name="apkInfoBackgroundStyleBlueLight">
+        <item name="android:background">@drawable/apk_info_separator_blue</item>
+    </style>
+    <style name="apkInfoBackgroundStyleRedLight">
+        <item name="android:background">@drawable/apk_info_separator_red</item>
+    </style>
+    <style name="apkInfoBackgroundStyleMagentaLight">
+        <item name="android:background">@drawable/apk_info_separator_magenta</item>
+    </style>
+    <style name="apkInfoBackgroundStyleSlategrayLight">
+        <item name="android:background">@drawable/apk_info_separator_slategray</item>
+    </style>
+    <style name="apkInfoBackgroundStyleSeagreenLight">
+        <item name="android:background">@drawable/apk_info_separator_seagreen</item>
+    </style>
+    <style name="apkInfoBackgroundStyleSilverLight">
+        <item name="android:background">@drawable/apk_info_separator_silver</item>
+    </style>
+    <style name="apkInfoBackgroundStyleDimgrayLight">
+        <item name="android:background">@drawable/apk_info_separator_dimgray</item>
+    </style>
+    <style name="apkInfoBackgroundStyleGreenAppleLight">
+        <item name="android:background">@drawable/apk_info_separator_greenapple</item>
+    </style>
+    <style name="apkInfoBackgroundStyleHappyBlueLight">
+        <item name="android:background">@drawable/apk_info_separator_happyblue</item>
+    </style>
+    <style name="apkInfoBackgroundStyleGreenLight">
+        <item name="android:background">@drawable/apk_info_separator_green</item>
+    </style>
+    <style name="apkInfoBackgroundStyleYellowLight">
+        <item name="android:background">@drawable/apk_info_separator_yellow</item>
+    </style>
+
+    <style name="apkInfoBackgroundStyleAptoideDark">
+        <item name="android:background">@drawable/app_header_bgd_aptoide_dark</item>
+    </style>
+    <style name="apkInfoBackgroundStyleMidnightDark">
+        <item name="android:background">@drawable/apk_info_separator_midnight_dark</item>
+    </style>
+    <style name="apkInfoBackgroundStyleBlackDark">
+        <item name="android:background">@drawable/apk_info_separator_black_dark</item>
+    </style>
+    <style name="apkInfoBackgroundStyleMaroonDark">
+        <item name="android:background">@drawable/apk_info_separator_maroon_dark</item>
+    </style>
+
+    <style name="navigationDrawerColorLight">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="navigationDrawerColorDark">
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="MenuDrawer" />
+
+    <style name="MenuDrawer.Widget" />
+
+    <style name="MenuDrawer.Widget.Category">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MenuDrawer.Widget.Title">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="settingsActionBar">
+    </style>
+
+    <!--<style name="CheckBoxAptoide" parent="android:Widget.CompoundButton.CheckBox">-->
+        <!--<item name="android:button">@drawable/aptoide_btn_check_holo_light</item>-->
+    <!--</style>-->
+
+    <style name="breadcrumbs_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#A0A0A0</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/highlight_overlay</item>
+    </style>
+
+    <style name="breadcrumbs_style_light" parent="breadcrumbs_style">
+        <item name="android:drawableLeft">@drawable/ic_ab_back_holo_light</item>
+    </style>
+
+    <style name="TranslucentActionBar" parent="AptoideThemeDefault">
+        <!--<item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
+        <item name="android:windowActionBarOverlay" tools:ignore="NewApi">true</item>
+        <!--<item name="actionBarStyle">@style/Widget.ActionBar.Transparent</item>-->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="Widget.ActionBar.Transparent">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="background">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Light.ActionBar.Transparent">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="background">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    </style>
+
+
+    <style name="Widget.Light.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+    </style>
+
+    <style name="WidgetButtonCustomGray" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/gray_btn_default_holo_light</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
+    </style>
+    <style name="WidgetButtonCustomMidnight" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_midnight</item>
+    </style>
+    <style name="WidgetButtonCustomBlack" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_dimgray</item>
+    </style>
+    <style name="WidgetButtonCustomMaroon" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_maroon</item>
+    </style>
+    <style name="WidgetButtonCustomGold" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_gold</item>
+    </style>
+    <style name="WidgetButtonCustomOrange" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_orange</item>
+    </style>
+    <style name="WidgetButtonCustomSpringgreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_springgreen</item>
+    </style>
+    <style name="WidgetButtonCustomLightsky" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_lightsky</item>
+    </style>
+    <style name="WidgetButtonCustomPink" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_pink</item>
+    </style>
+    <style name="WidgetButtonCustomBlue" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_blue</item>
+    </style>
+    <style name="WidgetButtonCustomRed" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_red</item>
+    </style>
+    <style name="WidgetButtonCustomMagenta" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_magenta</item>
+    </style>
+    <style name="WidgetButtonCustomSlategray" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_slategray</item>
+    </style>
+    <style name="WidgetButtonCustomSeagreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_seagreen</item>
+    </style>
+    <style name="WidgetButtonCustomSilver" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_silver</item>
+    </style>
+    <style name="WidgetButtonCustomDimgray" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_dimgray</item>
+    </style>
+    <style name="WidgetButtonCustomGreenApple" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_greenapple</item>
+    </style>
+    <style name="WidgetButtonCustomHappyBlue" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_happyblue</item>
+    </style>
+    <style name="WidgetButtonCustomGreen" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_green</item>
+    </style>
+    <style name="WidgetButtonCustomYellow" parent="WidgetButtonCustom">
+        <item name="android:background">@drawable/custom_color_button_yellow</item>
+    </style>
+
+    <style name="Animations"/>
+    <!--  PopDownMenu  -->
+    <style name="Animations.PopDownMenu"/>
+    <style name="Animations.PopDownMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+    </style>
+    <style name="Animations.PopDownMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+    </style>
+    <style name="Animations.PopDownMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
+    </style>
+    <style name="Animations.PopDownMenu.Reflect">
+        <item name="@android:windowEnterAnimation">@anim/pump_top</item>
+        <item name="@android:windowExitAnimation">@anim/disappear</item>
+    </style>
+    <!--  PopUpMenu  -->
+    <style name="Animations.PopUpMenu"/>
+    <style name="Animations.PopUpMenu.Center">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+    </style>
+    <style name="Animations.PopUpMenu.Left">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
+    </style>
+    <style name="Animations.PopUpMenu.Right">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
+        <item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
+    </style>
+    <style name="Animations.PopUpMenu.Reflect">
+        <item name="@android:windowEnterAnimation">@anim/pump_bottom</item>
+        <item name="@android:windowExitAnimation">@anim/disappear</item>
+    </style>
+
+    <style name="Settings" parent="@style/Theme.AppCompat">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+    </style>
+
+    <style name="transparent" parent="@style/AppBaseTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_light</item>
+    </style>
+
+    <style name="transparent_black" parent="AppBaseThemeDark">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="alertDialog">@style/alert_dialog_style_dark</item>
+    </style>
+
+    <style name="alert_dialog_style_light" parent="android:Theme.Dialog"/>
+    <style name="alert_dialog_style_dark" parent="android:Theme.Dialog"/>
+
+    <style name="ButtonBarButton">
+        <item name="android:minHeight">45dp</item>
+        <item name="android:textColor">?attr/android:textColorPrimary</item>
+    </style>
+
+    <style name="WizardPageTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">?attr/customColor</item>
+    </style>
+
+    <style name="RatingBarSmallAptoide">
+        <item name="android:progressDrawable">@drawable/aptoide_ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/aptoide_ratingbar_small_holo_light</item>
+        <item name="android:isIndicator">true</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="AppInfoDetailField">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:layout_gravity">center_horizontal|left</item>
+    </style>
+
+</resources>

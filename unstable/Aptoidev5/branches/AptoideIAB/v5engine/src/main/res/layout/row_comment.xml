@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2013 tdeus.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Public License v2.0
+which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical">
+
+    <View android:id="@+id/view"
+          android:layout_width="fill_parent"
+          android:layout_height="2dp"
+          android:background="@android:color/darker_gray"/>
+
+
+    <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_toLeftOf="@+id/date"
+            android:layout_below="@+id/view"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Daniel Batalha" android:paddingLeft="10dp"/>
+
+    <TextView
+            android:id="@+id/date"
+            android:layout_alignTop="@+id/author"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:layout_gravity="right"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="2dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="right" android:text="February 27, 2009 at 9:30 am"
+            android:layout_alignParentRight="true"/>
+
+    <TextView
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/author"
+            android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
+            android:paddingBottom="12dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+
+</RelativeLayout>

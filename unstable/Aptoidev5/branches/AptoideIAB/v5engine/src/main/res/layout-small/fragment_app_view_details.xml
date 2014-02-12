@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2013 tdeus.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Public License v2.0
+which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <Gallery
+            android:id="@+id/gallery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+
+    <include android:id="@+id/layout_info_details"
+             layout="@layout/fragment_app_info"/>
+
+
+    <TextView
+            style="@style/titleLabel"
+            android:text="@string/description"/>
+
+    <LinearLayout
+            android:id="@+id/description_container"
+            style="?attr/backgroundCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/descript"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="5.0sp"
+                android:paddingRight="5.0sp"
+                android:paddingTop="10.0dip"
+                />
+        <TextView
+                android:id="@+id/show_all_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableRight="?attr/icExpandDrawable"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:visibility="gone"
+                android:text="@string/show_more"/>
+    </LinearLayout>
+
+
+    <LinearLayout android:orientation="vertical" android:id="@+id/whats_new_container"
+                  android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:visibility="gone">
+
+        <TextView
+                style="@style/titleLabel"
+                android:text="@string/whats_new"/>
+
+        <LinearLayout android:orientation="vertical"
+                      android:id="@+id/whats_new_container"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:visibility="gone">
+
+            <TextView
+                    style="@style/titleLabel"
+                    android:text="@string/whats_new"/>
+
+            <LinearLayout style="?attr/backgroundCard"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_margin="5dp"
+                          android:clickable="true"
+                          android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/whats_new_descript"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingLeft="5.0sp"
+                        android:paddingRight="5.0sp"
+                        android:paddingTop="10.0dip"/>
+
+                <ImageView
+                        android:id="@+id/show_all_whats_new"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_more_arrow_down"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:contentDescription="@null"
+                        android:visibility="gone"
+                        android:layout_gravity="right|center_vertical"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:orientation="vertical"
+                  android:id="@+id/publisher_container"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone">
+
+        <TextView
+                style="@style/titleLabel"
+                android:text="@string/publisher"/>
+
+        <LinearLayout android:orientation="vertical"
+                      style="?attr/backgroundCard"
+                      android:layout_margin="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/publisher_website"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:drawableLeft="?attr/icWebSiteDrawable"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:gravity="center|left"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:autoLink="web"
+                    android:background="?attr/selectableItemBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+            <TextView
+                    android:id="@+id/publisher_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:drawableLeft="?attr/icEmailDrawable"
+                    android:gravity="center|left"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:autoLink="email"
+                    android:background="?attr/selectableItemBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+            <TextView
+                    android:id="@+id/publisher_privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:drawableLeft="?attr/icWebSiteDrawable"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center|left"
+                    android:autoLink="web"
+                    android:background="?attr/selectableItemBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
+
+

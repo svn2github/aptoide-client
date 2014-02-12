@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="95dp"
+             android:id="@+id/banner_background_layout">
+
+    <ImageView
+            android:id="@+id/banner_store_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+    <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/header_blur"/>-->
+
+    <View android:id="@+id/view_gradient"
+          android:layout_width="match_parent"
+          android:background="@drawable/gradient_black"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal|bottom" />
+
+    <LinearLayout
+            android:id="@+id/store_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="bottom">
+
+        <TextView
+                android:id="@+id/banner_store_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                />
+
+        <TextView
+                android:id="@+id/store_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:scrollbars="vertical"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white"
+                android:textStyle="italic"
+                android:layout_marginBottom="5dp"
+                />
+
+    </LinearLayout>
+</FrameLayout>
+

@@ -1,0 +1,43 @@
+<resources>
+
+    <string name="app_name_magalhaes">Magalhães Market</string>
+    <string name="app_name_lazerplay">Lazer Play Market</string>
+    <string name="app_name_timwe">Game Center</string>
+    <string name="app_name_digitallydifferent">Digitally Different Market</string>
+    <string name="app_name_eocean">E-ocean Market</string>
+    <string name="app_name_jblow">J-Blow Market</string>
+    <string name="app_name_educomp">Educomp Market</string>
+    <string name="app_name_peoplenet">Peoplenet Market</string>
+    <string name="app_name_ford">SYNC AppLink Market</string>
+    <string name="app_name_morva">Morva</string>
+
+    <string name="app_name">Aptoide</string>
+
+    <string name="email_encoding">message/rfc822</string>
+    <string name="ip_blacklisted_email_contact">ipblacklist@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+    <string name="http_url">http://</string>
+    <string name="store_path">.store.aptoide.com/</string>
+    <string name="aptoide_email"> aptoide@aptoide.com</string>
+	<string name="aptoide_url_topapps">http://www.aptoide.com/more/topapps</string>
+	<string name="paypal">PayPal</string>
+
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+
+    <string name="app_id">477114135645153</string>
+    <integer name="google_play_services_version">4132500</integer>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+
+    <array name="themes">
+        <item>dark</item>
+        <item>light</item>
+    </array>
+    <array name="theme_names">
+        <item>@string/dark</item>
+        <item>@string/light</item>
+    </array>
+</resources>

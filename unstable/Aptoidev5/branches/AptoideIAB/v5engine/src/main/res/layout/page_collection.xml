@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:padding="5dp"
+                  android:id="@+id/separatorLayout"
+                  android:background="?attr/selectableItemBackground">
+
+        <TextView style="@style/separatorLabel"
+                  android:id="@+id/collectionName"
+                  android:layout_weight="0.2"
+                  android:padding="5dp"
+                  android:gravity="center|left"
+                  android:layout_width="0dp" />
+
+        <TextView
+                style="?attr/headerSeparatorButton"
+                android:text="@string/more"
+                android:visibility="gone"
+                android:clickable="false"
+                android:id="@+id/more" />
+
+        <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:src="?attr/icExpandDrawable"
+                android:id="@+id/action"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/collectionList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+    </LinearLayout>
+
+</LinearLayout>

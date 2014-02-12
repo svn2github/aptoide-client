@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scroller"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:id="@+id/signup_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+            <EditText
+                    android:id="@+id/name_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/create_username"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <EditText
+                    android:id="@+id/email_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/username_tip"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <EditText
+                    android:id="@+id/password_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPassword"
+                    android:hint="@string/password"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                    android:id="@+id/accept_terms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/accept_terms"
+                    android:gravity="center"
+                    android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/signup_button_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            <Button
+                    android:id="@+id/submitCreateUser"
+                    style="@style/WidgetButtonCustomGray"
+                    android:onClick="signUp"
+                    android:text="@string/register"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+

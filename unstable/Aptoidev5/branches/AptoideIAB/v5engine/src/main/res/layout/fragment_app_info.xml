@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                style="?attr/backgroundCard" >
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/row1" android:layout_centerHorizontal="true">
+
+        <TextView android:id="@+id/downloads_label"
+                  style="@style/AppInfoDetailField"
+                  android:text="Downloads: 32.2 k"/>
+
+        <TextView
+                android:id="@+id/store_label"
+                style="@style/AppInfoDetailField"
+                android:text="Store: apps"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/row1"
+                  android:id="@+id/row2" android:layout_centerHorizontal="true">
+
+        <TextView
+                android:id="@+id/size_label"
+                style="@style/AppInfoDetailField"
+                android:text="Size: 234 Mb"/>
+        <TextView
+                android:id="@+id/publisher_label"
+                style="@style/AppInfoDetailField"
+                android:text="Publisher: king.com"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/row2"
+                  android:id="@+id/row3" android:layout_centerHorizontal="true">
+
+        <TextView android:id="@+id/likes_label"
+                  style="@style/AppInfoDetailField"
+                  android:text="50"/>
+
+        <TextView android:id="@+id/dont_likes_label"
+                  style="@style/AppInfoDetailField"
+                  android:text="40"/>
+
+        <TextView
+                android:id="@+id/rating_label"
+                style="@style/AppInfoDetailField"
+                android:text="Rating: 4.5/5"
+                />
+    </LinearLayout>
+
+</RelativeLayout>
