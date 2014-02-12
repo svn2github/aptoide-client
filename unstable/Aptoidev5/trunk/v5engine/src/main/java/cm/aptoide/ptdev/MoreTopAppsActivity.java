@@ -38,7 +38,7 @@ public class MoreTopAppsActivity extends ActionBarActivity {
     }
 
 
-    private static class MoreTopAppsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
+    public static class MoreTopAppsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
 
         ArrayList<HomeItem> items = new ArrayList<HomeItem>();
 

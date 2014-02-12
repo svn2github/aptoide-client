@@ -15,6 +15,7 @@ import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Download;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -87,6 +88,8 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
                 currentSection = item.getDownloadState().name();
                 currentPosition++;
             }
+
+
 
             itemPositions.put(currentPosition, i);
             currentPosition++;

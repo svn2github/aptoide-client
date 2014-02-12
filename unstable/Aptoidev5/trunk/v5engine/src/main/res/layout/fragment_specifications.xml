@@ -57,8 +57,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 style="?attr/backgroundCard"
+                android:visibility="gone"
                 android:orientation="vertical">
         </LinearLayout>
+
+        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge" android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 

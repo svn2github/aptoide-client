@@ -298,6 +298,7 @@ public class StoreActivity extends ActionBarActivity {
         isRefreshing = service.repoIsParsing(storeid);
         FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
         fragStore.onRefresh();
+        fragStore.setListShown(false);
         fragStore.setRefreshing(isRefreshing);
     }
 

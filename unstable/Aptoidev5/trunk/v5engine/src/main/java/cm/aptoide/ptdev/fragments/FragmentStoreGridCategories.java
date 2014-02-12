@@ -208,7 +208,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
         if(gridView.getAdapter()==null)
             gridView.setAdapter(mainAdapter);
-
+        setListShown(true);
 
     }
 
@@ -257,6 +257,12 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         });
         onRefresh();
         getActivity().supportInvalidateOptionsMenu();
+    }
+
+
+    @Override
+    public void setListShown(boolean b) {
+
     }
 
     @Override

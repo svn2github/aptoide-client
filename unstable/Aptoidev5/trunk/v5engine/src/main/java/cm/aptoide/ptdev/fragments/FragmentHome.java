@@ -16,6 +16,7 @@ import cm.aptoide.ptdev.MoreTopAppsActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
+import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
@@ -41,7 +42,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private ArrayList<Collection> editorsChoice = new ArrayList<Collection>();
     private List<HomeItem> top = new ArrayList<HomeItem>();
     
-    private HomeLayoutAdapter homeBucketAdapter;
+    private PrincipalLayoutAdapter homeBucketAdapter;
     private HomeBucketAdapter topAdapter;
 
     @Override
@@ -94,7 +95,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         adapter = new MergeAdapter();
 
-        homeBucketAdapter = new HomeLayoutAdapter(getActivity(), editorsChoice, true);
+        homeBucketAdapter = new PrincipalLayoutAdapter(getActivity(), editorsChoice, true);
         topAdapter = new HomeBucketAdapter(getActivity(), top);
 //        View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
 //        ((TextView) editorsView.findViewById(R.id.separator_label)).setText(getString(R.string.editors_choice));

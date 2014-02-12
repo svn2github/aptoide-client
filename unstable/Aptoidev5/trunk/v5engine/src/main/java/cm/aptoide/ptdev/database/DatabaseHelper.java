@@ -275,7 +275,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             TableDefinition td = ((TableDefinition) table.getAnnotation(TableDefinition.class));
             if (td != null) {
                 for (TableDefinition.Index index : td.indexes()) {
-                    drop_stmt = "DROP INDEX " + index.index_name();
+                    drop_stmt = "DROP INDEX IF EXISTS " + index.index_name();
                     db.execSQL(drop_stmt);
                 }
             }
@@ -287,7 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String drop_stmt = "";
         for (Class table : db_tables) {
-            drop_stmt = "DROP TABLE " + table.getSimpleName().toLowerCase(Locale.ENGLISH);
+            drop_stmt = "DROP TABLE IF EXISTS " + table.getSimpleName().toLowerCase(Locale.ENGLISH);
             db.execSQL(drop_stmt);
         }
     }

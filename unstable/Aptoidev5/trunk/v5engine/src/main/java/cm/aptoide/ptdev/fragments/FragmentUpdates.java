@@ -61,7 +61,7 @@ public class FragmentUpdates extends ListFragment {
 
     @Subscribe
     public void refreshStoresEvent(RepoCompleteEvent event) {
-
+        setListShown(false);
         Log.d("Aptoide-", "OnEvent");
         getLoaderManager().restartLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 
@@ -101,6 +101,8 @@ public class FragmentUpdates extends ListFragment {
                 ((MainActivity) getActivity()).updateBadge(sPref);
                 if (getListView().getAdapter() == null)
                     setListAdapter(adapter);
+
+                setListShown(true);
             }
 
             @Override

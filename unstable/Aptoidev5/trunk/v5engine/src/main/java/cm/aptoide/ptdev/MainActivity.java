@@ -73,7 +73,12 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MainActivity extends ActionBarActivity implements StoresCallback, DownloadManagerCallback, AddStoreDialog.Callback, DownloadInterface {
+public class MainActivity extends ActionBarActivity implements
+        StoresCallback,
+        DownloadManagerCallback,
+        AddStoreDialog.Callback,
+        DownloadInterface,
+        MyAppsAddStoreInterface {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int WIZARD_REQ_CODE = 50;
@@ -410,15 +415,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                 } else if (!getIntent().getBooleanExtra("nodialog", false)) {
-                    AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Store store = new Store();
-                            store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-                            store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                            startParse(store);
-                        }
-                    }, repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                    AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
                 } else {
 
                     Store store = new Store();
@@ -434,6 +431,8 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
     }
 
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -446,15 +445,7 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
                 if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                 } else if (!intent.getBooleanExtra("nodialog", false)) {
-                    AptoideDialog.addMyAppStore(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Store store = new Store();
-                            store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-                            store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                            startParse(store);
-                        }
-                    }, repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                    AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
                 } else {
 
                     Store store = new Store();
@@ -679,6 +670,21 @@ public class MainActivity extends ActionBarActivity implements StoresCallback, D
 
     public void installAppFromManager(long id) {
         downloadService.startExistingDownload(id);
+    }
+
+
+
+    @Override
+    public DialogInterface.OnClickListener getOnMyAppAddStoreListener(final String repoUrl) {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Store store = new Store();
+                store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                startParse(store);
+            }
+        };
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

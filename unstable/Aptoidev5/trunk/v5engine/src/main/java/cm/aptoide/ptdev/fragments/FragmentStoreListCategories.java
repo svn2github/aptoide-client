@@ -251,7 +251,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         if(getListView().getAdapter()==null)
             setListAdapter(mainAdapter);
-
+        setListShown(true);
 
     }
 

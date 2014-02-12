@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
@@ -99,6 +100,7 @@ public abstract class FragmentAppView extends Fragment {
         private Gallery screenshots;
         private ImageGalleryAdapter galleryAdapter;
         private LinearLayout mainLayout;
+        private ProgressBar loadingPb;
         private View cell;
         private ViewPager viewPager;
         private ImageLoader imageLoader;
@@ -109,7 +111,9 @@ public abstract class FragmentAppView extends Fragment {
         private View whatsNewContainer;
         private TextView whatsNew;
         private boolean collapsed = true;
-
+        private LinearLayout detailsContainer;
+        private View row2;
+        private View row3;
 
 
         @Subscribe
@@ -122,6 +126,7 @@ public abstract class FragmentAppView extends Fragment {
 
             Log.d("Aptoide-description", "lines "+description.getLineCount() );
             if (event.getDescription()!=null && event.getDescription().length() > 250) {
+
                 description.setMaxLines(10);
                 showAllDescription.setVisibility(View.VISIBLE);
                 showAllDescription.setOnClickListener(new View.OnClickListener() {
@@ -171,11 +176,24 @@ public abstract class FragmentAppView extends Fragment {
                         }
                     }
                 });
+
             }
+
+            if(event.getDescription() != null){
+                row2.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                row3.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                row2.setVisibility(View.VISIBLE);
+                row3.setVisibility(View.VISIBLE);
+                detailsContainer.setVisibility(View.VISIBLE);
+                detailsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                loadingPb.setVisibility(View.GONE);
+                loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            }
+
 
             publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
-            store.setText(getString(R.string.store) + ": " + ((AppViewActivity) getActivity()).getRepoName());
+            store.setText(getString(R.string.store) + ": " + event.getStore());
             downloads.setText(getString(R.string.downloads) + ": " + withSuffix(String.valueOf(event.getDownloads())));
             rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
 //            rating.setRating(Float.valueOf(event.getRating()));
@@ -195,7 +213,7 @@ public abstract class FragmentAppView extends Fragment {
                 publisherContainer.setVisibility(View.VISIBLE);
                 publisherEmail.setText(getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail());
 
-                String privacyPolicy="";
+                String privacyPolicy;
                 if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
                     privacyPolicy=getString(R.string.privacy_policy) +": " + event.getDeveloper().getInfo().getPrivacy_policy();
                 }else{
@@ -256,7 +274,11 @@ public abstract class FragmentAppView extends Fragment {
             whatsNew = (TextView) v.findViewById(R.id.whats_new_descript);
             whatsNewContainer = v.findViewById(R.id.whats_new_container);
             imageLoader = ImageLoader.getInstance();
+            detailsContainer = (LinearLayout) v.findViewById(R.id.detailsContainer);
+            loadingPb = (ProgressBar) v.findViewById(R.id.loadingPb);
 
+            row2 = v.findViewById(R.id.row2);
+            row3 = v.findViewById(R.id.row3);
 
             return v;
         }
@@ -390,6 +412,7 @@ public abstract class FragmentAppView extends Fragment {
                             }
                         }
 
+
                     }else{
                         multiVersionElements.addAll(relatedApkJson.getMultiversion());
                     }
@@ -463,6 +486,7 @@ public abstract class FragmentAppView extends Fragment {
         private TextView min_sdk;
         private TextView min_screen;
         private AsyncTask<ArrayList<String>, Void, ArrayList<ApkPermission>> task;
+        private View loadingPb;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -471,7 +495,7 @@ public abstract class FragmentAppView extends Fragment {
             permissionsContainer = (LinearLayout) v.findViewById(R.id.permissionsContainer);
             min_sdk = (TextView) v.findViewById(R.id.min_sdk);
             min_screen = (TextView) v.findViewById(R.id.min_screen);
-
+            loadingPb = v.findViewById(R.id.loadingPb);
             return v;
         }
 
@@ -524,6 +548,10 @@ public abstract class FragmentAppView extends Fragment {
                 super.onPostExecute(apkPermissions);
                 Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
                 FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
+                permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                permissionsContainer.setVisibility(View.VISIBLE);
+                loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+                loadingPb.setVisibility(View.GONE);
                 setRetainInstance(false);
             }
         }
@@ -566,6 +594,7 @@ public abstract class FragmentAppView extends Fragment {
         private Button addComment;
         private Button dontLikeBtn;
         private Button likeBtn;
+        private View loadingPb;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
@@ -575,13 +604,13 @@ public abstract class FragmentAppView extends Fragment {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
 
                 if (event.getComments().size() == 0) {
-                    commentsTitle.setVisibility(View.GONE);
                     commentsLayout.setVisibility(View.GONE);
+                    noComments.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     noComments.setVisibility(View.VISIBLE);
-                }
-                if (event.getComments().size() > 5) {
+                }else if (event.getComments().size() > 4) {
                     commentsTitle.setVisibility(View.VISIBLE);
                     commentsLayout.setVisibility(View.VISIBLE);
+                    commentsLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     seeAllButton.setVisibility(View.VISIBLE);
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -593,6 +622,9 @@ public abstract class FragmentAppView extends Fragment {
                             startActivity(intent);
                         }
                     });
+                }else{
+                    commentsLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                    commentsLayout.setVisibility(View.VISIBLE);
                 }
                 if(event.getUservote()!=null){
 
@@ -611,6 +643,10 @@ public abstract class FragmentAppView extends Fragment {
                     }
 
                 }
+
+                loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+                loadingPb.setVisibility(View.GONE);
+
             }
 
 
@@ -635,7 +671,7 @@ public abstract class FragmentAppView extends Fragment {
             likeBtn = (Button) v.findViewById(R.id.button_like);
             likeBtn.setOnClickListener(new AddLikeListener(true));
             addComment.setOnClickListener(new AddCommentListener());
-
+            loadingPb = v.findViewById(R.id.loadingPb);
 
             return v;
 
@@ -854,8 +890,6 @@ public abstract class FragmentAppView extends Fragment {
                     commentsContainer.addView(v);
                 }
 
-
-
             }
         }
 
@@ -866,3 +900,4 @@ public abstract class FragmentAppView extends Fragment {
 
 
 }
+

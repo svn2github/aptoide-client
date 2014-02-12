@@ -153,6 +153,7 @@ public class SearchManager extends ActionBarActivity {
                 sort = StoreActivity.Sort.PRICE;
             }
 
+
             getLoaderManager().restartLoader(60, getArguments(), this);
             item.setChecked(true);
             return super.onOptionsItemSelected(item);

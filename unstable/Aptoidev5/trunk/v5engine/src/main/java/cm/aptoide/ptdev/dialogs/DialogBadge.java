@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
@@ -20,20 +21,14 @@ import java.util.Iterator;
 public class DialogBadge extends DialogFragment {
 
 
-
-    private String appName;
-    private String status;
-    private GetApkInfoJson.Malware.Reason reason;
-
-    public DialogBadge(String appName, String status, GetApkInfoJson.Malware.Reason reason) {
-        this.appName = appName;
-        this.status = status;
-        this.reason = reason;
-    }
+    public DialogBadge() {}
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_anti_malware, null);
+        String appName = getArguments().getString("appName");
+        String status = getArguments().getString("status");
+        GetApkInfoJson.Malware.Reason reason = ((AppViewActivity) getActivity()).getReason();
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(status.equals("scanned")?getString(R.string.app_trusted, appName):getString(R.string.app_warning, appName))

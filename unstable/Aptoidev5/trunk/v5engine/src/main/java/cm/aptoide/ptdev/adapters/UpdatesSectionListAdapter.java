@@ -74,8 +74,8 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
         viewTypeCount = linkedAdapter.getViewTypeCount() + 1;
         String currentSection = null;
         final int count = linkedAdapter.getCount();
-        for (int i = 0; i < count; i++) {
 
+        for (int i = 0; i < count; i++) {
 
             final Cursor item = (Cursor) linkedAdapter.getItem(i);
 
@@ -169,6 +169,8 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
+                sectionView.findViewById(R.id.more).setVisibility(View.VISIBLE);
+
                 break;
             case 2:
                 break;
