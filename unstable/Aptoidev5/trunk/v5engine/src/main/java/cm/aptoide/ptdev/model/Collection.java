@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,7 +13,6 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.MoreEditorsChoiceActitivy;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -34,7 +32,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
     private boolean hasMore;
     private boolean expanded2;
     private int weeks = -1;
-    private Context context;
+
 
     public boolean isExpanded() {
         return expanded;
@@ -104,7 +102,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
     @Override
     public View inflateSelf(Context context, int bucketSize) {
 
-        Log.d("Aptoide-HomeLayout", "Inflating new layout");
+
 
         View v = LayoutInflater.from(context).inflate(R.layout.page_collection, null);
 
@@ -122,6 +120,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
             FrameLayout tvChild = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.row_app_home, rowLinearLayout, false);
             rowLinearLayout.addView(tvChild);
             i++;
+
         }
 
 
@@ -131,13 +130,8 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
     @Override
     public String getType() {
 
-        String size;
+        return appsList.size()+"";
 
-        size =  appsList.size()+"";
-
-        Log.d("Aptoide-HomeLayout", "AppsSize: "+ size);
-
-        return size;
     }
 
     public static class ViewHolder{
@@ -178,7 +172,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
 
         holder.separatorLayout.setClickable(true);
 
-
+        if(appsList.isEmpty()) return;
         String name = appsList.get(counter).getName();
         String categoryName;
         try {
