@@ -125,7 +125,8 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
             finish();
         }
 
-        getSupportActionBar().setTitle(getString(R.string.setcredentials));
+        getSupportActionBar().setTitle(getString(R.string.sign_out));
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

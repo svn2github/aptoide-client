@@ -119,6 +119,7 @@ public class StoreActivity extends ActionBarActivity {
             setFragment();
         }
 
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

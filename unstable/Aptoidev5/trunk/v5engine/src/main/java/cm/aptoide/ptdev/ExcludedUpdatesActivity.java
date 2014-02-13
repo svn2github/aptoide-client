@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -103,27 +100,32 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
 
         redraw();
 
-        Button bt_restore_updates = (Button) findViewById(R.id.restore_update);
-        bt_restore_updates.setText(getString(R.string.restore_updates));
-        bt_restore_updates.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                if (isAllChecked()) {
-                    for (ExcludedUpdate excludedUpdate : excludedUpdates) {
-                        if (excludedUpdate.checked) {
-                            db.deleteFromExcludeUpdate(excludedUpdate.apkid, excludedUpdate.vercode);
-                        }
-                    }
-                    redraw();
-                } else {
-                    Toast toast = Toast.makeText(ExcludedUpdatesActivity.this,
-                            R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
+//        Button bt_restore_updates = (Button) findViewById(R.id.restore_update);
+//        bt_restore_updates.setText(getString(R.string.restore_updates));
+//        bt_restore_updates.setOnClickListener(new View.OnClickListener() {
+//
+//            public void onClick(View v) {
+//                if (isAllChecked()) {
+//                    for (ExcludedUpdate excludedUpdate : excludedUpdates) {
+//                        if (excludedUpdate.checked) {
+//                            db.deleteFromExcludeUpdate(excludedUpdate.apkid, excludedUpdate.vercode);
+//                        }
+//                    }
+//                    redraw();
+//                } else {
+//                    Toast toast = Toast.makeText(ExcludedUpdatesActivity.this,
+//                            R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//            }
+//        });
         lv.setAdapter(adapter);
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_excluded_updates, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -135,6 +137,19 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if (i == R.id.menu_remove) {
+            if (isAllChecked()) {
+                for (ExcludedUpdate excludedUpdate : excludedUpdates) {
+                    if (excludedUpdate.checked) {
+                        db.deleteFromExcludeUpdate(excludedUpdate.apkid, excludedUpdate.vercode);
+                    }
+                }
+                redraw();
+            } else {
+                Toast toast = Toast.makeText(ExcludedUpdatesActivity.this,
+                        R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

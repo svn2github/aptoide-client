@@ -34,15 +34,14 @@
             <EditText android:id="@+id/password"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
-                      android:inputType="textPassword"
                       android:hint="@string/password"
                       android:singleLine="true"/>
 
-            <CheckBox android:id="@+id/show_login_passwd"
+            <CheckBox android:id="@+id/link_my_device"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="@string/showpass"
-                      android:checked="false"/>
+                      android:text="@string/link_device_webinstall"
+                      android:checked="true"/>
 
         </LinearLayout>
 

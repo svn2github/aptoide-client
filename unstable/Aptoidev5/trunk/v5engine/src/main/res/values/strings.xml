@@ -355,6 +355,7 @@
     <string name="download_error">Error</string>
     <string name="try_again">Try again</string>
     <string name="clear">Clear</string>
+    <string name="link_device_webinstall">Link account with Webinstall</string>
 
 
 </resources>

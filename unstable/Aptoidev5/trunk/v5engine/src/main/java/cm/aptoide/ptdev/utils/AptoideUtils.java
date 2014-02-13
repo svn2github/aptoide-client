@@ -651,5 +651,34 @@ public class AptoideUtils {
                 count / Math.pow(1000, exp),
                 "kMGTPE".charAt(exp-1));
     }
+
+    public static String screenshotToThumb(Context context, String imageUrl, String orientation) {
+
+        String screen;
+        String sizeString;
+
+        if (imageUrl.contains("_screen")) {
+
+            sizeString = IconSizes.generateSizeStringScreenshots(context, orientation);
+
+            String[] splittedUrl = imageUrl.split("\\.(?=[^\\.]+$)");
+            screen = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+
+        } else {
+
+
+            String[] splitedString = imageUrl.split("/");
+            StringBuilder db = new StringBuilder();
+            for (int i = 0; i != splitedString.length - 1; i++) {
+                db.append(splitedString[i]);
+                db.append("/");
+            }
+            db.append("thumbs/mobile/");
+            db.append(splitedString[splitedString.length - 1]);
+            screen = db.toString();
+        }
+
+        return screen;
+    }
 }
 

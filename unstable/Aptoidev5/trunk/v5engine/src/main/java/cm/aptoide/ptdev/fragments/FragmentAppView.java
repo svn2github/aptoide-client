@@ -4,19 +4,19 @@ import android.accounts.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.ImageGalleryAdapter;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -24,8 +24,7 @@ import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.ApkPermission;
-import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
@@ -34,7 +33,12 @@ import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.nostra13.universalimageloader.cache.disc.BaseDiscCache;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -47,6 +51,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -97,13 +102,10 @@ public abstract class FragmentAppView extends Fragment {
         private TextView size;
         private TextView publisher;
 
-        private Gallery screenshots;
-        private ImageGalleryAdapter galleryAdapter;
+        private HorizontalScrollView layoutScreenshots;
         private LinearLayout mainLayout;
         private ProgressBar loadingPb;
-        private View cell;
-        private ViewPager viewPager;
-        private ImageLoader imageLoader;
+
         private TextView publisherWebsite;
         private TextView publisherEmail;
         private TextView publisherPrivacyPolicy;
@@ -122,9 +124,10 @@ public abstract class FragmentAppView extends Fragment {
             Log.d("Aptoide-AppView", "Setting description");
             if(event == null) return;
 
-            description.setText(event.getDescription());
+            if (event.getDescription()!=null)
+                description.setText(event.getDescription());
 
-            Log.d("Aptoide-description", "lines "+description.getLineCount() );
+//            Log.d("Aptoide-description", "lines "+ description.getLineCount() );
             if (event.getDescription()!=null && event.getDescription().length() > 250) {
 
                 description.setMaxLines(10);
@@ -211,7 +214,15 @@ public abstract class FragmentAppView extends Fragment {
                 }
 
                 publisherContainer.setVisibility(View.VISIBLE);
-                publisherEmail.setText(getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail());
+
+
+                String email;
+                if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
+                    email=getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail();
+                }else{
+                    email=getString(R.string.username) +": " + getString(R.string.not_found);
+                }
+                publisherEmail.setText(email);
 
                 String privacyPolicy;
                 if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
@@ -220,32 +231,131 @@ public abstract class FragmentAppView extends Fragment {
                     privacyPolicy=getString(R.string.privacy_policy) +": " + getString(R.string.not_found);
                 }
                 publisherPrivacyPolicy.setText(privacyPolicy);
-                publisherWebsite.setText(getString(R.string.website) +": " + event.getDeveloper().getInfo().getWebsite());
+
+                String website;
+                if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
+                    website=getString(R.string.website) +": " + event.getDeveloper().getInfo().getWebsite();
+                }else{
+                    website=getString(R.string.website) +": " + getString(R.string.not_found);
+                }
+                publisherWebsite.setText(website);
             }
 
 
 
 
 
+            mainLayout.removeAllViews();
+            ArrayList<MediaObject> mediaObjects;
+            View cell;
 
-            if (event.getScreenshots() != null && event.getScreenshots().size() > 0) {
-                galleryAdapter = new ImageGalleryAdapter(getActivity(), event.getScreenshots(), false);
-                screenshots.setVisibility(View.VISIBLE);
-                screenshots.setAdapter(galleryAdapter);
-                screenshots.setSpacing(1);
-                screenshots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getActivity(), ScreenshotsViewer.class);
-                        intent.putStringArrayListExtra("url", new ArrayList<String>(event.getScreenshots()));
-                        intent.putExtra("position", position);
-                        startActivity(intent);
+            if (event.getScreenshotsAndThumbVideo() != null){
+                mediaObjects = event.getScreenshotsAndThumbVideo();
+                Log.d("FragmentAppView","media objects "+ Arrays.toString(mediaObjects.toArray()));
+                String imagePath = "";
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
+                        .cacheOnDisc(true)
+                        .build();
+
+                for (int i=0; i!=mediaObjects.size(); i++) {
+                    cell = getActivity().getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
+                    final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
+                    final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
+                    final ImageView play = (ImageView) cell.findViewById(R.id.play_button);
+                    final FrameLayout mediaLayout = (FrameLayout) cell.findViewById(R.id.media_layout);
+
+                    if(mediaObjects.get(i) instanceof Video){
+
+                        imagePath = mediaObjects.get(i).getImageUrl();
+                        Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
+                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
+                        play.setVisibility(View.VISIBLE);
+                        imageView.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
+                        options = new DisplayImageOptions.Builder()
+                                .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
+                                .cacheOnDisc(false)
+                                .build();
+
+                    } else if (mediaObjects.get(i) instanceof Screenshot) {
+
+                        imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
+                        Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
+                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i));
                     }
-                });
-                screenshots.setSelection(galleryAdapter.getCount() / 2);
+
+                    ImageLoader.getInstance().displayImage(imagePath, imageView, options, new ImageLoadingListener() {
+
+                        @Override
+                        public void onLoadingStarted(String uri, View v) {
+                            progress.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String uri, View v, FailReason failReason) {
+                            imageView.setImageResource(android.R.drawable.ic_delete);
+                            progress.setVisibility(View.GONE);
+                            Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
+                        }
+
+                        @Override
+                        public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
+                            progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onLoadingCancelled(String uri, View v) {
+                        }
+                    });
+
+                    mainLayout.addView(cell);
+
+
+                }
+
             }
 
         }
+
+        public static class ScreenShotsListener implements View.OnClickListener {
+
+            private Context context;
+            private final int position;
+            private ArrayList<String> urls;
+
+            public ScreenShotsListener(Context context, ArrayList<String> urls, int position) {
+                this.context = context;
+                this.position = position;
+                this.urls = urls;
+            }
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ScreenshotsViewer.class);
+                intent.putStringArrayListExtra("url", urls);
+                intent.putExtra("position", position);
+                context.startActivity(intent);
+            }
+        }
+
+        public static class VideoListener implements View.OnClickListener {
+
+            private Context context;
+            private String videoUrl;
+
+            public VideoListener(Context context, String videoUrl) {
+                this.context = context;
+                this.videoUrl = videoUrl;
+            }
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+                context.startActivity(intent);
+            }
+        }
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -254,7 +364,6 @@ public abstract class FragmentAppView extends Fragment {
             description = (TextView) v.findViewById(R.id.descript);
             showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
             descriptionContainer = (LinearLayout) v.findViewById(R.id.description_container);
-
             layoutInfoDetails = (RelativeLayout) v.findViewById(R.id.layout_info_details);
             store = (TextView) layoutInfoDetails.findViewById(R.id.store_label);
             downloads = (TextView) layoutInfoDetails.findViewById(R.id.downloads_label);
@@ -263,17 +372,15 @@ public abstract class FragmentAppView extends Fragment {
             dontLikes = (TextView) layoutInfoDetails.findViewById(R.id.dont_likes_label);
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
             publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
-
-            screenshots = (Gallery) v.findViewById(R.id.gallery);
-//            viewPager = (ViewPager) v.findViewById(R.id._viewPager);
-//            mainLayout = (LinearLayout) v.findViewById(R.id._linearLayout);
+//            screenshots = (Gallery) v.findViewById(R.id.gallery);
+            layoutScreenshots = (HorizontalScrollView) v.findViewById(R.id.layout_screenshots);
+            mainLayout = (LinearLayout) layoutScreenshots.findViewById(R.id._linearLayout);
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
             publisherPrivacyPolicy = (TextView) v.findViewById(R.id.publisher_privacy_policy);
             whatsNew = (TextView) v.findViewById(R.id.whats_new_descript);
             whatsNewContainer = v.findViewById(R.id.whats_new_container);
-            imageLoader = ImageLoader.getInstance();
             detailsContainer = (LinearLayout) v.findViewById(R.id.detailsContainer);
             loadingPb = (ProgressBar) v.findViewById(R.id.loadingPb);
 

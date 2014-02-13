@@ -90,6 +90,9 @@ public class GetApkInfoJson {
             this.sshots = sshots;
         }
 
+        public List<Videos> getVideos() { return videos; }
+        public void setVideos(List<Videos> videos) { this.videos = videos; }
+
         public static class Videos{
             @Key private String thumb;
             @Key private String type;

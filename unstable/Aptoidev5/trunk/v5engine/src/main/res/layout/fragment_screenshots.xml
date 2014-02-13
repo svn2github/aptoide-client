@@ -6,24 +6,15 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-    <HorizontalScrollView android:layout_width="fill_parent"
-                          android:layout_height="wrap_content">
-
-        <LinearLayout android:id="@+id/_linearLayout"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                       android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
-                      android:orientation="horizontal"/>
+                      android:scrollbars="none">
 
-    </HorizontalScrollView>
+    <LinearLayout android:id="@+id/_linearLayout"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"/>
 
-    <android.support.v4.view.ViewPager android:id="@+id/_viewPager"
-                                       android:layout_width="fill_parent"
-                                       android:layout_height="fill_parent"
-                                       android:background="#000000"
-                                       android:visibility="gone"/>
+</HorizontalScrollView>
 
-</RelativeLayout>

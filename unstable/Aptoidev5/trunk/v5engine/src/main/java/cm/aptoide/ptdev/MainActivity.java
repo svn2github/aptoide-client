@@ -56,6 +56,7 @@ import cm.aptoide.ptdev.views.BadgeView;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -140,7 +141,6 @@ public class MainActivity extends ActionBarActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
     MenuListAdapter mMenuAdapter;
 
-    private CharSequence mDrawerTitle;
 
     private boolean isDisconnect;
     private AccountManager accountManager;
@@ -386,10 +386,11 @@ public class MainActivity extends ActionBarActivity implements
         mMenuAdapter = new MenuListAdapter(mContext);
 
 
-
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(R.string.app_name);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open,
@@ -400,7 +401,6 @@ public class MainActivity extends ActionBarActivity implements
             }
 
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawerTitle);
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -739,7 +739,8 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        TextView login_email, login_store;
+        TextView login_email;
+        ImageView user_avatar;
         accountManager = AccountManager.get(this);
 
         if(mDrawerList.getHeaderViewsCount()>0){
@@ -757,9 +758,11 @@ public class MainActivity extends ActionBarActivity implements
             login_email = (TextView) header.findViewById(R.id.login_email);
             login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
 
-//            login_store = (TextView) header.findViewById(R.id.login_store);
-//            login_store.setText("");
-
+            user_avatar = (ImageView) header.findViewById(R.id.user_avatar);
+            String avatarUrl = PreferenceManager.getDefaultSharedPreferences(mContext).getString("useravatar",null);
+            if(avatarUrl!=null){
+                ImageLoader.getInstance().displayImage(avatarUrl, user_avatar);
+            }
 
             /*
             if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false)) {

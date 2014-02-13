@@ -425,181 +425,143 @@
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
+        <item name="icon">@drawable/ic_widget_launcher</item>
         <item name="background">@drawable/ab_background_aptoide</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
+        <item name="android:icon">@drawable/ic_widget_launcher</item>
         <item name="android:background">@drawable/ab_background_aptoide</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Midnight" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_midnight</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_midnight</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Black" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_black</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_black</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Maroon" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_maroon</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_maroon</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Gold" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_gold</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_gold</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Orange" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_orange</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_orange</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Springgreen" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_springgreen</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_springgreen</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Lightsky" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_lightsky</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_lightsky</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Pink" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_pink</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_pink</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Blue" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_blue</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_blue</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Red" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_red</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_red</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Magenta" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_magenta</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_magenta</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Slategray" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_slategray</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_slategray</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Seagreen" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_seagreen</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_seagreen</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Silver" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_silver</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_silver</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Dimgray" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_dimgray</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_dimgray</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.GreenApple" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_greenapple</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_greenapple</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.HappyBlue" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_happyblue</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_happyblue</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Green" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_green</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_green</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide.Yellow" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/brand_aptoide_padding</item>
         <item name="background">@drawable/ab_background_yellow</item>
         <item name="displayOptions">showHome|useLogo</item>
-        <item name="android:icon">@drawable/brand_aptoide_padding</item>
         <item name="android:background">@drawable/ab_background_yellow</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
     </style>

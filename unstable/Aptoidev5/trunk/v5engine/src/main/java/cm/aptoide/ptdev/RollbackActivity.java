@@ -66,7 +66,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
             finish();
         } else if (i == R.id.home) {
             finish();
-        } else if(i == R.id.clear_rollback){
+        } else if(i == R.id.menu_clear_rollback){
             new Database(Aptoide.getDb()).deleteRollbackItems();
             getSupportLoaderManager().restartLoader(17, null, this);
         }

@@ -18,12 +18,13 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/checkUserCredentials";
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/checkUserCredentials";
             //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;
     private String password;
     private String repo;
+    private String avatar;
 
     private boolean registerDevice;
 
@@ -173,4 +174,6 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     public LoginActivity.Mode getMode() {
         return mode;
     }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

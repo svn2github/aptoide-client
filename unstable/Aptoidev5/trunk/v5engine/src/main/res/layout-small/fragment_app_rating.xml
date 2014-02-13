@@ -67,15 +67,18 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-            style="@style/titleLabel"
-            android:text="@string/comments"/>
+    <TextView android:id="@+id/title_comments"
+              style="@style/titleLabel"
+              android:text="@string/comments"/>
+
+    <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
 
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:gravity="center_horizontal"
                   android:orientation="vertical"
                   android:layout_margin="5dp"
+                  android:visibility="gone"
                   style="?attr/backgroundCard"
                   android:id="@+id/layout_comments">
 

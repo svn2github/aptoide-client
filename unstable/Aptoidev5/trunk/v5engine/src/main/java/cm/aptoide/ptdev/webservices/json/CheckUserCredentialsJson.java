@@ -16,6 +16,11 @@ public class CheckUserCredentialsJson {
     @Key
     private String token;
 
+    @Key
+    private String avatar;
+
+    @Key
+    private String username;
 
     @Key
     private String queueName;
@@ -53,6 +58,14 @@ public class CheckUserCredentialsJson {
     public String getQueue() {
         return queueName;
     }
+
+    public String getAvatar() { return avatar; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     /*
     public String getQueueName() { return queueName; }

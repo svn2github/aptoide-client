@@ -131,6 +131,9 @@ public class Aptoide extends Application {
 
 
         FileNameGenerator generator = new FileNameGenerator() {
+
+
+
             @Override
             public String generate(String s) {
 

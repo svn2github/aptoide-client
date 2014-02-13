@@ -29,9 +29,9 @@
         android:text="@string/no_excluded_updates"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/restore_update"
-        style="@style/WidgetButtonCustomGray"
-        android:layout_alignParentBottom="true" />
+    <!--<Button-->
+        <!--android:id="@+id/restore_update"-->
+        <!--style="@style/WidgetButtonCustomGray"-->
+        <!--android:layout_alignParentBottom="true" />-->
 
 </RelativeLayout>

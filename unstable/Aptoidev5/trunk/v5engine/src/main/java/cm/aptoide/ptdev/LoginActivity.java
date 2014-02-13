@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -61,6 +63,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private PlusClient mPlusClient;
     private ConnectionResult mConnectionResult;
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+    private boolean showPassword = true;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -172,6 +175,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
+    public final static String PARAM_USER_AVATAR = "USER_AVATAR";
 
     private final int REQ_SIGNUP = 1;
 
@@ -243,19 +247,38 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 ((EditText) findViewById(R.id.username)).setText(accountName);
             }
 
-
             password_box = (EditText) findViewById(R.id.password);
-            checkShowPass = (CheckBox) findViewById(R.id.show_login_passwd);
-            checkShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        password_box.setTransformationMethod(null);
-                    } else {
-                        password_box.setTransformationMethod(new PasswordTransformationMethod());
+            final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.password_hide_blue);
+            final Drawable showPasswordRes = getResources().getDrawable(R.drawable.password_hide_gray);
+            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+            password_box.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (password_box.getCompoundDrawables()[2] == null) {
+                        return false;
                     }
+                    if (event.getAction() == MotionEvent.ACTION_UP){
+                        return false;
+                    }
+                    if (event.getX() > password_box.getWidth() - password_box.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
+                        if(showPassword){
+                            showPassword=false;
+                            password_box.setTransformationMethod(null);
+                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                        }else{
+                            showPassword=true;
+                            password_box.setTransformationMethod(new PasswordTransformationMethod());
+                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                        }
+                    }
+
+
+
+
+                    return false;
                 }
             });
-            checkShowPass.setEnabled(true);
+
 
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -438,12 +461,26 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 .putString("queueName", checkUserCredentialsJson.getQueue())
                                 .commit();
                     }
+                    if(checkUserCredentialsJson.getAvatar()!=null){
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("useravatar", checkUserCredentialsJson.getAvatar())
+                                .commit();
+                        
+                    }
+                    if(checkUserCredentialsJson.getUsername()!=null){
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("username", checkUserCredentialsJson.getUsername())
+                                .commit();
+                    }
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, checkUserCredentialsJson.getToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
+
 
                     final Intent res = new Intent();
                     res.putExtras(data);

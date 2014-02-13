@@ -33,6 +33,8 @@ import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
+import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
@@ -60,6 +62,8 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -528,6 +532,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 } else {
                     details.setScreenshots(json.getMedia().getSshots());
                 }
+                if (json.getMedia().getVideos() != null) {
+                    details.setVideos(json.getMedia().getVideos());
+                }
 
                 details.setRating("" + json.getMeta().getLikevotes().getRating());
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
@@ -713,6 +720,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if (savedInstanceState == null) {
 
@@ -1107,6 +1115,32 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         }
 
+        public ArrayList<MediaObject> getScreenshotsAndThumbVideo(){
+            ArrayList<MediaObject> imagesPath = new ArrayList<MediaObject>();
+
+            if(details.getVideos()!=null){
+                for(GetApkInfoJson.Media.Videos video : details.getVideos()){
+                    imagesPath.add(new Video(video.getThumb(), video.getUrl()));
+                    Log.d("AppView", "media objects [thumb]: " + video.getThumb());
+                    Log.d("AppView", "media objects [url]: " + video.getUrl());
+                }
+            }
+
+
+
+            if(details.getScreenshotsHd()!=null){
+                for(GetApkInfoJson.Media.Screenshots screenshot : details.getScreenshotsHd()){
+                    imagesPath.add(new Screenshot(screenshot.getPath(), screenshot.getOrient(), true));
+                }
+            }else if (details.getScreenshots() != null){
+                for(String screenshot : details.getScreenshots()){
+                    imagesPath.add(new Screenshot(screenshot, "portrait", false));
+                }
+            }
+
+            return imagesPath;
+        }
+
         public String getLikes(){
             return details.getLikes();
         }
@@ -1206,6 +1240,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String news;
         public String rating;
         private List<GetApkInfoJson.Media.Screenshots> screenshotsHd;
+        private List<GetApkInfoJson.Media.Videos> videos;
 
         public void setDescription(String description) {
             this.description = description;
@@ -1303,13 +1338,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return rating;
         }
 
-        public void setScreenshotsHd(List<GetApkInfoJson.Media.Screenshots> screenshotsHd) {
-            this.screenshotsHd = screenshotsHd;
-        }
+        public void setScreenshotsHd(List<GetApkInfoJson.Media.Screenshots> screenshotsHd) { this.screenshotsHd = screenshotsHd; }
 
         public List<GetApkInfoJson.Media.Screenshots> getScreenshotsHd() {
             return screenshotsHd;
         }
+
+        public List<GetApkInfoJson.Media.Videos> getVideos() { return videos; }
+
+        public void setVideos(List<GetApkInfoJson.Media.Videos> videos) { this.videos = videos; }
     }
 
     private static class Rating {

@@ -91,6 +91,8 @@ public class Tutorial extends ActionBarActivity {
 
         }
 
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.app_name);
     }
 
     @Override
