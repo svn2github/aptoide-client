@@ -9,10 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.EnumCategories;
-import cm.aptoide.ptdev.MoreEditorsChoiceActitivy;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -190,12 +187,21 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
             LinearLayout linearLayout = (LinearLayout) containerLinearLayout.getChildAt(i);
             final int count = linearLayout.getChildCount();
             for (int j = 0; j != count; j++) {
-                HomeItem item = appsList.get(counter);
+                final HomeItem item = appsList.get(counter);
                 View tvChild = linearLayout.getChildAt(j);
                 TextView nameTv = (TextView) tvChild.findViewById(R.id.app_name);
                 nameTv.setText(item.getName());
                 ImageView iconIv = (ImageView) tvChild.findViewById(R.id.app_icon);
 
+                tvChild.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(context, AppViewActivity.class);
+                        long id = item.getId();
+                        i.putExtra("id", id);
+                        context.startActivity(i);
+                    }
+                });
                 String icon = item.getIcon();
                 if (icon.contains("_icon")) {
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
