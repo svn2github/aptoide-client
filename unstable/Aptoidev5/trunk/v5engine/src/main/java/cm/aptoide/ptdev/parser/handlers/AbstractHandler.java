@@ -193,6 +193,18 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
+        elements.put("path", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setPath(sb.toString());
+            }
+        });
+
         elements.put("screenCompat", new ElementHandler() {
             @Override
             public void startElement(Attributes atts) throws SAXException {

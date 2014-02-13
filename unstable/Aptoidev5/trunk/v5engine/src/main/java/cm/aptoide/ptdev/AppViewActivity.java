@@ -379,7 +379,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             this.name = name;
             this.versionName = versionName;
             this.package_name = package_name;
-
         }
 
         @Override
@@ -402,6 +401,48 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             onClick(null);
         }
     }
+
+    public class InstallFromUrlListener implements View.OnClickListener, DialogInterface.OnClickListener {
+
+        private String icon;
+        private String name;
+        private String versionName;
+        private String package_name;
+        private final String md5;
+        private final String url;
+
+
+        public InstallFromUrlListener(String icon, String name, String versionName, String package_name, String md5, String url) {
+            this.icon = icon;
+            this.name = name;
+            this.versionName = versionName;
+            this.package_name = package_name;
+            this.md5 = md5;
+            this.url = url;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            Download download = new Download();
+
+            download.setId(downloadId);
+            download.setName(this.name);
+            download.setVersion(this.versionName);
+            download.setIcon(this.icon);
+            download.setPackageName(this.package_name);
+
+            service.startDownloadFromUrl(url, md5, downloadId, download);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            onClick(null);
+        }
+    }
+
+
 
     public class DowngradeListener implements  View.OnClickListener{
 
@@ -809,6 +850,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
         minSdk = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SDK));
         screen = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
+        md5 = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
+        String apkpath = apkCursor.getString(apkCursor.getColumnIndex("apk_path"));
+        String path = apkCursor.getString(apkCursor.getColumnIndex("path"));
         long versionCode = apkCursor.getLong(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
 
         float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
@@ -823,6 +867,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
 
         ImageLoader.getInstance().displayImage(icon = iconpath + localIcon , appIcon);
+        downloadId = md5.hashCode();
+        findViewById(R.id.btinstall).setEnabled(true);
+        findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath+path));
+
         GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
         request.setRepoName(repoName);

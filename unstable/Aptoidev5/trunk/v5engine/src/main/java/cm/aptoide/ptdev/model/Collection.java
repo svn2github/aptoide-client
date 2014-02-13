@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -16,6 +14,8 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created by rmateus on 28-01-2014.
@@ -207,12 +207,90 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
                     icon = splittedUrl[0] + "_" + IconSizes.generateSizeString(Aptoide.getContext()) + "." + splittedUrl[1];
                 }
+
+                String category;
+                try {
+                    int cat = Integer.parseInt(item.getCategory());
+                    category = context.getString(EnumCategories.getCategoryName(cat));
+                    Log.d("Home-categ", "Category Name: " + category);
+                }catch (Exception e){
+                    category = item.getCategory();
+                    Log.d("Home-categ", "Untranslated Category Name: " + category);
+                }
+
+                if(getParentId()!=-1){
+                    TextView downloadsTv = (TextView) tvChild.findViewById(R.id.app_downloads);
+                    downloadsTv.setText(context.getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+                    if(item.getName().length()>10){
+                        downloadsTv.setMaxLines(1);
+                    }else{
+                        downloadsTv.setMaxLines(2);
+                    }
+                    downloadsTv.setVisibility(View.VISIBLE);
+                }else{
+                    TextView categoryTv = (TextView) tvChild.findViewById(R.id.app_category);
+                    categoryTv.setText(category);
+                    if(item.getName().length()>10){
+                        categoryTv.setMaxLines(1);
+                    }else{
+                        categoryTv.setMaxLines(2);
+                    }
+                    categoryTv.setVisibility(View.VISIBLE);
+                }
+
+                ImageView overflow = (ImageView) tvChild.findViewById(R.id.ic_action);;
+                overflow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPopup(context, v, item.getId());
+                    }
+                });
+                RatingBar rating = (RatingBar) tvChild.findViewById(R.id.app_rating);
+                Log.d("Aptoide-Rating", String.valueOf(item.getRating()));
+                rating.setRating(item.getRating());
+                rating.setOnRatingBarChangeListener(null);
+                rating.setVisibility(View.VISIBLE);
                 ImageLoader.getInstance().displayImage(icon, iconIv);
                 counter++;
             }
         }
 
 
+    }
+
+    public void showPopup(Context context, View v, long id) {
+        android.support.v7.widget.PopupMenu popup = new android.support.v7.widget.PopupMenu(context, v);
+        popup.setOnMenuItemClickListener(new MenuListener(context, id));
+        popup.inflate(R.menu.menu_actions);
+        popup.show();
+    }
+
+    static class MenuListener implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_install) {
+                ((DownloadInterface)context).installApp(id);
+                Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                return true;
+            } else if (i == R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
 

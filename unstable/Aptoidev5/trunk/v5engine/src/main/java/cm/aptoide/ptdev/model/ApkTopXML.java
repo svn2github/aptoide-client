@@ -47,6 +47,8 @@ public class ApkTopXML extends Apk {
         values.add(Schema.Apk.COLUMN_ICON);
         values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
         values.add(Schema.Apk.COLUMN_SIGNATURE);
+        values.add(Schema.Apk.COLUMN_PATH);
+        values.add(Schema.Apk.COLUMN_MD5);
 
 
 
@@ -95,7 +97,9 @@ public class ApkTopXML extends Apk {
                             getMinGlEs(),
                             getIconPath(),
                             String.valueOf(AptoideUtils.isCompatible(this)?1:0),
-                            getSignature()
+                            getSignature(),
+                            getPath(),
+                            getMd5h()
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

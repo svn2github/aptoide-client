@@ -61,7 +61,7 @@ public class DownloadInfo implements Runnable, Serializable {
     private DownloadExecutor downloadExecutor;
     private long mProgress = 0;
     private boolean isPaused = false;
-    private ArrayList<String> downloadingFilenames;
+    private ArrayList<String> downloadingFilenames = new ArrayList<String>();
 
     public void setDownloadManager(DownloadManager downloadManager) {
         this.downloadManager = downloadManager;
@@ -107,7 +107,7 @@ public class DownloadInfo implements Runnable, Serializable {
             }
 
 
-            //checkDirectorySize(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/apks");
+            checkDirectorySize(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/apks");
 
 
             mSize = getAllThreadSize();

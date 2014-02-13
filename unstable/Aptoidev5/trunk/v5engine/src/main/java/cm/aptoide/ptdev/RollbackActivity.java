@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -65,11 +66,21 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if(i == R.id.clear_rollback){
+            new Database(Aptoide.getDb()).deleteRollbackItems();
+            getSupportLoaderManager().restartLoader(17, null, this);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_rollback_activity, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

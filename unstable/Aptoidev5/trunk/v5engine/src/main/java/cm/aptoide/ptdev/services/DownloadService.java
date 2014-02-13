@@ -173,6 +173,38 @@ public class DownloadService extends Service {
 
     private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 
+
+    public void startDownloadFromUrl(String remotePath, String md5, long id, Download download){
+        ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
+
+        String path = Aptoide.getConfiguration().getPathCacheApks();
+
+        DownloadModel downloadModel = new DownloadModel(remotePath, path + md5 + ".apk", md5, 0);
+        downloadModel.setAutoExecute(true);
+        filesToDownload.add(downloadModel);
+        DownloadInfo info = getDownload(id);
+
+        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + md5 + ".apk", new ArrayList<String>())));
+        info.setDownload(download);
+        info.setFilesToDownload(filesToDownload);
+
+        downloads.put(info.getId(), info);
+        info.download();
+
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+        mBuilder = setNotification();
+        startForeground(-3, mBuilder.build());
+
+        if(isStopped){
+            isStopped = false;
+            timer = new Timer();
+            timer.schedule(getTask(), 0, 1000);
+        }
+
+    }
+
+
+
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
 
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
@@ -187,7 +219,6 @@ public class DownloadService extends Service {
         }
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
-
 
 
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());

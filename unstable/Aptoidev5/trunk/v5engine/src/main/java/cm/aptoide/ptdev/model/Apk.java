@@ -20,6 +20,7 @@ public abstract class Apk {
 
 
     private String signature = "";
+    private String path;
 
     public long getRepoId() {
         return repoId;
@@ -266,5 +267,13 @@ public abstract class Apk {
 
     public String getSignature() {
         return signature.replaceAll(":", "");
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

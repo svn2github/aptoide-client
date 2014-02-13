@@ -426,6 +426,7 @@ public class Database {
 
         values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
         values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+        values.put(Schema.Repo.COLUMN_APK_PATH, server.getApkpath());
         values.put(Schema.Repo.COLUMN_NAME, server.getName());
         values.put(Schema.Repo.COLUMN_IS_USER, false);
         values.put(Schema.Repo.COLUMN_URL, server.getUrl());
@@ -476,9 +477,9 @@ public class Database {
 
         ContentValues values = new ContentValues();
 
+        if (server.getApkpath() != null) values.put(Schema.Repo.COLUMN_APK_PATH, server.getApkpath());
         if (server.getIconspath() != null) values.put(Schema.Repo.COLUMN_ICONS_PATH, server.getIconspath());
-        if (server.getWebservicespath() != null)
-            values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
+        if (server.getWebservicespath() != null) values.put(Schema.Repo.COLUMN_WEBSERVICES_PATH, server.getWebservicespath());
         if (server.getHash() != null) values.put(Schema.Repo.COLUMN_HASH, server.getHash());
         if (values.size() > 0)
             database.update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repo_id)});
@@ -775,7 +776,7 @@ public class Database {
 
     public Cursor getApkInfo(long id) {
 
-        Cursor c = database.rawQuery("select apk.version_code, apk.package_name, apk.name as name, apk.version_name, apk.rating, apk.downloads, apk.sdk, apk.screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
+        Cursor c = database.rawQuery("select repo.apk_path as apk_path, apk.path as path, apk.md5, apk.version_code, apk.package_name, apk.name as name, apk.version_name, apk.rating, apk.downloads, apk.sdk, apk.screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
         c.moveToFirst();
 
         return c;
@@ -1064,6 +1065,10 @@ public class Database {
 
     public void deleteScheduledDownloadByPackageName(String id) {
         database.delete(Schema.Scheduled.getName(), "package_name = ?", new String[] { id });
+    }
+
+    public void deleteRollbackItems(){
+        database.delete(Schema.RollbackTbl.getName(), null, null);
     }
 
 }

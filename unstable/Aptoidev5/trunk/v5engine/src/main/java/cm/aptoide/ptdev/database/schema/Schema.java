@@ -60,6 +60,11 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SCREEN = "screen";
 
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_PATH = "path";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_MD5 = "md5";
+
+
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_GLES = "gles";
 
         @ColumnDefinition(type = SQLType.TEXT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
@@ -191,6 +196,9 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_URL = "url";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_APK_PATH = "apk_path";
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_ICONS_PATH = "icons_path";
