@@ -978,10 +978,10 @@ public class Database {
 
     }
 
-    public boolean existsServer(String repoName) {
+    public boolean existsServer(String repoUrl) {
         Cursor c = null;
         try {
-            c = database.rawQuery("select 1 from repo where url = ?", new String[]{repoName});
+            c = database.rawQuery("select 1 from repo where url = ?", new String[]{repoUrl});
             return c.moveToFirst();
         } finally {
             if (c != null) c.close();

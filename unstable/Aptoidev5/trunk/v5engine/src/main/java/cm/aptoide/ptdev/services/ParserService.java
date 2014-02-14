@@ -132,8 +132,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         startForeground(45, createDefaultNotification());
         final long id;
         if(newStore){
-            if(db.existsServer(AptoideUtils.RepoUtils.split(store.getBaseUrl()))){
-                Toast.makeText(getApplicationContext(), R.string.store_already_added, Toast.LENGTH_LONG).show();
+            if(db.existsServer(store.getBaseUrl())){
                 return;
             };
             id = insertStoreDatabase(db, store);
