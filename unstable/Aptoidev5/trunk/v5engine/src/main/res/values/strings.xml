@@ -59,7 +59,7 @@
     <string name="follow_twitter">Follow us on Twitter</string>
     <string name="loading_facebook">Loading Facebook...</string>
     <string name="loading_twitter">Loading Twitter...</string>
-    <string name="new_to_aptoide">New to Aptoide? Create a free account</string>
+    <string name="new_to_aptoide">New to %s? Create a free account</string>
     <string name="forgot_passwd">Forgot password?</string>
     <string name="check_your_credentials">Check your credentials</string>
     <string name="settings_title_bar">Settings</string>
@@ -361,5 +361,6 @@
     <string name="retrieving_update">Retrieving update...</string>
     <string name="no_related">No related apps found.</string>
     <string name="update_username">Update username</string>
+    <string name="please_update_username">Please update your username to insert comment</string>
 
 </resources>
