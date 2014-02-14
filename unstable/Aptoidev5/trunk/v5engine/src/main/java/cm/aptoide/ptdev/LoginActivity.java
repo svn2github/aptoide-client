@@ -291,7 +291,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             });
 
             TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
-            SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide));
+            SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide, Aptoide.getConfiguration().getMarketName()));
             newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
             new_to_aptoide.setText(newToAptoideString);
             new_to_aptoide.setOnClickListener(new View.OnClickListener() {

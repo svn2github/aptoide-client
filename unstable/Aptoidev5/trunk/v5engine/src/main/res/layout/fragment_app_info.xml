@@ -49,8 +49,14 @@
         <TextView android:id="@+id/dont_likes_label"
                   style="@style/AppInfoDetailField"/>
 
-        <TextView android:id="@+id/rating_label"
-                  style="@style/AppInfoDetailField"/>
+        <RatingBar
+                android:id="@+id/rating_label"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:numStars="5" android:layout_marginBottom="2dp" android:layout_marginLeft="2dp"/>
+
     </LinearLayout>
 
 </RelativeLayout>

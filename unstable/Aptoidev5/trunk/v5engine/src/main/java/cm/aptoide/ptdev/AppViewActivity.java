@@ -30,6 +30,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ErrorDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
@@ -61,6 +62,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import javax.xml.transform.ErrorListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -346,6 +348,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public DialogInterface.OnClickListener getMyAppListener(){
         return new InstallListener(icon, name, versionName, package_name);
     }
+
+
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
@@ -595,7 +599,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     details.setVideos(json.getMedia().getVideos());
                 }
 
-                details.setRating("" + json.getMeta().getLikevotes().getRating());
+                details.setRating(json.getMeta().getLikevotes().getRating().floatValue());
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
                 details.setDontLikes("" + json.getMeta().getLikevotes().getDislikes());
             } else {
@@ -1223,7 +1227,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return details.getNews();
         }
 
-        public String getRating() {
+        public float getRating() {
             return details.rating;
         }
 
@@ -1308,7 +1312,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         private GetApkInfoJson.Meta.Developer developer;
         private String news;
-        public String rating;
+        public float rating;
         private List<GetApkInfoJson.Media.Screenshots> screenshotsHd;
         private List<GetApkInfoJson.Media.Videos> videos;
 
@@ -1400,11 +1404,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             return news;
         }
 
-        public void setRating(String rating) {
+        public void setRating(float rating) {
             this.rating = rating;
         }
 
-        public String getRating() {
+        public float getRating() {
             return rating;
         }
 

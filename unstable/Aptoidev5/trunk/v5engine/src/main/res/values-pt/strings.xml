@@ -6,6 +6,8 @@
   <string name="WidgetProvider_timestamp_hours_ago">há %s horas</string>
   <string name="WidgetProvider_timestamp_minutes_ago">há %s minutos</string>
   <string name="WidgetProvider_timestamp_just_now">Agora mesmo</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">Há %s semanas</string>
+  <string name="WidgetProvider_timestamp_week_ago">Há %s semana</string>
   <string name="timestamp_months">%s meses</string>
   <string name="timestamp_month">%s mês</string>
   <string name="timestamp_weeks">%s semanas</string>
@@ -136,7 +138,6 @@
   <string name="rollback_installed">Instalado</string>
   <string name="rollback_uninstalled">Desinstalado</string>
   <string name="rollback_updated">Actualizado</string>
-  <string name="rollback_downgraded">Transferido</string>
   <string name="install">Instalar</string>
   <string name="get_latest_version">Obter Última</string>
   <string name="get_latest_version_and_trusted">Obter Última e Verificada</string>
@@ -211,7 +212,6 @@
   <string name="exclude_update">Ignorar Actualização</string>
   <string name="trusted">Verificada</string>
   <string name="warning">Crítico</string>
-  <string name="downgrade">Transferido</string>
   <string name="open">Abrir</string>
   <string name="scanned_with_av">Verificado com:</string>
   <string name="compared_with_another_marketplace">Comparado com outro Android Marketplace:</string>
@@ -333,4 +333,9 @@
   <string name="download_error">Erro</string>
   <string name="try_again">Repetir</string>
   <string name="clear">Limpar</string>
+  <string name="link_device_webinstall">Associar conta à instalação Web</string>
+  <string name="update_self_title">Actualização disponível</string>
+  <string name="update_self_msg">Existe uma nova versão de %sQuer actualizar agora?</string>
+  <string name="retrieving_update">A obter a actualização...</string>
+  <string name="no_related">Sem aplicações relacionadas.</string>
 </resources>

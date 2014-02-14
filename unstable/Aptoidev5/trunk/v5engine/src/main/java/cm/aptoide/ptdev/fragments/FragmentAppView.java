@@ -96,7 +96,7 @@ public abstract class FragmentAppView extends Fragment {
         private RelativeLayout layoutInfoDetails;
         private TextView store;
         private TextView downloads;
-        private TextView rating;
+        private RatingBar rating;
         private TextView likes;
         private TextView dontLikes;
         private TextView size;
@@ -198,8 +198,10 @@ public abstract class FragmentAppView extends Fragment {
             size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
             store.setText(getString(R.string.store) + ": " + event.getStore());
             downloads.setText(getString(R.string.downloads) + ": " + withSuffix(String.valueOf(event.getDownloads())));
-            rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
-//            rating.setRating(Float.valueOf(event.getRating()));
+//            rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
+            rating.setRating(event.getRating());
+            rating.setOnRatingBarChangeListener(null);
+            rating.setVisibility(View.VISIBLE);
             likes.setText(getString(R.string.likes) +": " + event.getLikes());
             dontLikes.setText(getString(R.string.dont_likes) +": " + event.getDontLikes());
 
@@ -369,7 +371,7 @@ public abstract class FragmentAppView extends Fragment {
             layoutInfoDetails = (RelativeLayout) v.findViewById(R.id.layout_info_details);
             store = (TextView) layoutInfoDetails.findViewById(R.id.store_label);
             downloads = (TextView) layoutInfoDetails.findViewById(R.id.downloads_label);
-            rating = (TextView) layoutInfoDetails.findViewById(R.id.rating_label);
+            rating = (RatingBar) layoutInfoDetails.findViewById(R.id.rating_label);
             likes = (TextView) layoutInfoDetails.findViewById(R.id.likes_label);
             dontLikes = (TextView) layoutInfoDetails.findViewById(R.id.dont_likes_label);
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);

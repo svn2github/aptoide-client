@@ -2,10 +2,13 @@ package cm.aptoide.ptdev;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.EditText;
@@ -29,6 +32,9 @@ public class SignUpActivity extends ActionBarActivity{
     private String TAG = "SignUp";
     private String mAccountType;
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+    private boolean showPassword = true;
+    private EditText passBox;
+    private EditText emailBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,41 @@ public class SignUpActivity extends ActionBarActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         getSupportActionBar().setTitle(getString(R.string.register));
+        emailBox = (EditText) findViewById(R.id.email_box);
+        passBox = (EditText) findViewById(R.id.password_box);
+
+        final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.password_hide_blue);
+        final Drawable showPasswordRes = getResources().getDrawable(R.drawable.password_hide_gray);
+        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+        passBox.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (passBox.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP){
+                    return false;
+                }
+                if (event.getX() > passBox.getWidth() - passBox.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
+                    if(showPassword){
+                        showPassword=false;
+                        passBox.setTransformationMethod(null);
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                    }else{
+                        showPassword=true;
+                        passBox.setTransformationMethod(new PasswordTransformationMethod());
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                    }
+                }
+
+
+
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -69,12 +109,11 @@ public class SignUpActivity extends ActionBarActivity{
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
 
-        final EditText emailBox = (EditText) findViewById(R.id.email_box);
-        EditText nameBox = (EditText) findViewById(R.id.name_box);
-        final EditText passBox = (EditText) findViewById(R.id.password_box);
+
+
 
         createUserRequest.setEmail(emailBox.getText().toString());
-        createUserRequest.setName(nameBox.getText().toString());
+//        createUserRequest.setName(nameBox.getText().toString());
         createUserRequest.setPass(passBox.getText().toString());
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
@@ -102,6 +141,10 @@ public class SignUpActivity extends ActionBarActivity{
                 }
             }
         });
+
+
+
+
 
 //        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 //
