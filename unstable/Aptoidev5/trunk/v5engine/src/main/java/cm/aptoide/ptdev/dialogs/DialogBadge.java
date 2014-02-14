@@ -33,7 +33,7 @@ public class DialogBadge extends DialogFragment {
                 .setView(v)
                 .setTitle(status.equals("scanned")?getString(R.string.app_trusted, appName):getString(R.string.app_warning, appName))
                 .setIcon(status.equals("scanned")?getResources().getDrawable(R.drawable.ic_trusted):getResources().getDrawable(R.drawable.ic_warning))
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

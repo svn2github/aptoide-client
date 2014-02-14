@@ -40,6 +40,9 @@ public class AptoideDialog {
         return new WrongXmlVersionDialog();
     }
 
+    public static ErrorDialog errorDialog(){
+        return new ErrorDialog();
+    }
 
     public static DialogFragment myappInstall(String appName) {
 

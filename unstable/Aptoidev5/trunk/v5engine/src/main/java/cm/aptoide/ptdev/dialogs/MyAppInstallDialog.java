@@ -38,8 +38,8 @@ public class MyAppInstallDialog extends DialogFragment {
                 .setTitle(Aptoide.getConfiguration().getMarketName())
                 .setIcon(android.R.drawable.ic_menu_more)
                 .setMessage(getString(R.string.installapp_alrt) + appName + "?")
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(android.R.string.ok, okListener)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
         setCancelable(false);

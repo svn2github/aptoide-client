@@ -30,8 +30,8 @@ public class MyAppStoreDialog extends DialogFragment{
                 .setIcon(android.R.drawable.ic_menu_more)
                 .setCancelable(false)
                 .setMessage((getString(R.string.newrepo_alrt) + repoName + " ?"))
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(android.R.string.ok, okListener)
+                .setNegativeButton(android.R.string.cancel, null)
 
                 .create();
 
