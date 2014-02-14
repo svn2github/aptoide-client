@@ -44,6 +44,10 @@ public class AptoideDialog {
         return new ErrorDialog();
     }
 
+    public static UsernameDialog usernameDialog(){
+        return new UsernameDialog();
+    }
+
     public static DialogFragment myappInstall(String appName) {
 
         DialogFragment fragment = new MyAppInstallDialog();
