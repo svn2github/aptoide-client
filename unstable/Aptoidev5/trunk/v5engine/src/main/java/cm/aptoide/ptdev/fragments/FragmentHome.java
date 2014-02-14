@@ -134,7 +134,9 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter.addView(v);
         adapter.addAdapter(topAdapter);
 
-        getListView().setCacheColorHint(0);
+        getListView().setDivider(null);
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+
 
 //        HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
 //        View v = View.inflate(getActivity(), R.layout.separator_home_header, null);

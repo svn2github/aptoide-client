@@ -126,6 +126,8 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), AppViewActivity.class);
                 i.putExtra("fromRelated", true);
+                i.putExtra("appName", item.getName());
+                i.putExtra("versionName", item.getVername());
                 i.putExtra("repoName", item.getRepo());
                 i.putExtra("md5sum", item.getMd5sum());
                 getContext().startActivity(i);

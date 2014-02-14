@@ -3,7 +3,7 @@
 
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:cacheColorHint">@null</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="hagDividerVertical">@drawable/hag__divider_light</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_light</item>
         <item name="sectionListView.sectionTextViewPadding">2dip</item>
@@ -55,7 +55,7 @@
 
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
-        <item name="android:cacheColorHint">@null</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="hagDividerVertical">@drawable/hag__divider_dark</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_dark</item>
         <item name="sectionListView.sectionTextViewPadding">2dip</item>

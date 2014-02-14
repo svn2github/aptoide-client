@@ -13,6 +13,7 @@ import android.view.View;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.ArrayList;
 
@@ -61,6 +62,10 @@ public class MoreTopAppsActivity extends ActionBarActivity {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             getLoaderManager().initLoader(0, null, this);
+
+            getListView().setPadding(0, AptoideUtils.getPixels(getActivity(), 10), 0, 0);
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
         }
 
 

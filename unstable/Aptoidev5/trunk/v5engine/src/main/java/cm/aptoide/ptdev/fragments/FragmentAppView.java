@@ -469,6 +469,7 @@ public abstract class FragmentAppView extends Fragment {
                             i.putExtra("item", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
                             startActivity(i);
                         }
                     });
@@ -500,6 +501,7 @@ public abstract class FragmentAppView extends Fragment {
                             i.putExtra("developer", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
                             startActivity(i);
                         }
                     });
@@ -533,6 +535,7 @@ public abstract class FragmentAppView extends Fragment {
                             i.putExtra("version", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
+                            i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
                             startActivity(i);
                         }
                     });
@@ -580,6 +583,8 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
             Log.d("FragmentRelated", "onViewCreated");
 

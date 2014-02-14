@@ -165,8 +165,17 @@ public class MoreRelatedActivity extends ActionBarActivity {
             listRelatedApkRequest.setPackageName(packageName);
             listRelatedApkRequest.setVercode(versionCode);
             listRelatedApkRequest.setLimit(listAdapter.getBucketSize() * 5);
-
+            View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_frag_more, null);
+            if (header != null) {
+                TextView title = (TextView) header.findViewById(R.id.separator_label);
+                title.setText(getArguments().getString("appName"));
+            }
+            getListView().addHeaderView(header);
             spiceManager.execute(listRelatedApkRequest, packageName + "-related-" + mode, DurationInMillis.ONE_DAY, request);
+
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+
 
 
         }

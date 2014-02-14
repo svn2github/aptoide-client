@@ -66,6 +66,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         setEmptyText(getString(R.string.preparing_to_load));
 
         getListView().setDivider(null);
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
         // We need to create a PullToRefreshLayout manually
 

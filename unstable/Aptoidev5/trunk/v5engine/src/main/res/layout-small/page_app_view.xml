@@ -16,13 +16,13 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" style="?android:attr/progressBarStyleLarge"/>
+
 
     <ScrollView android:id="@+id/pager_host"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/app_view_header"
-                android:visibility="gone"
+
                 android:layout_above="@+id/advertisement">
 
         <LinearLayout android:id="@+id/page"

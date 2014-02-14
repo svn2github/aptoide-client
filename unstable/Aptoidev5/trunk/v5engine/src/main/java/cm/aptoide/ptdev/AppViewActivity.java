@@ -369,6 +369,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         return versionCode;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
@@ -702,11 +710,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         id = getIntent().getExtras().getLong("id");
 
         if(getIntent().getExtras().containsKey("appName")){
-            appName.setText(getIntent().getExtras().getString("appName"));
+            name = getIntent().getExtras().getString("appName");
+            appName.setText(name);
         }
 
         if(getIntent().getExtras().containsKey("versionName")){
-            appVersionName.setText(getIntent().getExtras().getString("versionName"));
+            versionName = getIntent().getExtras().getString("versionName");
+            appVersionName.setText(versionName);
         }
 
 

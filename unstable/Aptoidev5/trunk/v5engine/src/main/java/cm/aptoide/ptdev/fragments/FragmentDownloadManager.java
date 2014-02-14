@@ -184,6 +184,7 @@ public class FragmentDownloadManager extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
     }
 }

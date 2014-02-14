@@ -180,6 +180,7 @@ public class FragmentUpdates extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
         getListView().setDivider(null);
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {

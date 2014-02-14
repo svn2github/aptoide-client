@@ -202,6 +202,7 @@ public class SearchManager extends ActionBarActivity {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
             View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
             Button search = (Button) footer.findViewById(R.id.search);
