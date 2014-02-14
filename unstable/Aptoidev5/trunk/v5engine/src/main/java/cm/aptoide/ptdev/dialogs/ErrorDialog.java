@@ -14,6 +14,8 @@ import cm.aptoide.ptdev.R;
 public class ErrorDialog extends DialogFragment {
 
     private DialogInterface.OnClickListener tryAgainListener;
+    private DialogInterface.OnClickListener cancelListener;
+
 
     public ErrorDialog() {
 
@@ -23,7 +25,9 @@ public class ErrorDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-//        tryAgainListener = ((AppViewActivity)getActivity()).getTryAgainListener();
+        tryAgainListener = ((AppViewActivity)getActivity()).getTryAgainListener();
+        cancelListener = ((AppViewActivity)getActivity()).getCancelListener();
+
 
 
         AlertDialog builder = new AlertDialog.Builder(getActivity())
@@ -31,12 +35,7 @@ public class ErrorDialog extends DialogFragment {
                 .setIcon(android.R.drawable.stat_sys_warning)
                 .setMessage(getString(R.string.connection_error))
                 .setPositiveButton(getString(R.string.try_again), tryAgainListener)
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(android.R.string.cancel, cancelListener)
                 .create();
 
         setCancelable(false);

@@ -5,13 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.google.android.gms.auth.GoogleAuthUtil;
+
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -99,6 +100,14 @@ public class Aptoide extends Application {
         super.onCreate();
         context = getApplicationContext();
 
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()  // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build());
 
 
 

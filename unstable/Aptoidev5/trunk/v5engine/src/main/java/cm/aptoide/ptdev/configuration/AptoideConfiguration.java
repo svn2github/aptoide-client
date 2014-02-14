@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.R;
 
 import java.io.File;
 
@@ -162,6 +163,10 @@ public class AptoideConfiguration {
 
     public void setDefaultStore(String store) {
         sPref.edit().putString(PREF_DEFAULT_STORE, store).commit();
+    }
+
+    public int getIcon() {
+        return R.drawable.ic_launcher;
     }
 
 //    public ActivitiesClasses getClasses(){

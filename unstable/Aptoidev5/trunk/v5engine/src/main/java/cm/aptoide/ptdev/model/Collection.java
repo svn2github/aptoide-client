@@ -120,12 +120,28 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
 
         }
 
+        holder = (ViewHolder) containerLinearLayout.getTag();
+
+        if(holder == null){
+            holder = new ViewHolder();
+            holder.more = v.findViewById(R.id.more);
+            holder.separatorLayout = v.findViewById(R.id.separatorLayout);
+            holder.collectionList = (LinearLayout) v.findViewById(R.id.collectionList);
+            holder.collectionName = (TextView) v.findViewById(R.id.collectionName);
+            containerLinearLayout.setTag(holder);
+        }
+
+
+
 
         return v;
     }
 
     @Override
     public String getType() {
+
+        Log.d("Aptoide-HomeLayout", "size: " + appsList.size() );
+
 
         return appsList.size()+"";
 
@@ -143,19 +159,11 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
     @Override
     public void fillViewWithData(final Context context, View v) {
         int counter = 0;
+        LinearLayout containerLinearLayout = (LinearLayout) v.findViewById(R.id.collectionList);
 
-
-        if(holder == null){
-            holder = new ViewHolder();
-            holder.more = v.findViewById(R.id.more);
-            holder.separatorLayout = v.findViewById(R.id.separatorLayout);
-            holder.collectionList = (LinearLayout) v.findViewById(R.id.collectionList);
-            holder.collectionName = (TextView) v.findViewById(R.id.collectionName);
+        if(holder==null){
+            holder = (ViewHolder) containerLinearLayout.getTag();
         }
-
-
-
-        LinearLayout containerLinearLayout = holder.collectionList;
         holder.more.setVisibility(View.VISIBLE);
         holder.separatorLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,6 +229,8 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
                 if(getParentId()!=-1){
                     TextView downloadsTv = (TextView) tvChild.findViewById(R.id.app_downloads);
                     downloadsTv.setText(context.getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+                    TextView categoryTv = (TextView) tvChild.findViewById(R.id.app_category);
+                    categoryTv.setText("");
                     if(item.getName().length()>10){
                         downloadsTv.setMaxLines(1);
                     }else{
@@ -228,6 +238,8 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
                     }
                     downloadsTv.setVisibility(View.VISIBLE);
                 }else{
+                    TextView downloadsTv = (TextView) tvChild.findViewById(R.id.app_downloads);
+                    downloadsTv.setText("");
                     TextView categoryTv = (TextView) tvChild.findViewById(R.id.app_category);
                     categoryTv.setText(category);
                     if(item.getName().length()>10){

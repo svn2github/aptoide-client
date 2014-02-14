@@ -470,7 +470,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
-        elements.put("md5", new ElementHandler() {
+        elements.put("md5h", new ElementHandler() {
 
 
             public void startElement(Attributes atts) throws SAXException {

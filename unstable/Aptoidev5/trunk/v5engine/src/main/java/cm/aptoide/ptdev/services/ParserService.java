@@ -11,6 +11,9 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.Toast;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
@@ -129,6 +132,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         startForeground(45, createDefaultNotification());
         final long id;
         if(newStore){
+            if(db.existsServer(AptoideUtils.RepoUtils.split(store.getBaseUrl()))){
+                Toast.makeText(getApplicationContext(), R.string.store_already_added, Toast.LENGTH_LONG).show();
+                return;
+            };
             id = insertStoreDatabase(db, store);
             store.setId(id);
             BusProvider.getInstance().post(produceRepoAddedEvent());

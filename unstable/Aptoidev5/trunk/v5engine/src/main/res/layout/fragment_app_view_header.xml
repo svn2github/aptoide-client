@@ -89,7 +89,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
     <LinearLayout
             android:id="@+id/badge_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/btinstall"
             android:layout_alignTop="@+id/btinstall"
             android:layout_marginRight="5dp"

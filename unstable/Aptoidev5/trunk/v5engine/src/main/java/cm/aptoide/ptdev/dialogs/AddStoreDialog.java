@@ -110,10 +110,7 @@ public class AddStoreDialog extends DialogFragment {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-
-
-            dismissDialog("Unable to check store " + spiceException);
-
+            Toast.makeText(getActivity(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -163,7 +160,6 @@ public class AddStoreDialog extends DialogFragment {
         @Override
         public void onRequestCancelled() {
             Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
-
         }
     }
 

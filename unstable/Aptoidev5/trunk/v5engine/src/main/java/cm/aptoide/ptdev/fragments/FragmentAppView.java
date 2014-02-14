@@ -279,11 +279,16 @@ public abstract class FragmentAppView extends Fragment {
                                 .build();
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
-
+                        options = new DisplayImageOptions.Builder()
+                                .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
+                                .cacheOnDisc(true)
+                                .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i));
                     }
+
+                    mainLayout.addView(cell);
 
                     ImageLoader.getInstance().displayImage(imagePath, imageView, options, new ImageLoadingListener() {
 
@@ -308,9 +313,6 @@ public abstract class FragmentAppView extends Fragment {
                         public void onLoadingCancelled(String uri, View v) {
                         }
                     });
-
-                    mainLayout.addView(cell);
-
 
                 }
 
@@ -398,8 +400,6 @@ public abstract class FragmentAppView extends Fragment {
 
     }
 
-
-
     public static class FragmentAppViewRelated extends ListFragment {
 
 
@@ -426,12 +426,32 @@ public abstract class FragmentAppView extends Fragment {
         RequestListener<RelatedApkJson> request = new RequestListener<RelatedApkJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Toast.makeText(getActivity(), "Error listRelated", Toast.LENGTH_SHORT).show();
+                final View errorView = LayoutInflater.from(getActivity()).inflate(R.layout.page_error, null);
+                Button errorBtn = (Button) errorView.findViewById(R.id.errorButton);
+
+                errorBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getListView().removeHeaderView(errorView);
+                        setListAdapter(null);
+                        ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
+
+                        listRelatedApkRequest.setVercode(((AppViewActivity) getActivity()).getVersionCode());
+                        listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
+                        listRelatedApkRequest.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
+
+                        spiceManager.execute(listRelatedApkRequest, ((AppViewActivity) getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
+
+                    }
+                });
+                setEmptyText(getString(R.string.connection_error));
+                setListAdapter(new ArrayAdapter<String>(getActivity(), 0));
 
             }
 
             @Override
             public void onRequestSuccess(RelatedApkJson relatedApkJson) {
+                setEmptyText(getString(R.string.no_related));
 
                 if(relatedApkJson == null){
                     Log.d("FragmentRelated", "Related was null");
@@ -550,6 +570,8 @@ public abstract class FragmentAppView extends Fragment {
                 setListAdapter(adapter);
             }
         };
+
+
 
         @Override
         public void onStart() {
@@ -941,33 +963,35 @@ public abstract class FragmentAppView extends Fragment {
                                         } catch (AuthenticatorException e) {
                                             e.printStackTrace();
                                         }
-
                                     }
                                 }, null);
                             }
-
-
                         }
                     }, null);
                 }
-
-
-
             }
 
             private void addComment() {
-                manager = ((AppViewActivity)getActivity()).getSpice();
 
-                AddCommentRequest request = new AddCommentRequest(getActivity());
-                request.setApkversion(((AppViewActivity)getActivity()).getVersionName());
-                request.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
-                request.setRepo(((AppViewActivity) getActivity()).getRepoName());
-                request.setToken(((AppViewActivity) getActivity()).getToken());
 
-                request.setText(editText.getText().toString());
+                if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "").equals("NOT_SIGNED_UP")) {
+                    manager = ((AppViewActivity) getActivity()).getSpice();
 
-                manager.execute(request, requestListener);
-                AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
+                    AddCommentRequest request = new AddCommentRequest(getActivity());
+                    request.setApkversion(((AppViewActivity) getActivity()).getVersionName());
+                    request.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
+                    request.setRepo(((AppViewActivity) getActivity()).getRepoName());
+                    request.setToken(((AppViewActivity) getActivity()).getToken());
+
+                    request.setText(editText.getText().toString());
+
+                    manager.execute(request, requestListener);
+                    AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
+                } else {
+
+                    AptoideDialog.updateUsernameDialog().show(getFragmentManager(), "updateNameDialog");
+
+                }
             }
 
         }

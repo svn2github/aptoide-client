@@ -15,10 +15,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
@@ -192,10 +189,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 args.putLong("storeid", storeId);
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
-                Cursor c = (Cursor) l.getAdapter().getItem(position);
-                String title = c.getString(c.getColumnIndex("name"));
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(title).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
                 break;
 
             default:
@@ -249,10 +244,11 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         }
 
         Log.d("Aptoide-StoreListCategories", "Counter is " + counter);
-
-        if(getListView().getAdapter()==null)
+        if(data==null) return;
+        if(getListView().getAdapter()==null && data.getCount()>0)
             setListAdapter(mainAdapter);
-        setListShown(true);
+
+        if(data.getCount() > 0) setListShown(true);
 
     }
 

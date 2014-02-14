@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
@@ -80,10 +81,8 @@ public class MoreRelatedActivity extends ActionBarActivity {
             if (getArguments().containsKey("version")) {
                 ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.multiversion));
             } else if (getArguments().containsKey("developer")) {
-
                 ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.more_from_publisher));
             } else if (getArguments().containsKey("item")) {
-
                 ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.related_apps));
             }
         }
@@ -93,8 +92,8 @@ public class MoreRelatedActivity extends ActionBarActivity {
         RequestListener<RelatedApkJson> request = new RequestListener<RelatedApkJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Toast.makeText(getActivity(), "Error listRelated", Toast.LENGTH_SHORT).show();
-
+                setEmptyText(getString(R.string.connection_error));
+                setListShown(true);
             }
 
             @Override
@@ -138,6 +137,7 @@ public class MoreRelatedActivity extends ActionBarActivity {
                 listAdapter.notifyDataSetChanged();
 
                 setListAdapter(adapter);
+                setEmptyText(getString(R.string.no_related));
             }
         };
 

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.dialogs;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.widget.ListPopupWindow;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,9 +45,7 @@ public class AptoideDialog {
         return new ErrorDialog();
     }
 
-    public static UsernameDialog usernameDialog(){
-        return new UsernameDialog();
-    }
+
 
     public static DialogFragment myappInstall(String appName) {
 
@@ -72,5 +71,9 @@ public class AptoideDialog {
 
         return fragment;
 
+    }
+
+    public static DialogFragment updateUsernameDialog() {
+        return new UsernameDialog();
     }
 }

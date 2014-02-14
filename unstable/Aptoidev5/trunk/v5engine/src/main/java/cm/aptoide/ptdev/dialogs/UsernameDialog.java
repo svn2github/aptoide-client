@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 
 /**
@@ -21,10 +22,15 @@ import cm.aptoide.ptdev.R;
  */
 public class UsernameDialog extends DialogFragment {
 
+    EditText username;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_username, null);
+
+
+        username = (EditText) v.findViewById(R.id.update_username);
+
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(getString(R.string.update_username))
@@ -32,12 +38,8 @@ public class UsernameDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-//                        String username = ((EditText) v.findViewById(R.id.update_store_username)).getText().toString();
-//                        Intent i = new Intent();
-//
-//                        i.putExtra("username", username);
-//
-//                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
+                        ((AppViewActivity)getActivity()).updateUsername(username.getText().toString());
+
                     }
                 }).create();
 

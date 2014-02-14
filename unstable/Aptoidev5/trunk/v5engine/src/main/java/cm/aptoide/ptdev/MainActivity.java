@@ -260,7 +260,7 @@ public class MainActivity extends ActionBarActivity implements
                 Intent serviceIntent = new Intent(this, RabbitMqService.class);
                 startService(serviceIntent);
             }
-
+            new AutoUpdate(this).execute();
             executeWizard();
 
             executorService.execute(new Runnable() {
@@ -351,6 +351,7 @@ public class MainActivity extends ActionBarActivity implements
                                     }
 
                                 }
+                                c.close();
                                 try {
                                     executorService.submit(new Runnable() {
                                         @Override

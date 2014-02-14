@@ -10,14 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
+import android.preference.PreferenceManager;
+import android.support.v4.app.*;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -49,6 +48,8 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
+import cm.aptoide.ptdev.webservices.UpdateUserRequest;
+import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.mopub.mobileads.MoPubView;
@@ -96,7 +97,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onRequestFailure(SpiceException e) {
-            //showError(true, true);
+            AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
         }
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -372,9 +373,59 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
+    }
+    public DialogInterface.OnClickListener getCancelListener() {
+
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        };
+    }
+
+    public DialogInterface.OnClickListener getTryAgainListener() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                continueLoading(null);
+            }
+        };
+    }
+
+    public void updateUsername(final String username){
+
+        UpdateUserRequest request = new UpdateUserRequest(this);
+        request.setName(username);
+
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        spiceManager.execute(request, new RequestListener<CreateUserJson>() {
+
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(fragment!=null)fragment.dismiss();
+            }
+
+            @Override
+            public void onRequestSuccess(CreateUserJson createUserJson) {
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(fragment!=null)fragment.dismiss();
+
+                if(createUserJson.getStatus().equals("OK")){
+                    Toast.makeText(AppViewActivity.this, R.string.username_success, Toast.LENGTH_LONG).show();
+                    PreferenceManager.getDefaultSharedPreferences(AppViewActivity.this).edit().putString("username", username).commit();
+                }else{
+                    for(String error: createUserJson.getErrors()){
+                        Toast.makeText(AppViewActivity.this, error, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+            }
+        });
     }
 
 
@@ -637,9 +688,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
-        spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
-        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+
     }
+
+
 
     @Override
     protected void onStop() {
@@ -660,7 +712,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
-        findViewById(R.id.btinstall).setVisibility(View.GONE);
+
         if(savedInstanceState!=null){
             package_name = savedInstanceState.getString("packageName");
             downloadId = savedInstanceState.getInt("downloadId");
@@ -868,7 +920,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
         minSdk = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SDK));
         screen = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
-        md5 = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_SCREEN));
+        md5 = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_MD5));
         String apkpath = apkCursor.getString(apkCursor.getColumnIndex("apk_path"));
         String path = apkCursor.getString(apkCursor.getColumnIndex("path"));
         long versionCode = apkCursor.getLong(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
@@ -909,7 +961,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Subscribe
     public void onDownloadEventUpdate(DownloadEvent download) {
 
-        if (download.getId() == downloadId) {
+        if (service != null && download.getId() == downloadId) {
             onDownloadUpdate(service.getDownload(download.getId()).getDownload());
         }
 
@@ -927,6 +979,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Subscribe
     public void onInstalledEvent(InstalledApkEvent event){
         onRefresh(null);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
+        spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
     }
 
     @Subscribe
@@ -952,6 +1011,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             TextView progressText = (TextView) findViewById(R.id.progress);
             ProgressBar pb = (ProgressBar) findViewById(R.id.downloading_progress);
+
             findViewById(R.id.download_progress).setVisibility(View.VISIBLE);
             findViewById(R.id.btinstall).setVisibility(View.GONE);
             findViewById(R.id.badge_layout).setVisibility(View.GONE);

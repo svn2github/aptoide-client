@@ -423,6 +423,7 @@ public class AptoideUtils {
             connection.setConnectTimeout(TIME_OUT);
             connection.setReadTimeout(TIME_OUT);
             long lastModified = connection.getLastModified();
+
             connection.disconnect();
             return lastModified;
 

@@ -64,6 +64,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private ConnectionResult mConnectionResult;
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
     private boolean showPassword = true;
+    private CheckBox registerDevice;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -301,6 +302,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 }
             });
 
+            registerDevice = (CheckBox) findViewById(R.id.link_my_device);
             TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
             SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
             forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
@@ -413,11 +415,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 
-        request.setRegisterDevice(true);
+
         request.setMode(mode);
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        request.setRegisterDevice(registerDevice.isChecked());
 
         request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
         request.setDeviceId(deviceId);
@@ -520,7 +523,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
-        startService(new Intent(this, RabbitMqService.class));
+        if(registerDevice.isChecked()) startService(new Intent(this, RabbitMqService.class));
         /*
         ContentResolver wiResolver = getContentResolver();
         wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);

@@ -814,6 +814,7 @@ public class Database {
 
             database.delete(Schema.Category.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
         }
+        c.close();
 
 
     }
@@ -832,6 +833,7 @@ public class Database {
 
             database.delete(Schema.Category.getName(), "id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id)});
         }
+        c.close();
 
 
     }
@@ -855,7 +857,7 @@ public class Database {
         }
 
         database.delete(Schema.Apk.getName(), "package_name = ? and version_code = ? and id_repo = ?", new String[]{packageName, String.valueOf(versionCode), String.valueOf(repoId)});
-
+        c.close();
     }
 
     public void deleteInstalledApk(String packageName) {
