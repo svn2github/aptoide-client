@@ -356,6 +356,9 @@
     <string name="try_again">Try again</string>
     <string name="clear">Clear</string>
     <string name="link_device_webinstall">Link account with Webinstall</string>
-
+    <string name="update_self_title">Update available</string>
+    <string name="update_self_msg">There is a new version of %s available,\ndo you wish to update?</string>
+    <string name="retrieving_update">Retrieving update...</string>
+    <string name="no_related">No related apps found.</string>
 
 </resources>
