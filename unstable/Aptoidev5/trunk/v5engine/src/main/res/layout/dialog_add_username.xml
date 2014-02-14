@@ -20,7 +20,7 @@
             android:gravity="left|center" />
 
     <EditText
-            android:id="@+id/update_store_username"
+            android:id="@+id/update_username"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/create_username"
