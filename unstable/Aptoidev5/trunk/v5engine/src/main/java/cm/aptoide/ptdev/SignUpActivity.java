@@ -57,9 +57,10 @@ public class SignUpActivity extends ActionBarActivity{
         getSupportActionBar().setTitle(getString(R.string.register));
         emailBox = (EditText) findViewById(R.id.email_box);
         passBox = (EditText) findViewById(R.id.password_box);
+        passBox.setTransformationMethod(new PasswordTransformationMethod());
 
-        final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.password_hide_blue);
-        final Drawable showPasswordRes = getResources().getDrawable(R.drawable.password_hide_gray);
+        final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
+        final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
         passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
         passBox.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -74,11 +75,11 @@ public class SignUpActivity extends ActionBarActivity{
                     if(showPassword){
                         showPassword=false;
                         passBox.setTransformationMethod(null);
-                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
                     }else{
                         showPassword=true;
                         passBox.setTransformationMethod(new PasswordTransformationMethod());
-                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
                     }
                 }
 

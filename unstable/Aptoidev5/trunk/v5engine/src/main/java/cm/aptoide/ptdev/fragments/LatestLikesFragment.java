@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
@@ -126,17 +127,21 @@ public class LatestLikesFragment extends ListFragment {
 
             TextView user_name = (TextView) view.findViewById(R.id.username);
             TextView app_name = (TextView) view.findViewById(R.id.app_name);
-
+            TextView app_version = (TextView) view.findViewById(R.id.app_version);
+            ImageView taste = (ImageView) view.findViewById(R.id.user_taste);
 
             user_name.setText(getItem(position).getUsername());
             app_name.setText(getItem(position).getName());
+            app_version.setText(getItem(position).getVer());
 
             boolean like = Boolean.parseBoolean(getItem(position).getLike());
 
             if(like){
-                app_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_action_good_pressed, 0);
+//                app_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_action_good_pressed, 0);
+                taste.setImageResource(R.drawable.like);
             }else {
-                app_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_action_bad_pressed,0);
+//                app_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_action_bad_pressed,0);
+                taste.setImageResource(R.drawable.dont_like);
             }
 
             return view;

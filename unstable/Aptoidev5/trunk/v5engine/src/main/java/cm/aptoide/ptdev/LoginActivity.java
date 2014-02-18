@@ -250,8 +250,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             }
 
             password_box = (EditText) findViewById(R.id.password);
-            final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.password_hide_blue);
-            final Drawable showPasswordRes = getResources().getDrawable(R.drawable.password_hide_gray);
+            password_box.setTransformationMethod(new PasswordTransformationMethod());
+
+            final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
+            final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
             password_box.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -266,11 +268,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         if(showPassword){
                             showPassword=false;
                             password_box.setTransformationMethod(null);
-                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
                         }else{
                             showPassword=true;
                             password_box.setTransformationMethod(new PasswordTransformationMethod());
-                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
                         }
                     }
 

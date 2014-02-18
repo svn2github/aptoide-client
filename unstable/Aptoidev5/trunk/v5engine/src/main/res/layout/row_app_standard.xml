@@ -38,7 +38,8 @@
                 android:layout_marginLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center|left"
-                android:layout_alignBottom="@+id/ic_action" android:layout_toLeftOf="@+id/ic_action"
+                android:layout_alignBottom="@+id/ic_action"
+                android:layout_toLeftOf="@+id/ic_action"
                 android:layout_toRightOf="@+id/app_icon"/>
 
         <TextView
