@@ -483,6 +483,12 @@ public class GetApkInfoJson {
         private Number id;
         @Key
         private String md5sum;
+
+        @Key
+        private Number minSdk;
+
+        @Key
+        private String minScreen;
         @Key("package")
         private String packageName;
         @Key
@@ -567,6 +573,13 @@ public class GetApkInfoJson {
         }
 
 
+        public Number getMinSdk() {
+            return minSdk;
+        }
+
+        public String getMinScreen() {
+            return minScreen;
+        }
     }
 
 

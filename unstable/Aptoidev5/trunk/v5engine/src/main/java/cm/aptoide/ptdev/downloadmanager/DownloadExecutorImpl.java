@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -279,7 +280,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                             mBuilder.setContentIntent(onClickAction);
                             mBuilder.setAutoCancel(true);
                             managerNotification.notify((int) apk.getAppHashId(), mBuilder.build());
-
+                            if(Build.VERSION.SDK_INT >= 11) context.getPackageManager().setInstallerPackageName(apk.getApkid(), "cm.aptoide.pt.dev");
 
 
                         }else{

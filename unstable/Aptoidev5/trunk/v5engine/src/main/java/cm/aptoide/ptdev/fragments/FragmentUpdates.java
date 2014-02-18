@@ -84,6 +84,7 @@ public class FragmentUpdates extends ListFragment {
                 int updates = 0;
                 if (data.getCount() > 1) {
 
+                    updatesAdapter.swapCursor(data);
                     for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
                         if(data.getInt(data.getColumnIndex("is_update"))==1){
                             updates++;
@@ -91,7 +92,6 @@ public class FragmentUpdates extends ListFragment {
                     }
 
                     editor.putInt("updates", updates);
-                    updatesAdapter.swapCursor(data);
                 } else {
                     updatesAdapter.swapCursor(null);
                     editor.remove("updates");
@@ -223,6 +223,8 @@ public class FragmentUpdates extends ListFragment {
 
                 if (data.getCount() > 1) {
 
+
+                    updatesAdapter.swapCursor(data);
                     for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
                         if(data.getInt(data.getColumnIndex("is_update"))==1){
                             updates++;
@@ -230,7 +232,6 @@ public class FragmentUpdates extends ListFragment {
                     }
 
                     editor.putInt("updates", updates);
-                    updatesAdapter.swapCursor(data);
                 } else {
                     updatesAdapter.swapCursor(null);
                     editor.remove("updates");

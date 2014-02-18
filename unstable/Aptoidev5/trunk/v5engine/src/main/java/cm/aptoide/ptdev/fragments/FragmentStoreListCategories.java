@@ -6,10 +6,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.*;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
@@ -17,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
+import cm.aptoide.ptdev.adapters.ListSocialAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -26,6 +24,8 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLa
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,9 +48,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -85,19 +82,13 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                             // We can now complete the setup as desired
 
                     .listener(this)
-
                     .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
                     .setup(mPullToRefreshLayout);
         }
 
     }
 
-
-
-
-
     StoreActivity.SortObject sort;
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -105,6 +96,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         sort = ((StoreActivity)getActivity()).getSort();
         setRefreshing(((StoreActivity) getActivity()).isRefreshing());
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +109,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         apkAdapter = new CategoryAdapter(getActivity());
         mainAdapter.addAdapter(categoryAdapter);
         mainAdapter.addAdapter(apkAdapter);
+
+
         setHasOptionsMenu(true);
 
         if(savedInstanceState==null){
@@ -128,6 +123,24 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
 
         if(parentId==0){
+
+            ArrayList<ListSocialAdapter.SocialObject> objects = new ArrayList<ListSocialAdapter.SocialObject>();
+
+            ListSocialAdapter.SocialObject likes = new ListSocialAdapter.SocialObject();
+            likes.id = EnumCategories.LATEST_LIKES;
+            likes.name = getString(R.string.latest_likes);
+
+
+            ListSocialAdapter.SocialObject comments = new ListSocialAdapter.SocialObject();
+            comments.name = getString(R.string.latest_comments);
+            comments.id = EnumCategories.LATEST_COMMENTS;
+            objects.add(likes);
+            objects.add(comments);
+
+            ListSocialAdapter socialAdapter = new ListSocialAdapter(getActivity(), 0, objects);
+
+            mainAdapter.addAdapter(socialAdapter);
+
             setListAdapter(mainAdapter);
         }
 
@@ -190,9 +203,28 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
                 break;
 
+            case 4:
+                Bundle bundle = new Bundle();
+                bundle.putLong("storeid", storeId);
+                switch ( (int) id) {
+
+                    case EnumCategories.LATEST_LIKES:
+                        Fragment likes = new LatestLikesFragment();
+                        likes.setArguments(bundle);
+                        getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, likes, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                        break;
+                    case EnumCategories.LATEST_COMMENTS:
+                        Fragment comments = new LatestCommentsFragment();
+                        comments.setArguments(bundle);
+                        getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, comments, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                        break;
+                }
+
+
+                break;
             default:
                 Intent i = new Intent(getActivity(), AppViewActivity.class);
                 i.putExtra("id", id);

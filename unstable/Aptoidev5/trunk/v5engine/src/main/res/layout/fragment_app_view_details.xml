@@ -25,7 +25,8 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:visibility="gone"/>-->
 
-
+        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge" />
 
         <include android:id="@+id/layout_screenshots"
                  layout="@layout/fragment_screenshots"/>
@@ -34,8 +35,7 @@
         <include android:id="@+id/layout_info_details"
                  layout="@layout/fragment_app_info"/>
 
-        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content"
-                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge" />
+
 
         <LinearLayout android:id="@+id/detailsContainer" android:layout_width="match_parent"
                       android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">

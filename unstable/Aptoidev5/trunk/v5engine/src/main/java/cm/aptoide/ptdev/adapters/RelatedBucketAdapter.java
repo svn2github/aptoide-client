@@ -20,6 +20,7 @@ import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,27 +85,8 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
 
         try {
-            boolean month = true;
-            DateTime startDate = new DateTime(dateFormater.parse(item.getTimestamp()));
-            DateTime now = DateTime.now();
-
-            int time = Months.monthsBetween(startDate, now).getMonths();
-
-            if(time == 0){
-                month = false;
-                time = Days.daysBetween(startDate, now).getDays();
-            }
-
-            if(time == 0){
-                time = Hours.hoursBetween(startDate, now).getHours();
-            }
-
-
-            if(month){
-                holder.timestamp.setText(getContext().getString(R.string.timestamp_months, String.valueOf(time)));
-            }else{
-                holder.timestamp.setText(getContext().getString(R.string.timestamp_days, String.valueOf(time)));
-            }
+            Date date = dateFormater.parse(item.getTimestamp());
+            holder.timestamp.setText(AptoideUtils.DateDiffUtils.getDiffDate(getContext(), date));
         } catch (ParseException e) {
             e.printStackTrace();
         }

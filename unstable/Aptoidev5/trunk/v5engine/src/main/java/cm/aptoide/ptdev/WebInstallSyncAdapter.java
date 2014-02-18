@@ -5,13 +5,19 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.*;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.*;
+import android.provider.Settings;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Filters;
+import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
+import com.octo.android.robospice.SpiceManager;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
@@ -22,6 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 /**
  * Created by j-pac on 27-01-2014.
@@ -45,10 +52,12 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
         factory.setVirtualHost("webinstall");
         factory.setUsername("public");
         factory.setPassword("public");
-
+        AMQConnection connection = null;
+        ChannelN channel = null;
         try {
-            AMQConnection connection = (AMQConnection) factory.newConnection();
-            ChannelN channel = (ChannelN) connection.createChannel();
+
+            connection = (AMQConnection) factory.newConnection();
+            channel = (ChannelN) connection.createChannel();
             channel.basicQos(0);
 
             GetResponse response;
@@ -63,8 +72,16 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             connection.disconnectChannel(channel);
             connection.close();
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+        } catch (ShutdownSignalException e){
+
+            if (connection != null) {
+                connection.disconnectChannel(channel);
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            if (connection != null) {
+                connection.disconnectChannel(channel);
+            }
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
         }
 

@@ -136,7 +136,10 @@ public class CategoryAdapter extends CursorAdapter {
                 }
                 ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
 
-                ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+                if(count>0){
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+                }
+
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
 

@@ -43,13 +43,14 @@ public class MyAppInstallDialog extends DialogFragment {
                 .create();
 
         setCancelable(false);
+
         //builder.setOnDismissListener(dismissListener);
         return builder;
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
         if(dismissListener!=null) dismissListener.onDismiss(dialog);
+        super.onDismiss(dialog);
     }
 }

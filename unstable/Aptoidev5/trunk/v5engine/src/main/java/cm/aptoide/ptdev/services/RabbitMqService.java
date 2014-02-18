@@ -22,6 +22,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.impl.AMQConnection;
@@ -217,7 +218,6 @@ public class RabbitMqService extends Service {
             while(isRunning){
                 try {
                     QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-
                     String body = new String(delivery.getBody(), "UTF-8");
                     Log.d("Aptoide-RabbitMqService", "MESSAGE: " + body);
                     handleMessage(body);
@@ -225,11 +225,28 @@ public class RabbitMqService extends Service {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    isRunning = false;
                     e.printStackTrace();
                 } catch (ShutdownSignalException e){
+                    isRunning = false;
                     Log.d("Aptoide-WebInstall", "Connection closed with reason " + e.getReason().toString());
+                } catch (ConsumerCancelledException e){
+                    isRunning = false;
+                    Log.d("Aptoide-WebInstall", "Connection was canceled");
                 }
+
             }
+            try{
+                if(channel != null && channel.isOpen()){
+                    channel.close();
+                    connection.disconnectChannel(channel);
+                    connection.close();
+                }
+
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
         }
 

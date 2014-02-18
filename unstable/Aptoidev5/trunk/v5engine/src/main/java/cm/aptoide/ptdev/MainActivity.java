@@ -420,6 +420,7 @@ public class MainActivity extends ActionBarActivity implements
                 } else {
 
                     Store store = new Store();
+
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
@@ -457,6 +458,7 @@ public class MainActivity extends ActionBarActivity implements
                 }
 
             }
+
         }
 
 

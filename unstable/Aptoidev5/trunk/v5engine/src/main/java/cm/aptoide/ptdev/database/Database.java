@@ -381,7 +381,7 @@ public class Database {
                 "" +(filterMature ? "and apk.mature='0'": "") + " " +
                 "and installed.signature = apk.signature  " +
                 "group by is_update , apk.package_name " +
-                "order by is_update desc, apk.package_name collate nocase",null);
+                "order by is_update desc, apk.name collate nocase,  apk.version_code desc",null);
 
         c.getCount();
         return c;
@@ -993,7 +993,7 @@ public class Database {
         Cursor c = null;
         try {
 
-            c = database.rawQuery("select id_apk from apk where package_name = ?", new String[]{param});
+            c = database.rawQuery("select id_apk from apk where package_name = ? and is_compatible = 1 order by version_code ", new String[]{param});
             if(c.moveToFirst()){
                 return c.getInt(0);
             }else{
@@ -1003,6 +1003,24 @@ public class Database {
             if (c != null) c.close();
         }
     }
+
+
+    public long getApkFromPackage(String param, String repo) {
+
+        Cursor c = null;
+        try {
+
+            c = database.rawQuery("select id_apk from apk join repo where package_name = ? and is_compatible = 1 and repo.name = ? order by version_code ", new String[]{param, repo});
+            if(c.moveToFirst()){
+                return c.getInt(0);
+            }else{
+                return 0;
+            }
+        } finally {
+            if (c != null) c.close();
+        }
+    }
+
     public Cursor getScheduledDownloads() {
 
         Cursor c = null;

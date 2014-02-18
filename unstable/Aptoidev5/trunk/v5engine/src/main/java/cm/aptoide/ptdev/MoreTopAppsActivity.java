@@ -1,7 +1,12 @@
 package cm.aptoide.ptdev;
 
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -12,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.DownloadManager;
 import cm.aptoide.ptdev.fragments.HomeItem;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.ArrayList;
@@ -20,8 +27,21 @@ import java.util.ArrayList;
 /**
  * Created by rmateus on 06-02-2014.
  */
-public class MoreTopAppsActivity extends ActionBarActivity {
+public class MoreTopAppsActivity extends ActionBarActivity implements DownloadInterface {
 
+    private DownloadService downloadService;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            downloadService = ((DownloadService.LocalBinder) binder).getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +56,12 @@ public class MoreTopAppsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.more_top_apps));
+        bindService(new Intent(this, DownloadManager.class), conn, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void installApp(long id) {
+        downloadService.startDownloadFromAppId(id);
     }
 
 

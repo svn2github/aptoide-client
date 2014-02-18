@@ -103,7 +103,7 @@ public abstract class FragmentAppView extends Fragment {
         private TextView publisher;
 
         private HorizontalScrollView layoutScreenshots;
-        private LinearLayout mainLayout;
+
         private ProgressBar loadingPb;
 
         private TextView publisherWebsite;
@@ -219,7 +219,7 @@ public abstract class FragmentAppView extends Fragment {
 
 
                 String email;
-                if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
+                if(event.getDeveloper().getInfo().getEmail()!=null){
                     email=getString(R.string.username) +": " + event.getDeveloper().getInfo().getEmail();
                 }else{
                     email=getString(R.string.username) +": " + getString(R.string.not_found);
@@ -235,7 +235,7 @@ public abstract class FragmentAppView extends Fragment {
                 publisherPrivacyPolicy.setText(privacyPolicy);
 
                 String website;
-                if(event.getDeveloper().getInfo().getPrivacy_policy()!=null){
+                if(event.getDeveloper().getInfo().getWebsite()!=null){
                     website=getString(R.string.website) +": " + event.getDeveloper().getInfo().getWebsite();
                 }else{
                     website=getString(R.string.website) +": " + getString(R.string.not_found);
@@ -243,9 +243,7 @@ public abstract class FragmentAppView extends Fragment {
                 publisherWebsite.setText(website);
             }
 
-
-
-
+            LinearLayout mainLayout = (LinearLayout) layoutScreenshots.findViewById(R.id._linearLayout);
 
             mainLayout.removeAllViews();
             ArrayList<MediaObject> mediaObjects;
@@ -376,9 +374,8 @@ public abstract class FragmentAppView extends Fragment {
             dontLikes = (TextView) layoutInfoDetails.findViewById(R.id.dont_likes_label);
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
             publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
-//            screenshots = (Gallery) v.findViewById(R.id.gallery);
+
             layoutScreenshots = (HorizontalScrollView) v.findViewById(R.id.layout_screenshots);
-            mainLayout = (LinearLayout) layoutScreenshots.findViewById(R.id._linearLayout);
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);

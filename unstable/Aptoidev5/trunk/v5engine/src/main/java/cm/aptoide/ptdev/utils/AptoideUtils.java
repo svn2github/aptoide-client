@@ -28,6 +28,7 @@ import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
 
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import org.joda.time.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,10 +42,8 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -436,6 +435,7 @@ public class AptoideUtils {
 
         public static String split(String repo) {
             Log.d("Aptoide-RepoUtils", "Splitting " + repo);
+            repo = formatRepoUri(repo);
             return repo.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
         }
 
@@ -453,6 +453,90 @@ public class AptoideUtils {
                 Log.d("Aptoide-ManageRepo", "repo uri: " + uri_str);
             }
             return uri_str;
+        }
+
+    }
+
+
+
+    public static class DateDiffUtils{
+
+        final static int MONTHS = 0;
+        final static int DAYS = 1;
+        final static int HOURS = 2;
+        final static int MINUTES = 3;
+        final static int SECONDS = 4;
+
+        public static String getDiffDate(Context context, Date date){
+
+            int TIME_TYPE = MONTHS;
+            DateTime startDate = new DateTime(date);
+            DateTime now = DateTime.now();
+
+            int time = Months.monthsBetween(startDate, now).getMonths();
+
+            if(time == 0){
+                TIME_TYPE = DAYS;
+                time = Days.daysBetween(startDate, now).getDays();
+            }
+
+            if(time == 0){
+                TIME_TYPE = HOURS;
+                time = Hours.hoursBetween(startDate, now).getHours();
+            }
+
+            if(time == 0){
+                TIME_TYPE = MINUTES;
+                time = Minutes.minutesBetween(startDate, now).getMinutes();
+            }
+
+            if(time == 0){
+                TIME_TYPE = SECONDS;
+                time = Seconds.secondsBetween(startDate, now).getSeconds();
+            }
+
+
+            if(time == 1){
+                return getSingleUnitStringBasedOnType(context, TIME_TYPE);
+            }else{
+                return getStringBasedOnType(context, TIME_TYPE, time);
+            }
+
+
+        }
+
+        private static String getSingleUnitStringBasedOnType(Context context, int type){
+
+            switch (type){
+                case MONTHS:
+                    return context.getString(R.string.timestamp_month, 1);
+                case DAYS:
+                    return context.getString(R.string.timestamp_day, 1);
+                case HOURS:
+                    return context.getString(R.string.WidgetProvider_timestamp_hour_ago, 1);
+                case MINUTES:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+                case SECONDS:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+            }
+            return null;
+        }
+
+        private static String getStringBasedOnType(Context context, int type, int time){
+
+            switch (type){
+                case MONTHS:
+                    return context.getString(R.string.timestamp_months, time);
+                case DAYS:
+                    return context.getString(R.string.timestamp_days, time);
+                case HOURS:
+                    return context.getString(R.string.WidgetProvider_timestamp_hours_ago, time);
+                case MINUTES:
+                    return context.getString(R.string.WidgetProvider_timestamp_minutes_ago, time);
+                case SECONDS:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+            }
+            return null;
         }
 
     }

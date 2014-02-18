@@ -111,12 +111,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
 
-
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
                     package_name = getApkInfoJson.getApk().getPackage();
                     repoName = getApkInfoJson.getApk().getRepo();
                     wUrl = getApkInfoJson.getMeta().getWUrl();
+                    screen = getApkInfoJson.getApk().getMinScreen();
+                    minSdk = getApkInfoJson.getApk().getMinSdk().intValue();
                     Log.d("AppView", "wUrl " + wUrl);
                     boolean showLatestString = false;
                     if (getApkInfoJson.getApk().getIconHd() != null) {
@@ -919,6 +920,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
         package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
         versionName = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERNAME));
+
         String localIcon = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_ICON));
         final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
         downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
@@ -927,7 +929,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         md5 = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_MD5));
         String apkpath = apkCursor.getString(apkCursor.getColumnIndex("apk_path"));
         String path = apkCursor.getString(apkCursor.getColumnIndex("path"));
-        long versionCode = apkCursor.getLong(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
+        versionCode = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
+
 
         float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
 
@@ -942,8 +945,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         ImageLoader.getInstance().displayImage(icon = iconpath + localIcon , appIcon);
         downloadId = md5.hashCode();
-        findViewById(R.id.btinstall).setEnabled(true);
-        findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath+path));
+
 
         GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
@@ -958,6 +960,45 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         cacheKey = package_name + repoName + versionName;
         BusProvider.getInstance().post(publishDetails());
+
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
+
+            if (versionCode > info.versionCode) {
+                isUpdate = true;
+                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
+                findViewById(R.id.btinstall).setEnabled(true);
+                findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path));
+            } else if (versionCode < info.versionCode) {
+
+                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
+                findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
+
+            } else {
+
+                final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
+
+                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.open));
+
+                if (i != null) {
+                    findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(i);
+                        }
+                    });
+
+                } else {
+                    findViewById(R.id.btinstall).setEnabled(false);
+                }
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {
+            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+        }
+
+
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
     }

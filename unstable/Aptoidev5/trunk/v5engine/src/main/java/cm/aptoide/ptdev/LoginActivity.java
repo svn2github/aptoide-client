@@ -65,6 +65,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
     private boolean showPassword = true;
     private CheckBox registerDevice;
+    private boolean hasQueue;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -459,6 +460,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
                     if(checkUserCredentialsJson.getQueue()!=null){
+                        hasQueue = true;
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
                                 .putString("queueName", checkUserCredentialsJson.getQueue())
@@ -523,7 +525,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
-        if(registerDevice.isChecked()) startService(new Intent(this, RabbitMqService.class));
         /*
         ContentResolver wiResolver = getContentResolver();
         wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);
@@ -533,8 +534,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             wiResolver.addPeriodicSync(account, STUB_PROVIDER_AUTHORITY, new Bundle(), WEB_INSTALL_POLL_FREQUENCY);
         }
         */
-
         finish();
+        if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
+
     }
 
     @Override
