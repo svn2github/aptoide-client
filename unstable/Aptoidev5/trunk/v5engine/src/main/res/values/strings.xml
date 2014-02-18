@@ -363,5 +363,6 @@
     <string name="update_username">Update username</string>
     <string name="username_success">Username updated with success.</string>
     <string name="please_update_username">Please update your username to insert comment</string>
+    <string name="no_downloads">No downloads. Start downloading!</string>
 
 </resources>

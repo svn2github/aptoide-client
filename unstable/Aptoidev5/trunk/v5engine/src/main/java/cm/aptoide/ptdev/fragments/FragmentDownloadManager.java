@@ -86,7 +86,7 @@ public class FragmentDownloadManager extends ListFragment {
             adapter.addAdapter(notOngoingAdapter);
 
             DownloadManagerSectionAdapter adapterDownloads = new DownloadManagerSectionAdapter(getActivity(), LayoutInflater.from(getActivity()), adapter);
-
+            setEmptyText(getString(R.string.no_downloads));
             setListAdapter(adapterDownloads);
             getActivity().supportInvalidateOptionsMenu();
 
