@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
@@ -194,16 +195,15 @@ public abstract class FragmentAppView extends Fragment {
             }
 
 
-            publisher.setText(getString(R.string.publisher) +": " + event.getPublisher());
-            size.setText(getString(R.string.size) + ": " + AptoideUtils.formatBytes(event.getSize()));
-            store.setText(getString(R.string.store) + ": " + event.getStore());
-            downloads.setText(getString(R.string.downloads) + ": " + withSuffix(String.valueOf(event.getDownloads())));
-//            rating.setText(getString(R.string.order_popup_lst3) +": "+ event.getRating()+ "/5");
+            publisher.setText(Html.fromHtml("<b>" + getString(R.string.publisher) + "</b>" + ": " + event.getPublisher()));
+            size.setText(Html.fromHtml("<b>" + getString(R.string.size) + "</b>" + ": " + AptoideUtils.formatBytes(event.getSize())));
+            store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": " + event.getStore()));
+            downloads.setText(Html.fromHtml("<b>" + getString(R.string.downloads) + "</b>" + ": " + withSuffix(String.valueOf(event.getDownloads()))));
             rating.setRating(event.getRating());
             rating.setOnRatingBarChangeListener(null);
             rating.setVisibility(View.VISIBLE);
-            likes.setText(getString(R.string.likes) +": " + event.getLikes());
-            dontLikes.setText(getString(R.string.dont_likes) +": " + event.getDontLikes());
+            likes.setText(Html.fromHtml("<b>" + getString(R.string.likes) + "</b>" +  ": " + event.getLikes()));
+            dontLikes.setText(Html.fromHtml("<b>" + getString(R.string.dont_likes) + "</b>" + ": " + event.getDontLikes()));
 
             if(event.getDeveloper() != null){
                 publisherContainer.setVisibility(View.VISIBLE);

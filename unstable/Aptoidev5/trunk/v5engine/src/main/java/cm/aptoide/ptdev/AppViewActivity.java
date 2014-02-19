@@ -788,6 +788,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.applications);
 
         if (savedInstanceState == null) {
 
