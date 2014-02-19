@@ -194,7 +194,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
                                 @Override
                                 public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-
+                                    if(getApkInfoJson == null) return;
                                     Download download = new Download();
                                     download.setId(schDown.getId());
                                     download.setName(schDown.getName());

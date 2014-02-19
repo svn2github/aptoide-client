@@ -89,6 +89,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isFromActivityResult;
     private String wUrl;
     private String md5;
+    private boolean isInstalled;
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -136,14 +137,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     try {
                         PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
-
+                        isInstalled = true;
                         if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
                             isUpdate=true;
                             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
                             findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                         } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
-
                             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
                             findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
 
@@ -168,7 +168,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                         }
-
+                        supportInvalidateOptionsMenu();
 
                     } catch (PackageManager.NameNotFoundException e) {
                         findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
@@ -845,6 +845,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_app_view, menu);
+
+        if(isInstalled){
+            menu.findItem(R.id.menu_uninstall).setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -964,7 +969,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
-
+            isInstalled = true;
             if (versionCode > info.versionCode) {
                 isUpdate = true;
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
@@ -993,6 +998,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     findViewById(R.id.btinstall).setEnabled(false);
                 }
             }
+            supportInvalidateOptionsMenu();
 
         } catch (PackageManager.NameNotFoundException e) {
             findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));

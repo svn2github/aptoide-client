@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -230,6 +231,8 @@ public class MainActivity extends ActionBarActivity implements
         mContext = this;
         setContentView(R.layout.activity_main);
 
+
+
         pager = (ViewPager) findViewById(R.id.pager);
 
         AptoidePagerAdapter adapter = new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
@@ -331,6 +334,7 @@ public class MainActivity extends ActionBarActivity implements
 
                     @Override
                     public void onRequestSuccess(RepositoryChangeJson repositoryChangeJson) {
+
                         for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
                             if (Boolean.parseBoolean(changes.getHasupdates())) {
 //                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
@@ -417,6 +421,7 @@ public class MainActivity extends ActionBarActivity implements
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                 } else if (!getIntent().getBooleanExtra("nodialog", false)) {
                     AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                    pager.setCurrentItem(1);
                 } else {
 
                     Store store = new Store();
@@ -424,7 +429,7 @@ public class MainActivity extends ActionBarActivity implements
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-
+                    pager.setCurrentItem(1);
                 }
 
             }
@@ -432,6 +437,11 @@ public class MainActivity extends ActionBarActivity implements
         }
 
     }
+
+
+
+
+
 
 
 
@@ -448,13 +458,14 @@ public class MainActivity extends ActionBarActivity implements
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                 } else if (!intent.getBooleanExtra("nodialog", false)) {
                     AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                    pager.setCurrentItem(1);
                 } else {
 
                     Store store = new Store();
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-
+                    pager.setCurrentItem(1);
                 }
 
             }
