@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreTopAppsActivity;
 import cm.aptoide.ptdev.R;
@@ -221,6 +222,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             top.addAll(data);
 
             if(getListView().getAdapter()==null){
+
                 if(!data.isEmpty()) setListAdapter(adapter);
             }else{
                 adapter.notifyDataSetChanged();
@@ -258,7 +260,10 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         editorsChoice.addAll(data);
 
         if(getListView().getAdapter()==null){
-            if(!data.isEmpty()) setListAdapter(adapter);
+
+
+
+            if(data.size()>1) setListAdapter(adapter);
         }else{
             adapter.notifyDataSetChanged();
         }

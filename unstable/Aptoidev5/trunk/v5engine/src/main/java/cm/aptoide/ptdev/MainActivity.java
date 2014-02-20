@@ -292,10 +292,6 @@ public class MainActivity extends ActionBarActivity implements
 
             Cursor c = database.getServers();
 
-
-
-
-
             ArrayList<BasicNameValuePair> storesToCheck = new ArrayList<BasicNameValuePair>();
             final HashMap<String, Long> storesIds = new HashMap<String, Long>();
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -333,42 +329,48 @@ public class MainActivity extends ActionBarActivity implements
                     }
 
                     @Override
-                    public void onRequestSuccess(RepositoryChangeJson repositoryChangeJson) {
+                    public void onRequestSuccess(final RepositoryChangeJson repositoryChangeJson) {
 
-                        for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
-                            if (Boolean.parseBoolean(changes.getHasupdates())) {
+                        executorService.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
+                                    if (Boolean.parseBoolean(changes.getHasupdates())) {
 //                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
-                                spiceManager.removeDataFromCache(RepositoryChangeJson.class);
-                                final Store store = new Store();
-                                Cursor c = database.getStore(storesIds.get(changes.getRepo()));
-                                if (c.moveToFirst()) {
-                                    store.setBaseUrl(c.getString(c.getColumnIndex("url")));
-                                    store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
-                                    store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
-                                    store.setDelta(c.getString(c.getColumnIndex("hash")));
-                                    store.setId(c.getLong(c.getColumnIndex("id_repo")));
-                                    if (c.getString(c.getColumnIndex("username")) != null) {
-                                        Login login = new Login();
-                                        login.setUsername(c.getString(c.getColumnIndex("username")));
-                                        login.setPassword(c.getString(c.getColumnIndex("password")));
-                                        store.setLogin(login);
+                                        spiceManager.removeDataFromCache(RepositoryChangeJson.class);
+                                        final Store store = new Store();
+                                        Cursor c = database.getStore(storesIds.get(changes.getRepo()));
+                                        if (c.moveToFirst()) {
+                                            store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                                            store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                                            store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                                            store.setDelta(c.getString(c.getColumnIndex("hash")));
+                                            store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                                            if (c.getString(c.getColumnIndex("username")) != null) {
+                                                Login login = new Login();
+                                                login.setUsername(c.getString(c.getColumnIndex("username")));
+                                                login.setPassword(c.getString(c.getColumnIndex("password")));
+                                                store.setLogin(login);
+                                            }
+
+                                        }
+                                        c.close();
+                                        try {
+                                            executorService.submit(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    service.startParse(database, store, false);
+                                                }
+                                            });
+                                        } catch (RejectedExecutionException e) {
+                                        }
+
                                     }
 
                                 }
-                                c.close();
-                                try {
-                                    executorService.submit(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            service.startParse(database, store, false);
-                                        }
-                                    });
-                                } catch (RejectedExecutionException e) {
-                                }
-
                             }
+                        });
 
-                        }
 
                     }
                 });

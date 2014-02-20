@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,8 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
+
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -181,7 +184,7 @@ public class SearchManager extends ActionBarActivity {
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
             cursorAdapter.swapCursor(data);
             TextView foundResults = (TextView) v.findViewById(android.R.id.text1);
             if(data.getCount()>0){
@@ -191,6 +194,25 @@ public class SearchManager extends ActionBarActivity {
             }
             setListAdapter(adapter);
             setEmptyText(getString(R.string.no_search_result, query));
+
+            Handler handler = new Handler();
+
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+
+                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+
+
+
         }
 
         @Override

@@ -208,7 +208,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
                     EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme),
-                    "list".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
+                    "grid".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );
             Log.d("Aptoide-", "Added store");

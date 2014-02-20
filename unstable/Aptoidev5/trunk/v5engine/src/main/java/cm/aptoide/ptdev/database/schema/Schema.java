@@ -236,6 +236,9 @@ public class Schema {
         @ColumnDefinition(type = SQLType.BOOLEAN)
         public final static String COLUMN_IS_USER = "is_user";
 
+        @ColumnDefinition(type = SQLType.BOOLEAN)
+        public final static String COLUMN_FAILED = "is_failed";
+
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
 

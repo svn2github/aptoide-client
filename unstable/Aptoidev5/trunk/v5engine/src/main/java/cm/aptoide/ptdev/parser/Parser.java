@@ -2,10 +2,12 @@ package cm.aptoide.ptdev.parser;
 
 
 import android.app.Application;
+import android.content.ContentValues;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
@@ -91,6 +93,9 @@ public class Parser{
                 if(threadPoolIsIdle() && poolEndedCallback!=null){
                     poolEndedCallback.onEnd();
                 }
+                if(handler instanceof HandlerInfoXml){
+                    new Database(Aptoide.getDb()).setFailedRepo(repoId);
+                }
                 if (errorCallback != null) errorCallback.onError(spiceException, repoId);
             }
 
@@ -113,6 +118,9 @@ public class Parser{
 
                             if(handler instanceof HandlerInfoXml){
                                 ((HandlerInfoXml)handler).setFile(file);
+                                ContentValues values = new ContentValues();
+                                values.putNull("is_failed");
+                                Aptoide.getDb().update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repoId)});
                             }
 
                             parser.parse(inputStream, handler);

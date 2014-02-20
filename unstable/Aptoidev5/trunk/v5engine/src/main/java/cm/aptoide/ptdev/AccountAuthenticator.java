@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.services.RabbitMqService;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -142,6 +144,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sPref.edit().remove("queueName").commit();
+        mContext.stopService(new Intent(mContext, RabbitMqService.class));
 
         return result;
 

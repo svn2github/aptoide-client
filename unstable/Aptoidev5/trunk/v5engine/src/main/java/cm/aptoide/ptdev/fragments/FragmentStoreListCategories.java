@@ -124,25 +124,34 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         if(parentId==0){
 
-            ArrayList<ListSocialAdapter.SocialObject> objects = new ArrayList<ListSocialAdapter.SocialObject>();
 
-            ListSocialAdapter.SocialObject likes = new ListSocialAdapter.SocialObject();
-            likes.id = EnumCategories.LATEST_LIKES;
-            likes.name = getString(R.string.latest_likes);
+            if(storeId>0){
+
+                ArrayList<ListSocialAdapter.SocialObject> objects = new ArrayList<ListSocialAdapter.SocialObject>();
 
 
-            ListSocialAdapter.SocialObject comments = new ListSocialAdapter.SocialObject();
-            comments.name = getString(R.string.latest_comments);
-            comments.id = EnumCategories.LATEST_COMMENTS;
-            objects.add(likes);
-            objects.add(comments);
+                ListSocialAdapter.SocialObject likes = new ListSocialAdapter.SocialObject();
+                likes.id = EnumCategories.LATEST_LIKES;
+                likes.name = getString(R.string.latest_likes);
 
-            ListSocialAdapter socialAdapter = new ListSocialAdapter(getActivity(), 0, objects);
 
-            mainAdapter.addAdapter(socialAdapter);
+                ListSocialAdapter.SocialObject comments = new ListSocialAdapter.SocialObject();
+                comments.name = getString(R.string.latest_comments);
+                comments.id = EnumCategories.LATEST_COMMENTS;
+
+
+                objects.add(likes);
+                objects.add(comments);
+                ListSocialAdapter socialAdapter = new ListSocialAdapter(getActivity(), 0, objects);
+                mainAdapter.addAdapter(socialAdapter);
+                Log.d("Aptoide-StoreList", "adding social adapter");
+            }else{
+                ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
+            }
 
             setListAdapter(mainAdapter);
         }
+
 
 
 
@@ -178,8 +187,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-
-
 
     }
 
@@ -282,6 +289,12 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         if(data.getCount() > 0) setListShown(true);
 
+        if(new Database(Aptoide.getDb()).isStoreError(getArguments().getLong("storeid")) ){
+            setListAdapter(null);
+            setListShown(true);
+            setEmptyText(getString(R.string.connection_error));
+        }
+
     }
 
     @Override
@@ -307,6 +320,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
             categoryAdapter.swapCursor(null);
         }
 
+
+
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
 
@@ -315,6 +330,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void onError() {
 
+        setEmptyText(getString(R.string.connection_error));
     }
 
     @Override

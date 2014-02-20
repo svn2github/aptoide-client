@@ -1,14 +1,18 @@
 package cm.aptoide.ptdev.services;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -51,8 +55,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
     private SpiceManager spiceManager2 = new SpiceManager(HttpClientSpiceService.class);
-
-
+    private boolean showNotification;
 
 
     @Override
@@ -78,6 +81,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             public void onEnd() {
                 Log.d("Aptoide-", "onEnd");
                 try {
+                    if(showNotification){
+                        showNotification = false;
+                        showUpdatesNotification();
+                    }
                     spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -88,6 +95,64 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         });
 
         return new MainServiceBinder();
+    }
+
+    private void showUpdatesNotification() {
+
+        Cursor data = new Database(Aptoide.getDb()).getUpdates();
+
+        int updates = 0;
+        for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+            if(data.getInt(data.getColumnIndex("is_update"))==1){
+                updates++;
+            }
+        }
+
+        data.close();
+
+        if(updates>0){
+                NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                int icon = android.R.drawable.stat_sys_download_done;
+
+
+                if(Aptoide.getConfiguration().getMarketName().equals("Aptoide")){
+                    icon = R.drawable.ic_stat_aptoide_notification;
+                }
+
+
+                CharSequence tickerText = getString(R.string.has_updates, Aptoide.getConfiguration().getMarketName());
+                long when = System.currentTimeMillis();
+
+                Context context = getApplicationContext();
+                CharSequence contentTitle = Aptoide.getConfiguration().getMarketName();
+                CharSequence contentText = getString(R.string.new_updates, updates);
+                if(updates==1){
+                    contentText = getString(R.string.one_new_update, updates);
+                }
+
+
+                Intent notificationIntent = new Intent();
+
+                notificationIntent.setClassName(getPackageName(), getPackageName()+".MainActivity");
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                notificationIntent.setAction("");
+
+
+                notificationIntent.putExtra("new_updates", true);
+
+
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification notification = new NotificationCompat.Builder(this)
+                        .setSmallIcon(icon)
+                        .setContentTitle(contentTitle)
+                        .setContentText(contentText)
+                        .setContentIntent(contentIntent)
+                        .setTicker(tickerText)
+                        .build();
+                managerNotification.notify(172354, notification);
+
+        }
     }
 
     @Override
@@ -103,6 +168,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         this.parser = parser;
     }
 
+    public void setShowNotification(boolean showNotification) {
+        this.showNotification = showNotification;
+    }
 
     public boolean repoIsParsing(long id){
         return handlerBundleSparseArray.get((int) id)!=null;
@@ -153,6 +221,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceManager2.shouldStop();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        beginParse(db, store, id);
+                    }
+                }).start();
             }
 
             @Override
@@ -215,7 +289,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     private void beginParse(Database db, Store store, long id) {
         Log.d("Aptoide-Parser", "Creating Objects");
-
+        if(handlerBundleSparseArray.get((int) store.getId())!=null){
+            return;
+        }
         db.updateStore(store);
         BusProvider.getInstance().post(produceRepoAddedEvent());
 

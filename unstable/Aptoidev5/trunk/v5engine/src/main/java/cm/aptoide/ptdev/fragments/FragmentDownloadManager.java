@@ -61,6 +61,8 @@ public class FragmentDownloadManager extends ListFragment {
         BusProvider.getInstance().register(this);
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -73,27 +75,17 @@ public class FragmentDownloadManager extends ListFragment {
         service = callback.getDownloadService();
 
         if(service!=null){
-            ongoingList = new ArrayList<Download>();
+
             ongoingList.addAll(service.getAllActiveDownloads());
-            notOngoingList = new ArrayList<Download>();
             notOngoingList.addAll(service.getAllNotActiveDownloads());
-            adapter = new MergeAdapter();
-
-            ongoingAdapter = new OngoingAdapter(getActivity(), ongoingList);
-            notOngoingAdapter = new NotOngoingAdapter(getActivity(), notOngoingList);
-
-            adapter.addAdapter(ongoingAdapter);
-            adapter.addAdapter(notOngoingAdapter);
-
-            DownloadManagerSectionAdapter adapterDownloads = new DownloadManagerSectionAdapter(getActivity(), LayoutInflater.from(getActivity()), adapter);
-            setEmptyText(getString(R.string.no_downloads));
-            setListAdapter(adapterDownloads);
+            adapter.notifyDataSetChanged();
             getActivity().supportInvalidateOptionsMenu();
 
         }
 
 
     }
+
 
     @Override
     public void onStop() {
@@ -105,12 +97,24 @@ public class FragmentDownloadManager extends ListFragment {
 
     OngoingAdapter ongoingAdapter;
     NotOngoingAdapter notOngoingAdapter;
-    ArrayList<Download> ongoingList;
+    ArrayList<Download> ongoingList  = new ArrayList<Download>();
     ArrayList<Download> notOngoingList = new ArrayList<Download>();
+    DownloadManagerSectionAdapter sectionAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        adapter = new MergeAdapter();
+
+        ongoingAdapter = new OngoingAdapter(getActivity(), ongoingList);
+        notOngoingAdapter = new NotOngoingAdapter(getActivity(), notOngoingList);
+
+        adapter.addAdapter(ongoingAdapter);
+        adapter.addAdapter(notOngoingAdapter);
+
+        sectionAdapter = new DownloadManagerSectionAdapter(getActivity(), getActivity().getLayoutInflater(), ongoingAdapter);
+
+        setListAdapter(sectionAdapter);
     }
 
     @Override
@@ -145,15 +149,14 @@ public class FragmentDownloadManager extends ListFragment {
     @Subscribe
     public void onDownloadStatus(DownloadEvent event){
 
+
         ongoingList.clear();
         notOngoingList.clear();
-
         ongoingList.addAll(service.getAllActiveDownloads());
         notOngoingList.addAll(service.getAllNotActiveDownloads());
 
-        ongoingAdapter.notifyDataSetChanged();
-        notOngoingAdapter.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
+
         getActivity().supportInvalidateOptionsMenu();
         Log.d("Aptoide-DownloadManager", "On Download Status");
 
@@ -185,6 +188,8 @@ public class FragmentDownloadManager extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+
+        setEmptyText(getString(R.string.no_downloads));
 
     }
 }

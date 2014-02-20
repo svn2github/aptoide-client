@@ -349,8 +349,7 @@ public class DownloadService extends Service {
 
         @Override
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-
-            startDownloadFromJson(getApkInfoJson, id, download);
+            if(getApkInfoJson!=null) startDownloadFromJson(getApkInfoJson, id, download);
 
         }
     }

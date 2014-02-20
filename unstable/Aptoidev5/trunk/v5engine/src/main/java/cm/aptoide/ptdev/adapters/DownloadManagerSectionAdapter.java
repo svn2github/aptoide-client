@@ -30,8 +30,9 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
-            super.onChanged();
             updateSessionCache();
+
+            super.onChanged();
         }
 
         @Override

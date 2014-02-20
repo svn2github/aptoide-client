@@ -110,6 +110,7 @@ public class AddStoreDialog extends DialogFragment {
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+            dismissDialog();
             Toast.makeText(getActivity(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 

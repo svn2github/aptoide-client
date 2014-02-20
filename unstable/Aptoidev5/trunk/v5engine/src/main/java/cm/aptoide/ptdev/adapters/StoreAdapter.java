@@ -75,7 +75,13 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
         }
 
         if(getItemId(position)>0){
-            ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
+
+            if(storeItem.getStoreAvatar()!=null && storeItem.getStoreAvatar().length()>0){
+                ImageLoader.getInstance().displayImage(storeItem.getStoreAvatar(),avatarImage);
+            }else{
+                ImageLoader.getInstance().displayImage("drawable://"+R.drawable.repo_default,avatarImage);
+            }
+
         }else{
             avatarImage.setImageResource(R.drawable.avatar_apps);
         }

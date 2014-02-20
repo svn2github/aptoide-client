@@ -133,7 +133,7 @@ public class StoreActivity extends ActionBarActivity {
         Fragment fragment;
 
 
-        if(getIntent().getBooleanExtra("list", false)){
+        if(!getIntent().getBooleanExtra("list", true)){
             fragment = new FragmentStoreListCategories();
         }else{
             fragment = new FragmentStoreGridCategories();
@@ -285,8 +285,12 @@ public class StoreActivity extends ActionBarActivity {
     @Subscribe
     public void onStoreError(RepoErrorEvent event) {
         if (event.getRepoId() == storeid) {
-
-            refreshList();
+            FragmentStore fragStoreHeader = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStoreHeader");
+            fragStoreHeader.onError();
+            FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
+            fragStore.onError();
+            fragStore.onRefresh();
+            fragStore.setRefreshing(service.repoIsParsing(storeid));
         }
     }
 
@@ -295,7 +299,6 @@ public class StoreActivity extends ActionBarActivity {
     }
 
     private void refreshList() {
-
         isRefreshing = service.repoIsParsing(storeid);
         FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
         fragStore.onRefresh();

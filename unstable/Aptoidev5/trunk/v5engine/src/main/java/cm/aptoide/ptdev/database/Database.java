@@ -1091,4 +1091,46 @@ public class Database {
         database.delete(Schema.RollbackTbl.getName(), null, null);
     }
 
+    public void setFailedRepo(long repoId) {
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.Repo.COLUMN_FAILED, 1);
+        database.update(Schema.Repo.getName(), values, Schema.Repo.COLUMN_ID + " = ?", new String[]{String.valueOf(repoId)});
+
+    }
+
+    public boolean isStoreError(long storeid) {
+
+        Cursor c = database.rawQuery("select 1 from repo where id_repo = ? and is_failed = 1 and hash IS NULL", new String[]{String.valueOf(storeid)});
+
+        boolean isStoreError = c.moveToFirst();
+        c.close();
+
+        return isStoreError;
+    }
+
+    public ArrayList<Number> getFailedStores() {
+
+        ArrayList<Number> ids = new ArrayList<Number>();
+        Cursor c = database.rawQuery("select id_repo from repo where is_failed = 1 and hash IS NULL", null);
+
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            ids.add(c.getLong(c.getColumnIndex("id_repo")));
+        }
+
+        c.close();
+
+        return ids;
+    }
+
+    public boolean isRepoParsed(long storeId) {
+
+        Cursor c = database.rawQuery("select 1 from repo where id_repo = ? and hash IS NOT NULL", new String[]{String.valueOf(storeId)});
+
+        boolean result = c.moveToFirst();
+
+        c.close();
+        return result;
+    }
 }

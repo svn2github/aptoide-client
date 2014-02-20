@@ -17,7 +17,7 @@ public class Constants {
     public static final String LOGIN_USER_USERNAME = "userName";
     public static final String LOGIN_DEFAULT_REPO = "defaultRepo";
 
-    public static final String WEBINSTALL_HOST = "frontend6.aptoide.com";
+    public static final String WEBINSTALL_HOST = "amqp.webservices.aptoide.com";
     public static final String WEBINSTALL_QUEUE_NAME = "queueName";
     public static final String WEBINSTALL_SERVICE_RUNNING = "wiServiceRunning";
     public static final String WEBINSTALL_QUEUE_EXCLUDED =  "wiQueueExcluded";

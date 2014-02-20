@@ -364,5 +364,8 @@
     <string name="username_success">Username updated with success.</string>
     <string name="please_update_username">Please update your username to insert comment</string>
     <string name="no_downloads">No downloads. Start downloading!</string>
+    <string name="new_updates">There are %s new updates available!</string>
+    <string name="one_new_update">There is %s new update available!</string>
+    <string name="has_updates">%s has new updates available!</string>
 
 </resources>
