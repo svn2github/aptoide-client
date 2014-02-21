@@ -162,9 +162,12 @@ public class RabbitMqService extends Service {
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
         try {
             isRunning = false;
-            if(channel!=null) channel.close();
-            connection.disconnectChannel(channel);
-            connection.close();
+            if(connection != null && connection.isOpen()){
+                channel.close();
+                connection.disconnectChannel(channel);
+                connection.close();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ShutdownSignalException e){

@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
@@ -33,8 +34,8 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
+            Log.d("Aptoide-TopAppsActivity", "ServiceBound");
             downloadService = ((DownloadService.LocalBinder) binder).getService();
-
         }
 
         @Override
@@ -48,6 +49,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
+        bindService(new Intent(this, DownloadService.class), conn, Context.BIND_AUTO_CREATE);
 
         Fragment fragment = new MoreTopAppsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
@@ -56,7 +58,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.more_top_apps));
-        bindService(new Intent(this, DownloadManager.class), conn, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override

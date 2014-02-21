@@ -68,7 +68,9 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
                 download.getParent().remove();
             }
         });
-
+        if(v==null){
+            Log.e("Aptoide-Section", "View is null");
+        }
         return v;
     }
 }

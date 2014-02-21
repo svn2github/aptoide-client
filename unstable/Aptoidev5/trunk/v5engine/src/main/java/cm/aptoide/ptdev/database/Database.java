@@ -1,11 +1,14 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.HomeItem;
@@ -1073,6 +1076,8 @@ public class Database {
         values.put(Schema.Scheduled.COLUMN_REPO, repoName);
         values.put(Schema.Scheduled.COLUMN_ICON, icon);
         values.put(Schema.Scheduled.COLUMN_MD5, md5);
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+        sPref.edit().putBoolean("schTrigger", true).commit();
 
         database.insert(Schema.Scheduled.getName(), null, values);
 

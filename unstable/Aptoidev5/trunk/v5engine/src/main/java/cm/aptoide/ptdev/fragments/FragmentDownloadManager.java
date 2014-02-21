@@ -75,7 +75,8 @@ public class FragmentDownloadManager extends ListFragment {
         service = callback.getDownloadService();
 
         if(service!=null){
-
+            ongoingList.clear();
+            notOngoingList.clear();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList.addAll(service.getAllNotActiveDownloads());
             adapter.notifyDataSetChanged();
@@ -112,7 +113,7 @@ public class FragmentDownloadManager extends ListFragment {
         adapter.addAdapter(ongoingAdapter);
         adapter.addAdapter(notOngoingAdapter);
 
-        sectionAdapter = new DownloadManagerSectionAdapter(getActivity(), getActivity().getLayoutInflater(), ongoingAdapter);
+        sectionAdapter = new DownloadManagerSectionAdapter(getActivity(), getActivity().getLayoutInflater(), adapter);
 
         setListAdapter(sectionAdapter);
     }

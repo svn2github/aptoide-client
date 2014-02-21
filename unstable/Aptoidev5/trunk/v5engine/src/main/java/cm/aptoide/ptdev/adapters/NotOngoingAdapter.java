@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,9 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
 
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setVisibility(View.GONE);
-
+        if(v==null){
+            Log.e("Aptoide-Section", "View is null");
+        }
         return v;
     }
 }

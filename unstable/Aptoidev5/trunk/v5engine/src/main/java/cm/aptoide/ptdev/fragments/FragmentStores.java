@@ -315,7 +315,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(mergeStore){
             stores.clear();
-            stores.add(new StoreItem(getString(R.string.all_stores), "", "", EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
+            stores.add(new StoreItem(getString(R.string.all_stores), "", "", EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             refreshStoresEvent(null);

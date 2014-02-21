@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Download;
@@ -30,8 +31,8 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
+            Log.d("Aptoide-SectionAdapter", "Updating session cache");
             updateSessionCache();
-
             super.onChanged();
         }
 
@@ -207,11 +208,22 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     @Override
     public View getView(final int position, final View convertView,
             final ViewGroup parent) {
+        Log.d("Aptoide-SectionAdapter", "GetView " + position);
+
+        View v;
         if (isSection(position)) {
-            return getSectionView(convertView, sectionPositions.get(position));
+            v = getSectionView(convertView, sectionPositions.get(position));
+        } else {
+            v = linkedAdapter.getView(getLinkedPosition(position), convertView, parent);
+
+            if(v==null){
+                Log.e("Aptoide-SectionAdapter", "GetView " + position +" " + " is null as adapter" + linkedAdapter.getClass().getCanonicalName());
+                v = new View(Aptoide.getContext());
+            }
         }
-        return linkedAdapter.getView(getLinkedPosition(position), convertView,
-                parent);
+
+
+        return v;
     }
 
     @Override

@@ -94,38 +94,12 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         sort = ((StoreActivity)getActivity()).getSort();
+
         setRefreshing(((StoreActivity) getActivity()).isRefreshing());
-    }
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mainAdapter = new MergeAdapter();
-        database = new Database(Aptoide.getDb());
-        categoryAdapter = new CategoryAdapter(getActivity());
-        apkAdapter = new CategoryAdapter(getActivity());
-        mainAdapter.addAdapter(categoryAdapter);
-        mainAdapter.addAdapter(apkAdapter);
-
-
-        setHasOptionsMenu(true);
-
-        if(savedInstanceState==null){
-            parentId = getArguments().getLong("parentid");
-            storeId = getArguments().getLong("storeid");
-        }else{
-            parentId = savedInstanceState.getLong("parentid");
-            storeId = savedInstanceState.getLong("storeid");
-        }
-
 
         if(parentId==0){
 
-
-            if(storeId>0){
+            if(storeId>0 && !sort.isNoCategories()){
 
                 ArrayList<ListSocialAdapter.SocialObject> objects = new ArrayList<ListSocialAdapter.SocialObject>();
 
@@ -151,9 +125,31 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
             setListAdapter(mainAdapter);
         }
+    }
 
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mainAdapter = new MergeAdapter();
+        database = new Database(Aptoide.getDb());
+        categoryAdapter = new CategoryAdapter(getActivity());
+        apkAdapter = new CategoryAdapter(getActivity());
+        mainAdapter.addAdapter(categoryAdapter);
+        mainAdapter.addAdapter(apkAdapter);
+
+
+        setHasOptionsMenu(true);
+
+        if(savedInstanceState==null){
+            parentId = getArguments().getLong("parentid");
+            storeId = getArguments().getLong("storeid");
+        }else{
+            parentId = savedInstanceState.getLong("parentid");
+            storeId = savedInstanceState.getLong("storeid");
+        }
 
 
         Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
