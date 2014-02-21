@@ -53,7 +53,7 @@
   <string name="follow_twitter">Segue-nos no Twitter</string>
   <string name="loading_facebook">Carregando Facebook...</string>
   <string name="loading_twitter">Carregando Twitter...</string>
-  <string name="new_to_aptoide">Novo no Aptoide? Crie a sua conta gratuita</string>
+  <string name="new_to_aptoide">Novo no %s? Crie a sua conta gratuita</string>
   <string name="forgot_passwd">Esqueceu a sua passe?</string>
   <string name="check_your_credentials">Verifique as suas credenciais</string>
   <string name="settings_title_bar">Configurações</string>
@@ -64,7 +64,7 @@
   <string name="setting_ethernet">Ethernet</string>
   <string name="setting_filters_title">Filtros</string>
   <string name="setting_hwspecstitle">Especificações de Hardware</string>
-  <string name="setting_hwspecssum">Verifique as especificações do seu dispositivo</string>
+  <string name="setting_hwspecssum">Especificações hardware do seu dispositivo</string>
   <string name="setting_appfiltersum">Esconder aplicações não compatíveis com este dispositivo</string>
   <string name="setting_appfiltertitle">Filtrar Aplicativos</string>
   <string name="setting_dont_show_mature_content">Não mostrar conteúdo adulto</string>
@@ -283,4 +283,8 @@
   <string name="update_self_title">Atualização disponível</string>
   <string name="update_self_msg">Existe uma nova versão de %s disponível,\ndeseja atualizar?</string>
   <string name="retrieving_update">Obtendo o último update...</string>
+  <string name="no_downloads">Não existem downloads. Comece a descarregar agora!</string>
+  <string name="new_updates">Há %s novas atualizações disponíveis!</string>
+  <string name="one_new_update">Há %s nova atualização disponível!</string>
+  <string name="has_updates">%s tem atualização(ões)!</string>
 </resources>

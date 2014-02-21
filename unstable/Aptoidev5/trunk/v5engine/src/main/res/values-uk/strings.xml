@@ -205,4 +205,8 @@
   <string name="update_self_title">Доступно оновлення</string>
   <string name="update_self_msg">Доступна нова версія %s\nви бажаєте оновити?</string>
   <string name="retrieving_update">Отримання оновлення...</string>
+  <string name="no_downloads">Немає активних завантажень. Почніть завантаження!</string>
+  <string name="new_updates">З\'явилися %s нові оновлення!</string>
+  <string name="one_new_update">З\'явилося %s нове оновлення!</string>
+  <string name="has_updates">%s має нове(і) доступне(і) оновлення!</string>
 </resources>

@@ -52,7 +52,7 @@ public class CategoryGridAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard_grid, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_grid, parent, false);

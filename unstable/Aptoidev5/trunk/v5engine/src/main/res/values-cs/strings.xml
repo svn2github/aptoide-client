@@ -208,4 +208,8 @@
   <string name="update_self_title">Dostupná aktualizace</string>
   <string name="update_self_msg">K dispozici je nová verze %s ,\npřejete si aktualizovat?</string>
   <string name="retrieving_update">Načítání aktualizace...</string>
+  <string name="no_downloads">Žádná stahování. Začněte stahovat!</string>
+  <string name="new_updates">Je dostupných %s nových aktualizací!</string>
+  <string name="one_new_update">Je dostupná nová aktualizace %s !</string>
+  <string name="has_updates">%s nových aktualizací!!</string>
 </resources>

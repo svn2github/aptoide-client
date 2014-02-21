@@ -6,6 +6,7 @@
   <string name="WidgetProvider_timestamp_hours_ago">prije %s sati</string>
   <string name="WidgetProvider_timestamp_minutes_ago">prije %s minuta</string>
   <string name="WidgetProvider_timestamp_just_now">Upravo</string>
+  <string name="action_contact">Kontakt:</string>
   <string name="installed_tab">Instalirano</string>
   <string name="update">Azuriranja</string>
   <string name="uninstall">Ukloni</string>
@@ -56,15 +57,21 @@
   <string name="menu_context_reparse">Osvježi</string>
   <string name="menu_context_remove">Ukloni</string>
   <string name="share">Podijeli</string>
+  <string name="settings">Postavke</string>
   <string name="no_sch_downloads">Nema zakazanih preuzimanja!</string>
   <string name="schDown_installselected">Instalirati Odabrano</string>
   <string name="stores">Store-ovi</string>
   <string name="store_name">Ime Store-a</string>
   <string name="setcredentials">Prijava</string>
+  <string name="rollback_installed">Instalirano</string>
+  <string name="rollback_uninstalled">Ukloni</string>
+  <string name="rollback_updated">Azuriranja</string>
+  <string name="rollback_downgraded">Preuzimanja</string>
   <string name="install">Instaliraj</string>
   <string name="rate_this_app">Ocijeni ovu aplikaciju</string>
   <string name="download_manager">Upravitelj Preuzimanja</string>
   <string name="updates_tab">Ažuriranja</string>
+  <string name="home">Naslovnica:</string>
   <string name="update_all">Ažuriraj sve</string>
   <string name="username">Email</string>
   <string name="password">Zaporka</string>
@@ -95,10 +102,14 @@
   <string name="installapp_alrt">Želite li instalirati: \n\n</string>
   <string name="starting_download">Pokretanje preuzimanja</string>
   <string name="newrepo_alrt">Želite li dodati ovaj store na svoju listu?\n\n</string>
+  <string name="downloads">Preuzimanja</string>
   <string name="size">Veličina</string>
+  <string name="likes">Sviđa mi se</string>
+  <string name="dont_likes">Ne sviđa mi se</string>
   <string name="store">Store</string>
   <string name="exclude_update">Zanemari Ažuriranje</string>
   <string name="trusted">Pouzdan</string>
+  <string name="downgrade">Preuzimanja</string>
   <string name="open">Otvori</string>
   <string name="scanned_with_av">Skenirano sa Anti-Virusom:</string>
   <string name="about_aptoide_antimalware">Aptoide Anti-Malware platforma analizira aplikacije pri izvođenju i onemogućava potencijalne prijetnje u svim store-ovima. Ovaj sistem skenira sve nove aplikacijske datoteke iz store-ova i certificira ih usporedbom sa drugim Android Trgovinama.</string>
@@ -111,6 +122,11 @@
   <string name="schDown_install">Želite li instalirati sva zakazana preuzimanja?</string>
   <string name="applications">Aplikacije:</string>
   <string name="racing">Po ocjeni</string>
+  <string name="editors_choice_new">Izbor Urednika</string>
   <string name="editors_choice">Izbor Urednika</string>
   <string name="top_apps">Najpopularnije Aplikacije</string>
+  <string name="reinstall">Ukloni</string>
+  <string name="error_SYS_1">Pojavila se greška. Molimo pokušajte ponovo</string>
+  <string name="more_editors_choice">Izbor Urednika</string>
+  <string name="no_downloads">Nema preuzimanja. Počnite preuzimati!</string>
 </resources>

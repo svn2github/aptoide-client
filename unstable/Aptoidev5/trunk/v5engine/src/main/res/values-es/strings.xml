@@ -6,14 +6,14 @@
   <string name="WidgetProvider_timestamp_hours_ago">hace %s horas</string>
   <string name="WidgetProvider_timestamp_minutes_ago">hace %s minutos</string>
   <string name="WidgetProvider_timestamp_just_now">Justo ahora</string>
-  <string name="WidgetProvider_timestamp_weeks_ago">hace % semanas atras</string>
-  <string name="WidgetProvider_timestamp_week_ago">% semana atras</string>
-  <string name="timestamp_months">% meses</string>
-  <string name="timestamp_month">% mes</string>
-  <string name="timestamp_weeks">% semanas</string>
-  <string name="timestamp_week">% semana</string>
-  <string name="timestamp_days">% dias</string>
-  <string name="timestamp_day">% dia</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">hace %s semanas atras</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s semana atras</string>
+  <string name="timestamp_months">%s meses</string>
+  <string name="timestamp_month">%s mes</string>
+  <string name="timestamp_weeks">%s semanas</string>
+  <string name="timestamp_week">%s semana</string>
+  <string name="timestamp_days">%s dias</string>
+  <string name="timestamp_day">%s dia</string>
   <string name="action_contact">Contacto</string>
   <string name="installed_tab">Instaladas</string>
   <string name="update">Actualizar</string>
@@ -53,7 +53,7 @@
   <string name="follow_twitter">Síguenos en Twitter</string>
   <string name="loading_facebook">Cargando Facebook...</string>
   <string name="loading_twitter">Cargando Twitter...</string>
-  <string name="new_to_aptoide">¿Nuevo en Aptoide? Crea una nueva cuenta gratis</string>
+  <string name="new_to_aptoide">¿Nuevo en %s? Crea una nueva cuenta gratis</string>
   <string name="forgot_passwd">¿Olvidaste tu contraseña?</string>
   <string name="check_your_credentials">Comprueba tus credenciales</string>
   <string name="settings_title_bar">Configuración</string>
@@ -342,4 +342,8 @@
   <string name="update_self_title">Actualización disponible</string>
   <string name="update_self_msg">Hay una nueva versión de aptoide disponible,\n¿Desea actualizarla?</string>
   <string name="retrieving_update">Recuperando actualización...</string>
+  <string name="no_downloads">No hay ninguna descarga. ¡Comienza a descargar!</string>
+  <string name="new_updates">¡Hay %s nuevas actualizaciones disponibles!</string>
+  <string name="one_new_update">¡Hay %s actualización disponible!</string>
+  <string name="has_updates">¡%s tiene nuevas actualizaciones disponibles!</string>
 </resources>

@@ -181,4 +181,5 @@
   <string name="more_editors_choice">Alegerea Editorului</string>
   <string name="update_self_title">Actualizare disponibilă</string>
   <string name="update_self_msg">Este disponibilă o versiune nouă de %s,\nvreţi să actualizaţi?</string>
+  <string name="no_downloads">Nici o descarcare. Incepe descarcarea!</string>
 </resources>

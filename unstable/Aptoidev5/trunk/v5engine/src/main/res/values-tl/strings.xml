@@ -205,4 +205,8 @@
   <string name="update_self_title">May makukuhang update</string>
   <string name="update_self_msg">Mayroong makukuhang bagong bersyon ng %s,\ngusto mo bang i-update?</string>
   <string name="retrieving_update">Kinukuha ang update...</string>
+  <string name="no_downloads">Walang mga download. Simulang magdownload!</string>
+  <string name="new_updates">Mayroong %s mga bagong update!</string>
+  <string name="one_new_update">Mayroong %s bagong update!</string>
+  <string name="has_updates">Ang %s ay mayroong (mga) bagong update!</string>
 </resources>

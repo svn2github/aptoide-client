@@ -53,7 +53,7 @@
   <string name="follow_twitter">Seguici su Twitter</string>
   <string name="loading_facebook">Caricando Facebook...</string>
   <string name="loading_twitter">Caricando Twitter...</string>
-  <string name="new_to_aptoide">Nuovo qui su Aptoide? Crea un account gratuito</string>
+  <string name="new_to_aptoide">Nuovo qui su %s? Crea un account gratuito</string>
   <string name="forgot_passwd">Password dimenticata?</string>
   <string name="check_your_credentials">Controlla le tue credenziali</string>
   <string name="settings_title_bar">Impostazioni</string>
@@ -303,7 +303,7 @@
   <string name="wizard_secure_fast_reliable">Sicuro. Veloce. Affidabile.</string>
   <string name="wizard_next">Avanti</string>
   <string name="wizard_prev">Indietro</string>
-  <string name="create_username">Username</string>
+  <string name="create_username">Nome utente</string>
   <string name="all_stores">Tutti gli Store</string>
   <string name="incompatible_store">Store incompatibile</string>
   <string name="incompatible_store_msg">Questo store non è ancora compatibile con questa versione di Aptoide. Per favore attendi alcuni giorni finché non ricostruiamo tutti gli store.</string>
@@ -339,7 +339,16 @@
   <string name="download_error">Errore</string>
   <string name="try_again">Riprova</string>
   <string name="clear">Pulisci</string>
+  <string name="link_device_webinstall">Collega account con Webinstall</string>
   <string name="update_self_title">Aggiornamento disponibile</string>
   <string name="update_self_msg">Una nuova versione di %s è disponibile,\ndesideri aggiornare?</string>
   <string name="retrieving_update">Recupero dell\'aggiornamento...</string>
+  <string name="no_related">Nessuna app correlata trovata.</string>
+  <string name="update_username">Aggiorna nome utente</string>
+  <string name="username_success">Nome utente aggiornato con successo.</string>
+  <string name="please_update_username">Per favore aggiorna il tuo nome utente per inserire commenti</string>
+  <string name="no_downloads">Nessun download. Inizia a scaricare!</string>
+  <string name="new_updates">Ci sono %s nuovi aggiornamenti possibili!</string>
+  <string name="one_new_update">C\'è %s nuovo aggiornamento disponibile!</string>
+  <string name="has_updates">%s ha nuovi aggiornamenti disponibili!</string>
 </resources>

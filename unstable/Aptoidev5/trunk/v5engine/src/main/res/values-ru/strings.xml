@@ -206,4 +206,8 @@
   <string name="update_self_title">"Обновление доступно "</string>
   <string name="update_self_msg">Новая версия %s доступна \nВы хотите обновить?</string>
   <string name="retrieving_update">Получение обновления</string>
+  <string name="no_downloads">Нет загрузок. Начать загрузку!</string>
+  <string name="new_updates">Новые обновления для %s доступны</string>
+  <string name="one_new_update">Новое обновление для %s доступно</string>
+  <string name="has_updates">Новые обновления для %s доступны</string>
 </resources>

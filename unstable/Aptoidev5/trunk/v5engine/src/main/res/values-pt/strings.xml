@@ -53,7 +53,7 @@
   <string name="follow_twitter">Siga-nos no Twitter</string>
   <string name="loading_facebook">A carregar o Facebook...</string>
   <string name="loading_twitter">A carregar o Twitter...</string>
-  <string name="new_to_aptoide">Novo no Aptoide? Crie uma conta gratuita</string>
+  <string name="new_to_aptoide">Novo em %s? Crie uma conta gratuita</string>
   <string name="forgot_passwd">Esqueceu-se da palavra passe?</string>
   <string name="check_your_credentials">Verifique as suas credenciais</string>
   <string name="settings_title_bar">Configurações</string>
@@ -76,6 +76,7 @@
   <string name="setting_screen_size">Tamanho do ecrã</string>
   <string name="setting_esgl_version">Versão GLES</string>
   <string name="screenCode">Código de ecrã</string>
+  <string name="cpuAbi">CPU</string>
   <string name="setting_schdwninstalltitle">Instalação automática</string>
   <string name="setting_clear_memory">Apagar memoria</string>
   <string name="clearcontent_title">Remover dados e configurações do Aptoide</string>
@@ -134,10 +135,12 @@
   <string name="search_other_stores">Ou procurar por outras...</string>
   <string name="see_top_stores">Ver Lojas Principais</string>
   <string name="setcredentials">Iniciar sessão</string>
+  <string name="rollback">Rollback</string>
   <string name="rollback_empty">Sem apps para reverter</string>
   <string name="rollback_installed">Instalado</string>
   <string name="rollback_uninstalled">Desinstalado</string>
   <string name="rollback_updated">Actualizado</string>
+  <string name="rollback_downgraded">Downgraded</string>
   <string name="install">Instalar</string>
   <string name="get_latest_version">Obter Última</string>
   <string name="get_latest_version_and_trusted">Obter Última e Verificada</string>
@@ -212,6 +215,7 @@
   <string name="exclude_update">Ignorar Actualização</string>
   <string name="trusted">Verificada</string>
   <string name="warning">Crítico</string>
+  <string name="downgrade">Downgrade</string>
   <string name="open">Abrir</string>
   <string name="scanned_with_av">Verificado com:</string>
   <string name="compared_with_another_marketplace">Comparado com outro Android Marketplace:</string>
@@ -289,6 +293,8 @@
   <string name="wizard_search_local">Aplicações disponíveis nas lojas locais</string>
   <string name="wizard_search_online">Procurar noutras lojas na página Aptoide</string>
   <string name="wizard_new_layout">1- Nova apresentação</string>
+  <string name="wizard_rollback">2- Rollback</string>
+  <string name="wizard_widget">3- Widget</string>
   <string name="wizard_new_account">4- Gestão de Conta</string>
   <string name="wizard_add_more_stores">Adicionar novas lojas Android</string>
   <string name="wizard_rollback_description">Reinstalar ou reverter as aplicações</string>
@@ -338,4 +344,11 @@
   <string name="update_self_msg">Existe uma nova versão de %sQuer actualizar agora?</string>
   <string name="retrieving_update">A obter a actualização...</string>
   <string name="no_related">Sem aplicações relacionadas.</string>
+  <string name="update_username">Actualizar o nome de utilizador</string>
+  <string name="username_success">Nome de utilizador actualizado com sucesso.</string>
+  <string name="please_update_username">Por favor actualize o nome de utilizador para inserir um comentário</string>
+  <string name="no_downloads">Sem downloads. Inicie transferências!</string>
+  <string name="new_updates">Há %s novas actualizações disponíveis!</string>
+  <string name="one_new_update">Há %s nova actualização disponível!</string>
+  <string name="has_updates">%s tem novas actualizações!</string>
 </resources>

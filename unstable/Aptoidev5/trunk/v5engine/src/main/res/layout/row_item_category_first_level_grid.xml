@@ -8,15 +8,14 @@
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
-             android:layout_height="match_parent"
+             android:layout_height="wrap_content"
              style="?attr/customRowForeground">
 
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/row_grid_background"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="160dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="2dp"
@@ -29,40 +28,31 @@
                 android:id="@+id/category_first_level_icon"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical" android:layout_centerHorizontal="true"/>
 
-        <LinearLayout
-                android:layout_width="fill_parent"
+        <TextView
+                android:id="@+id/category_first_level_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical">
-
-            <TextView
-                    android:id="@+id/category_first_level_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="Applications"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                    android:id="@+id/category_first_level_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="Number"
-                    android:textSize="10sp"
-                    android:layout_gravity="center|left"/>
-        </LinearLayout>
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Applications"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_below="@+id/category_first_level_icon" android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+        <TextView
+                android:id="@+id/category_first_level_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Number"
+                android:textSize="10sp"
+                android:layout_gravity="center|left" android:layout_below="@+id/category_first_level_name"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

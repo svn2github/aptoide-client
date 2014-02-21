@@ -53,7 +53,7 @@
   <string name="follow_twitter">Ακολουθήστε μας στο Twitter</string>
   <string name="loading_facebook">Φόρτωση Facebook...</string>
   <string name="loading_twitter">Φόρτωση Twitter...</string>
-  <string name="new_to_aptoide">Νέος στο Aptoide? Δημιουργήστε έναν δωρεάν λογαριασμό</string>
+  <string name="new_to_aptoide">Νέος στο Aptoide? Δημιουργήστε ένα δωρεάν λογαριασμό</string>
   <string name="forgot_passwd">Ξεχάσατε τον κωδικό?</string>
   <string name="check_your_credentials">Ελέγξτε τα διαπιστευτήριά σας</string>
   <string name="settings_title_bar">Ρυθμίσεις</string>
@@ -193,7 +193,7 @@
   <string name="restore">Εγκατάσταση</string>
   <string name="x_app">%d εφαρμογή</string>
   <string name="x_apps">%d εφαρμογές</string>
-  <string name="aptoide_downloading">%s κατεβάζει</string>
+  <string name="aptoide_downloading">%s κατεβαίνει</string>
   <string name="min_sdk">Min SDK</string>
   <string name="min_screen">Min Screen</string>
   <string name="found_results">Βρέθηκαν %s αποτελέσμα(τα)</string>
@@ -339,7 +339,16 @@
   <string name="download_error">Σφάλμα</string>
   <string name="try_again">Προσπαθήστε ξανά</string>
   <string name="clear">Καθαρισμός</string>
+  <string name="link_device_webinstall">Σύνδεση λογαριασμού με Webinstall</string>
   <string name="update_self_title">Ενημέρωση διαθέσιμη</string>
   <string name="update_self_msg">Υπάρχει νέα έκδοση της %s διαθέσιμη,\nθέλετε να ενημερώσετε?</string>
   <string name="retrieving_update">Ανάκτηση ενημέρωσης...</string>
+  <string name="no_related">Δεν βρέθηκαν σχετικές εφαρμογές.</string>
+  <string name="update_username">Ενημερώστε το όνομα χρήστη</string>
+  <string name="username_success">Το όνομα χρήστη ενημερώθηκε επιτυχώς.</string>
+  <string name="please_update_username">Παρακαλώ ενημερώστε το όνομα χρήστη σας για να εισάγετε σχόλιο</string>
+  <string name="no_downloads">Καμία λήψη. Ξεκινήστε τις λήψεις!</string>
+  <string name="new_updates">Υπάρχουν %s νέες ενημερώσεις διαθέσιμες!</string>
+  <string name="one_new_update">Υπάρχει %s νέα ενημέρωση διαθέσιμη!</string>
+  <string name="has_updates">%s έχει νέα ενημέρωση διαθέσιμη!</string>
 </resources>

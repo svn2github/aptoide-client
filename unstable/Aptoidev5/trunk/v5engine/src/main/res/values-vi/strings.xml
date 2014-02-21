@@ -205,4 +205,8 @@
   <string name="update_self_title">Cập nhật hiện có</string>
   <string name="update_self_msg">Hiện có một phiên bản mới của %s,\nbạn có muốn cập nhật không?</string>
   <string name="retrieving_update">Đang khôi phục cập nhật...</string>
+  <string name="no_downloads">Không có tài về. Bắt đầu tải về ngay!</string>
+  <string name="new_updates">Hiện có %s bản cập nhật mới!</string>
+  <string name="one_new_update">Hiện có %s bản cập nhật mới!</string>
+  <string name="has_updates">%s hiện có bản cập nhật mới!</string>
 </resources>

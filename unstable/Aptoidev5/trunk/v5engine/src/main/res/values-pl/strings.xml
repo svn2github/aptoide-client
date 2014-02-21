@@ -53,7 +53,7 @@
   <string name="follow_twitter">Podążaj za nami na Twitterze</string>
   <string name="loading_facebook">Otwieram Facebook...</string>
   <string name="loading_twitter">Otwieram Twitter...</string>
-  <string name="new_to_aptoide">Nowy w Aptoide? Stwórz darmowe konto</string>
+  <string name="new_to_aptoide">Nowy w %s? Stwórz darmowe konto</string>
   <string name="forgot_passwd">Zapomniałeś hasło?</string>
   <string name="check_your_credentials">Sprawdź swoje poświadczenia</string>
   <string name="settings_title_bar">Ustawienia</string>
@@ -334,4 +334,8 @@
   <string name="update_self_title">Dostępne jest uaktualnienie</string>
   <string name="update_self_msg">Dostępna jest nowa wersja %s,\nczy chcesz uaktualnić?</string>
   <string name="retrieving_update">Pobieranie uaktualnienia...</string>
+  <string name="no_downloads">Nic nie pobrałeś - pobierz coś.</string>
+  <string name="new_updates">Dostępne są aktualizacje dla %s!</string>
+  <string name="one_new_update">Dostępna jest aktualizacja dla %s!</string>
+  <string name="has_updates">Dostępne są aktualizacje dla %s!</string>
 </resources>

@@ -304,6 +304,9 @@
   <string name="try_again">נסה שוב</string>
   <string name="clear">נקה</string>
   <string name="update_self_title">עדכון זמין</string>
-  <string name="update_self_msg">גרסה חדשה של %s זמינה, האם ברצונך לעדכן?</string>
+  <string name="update_self_msg">גרסה חדשה של s% זמינה, האם ברצונך לעדכן?</string>
   <string name="retrieving_update">משיג עדכון...</string>
+  <string name="new_updates">יש s% עדכונים זמינים!</string>
+  <string name="one_new_update">יש s% עדכונים זמינים!</string>
+  <string name="has_updates">עדכונים זמינים ב s%</string>
 </resources>

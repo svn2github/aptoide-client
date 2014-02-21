@@ -206,4 +206,8 @@
   <string name="update_self_title">Azhornimi i disponueshëm</string>
   <string name="update_self_msg">Lista e Dyqaneve të aplikacioneve ka ndryshuar.\nDoni ti azhornoni ato?</string>
   <string name="retrieving_update">Merrnim versionin e fundit...</string>
+  <string name="no_downloads">Nuk ka shkarkime. Fillo shkarkimin!</string>
+  <string name="new_updates">Ka %s azhornime të reja të disponueshme!</string>
+  <string name="one_new_update">Ka %s azhornim të ri të disponueshëm!</string>
+  <string name="has_updates">"%s ka  azhornim(e) të reja të disponueshme!"</string>
 </resources>

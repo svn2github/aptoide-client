@@ -53,7 +53,7 @@
   <string name="follow_twitter">Sek mus Twitter\'yje</string>
   <string name="loading_facebook">Krauna Facebook\'ą...</string>
   <string name="loading_twitter">Krauna Twitter\'į...</string>
-  <string name="new_to_aptoide">Aptoide naujokas? Sukurkite nemokamą paskyrą</string>
+  <string name="new_to_aptoide">%s naujokas? Sukurkite nemokamą paskyrą</string>
   <string name="forgot_passwd">Pamiršote slaptažodį?</string>
   <string name="check_your_credentials">Pasitikrinkite savo kvalifikaciją</string>
   <string name="settings_title_bar">Parametrai</string>
@@ -233,6 +233,7 @@
   <string name="error_no_market">Neturite įdiegtos Google partuotuvės!</string>
   <string name="schDown_invertselection">Pasirinkti atvirkščiai</string>
   <string name="schDown_removeselected">Pašalinti parinktuosius</string>
+  <string name="skip">Praleisti</string>
   <string name="schDwnBtn">Planuoti atsisiuntimą</string>
   <string name="schDown_install">Ar norite įdiegti visus suplanuotus atsisiuntimus?</string>
   <string name="applications">Programos</string>
@@ -286,8 +287,17 @@
   <string name="website">Svetainė:</string>
   <string name="reinstall">Pašalinti</string>
   <string name="error_SYS_1">Įvyko klaida. Bandykite dar kartą</string>
-  <string name="more_editors_choice">Redaktoriaus pasirinkimas</string>
+  <string name="more_editors_choice">Daugiau redaktoriaus pasirinkimų</string>
+  <string name="not_found">Nerasta</string>
+  <string name="download_completed">Baigta</string>
+  <string name="download_error">Klaida</string>
+  <string name="try_again">Bandykite dar kartą</string>
+  <string name="clear">Išvalyti</string>
   <string name="update_self_title">Galimas naujinimas</string>
   <string name="update_self_msg">Galima nauja %s versija,\nar norite atnaujinti?</string>
   <string name="retrieving_update">Gaunamas naujinimas...</string>
+  <string name="no_downloads">Nėra atsisiuntimų. Pradėkite siųsti!</string>
+  <string name="new_updates">Yra prieinami %s nauji naujinimai!</string>
+  <string name="one_new_update">Yra prieinamas %s naujas naujinimas!</string>
+  <string name="has_updates">%s turi naujų prieinamų naujinimų!</string>
 </resources>

@@ -205,4 +205,8 @@
   <string name="update_self_title">更新がご利用できます。</string>
   <string name="update_self_msg">%s の新しいバージョンがご利用になれます。更新しますか？</string>
   <string name="retrieving_update">更新を取得中・・・</string>
+  <string name="no_downloads">ダウンロードが一切されていません。ダウンロードを開始してください！</string>
+  <string name="new_updates">%sの新規更新がご利用になれます！</string>
+  <string name="one_new_update">%sの新規更新がご利用になれます！</string>
+  <string name="has_updates">%sの新規更新がご利用できます！</string>
 </resources>

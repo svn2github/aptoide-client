@@ -53,7 +53,7 @@
   <string name="follow_twitter">Folge uns auf Twitter</string>
   <string name="loading_facebook">Facebook wird geladen...</string>
   <string name="loading_twitter">Twitter wird geladen...</string>
-  <string name="new_to_aptoide">Neu bei Aptoide? Erstelle einen kostenloses Konto</string>
+  <string name="new_to_aptoide">Neu bei %s? Erstelle einen kostenloses Konto</string>
   <string name="forgot_passwd">Passwort vergessen?</string>
   <string name="check_your_credentials">Überprüfe deine Anmeldeinformationen</string>
   <string name="settings_title_bar">Einstellungen</string>
@@ -78,7 +78,7 @@
   <string name="screenCode">Bildschirm Code</string>
   <string name="cpuAbi">CPU</string>
   <string name="setting_schdwninstalltitle">Automatische Installation</string>
-  <string name="setting_clear_memory">Speicher auffrischen</string>
+  <string name="setting_clear_memory">Speicher löschen</string>
   <string name="clearcontent_title">Daten und Konfigurationen entfernen</string>
   <string name="clearcache_title">Cache leeren</string>
   <string name="clear_cache_sucess">Inhalt wurde erfolgreich entfernt</string>
@@ -88,6 +88,7 @@
   <string name="about_mail">Kontakt:</string>
   <string name="about_us">Über uns</string>
   <string name="settings_maxFileCache_sum">Setze maximale Größe um Apk Dateien zu behalten</string>
+  <string name="settings_maxFileCache_title">Heruntergeladene Daten Cache (MB)</string>
   <string name="cache_using_X_mb">%s MB verwendet</string>
   <string name="crash_reports">Absturz-Berichte</string>
   <string name="pref_enable_acra">Berichte senden</string>
@@ -134,11 +135,12 @@
   <string name="search_other_stores">Oder suche nach anderen...</string>
   <string name="see_top_stores">Siehe Top Stores</string>
   <string name="setcredentials">Anmelden</string>
+  <string name="rollback">Downgrade</string>
   <string name="rollback_empty">Keine Apps zum downgraden</string>
   <string name="rollback_installed">Installiert</string>
   <string name="rollback_uninstalled">Deinstalliert</string>
   <string name="rollback_updated">Aktualisiert</string>
-  <string name="rollback_downgraded">Heruntergeladen</string>
+  <string name="rollback_downgraded">Downgraded</string>
   <string name="install">Installieren</string>
   <string name="get_latest_version">Erhalte neueste Version</string>
   <string name="get_latest_version_and_trusted">Erhalte Neueste &amp; Vertrauenswürdige</string>
@@ -213,6 +215,7 @@
   <string name="exclude_update">Update ignorieren</string>
   <string name="trusted">Vertraut</string>
   <string name="warning">Warnung</string>
+  <string name="downgrade">Downgrade</string>
   <string name="open">Öffnen</string>
   <string name="scanned_with_av">Mit Anti-Virus gescannt:</string>
   <string name="compared_with_another_marketplace">Mit anderen Android Märkten verglichen:</string>
@@ -323,7 +326,7 @@
   <string name="error_SYS_2">Keine Daten gefunden, bitte versuche es später noch einmal</string>
   <string name="error_SYS_3">System wird derzeit gewartet, bitte versuche es später erneut</string>
   <string name="error_SYS_4">Diese Aufforderung wird von der aktuellen API-Version nicht unterstützt</string>
-  <string name="X_download_number">%s unten.</string>
+  <string name="X_download_number">%s geladen.</string>
   <string name="search_more">Mehr Suchen</string>
   <string name="more_editors_choice">Mehr Redaktionstipps</string>
   <string name="more_top_apps">Mehr Top Apps</string>
@@ -335,7 +338,16 @@
   <string name="download_error">Fehler</string>
   <string name="try_again">Erneut versuchen</string>
   <string name="clear">Löschen</string>
+  <string name="link_device_webinstall">Account mit Web-Install verknüpfen</string>
   <string name="update_self_title">Update verfügbar</string>
   <string name="update_self_msg">Es gibt eine neue Version von %s,\nmöchten Sie aktualisieren?</string>
   <string name="retrieving_update">Empfange Update...</string>
+  <string name="no_related">Keine ähnlichen Apps gefunden.</string>
+  <string name="update_username">Benutzernamen aktualisieren</string>
+  <string name="username_success">Benutzername erfolgreich aktualisiert.</string>
+  <string name="please_update_username">Bitte aktualisiere deinen Benutzernamen um Kommentar einzufügen</string>
+  <string name="no_downloads">Keine Downloads. Fang an zum heruterladen!</string>
+  <string name="new_updates">Es sind %s neue Updates verfügbar!</string>
+  <string name="one_new_update">Es ist %s neues Update verfügbar!</string>
+  <string name="has_updates">%s hat neue Updates verfügbar!</string>
 </resources>
