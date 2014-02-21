@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+    android:contentAuthority="cm.aptoide.ptdev.UpdatesProvider"
+    android:accountType="cm.aptoide.ptdev"
+    android:supportsUploading="false"
+    android:allowParallelSyncs="false"
+    android:userVisible="false"/>
+
+
+
+
+
