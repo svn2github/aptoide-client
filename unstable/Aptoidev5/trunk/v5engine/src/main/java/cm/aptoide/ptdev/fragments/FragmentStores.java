@@ -90,8 +90,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     public void refreshStoresEvent(RepoAddedEvent event){
 
         Log.d("Aptoide-", "OnEvent");
-
-        getLoaderManager().restartLoader(0, null, this);
+        if(!isMergeStore) getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override

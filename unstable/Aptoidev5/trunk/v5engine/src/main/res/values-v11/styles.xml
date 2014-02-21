@@ -34,8 +34,10 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">italic</item>
+
     </style>
 
 </resources>

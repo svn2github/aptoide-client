@@ -89,6 +89,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isFromActivityResult;
     private String wUrl;
     private String md5;
+    private String versionInstalled;
     private boolean isInstalled;
 
     public GetApkInfoJson.Malware.Reason getReason() {
@@ -133,8 +134,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     appVersionName.setText(versionName);
                     ImageLoader.getInstance().displayImage(icon, appIcon);
 
-
-
                     try {
                         PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
                         isInstalled = true;
@@ -142,11 +141,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             isUpdate=true;
                             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
                             findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
-
+                            ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
+                            ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " +info.versionName);
                         } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
                             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
                             findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-
+                            ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
+                            ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " +info.versionName);
                         } else {
 
 
@@ -174,7 +175,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
 
                     }
-
 
 
 
@@ -976,11 +976,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
                 findViewById(R.id.btinstall).setEnabled(true);
                 findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path));
+                ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " +info.versionName);
             } else if (versionCode < info.versionCode) {
 
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
                 findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-
+                ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " +info.versionName);
             } else {
 
                 final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);

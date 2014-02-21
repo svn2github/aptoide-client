@@ -17,6 +17,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ListView;
@@ -107,6 +108,7 @@ public class SearchManager extends ActionBarActivity {
         private CursorAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
+        TextView more;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -186,7 +188,8 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
             cursorAdapter.swapCursor(data);
-            TextView foundResults = (TextView) v.findViewById(android.R.id.text1);
+            TextView foundResults = (TextView) v.findViewById(R.id.results);
+            more = (TextView) v.findViewById(R.id.more);
             if(data.getCount()>0){
                 foundResults.setText(getString(R.string.found_results, data.getCount()));
             }else{
@@ -203,9 +206,15 @@ public class SearchManager extends ActionBarActivity {
                 public void run() {
                     int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
 
-                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
+                    if(visibleItems < data.getCount()){
+                        more.setVisibility(View.VISIBLE);
+                        more.setOnClickListener(getSearchListener());
+                    }else{
+                        more.setVisibility(View.GONE);
+                    }
                 }
             });
 
@@ -228,7 +237,14 @@ public class SearchManager extends ActionBarActivity {
 
             View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
             Button search = (Button) footer.findViewById(R.id.search);
-            search.setOnClickListener(new View.OnClickListener() {
+            search.setOnClickListener(getSearchListener());
+
+            getListView().addFooterView(footer);
+
+        }
+
+        private View.OnClickListener getSearchListener() {
+            return new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
@@ -240,10 +256,7 @@ public class SearchManager extends ActionBarActivity {
                     i.setData(Uri.parse(url));
                     startActivity(i);
                 }
-            });
-
-            getListView().addFooterView(footer);
-
+            };
         }
     }
 

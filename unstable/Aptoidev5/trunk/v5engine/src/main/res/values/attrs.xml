@@ -11,6 +11,8 @@
 
     <attr name="backgroundTabs" format="reference"/>
 
+    <attr name="backgroundHeaderLoggedIn" format="reference"/>
+
     <attr name="apkInfoBackgroundHeader" format="reference"/>
 
     <attr name="headerSeparatorButton" format="reference"/>

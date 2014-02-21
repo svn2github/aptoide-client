@@ -15,7 +15,7 @@
   <string name="timestamp_days">%s dias</string>
   <string name="timestamp_day">%s dia</string>
   <string name="action_contact">Contacto</string>
-  <string name="installed_tab">Instaladas</string>
+  <string name="installed_tab">Instalado</string>
   <string name="update">Actualizar</string>
   <string name="uninstall">Desinstalar</string>
   <string name="downloading_apps">A transferir</string>
