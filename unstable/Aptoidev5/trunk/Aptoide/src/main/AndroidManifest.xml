@@ -203,6 +203,12 @@
 
         <provider android:name="cm.aptoide.ptdev.UpdatesProvider"
                   android:authorities="cm.aptoide.ptdev.UpdatesProvider"
+                  android:label="Updates notification"
+                  android:exported="false"/>
+
+        <provider android:name="cm.aptoide.ptdev.AutoUpdateProvider"
+                  android:authorities="cm.aptoide.ptdev.AutoUpdateProvider"
+                  android:label="Auto-Update Apps"
                   android:exported="false"/>
 
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
@@ -233,6 +239,15 @@
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
                        android:resource="@xml/updates_sync_adapter" />
+        </service>
+
+        <service android:name="cm.aptoide.ptdev.services.AutoUpdateSyncService"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/autoupdate_sync_adapter"/>
         </service>
 
         <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >
