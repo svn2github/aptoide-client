@@ -35,12 +35,14 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:orientation="vertical">
 
             <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="120dp"
-                    android:hint="@string/write_your_comment"
                     android:id="@+id/editText_addcomment"
-                    android:inputType="textMultiLine"/>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:hint="@string/write_your_comment"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:lines="3"
+                    android:gravity="top|left"/>
 
             <Button android:id="@+id/button_add_comment"
                     android:layout_width="match_parent"
@@ -57,17 +59,17 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     android:id="@+id/layout_likes">
 
                 <Button android:id="@+id/button_like"
+                        style="@style/WidgetButtonCustomGray"
                         android:layout_width="fill_parent"
                         android:text="@string/like"
-                        android:background="?attr/selectableItemBackground"
                         android:drawableLeft="?attr/icRatingGoodDrawable"
                         android:layout_margin="10dp"
                         android:layout_height="wrap_content"/>
 
                 <Button android:id="@+id/button_dont_like"
+                        style="@style/WidgetButtonCustomGray"
                         android:layout_width="fill_parent"
                         android:text="@string/dont_like"
-                        android:background="?attr/selectableItemBackground"
                         android:drawableLeft="?attr/icRatingBadDrawable"
                         android:layout_margin="10dp"
                         android:layout_height="wrap_content"/>

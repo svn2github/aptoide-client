@@ -10,6 +10,7 @@
     <string name="WidgetProvider_timestamp_just_now">Just now</string>
     <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
     <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
+    <string name="WidgetProvider_timestamp_this_week">This week</string>
 
     <string name="timestamp_months">%s months</string>
     <string name="timestamp_month">%s month</string>

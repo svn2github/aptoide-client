@@ -156,6 +156,7 @@ public class DownloadInfo implements Runnable, Serializable {
 
 
                     download.setSpeed(getSpeed());
+                    download.setTimeLeft(mETA);
                     download.setProgress(getPercentDownloaded());
                     BusProvider.getInstance().post(getDownloadEvent());
 //                    mSpeed = 0;

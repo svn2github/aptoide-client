@@ -68,7 +68,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
         View downloadsLayout = v.findViewById(R.id.download_details_layout);
         downloadsLayout.setVisibility(View.VISIBLE);
         ((TextView) downloadsLayout.findViewById(R.id.speed)).setText(Utils.formatBits((long) download.getSpeed())+"/s");
-        ((TextView) downloadsLayout.findViewById(R.id.eta)).setText(Utils.formatEta((long) download.getTimeLeft(), context.getString(R.string.time_left)));
+        ((TextView) downloadsLayout.findViewById(R.id.eta)).setText(Utils.formatEta(download.getTimeLeft(), context.getString(R.string.time_left)));
         ((TextView) downloadsLayout.findViewById(R.id.progress)).setText(download.getProgress()+"%");
 
 

@@ -84,7 +84,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/app_icon"
             android:visibility="gone"
-            android:layout_below="@+id/version_layout"/>
+            android:layout_below="@+id/app_version_installed"/>
 
     <Button
             android:id="@+id/btinstall"

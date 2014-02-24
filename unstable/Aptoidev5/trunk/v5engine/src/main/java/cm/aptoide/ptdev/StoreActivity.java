@@ -155,6 +155,8 @@ public class StoreActivity extends ActionBarActivity {
 
         if(storeid>0){
             getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
+        }else{
+            noCategories = false;
         }
 
     }
@@ -203,6 +205,12 @@ public class StoreActivity extends ActionBarActivity {
 
         if(noCategories){
             menu.findItem(R.id.show_all).setChecked(true);
+        }
+
+        if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", true)){
+            menu.findItem(R.id.show_all).setVisible(false);
+        }else{
+            menu.findItem(R.id.show_all).setVisible(true);
         }
 
         return super.onCreateOptionsMenu(menu);
