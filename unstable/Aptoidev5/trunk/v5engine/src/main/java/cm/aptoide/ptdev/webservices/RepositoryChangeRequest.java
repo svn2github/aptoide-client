@@ -54,8 +54,6 @@ public class RepositoryChangeRequest extends GoogleHttpClientSpiceRequest<Reposi
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-
-
         return request.execute().parseAs( getResultType() );
     }
 }

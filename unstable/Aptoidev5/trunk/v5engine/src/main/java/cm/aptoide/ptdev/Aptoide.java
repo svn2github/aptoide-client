@@ -100,14 +100,14 @@ public class Aptoide extends Application {
         super.onCreate();
         context = getApplicationContext();
 
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectAll()  // or .detectAll() for all detectable problems
-                .penaltyLog()
-                .build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build());
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()  // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .build());
 
 
 

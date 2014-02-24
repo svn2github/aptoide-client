@@ -45,6 +45,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
+import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -461,21 +462,21 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                     //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
 
-                    if(checkUserCredentialsJson.getQueue()!=null){
+                    if(!Data.isNull(checkUserCredentialsJson.getQueue())){
                         hasQueue = true;
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
                                 .putString("queueName", checkUserCredentialsJson.getQueue())
                                 .commit();
                     }
-                    if(checkUserCredentialsJson.getAvatar()!=null){
+                    if(!Data.isNull(checkUserCredentialsJson.getAvatar())){
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
                                 .putString("useravatar", checkUserCredentialsJson.getAvatar())
                                 .commit();
                         
                     }
-                    if(checkUserCredentialsJson.getUsername()!=null){
+                    if(!Data.isNull(checkUserCredentialsJson.getUsername())){
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                                 .edit()
                                 .putString("username", checkUserCredentialsJson.getUsername())

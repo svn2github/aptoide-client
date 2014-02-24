@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by brutus on 09-12-2013.
  */
+
 public class CheckUserCredentialsJson {
 
     @Key
