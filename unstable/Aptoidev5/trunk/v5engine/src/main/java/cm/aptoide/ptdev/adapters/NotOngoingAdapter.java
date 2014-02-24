@@ -61,6 +61,9 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
                 ((TextView)v.findViewById(R.id.app_error)).setText(download.getParent().getFailReason().toString(getContext()));
                 v.findViewById(R.id.app_error).setVisibility(View.VISIBLE);
                 break;
+            case COMPLETE:
+                v.findViewById(R.id.app_error).setVisibility(View.GONE);
+                break;
         }
 
         if(v==null){

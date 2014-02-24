@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.*;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
+import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -64,8 +66,9 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
 
         View downloadsLayout = v.findViewById(R.id.download_details_layout);
-        ((TextView) downloadsLayout.findViewById(R.id.speed)).setText(download.getParent().getSpeed()+"");
-        ((TextView) downloadsLayout.findViewById(R.id.eta)).setText(download.getParent().getEta()+"");
+        downloadsLayout.setVisibility(View.VISIBLE);
+        ((TextView) downloadsLayout.findViewById(R.id.speed)).setText(Utils.formatBits((long) download.getSpeed())+"/s");
+        ((TextView) downloadsLayout.findViewById(R.id.eta)).setText(Utils.formatEta((long) download.getTimeLeft(), context.getString(R.string.time_left)));
         ((TextView) downloadsLayout.findViewById(R.id.progress)).setText(download.getProgress()+"%");
 
 

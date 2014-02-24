@@ -367,5 +367,6 @@
     <string name="new_updates">There are %s new updates available!</string>
     <string name="one_new_update">There is %s new update available!</string>
     <string name="has_updates">%s has new updates available!</string>
+    <string name="time_left">time left</string>
 
 </resources>
