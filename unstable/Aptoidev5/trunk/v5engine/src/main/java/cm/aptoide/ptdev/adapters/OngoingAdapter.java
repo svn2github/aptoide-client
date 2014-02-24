@@ -62,6 +62,13 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
         pb.setProgress(download.getProgress());
 
+
+        View downloadsLayout = v.findViewById(R.id.download_details_layout);
+        ((TextView) downloadsLayout.findViewById(R.id.speed)).setText(download.getParent().getSpeed()+"");
+        ((TextView) downloadsLayout.findViewById(R.id.eta)).setText(download.getParent().getEta()+"");
+        ((TextView) downloadsLayout.findViewById(R.id.progress)).setText(download.getProgress()+"%");
+
+
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

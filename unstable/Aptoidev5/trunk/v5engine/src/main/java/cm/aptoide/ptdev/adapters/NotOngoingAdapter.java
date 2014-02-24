@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.downloadmanager.EnumDownloadFailReason;
+import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.model.Download;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -51,6 +54,15 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
 
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setVisibility(View.GONE);
+
+        EnumState downloadState = download.getDownloadState();
+        switch(downloadState){
+            case ERROR:
+                ((TextView)v.findViewById(R.id.app_error)).setText(download.getParent().getFailReason().toString(getContext()));
+                v.findViewById(R.id.app_error).setVisibility(View.VISIBLE);
+                break;
+        }
+
         if(v==null){
             Log.e("Aptoide-Section", "View is null");
         }
