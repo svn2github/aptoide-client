@@ -93,6 +93,7 @@ public class RabbitMqService extends Service {
                                 i.putExtra("repoName", repo);
                                 i.putExtra("id", id);
                                 i.putExtra("md5sum", md5sum);
+
                                 String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -100,6 +101,8 @@ public class RabbitMqService extends Service {
                                 String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo+id+md5sum, authToken+deviceId);
                                 if(hmac.equals(calculatedHmac)){
                                     getApplicationContext().startActivity(i);
+                                }else{
+                                    Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

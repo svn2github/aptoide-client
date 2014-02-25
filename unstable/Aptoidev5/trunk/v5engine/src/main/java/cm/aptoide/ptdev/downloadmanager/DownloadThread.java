@@ -6,11 +6,8 @@ import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
+import java.io.*;
 
-import java.io.RandomAccessFile;
-import java.io.Serializable;
 import java.net.UnknownHostException;
 
 /**
@@ -126,6 +123,9 @@ public class DownloadThread implements Runnable, Serializable {
         }catch (NotFoundException exception){
             exception.printStackTrace();
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NOT_FOUND));
+        }catch (FileNotFoundException exception){
+            exception.printStackTrace();
+            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.SD_ERROR));
         }catch (ContentTypeNotApkException e){
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
         }catch (IPBlackListedException e){

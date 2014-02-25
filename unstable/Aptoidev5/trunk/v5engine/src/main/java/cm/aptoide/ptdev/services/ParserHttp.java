@@ -36,7 +36,7 @@ public class ParserHttp extends SpiceService {
 
     @Override
     public int getThreadCount() {
-        return 2;
+        return 4;
     }
 
 
