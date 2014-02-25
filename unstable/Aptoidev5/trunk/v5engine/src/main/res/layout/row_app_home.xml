@@ -74,7 +74,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:gravity="center|left"
                 android:layout_marginRight="12dp"
-                android:layout_below="@+id/app_category"
+                android:layout_below="@+id/app_name"
                 android:text="DOWNLOADS"
                 android:visibility="gone"
                 android:layout_alignLeft="@+id/app_name"

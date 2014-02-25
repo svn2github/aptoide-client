@@ -45,8 +45,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
         <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_gravity="center"
                 android:id="@+id/layout_likes">
 
@@ -54,6 +55,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     style="@style/WidgetButtonCustomGray"
                     android:layout_width="fill_parent"
                     android:text="@string/like"
+                    android:layout_weight="1"
                     android:drawableLeft="?attr/icRatingGoodDrawable"
                     android:layout_margin="10dp"
                     android:layout_height="wrap_content"/>
@@ -64,16 +66,20 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     android:text="@string/dont_like"
                     android:drawableLeft="?attr/icRatingBadDrawable"
                     android:layout_margin="10dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"/>
 
         </LinearLayout>
+
     </LinearLayout>
+
 
     <TextView android:id="@+id/title_comments"
               style="@style/titleLabel"
               android:text="@string/comments"/>
 
-    <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+    <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 style="?android:attr/progressBarStyleLarge"/>
 
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
@@ -121,14 +127,14 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:text="@string/no_comments"/>
 
     <!--<TextView-->
-            <!--style="@style/titleLabel"-->
-            <!--android:text="@string/flag_this_app"/>-->
+    <!--style="@style/titleLabel"-->
+    <!--android:text="@string/flag_this_app"/>-->
 
     <!--<Button android:id="@+id/button_flag"-->
-            <!--style="?attr/customButtonColor"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:text="@string/flag"-->
-            <!--android:layout_margin="10dp"/>-->
+    <!--style="?attr/customButtonColor"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:text="@string/flag"-->
+    <!--android:layout_margin="10dp"/>-->
 
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.services;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -133,7 +134,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
                 Intent notificationIntent = new Intent();
 
-                notificationIntent.setClassName(getPackageName(), getPackageName()+".MainActivity");
+                notificationIntent.setClassName(getPackageName(), "cm.aptoide.ptdev.MainActivity");
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                 notificationIntent.setAction("");
 
@@ -150,11 +151,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         .setContentIntent(contentIntent)
                         .setTicker(tickerText)
                         .build();
-                managerNotification.notify(172354, notification);
+                managerNotification.notify(1, notification);
 
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);

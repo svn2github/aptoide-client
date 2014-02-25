@@ -128,8 +128,15 @@ public class HomeLayoutAdapter extends BaseAdapter {
         String name = list.get(position).getName();
         String categoryName;
 
+
         if (list.get(position).getWeeks() > -1) {
-            categoryName = context.getString(R.string.timestamp_weeks, list.get(position).getWeeks());
+            if (list.get(position).getWeeks() == 0) {
+                categoryName = context.getString(R.string.WidgetProvider_timestamp_this_week);
+            }else if (list.get(position).getWeeks() == 1) {
+                categoryName = context.getString(R.string.timestamp_week, 1);
+            }else{
+                categoryName = context.getString(R.string.timestamp_weeks, list.get(position).getWeeks());
+            }
 
         } else {
 

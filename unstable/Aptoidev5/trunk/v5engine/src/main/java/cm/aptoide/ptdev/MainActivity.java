@@ -104,6 +104,10 @@ public class MainActivity extends ActionBarActivity implements
         public void onServiceConnected(ComponentName name, IBinder binder) {
             downloadService = ((DownloadService.LocalBinder) binder).getService();
             BusProvider.getInstance().post(new DownloadServiceConnected());
+
+            if (getIntent().hasExtra("new_updates") && pager != null) {
+                pager.setCurrentItem(2);
+            }
         }
 
         @Override
@@ -472,6 +476,10 @@ public class MainActivity extends ActionBarActivity implements
 
             }
 
+        }
+
+        if (intent.hasExtra("new_updates") && pager != null) {
+            pager.setCurrentItem(2);
         }
 
 

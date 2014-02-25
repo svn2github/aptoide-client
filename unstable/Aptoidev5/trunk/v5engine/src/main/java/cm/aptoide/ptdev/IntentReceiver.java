@@ -134,7 +134,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         if(uri.startsWith("aptoiderepo")){
             ArrayList<String> repo = new ArrayList<String>();
             repo.add(uri.substring(14));
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
+            Intent i = new Intent(IntentReceiver.this, MainActivity.class);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);
