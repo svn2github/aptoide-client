@@ -207,11 +207,7 @@ public class StoreActivity extends ActionBarActivity {
             menu.findItem(R.id.show_all).setChecked(true);
         }
 
-        if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", true)){
-            menu.findItem(R.id.show_all).setVisible(false);
-        }else{
-            menu.findItem(R.id.show_all).setVisible(true);
-        }
+        menu.findItem(R.id.show_all).setVisible(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false));
 
         return super.onCreateOptionsMenu(menu);
     }
