@@ -119,11 +119,13 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 ListSocialAdapter socialAdapter = new ListSocialAdapter(getActivity(), 0, objects);
                 mainAdapter.addAdapter(socialAdapter);
                 Log.d("Aptoide-StoreList", "adding social adapter");
-            }else{
-                ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
             }
 
             setListAdapter(mainAdapter);
+        }
+
+        if(storeId == -1){
+            ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
         }
     }
 
