@@ -112,7 +112,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                     mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
                         @Override
                         public void run(AccountManagerFuture<Boolean> future) {
-                            addAccount();
+                            //addAccount();
                             finish();
                         }
                     }, null);

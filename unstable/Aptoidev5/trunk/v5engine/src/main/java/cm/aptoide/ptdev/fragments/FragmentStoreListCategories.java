@@ -125,6 +125,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         }
 
         if(storeId == -1){
+            ((StoreActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
             ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
         }
     }

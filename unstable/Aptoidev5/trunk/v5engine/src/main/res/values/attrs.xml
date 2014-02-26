@@ -71,7 +71,9 @@
 
     <attr name="icAddStoreDrawable" format="reference"/>
 
-    <attr name="icWizardArrowDrawable" format="reference"/>
+    <attr name="icWizardLeftArrowDrawable" format="reference"/>
+
+    <attr name="icWizardRightArrowDrawable" format="reference"/>
 
     <attr name="icCollapseDrawable" format="reference"/>
 

@@ -680,6 +680,12 @@ public abstract class FragmentAppView extends Fragment {
             protected void onPostExecute(ArrayList<ApkPermission> apkPermissions) {
                 super.onPostExecute(apkPermissions);
                 Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
+                if(apkPermissions.size()==0){
+                    TextView noPermissions = new TextView(getActivity());
+                    noPermissions.setText(getString(R.string.no_permissions_required));
+                    noPermissions.setPadding(5,5,5,5);
+                    permissionsContainer.addView(noPermissions);
+                }
                 FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
                 permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                 permissionsContainer.setVisibility(View.VISIBLE);

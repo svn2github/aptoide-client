@@ -105,8 +105,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:background="?attr/selectableItemBackground"
                 android:drawableRight="@drawable/ic_more_arrow_right"
                 android:gravity="fill_vertical|right"
-                android:paddingLeft="5.0sp"
-                android:paddingRight="5.0sp"
+                android:padding="5.0sp"
                 android:text="@string/comment_see_all"
                 android:visibility="gone"
                 android:textColor="@android:color/darker_gray"/>
@@ -123,7 +122,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:paddingLeft="5.0dp"
             android:paddingRight="5.0dp"
             android:visibility="gone"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/no_comments"/>
 
     <!--<TextView-->

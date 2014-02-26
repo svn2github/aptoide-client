@@ -70,8 +70,10 @@ public class Wizard {
             description.setText(getString(R.string.wizard_what_is_aptoide));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_layout);
-            TextView more_text = (TextView) view.findViewById(R.id.more_text);
+            TextView more_text = (TextView) view.findViewById(R.id.more_text_right);
             more_text.setText(getString(R.string.wizard_secure_fast_reliable));
+            ImageView arrow = (ImageView) view.findViewById(R.id.arrow_right);
+            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -126,11 +128,10 @@ public class Wizard {
             image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_stores);
 
-            arrow = (ImageView) view.findViewById(R.id.arrow);
+            add_more_stores = (TextView) view.findViewById(R.id.more_text_left);
+            add_more_stores.setText(getString(R.string.wizard_add_more_stores));
+            arrow = (ImageView) view.findViewById(R.id.arrow_left);
             arrow.setVisibility(View.VISIBLE);
-//            add_more_stores = (TextView) view.findViewById(R.id.add_more_stores);
-//            add_more_stores.setVisibility(View.VISIBLE);
-//            add_more_stores.setText(getString(R.string.wizard_add_more_stores));
         }
 
         @Override
@@ -173,8 +174,11 @@ public class Wizard {
             description.setText(getString(R.string.wizard_search_local));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_search);
-            TextView more_text = (TextView) view.findViewById(R.id.more_text);
+
+            TextView more_text = (TextView) view.findViewById(R.id.more_text_right);
             more_text.setText(getString(R.string.wizard_search_online));
+            ImageView arrow = (ImageView) view.findViewById(R.id.arrow_right);
+            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -275,8 +279,8 @@ public class Wizard {
             image.setImageResource(R.drawable.wizard_widget);
             TextView description = (TextView) view.findViewById(R.id.description);
             description.setText(getString(R.string.wizard_widget_description));
-            ImageView arrow = (ImageView) view.findViewById(R.id.arrow);
-            arrow.setVisibility(View.VISIBLE);
+//            ImageView arrow = (ImageView) view.findViewById(R.id.arrow);
+//            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override

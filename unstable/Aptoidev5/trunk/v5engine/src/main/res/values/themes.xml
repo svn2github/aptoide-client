@@ -48,7 +48,8 @@
         <item name="icRevertDrawable">@drawable/ic_action_undo</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
-        <item name="icWizardArrowDrawable">@drawable/wizard_arrow</item>
+        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow</item>
+        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
 
@@ -102,7 +103,8 @@
         <item name="icRevertDrawable">@drawable/ic_action_undo_dark</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new_dark</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept_dark</item>
-        <item name="icWizardArrowDrawable">@drawable/wizard_arrow_dark</item>
+        <item name="icWizardRightArrowDrawable">@drawable/right_wizard_arrow_dark</item>
+        <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow_dark</item>
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse_dark</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
 

@@ -125,11 +125,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingBottom="5.0dp"
-                android:paddingLeft="5.0dp"
-                android:paddingRight="5.0dp"
+                android:padding="5.0dp"
                 android:visibility="gone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_comments"/>
         <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->
