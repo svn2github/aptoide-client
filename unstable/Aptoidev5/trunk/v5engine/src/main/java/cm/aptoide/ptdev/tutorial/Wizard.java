@@ -70,10 +70,10 @@ public class Wizard {
             description.setText(getString(R.string.wizard_what_is_aptoide));
             ImageView image = (ImageView) view.findViewById(R.id.image);
             image.setImageResource(R.drawable.wizard_layout);
-            TextView more_text = (TextView) view.findViewById(R.id.more_text_right);
+            TextView more_text = (TextView) view.findViewById(R.id.more_text_left);
             more_text.setText(getString(R.string.wizard_secure_fast_reliable));
-            ImageView arrow = (ImageView) view.findViewById(R.id.arrow_right);
-            arrow.setVisibility(View.VISIBLE);
+//            ImageView arrow = (ImageView) view.findViewById(R.id.arrow_right);
+//            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override

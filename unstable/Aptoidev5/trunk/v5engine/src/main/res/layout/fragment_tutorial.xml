@@ -13,7 +13,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"
                   style="?attr/backgroundCard"
-                  android:layout_margin="10dp"
+                  android:layout_margin="8dp"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
 
@@ -33,14 +33,51 @@
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"/>
 
+        <RelativeLayout android:layout_weight="0.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:id="@+id/image"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.2"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/image"
+                    android:maxWidth="200dp"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_centerInParent="true"/>
 
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/arrow_right"
+                       android:src="?attr/icWizardRightArrowDrawable"
+                       android:visibility="gone"
+                       android:layout_centerVertical="true"
+                       android:layout_toRightOf="@+id/image"/>
+
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/arrow_left"
+                       android:src="?attr/icWizardLeftArrowDrawable"
+                       android:visibility="gone"
+                       android:layout_below="@+id/more_text_left"
+                       android:layout_toLeftOf="@+id/image"/>
+            <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/more_text_right"
+                    android:layout_above="@+id/arrow_right"
+                    android:layout_toRightOf="@+id/image"/>
+
+            <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/more_text_left"
+                    android:gravity="center"
+                    android:layout_toLeftOf="@+id/image"
+                    android:layout_centerVertical="true"/>
+        </RelativeLayout>
 
         <CheckBox android:id="@+id/add_apps"
                   android:layout_width="wrap_content"
@@ -54,43 +91,5 @@
 
     </LinearLayout>
 
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:id="@+id/arrow_right"
-               android:layout_marginRight="50dp"
-               android:layout_below="@+id/more_text_right"
-               android:visibility="gone"
-               android:src="?attr/icWizardRightArrowDrawable"
-               android:layout_alignParentRight="true" />
-
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:id="@+id/arrow_left"
-               android:layout_marginLeft="50dp"
-               android:layout_below="@+id/more_text_left"
-               android:visibility="gone"
-               android:src="?attr/icWizardLeftArrowDrawable"
-               android:layout_alignParentLeft="true" />
-    <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/more_text_right"
-            android:gravity="center"
-            android:layout_marginRight="20dp"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"
-            />
-
-    <TextView
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/more_text_left"
-            android:gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_centerInParent="true"
-            android:layout_alignParentLeft="true"
-            />
 
 </RelativeLayout>
