@@ -58,7 +58,7 @@
                android:layout_height="wrap_content"
                android:id="@+id/arrow_right"
                android:layout_marginRight="50dp"
-               android:layout_centerInParent="true"
+               android:layout_below="@+id/more_text_right"
                android:visibility="gone"
                android:src="?attr/icWizardRightArrowDrawable"
                android:layout_alignParentRight="true" />
@@ -67,8 +67,8 @@
                android:layout_height="wrap_content"
                android:id="@+id/arrow_left"
                android:layout_marginLeft="50dp"
+               android:layout_below="@+id/more_text_left"
                android:visibility="gone"
-               android:layout_centerInParent="true"
                android:src="?attr/icWizardLeftArrowDrawable"
                android:layout_alignParentLeft="true" />
     <TextView
@@ -80,8 +80,7 @@
             android:layout_marginRight="20dp"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
-            android:layout_above="@+id/arrow_right"
-            android:layout_marginBottom="5dp"/>
+            />
 
     <TextView
             android:layout_width="60dp"
@@ -92,7 +91,6 @@
             android:layout_marginLeft="20dp"
             android:layout_centerInParent="true"
             android:layout_alignParentLeft="true"
-            android:layout_above="@+id/arrow_left"
-            android:layout_marginBottom="5dp"/>
+            />
 
 </RelativeLayout>
