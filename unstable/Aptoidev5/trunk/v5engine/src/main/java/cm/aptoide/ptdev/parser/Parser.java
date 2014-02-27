@@ -84,7 +84,9 @@ public class Parser{
         i++;
         final long repoId = handler.getRepoId();
         Log.d("Aptoide-Parser", "Starting request: " + url);
-
+        if(!spiceManager.isStarted()){
+            spiceManager.start(Aptoide.getContext());
+        }
         spiceManager.execute(new FileRequest(url,file, login), new RequestListener<InputStream>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {

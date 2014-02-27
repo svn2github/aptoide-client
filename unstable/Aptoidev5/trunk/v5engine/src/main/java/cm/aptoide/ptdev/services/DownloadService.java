@@ -428,10 +428,10 @@ public class DownloadService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         Intent onClick = new Intent();
-        onClick.setClassName(getPackageName(), getApplicationContext().getPackageName()+".DownloadManager");
+        onClick.setClassName(getPackageName(), "cm.aptoide.ptdev.MainActivity");
         onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        onClick.setAction("");
-        onClick.putExtra("", "");
+        onClick.setAction(Intent.ACTION_VIEW);
+        onClick.putExtra("fromDownloadNotification", true);
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent onClickAction = PendingIntent.getActivity(getApplicationContext(), 0, onClick, PendingIntent.FLAG_UPDATE_CURRENT);

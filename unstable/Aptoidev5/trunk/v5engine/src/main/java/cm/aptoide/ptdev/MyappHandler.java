@@ -14,20 +14,23 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-enum Elements {
 
-    MYAPP, GETAPP, NAME, PNAME, MD5SUM, INTSIZE, NEWSERVER, SERVER, NOTFOUND, GET, OBB, MAIN_PATH, MAIN_MD5SUM, MAIN_FILESIZE, MAIN_FILENAME, PATCH_PATH, PATCH_MD5SUM, PATCH_FILESIZE, PATCH_FILENAME;
-
-	public static Elements lookup(String element){
-		try{
-			return Elements.valueOf(element);
-		}catch (Exception e) {
-			return Elements.NOTFOUND;
-		}
-	}
-};
 
 public class MyappHandler extends DefaultHandler {
+
+    enum Elements {
+
+        MYAPP, GETAPP, NAME, PNAME, MD5SUM, INTSIZE, NEWSERVER, SERVER, NOTFOUND, GET, OBB, MAIN_PATH, MAIN_MD5SUM, MAIN_FILESIZE, MAIN_FILENAME, PATCH_PATH, PATCH_MD5SUM, PATCH_FILESIZE, PATCH_FILENAME;
+
+        public static Elements lookup(String element){
+            try{
+                return Elements.valueOf(element);
+            }catch (Exception e) {
+                return Elements.NOTFOUND;
+            }
+        }
+    };
+
 	HashMap<String, String> app;
 	ArrayList<String> servers = new ArrayList<String>();
 	StringBuilder sb = new StringBuilder();

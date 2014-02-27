@@ -48,6 +48,7 @@ import com.google.android.gms.plus.PlusClient;
 import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 
@@ -57,7 +58,7 @@ import java.util.Locale;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener, ProgressDialogFragment.OnCancelListener {
 
 
     private ProgressDialog mConnectionProgressDialog;
@@ -67,6 +68,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private boolean showPassword = true;
     private CheckBox registerDevice;
     private boolean hasQueue;
+    private CheckUserCredentialsRequest request;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -168,6 +170,23 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     }
 
+    @Override
+    public void onCancel() {
+        request.setRequestCancellationListener(new RequestCancellationListener() {
+            @Override
+            public void onRequestCancelled() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(LoginActivity.this, "Request canceled", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        });
+        spiceManager.cancel(request);
+    }
+
     public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -200,7 +219,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
-                        submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                        if(session == Session.getActiveSession() && user!=null){
+                            submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                        }else{
+                            session.closeAndClearTokenInformation();
+                        }
+
                     }
                 });
                 request.executeAsync();
@@ -219,11 +243,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         super.onCreate(savedInstanceState);
 
 
+
         if (AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
-        } else {
 
+        } else {
 
             setContentView(R.layout.form_login);
 
@@ -410,6 +435,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         spiceManager.shouldStop();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
     public void submit(Mode mode, final String username, final String passwordOrToken, String nameForGoogle) {
 
         //final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
@@ -417,8 +448,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
-        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
-
+        request = new CheckUserCredentialsRequest();
 
         request.setMode(mode);
 
@@ -440,12 +470,26 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
         spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
+
             @Override
             public void onRequestFailure(SpiceException e) {
+
+                Session session = Session.getActiveSession();
+
+                if(session != null && session.isOpened()){
+                    session.closeAndClearTokenInformation();
+                }
+
+                if(mPlusClient!=null && mPlusClient.isConnected()){
+                    mPlusClient.clearDefaultAccount();
+                    mPlusClient.disconnect();
+                }
+
                 Toast.makeText(getBaseContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (pd != null) {
-                    pd.dismiss();
+                    pd.dismissAllowingStateLoss();
                 }
             }
 
@@ -454,7 +498,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (pd != null) {
-                    pd.dismiss();
+                    pd.dismissAllowingStateLoss();
                 }
 
 
@@ -474,7 +518,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 .edit()
                                 .putString("useravatar", checkUserCredentialsJson.getAvatar())
                                 .commit();
-                        
+
                     }
                     if(!Data.isNull(checkUserCredentialsJson.getUsername())){
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)

@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Created by rmateus on 18-02-2014.
  */
-public class LatestLikesFragment extends ListFragment {
+public class LatestLikesFragment extends ListFragment implements FragmentStore{
 
     SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
     private String repoName;
@@ -104,6 +104,21 @@ public class LatestLikesFragment extends ListFragment {
 
         Log.d("FragmentRelated", "onViewCreated");
 
+
+    }
+
+    @Override
+    public void onRefresh() {
+
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void setRefreshing(boolean bool) {
 
     }
 

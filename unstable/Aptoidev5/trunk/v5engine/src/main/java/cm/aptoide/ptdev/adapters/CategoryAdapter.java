@@ -140,11 +140,12 @@ public class CategoryAdapter extends CursorAdapter {
                     ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
                 }
 
-                String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
 
                 EnumStoreTheme theme;
                 try{
+                    String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
+
                     theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
                 }catch (Exception e){
                     theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;

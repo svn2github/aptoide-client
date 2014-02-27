@@ -38,7 +38,7 @@ import com.squareup.otto.Subscribe;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentUpdates extends ListFragment {
+public class FragmentUpdates extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private InstalledAdapter installedAdapter;
     private UpdatesAdapter updatesAdapter;
@@ -63,58 +63,58 @@ public class FragmentUpdates extends ListFragment {
     public void refreshStoresEvent(RepoCompleteEvent event) {
         setListShown(false);
         Log.d("Aptoide-", "OnEvent");
-        getLoaderManager().restartLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-                return new SimpleCursorLoader(getActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        counter++;
-                        return db.getUpdates();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sPref.edit();
-                int updates = 0;
-                if (data.getCount() > 1) {
-
-                    updatesAdapter.swapCursor(data);
-                    for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
-                        if(data.getInt(data.getColumnIndex("is_update"))==1){
-                            updates++;
-                        }
-                    }
-
-                    editor.putInt("updates", updates);
-                } else {
-                    updatesAdapter.swapCursor(null);
-                    editor.remove("updates");
-                }
-                editor.commit();
-
-                ((MainActivity) getActivity()).updateBadge(sPref);
-                if (getListView().getAdapter() == null)
-                    setListAdapter(adapter);
-
-                setListShown(true);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-
-            }
-        });
+        getLoaderManager().restartLoader(91, null, this);
 
 
 
 
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        return new SimpleCursorLoader(getActivity()) {
+            @Override
+            public Cursor loadInBackground() {
+                counter++;
+                return db.getUpdates();
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sPref.edit();
+        int updates = 0;
+        if (data.getCount() > 1) {
+
+            updatesAdapter.swapCursor(data);
+            for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                if(data.getInt(data.getColumnIndex("is_update"))==1){
+                    updates++;
+                }
+            }
+
+            editor.putInt("updates", updates);
+        } else {
+            updatesAdapter.swapCursor(null);
+            editor.remove("updates");
+        }
+        editor.commit();
+
+        ((MainActivity) getActivity()).updateBadge(sPref);
+        if (getListView().getAdapter() == null)
+            setListAdapter(adapter);
+
+        setListShown(true);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
 
 
     @Override
@@ -128,8 +128,9 @@ public class FragmentUpdates extends ListFragment {
 
         adapter = new UpdatesSectionListAdapter(getActivity(),getLayoutInflater(savedInstanceState), updatesAdapter);
 
-
         setHasOptionsMenu(true);
+
+
 
     }
 
@@ -201,58 +202,8 @@ public class FragmentUpdates extends ListFragment {
 
             }
         });
-        getLoaderManager().initLoader(91, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-                return new SimpleCursorLoader(getActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        counter++;
-                        return db.getUpdates();
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sPref.edit();
-                int updates = 0;
-
-                if (data.getCount() > 1) {
-
-
-                    updatesAdapter.swapCursor(data);
-                    for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
-                        if(data.getInt(data.getColumnIndex("is_update"))==1){
-                            updates++;
-                        }
-                    }
-
-                    editor.putInt("updates", updates);
-                } else {
-                    updatesAdapter.swapCursor(null);
-                    editor.remove("updates");
-                }
-
-                editor.commit();
-
-                ((MainActivity) getActivity()).updateBadge(sPref);
-
-
-                if (getListView().getAdapter() == null) {
-                    setListAdapter(adapter);
-                }
-
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-                updatesAdapter.swapCursor(null);
-            }
-        });
+        getLoaderManager().initLoader(91, null, this);
 
     }
 

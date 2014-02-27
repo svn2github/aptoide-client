@@ -133,7 +133,7 @@ public class DownloadInfo implements Runnable, Serializable {
                     // Difference between last time and this time = how much was downloaded since last run.
                     long downloadedSinceLastTime = mDownloadedSize - iMLastDownloadedSize;
                     iMLastDownloadedSize = mDownloadedSize;
-                    if (timeElapsedSinceLastTime > 0) {
+                    if (timeElapsedSinceLastTime > 0 && timeElapsed > 0) {
                         // Speed (bytes per second) = downloaded bytes / time in seconds (nanoseconds / 1000000000)
                         mAvgSpeed = (mDownloadedSize) * 1000 / timeElapsed;
                         mSpeed = downloadedSinceLastTime * 1000 / timeElapsedSinceLastTime;

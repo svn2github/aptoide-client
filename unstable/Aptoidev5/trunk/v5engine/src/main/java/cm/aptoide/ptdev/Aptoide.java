@@ -125,10 +125,11 @@ public class Aptoide extends Application {
         ACRA.setConfig(acraConfiguration);
 
         db = DatabaseHelper.getInstance(getApplicationContext());
+        setConfiguration(getAptoideConfiguration());
+
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
-        setConfiguration(getAptoideConfiguration());
         setThemePicker(getNewThemePicker());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -235,7 +236,6 @@ public class Aptoide extends Application {
 
 
         }
-
 
     }
 

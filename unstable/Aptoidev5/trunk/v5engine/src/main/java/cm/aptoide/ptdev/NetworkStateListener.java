@@ -100,13 +100,13 @@ public class NetworkStateListener extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent incomingIntent) {
 
-        Handler handler = new Handler();
+
 
         final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if ((wifi.getState() == NetworkInfo.State.CONNECTED || mobile.getState() == NetworkInfo.State.CONNECTED) && service==null) {
+        if (((wifi!=null && wifi.getState() == NetworkInfo.State.CONNECTED )|| (mobile!=null && mobile.getState() == NetworkInfo.State.CONNECTED)) && service==null) {
 
             synchronized (lock){
                 Aptoide.getContext().bindService(new Intent(Aptoide.getContext(), ParserService.class), conn, Context.BIND_AUTO_CREATE);

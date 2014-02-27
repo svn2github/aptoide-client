@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.ResponseCode;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -24,6 +27,7 @@ import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -87,9 +91,9 @@ public class AddStoreDialog extends DialogFragment {
         spiceManager.start(getActivity());
 
         if(url!=null){
-            spiceManager.addListenerIfPending(Integer.class, (url+"rc"),new CheckStoreListener(login));
+            spiceManager.addListenerIfPending(ResponseCode.class, (url+"rc"),new CheckStoreListener(login));
             spiceManager.addListenerIfPending(RepositoryInfoJson.class, (url+"repositoryInfo"), new RepositoryRequestListener(url, login));
-            spiceManager.getFromCache(Integer.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
+            spiceManager.getFromCache(ResponseCode.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
             spiceManager.getFromCache(RepositoryInfoJson.class, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
         }
 
@@ -98,7 +102,7 @@ public class AddStoreDialog extends DialogFragment {
 
 
 
-    public final class CheckStoreListener implements RequestListener<Integer>, RequestCancellationListener {
+    public final class CheckStoreListener implements RequestListener<ResponseCode> {
 
 
         private final Login login;
@@ -115,11 +119,11 @@ public class AddStoreDialog extends DialogFragment {
         }
 
         @Override
-        public void onRequestSuccess(Integer integer) {
+        public void onRequestSuccess(ResponseCode integer) {
 
             if (integer != null) {
 
-                switch (integer) {
+                switch (integer.responseCode) {
                     case 401:
                         //on401(url);
                         dismissDialog("Private store found");
@@ -158,10 +162,7 @@ public class AddStoreDialog extends DialogFragment {
             }
         }
 
-        @Override
-        public void onRequestCancelled() {
-            Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     @Override
@@ -188,6 +189,7 @@ public class AddStoreDialog extends DialogFragment {
                 showDialog();
                 break;
         }
+
     }
 
     public final class RepositoryRequestListener implements RequestListener<RepositoryInfoJson>, RequestCancellationListener {
@@ -263,7 +265,7 @@ public class AddStoreDialog extends DialogFragment {
     void dismissDialog(){
         DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null)
-                pd.dismiss();
+                pd.dismissAllowingStateLoss();
 
     }
 
@@ -283,8 +285,23 @@ public class AddStoreDialog extends DialogFragment {
         repoName = AptoideUtils.RepoUtils.split(url);
         checkServerRequest = new CheckServerRequest(url, login);
         CheckStoreListener checkStoreListener = new CheckStoreListener(login);
-        checkServerRequest.setRequestCancellationListener(checkStoreListener);
-        spiceManager.execute(checkServerRequest, (url+"rc"), DurationInMillis.ONE_MINUTE, checkStoreListener);
+
+        spiceManager.execute(checkServerRequest, "1", DurationInMillis.ONE_MINUTE, checkStoreListener);
+
+        checkServerRequest.setRequestCancellationListener(new RequestCancellationListener() {
+            @Override
+            public void onRequestCancelled() {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        });
+
         Log.i("Aptoide-", "Request:" +(url+"rc") );
 
     }
@@ -316,27 +333,25 @@ public class AddStoreDialog extends DialogFragment {
 
     private void showDialog() {
 
-        ProgressDialogFragment pd = (ProgressDialogFragment) AptoideDialog.pleaseWaitDialog();
-
-        pd.setOnCancelListener(cancelListener);
-        pd.show(getFragmentManager(), "addStoreProgress");
+        AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "addStoreProgress");
 
     }
 
-    ProgressDialogFragment.OnCancelListener cancelListener = new ProgressDialogFragment.OnCancelListener() {
-
+    public ProgressDialogFragment.OnCancelListener cancelListener = new ProgressDialogFragment.OnCancelListener() {
 
         @Override
         public void onCancel() {
 
             Log.i("Aptoide-", "Canceling:" +(url+"rc") );
-            Log.i("Aptoide-", "Canceling:" +(url+"repositoryInfo") );
+            Log.i("Aptoide-", "Canceling:" + (url + "repositoryInfo"));
+            spiceManager.cancel(ResponseCode.class, "1"   );
 
-            if(checkServerRequest!=null)checkServerRequest.cancel();
-            if(getRepoInfoRequest!=null)getRepoInfoRequest.cancel();
 
-            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();
+
+            //Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();
+
         }
+
     };
 
     @Override
@@ -347,9 +362,7 @@ public class AddStoreDialog extends DialogFragment {
             url = savedInstanceState.getString("url");
 
             ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
-            if(pd!=null){
-                pd.setOnCancelListener(cancelListener);
-            }
+
         }
 
     }

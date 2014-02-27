@@ -37,7 +37,8 @@ public enum EnumDownloadFailReason {
 	NOT_FOUND,
 	MD5_CHECK_FAILED,
     PAIDAPP_NOTFOUND,
-    NO_FREE_SPACE, SD_ERROR;
+    NO_FREE_SPACE,
+    SD_ERROR;
 
 	public static EnumDownloadFailReason reverseOrdinal(int ordinal){
 		return values()[ordinal];

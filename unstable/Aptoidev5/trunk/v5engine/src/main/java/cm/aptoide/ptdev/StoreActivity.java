@@ -123,6 +123,7 @@ public class StoreActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 

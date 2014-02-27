@@ -40,23 +40,23 @@ public class AptoideConfiguration {
 
 
 
-    public static String getMarketName() {
+    public String getMarketName() {
         return MARKETNAME;
     }
 
-    public static void setMARKETNAME(String MARKETNAME) {
+    public void setMARKETNAME(String MARKETNAME) {
         AptoideConfiguration.MARKETNAME = MARKETNAME;
     }
 
-    public static String getBrand() {
+    public String getBrand() {
         return BRAND;
     }
 
-    public static void setBrand(String brand) {
+    public void setBrand(String brand) {
         AptoideConfiguration.BRAND = brand;
     }
 
-    public static Class getShortcutClass() {
+    public Class getShortcutClass() {
         return MainActivity.class;
     }
 

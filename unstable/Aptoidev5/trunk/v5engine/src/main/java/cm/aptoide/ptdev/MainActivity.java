@@ -35,6 +35,7 @@ import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
@@ -80,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements
         DownloadManagerCallback,
         AddStoreDialog.Callback,
         DownloadInterface,
-        MyAppsAddStoreInterface {
+        MyAppsAddStoreInterface, ProgressDialogFragment.OnCancelListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int WIZARD_REQ_CODE = 50;
@@ -259,6 +260,31 @@ public class MainActivity extends ActionBarActivity implements
 
         if (savedInstanceState == null) {
 
+            if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {
+                ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
+                for (final String repoUrl : repos) {
+
+                    if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
+                        Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
+                    } else if (!getIntent().getBooleanExtra("nodialog", false)) {
+                        AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
+                        pager.setCurrentItem(1);
+                    } else {
+
+                        Store store = new Store();
+
+                        store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                        store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                        startParse(store);
+                        pager.setCurrentItem(1);
+                    }
+
+                }
+                getIntent().removeExtra("newrepo");
+            }else if(getIntent().hasExtra("fromDownloadNotification") && pager != null){
+                getIntent().removeExtra("fromDownloadNotification");
+                pager.setCurrentItem(3);
+            }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             String queueName = sharedPreferences.getString("queueName", null);
 
@@ -419,28 +445,7 @@ public class MainActivity extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {
-            ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
-            for (final String repoUrl : repos) {
 
-                if (database.existsServer(AptoideUtils.RepoUtils.formatRepoUri(repoUrl))) {
-                    Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
-                } else if (!getIntent().getBooleanExtra("nodialog", false)) {
-                    AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
-                    pager.setCurrentItem(1);
-                } else {
-
-                    Store store = new Store();
-
-                    store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-                    store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                    startParse(store);
-                    pager.setCurrentItem(1);
-                }
-
-            }
-            getIntent().removeExtra("newrepo");
-        }
 
     }
 
@@ -476,10 +481,10 @@ public class MainActivity extends ActionBarActivity implements
 
             }
 
-        }
-
-        if (intent.hasExtra("new_updates") && pager != null) {
+        }else if (intent.hasExtra("new_updates") && pager != null) {
             pager.setCurrentItem(2);
+        }else if(intent.hasExtra("fromDownloadNotification") && pager != null){
+            pager.setCurrentItem(3);
         }
 
 
@@ -596,6 +601,8 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
+
+
     protected void waitForServiceToBeBound() throws InterruptedException {
         lock.lock();
         try {
@@ -709,6 +716,17 @@ public class MainActivity extends ActionBarActivity implements
                 startParse(store);
             }
         };
+    }
+
+    @Override
+    public void onCancel() {
+
+        AddStoreDialog fragment = (AddStoreDialog) getSupportFragmentManager().findFragmentByTag("addStoreDialog");
+
+        if(fragment!=null){
+            fragment.cancelListener.onCancel();
+        }
+
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

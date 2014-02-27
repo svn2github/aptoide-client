@@ -197,7 +197,13 @@ public abstract class FragmentAppView extends Fragment {
 
             publisher.setText(Html.fromHtml("<b>" + getString(R.string.publisher) + "</b>" + ": " + event.getPublisher()));
             size.setText(Html.fromHtml("<b>" + getString(R.string.size) + "</b>" + ": " + AptoideUtils.formatBytes(event.getSize())));
-            store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": " + event.getStore()));
+            if(event.getStore()!=null){
+                store.setVisibility(View.VISIBLE);
+                store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": " + event.getStore()));
+            }else{
+                store.setVisibility(View.INVISIBLE);
+            }
+
             downloads.setText(Html.fromHtml("<b>" + getString(R.string.downloads) + "</b>" + ": " + withSuffix(String.valueOf(event.getDownloads()))));
             rating.setRating(event.getRating());
             rating.setOnRatingBarChangeListener(null);
@@ -911,14 +917,20 @@ public abstract class FragmentAppView extends Fragment {
                 public void onRequestFailure(SpiceException spiceException) {
                     Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    pd.dismiss();
+                    if(pd!=null){
+                        pd.dismissAllowingStateLoss();
+                    }
+
                 }
 
                 @Override
                 public void onRequestSuccess(GenericResponse genericResponse) {
 
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    pd.dismiss();
+                    if(pd!=null){
+                        pd.dismissAllowingStateLoss();
+                    }
+
 
                     if(genericResponse.getStatus().equals("OK")){
                         Toast.makeText(getActivity(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();

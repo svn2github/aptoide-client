@@ -460,8 +460,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
 
-            service.startDownloadFromJson(json, downloadId, download);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+            if(service!=null){
+                service.startDownloadFromJson(json, downloadId, download);
+                Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
@@ -1005,7 +1007,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             supportInvalidateOptionsMenu();
 
         } catch (PackageManager.NameNotFoundException e) {
-            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+            findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path));
         }
 
 

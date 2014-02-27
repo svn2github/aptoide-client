@@ -86,7 +86,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         showNotification = false;
                         showUpdatesNotification();
                     }
-                    spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
+                    if(spiceManager.isStarted()){
+                        spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
