@@ -53,6 +53,7 @@ import cm.aptoide.ptdev.webservices.UpdateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -591,7 +592,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 if (json.getMeta().getNews() != null) details.setNews(json.getMeta().getNews());
                 Log.d("Aptoide-AppView", "Description: " + json.getMeta().getDescription());
                 details.setDescription(json.getMeta().getDescription());
-                details.setSize(json.getApk().getSize().longValue());
+
+                long size = json.getApk().getSize().longValue();
+
+                if(json.getObb()!=null && !Data.isNull(json.getObb())){
+                    size += json.getObb().getMain().getFilesize().longValue();
+
+                    if(json.getObb().getPatch() !=null && !Data.isNull(json.getObb().getPatch())){
+                        size += json.getObb().getPatch().getFilesize().longValue();
+                    }
+
+                }
+
+                details.setSize(size);
 
                 if (json.getMedia().getSshots_hd() != null) {
                     details.setScreenshotsHd(json.getMedia().getSshots_hd());

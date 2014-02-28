@@ -55,6 +55,7 @@ import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.BadgeView;
+import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
@@ -733,6 +734,7 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
 
+
             int switchId = (int) id;
 
             switch (switchId) {
@@ -789,11 +791,13 @@ public class MainActivity extends ActionBarActivity implements
             View v = mDrawerList.getChildAt(0);
             mDrawerList.removeHeaderView(v);
         }
+
         mDrawerList.setAdapter(null);
 
         //Login Header
         if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
+
 
             mDrawerList.addHeaderView(header, null, false);
 
@@ -802,15 +806,10 @@ public class MainActivity extends ActionBarActivity implements
 
             user_avatar = (ImageView) header.findViewById(R.id.user_avatar);
             String avatarUrl = PreferenceManager.getDefaultSharedPreferences(mContext).getString("useravatar",null);
-            if(avatarUrl!=null){
+
+            if (avatarUrl != null) {
                 ImageLoader.getInstance().displayImage(avatarUrl, user_avatar);
             }
-
-            /*
-            if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false)) {
-                toast.makeText(this, getString(R.string.webinstall_relogin), Toast.LENGTH_SHORT).show();
-            }
-            */
 
         }
         mDrawerList.setAdapter(mMenuAdapter);
