@@ -8,20 +8,21 @@
   <string name="WidgetProvider_timestamp_just_now">Alleen nu</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s weken geleden</string>
   <string name="WidgetProvider_timestamp_week_ago">%s weken geleden</string>
+  <string name="WidgetProvider_timestamp_this_week">Deze week</string>
   <string name="timestamp_months">%s maanden</string>
   <string name="timestamp_month">%s maanden</string>
   <string name="timestamp_weeks">%s weken</string>
   <string name="timestamp_week">%s week</string>
   <string name="timestamp_days">%s dagen</string>
   <string name="timestamp_day">%s dag</string>
-  <string name="action_contact">Contact:</string>
+  <string name="action_contact">Contact</string>
   <string name="installed_tab">Geïnstalleerd</string>
   <string name="update">Update</string>
   <string name="uninstall">Deinstalleren</string>
   <string name="downloading_apps">Downloaden</string>
   <string name="downloaded_apps">Gedownload</string>
-  <string name="screenshots">Scherm afbeeldingen</string>
-  <string name="about">Uitleg</string>
+  <string name="screenshots">Schermafdrukken</string>
+  <string name="about">Beschrijving</string>
   <string name="show_more">Toon meer</string>
   <string name="show_less">Toon minder</string>
   <string name="like">Leuk</string>
@@ -47,7 +48,7 @@
   <string name="order_popup_title2">Toon applicaties</string>
   <string name="order_popup_catg1">Op categorie</string>
   <string name="order_popup_catg2">Alle applicaties</string>
-  <string name="order_popup_title3">Volwassen inhoud:</string>
+  <string name="order_popup_title3">Volwassen inhoud</string>
   <string name="social_networks">Sociale Netwerken</string>
   <string name="find_us_on_facebook">Vind ons op Facebook</string>
   <string name="follow_twitter">Volg ons op Twitter</string>
@@ -80,7 +81,7 @@
   <string name="setting_schdwninstalltitle">Automatische installatie</string>
   <string name="setting_clear_memory">Wis Geheugen</string>
   <string name="clearcontent_title">Verwijder gegevens en configuraties</string>
-  <string name="clearcache_title">Cache leegmaken</string>
+  <string name="clearcache_title">Wis cache</string>
   <string name="clear_cache_sucess">Inhoud met succes verwijderd</string>
   <string name="clearcache_sum">Verwijderd cache (iconen, schermafbeelding) van de SD kaart.</string>
   <string name="clearcontent_sum">Verwijderd gegevens van de SD kaart.</string>
@@ -114,7 +115,7 @@
   <string name="add_store">Voeg een winkel toe</string>
   <string name="add">Toevoegen</string>
   <string name="new_store">Voeg een nieuwe winkel toe</string>
-  <string name="merge_all_stores">Voeg alle winkels bij elkaar</string>
+  <string name="merge_all_stores">Winkels samenvoegen</string>
   <string name="menu_context_reparse">Opnieuw laden</string>
   <string name="menu_context_remove">Verwijderen</string>
   <string name="menu_select_all">Alles selecteren</string>
@@ -207,7 +208,7 @@
   <string name="likes">Leuk</string>
   <string name="dont_likes">Niet leuk</string>
   <string name="split_stores">Split Winkels</string>
-  <string name="change_theme">Verander thema</string>
+  <string name="change_theme">Thema veranderen</string>
   <string name="theme">Thema\'s</string>
   <string name="store">Winkel</string>
   <string name="search_for_apps">Zoek voor apps...</string>
@@ -215,7 +216,7 @@
   <string name="exclude_update">Update negeren</string>
   <string name="trusted">Vertrouwd</string>
   <string name="warning">Waarschuwing</string>
-  <string name="downgrade">Terug naar vorige versie</string>
+  <string name="downgrade">Vorige versie</string>
   <string name="open">Open</string>
   <string name="scanned_with_av">Gescand met Anti-Virus:</string>
   <string name="compared_with_another_marketplace">Vergelijkt met een andere Androidmarkt:</string>
@@ -338,7 +339,7 @@
   <string name="download_inactive">Inactief</string>
   <string name="download_error">Fout</string>
   <string name="try_again">Probeer nogmaals</string>
-  <string name="clear">Duidelijk</string>
+  <string name="clear">Wis</string>
   <string name="link_device_webinstall">Link account met Webinstall</string>
   <string name="update_self_title">Update beschikbaar</string>
   <string name="update_self_msg">Er is een nieuwe versie van %s beschikbaar,\nWil je updaten?</string>
@@ -351,4 +352,6 @@
   <string name="new_updates">Er zijn %s nieuwe updates beschikbaar!</string>
   <string name="one_new_update">Er is %s nieuwe update beschikbaar!</string>
   <string name="has_updates">%s heeft nieuwe update(s) beschikbaar!</string>
+  <string name="remaining_time">overblijvende</string>
+  <string name="sd_error">Kon niet schrijven naar SD-kaart</string>
 </resources>

@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Soeben</string>
   <string name="WidgetProvider_timestamp_weeks_ago">vor %s Wochen</string>
   <string name="WidgetProvider_timestamp_week_ago">vor %s Woche</string>
+  <string name="WidgetProvider_timestamp_this_week">Diese Woche</string>
   <string name="timestamp_months">%s Monaten</string>
   <string name="timestamp_month">%s Monate</string>
   <string name="timestamp_weeks">%s Wochen</string>
@@ -123,7 +124,7 @@
   <string name="flag">Markieren</string>
   <string name="srch_hint">Suche nach Apps...</string>
   <string name="share">Teilen</string>
-  <string name="search_other_market">Anderen Store durchsuchen</string>
+  <string name="search_other_market">Anderen Store suchen</string>
   <string name="search">Suche</string>
   <string name="settings">Einstellungen</string>
   <string name="my_account">Mein Konto</string>
@@ -135,12 +136,12 @@
   <string name="search_other_stores">Oder suche nach anderen...</string>
   <string name="see_top_stores">Siehe Top Stores</string>
   <string name="setcredentials">Anmelden</string>
-  <string name="rollback">Downgrade</string>
-  <string name="rollback_empty">Keine Apps zum downgraden</string>
+  <string name="rollback">Zurücksetzen</string>
+  <string name="rollback_empty">Keine Apps zum zurücksetzen</string>
   <string name="rollback_installed">Installiert</string>
   <string name="rollback_uninstalled">Deinstalliert</string>
   <string name="rollback_updated">Aktualisiert</string>
-  <string name="rollback_downgraded">Downgraded</string>
+  <string name="rollback_downgraded">Zurückgesetzt</string>
   <string name="install">Installieren</string>
   <string name="get_latest_version">Erhalte neueste Version</string>
   <string name="get_latest_version_and_trusted">Erhalte Neueste &amp; Vertrauenswürdige</string>
@@ -205,7 +206,7 @@
   <string name="downloads">Heruntergeladen</string>
   <string name="size">Größe</string>
   <string name="likes">Likes</string>
-  <string name="dont_likes">Nicht Likes</string>
+  <string name="dont_likes">Gefällt nicht</string>
   <string name="split_stores">Stores aufteilen</string>
   <string name="change_theme">Design ändern</string>
   <string name="theme">Designs</string>
@@ -215,7 +216,7 @@
   <string name="exclude_update">Update ignorieren</string>
   <string name="trusted">Vertraut</string>
   <string name="warning">Warnung</string>
-  <string name="downgrade">Downgrade</string>
+  <string name="downgrade">zurücksetzen</string>
   <string name="open">Öffnen</string>
   <string name="scanned_with_av">Mit Anti-Virus gescannt:</string>
   <string name="compared_with_another_marketplace">Mit anderen Android Märkten verglichen:</string>
@@ -293,6 +294,7 @@
   <string name="wizard_search_local">Apps verfügbar in lokalen Stores</string>
   <string name="wizard_search_online">Suche in anderen Stores auf der Aptoide Webseite</string>
   <string name="wizard_new_layout">1- Neues Layout</string>
+  <string name="wizard_rollback">2- Downgrade</string>
   <string name="wizard_widget">3- Widget</string>
   <string name="wizard_new_account">4- Account Manager</string>
   <string name="wizard_add_more_stores">Du kannst neue Android Stores hinzufügen</string>
@@ -346,8 +348,10 @@
   <string name="update_username">Benutzernamen aktualisieren</string>
   <string name="username_success">Benutzername erfolgreich aktualisiert.</string>
   <string name="please_update_username">Bitte aktualisiere deinen Benutzernamen um Kommentar einzufügen</string>
-  <string name="no_downloads">Keine Downloads. Fang an zum heruterladen!</string>
+  <string name="no_downloads">Keine Downloads. Fang an zum herunterladen!</string>
   <string name="new_updates">Es sind %s neue Updates verfügbar!</string>
   <string name="one_new_update">Es ist %s neues Update verfügbar!</string>
   <string name="has_updates">%s hat neue Updates verfügbar!</string>
+  <string name="remaining_time">übrig</string>
+  <string name="sd_error">Konnte nicht auf SD-Karte geschrieben werden.</string>
 </resources>

@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Adesso</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s settimane fa</string>
   <string name="WidgetProvider_timestamp_week_ago">%s settimana fa</string>
+  <string name="WidgetProvider_timestamp_this_week">Questa settimana</string>
   <string name="timestamp_months">%s mesi</string>
   <string name="timestamp_month">%s mese</string>
   <string name="timestamp_weeks">%s settimane</string>
@@ -351,4 +352,6 @@
   <string name="new_updates">Ci sono %s nuovi aggiornamenti possibili!</string>
   <string name="one_new_update">C\'è %s nuovo aggiornamento disponibile!</string>
   <string name="has_updates">%s ha nuovi aggiornamenti disponibili!</string>
+  <string name="remaining_time">rimanenti</string>
+  <string name="sd_error">Impossibile scrivere sulla SDCard.</string>
 </resources>

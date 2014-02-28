@@ -181,7 +181,7 @@
   <string name="update_self_msg">یک نسخه از %s در دسترس است،n\\تمایل به به روز رسانی دارید؟</string>
   <string name="retrieving_update">در حال بازیابی به روزرسانی...</string>
   <string name="no_downloads">هیچ دانلودی انجام نداده اید. دانلود کنید!</string>
-  <string name="new_updates">"تعداد s% به روز رسانی جدید  در دسترس است!"</string>
-  <string name="one_new_update">یک مورد s% به روز رسانی در دسترس است!</string>
-  <string name="has_updates">s% تعدادی به روز رسانی جدید دارد.</string>
+  <string name="new_updates">"تعداد %s به روز رسانی جدید  در دسترس است!"</string>
+  <string name="one_new_update">یک مورد %s به روز رسانی در دسترس است!</string>
+  <string name="has_updates">%s تعدادی به روز رسانی جدید دارد.</string>
 </resources>

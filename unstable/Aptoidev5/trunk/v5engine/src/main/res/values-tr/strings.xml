@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Şimdi</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s hafta önce</string>
   <string name="WidgetProvider_timestamp_week_ago">%s hafta önce</string>
+  <string name="WidgetProvider_timestamp_this_week">Bu hafta</string>
   <string name="timestamp_months">%s ay</string>
   <string name="timestamp_month">%s ay</string>
   <string name="timestamp_weeks">%s hafta</string>
@@ -351,4 +352,6 @@
   <string name="new_updates">%s yeni güncelleme mevcuttur!</string>
   <string name="one_new_update">%s yeni güncelleme mevcuttur!</string>
   <string name="has_updates">%s için yeni güncelleme(ler) mevcuttur!</string>
+  <string name="remaining_time">kaldı</string>
+  <string name="sd_error">SD kartına yazma başarısız oldu.</string>
 </resources>

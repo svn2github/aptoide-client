@@ -41,8 +41,7 @@
                     android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
 
-        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial"
-                  android:screenOrientation="portrait"/>
+        <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
 
         <activity android:name="com.facebook.LoginActivity"  />
 

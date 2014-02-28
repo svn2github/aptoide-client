@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Justo ahora</string>
   <string name="WidgetProvider_timestamp_weeks_ago">hace %s semanas atras</string>
   <string name="WidgetProvider_timestamp_week_ago">%s semana atras</string>
+  <string name="WidgetProvider_timestamp_this_week">Esta semana</string>
   <string name="timestamp_months">%s meses</string>
   <string name="timestamp_month">%s mes</string>
   <string name="timestamp_weeks">%s semanas</string>
@@ -339,11 +340,18 @@
   <string name="download_error">Error</string>
   <string name="try_again">Intentar otra vez</string>
   <string name="clear">Limpiar</string>
+  <string name="link_device_webinstall">Asociar cuenta con Webinstall</string>
   <string name="update_self_title">Actualización disponible</string>
   <string name="update_self_msg">Hay una nueva versión de aptoide disponible,\n¿Desea actualizarla?</string>
   <string name="retrieving_update">Recuperando actualización...</string>
+  <string name="no_related">Aplicaciones relacionadas no encontradas.</string>
+  <string name="update_username">Editar nombre de usuario</string>
+  <string name="username_success">Nombre de usuario actualizado con éxito.</string>
+  <string name="please_update_username">Por favor, actualiza tu nombre de usuario para insertar un comentario</string>
   <string name="no_downloads">No hay ninguna descarga. ¡Comienza a descargar!</string>
   <string name="new_updates">¡Hay %s nuevas actualizaciones disponibles!</string>
   <string name="one_new_update">¡Hay %s actualización disponible!</string>
   <string name="has_updates">¡%s tiene nuevas actualizaciones disponibles!</string>
+  <string name="remaining_time">restante</string>
+  <string name="sd_error">No pudimos escribir en la tarjeta SD</string>
 </resources>

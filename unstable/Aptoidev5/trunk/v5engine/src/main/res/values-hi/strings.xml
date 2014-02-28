@@ -6,6 +6,7 @@
   <string name="WidgetProvider_timestamp_hours_ago">%s घंटों पहले</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s मिनटों पहले</string>
   <string name="WidgetProvider_timestamp_just_now">बस अभी</string>
+  <string name="action_contact">संपर्क:</string>
   <string name="installed_tab">स्थापित</string>
   <string name="update">अपडेट</string>
   <string name="uninstall">स्थापना रद्द करो</string>
@@ -50,14 +51,20 @@
   <string name="menu_context_reparse">दोबारा लोड करो</string>
   <string name="menu_context_remove">हटा दो</string>
   <string name="share">साँझा</string>
+  <string name="settings">सैटिंग्स</string>
   <string name="no_sch_downloads">कोई समय सारणी डाऊनलोड नहीं है!</string>
   <string name="schDown_installselected">संपादन का चयन</string>
   <string name="stores">स्टोर</string>
   <string name="store_name">स्टोर का नाम</string>
+  <string name="rollback_installed">स्थापित</string>
+  <string name="rollback_uninstalled">स्थापना रद्द करो</string>
+  <string name="rollback_updated">अपडेट</string>
+  <string name="rollback_downgraded">डाऊनलोड</string>
   <string name="install">संस्थापित</string>
   <string name="rate_this_app">इस अनुप्रयोग को दर्जा दें</string>
   <string name="download_manager">प्रबन्धक को डाऊनलोड करें</string>
   <string name="updates_tab">अपडेट</string>
+  <string name="home">होम:</string>
   <string name="update_all">सभी को अपडेट करो</string>
   <string name="username">ईमेल</string>
   <string name="password">पासवर्ड</string>
@@ -84,10 +91,14 @@
   <string name="installapp_alrt">क्या अप स्थापना करना चाहते हैं: \n\n</string>
   <string name="starting_download">डाऊनलोड शुरू हो रहा है</string>
   <string name="newrepo_alrt">क्या आप अपनी सूची में इस स्टोर को जोड़ना चाहते हैं? \n\n</string>
+  <string name="downloads">डाऊनलोड</string>
   <string name="size">आकार</string>
+  <string name="likes">पसंद</string>
+  <string name="dont_likes">"न पसंद "</string>
   <string name="store">स्टोर</string>
   <string name="exclude_update">अपडेट को अनदेखा करो</string>
   <string name="trusted">विश्वसनीय</string>
+  <string name="downgrade">डाऊनलोड</string>
   <string name="scanned_with_av">एंटी वायरस के साथ स्कैन:</string>
   <string name="about_aptoide_antimalware">"ऐप्टोयेड ऐंटी मालवेयर प्लेटफार्म चलते समय अनुप्रयोगों का विश्लेषण करता है और सभी स्टोरों में संभावित खतरों को  निष्क्रिय करता है। यह प्रणाली स्टोरों से सभी नए अनुप्रयोग फाइलों को स्कैन करती और उनको अन्य एंड्रॉयड बाजारों के साथ तुलना द्वारा प्रमाणित करता है।  "</string>
   <string name="schDown_nodownloadselect">"कोई समय सारणी का चयन नहीं हुआ। "</string>
@@ -100,4 +111,6 @@
   <string name="applications">अनुप्रयोग:</string>
   <string name="racing">रेटिंग</string>
   <string name="top_apps">मुख्य अनुप्रयोग</string>
+  <string name="reinstall">स्थापना रद्द करो</string>
+  <string name="error_SYS_1">एक त्रुटी उत्पन्न हुई है। कृपया फिर से कोशिश करें।</string>
 </resources>

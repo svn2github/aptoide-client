@@ -320,7 +320,7 @@
     <string name="create_username">Username</string>
     <string name="all_stores">All Stores</string>
     <string name="incompatible_store">Incompatible store</string>
-    <string name="incompatible_store_msg">This store is not yet incompatible with this version of Aptoide. Please wait some days until we rebuild all stores.</string>
+    <string name="incompatible_store_msg">This store is not yet compatible with this version of Aptoide. Please wait some days until we rebuild all stores.</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="website">Website</string>
     <string name="downgrade_requires_uninstall">Downgrade requires Application uninstall</string>

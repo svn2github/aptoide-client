@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Μόλις τώρα</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s εβδομάδες πριν</string>
   <string name="WidgetProvider_timestamp_week_ago">%s εβδομάδα πριν</string>
+  <string name="WidgetProvider_timestamp_this_week">Αυτή την εβδομάδα</string>
   <string name="timestamp_months">%s μήνες</string>
   <string name="timestamp_month">%s μήνας</string>
   <string name="timestamp_weeks">%s εβδομάδες</string>
@@ -142,8 +143,8 @@
   <string name="rollback_updated">Αναβαθμίστηκε</string>
   <string name="rollback_downgraded">Λήφθηκε</string>
   <string name="install">Εγκατάσταση</string>
-  <string name="get_latest_version">Λάβετε τα τελευταία</string>
-  <string name="get_latest_version_and_trusted">Λάβετε τα Τελευταία &amp; Έμπιστα</string>
+  <string name="get_latest_version">Λάβετε την τελευταία</string>
+  <string name="get_latest_version_and_trusted">Λάβετε την Τελευταία &amp; Έμπιστη</string>
   <string name="review">Κριτική</string>
   <string name="rate_this_app">Βαθμολογήστε την εφαρμογή</string>
   <string name="info">Πληροφορίες</string>
@@ -327,9 +328,9 @@
   <string name="error_SYS_2">Δεν βρέθηκαν στοιχεία, παρακαλώ δοκιμάστε ξανά αργότερα</string>
   <string name="error_SYS_3">Το σύστημα είναι σε συντήρηση, παρακαλώ δοκιμάστε ξανά αργότερα</string>
   <string name="error_SYS_4">Αυτή η κλήση δεν υποστηρίζεται από την παρούσα API έκδοση</string>
-  <string name="X_download_number">%s κάτω.</string>
+  <string name="X_download_number">%s λήψεις.</string>
   <string name="search_more">Αναζητήστε Περισσότερο</string>
-  <string name="more_editors_choice">Περισσότερες Επιλογές Συνταακτών</string>
+  <string name="more_editors_choice">Περισσότερες Επιλογές Συντακτών</string>
   <string name="more_top_apps">Περισσότερες Κορυφαίες Εφαρμογές</string>
   <string name="not_found">Δεν βρέθηκε</string>
   <string name="download_active">Ενεργό</string>
@@ -351,4 +352,6 @@
   <string name="new_updates">Υπάρχουν %s νέες ενημερώσεις διαθέσιμες!</string>
   <string name="one_new_update">Υπάρχει %s νέα ενημέρωση διαθέσιμη!</string>
   <string name="has_updates">%s έχει νέα ενημέρωση διαθέσιμη!</string>
+  <string name="remaining_time">απομένει</string>
+  <string name="sd_error">Δεν μπορεί να γράψει στην SDCard.</string>
 </resources>
