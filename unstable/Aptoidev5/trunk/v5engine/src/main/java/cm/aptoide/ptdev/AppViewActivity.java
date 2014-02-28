@@ -595,10 +595,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 long size = json.getApk().getSize().longValue();
 
-                if(json.getObb()!=null && !Data.isNull(json.getObb())){
+                if (json.getObb() != null && !Data.isNull(json.getObb())) {
                     size += json.getObb().getMain().getFilesize().longValue();
 
-                    if(json.getObb().getPatch() !=null && !Data.isNull(json.getObb().getPatch())){
+                    if (json.getObb().getPatch() != null && !Data.isNull(json.getObb().getPatch())) {
                         size += json.getObb().getPatch().getFilesize().longValue();
                     }
 
