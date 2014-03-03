@@ -302,7 +302,7 @@ public class MainActivity extends ActionBarActivity implements
                 public void run() {
                     try {
                         waitForServiceToBeBound();
-                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=us");
+                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=" + AptoideUtils.getMyCountry(MainActivity.this));
                         service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
                     } catch (InterruptedException e) {
                         e.printStackTrace();

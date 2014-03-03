@@ -28,6 +28,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.CachedSpiceRequest;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -92,9 +93,7 @@ public class AddStoreDialog extends DialogFragment {
 
         if(url!=null){
             spiceManager.addListenerIfPending(ResponseCode.class, (url+"rc"),new CheckStoreListener(login));
-            spiceManager.addListenerIfPending(RepositoryInfoJson.class, (url+"repositoryInfo"), new RepositoryRequestListener(url, login));
-            spiceManager.getFromCache(ResponseCode.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
-            spiceManager.getFromCache(RepositoryInfoJson.class, (url+"repositoryInfo"), DurationInMillis.ONE_MINUTE, new RepositoryRequestListener(url, login));
+            //spiceManager.getFromCache(ResponseCode.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
         }
 
     }
@@ -102,7 +101,7 @@ public class AddStoreDialog extends DialogFragment {
 
 
 
-    public final class CheckStoreListener implements RequestListener<ResponseCode> {
+    public final class CheckStoreListener implements RequestListener<ResponseCode>, PendingRequestListener<ResponseCode> {
 
 
         private final Login login;
@@ -163,6 +162,10 @@ public class AddStoreDialog extends DialogFragment {
         }
 
 
+        @Override
+        public void onRequestNotFound() {
+
+        }
     }
 
     @Override
@@ -263,6 +266,7 @@ public class AddStoreDialog extends DialogFragment {
     }
 
     void dismissDialog(){
+        setRetainInstance(false);
         DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
             if(pd!=null)
                 pd.dismissAllowingStateLoss();
@@ -285,8 +289,8 @@ public class AddStoreDialog extends DialogFragment {
         repoName = AptoideUtils.RepoUtils.split(url);
         checkServerRequest = new CheckServerRequest(url, login);
         CheckStoreListener checkStoreListener = new CheckStoreListener(login);
-
-        spiceManager.execute(checkServerRequest, "1", DurationInMillis.ONE_MINUTE, checkStoreListener);
+        setRetainInstance(true);
+        spiceManager.execute(checkServerRequest, checkStoreListener);
 
         checkServerRequest.setRequestCancellationListener(new RequestCancellationListener() {
             @Override
@@ -344,8 +348,10 @@ public class AddStoreDialog extends DialogFragment {
 
             Log.i("Aptoide-", "Canceling:" +(url+"rc") );
             Log.i("Aptoide-", "Canceling:" + (url + "repositoryInfo"));
-            spiceManager.cancel(ResponseCode.class, "1"   );
 
+            if(checkServerRequest!=null){
+                checkServerRequest.cancel();
+            }
 
 
             //Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();

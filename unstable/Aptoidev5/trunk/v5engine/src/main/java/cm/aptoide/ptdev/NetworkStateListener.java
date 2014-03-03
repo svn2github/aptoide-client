@@ -9,11 +9,15 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.EnumDownloadFailReason;
+import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.Parser;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
 
 import java.io.IOException;
@@ -96,23 +100,52 @@ public class NetworkStateListener extends BroadcastReceiver {
         }
     };
     private Object lock = new Object();
+    private DownloadService downloadService;
+    private ServiceConnection downloadConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+
+            downloadService = ((DownloadService.LocalBinder)service).getService();
+
+            for(Download download : downloadService.getAllNotActiveDownloads()){
+
+                if(download.getDownloadState().equals(EnumState.ERROR) && download.getParent().getFailReason().equals(EnumDownloadFailReason.TIMEOUT)||download.getParent().getFailReason().equals(EnumDownloadFailReason.CONNECTION_ERROR)){
+                    download.getParent().download();
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent incomingIntent) {
 
 
-
         final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        //final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        if (((wifi!=null && wifi.getState() == NetworkInfo.State.CONNECTED )|| (mobile!=null && mobile.getState() == NetworkInfo.State.CONNECTED)) && service==null) {
+        if (((wifi != null && wifi.getState() == NetworkInfo.State.CONNECTED) && service == null)) {
 
-            synchronized (lock){
+            synchronized (lock) {
                 Aptoide.getContext().bindService(new Intent(Aptoide.getContext(), ParserService.class), conn, Context.BIND_AUTO_CREATE);
             }
 
         }
+
+
+        if (((wifi != null && wifi.getState() == NetworkInfo.State.CONNECTED) && downloadService == null)) {
+            synchronized (lock) {
+                Aptoide.getContext().bindService(new Intent(Aptoide.getContext(), DownloadService.class), downloadConn, Context.BIND_AUTO_CREATE);
+            }
+        }
+
 
     }
 
