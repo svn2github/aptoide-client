@@ -16,7 +16,6 @@ import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Download;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -202,7 +201,7 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     }
 
     protected View createNewSectionView() {
-        return inflater.inflate(R.layout.separator_installed, null);
+        return inflater.inflate(R.layout.separator_textview, null);
     }
 
     @Override

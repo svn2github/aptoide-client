@@ -6,21 +6,20 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:layout_marginTop="15dp"
-              android:layout_marginBottom="15dp"
+              android:padding="5dp"
               android:background="?attr/selectableItemBackground">
 
-    <TextView style="@style/separatorLabel"
-              android:id="@+id/separator_label"
-              android:layout_weight="0.2"/>
+    <TextView style="@style/homeLabel"
+              android:id="@+id/separator_label" />
 
     <TextView style="?attr/headerSeparatorButton"
               android:text="@string/more"
-              android:id="@+id/more"/>
+              android:id="@+id/more"
+              android:clickable="false"
+              android:layout_alignParentRight="true" />
 
 
-</LinearLayout>
+</RelativeLayout>

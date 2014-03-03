@@ -52,8 +52,7 @@
         <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow</item>
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
-
-        <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
+        <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
     </style>
 
 

@@ -323,6 +323,7 @@
   <string name="error_IARG_2">არასწორი კოდი!</string>
   <string name="error_IARG_3">ვერ მოხდა იდენტიფიკაცია!</string>
   <string name="error_IARG_100">კომენტარების არასწორი ლიმიტი!</string>
+  <string name="error_IARG_102">არასწორი პარამეტრი!</string>
   <string name="error_SYS_1">დაფიქსირდა შეცდომა.სცადეთ თავიდან</string>
   <string name="error_SYS_2">ინფორმაცია ვერ მოიძებნა, გთხოვთ სცადეთ მოგვიანებით</string>
   <string name="error_SYS_3">მიმდინარეობს ტექნიკური სამუშაოები, სცადეთ მოგვიანებით</string>
