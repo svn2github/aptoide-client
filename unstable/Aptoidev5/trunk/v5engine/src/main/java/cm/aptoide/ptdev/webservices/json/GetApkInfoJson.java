@@ -31,7 +31,7 @@ public class GetApkInfoJson {
     private ObbObject obb;
 
     @Key
-    private List<cm.aptoide.ptdev.model.Error> errors;
+    List<cm.aptoide.ptdev.model.Error> errors;
 
     public Apk getApk() {
         return apk;

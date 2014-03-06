@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import cm.aptoide.ptdev.DownloadServiceConnected;
 import cm.aptoide.ptdev.MainActivity;
@@ -27,6 +28,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,9 +39,29 @@ import java.util.ArrayList;
  */
 public class FragmentDownloadManager extends ListFragment {
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        //super.onCreateContextMenu(menu, v, menuInfo);
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        Object type = getListView().getAdapter().getItem((info).position);
+        MenuInflater inflater = this.getActivity().getMenuInflater();
+
+        Log.d("onCreateContextMenu", "OnCreate");
+
+        if (type instanceof Download) {
+            switch (((Download) type).getDownloadState()) {
+                case ERROR:
+                    inflater.inflate(R.menu.menu_download_error, menu);
+                    break;
+            }
+        }
+
+    }
 
     MainActivity callback;
     DownloadService service;
+
 
 
     @Override
@@ -71,6 +93,7 @@ public class FragmentDownloadManager extends ListFragment {
 
     @Subscribe
     public void initAdapters(DownloadServiceConnected event) {
+
 
         service = callback.getDownloadService();
 
@@ -128,6 +151,18 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
     @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id == R.id.menu_retry){
+            ((Download)getListAdapter().getItem(((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position)).getParent().download();
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -135,8 +170,6 @@ public class FragmentDownloadManager extends ListFragment {
         if(id == R.id.menu_clear_downloads){
             service.removeNonActiveDownloads();
         }
-
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -189,8 +222,14 @@ public class FragmentDownloadManager extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
         setEmptyText(getString(R.string.no_downloads));
+        registerForContextMenu(getListView());
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 }

@@ -37,12 +37,15 @@ public class ParserHelper {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((ParserService.MainServiceBinder)binder).getService();
+            spiceManager.start(context);
 
             if (!storesToCheck.isEmpty()) {
                 spiceManager.execute(request, (repos.toString() + hashes.toString()).hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<RepositoryChangeJson>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-
+                        if (spiceManager.isStarted()) {
+                            spiceManager.shouldStop();
+                        }
                     }
 
                     @Override
@@ -69,7 +72,9 @@ public class ParserHelper {
 
                                 }
                                 c.close();
-                                spiceManager.shouldStop();
+                                if (spiceManager.isStarted()) {
+                                    spiceManager.shouldStop();
+                                }
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -84,6 +89,10 @@ public class ParserHelper {
 
                     }
                 });
+            } else {
+                if (spiceManager.isStarted()) {
+                    spiceManager.shouldStop();
+                }
             }
 
         }
@@ -104,9 +113,9 @@ public class ParserHelper {
     private StringBuilder repos;
 
     public void parse(final Context context) {
+
         Log.d("Aptoide-UpdateSync", "parse");
         this.context = context;
-        spiceManager.start(context);
 
         database = new Database(Aptoide.getDb());
         Cursor c = database.getServers();
@@ -139,6 +148,7 @@ public class ParserHelper {
         request.setRepos(repos.toString());
         request.setHashes(hashes.toString());
         context.bindService(new Intent(context, ParserService.class),conn,Context.BIND_AUTO_CREATE);
+
     }
 
 

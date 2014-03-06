@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentBreadCrumbs;
@@ -16,7 +14,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
@@ -68,7 +65,7 @@ public class StoreActivity extends ActionBarActivity {
     }
 
     public enum Sort{ 	NAME, DOWNLOADS, DATE, PRICE, RATING}
-    public boolean noCategories;
+    public boolean categories;
     public Sort sort;
 
 
@@ -107,7 +104,7 @@ public class StoreActivity extends ActionBarActivity {
         sort = Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         //storeName = getIntent().getStringExtra("storename");
         storeid = getIntent().getLongExtra("storeid", 0);
-        noCategories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", false);
+        categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
         //themeordinal = getIntent().getIntExtra("theme", 0);
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
         FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
@@ -157,7 +154,7 @@ public class StoreActivity extends ActionBarActivity {
         if(storeid>0){
             getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
         }else{
-            noCategories = false;
+            categories = true;
         }
 
     }
@@ -204,7 +201,7 @@ public class StoreActivity extends ActionBarActivity {
                 break;
         }
 
-        if(noCategories){
+        if(!categories){
             menu.findItem(R.id.show_all).setChecked(true);
         }
 
@@ -245,13 +242,13 @@ public class StoreActivity extends ActionBarActivity {
 
         }else if( i == R.id.show_all){
 
-            noCategories = !noCategories;
+            categories = !categories;
             getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             setSort(item);
 
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("orderByCategory", noCategories).putInt("order_list", sort.ordinal()).commit();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("orderByCategory", categories).putInt("order_list", sort.ordinal()).commit();
 
         return true;
     }
@@ -300,7 +297,7 @@ public class StoreActivity extends ActionBarActivity {
     }
 
     public SortObject getSort(){
-        return new SortObject(sort, noCategories);
+        return new SortObject(sort, !categories);
     }
 
     private void refreshList() {

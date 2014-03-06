@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cm.aptoide.pt.dev"
-          android:versionCode="422"
+          package="cm.aptoide.pt"
+          android:versionCode="423"
           android:versionName="5.0.0 Dev Version">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
@@ -52,6 +52,9 @@
         <activity android:name="cm.aptoide.ptdev.MyAccountActivity" />
 
         <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity" />
+
+        <activity android:name="cm.aptoide.ptdev.MoreUserBasedActivity" />
+
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
 

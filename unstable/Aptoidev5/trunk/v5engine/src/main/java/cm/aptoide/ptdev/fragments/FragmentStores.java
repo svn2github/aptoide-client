@@ -259,7 +259,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
-                pd.dismiss();
+                pd.dismissAllowingStateLoss();
                 setRetainInstance(false);
                 getLoaderManager().restartLoader(0,null,FragmentStores.this);
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));

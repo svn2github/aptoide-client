@@ -29,6 +29,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
@@ -69,6 +70,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private CheckBox registerDevice;
     private boolean hasQueue;
     private CheckUserCredentialsRequest request;
+    private boolean fromPreviousAptoideVersion;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -274,6 +276,15 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             if (accountName != null) {
                 ((EditText) findViewById(R.id.username)).setText(accountName);
             }
+
+            if (PreferenceManager.getDefaultSharedPreferences(this).contains(Constants.LOGIN_USER_LOGIN)) {
+                ((EditText) findViewById(R.id.username)).setText(PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.LOGIN_USER_LOGIN, ""));
+                fromPreviousAptoideVersion = true;
+            }
+
+
+
+
 
             password_box = (EditText) findViewById(R.id.password);
             password_box.setTransformationMethod(new PasswordTransformationMethod());
@@ -572,6 +583,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
+
+        if(fromPreviousAptoideVersion){
+            PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Constants.LOGIN_USER_LOGIN).commit();
+        }
+
         /*
         ContentResolver wiResolver = getContentResolver();
         wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);

@@ -794,7 +794,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
         if(pager != null){
-            PagerAdapter adapter = new AppViewPager(getSupportFragmentManager());
+            PagerAdapter adapter = new AppViewPager(getSupportFragmentManager(), this);
             pager.setAdapter(adapter);
             PagerSlidingTabStrip slidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             slidingTabStrip.setViewPager(pager);
@@ -979,7 +979,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             request.setToken(token);
         }
 
-        cacheKey = package_name + repoName + versionName;
+        cacheKey = package_name + repoName + versionCode;
         BusProvider.getInstance().post(publishDetails());
 
 
@@ -1149,17 +1149,18 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
 
-    public class AppViewPager extends FixedFragmentStatePagerAdapter{
+    public static class AppViewPager extends FixedFragmentStatePagerAdapter{
 
-        private final String[] TITLES = { getString(R.string.info), getString(R.string.review), getString(R.string.related), getString(R.string.advanced)};
+        private final String[] TITLES;
 
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position];
         }
 
-        public AppViewPager(FragmentManager fm) {
+        public AppViewPager(FragmentManager fm, Context context) {
             super(fm);
+            TITLES = new String[]{context.getString(R.string.info), context.getString(R.string.review), context.getString(R.string.related), context.getString(R.string.advanced)};
         }
 
         @Override

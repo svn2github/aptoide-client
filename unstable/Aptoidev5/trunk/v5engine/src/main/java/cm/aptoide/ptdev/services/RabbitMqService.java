@@ -166,7 +166,7 @@ public class RabbitMqService extends Service {
         try {
             isRunning = false;
             if(connection != null && connection.isOpen()){
-                channel.close();
+                if(channel!=null) channel.close();
                 connection.disconnectChannel(channel);
                 connection.close();
             }

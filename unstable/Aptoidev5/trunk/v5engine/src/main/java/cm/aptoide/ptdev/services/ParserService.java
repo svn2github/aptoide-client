@@ -35,6 +35,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
+import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -55,8 +56,8 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
-    private SpiceManager spiceManager2 = new SpiceManager(HttpClientSpiceService.class);
-    private boolean showNotification;
+    private boolean showNotification = true;
+    private Object lock = new Object();
 
 
     @Override
@@ -79,16 +80,22 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         parser = new Parser(spiceManager);
         parser.setPoolEndCallback(new PoolEndedCallback() {
             @Override
-            public void onEnd() {
+            public synchronized void onEnd() {
                 Log.d("Aptoide-", "onEnd");
                 try {
-                    if(showNotification){
+
+                    if (showNotification) {
+
                         showNotification = false;
-                        showUpdatesNotification();
+                        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true))
+                            showUpdatesNotification();
+
                     }
-                    if(spiceManager.isStarted()){
+
+                    if (spiceManager.isStarted()) {
                         spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
                     }
+
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -191,15 +198,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         if(handlerBundleSparseArray.get((int) store.getId())!=null){
             return;
         }
-        if (!spiceManager.isStarted()) {
-            Log.d("Aptoide-Parser", "Starting spice");
-            spiceManager.start(getApplicationContext());
-        }
-
-        if (!spiceManager2.isStarted()) {
-            Log.d("Aptoide-Parser", "Starting spice");
-            spiceManager2.start(getApplicationContext());
-        }
 
         startService(new Intent(getApplicationContext(), ParserService.class));
         startForeground(45, createDefaultNotification());
@@ -221,74 +219,66 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
 
+        if (!spiceManager.isStarted()) {
+            Log.d("Aptoide-Parser", "Starting spice");
+            spiceManager.start(getApplicationContext());
+        }
 
-        spiceManager2.execute(getRepoInfoRequest, new RequestListener<RepositoryInfoJson>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                spiceManager2.shouldStop();
+        RepositoryInfoJson repositoryInfoJson = null;
+        getRepoInfoRequest.setHttpRequestFactory(Jackson2GoogleHttpClientSpiceService.createRequestFactory());
+        try {
+            repositoryInfoJson = getRepoInfoRequest.loadDataFromNetwork();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String message = null;
+
+
+        if (repositoryInfoJson != null) {
+
+            Log.i("Aptoide-", "success");
+            if ("FAIL".equals(repositoryInfoJson.getStatus())) {
+
+                message = "Store doesn't exist.";
+
+
+            } else {
+
+
+                store.setName(repositoryInfoJson.getListing().getName());
+                store.setDownloads(repositoryInfoJson.getListing().getDownloads());
+
+
+                if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+
+                    String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
+
+
+                    String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                    avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+
+                    store.setAvatar(avatar);
+
+                }else{
+                    store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+                }
+
+                store.setDescription(repositoryInfoJson.getListing().getDescription());
+                store.setTheme(repositoryInfoJson.getListing().getTheme());
+                store.setView(repositoryInfoJson.getListing().getView());
+                store.setItems(repositoryInfoJson.getListing().getItems());
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         beginParse(db, store, id);
                     }
                 }).start();
-            }
-
-            @Override
-            public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
-
-                spiceManager2.shouldStop();
-                String message = null;
-
-                Log.i("Aptoide-", "success");
-                if (repositoryInfoJson != null) {
-
-
-                    if ("FAIL".equals(repositoryInfoJson.getStatus())) {
-
-                        message = "Store doesn't exist.";
-
-
-                    } else {
-
-
-                        store.setName(repositoryInfoJson.getListing().getName());
-                        store.setDownloads(repositoryInfoJson.getListing().getDownloads());
-
-
-                        if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
-
-                            String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
-
-
-                            String avatar = repositoryInfoJson.getListing().getAvatar_hd();
-                            String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                            avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-
-                            store.setAvatar(avatar);
-
-                        }else{
-                            store.setAvatar(repositoryInfoJson.getListing().getAvatar());
-                        }
-
-                        store.setDescription(repositoryInfoJson.getListing().getDescription());
-                        store.setTheme(repositoryInfoJson.getListing().getTheme());
-                        store.setView(repositoryInfoJson.getListing().getView());
-                        store.setItems(repositoryInfoJson.getListing().getItems());
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                beginParse(db, store, id);
-                            }
-                        }).start();
-
-                    }
-                }
 
             }
-        });
-
+        }
 
     }
 

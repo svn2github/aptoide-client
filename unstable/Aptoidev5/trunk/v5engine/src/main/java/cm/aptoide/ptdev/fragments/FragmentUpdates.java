@@ -209,7 +209,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        //super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         int type = getListView().getAdapter().getItemViewType(info.position);

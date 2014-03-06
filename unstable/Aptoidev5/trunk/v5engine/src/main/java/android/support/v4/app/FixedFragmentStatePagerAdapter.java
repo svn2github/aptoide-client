@@ -14,6 +14,7 @@ public abstract class FixedFragmentStatePagerAdapter extends FragmentStatePagerA
 
     public FixedFragmentStatePagerAdapter(FragmentManager fm) {
         super(fm);
+
     }
 
     @Override

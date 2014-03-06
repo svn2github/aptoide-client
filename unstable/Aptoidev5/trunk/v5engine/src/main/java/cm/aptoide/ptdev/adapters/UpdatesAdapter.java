@@ -136,6 +136,7 @@ public class UpdatesAdapter extends CursorAdapter {
                 if(c.getLong(c.getColumnIndex("is_update"))==1){
                     ids.add(c.getLong(c.getColumnIndex("_id")));
                 }
+
         }
 
         return ids;

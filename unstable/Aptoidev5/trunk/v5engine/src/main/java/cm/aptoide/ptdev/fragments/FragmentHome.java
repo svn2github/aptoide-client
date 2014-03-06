@@ -1,7 +1,14 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -12,20 +19,27 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MoreTopAppsActivity;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Collection;
+import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
+import cm.aptoide.ptdev.webservices.json.ListRecomended;
+import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,15 +56,21 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private MergeAdapter adapter;
     private ArrayList<Collection> editorsChoice = new ArrayList<Collection>();
     private List<HomeItem> top = new ArrayList<HomeItem>();
-    
+    private List<HomeItem> recommended = new ArrayList<HomeItem>();
+
+
     private PrincipalLayoutAdapter homeBucketAdapter;
     private HomeBucketAdapter topAdapter;
+    private HomeBucketAdapter recomendedAdapter;
+    private View v2;
+
 
     @Override
     public void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(50, null, this);
         getLoaderManager().restartLoader(51, null, loader);
+        refreshRecommendedList();
     }
 
     @Override
@@ -76,6 +96,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         }
     }
 
+
+
     private void refreshEditorsList() {
        editorsChoice.clear();
        adapter.notifyDataSetChanged();
@@ -88,6 +110,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         getLoaderManager().restartLoader(51, null, loader);
     }
 
+    private void refreshRecommendedList() {
+
+        loadRecommended(v2);
+    }
+
     TopFeaturedLoader loader = new TopFeaturedLoader();
 
     @Override
@@ -98,6 +125,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         homeBucketAdapter = new PrincipalLayoutAdapter(getActivity(), editorsChoice, true);
         topAdapter = new HomeBucketAdapter(getActivity(), top);
+        recomendedAdapter = new HomeBucketAdapter(getActivity(), recommended);
 //        View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
 //        ((TextView) editorsView.findViewById(R.id.separator_label)).setText(getString(R.string.editors_choice));
 //        editorsView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
@@ -124,16 +152,32 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             }
         });
 
-        ((TextView) v.findViewById(R.id.more)).setOnClickListener(new View.OnClickListener() {
+
+
+        adapter.addView(v);
+        adapter.addAdapter(topAdapter);
+
+        v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
+        ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
+        v2.setClickable(true);
+        v2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), MoreTopAppsActivity.class);
+                Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
                 startActivity(i);
             }
         });
 
-        adapter.addView(v);
-        adapter.addAdapter(topAdapter);
+
+        v2.setVisibility(View.GONE);
+
+        adapter.addView(v2);
+        adapter.addAdapter(recomendedAdapter);
+
+        //setListAdapter(adapter);
+
+        //loadRecommended(v2);
+
 
         getListView().setDivider(null);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
@@ -179,6 +223,97 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         });
     }
 
+    private void loadRecommended(final View v2) {
+        final AccountManager accountManager = AccountManager.get(getActivity());
+
+        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            final SpiceManager manager = ((MainActivity) getActivity()).getSpiceManager();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
+                    Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                    String token = null;
+                    try {
+                        token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
+
+                        request.setLimit(recomendedAdapter.getBucketSize()*2);
+                        request.setPackageName(token);
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        e.printStackTrace();
+                    }
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    final String finalToken = token + recomendedAdapter.getBucketSize()*2;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(finalToken !=null){
+                            manager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
+                                @Override
+                                public void onRequestFailure(SpiceException e) {
+
+                                }
+
+                                @Override
+                                public void onRequestSuccess(ListRecomended listRecomended) {
+                                    v2.setVisibility(View.VISIBLE);
+                                    recommended.clear();
+                                    final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true);
+                                    for(ListRecomended.Repository repository : listRecomended.getRepository()){
+
+                                        String repoName = repository.getName();
+                                        String iconPath = repository.getIconspath();
+                                        for(ListRecomended.Repository.Package aPackage : repository.getPackage()){
+
+                                            String icon;
+
+                                            if(aPackage.getIcon_hd()!=null){
+                                                icon = aPackage.getIcon_hd();
+                                            }else{
+                                                icon = aPackage.getIcon();
+                                            }
+                                            HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue());
+                                            item.setRecommended(true);
+                                            item.setRepoName(repoName);
+                                            item.setMd5(aPackage.getMd5h());
+
+                                            if (matureCheck) {
+                                                if (!aPackage.getAge().equals("Mature")) {
+                                                    recommended.add(item);
+                                                }
+                                            } else {
+                                                recommended.add(item);
+                                            }
+
+                                        }
+
+                                    }
+                                    recomendedAdapter.notifyDataSetChanged();
+                                }
+                            });
+                            }
+                        }
+                    });
+                }
+            }).start();
+
+
+
+
+
+
+        }else{
+            recommended.clear();
+            recomendedAdapter.notifyDataSetChanged();
+            v2.setVisibility(View.GONE);
+        }
+    }
 
 
     @Override
@@ -190,11 +325,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-
     }
 
     public class TopFeaturedLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
@@ -260,13 +390,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         editorsChoice.addAll(data);
 
         if(getListView().getAdapter()==null){
-
-
-
             if(data.size()>1) setListAdapter(adapter);
         }else{
             adapter.notifyDataSetChanged();
         }
+
 
     }
 

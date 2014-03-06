@@ -32,7 +32,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
     private AccountManager mAccountManager;
     private UiLifecycleHelper uiLifecycleHelper;
-    private Session.StatusCallback statusCallback= new Session.StatusCallback() {
+    private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
 
@@ -43,7 +43,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onResume() {
         super.onResume();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
 
             uiLifecycleHelper.onResume();
         }
@@ -52,7 +52,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onPause() {
         super.onPause();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onPause();
         }
     }
@@ -60,7 +60,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onDestroy();
         }
     }
@@ -68,7 +68,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -88,7 +88,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
             setContentView(R.layout.form_logout);
             final Account account = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
 
-            ((TextView)findViewById(R.id.username)).setText(account.name);
+            ((TextView) findViewById(R.id.username)).setText(account.name);
 
             findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,11 +96,11 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
                     Session session = Session.getActiveSession();
 
-                    if(session != null && session.isOpened()){
+                    if (session != null && session.isOpened()) {
                         session.closeAndClearTokenInformation();
                     }
 
-                    if(mPlusClient.isConnected()){
+                    if (mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
@@ -120,7 +120,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                 }
             });
 
-        }else{
+        } else {
             addAccount();
             finish();
         }
@@ -134,13 +134,13 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onStart() {
         super.onStart();
-        mPlusClient.connect();
+        if (Build.VERSION.SDK_INT >= 8) mPlusClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPlusClient.disconnect();
+        if (Build.VERSION.SDK_INT >= 8) mPlusClient.disconnect();
     }
 
     private void addAccount() {
@@ -150,11 +150,11 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                 try {
                     Bundle bnd = future.getResult();
                     //showMessage("Account was created");
-                    if(bnd.containsKey(AccountManager.KEY_AUTHTOKEN)){
+                    if (bnd.containsKey(AccountManager.KEY_AUTHTOKEN)) {
                         setContentView(R.layout.form_logout);
                         Toast.makeText(MyAccountActivity.this, "Account was created", Toast.LENGTH_LONG).show();
                         Log.d("udinic", "AddNewAccount Bundle is " + bnd);
-                    }else{
+                    } else {
                         finish();
                     }
 

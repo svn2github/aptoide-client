@@ -109,7 +109,7 @@ public class NetworkStateListener extends BroadcastReceiver {
 
             for(Download download : downloadService.getAllNotActiveDownloads()){
 
-                if(download.getDownloadState().equals(EnumState.ERROR) && download.getParent().getFailReason().equals(EnumDownloadFailReason.TIMEOUT)||download.getParent().getFailReason().equals(EnumDownloadFailReason.CONNECTION_ERROR)){
+                if(download.getDownloadState().equals(EnumState.ERROR) && (download.getParent().getFailReason().equals(EnumDownloadFailReason.TIMEOUT)||download.getParent().getFailReason().equals(EnumDownloadFailReason.CONNECTION_ERROR))){
                     download.getParent().download();
                 }
 

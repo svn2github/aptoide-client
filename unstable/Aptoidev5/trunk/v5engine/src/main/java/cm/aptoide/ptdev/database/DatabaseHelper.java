@@ -1,7 +1,9 @@
 package cm.aptoide.ptdev.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.Preference;
@@ -14,8 +16,11 @@ import cm.aptoide.ptdev.database.schema.SQLType;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.database.schema.anotations.ColumnDefinition;
 import cm.aptoide.ptdev.database.schema.anotations.TableDefinition;
+import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.Server;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
@@ -246,6 +251,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "DatabaseHelper onUpgrade()");
+        ArrayList<Server> oldServers = new ArrayList<Server>();
+        if (oldVersion == 13) {
+
+            try {
+                Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, null, null, null, null, null);
+                for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+
+                    Server server = new Server();
+                    server.setUrl(c.getString(0));
+                    server.setName(c.getString(1));
+
+                    if(c.getString(2)!=null){
+                        server.login = new Login();
+                        server.login.setUsername(c.getString(2));
+                        server.login.setPassword(c.getString(3));
+                    }
+
+                    oldServers.add(server);
+                }
+                c.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 
         dropIndexes(db);
         dropTables(db);
@@ -254,6 +284,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             createDb(db);
         } catch (IllegalAccessException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        if (oldVersion == 13) {
+
+            for (Server server : oldServers) {
+                ContentValues values = new ContentValues();
+
+                values.put(Schema.Repo.COLUMN_NAME, server.getName());
+                values.put(Schema.Repo.COLUMN_IS_USER, true);
+                values.put(Schema.Repo.COLUMN_URL, server.getUrl());
+
+                if(server.login!=null){
+                    values.put(Schema.Repo.COLUMN_USERNAME, server.login.getUsername());
+                    values.put(Schema.Repo.COLUMN_PASSWORD, server.login.getPassword());
+                }
+
+                db.insert(Schema.Repo.getName(), null, values);
+            }
         }
 
         removeSharedPreferences();

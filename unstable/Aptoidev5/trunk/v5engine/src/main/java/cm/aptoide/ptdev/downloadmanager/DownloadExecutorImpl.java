@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -221,6 +222,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             mBuilder.setContentIntent(onClickAction);
             mBuilder.setAutoCancel(true);
 
+            
 
             managerNotification.notify((int) apk.getAppHashId(), mBuilder.build());
             new Thread(new Runnable() {

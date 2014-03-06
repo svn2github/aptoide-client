@@ -24,6 +24,7 @@ import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -168,8 +169,8 @@ public class DownloadService extends Service {
         }
 
 
-
     }
+
 
     private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 
@@ -253,6 +254,7 @@ public class DownloadService extends Service {
                 updateDownload();
                 Log.d("Aptoide-DownloadService", "Updating progress bar");
             }
+
         };
     }
 
@@ -379,21 +381,23 @@ public class DownloadService extends Service {
                     final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
                     String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
                     final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
+                    final String md5sum = apkCursor.getString(apkCursor.getColumnIndex("md5"));
                     String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
 
-                    GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+                    GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
 
                     request.setRepoName(repoName);
-                    request.setPackageName(package_name);
-                    request.setVersionName(versionName);
+                    request.setMd5Sum(md5sum);
+
 
                     Download download = new Download();
                     download.setId(id);
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
+
 
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
@@ -402,7 +406,7 @@ public class DownloadService extends Service {
 
                     download.setIcon(iconpath + icon);
 
-                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));
+                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, repoName + md5sum, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));
                     apkCursor.close();
                 }
 
@@ -443,6 +447,7 @@ public class DownloadService extends Service {
                 .setProgress(0, 0, true)
                 .setContentIntent(onClickAction);
         updateProgress(mBuilder, getOngoingDownloads());
+
         return mBuilder;
     }
 

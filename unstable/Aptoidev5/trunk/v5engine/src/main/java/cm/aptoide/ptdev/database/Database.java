@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.database;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
@@ -15,6 +16,7 @@ import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 
@@ -169,9 +171,49 @@ public class Database {
 
         Cursor c = null;
         if(storeid>0){
-            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme, repo.name as repo_name from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme as theme, repo.name as repo_name, repo.items as items from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
             c.getCount();
+
+            if(parentid==0){
+
+                MatrixCursor cursor = new MatrixCursor(new String[]{"name", "_id", "count", "version_name", "type", "icon", "iconpath", "theme", "repo_name"});
+                String[] itemsList = null;
+
+                if (c.moveToFirst()) {
+                    String items = c.getString(c.getColumnIndex("items"));
+                    if (items != null) {
+                        itemsList = items.split(",");
+                    } else {
+                        Log.d("Aptoide-Exception", "Items is null");
+                    }
+                }
+
+
+                for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+                    if (itemsList != null && ArrayUtils.contains(itemsList, c.getString(0).replaceAll(" ", "_").toLowerCase(Locale.ENGLISH))) {
+                        cursor.addRow(new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8)});
+                    }else if(itemsList == null){
+                        cursor.addRow(new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8)});
+                    }
+
+                }
+
+                if(itemsList!=null && ArrayUtils.contains(itemsList, "Latest Likes".replaceAll(" ", "_").toLowerCase(Locale.ENGLISH))){
+                    cursor.addRow(new String[]{"Latest Likes", "502" , "0", "", "1","","","",""});
+                }
+
+                if(itemsList!=null && ArrayUtils.contains(itemsList, "Latest Comments".replaceAll(" ", "_").toLowerCase(Locale.ENGLISH))){
+                    cursor.addRow(new String[]{"Latest Comments", "503" , "0", "", "1","","","",""});
+                }
+
+
+                c.close();
+                return cursor;
+            }
         }
+
+
 
         return c;
 
@@ -444,6 +486,23 @@ public class Database {
         }
 
         return id;
+    }
+
+    public void insertLegacyServer(Server server, Login login) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_NAME, server.getName());
+        values.put(Schema.Repo.COLUMN_IS_USER, true);
+        values.put(Schema.Repo.COLUMN_URL, server.getUrl());
+
+        if(login!=null){
+            values.put(Schema.Repo.COLUMN_USERNAME, login.getUsername());
+            values.put(Schema.Repo.COLUMN_PASSWORD, login.getPassword());
+        }
+
+
+        database.insert(Schema.Repo.getName(), null, values);
     }
 
     public void deleteFeatured(int type){

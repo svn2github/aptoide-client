@@ -98,29 +98,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         setRefreshing(((StoreActivity) getActivity()).isRefreshing());
 
         if(parentId==0){
-
-            if(storeId>0 && !sort.isNoCategories()){
-
-                ArrayList<ListSocialAdapter.SocialObject> objects = new ArrayList<ListSocialAdapter.SocialObject>();
-
-
-                ListSocialAdapter.SocialObject likes = new ListSocialAdapter.SocialObject();
-                likes.id = EnumCategories.LATEST_LIKES;
-                likes.name = getString(R.string.latest_likes);
-
-
-                ListSocialAdapter.SocialObject comments = new ListSocialAdapter.SocialObject();
-                comments.name = getString(R.string.latest_comments);
-                comments.id = EnumCategories.LATEST_COMMENTS;
-
-
-                objects.add(likes);
-                objects.add(comments);
-                ListSocialAdapter socialAdapter = new ListSocialAdapter(getActivity(), 0, objects);
-                mainAdapter.addAdapter(socialAdapter);
-                Log.d("Aptoide-StoreList", "adding social adapter");
-            }
-
             setListAdapter(mainAdapter);
         }
 
@@ -208,29 +185,30 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 args.putLong("storeid", storeId);
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
+                String name;
+                int res = EnumCategories.getCategoryName((int) id);
+                if ( res == 0) {
+                    name = ((Cursor) l.getAdapter().getItem(position)).getString(0);
+                } else{
+                    name = getString(res);
+                }
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-                break;
-
-            case 4:
-                Bundle bundle = new Bundle();
-                bundle.putLong("storeid", storeId);
                 switch ( (int) id) {
-
                     case EnumCategories.LATEST_LIKES:
-                        Fragment likes = new LatestLikesFragment();
-                        likes.setArguments(bundle);
-                        getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, likes, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                        fragment = new LatestLikesFragment();
+                        fragment.setArguments(args);
                         break;
                     case EnumCategories.LATEST_COMMENTS:
-                        Fragment comments = new LatestCommentsFragment();
-                        comments.setArguments(bundle);
-                        getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, comments, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                        fragment = new LatestCommentsFragment();
+                        fragment.setArguments(args);
                         break;
                 }
 
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 
                 break;
+
+
             default:
                 Intent i = new Intent(getActivity(), AppViewActivity.class);
                 i.putExtra("id", id);

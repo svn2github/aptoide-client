@@ -164,6 +164,8 @@ public class AptoideUtils {
         public static final String TERMINAL_INFO = android.os.Build.MODEL + "("+ android.os.Build.PRODUCT + ")"
                 +";v"+android.os.Build.VERSION.RELEASE+";"+System.getProperty("os.arch");
 
+
+
     }
 
     public static class Algorithms {

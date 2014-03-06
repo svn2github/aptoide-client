@@ -107,8 +107,16 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), AppViewActivity.class);
-                long id = item.getId();
-                i.putExtra("id", id);
+
+                if(item.isRecommended()){
+                    i.putExtra("fromRelated", true);
+                    i.putExtra("md5sum", item.getMd5());
+                    i.putExtra("repoName", item.getRepoName());
+                }else{
+                    long id = item.getId();
+                    i.putExtra("id", id);
+                }
+
                 getContext().startActivity(i);
             }
         });

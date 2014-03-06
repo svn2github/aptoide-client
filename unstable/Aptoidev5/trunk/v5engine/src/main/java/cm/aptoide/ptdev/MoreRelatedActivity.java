@@ -107,13 +107,19 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
                 ArrayList<RelatedApkJson.Item> items;
 
-                if (mode.equals("multiversion")) {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getMultiversion());
-                } else if (mode.equals("itembased")) {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getItembased());
-                } else {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getDevelbased());
+                if(relatedApkJson!=null){
+                    if (mode.equals("multiversion")) {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getMultiversion());
+                    } else if (mode.equals("itembased")) {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getItembased());
+                    } else {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getDevelbased());
+                    }
+                }else{
+                    items = new ArrayList<RelatedApkJson.Item>();
                 }
+
+
 
 
                 if (items.size() > 0) {

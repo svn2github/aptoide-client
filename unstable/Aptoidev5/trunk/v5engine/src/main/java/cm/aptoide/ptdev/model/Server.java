@@ -17,6 +17,7 @@ public class Server {
     private String screenspath;
     private String iconspath;
     private String basepath;
+    public Login login;
 
     public String getName() {
         return name;

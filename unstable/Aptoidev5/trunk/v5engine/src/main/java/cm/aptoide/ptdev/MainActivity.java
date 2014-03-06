@@ -94,6 +94,9 @@ public class MainActivity extends ActionBarActivity implements
     private Condition boundCondition = lock.newCondition();
     private ViewPager pager;
     private BadgeView badge;
+    private RepositoryChangeRequest request;
+    private HashMap<String, Long> storesIds;
+    private int checkServerCacheString;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -168,6 +171,7 @@ public class MainActivity extends ActionBarActivity implements
             unbindService(conn);
             unbindService(conn2);
         }
+
         if(executorService!=null){
             executorService.shutdownNow();
         }
@@ -226,6 +230,58 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     ExecutorService executorService = Executors.newFixedThreadPool(2);
+    RequestListener<RepositoryChangeJson> requestListener = new RequestListener<RepositoryChangeJson>() {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+
+        }
+
+        @Override
+        public void onRequestSuccess(final RepositoryChangeJson repositoryChangeJson) {
+            try{
+                if(repositoryChangeJson==null){
+                    return;
+                }
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
+                            if (Boolean.parseBoolean(changes.getHasupdates())) {
+//                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
+                                spiceManager.removeDataFromCache(RepositoryChangeJson.class);
+                                final Store store = new Store();
+                                Cursor c = database.getStore(storesIds.get(changes.getRepo()));
+                                if (c.moveToFirst()) {
+                                    store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                                    store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                                    store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                                    store.setDelta(c.getString(c.getColumnIndex("hash")));
+                                    store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                                    if (c.getString(c.getColumnIndex("username")) != null) {
+                                        Login login = new Login();
+                                        login.setUsername(c.getString(c.getColumnIndex("username")));
+                                        login.setPassword(c.getString(c.getColumnIndex("password")));
+                                        store.setLogin(login);
+                                    }
+
+                                }
+
+                                c.close();
+
+                                Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
+
+                                service.startParse(database, store, false);
+                            }
+
+                        }
+                    }
+                });
+            }catch (RejectedExecutionException e){
+
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +380,7 @@ public class MainActivity extends ActionBarActivity implements
             Cursor c = database.getServers();
 
             ArrayList<BasicNameValuePair> storesToCheck = new ArrayList<BasicNameValuePair>();
-            final HashMap<String, Long> storesIds = new HashMap<String, Long>();
+            storesIds = new HashMap<String, Long>();
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 storesToCheck.add(new BasicNameValuePair(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("hash"))));
                 storesIds.put(c.getString(c.getColumnIndex("name")), c.getLong(c.getColumnIndex("id_repo")));
@@ -348,63 +404,13 @@ public class MainActivity extends ActionBarActivity implements
                 }
             }
 
-            RepositoryChangeRequest request = new RepositoryChangeRequest();
+            request = new RepositoryChangeRequest();
             request.setRepos(repos.toString());
             request.setHashes(hashes.toString());
 
+            checkServerCacheString = (repos.toString() + hashes.toString()).hashCode();
             if (!storesToCheck.isEmpty()) {
-                spiceManager.execute(request, (repos.toString() + hashes.toString()).hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<RepositoryChangeJson>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-
-                    }
-
-                    @Override
-                    public void onRequestSuccess(final RepositoryChangeJson repositoryChangeJson) {
-
-                        executorService.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
-                                    if (Boolean.parseBoolean(changes.getHasupdates())) {
-//                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
-                                        spiceManager.removeDataFromCache(RepositoryChangeJson.class);
-                                        final Store store = new Store();
-                                        Cursor c = database.getStore(storesIds.get(changes.getRepo()));
-                                        if (c.moveToFirst()) {
-                                            store.setBaseUrl(c.getString(c.getColumnIndex("url")));
-                                            store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
-                                            store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
-                                            store.setDelta(c.getString(c.getColumnIndex("hash")));
-                                            store.setId(c.getLong(c.getColumnIndex("id_repo")));
-                                            if (c.getString(c.getColumnIndex("username")) != null) {
-                                                Login login = new Login();
-                                                login.setUsername(c.getString(c.getColumnIndex("username")));
-                                                login.setPassword(c.getString(c.getColumnIndex("password")));
-                                                store.setLogin(login);
-                                            }
-
-                                        }
-                                        c.close();
-                                        try {
-                                            executorService.submit(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    service.startParse(database, store, false);
-                                                }
-                                            });
-                                        } catch (RejectedExecutionException e) {
-                                        }
-
-                                    }
-
-                                }
-                            }
-                        });
-
-
-                    }
-                });
+                spiceManager.execute(request, checkServerCacheString, DurationInMillis.ONE_HOUR, requestListener);
             }
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -451,12 +457,6 @@ public class MainActivity extends ActionBarActivity implements
     }
 
 
-
-
-
-
-
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -478,6 +478,7 @@ public class MainActivity extends ActionBarActivity implements
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
                     pager.setCurrentItem(1);
+
                 }
 
             }
@@ -494,10 +495,10 @@ public class MainActivity extends ActionBarActivity implements
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        if (sPref.getBoolean("firstRun", true)) {
+        if (sPref.getBoolean("firstrun", true)) {
             Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
             startActivityForResult(newToAptoideTutorial, WIZARD_REQ_CODE);
-            sPref.edit().putBoolean("firstRun", false).commit();
+            sPref.edit().putBoolean("firstrun", false).commit();
             try {
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
             } catch (PackageManager.NameNotFoundException e) {
@@ -511,7 +512,7 @@ public class MainActivity extends ActionBarActivity implements
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
                     Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                     whatsNewTutorial.putExtra("isUpdate", true);
-                    startActivity(whatsNewTutorial);
+                    startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -589,7 +590,8 @@ public class MainActivity extends ActionBarActivity implements
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
                 break;
             case 50:
-                if(resultCode == RESULT_OK){
+                spiceManager.getFromCache(RepositoryChangeJson.class, checkServerCacheString, DurationInMillis.ONE_DAY, requestListener);
+                if(resultCode == RESULT_OK && data.getBooleanExtra("addDefaultRepo", false)){
                     Store store = new Store();
                     String repoUrl = "http://apps.store.aptoide.com/";
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
@@ -728,6 +730,10 @@ public class MainActivity extends ActionBarActivity implements
             fragment.cancelListener.onCancel();
         }
 
+    }
+
+    public SpiceManager getSpiceManager() {
+        return spiceManager;
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

@@ -65,12 +65,19 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-
+            setListShown(true);
+            setEmptyText(getString(R.string.connection_error));
         }
 
         @Override
         public void onRequestSuccess(RepositoryCommentsJson relatedApkJson) {
-            setListAdapter(new CommentsAdapter(getActivity(), relatedApkJson.getListing()));
+            if(relatedApkJson!=null){
+                setListAdapter(new CommentsAdapter(getActivity(), relatedApkJson.getListing()));
+            }else{
+                setListShown(true);
+                setEmptyText(getString(R.string.error_occured));
+            }
+
         }
 
     };
@@ -103,11 +110,10 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         getListView().setDivider(null);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
         Log.d("FragmentRelated", "onViewCreated");
-
 
     }
 

@@ -35,8 +35,6 @@ import java.security.NoSuchAlgorithmException;
 public class UpdatesSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
-
-
     public UpdatesSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
