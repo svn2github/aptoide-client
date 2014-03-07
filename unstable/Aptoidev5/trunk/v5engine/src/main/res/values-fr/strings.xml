@@ -23,7 +23,7 @@
   <string name="downloaded_apps">Téléchargé</string>
   <string name="screenshots">Captures d\'écran</string>
   <string name="about">Description</string>
-  <string name="show_more">Voir plus</string>
+  <string name="show_more">Voir davantage</string>
   <string name="show_less">Voir moins</string>
   <string name="like">Aimer</string>
   <string name="dont_like">Ne pas aimer</string>
@@ -67,7 +67,7 @@
   <string name="setting_hwspecstitle">Spécifications matérielles</string>
   <string name="setting_hwspecssum">Informations matérielles de votre téléphone</string>
   <string name="setting_appfiltersum">Ne pas montrer les applications non compatibles avec cet appareil</string>
-  <string name="setting_appfiltertitle">Filtrer applications</string>
+  <string name="setting_appfiltertitle">Filtrer les applications</string>
   <string name="setting_dont_show_mature_content">Ne pas afficher de contenu pour adultes</string>
   <string name="setting_mature_filtering">Filtrer les contenus pour adultes</string>
   <string name="excluded_updates_sum">Restaurer les mises à jour exclues</string>
@@ -122,7 +122,7 @@
   <string name="menu_reset_list">Réinitialiser</string>
   <string name="flag_this_app">Signaler l\'application</string>
   <string name="flag">Signaler</string>
-  <string name="srch_hint">Cherche des applications…</string>
+  <string name="srch_hint">Chercher des applications…</string>
   <string name="share">Partager</string>
   <string name="search_other_market">Chercher un autre marché</string>
   <string name="search">Cherche</string>
@@ -145,7 +145,7 @@
   <string name="install">Installer</string>
   <string name="get_latest_version">Obtenir la plus récente</string>
   <string name="get_latest_version_and_trusted">Obtenir la plus récente et la plus sûre</string>
-  <string name="review">Révisé</string>
+  <string name="review">Commentaires</string>
   <string name="rate_this_app">Évaluer cette application</string>
   <string name="info">Information</string>
   <string name="related">Connexe</string>
@@ -165,7 +165,7 @@
   <string name="username_tip">Tapez votre courriel</string>
   <string name="password_tip">Choisir un mot de passe</string>
   <string name="add_pvt_store">Ajouter un dépôt privé</string>
-  <string name="accept_terms">En créant un compte vous donnez votre accord aux conditions d\'utilisation Aptoide et à la politique de contenu pour les développeurs</string>
+  <string name="accept_terms">En créant un compte vous donnez votre accord aux conditions d\'utilisation d\'Aptoide et à la politique de contenu pour les développeurs</string>
   <string name="register">Inscription</string>
   <string name="or">Ou</string>
   <string name="showpass">Afficher le mot de passe</string>
@@ -230,7 +230,7 @@
   <string name="application_signature_blacklisted">La signature de l\'application n\'est pas une signature de confiance sur la plate-forme contre les logiciels malveillants d\'Aptoide car elle a été utilisée pour signer d\'autres applications qui ne correspondent pas à la signature légitime du développeur.</string>
   <string name="scanned_verified_by_tester">L\'application a été vérifiée manuellement par un testeur de l\'équipe Aptoide qui assure de la sécurité de l\'application.</string>
   <string name="schDown_nodownloadselect">Pas de téléchargements sélectionnés</string>
-  <string name="addSchDown">Ajouter dans la planification</string>
+  <string name="addSchDown">Ajouté dans la planification</string>
   <string name="error_no_market">Google Market non installé !</string>
   <string name="schDown_invertselection">Inverser la sélection</string>
   <string name="schDown_removeselected">Retirer sélectionné</string>
@@ -279,7 +279,7 @@
   <string name="casual">Détendu</string>
   <string name="sport_games">Jeux de sport</string>
   <string name="racing">Course</string>
-  <string name="editors_choice_new">Nouveautés Choix de l\'éditeur</string>
+  <string name="editors_choice_new">Nouveaux choix de l\'éditeur</string>
   <string name="editors_choice">Choix de l\'éditeur</string>
   <string name="top_apps">Meilleures applications</string>
   <string name="latest_apps">Dernières applications</string>
@@ -328,7 +328,7 @@
   <string name="error_SYS_2">Pas de données trouvées, veuillez réessayer plus tard</string>
   <string name="error_SYS_3">Le système est actuellement en maintenance, veuillez réessayer plus tard</string>
   <string name="error_SYS_4">Cet appel n\'est pas supporté par la version actuelle de l\'API</string>
-  <string name="X_download_number">%s perdu.</string>
+  <string name="X_download_number">%s téléchargements</string>
   <string name="search_more">Chercher plus</string>
   <string name="more_editors_choice">Plus de choix de l\'éditeur</string>
   <string name="more_top_apps">Plus de top applications</string>

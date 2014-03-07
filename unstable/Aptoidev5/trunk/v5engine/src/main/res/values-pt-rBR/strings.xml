@@ -136,8 +136,8 @@
   <string name="search_other_stores">Ou procurar por outras...</string>
   <string name="see_top_stores">Ver Lojas Principais</string>
   <string name="setcredentials">Iniciar sessão</string>
-  <string name="rollback">Reverter</string>
-  <string name="rollback_empty">Sem apps para reverter</string>
+  <string name="rollback">Restaurar</string>
+  <string name="rollback_empty">Sem apps para restaurar</string>
   <string name="rollback_installed">Instalado</string>
   <string name="rollback_uninstalled">Desinstalado</string>
   <string name="rollback_updated">Atualizado</string>

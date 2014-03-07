@@ -9,8 +9,8 @@
   <string name="WidgetProvider_timestamp_weeks_ago">vor %s Wochen</string>
   <string name="WidgetProvider_timestamp_week_ago">vor %s Woche</string>
   <string name="WidgetProvider_timestamp_this_week">Diese Woche</string>
-  <string name="timestamp_months">%s Monaten</string>
-  <string name="timestamp_month">%s Monate</string>
+  <string name="timestamp_months">%s Monate</string>
+  <string name="timestamp_month">%s Monat</string>
   <string name="timestamp_weeks">%s Wochen</string>
   <string name="timestamp_week">%s Woche</string>
   <string name="timestamp_days">%s Tage</string>
@@ -169,7 +169,7 @@
   <string name="register">Registrieren</string>
   <string name="or">Oder</string>
   <string name="showpass">Passwort anzeigen</string>
-  <string name="dont_have_an_account">Du hast keinen Account? Registrieren</string>
+  <string name="dont_have_an_account">Du hast kein Konto? Registrieren</string>
   <string name="logged_as">Angemeldet als:</string>
   <string name="sign_out">Abmelden</string>
   <string name="please_wait">Bitte warten…</string>
@@ -178,7 +178,7 @@
   <string name="no_excluded_updates_selected">Keine ausgeschlossenen Updates ausgewählt</string>
   <string name="restore_updates">Updates wiederherstellen</string>
   <string name="start_loading">Laden…</string>
-  <string name="one_account_allowed">Nur ein Account erlaubt</string>
+  <string name="one_account_allowed">Nur ein Konto erlaubt</string>
   <string name="crash_text">Alte Versionen wieder installieren</string>
   <string name="timeout">netzwerk-verbindungs-timeout</string>
   <string name="ip_blacklisted">Blacklisted IP</string>
@@ -216,7 +216,7 @@
   <string name="exclude_update">Update ignorieren</string>
   <string name="trusted">Vertraut</string>
   <string name="warning">Warnung</string>
-  <string name="downgrade">zurücksetzen</string>
+  <string name="downgrade">Zurücksetzen</string>
   <string name="open">Öffnen</string>
   <string name="scanned_with_av">Mit Anti-Virus gescannt:</string>
   <string name="compared_with_another_marketplace">Mit anderen Android Märkten verglichen:</string>
@@ -294,11 +294,11 @@
   <string name="wizard_search_local">Apps verfügbar in lokalen Stores</string>
   <string name="wizard_search_online">Suche in anderen Stores auf der Aptoide Webseite</string>
   <string name="wizard_new_layout">1- Neues Layout</string>
-  <string name="wizard_rollback">2- Downgrade</string>
+  <string name="wizard_rollback">2- Zurücksetzen</string>
   <string name="wizard_widget">3- Widget</string>
-  <string name="wizard_new_account">4- Account Manager</string>
+  <string name="wizard_new_account">4- Konto Manager</string>
   <string name="wizard_add_more_stores">Du kannst neue Android Stores hinzufügen</string>
-  <string name="wizard_rollback_description">Du kannst Apps erneut installieren oder downgraden</string>
+  <string name="wizard_rollback_description">Du kannst Apps erneut installieren oder zurücksetzen</string>
   <string name="wizard_widget_description">Schnelle Suche von Apps</string>
   <string name="wizard_account_description">Aptoide Apps können denselben Login verwenden</string>
   <string name="wizard_secure_fast_reliable">Sicher. Schnell. Zuverlässig.</string>
@@ -310,12 +310,12 @@
   <string name="incompatible_store_msg">Dieser Store ist noch nicht kompatibel mit dieser Version von Aptoide. Bitte warte ein paar Tage bis wir die Stores wieder aufbauen.</string>
   <string name="privacy_policy">Datenschutz</string>
   <string name="website">Webseite</string>
-  <string name="downgrade_requires_uninstall">Downgrade setzt Deinstallation vorraus</string>
+  <string name="downgrade_requires_uninstall">Zurücksetzen setzt Deinstallation vorraus</string>
   <string name="signing_in">Anmeldung läuft…</string>
   <string name="search_on_aptoide">Mehr auf der Aptoide Webseite suchen</string>
   <string name="reinstall">Erneut installieren</string>
   <string name="at_time">bei %s</string>
-  <string name="webinstall_relogin">Du musst dich neu anmelden um Webinstall aktivieren zu können</string>
+  <string name="webinstall_relogin">Du musst dich neu anmelden um Webinstallation aktivieren zu können</string>
   <string name="error_MARG_1">Fehlender Repo Parameter</string>
   <string name="error_MARG_2">Fehlender Apk-ID Parameter</string>
   <string name="error_MARG_3">Fehlerde Apk-Version Parameter</string>
@@ -340,7 +340,7 @@
   <string name="download_error">Fehler</string>
   <string name="try_again">Erneut versuchen</string>
   <string name="clear">Löschen</string>
-  <string name="link_device_webinstall">Account mit Web-Install verknüpfen</string>
+  <string name="link_device_webinstall">Konto mit Webinstallation verknüpfen</string>
   <string name="update_self_title">Update verfügbar</string>
   <string name="update_self_msg">Es gibt eine neue Version von %s,\nmöchten Sie aktualisieren?</string>
   <string name="retrieving_update">Empfange Update...</string>
@@ -348,7 +348,7 @@
   <string name="update_username">Benutzernamen aktualisieren</string>
   <string name="username_success">Benutzername erfolgreich aktualisiert.</string>
   <string name="please_update_username">Bitte aktualisiere deinen Benutzernamen um Kommentar einzufügen</string>
-  <string name="no_downloads">Keine Downloads. Fang an zum herunterladen!</string>
+  <string name="no_downloads">Keine Downloads. Fang an herunterzuladen!</string>
   <string name="new_updates">Es sind %s neue Updates verfügbar!</string>
   <string name="one_new_update">Es ist %s neues Update verfügbar!</string>
   <string name="has_updates">%s hat neue Updates verfügbar!</string>

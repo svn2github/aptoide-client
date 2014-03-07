@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Upravo</string>
   <string name="WidgetProvider_timestamp_weeks_ago">prije %s tjedana</string>
   <string name="WidgetProvider_timestamp_week_ago">prije %s tjedan</string>
+  <string name="WidgetProvider_timestamp_this_week">Ovaj tjedan</string>
   <string name="timestamp_months">%s mjeseci</string>
   <string name="timestamp_month">%s mjesec</string>
   <string name="timestamp_weeks">%s tjedana</string>
@@ -147,7 +148,7 @@
   <string name="review">Recenzija</string>
   <string name="rate_this_app">Ocijeni ovu aplikaciju</string>
   <string name="info">Info</string>
-  <string name="related">Srodno</string>
+  <string name="related">Slično</string>
   <string name="advanced">Napredno</string>
   <string name="specs">Specifikacije</string>
   <string name="permissions">Dozvole</string>
@@ -351,4 +352,6 @@
   <string name="new_updates">Dostupno je %s novih ažuriranja!</string>
   <string name="one_new_update">Dostupno je %s novo ažuriranje</string>
   <string name="has_updates">"%s ima dostupna novo(a) ažuriranje(a) "</string>
+  <string name="remaining_time">preostalo</string>
+  <string name="sd_error">Nije moguće zapisati na SD Karticu.</string>
 </resources>

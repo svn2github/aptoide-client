@@ -35,7 +35,7 @@
   <string name="no_comments">Κανένα σχόλιο ακόμα. Γίνετε ο πρώτος!</string>
   <string name="comment_see_all">Δείτε τα Όλα</string>
   <string name="related_apps">Σχετικές Εφαρμογές</string>
-  <string name="multiversion">Πολλαπλές εκδόσεις</string>
+  <string name="multiversion">Παλαιότερες εκδόσεις</string>
   <string name="more">+ περισσότερα</string>
   <string name="more_from_publisher">Περισσότερα από τον Εκδότη</string>
   <string name="preparing_to_load">Προετοιμασία για φόρτωση, παρακαλώ περιμένετε…</string>
@@ -174,8 +174,8 @@
   <string name="sign_out">Έξοδος</string>
   <string name="please_wait">Παρακαλώ περιμένετε…</string>
   <string name="excluded_updates">Αποκλεισμένες Ενημερώσεις</string>
-  <string name="no_excluded_updates">Μη Αποκλεισμένες Ενημερώσεις</string>
-  <string name="no_excluded_updates_selected">Μη Αποκλεισμένες Ενημερώσεις επιλέχθηκαν</string>
+  <string name="no_excluded_updates">Καμία Αποκλεισμένη Ενημέρωση</string>
+  <string name="no_excluded_updates_selected">Δεν επιλέχθηκαν Αποκλεισμένες Ενημερώσεις</string>
   <string name="restore_updates">Επαναφορά Ενημερώσεων</string>
   <string name="start_loading">Φόρτωση…</string>
   <string name="one_account_allowed">Μόνο ένας λογαριασμός επιτρέπεται</string>
@@ -329,7 +329,7 @@
   <string name="error_SYS_3">Το σύστημα είναι σε συντήρηση, παρακαλώ δοκιμάστε ξανά αργότερα</string>
   <string name="error_SYS_4">Αυτή η κλήση δεν υποστηρίζεται από την παρούσα API έκδοση</string>
   <string name="X_download_number">%s λήψεις.</string>
-  <string name="search_more">Αναζητήστε Περισσότερο</string>
+  <string name="search_more">Αναζητήστε Περισσότερες</string>
   <string name="more_editors_choice">Περισσότερες Επιλογές Συντακτών</string>
   <string name="more_top_apps">Περισσότερες Κορυφαίες Εφαρμογές</string>
   <string name="not_found">Δεν βρέθηκε</string>

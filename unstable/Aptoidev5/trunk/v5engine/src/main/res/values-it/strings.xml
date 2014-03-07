@@ -138,10 +138,10 @@
   <string name="setcredentials">Login</string>
   <string name="rollback">Ripristino</string>
   <string name="rollback_empty">Nessuna app da ripristinare</string>
-  <string name="rollback_installed">Installate</string>
-  <string name="rollback_uninstalled">Disinstallate</string>
-  <string name="rollback_updated">Aggiornate</string>
-  <string name="rollback_downgraded">Downgradate</string>
+  <string name="rollback_installed">Installata</string>
+  <string name="rollback_uninstalled">Disinstallata</string>
+  <string name="rollback_updated">Aggiornata</string>
+  <string name="rollback_downgraded">Downgradata</string>
   <string name="install">Installa</string>
   <string name="get_latest_version">Ottieni l\'Ultima Versione</string>
   <string name="get_latest_version_and_trusted">Ottieni l\'Ultima Versione Verificata</string>
@@ -294,7 +294,7 @@
   <string name="wizard_search_local">App disponibili negli Store Locali</string>
   <string name="wizard_search_online">Cerca in altri store sul sito web di Aptoide</string>
   <string name="wizard_new_layout">1- Nuovo Layout</string>
-  <string name="wizard_rollback">2- Rollback</string>
+  <string name="wizard_rollback">2- Ripristino</string>
   <string name="wizard_widget">3- Widget</string>
   <string name="wizard_new_account">4- Gestore Account</string>
   <string name="wizard_add_more_stores">Puoi aggiungere nuovi store Android</string>

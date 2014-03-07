@@ -348,7 +348,7 @@
   <string name="update_username">Update gebruikersnaam</string>
   <string name="username_success">Gebruikersnaam succesvol geupdate.</string>
   <string name="please_update_username">Update je gebruikersnaam om commentaar te typen</string>
-  <string name="no_downloads">Geen downloads. Start met downloaden!</string>
+  <string name="no_downloads">Geen downloads. Begin met downloaden!</string>
   <string name="new_updates">Er zijn %s nieuwe updates beschikbaar!</string>
   <string name="one_new_update">Er is %s nieuwe update beschikbaar!</string>
   <string name="has_updates">%s heeft nieuwe update(s) beschikbaar!</string>

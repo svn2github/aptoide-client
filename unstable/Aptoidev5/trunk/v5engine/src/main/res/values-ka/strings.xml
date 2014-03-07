@@ -155,7 +155,7 @@
   <string name="publisher">დეველოპერი</string>
   <string name="download_manager">გადმოწერები</string>
   <string name="updates_tab">განახლებები</string>
-  <string name="home">სახლი</string>
+  <string name="home">მთავარი</string>
   <string name="login_or_register">გაიარეთ ავტორიზაცია ან რეგისტრაცია</string>
   <string name="rollback_sum">ქმედებების დაუბრუნდება</string>
   <string name="update_all">ყველას განახლება</string>
