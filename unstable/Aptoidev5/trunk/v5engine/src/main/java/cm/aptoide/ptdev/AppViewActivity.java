@@ -64,6 +64,7 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import javax.xml.transform.ErrorListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +93,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String md5;
     private String versionInstalled;
     private boolean isInstalled;
+    private boolean autoDownload;
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -276,11 +278,29 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     publishEvents();
                     supportInvalidateOptionsMenu();
                     //if (!isShown) show(true, true);
+                    downloadId = json.getApk().getMd5sum().hashCode();
 
-                    if (isFromActivityResult) {
+                    if (isFromActivityResult || autoDownload) {
 
                         Log.d("Downgrade", "iffromactivityresult");
                         Download download = new Download();
+
+                        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isRooted()) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
+                        }
+
                         download.setId(downloadId);
                         download.setName(name);
                         download.setVersion(versionName);
@@ -289,6 +309,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         service.startDownloadFromJson(json, downloadId, download);
 
                         isFromActivityResult = false;
+                        autoDownload = false;
                     }
 
                     moPubView = (MoPubView) findViewById(R.id.adview);
@@ -298,7 +319,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     moPubView.setVisibility(View.VISIBLE);
                     moPubView.setAdUnitId("18947d9a99e511e295fa123138070049");
                     moPubView.loadAd();
-                    downloadId = json.getApk().getMd5sum().hashCode();
 
                     if(service !=null && service.getDownload(downloadId).getDownload() != null){
                         onDownloadUpdate(service.getDownload(downloadId).getDownload());
@@ -434,6 +454,27 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         });
     }
 
+    private static boolean isRooted() {
+        return findBinary("su");
+    }
+
+
+
+    public static boolean findBinary(String binaryName) {
+        boolean found = false;
+        if (!found) {
+            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+            for (String where : places) {
+                if ( new File( where + binaryName ).exists() ) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
+
 
     public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
@@ -454,6 +495,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onClick(View v) {
 
             Download download = new Download();
+
+            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isRooted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
 
             download.setId(downloadId);
             download.setName(this.name);
@@ -496,6 +553,23 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onClick(View v) {
 
             Download download = new Download();
+
+
+            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isRooted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
 
             download.setId(downloadId);
             download.setName(this.name);
@@ -846,6 +920,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     request.setToken(token);
                 }
                 cacheKey = md5sum;
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+            } else if (getIntent().getBooleanExtra("fromApkInstaller", false)) {
+
+                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+                long id = getIntent().getLongExtra("id", 0);
+                request.setAppId(String.valueOf(id));
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = String.valueOf(id);
+                autoDownload = true;
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
             } else {

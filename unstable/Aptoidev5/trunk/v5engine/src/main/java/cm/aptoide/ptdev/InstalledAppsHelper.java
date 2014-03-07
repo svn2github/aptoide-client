@@ -29,6 +29,7 @@ public class InstalledAppsHelper {
     public static void sync(SQLiteDatabase database, Context context) {
 
         Database db = new Database(database);
+        db.clearInstalled();
 
         List<PackageInfo> system_installed_list = context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
         List<InstalledPackage> database_installed_list = db.getStartupInstalled();

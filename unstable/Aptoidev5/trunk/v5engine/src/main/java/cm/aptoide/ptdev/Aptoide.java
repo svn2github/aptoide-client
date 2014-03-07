@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
@@ -94,12 +95,17 @@ public class Aptoide extends Application {
     }
 
 
+    public static boolean IS_SYSTEM;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-
+        try {
+            IS_SYSTEM = (getPackageManager().getApplicationInfo(getPackageName(), 0).flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems
 //                .penaltyLog()

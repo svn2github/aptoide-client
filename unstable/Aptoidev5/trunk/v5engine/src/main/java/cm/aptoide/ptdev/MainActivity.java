@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
@@ -69,6 +70,7 @@ import org.apache.http.message.BasicNameValuePair;
 import roboguice.util.temp.Ln;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -314,8 +316,11 @@ public class MainActivity extends ActionBarActivity implements
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
 
-
         if (savedInstanceState == null) {
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+
 
             if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {
                 ArrayList<String> repos = getIntent().getExtras().getStringArrayList("newrepo");
@@ -338,7 +343,7 @@ public class MainActivity extends ActionBarActivity implements
 
                 }
                 getIntent().removeExtra("newrepo");
-            }else if(getIntent().hasExtra("fromDownloadNotification") && pager != null){
+            } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
                 pager.setCurrentItem(3);
             }
@@ -346,12 +351,16 @@ public class MainActivity extends ActionBarActivity implements
             String queueName = sharedPreferences.getString("queueName", null);
 
 
-            if(queueName!=null){
+            if (queueName != null) {
                 Intent serviceIntent = new Intent(this, RabbitMqService.class);
                 startService(serviceIntent);
             }
+
+
             new AutoUpdate(this).execute();
             executeWizard();
+
+
 
             executorService.execute(new Runnable() {
                 @Override
@@ -387,7 +396,6 @@ public class MainActivity extends ActionBarActivity implements
             }
 
             c.close();
-
 
 
             StringBuffer repos = new StringBuffer();
@@ -502,6 +510,23 @@ public class MainActivity extends ActionBarActivity implements
             try {
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
             } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                InputStream is = getAssets().open("actionsOnBoot.properties");
+                Properties properties = new Properties();
+                properties.load(is);
+
+                String id = properties.getProperty("downloadId");
+
+                Intent intent = new Intent(this, AppViewActivity.class);
+
+                intent.putExtra("fromApkInstaller", true);
+                intent.putExtra("id", Long.valueOf(id));
+
+                startActivity(intent);
+            } catch (IOException e) {
+                Log.e("MYTAG", "");
                 e.printStackTrace();
             }
 

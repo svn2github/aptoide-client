@@ -1197,4 +1197,8 @@ public class Database {
         c.close();
         return result;
     }
+
+    public void clearInstalled() {
+        database.delete(Schema.Installed.getName(), null, null);
+    }
 }

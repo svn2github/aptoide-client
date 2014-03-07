@@ -29,6 +29,10 @@ public class AptoideDialog {
         return new AddStoreDialog();
     }
 
+    public static DialogFragment allowRootDialog(){
+        return new AllowRootDialog();
+    }
+
     public static DialogFragment pleaseWaitDialog(){
         return new ProgressDialogFragment();
     }

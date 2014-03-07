@@ -371,6 +371,6 @@
     <string name="remaining_time">remaining</string>
     <string name="sd_error">Couldn\'t write to SDCard.</string>
     <string name="download_retry">Retry</string>
-    <string name="root_access_dialog">It seems you have root. Would you like to auto install app after download?</string>
+    <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
 
 </resources>

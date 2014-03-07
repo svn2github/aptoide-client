@@ -7,6 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'android'
+apply from: 'signing.gradle'
 
 repositories {
     mavenCentral()
@@ -38,6 +39,8 @@ android {
         exclude 'META-INF/NOTICE.txt'
 
     }
+
+
 
 
 }
