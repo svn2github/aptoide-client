@@ -96,8 +96,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:gravity="center"
-                    android:drawableRight="?attr/icUpdateDrawable"
+                    android:gravity="left|center"
                     android:maxLines="1"/>
 
         </LinearLayout>
