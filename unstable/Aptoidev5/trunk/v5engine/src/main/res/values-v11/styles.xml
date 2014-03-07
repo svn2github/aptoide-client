@@ -4,6 +4,12 @@
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="customRowStyleHomeLayout">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="Settings" parent="AppBaseTheme">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>

@@ -37,12 +37,27 @@
         <item name="android:foreground">@drawable/highlight_overlay</item>
     </style>
 
+    <style name="customRowStyleHomeLayout">
+        <item name="android:foreground">@drawable/highlight_overlay</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="backgroundCardStyleLight">
         <item name="android:background">@drawable/background_card_light</item>
     </style>
 
     <style name="backgroundCardStyleDark">
         <item name="android:background">@drawable/background_card_dark</item>
+    </style>
+
+    <style name="focusableBackground">
+        <item name="android:foreground">@drawable/highlight_overlay</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
     </style>
 
     <style name="overflowMenuButton">

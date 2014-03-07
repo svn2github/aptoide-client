@@ -72,6 +72,7 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
                         android:visibility="gone"
+                        android:focusable="true"
                         android:text="@string/show_more"/>
 
             </LinearLayout>

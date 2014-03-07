@@ -3,6 +3,9 @@
 
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="hagDividerVertical">@drawable/hag__divider_light</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_light</item>
@@ -57,6 +60,9 @@
 
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
+        <item name="customRowForeground">@style/customRowStyle</item>
+        <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
+
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="hagDividerVertical">@drawable/hag__divider_dark</item>
         <item name="hagSelectableItemBackground">@drawable/hag__background_dark</item>
@@ -112,7 +118,6 @@
     </style>
 
     <style name="AptoideThemeDefault" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideLight</item>
@@ -126,7 +131,6 @@
     </style>
 
     <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleAptoideDark</item>
@@ -141,7 +145,6 @@
 
 
     <style name="AptoideThemeDefaultMidnight" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightLight</item>
@@ -155,7 +158,6 @@
 
 
     <style name="AptoideThemeDefaultMidnightDark" parent="AppBaseThemeDark">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightDark</item>
@@ -169,7 +171,6 @@
 
 
     <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlackLight</item>
@@ -182,7 +183,6 @@
     </style>
 
     <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlackDark</item>
@@ -195,7 +195,6 @@
     </style>
 
     <style name="AptoideThemeDefaultMaroon" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMaroonLight</item>
@@ -208,7 +207,6 @@
     </style>
 
     <style name="AptoideThemeDefaultMaroonDark" parent="AppBaseThemeDark">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleDark</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleDark</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMidnightDark</item>
@@ -221,7 +219,6 @@
     </style>
 
     <style name="AptoideThemeDefaultGold" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGoldLight</item>
@@ -234,7 +231,6 @@
     </style>
 
     <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleOrangeLight</item>
@@ -247,7 +243,6 @@
     </style>
 
     <style name="AptoideThemeDefaultSpringgreen" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSpringgreenLight</item>
@@ -260,7 +255,6 @@
     </style>
 
     <style name="AptoideThemeDefaultLightsky" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleLightskyLight</item>
@@ -273,7 +267,6 @@
     </style>
 
     <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStylePinkLight</item>
@@ -286,7 +279,6 @@
     </style>
 
     <style name="AptoideThemeDefaultBlue" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleBlueLight</item>
@@ -299,7 +291,6 @@
     </style>
 
     <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleRedLight</item>
@@ -312,7 +303,6 @@
     </style>
 
     <style name="AptoideThemeDefaultMagenta" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleMagentaLight</item>
@@ -325,7 +315,6 @@
     </style>
 
     <style name="AptoideThemeDefaultSlategray" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSlategrayLight</item>
@@ -338,7 +327,6 @@
     </style>
 
     <style name="AptoideThemeDefaultSeagreen" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSeagreenLight</item>
@@ -351,7 +339,6 @@
     </style>
 
     <style name="AptoideThemeDefaultSilver" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleSilverLight</item>
@@ -364,7 +351,6 @@
     </style>
 
     <style name="AptoideThemeDefaultDimgray" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleDimgrayLight</item>
@@ -378,7 +364,6 @@
 
 
     <style name="AptoideThemeDefaultGreenApple" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGreenAppleLight</item>
@@ -391,7 +376,6 @@
     </style>
 
     <style name="AptoideThemeDefaultHappyBlue" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleHappyBlueLight</item>
@@ -404,7 +388,6 @@
     </style>
 
     <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleGreenLight</item>
@@ -417,7 +400,6 @@
     </style>
 
     <style name="AptoideThemeDefaultYellow" parent="AppBaseTheme">
-        <item name="customRowForeground">@style/customRowStyle</item>
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="apkInfoBackgroundHeader">@style/apkInfoBackgroundStyleYellowLight</item>
