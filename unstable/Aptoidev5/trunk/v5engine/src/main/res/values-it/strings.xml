@@ -29,7 +29,7 @@
   <string name="dont_like">Non mi piace</string>
   <string name="comments">Commenti</string>
   <string name="write_your_comment">Scrivi il tuo commento</string>
-  <string name="add_comment">Aggiungi un commento</string>
+  <string name="add_comment">Aggiungi commento</string>
   <string name="opinion_success">La tua richiesta è stata inviata con successo</string>
   <string name="comment_submitted">Il tuo commento è stato inviato con successo</string>
   <string name="no_comments">Nessun commento. Sii il primo!</string>
@@ -38,7 +38,7 @@
   <string name="multiversion">Altre versioni</string>
   <string name="more">+ altro</string>
   <string name="more_from_publisher">Altro dallo Sviluppatore</string>
-  <string name="preparing_to_load">Preparo il caricamento, attendi...</string>
+  <string name="preparing_to_load">Preparo il caricamento, attendere prego...</string>
   <string name="sort">Ordina</string>
   <string name="order_popup_lst1">Prima le più recenti</string>
   <string name="order_popup_lst2">In ordine alfabetico</string>
@@ -159,7 +159,7 @@
   <string name="login_or_register">Effettua il login o registrati</string>
   <string name="rollback_sum">Ripristina azioni</string>
   <string name="update_all">Aggiorna tutto</string>
-  <string name="whats_new">Novità?</string>
+  <string name="whats_new">Cosa c\'è di nuovo?</string>
   <string name="username">Email</string>
   <string name="password">Password</string>
   <string name="username_tip">Inserisci il tuo indirizzo email</string>
@@ -196,9 +196,9 @@
   <string name="x_apps">%d app</string>
   <string name="aptoide_downloading">%s è in download</string>
   <string name="min_sdk">Versione minima SDK</string>
-  <string name="min_screen">Densità dello schermo minima</string>
+  <string name="min_screen">Dimensione dello schermo minima</string>
   <string name="found_results">Trovati %s risultati</string>
-  <string name="no_search_result">Non hai aggiunto \'%s\' tra i tuoi store.</string>
+  <string name="no_search_result">Impossibile trovare \'%s\' negli store che hai aggiunto.</string>
   <string name="error_occured">Si è verificato un errore. Si prega di riprovare</string>
   <string name="installapp_alrt">Vuoi installare: \n\n</string>
   <string name="starting_download">Iniziando il download</string>
@@ -234,7 +234,7 @@
   <string name="error_no_market">Non hai Google Play Store installato!</string>
   <string name="schDown_invertselection">Inverti selezione</string>
   <string name="schDown_removeselected">Rimuovi Selezionati</string>
-  <string name="add_apps_official_store">Aggiungi \'store\', l\'App Store Ufficiale di Aptoide</string>
+  <string name="add_apps_official_store">Aggiungi \'apps\', l\'App Store Ufficiale di Aptoide</string>
   <string name="skip">Salta</string>
   <string name="schDwnBtn">Pianifica Download</string>
   <string name="schDown_install">Vuoi installare tutti i download pianificati?</string>
@@ -354,4 +354,6 @@
   <string name="has_updates">%s ha nuovi aggiornamenti disponibili!</string>
   <string name="remaining_time">rimanenti</string>
   <string name="sd_error">Impossibile scrivere sulla SDCard.</string>
+  <string name="download_retry">Riprova</string>
+  <string name="root_access_dialog">Sembra che tu abbia i permessi di root. Vuoi installare automaticamente le app dopo il download?</string>
 </resources>

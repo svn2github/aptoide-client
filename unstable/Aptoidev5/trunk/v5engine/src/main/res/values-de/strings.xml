@@ -307,7 +307,7 @@
   <string name="create_username">Benutzername</string>
   <string name="all_stores">Alle Stores</string>
   <string name="incompatible_store">Nicht kompatibler Store</string>
-  <string name="incompatible_store_msg">Dieser Store ist noch nicht kompatibel mit dieser Version von Aptoide. Bitte warte ein paar Tage bis wir die Stores wieder aufbauen.</string>
+  <string name="incompatible_store_msg">Dieser Store ist noch nicht mit dieser Version von Aptoide kompatibel. Bitte warte ein paar Tage bis wir alle Stores erneuern.</string>
   <string name="privacy_policy">Datenschutz</string>
   <string name="website">Webseite</string>
   <string name="downgrade_requires_uninstall">Zurücksetzen setzt Deinstallation vorraus</string>
@@ -354,4 +354,6 @@
   <string name="has_updates">%s hat neue Updates verfügbar!</string>
   <string name="remaining_time">übrig</string>
   <string name="sd_error">Konnte nicht auf SD-Karte geschrieben werden.</string>
+  <string name="download_retry">Wiederholen</string>
+  <string name="root_access_dialog">Es scheint so als ob du Root hättest. Möchtest du Apps nach dem Download automatisch installieren?</string>
 </resources>

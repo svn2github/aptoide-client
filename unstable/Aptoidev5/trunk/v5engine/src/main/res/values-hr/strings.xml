@@ -307,7 +307,6 @@
   <string name="create_username">Korisničko ime</string>
   <string name="all_stores">Sve Trgovine</string>
   <string name="incompatible_store">Inkompatibilna trgovina</string>
-  <string name="incompatible_store_msg">Ova trgovina nije još kompatibilna s ovom verzijom Aptoidea. Molimo pričekajte par dana dok ne obnovimo sve trgovine.</string>
   <string name="privacy_policy">Pravila o Privatnosti</string>
   <string name="website">Web stranica</string>
   <string name="downgrade_requires_uninstall">Vraćanje na staru verziju zahtijeva uklanjanje Aplikacije</string>

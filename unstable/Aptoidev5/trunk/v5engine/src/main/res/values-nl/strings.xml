@@ -194,7 +194,7 @@
   <string name="restore">Installeren</string>
   <string name="x_app">%d app</string>
   <string name="x_apps">%d apps</string>
-  <string name="aptoide_downloading">%s wordt gedownload</string>
+  <string name="aptoide_downloading">%s is aan het downloaden</string>
   <string name="min_sdk">Min SDK</string>
   <string name="min_screen">Min Scherm</string>
   <string name="found_results">%s gevonden resulta(a)t(en)</string>
@@ -307,7 +307,7 @@
   <string name="create_username">Gebruikersnaam</string>
   <string name="all_stores">Alle winkels</string>
   <string name="incompatible_store">Incompatible winkel</string>
-  <string name="incompatible_store_msg">Deze winkel is nog niet compatible met deze versie van Aptoide. Wacht een paar dagen tot we alle winkels hebben hersteld.</string>
+  <string name="incompatible_store_msg">Deze winkel is nog niet compatible met deze versie van Aptoide. Wacht een paar dagen totdat we alle winkels hebben herbouwd.</string>
   <string name="privacy_policy">Privacybeleid</string>
   <string name="website">Website</string>
   <string name="downgrade_requires_uninstall">Terugzetten vereist applicatie deinstalleren</string>
@@ -354,4 +354,6 @@
   <string name="has_updates">%s heeft nieuwe update(s) beschikbaar!</string>
   <string name="remaining_time">overblijvende</string>
   <string name="sd_error">Kon niet schrijven naar SD-kaart</string>
+  <string name="download_retry">Opnieuw proberen</string>
+  <string name="root_access_dialog">Het lijkt erop dat je root hebt. Wil je na een download automatisch de app installeren?</string>
 </resources>
