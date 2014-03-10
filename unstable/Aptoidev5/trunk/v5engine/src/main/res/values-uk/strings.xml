@@ -33,7 +33,7 @@
   <string name="social_networks">Соціальні Мережі</string>
   <string name="find_us_on_facebook">Знайти нас на Facebook</string>
   <string name="follow_twitter">Слідкувати за нами в Twitter</string>
-  <string name="new_to_aptoide">Вперше на Aptoide? Створіть безкоштовний акаунт</string>
+  <string name="new_to_aptoide">Вперше на %s? Створіть безкоштовний акаунт</string>
   <string name="forgot_passwd">Забули пароль?</string>
   <string name="settings_title_bar">Налаштування</string>
   <string name="setting_icon_download_rules">Правила Іконок Завантаження</string>

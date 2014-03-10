@@ -33,7 +33,7 @@
   <string name="social_networks">Mạng Xã Hội</string>
   <string name="find_us_on_facebook">Tìm chúng tôi trên Facebook</string>
   <string name="follow_twitter">Theo dõi chúng tôi trên Twitter</string>
-  <string name="new_to_aptoide">Mới dùng Aptoide? Tạo một tài khoản miễn phí</string>
+  <string name="new_to_aptoide">Mới dùng %s? Tạo một tài khoản miễn phí</string>
   <string name="forgot_passwd">Quên mật khẩu?</string>
   <string name="settings_title_bar">Thiết lập</string>
   <string name="setting_icon_download_rules">Cài Đặt Biểu Tượng Tải Về</string>

@@ -33,7 +33,7 @@
   <string name="social_networks">Retele Sociale</string>
   <string name="find_us_on_facebook">Gaseste-ne pe Facebook</string>
   <string name="follow_twitter">Urmareste-ne pe Twitter</string>
-  <string name="new_to_aptoide">Nou pe Aptoide? Creaza un cont gratuit</string>
+  <string name="new_to_aptoide">Nou pe %s? Creaza un cont gratuit</string>
   <string name="forgot_passwd">Ai uitat parola?</string>
   <string name="settings_title_bar">Setări</string>
   <string name="setting_icon_download_rules">Regulile Descarcarii Iconitelor</string>

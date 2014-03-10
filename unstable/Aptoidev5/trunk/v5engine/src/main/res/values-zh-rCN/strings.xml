@@ -33,7 +33,7 @@
   <string name="social_networks">社交网络</string>
   <string name="find_us_on_facebook">在Facebook上找到我们</string>
   <string name="follow_twitter">在Twitter上关注我们</string>
-  <string name="new_to_aptoide">刚来Aptoide吗？创建一个免费账户吧</string>
+  <string name="new_to_aptoide">刚来%s吗？创建一个免费账户吧</string>
   <string name="forgot_passwd">忘记了密码？</string>
   <string name="settings_title_bar">设置</string>
   <string name="setting_icon_download_rules">图标下载规则</string>

@@ -33,7 +33,7 @@
   <string name="social_networks">ソーシャルネットワーク</string>
   <string name="find_us_on_facebook">私達をフェイスブックで見つけてください。</string>
   <string name="follow_twitter">私達をツイッターでフォローしてください。</string>
-  <string name="new_to_aptoide">アプトイドを新規ご利用ですか？無料アカウントをご作成ください。</string>
+  <string name="new_to_aptoide">%sを新規ご利用ですか？無料アカウントをご作成ください。</string>
   <string name="forgot_passwd">パスワードをお忘れですか？</string>
   <string name="settings_title_bar">設定</string>
   <string name="setting_icon_download_rules">アイコンダウンロードの規定</string>

@@ -54,7 +54,7 @@
   <string name="follow_twitter">Ακολουθήστε μας στο Twitter</string>
   <string name="loading_facebook">Φόρτωση Facebook...</string>
   <string name="loading_twitter">Φόρτωση Twitter...</string>
-  <string name="new_to_aptoide">Νέος στο Aptoide? Δημιουργήστε ένα δωρεάν λογαριασμό</string>
+  <string name="new_to_aptoide">Νέος στο %s? Δημιουργήστε ένα δωρεάν λογαριασμό</string>
   <string name="forgot_passwd">Ξεχάσατε τον κωδικό?</string>
   <string name="check_your_credentials">Ελέγξτε τα διαπιστευτήριά σας</string>
   <string name="settings_title_bar">Ρυθμίσεις</string>

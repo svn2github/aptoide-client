@@ -33,7 +33,7 @@
   <string name="social_networks">Rrjete Sociale</string>
   <string name="find_us_on_facebook">Na ndiqni në Facebook</string>
   <string name="follow_twitter">Na ndiqni në Twitter</string>
-  <string name="new_to_aptoide">I ri në Aptoide? Krijoni një llogari falas</string>
+  <string name="new_to_aptoide">I ri në %s? Krijoni një llogari falas</string>
   <string name="forgot_passwd">Keni harruar fjalëkalimin?</string>
   <string name="settings_title_bar">Konfigurimet</string>
   <string name="setting_icon_download_rules">Rregulli për shkarkimin e ikonave</string>

@@ -31,7 +31,7 @@
   <string name="social_networks">شبکه های اجتماعی</string>
   <string name="find_us_on_facebook">به ما در Facebook بپیوندید</string>
   <string name="follow_twitter">به ما در Twitter بپیوندید</string>
-  <string name="new_to_aptoide">هنوز کاربر آپتویید نیستید؟یک حساب ایجاد کنید</string>
+  <string name="new_to_aptoide">هنوز کاربر %s نیستید؟یک حساب ایجاد کنید</string>
   <string name="forgot_passwd">پسوردم را فراموش کرده ام.</string>
   <string name="settings_title_bar">تنظیمات</string>
   <string name="setting_icon_download_rules">آیکن قواعد دانلود</string>

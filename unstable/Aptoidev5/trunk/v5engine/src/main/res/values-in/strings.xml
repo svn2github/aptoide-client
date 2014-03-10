@@ -32,7 +32,7 @@
   <string name="social_networks">Social Networks</string>
   <string name="find_us_on_facebook">Temukan kami di Facebook</string>
   <string name="follow_twitter">Ikuti kami di Twitter</string>
-  <string name="new_to_aptoide">Baru di Aptoide? Buat akun gratis</string>
+  <string name="new_to_aptoide">Baru di %s? Buat akun gratis</string>
   <string name="forgot_passwd">Lupa Password?</string>
   <string name="settings_title_bar">Pengaturan</string>
   <string name="setting_icon_download_rules">Ikon Peraturan unduh</string>

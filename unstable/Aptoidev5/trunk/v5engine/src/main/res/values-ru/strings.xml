@@ -53,7 +53,7 @@
   <string name="follow_twitter">Следите за нами в Twitter</string>
   <string name="loading_facebook">Загружаю Facebook...</string>
   <string name="loading_twitter">Загружаю Twitter</string>
-  <string name="new_to_aptoide">Новичок в Aptoide? Создайте бесплатную учетную запись</string>
+  <string name="new_to_aptoide">Новичок в %s? Создайте бесплатную учетную запись</string>
   <string name="forgot_passwd">Забыли пароль?</string>
   <string name="settings_title_bar">Настройки</string>
   <string name="setting_icon_download_rules">Правила загрузки иконок</string>

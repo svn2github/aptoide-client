@@ -53,7 +53,7 @@
   <string name="follow_twitter">Seuraa meitä Twitterissä</string>
   <string name="loading_facebook">Ladataan Facebookia...</string>
   <string name="loading_twitter">Ladataan Twitteriä...</string>
-  <string name="new_to_aptoide">Uusi Aptoide-käyttäjä? Luo ilmainen tili</string>
+  <string name="new_to_aptoide">Uusi %s-käyttäjä? Luo ilmainen tili</string>
   <string name="forgot_passwd">Unohditko salasanasi?</string>
   <string name="check_your_credentials">Tarkista tilitietosi</string>
   <string name="settings_title_bar">Asetukset</string>

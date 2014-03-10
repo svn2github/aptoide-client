@@ -31,7 +31,7 @@
   <string name="social_networks">Društvene Mreže</string>
   <string name="find_us_on_facebook">Pronađi nas na Facebook-u</string>
   <string name="follow_twitter">Prati nas na Twitter-u</string>
-  <string name="new_to_aptoide">Novi ste u Aptoide-u? Napravite besplatni račun</string>
+  <string name="new_to_aptoide">Novi ste u %s-u? Napravite besplatni račun</string>
   <string name="forgot_passwd">Zaboravljena lozinka?</string>
   <string name="settings_title_bar">Postavke</string>
   <string name="setting_icon_download_rules">Pravila Preuzimanja Ikona</string>
