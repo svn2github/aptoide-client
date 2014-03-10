@@ -349,9 +349,9 @@
   <string name="username_success">تم تحديث إسم المستخدم بنجاح</string>
   <string name="please_update_username">الرجاء تحديث أسم المستخدم لادراج تعليقك</string>
   <string name="no_downloads">لا توجد تحميلات. بدأ التنزيل!</string>
-  <string name="new_updates">توجد s% تحديثات جديدة!</string>
-  <string name="one_new_update">هنالك s% تحديث جديد متوفر!</string>
-  <string name="has_updates">s% لديه تحديث متوفر!</string>
+  <string name="new_updates">توجد %s تحديثات جديدة!</string>
+  <string name="one_new_update">هنالك %s تحديث جديد متوفر!</string>
+  <string name="has_updates">%s لديه تحديث متوفر!</string>
   <string name="remaining_time">المتبقية</string>
   <string name="sd_error">لا يمكن الكتابة إلى بطاقة SD</string>
 </resources>
