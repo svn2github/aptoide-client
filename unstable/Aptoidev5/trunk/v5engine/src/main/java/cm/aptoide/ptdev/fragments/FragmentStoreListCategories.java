@@ -95,7 +95,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         super.onActivityCreated(savedInstanceState);
         sort = ((StoreActivity)getActivity()).getSort();
 
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
+
 
         if(parentId==0){
             setListAdapter(mainAdapter);
@@ -163,7 +163,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-
+        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
     }
 
     @Override

@@ -50,7 +50,7 @@ public class MyAppInstallDialog extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if(dismissListener!=null) dismissListener.onDismiss(dialog);
+        if(dismissListener!=null && isAdded()) dismissListener.onDismiss(dialog);
         super.onDismiss(dialog);
     }
 }

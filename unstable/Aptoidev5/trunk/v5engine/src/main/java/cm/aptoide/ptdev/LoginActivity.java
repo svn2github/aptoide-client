@@ -30,7 +30,7 @@ import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -105,19 +105,35 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         mPlusClient.disconnect();
                     }
                     e.printStackTrace();
+                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
+                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    if (pd != null) {
+                        pd.dismissAllowingStateLoss();
+                    }
                 } catch (UserRecoverableAuthException e) {
                     startActivityForResult(e.getIntent(), 90);
                 } catch (GoogleAuthException e) {
+                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
                     e.printStackTrace();
                     if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
+                    }
+                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    if (pd != null) {
+                        pd.dismissAllowingStateLoss();
                     }
                 } catch (Exception e) {
                     Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
                     if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
+                    }
+                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    if (pd != null) {
+                        pd.dismissAllowingStateLoss();
                     }
                 }
             }
@@ -129,7 +145,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     @Override
     public void onDisconnected() {
-
+        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+        if (pd != null) {
+            pd.dismissAllowingStateLoss();
+        }
     }
 
     @Override
@@ -147,6 +166,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             }
         }
 
+        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+        if (pd != null) {
+            pd.dismissAllowingStateLoss();
+        }
         // Save the intent so that we can start an activity when the user clicks
         // the sign-in button.
         mConnectionResult = result;
@@ -549,8 +572,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     res.putExtras(data);
                     finishLogin(res);
                 } else {
-                    for (String error : checkUserCredentialsJson.getErrors()) {
-                        Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+                    for (cm.aptoide.ptdev.model.Error error : checkUserCredentialsJson.getErrors()) {
+                        Toast.makeText(getBaseContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
 

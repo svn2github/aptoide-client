@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -77,18 +78,23 @@ public class HandlerInfoXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
-                if (isRunning() && !multipleApk) {
+                if (isRunning()) {
 
-                    if(isRemove){
+                    if (isRemove) {
                         apk.databaseDelete(getDb());
                         isRemove = false;
-                    }else{
+                    } else if (apk.getChildren() != null) {
+                        for (Apk theApk : apk.getChildren()) {
+
+                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
+
+                            theApk.databaseInsert(statements, categoriesIds);
+                        }
+                        apk.setChildren(null);
+                    } else {
                         apk.databaseInsert(statements, categoriesIds);
                     }
-
-
                 }
-                multipleApk = false;
             }
         });
 
@@ -183,7 +189,7 @@ public class HandlerInfoXml extends AbstractHandler {
             @Override
             public void endElement() throws SAXException {
                 if(multipleApk){
-                    apk.databaseInsert(statements, categoriesIds);
+                    apk.getChildren().add(apk);
                 }
             }
         });

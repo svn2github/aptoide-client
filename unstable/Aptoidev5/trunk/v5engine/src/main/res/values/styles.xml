@@ -496,4 +496,15 @@
         <item name="android:layout_gravity">center_horizontal|left</item>
     </style>
 
+    <style name="SectionTextViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:padding">?sectionListView.sectionTextViewPadding</item>
+        <item name="android:textColor">?sectionListView.sectionTextViewTextColor</item>
+        <item name="android:textSize">?sectionListView.sectionTextViewTextSize</item>
+    </style>
+
+    <style name="SectionItemStyle">
+        <item name="android:padding">?sectionListView.sectionItemPadding</item>
+        <item name="android:background">?sectionListView.sectionItemBackground</item>
+    </style>
+
 </resources>

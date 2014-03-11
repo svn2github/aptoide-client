@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.webservices.json;
 
 
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import com.google.api.client.util.Key;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class CheckUserCredentialsJson {
     private String queueName;
 
     @Key
-    private List<String> errors;
+    private List<Error> errors;
 
    // @Key
     //private String queueName;
@@ -48,11 +50,11 @@ public class CheckUserCredentialsJson {
         this.token = token;
     }
 
-    public List<String> getErrors() {
+    public List<Error> getErrors() {
         return errors;
     }
 
-    public void setErrors(List<String> errors) {
+    public void setErrors(List<Error> errors) {
         this.errors = errors;
     }
 

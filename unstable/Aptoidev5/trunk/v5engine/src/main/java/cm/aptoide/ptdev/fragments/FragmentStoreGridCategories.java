@@ -154,7 +154,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-
+        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
 
 
     }

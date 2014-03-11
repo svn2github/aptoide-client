@@ -87,8 +87,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                     if (showNotification) {
 
                         showNotification = false;
-                        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true))
+                        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true)){
                             showUpdatesNotification();
+                        }
 
                     }
 
@@ -433,6 +434,25 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
     }
 
+    ErrorCallback editorsErrorCallback = new ErrorCallback() {
+        @Override
+        public void onError(Exception e, long repoId) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            preferences.edit().remove("editorschoiceTimestamp").commit();
+            BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
+        }
+    };
+
+    ErrorCallback topErrorCallback = new ErrorCallback() {
+        @Override
+        public void onError(Exception e, long repoId) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            preferences.edit().remove("topappsTimestamp").commit();
+            BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
+
+        }
+    };
+
     public void parseEditorsChoice(final Database db, String url) throws IOException {
 
 
@@ -451,7 +471,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
             startService(new Intent(getApplicationContext(), ParserService.class));
             startForeground(45, createDefaultNotification());
-            parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), this, this, new Runnable() {
+            parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), editorsErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {
                     db.deleteFeatured(510);
@@ -477,7 +497,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             }
             startService(new Intent(getApplicationContext(), ParserService.class));
             startForeground(45, createDefaultNotification());
-            parser.parse(url, null, 2, new HandlerFeaturedTop(database), this, this, new Runnable() {
+            parser.parse(url, null, 2, new HandlerFeaturedTop(database), topErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {
                     database.deleteFeatured(511);

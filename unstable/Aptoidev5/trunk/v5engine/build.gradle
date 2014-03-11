@@ -58,7 +58,7 @@ dependencies {
     compile project (':pagerslidertabstrip')
     compile project (':hanselandgretel')
     compile project (':android-websockets')
-    compile project (':android-section-list')
+
     compile project (':facebook')
     compile project (':google-play-services')
     compile project (':mopub-sdk')

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,6 +17,8 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -24,11 +27,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -188,10 +188,40 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             startActivity(i);
             finish();
 
-        }else if(uri.startsWith("file://")){
-            new MyAppDownloader().execute(getIntent().getDataString());
-        } else if(uri.startsWith("aptoideinstall://")){
+        } else if (uri.startsWith("http://webservices.aptoide.com")) {
 
+            List<NameValuePair> params = URLEncodedUtils.parse(URI.create(uri), "UTF-8");
+
+            String uid = null;
+            for (NameValuePair param : params) {
+
+                if(param.getName().equals("uid")){
+                    uid = param.getValue();
+                }
+
+                System.out.println(param.getName() + " : " + param.getValue());
+            }
+
+            try {
+
+                long id = Long.parseLong(uid);
+                Intent i = new Intent(this, AppViewActivity.class);
+                i.putExtra("fromMyapp", true);
+                i.putExtra("id", id);
+                startActivity(i);
+
+            } catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            }
+
+
+            finish();
+
+
+        } else if (uri.startsWith("file://")) {
+            new MyAppDownloader().execute(getIntent().getDataString());
+        } else if (uri.startsWith("aptoideinstall://")) {
             long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
 
             Intent i = new Intent(this, AppViewActivity.class);
@@ -200,10 +230,20 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             startActivity(i);
             finish();
-        }else{
+        } else {
             finish();
         }
 
+    }
+
+    public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        }
+        return query_pairs;
     }
 
     private void downloadMyappFile(String myappUri) throws Exception{

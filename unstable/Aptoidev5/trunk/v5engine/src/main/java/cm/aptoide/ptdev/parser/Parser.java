@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.parser;
 
 import android.app.Application;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
@@ -14,6 +15,7 @@ import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
+import cm.aptoide.ptdev.parser.handlers.HandlerFeaturedTop;
 import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.services.FileRequest;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -98,6 +100,7 @@ public class Parser{
                 if(handler instanceof HandlerInfoXml){
                     new Database(Aptoide.getDb()).setFailedRepo(repoId);
                 }
+
                 if (errorCallback != null) errorCallback.onError(spiceException, repoId);
             }
 

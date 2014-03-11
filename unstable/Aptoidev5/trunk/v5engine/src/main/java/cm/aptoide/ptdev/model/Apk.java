@@ -19,6 +19,7 @@ import java.util.List;
 public abstract class Apk {
 
 
+    private ArrayList<Apk> children;
     private String signature = "";
     private String path;
 
@@ -275,5 +276,13 @@ public abstract class Apk {
 
     public String getPath() {
         return path;
+    }
+
+    public ArrayList<Apk> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<Apk> children) {
+        this.children = children;
     }
 }

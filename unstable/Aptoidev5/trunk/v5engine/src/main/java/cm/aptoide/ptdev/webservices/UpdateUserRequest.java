@@ -14,6 +14,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,7 +43,7 @@ public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
         GenericUrl url = new GenericUrl(baseUrl);
         AccountManager manager = AccountManager.get(context);
         Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-        String email = account.name;
+        String email = account.name.toLowerCase(Locale.ENGLISH);
         String pass = manager.getPassword(account);
 
         HashMap<String, String > parameters = new HashMap<String, String>();

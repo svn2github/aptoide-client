@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <pl.polidea.sectionedlist.SectionListView
+    <ListView
             android:id="@+id/rollback_list"
 
             android:layout_width="match_parent"

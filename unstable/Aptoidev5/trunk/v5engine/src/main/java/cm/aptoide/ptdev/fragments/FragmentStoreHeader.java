@@ -98,7 +98,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             if(url!=null && url.length()>0){
                 ImageLoader.getInstance().displayImage(url, avatar);
             }else{
-                avatar.setImageResource(R.drawable.repo_default);
+                avatar.setImageResource(R.drawable.avatar_apps);
             }
             banner_store_name.setText(store_name);
             banner_description.setText(description);

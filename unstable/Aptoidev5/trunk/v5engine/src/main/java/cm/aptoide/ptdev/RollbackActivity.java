@@ -12,11 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import cm.aptoide.ptdev.adapters.RollBackAdapter;
+import cm.aptoide.ptdev.adapters.RollbackSectionListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.squareup.otto.Subscribe;
-import pl.polidea.sectionedlist.SectionListAdapter;
+
 
 
 public class RollbackActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -46,7 +47,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         ListView lView = (ListView) findViewById(R.id.rollback_list);
         lView.setDivider(null);
 
-        SectionListAdapter adapter = new SectionListAdapter(getLayoutInflater(), rollBackAdapter);
+        RollbackSectionListAdapter adapter = new RollbackSectionListAdapter(getLayoutInflater(), rollBackAdapter);
 
         lView.setAdapter(adapter);
 
@@ -54,6 +55,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.rollback));
+
     }
 
 

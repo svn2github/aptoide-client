@@ -100,7 +100,7 @@
                        android:resource="@xml/find"/>
         </activity>
 
-        <activity android:name="cm.aptoide.ptdev.IntentReceiver" >
+        <activity android:name="cm.aptoide.ptdev.IntentReceiver" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -145,21 +145,16 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
+                <data android:scheme="https"
+                      android:host="webservices.aptoide.com" android:pathPrefix="/apkinstall"/>
                 <data android:host="play.google.com"
                       android:scheme="https" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="http"
                       android:host="imgs.aptoide.com"
                       android:pathPattern="*//.myapp"/>
             </intent-filter>
+
+
         </activity>
 
         <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation"/>

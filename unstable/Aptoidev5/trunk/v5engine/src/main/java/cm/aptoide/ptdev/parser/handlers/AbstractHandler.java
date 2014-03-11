@@ -155,6 +155,11 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 apk.setSignature(sb.toString());
+                if (apk.getChildren() != null) {
+                    for (Apk theApk : apk.getChildren()) {
+                        theApk.setSignature(sb.toString());
+                    }
+                }
             }
         });
 
@@ -162,12 +167,13 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             public void startElement(Attributes atts) throws SAXException {
 
                 multipleApk = true;
+                apk.setChildren(new ArrayList<Apk>());
 
             }
 
             @Override
             public void endElement() throws SAXException {
-
+                multipleApk = false;
             }
         });
 

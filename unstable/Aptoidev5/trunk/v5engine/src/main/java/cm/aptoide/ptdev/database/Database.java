@@ -410,25 +410,28 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
-        Cursor c = database.rawQuery("select " +
-                "(installed.version_code < apk.version_code) as is_update, " +
-                "apk.id_apk as _id, apk.name as name,  " +
-                "apk.downloads as count," +
-                "apk.version_name as version_name, " +
-                "installed.version_name as installed_version_name, " +
-                "apk.icon as icon, " +
-                "repo.icons_path as iconpath " +
-                    "from apk inner " +
-                        "join installed on apk.package_name = installed.package_name " +
-                        "join repo on apk.id_repo = repo.id_repo  " +
-                "where not exists (select 1 from excluded as d where apk.package_name = d.package_name )  " +
-                "" +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +
-                "" +(filterMature ? "and apk.mature='0'": "") + " " +
-                "and installed.signature = apk.signature  " +
-                "group by is_update , apk.package_name " +
-                "order by is_update desc, apk.name collate nocase,  apk.version_code desc",null);
+        Cursor c = database.rawQuery("select * from (select " +
+                " (installed.version_code < apk.version_code) as is_update, " +
+                " apk.id_apk as _id, " +
+                " apk.name as name, " +
+                " apk.version_code as version_code, " +
+                " apk.package_name as package_name, " +
+                " apk.downloads as count, " +
+                " apk.version_name as version_name, " +
+                " installed.version_name as installed_version_name, " +
+                " apk.icon as icon, " +
+                " repo.icons_path as iconpath " +
+                " from apk inner " +
+                " join installed on apk.package_name = installed.package_name " +
+                " join repo on apk.id_repo = repo.id_repo where not exists (select 1 from excluded as d where apk.package_name = d.package_name ) "+
+                    (filterCompatible ? " and apk.is_compatible='1' " :" "   ) +
+                    (filterMature ?  " and apk.mature='0' " : " "  )   +
+                " and (installed.signature = apk.signature or apk.signature='') " +
+                " order by apk.version_code asc) as firstQuery " +
+                " group by package_name, is_update order by is_update desc, name collate nocase ", null);
 
         c.getCount();
+
         return c;
     }
 

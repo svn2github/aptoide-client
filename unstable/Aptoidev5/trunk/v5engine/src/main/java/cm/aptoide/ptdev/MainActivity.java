@@ -9,10 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
+import android.os.*;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -69,6 +66,7 @@ import com.squareup.otto.Subscribe;
 import org.apache.http.message.BasicNameValuePair;
 import roboguice.util.temp.Ln;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -160,7 +158,6 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-
         BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
 
@@ -317,9 +314,53 @@ public class MainActivity extends ActionBarActivity implements
 
 
         if (savedInstanceState == null) {
-            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
 
+            File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
+            if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
 
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                final AlertDialog noSDDialog = dialogBuilder.create();
+                noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
+                noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
+                noSDDialog.setMessage(getText(R.string.remote_in_noSD));
+                noSDDialog.setCancelable(false);
+                noSDDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+                });
+                noSDDialog.show();
+
+            } else {
+                StatFs stat = new StatFs(sdcard_file.getPath());
+                long blockSize = stat.getBlockSize();
+                long totalBlocks = stat.getBlockCount();
+                long availableBlocks = stat.getAvailableBlocks();
+
+                long total = (blockSize * totalBlocks) / 1024 / 1024;
+                long avail = (blockSize * availableBlocks) / 1024 / 1024;
+                Log.d("Aptoide", "* * * * * * * * * *");
+                Log.d("Aptoide", "Total: " + total + " Mb");
+                Log.d("Aptoide", "Available: " + avail + " Mb");
+
+                if (avail < 10) {
+                    Log.d("Aptoide", "No space left on SDCARD...");
+                    Log.d("Aptoide", "* * * * * * * * * *");
+
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+                    final AlertDialog noSpaceDialog = dialogBuilder.create();
+                    noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
+                    noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
+                    noSpaceDialog.setMessage(getText(R.string.remote_in_noSDspace));
+                    noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+                    noSpaceDialog.show();
+                }
+            }
 
 
             if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {
@@ -360,6 +401,29 @@ public class MainActivity extends ActionBarActivity implements
             new AutoUpdate(this).execute();
             executeWizard();
 
+
+            try {
+                InputStream is = getAssets().open("actionsOnBoot.properties");
+                Properties properties = new Properties();
+                properties.load(is);
+
+                String id = properties.getProperty("downloadId");
+                long savedId = sharedPreferences.getLong("downloadId", 0);
+
+                if (Long.valueOf(id) != savedId) {
+                    sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
+                    Intent intent = new Intent(this, AppViewActivity.class);
+
+                    intent.putExtra("fromApkInstaller", true);
+                    intent.putExtra("id", Long.valueOf(id));
+
+                    startActivity(intent);
+                }
+
+            } catch (IOException e) {
+                Log.e("MYTAG", "");
+                e.printStackTrace();
+            }
 
 
             executorService.execute(new Runnable() {
@@ -512,23 +576,7 @@ public class MainActivity extends ActionBarActivity implements
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            try {
-                InputStream is = getAssets().open("actionsOnBoot.properties");
-                Properties properties = new Properties();
-                properties.load(is);
 
-                String id = properties.getProperty("downloadId");
-
-                Intent intent = new Intent(this, AppViewActivity.class);
-
-                intent.putExtra("fromApkInstaller", true);
-                intent.putExtra("id", Long.valueOf(id));
-
-                startActivity(intent);
-            } catch (IOException e) {
-                Log.e("MYTAG", "");
-                e.printStackTrace();
-            }
 
         } else {
 
@@ -664,6 +712,7 @@ public class MainActivity extends ActionBarActivity implements
             public void run() {
                 try {
                     waitForServiceToBeBound();
+                    service.setShowNotification(!isLoggedin);
                     service.startParse(database, store, true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -807,6 +856,7 @@ public class MainActivity extends ActionBarActivity implements
 
     }
 
+    boolean isLoggedin = false;
 
     @Override
     protected void onResume() {
@@ -826,9 +876,9 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerList.setAdapter(null);
 
         //Login Header
-        if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
-
+            isLoggedin = true;
 
             mDrawerList.addHeaderView(header, null, false);
 
@@ -842,6 +892,8 @@ public class MainActivity extends ActionBarActivity implements
                 ImageLoader.getInstance().displayImage(avatarUrl, user_avatar);
             }
 
+        }else{
+            isLoggedin = false;
         }
         mDrawerList.setAdapter(mMenuAdapter);
 

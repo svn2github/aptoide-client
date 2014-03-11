@@ -4,7 +4,10 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -71,6 +74,17 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         getLoaderManager().restartLoader(50, null, this);
         getLoaderManager().restartLoader(51, null, loader);
         refreshRecommendedList();
+        if(!isNetworkAvailable(Aptoide.getContext())){
+            setListShown(true);
+            setEmptyText(getString(R.string.connection_error));
+        }
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
@@ -262,37 +276,39 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
                                 @Override
                                 public void onRequestSuccess(ListRecomended listRecomended) {
-                                    v2.setVisibility(View.VISIBLE);
-                                    recommended.clear();
-                                    final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true);
-                                    for(ListRecomended.Repository repository : listRecomended.getRepository()){
+                                    if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
+                                        v2.setVisibility(View.VISIBLE);
+                                        recommended.clear();
+                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+                                        for (ListRecomended.Repository repository : listRecomended.getRepository()) {
 
-                                        String repoName = repository.getName();
-                                        String iconPath = repository.getIconspath();
-                                        for(ListRecomended.Repository.Package aPackage : repository.getPackage()){
+                                            String repoName = repository.getName();
+                                            String iconPath = repository.getIconspath();
+                                            for (ListRecomended.Repository.Package aPackage : repository.getPackage()) {
 
-                                            String icon;
+                                                String icon;
 
-                                            if(aPackage.getIcon_hd()!=null){
-                                                icon = aPackage.getIcon_hd();
-                                            }else{
-                                                icon = aPackage.getIcon();
-                                            }
-                                            HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue());
-                                            item.setRecommended(true);
-                                            item.setRepoName(repoName);
-                                            item.setMd5(aPackage.getMd5h());
+                                                if (aPackage.getIcon_hd() != null) {
+                                                    icon = aPackage.getIcon_hd();
+                                                } else {
+                                                    icon = aPackage.getIcon();
+                                                }
+                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue());
+                                                item.setRecommended(true);
+                                                item.setRepoName(repoName);
+                                                item.setMd5(aPackage.getMd5h());
 
-                                            if (matureCheck) {
-                                                if (!aPackage.getAge().equals("Mature")) {
+                                                if (matureCheck) {
+                                                    if (!aPackage.getAge().equals("Mature")) {
+                                                        recommended.add(item);
+                                                    }
+                                                } else {
                                                     recommended.add(item);
                                                 }
-                                            } else {
-                                                recommended.add(item);
+
                                             }
 
                                         }
-
                                     }
                                     recomendedAdapter.notifyDataSetChanged();
                                 }
@@ -352,8 +368,9 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             top.addAll(data);
 
             if(getListView().getAdapter()==null){
-
-                if(!data.isEmpty()) setListAdapter(adapter);
+                if(!data.isEmpty()){
+                    setListAdapter(adapter);
+                }
             }else{
                 adapter.notifyDataSetChanged();
             }
