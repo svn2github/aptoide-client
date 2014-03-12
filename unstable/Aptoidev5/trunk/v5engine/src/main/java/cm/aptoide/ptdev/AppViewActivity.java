@@ -62,6 +62,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+import roboguice.util.temp.Ln;
 
 import javax.xml.transform.ErrorListener;
 import java.io.File;
@@ -70,6 +71,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,6 +99,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String versionInstalled;
     private boolean isInstalled;
     private boolean autoDownload;
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition boundCondition = lock.newCondition();
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -264,6 +271,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setVersion(versionName);
                         download.setIcon(icon);
                         download.setPackageName(package_name);
+
+                        try {
+                            waitForServiceToBeBound();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         service.startDownloadFromJson(json, downloadId, download);
 
                         isFromActivityResult = false;
@@ -275,7 +288,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     }
                     moPubView.setVisibility(View.VISIBLE);
-                    moPubView.setAdUnitId("18947d9a99e511e295fa123138070049");
+                    moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
                     moPubView.loadAd();
 
                     if(service !=null && service.getDownload(downloadId).getDownload() != null){
@@ -293,6 +306,18 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         }
     };
+
+    protected void waitForServiceToBeBound() throws InterruptedException {
+        lock.lock();
+        try {
+            while (service == null) {
+                boundCondition.await();
+            }
+            Ln.d("Bound ok.");
+        } finally {
+            lock.unlock();
+        }
+    }
 
     private void checkInstallation(GetApkInfoJson getApkInfoJson) {
         try {
@@ -631,6 +656,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
                 findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
             }
+            lock.lock();
+            try {
+                boundCondition.signalAll();
+            } finally {
+                lock.unlock();
+            }
+
 
         }
 
@@ -1192,7 +1224,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public void onDownloadUpdate(Download download) {
 
 
-        if (download.getId() == downloadId) {
+        if (download !=null && download.getId() == downloadId) {
 
             TextView progressText = (TextView) findViewById(R.id.progress);
             ProgressBar pb = (ProgressBar) findViewById(R.id.downloading_progress);

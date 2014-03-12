@@ -184,15 +184,18 @@ public class FragmentDownloadManager extends ListFragment {
     public void onDownloadStatus(DownloadEvent event){
 
 
-        ongoingList.clear();
-        notOngoingList.clear();
-        ongoingList.addAll(service.getAllActiveDownloads());
-        notOngoingList.addAll(service.getAllNotActiveDownloads());
+        if(service!=null && getActivity() != null){
+            ongoingList.clear();
+            notOngoingList.clear();
+            ongoingList.addAll(service.getAllActiveDownloads());
+            notOngoingList.addAll(service.getAllNotActiveDownloads());
 
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
 
-        getActivity().supportInvalidateOptionsMenu();
-        Log.d("Aptoide-DownloadManager", "On Download Status");
+            getActivity().supportInvalidateOptionsMenu();
+            Log.d("Aptoide-DownloadManager", "On Download Status");
+        }
+
 
     }
 

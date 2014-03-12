@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
@@ -17,6 +18,7 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import com.facebook.Session;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -142,6 +144,12 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         final Bundle result = new Bundle();
         result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+
+        if (Build.VERSION.SDK_INT >= 8) {
+            if (Session.getActiveSession() != null) {
+                Session.getActiveSession().closeAndClearTokenInformation();
+            }
+        }
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sPref.edit().remove("queueName").commit();
         mContext.stopService(new Intent(mContext, RabbitMqService.class));

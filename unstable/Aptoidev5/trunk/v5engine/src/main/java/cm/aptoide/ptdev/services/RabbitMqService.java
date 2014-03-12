@@ -150,11 +150,16 @@ public class RabbitMqService extends Service {
         Log.d("Aptoide-RabbitMqService", "RabbitMqService created!");
         thread_pool = Executors.newCachedThreadPool();
 
-        Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
-        if(Build.VERSION.SDK_INT >= 8) {
-            ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+        Account account;
+        AccountManager manager = AccountManager.get(getApplicationContext());
+        if(manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
+            account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            if(Build.VERSION.SDK_INT >= 8) {
+                ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+            }
+            ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
         }
-        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
+
 
     }
 

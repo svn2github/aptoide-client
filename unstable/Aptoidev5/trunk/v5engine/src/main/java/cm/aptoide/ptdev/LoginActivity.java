@@ -105,36 +105,56 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         mPlusClient.disconnect();
                     }
                     e.printStackTrace();
-                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
 
-                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if (pd != null) {
-                        pd.dismissAllowingStateLoss();
-                    }
+                            android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                            if (pd != null) {
+                                pd.dismissAllowingStateLoss();
+                            }
+                        }
+                    });
+
                 } catch (UserRecoverableAuthException e) {
                     startActivityForResult(e.getIntent(), 90);
                 } catch (GoogleAuthException e) {
-                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
 
                     e.printStackTrace();
                     if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
-                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if (pd != null) {
-                        pd.dismissAllowingStateLoss();
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
+                            android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                            if (pd != null) {
+                                pd.dismissAllowingStateLoss();
+                            }
+                        }
+                    });
                 } catch (Exception e) {
-                    Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
                     if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
-                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if (pd != null) {
-                        pd.dismissAllowingStateLoss();
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
+                            android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                            if (pd != null) {
+                                pd.dismissAllowingStateLoss();
+                            }
+                        }
+                    });
                 }
             }
         }).start();
@@ -244,8 +264,24 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
-                        if(session == Session.getActiveSession() && user!=null){
-                            submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                        if(session == Session.getActiveSession() && user != null){
+
+                            try{
+                                submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                            }catch (Exception e){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+
+                                        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                                        if (pd != null) {
+                                            pd.dismissAllowingStateLoss();
+                                        }
+                                    }
+                                });
+                                session.closeAndClearTokenInformation();
+                            }
                         }else{
                             session.closeAndClearTokenInformation();
                         }

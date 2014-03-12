@@ -74,7 +74,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.more_top_apps));
+        getSupportActionBar().setTitle(getString(R.string.more_recommended_apps));
 
     }
 

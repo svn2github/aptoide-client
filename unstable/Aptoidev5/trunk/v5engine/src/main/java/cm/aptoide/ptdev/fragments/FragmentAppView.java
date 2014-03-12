@@ -701,29 +701,27 @@ public abstract class FragmentAppView extends Fragment {
             }
         }
 
-        public static class FillPermissions{
+        public static class FillPermissions {
 
             public static void fillPermissions(Context context, LinearLayout permissionsContainer, ArrayList<ApkPermission> permissions) {
 
                 View v;
 
-                assert context != null: "Context is null";
-                assert permissionsContainer != null: "container is null";
+                if (permissionsContainer != null) {
 
-                for(ApkPermission permission : permissions){
+                    for (ApkPermission permission : permissions) {
 
-                    v = LayoutInflater.from(context).inflate(R.layout.row_permission, permissionsContainer, false);
+                        v = LayoutInflater.from(context).inflate(R.layout.row_permission, permissionsContainer, false);
 
-                    TextView name = (TextView) v.findViewById(R.id.permission_name);
-                    TextView description = (TextView) v.findViewById(R.id.permission_description);
+                        TextView name = (TextView) v.findViewById(R.id.permission_name);
+                        TextView description = (TextView) v.findViewById(R.id.permission_description);
 
-                    name.setText(permission.getName());
-                    description.setText(permission.getDescription());
-                    permissionsContainer.addView(v);
+                        name.setText(permission.getName());
+                        description.setText(permission.getDescription());
+                        permissionsContainer.addView(v);
+                    }
+
                 }
-
-
-
             }
         }
     }

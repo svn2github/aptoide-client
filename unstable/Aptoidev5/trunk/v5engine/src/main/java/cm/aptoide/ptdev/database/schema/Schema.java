@@ -67,7 +67,7 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_GLES = "gles";
 
-        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
+        @ColumnDefinition(type = SQLType.FLOAT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
 
         @ColumnDefinition(type = SQLType.INTEGER) public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
 

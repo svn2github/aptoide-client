@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.ResponseCode;
 import cm.aptoide.ptdev.model.Store;
@@ -326,7 +327,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_top_stores).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos");
+                Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos/q=" + Utils.filters(getActivity()));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 dismiss();
 

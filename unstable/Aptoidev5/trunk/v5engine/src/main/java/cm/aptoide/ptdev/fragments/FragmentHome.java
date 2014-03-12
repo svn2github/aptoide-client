@@ -114,13 +114,13 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     private void refreshEditorsList() {
        editorsChoice.clear();
-       adapter.notifyDataSetChanged();
+        if(adapter != null) adapter.notifyDataSetChanged();
        getLoaderManager().restartLoader(50, null, this);
     }
 
     private void refreshTopList() {
         top.clear();
-        adapter.notifyDataSetChanged();
+        if(adapter != null) adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(51, null, loader);
     }
 
@@ -379,8 +379,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         @Override
         public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
-            top.clear();
-            adapter.notifyDataSetChanged();
+            if(top!=null) top.clear();
+            if(adapter!=null) adapter.notifyDataSetChanged();
         }
     }
 
@@ -417,7 +417,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Collection>> loader) {
-        editorsChoice.clear();
-        adapter.notifyDataSetChanged();
+        if(editorsChoice != null) editorsChoice.clear();
+        if(adapter != null) adapter.notifyDataSetChanged();
     }
 }

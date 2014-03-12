@@ -144,8 +144,12 @@ public class UninstallRetainFragment extends Fragment {
                     UninstallHelper.uninstall(activity, packageName, false);
                 }
             }
+
             DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            pd.dismiss();
+            if(pd!=null){
+                pd.dismissAllowingStateLoss();
+            }
+
             getFragmentManager().beginTransaction().remove(UninstallRetainFragment.this).commit();
         }
 

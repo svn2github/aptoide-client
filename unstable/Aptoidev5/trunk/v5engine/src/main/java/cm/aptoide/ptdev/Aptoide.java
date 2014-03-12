@@ -46,11 +46,11 @@ import static org.acra.ReportField.*;
         formKey = "",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="mmorthemysisserealstandl",
-        formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
+        formUriBasicAuthLogin="rtarstorciestremndicaste",
+        formUriBasicAuthPassword="ri8QdfOYmRCummWsIRk3pbHI",
         // Your usual ACRA configuration
 
-        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+        formUri = "https://rmateus.cloudant.com/acra-aptoidev5-inhouse/_design/acra-storage/_update/report"
 )
 public class Aptoide extends Application {
 
@@ -168,8 +168,6 @@ public class Aptoide extends Application {
                 .defaultDisplayImageOptions(options)
                 .build();
         ImageLoader.getInstance().init(config);
-
-
 
 
 

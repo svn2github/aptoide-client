@@ -73,13 +73,12 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             connection.close();
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
         } catch (ShutdownSignalException e){
-
-            if (connection != null) {
+            if (connection != null && channel != null) {
                 connection.disconnectChannel(channel);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            if (connection != null) {
+            if (connection != null && channel != null) {
                 connection.disconnectChannel(channel);
             }
             //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();

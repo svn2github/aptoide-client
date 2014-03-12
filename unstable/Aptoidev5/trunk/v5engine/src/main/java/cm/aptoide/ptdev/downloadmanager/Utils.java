@@ -93,6 +93,7 @@ public class Utils {
         String filters = "maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density+"&myApt="+myversionCode;
 
         return Base64.encodeToString(filters.getBytes(), 0).replace("=","").replace("/","*").replace("+","_").replace("\n", "");
+
     }
 
 
