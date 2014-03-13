@@ -8,8 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -113,7 +114,7 @@ public class UpdatesAdapter extends CursorAdapter {
                 holder.manageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) context).installApp(id);
+                        ((Start) context).installApp(id);
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });

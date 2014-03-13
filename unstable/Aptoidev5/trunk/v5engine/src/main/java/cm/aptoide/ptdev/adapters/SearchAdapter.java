@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.SearchManager;
 import cm.aptoide.ptdev.StoreActivity;

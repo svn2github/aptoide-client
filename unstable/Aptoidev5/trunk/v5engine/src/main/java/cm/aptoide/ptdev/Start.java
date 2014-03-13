@@ -77,14 +77,14 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MainActivity extends ActionBarActivity implements
+public class Start extends ActionBarActivity implements
         StoresCallback,
         DownloadManagerCallback,
         AddStoreDialog.Callback,
         DownloadInterface,
         MyAppsAddStoreInterface, ProgressDialogFragment.OnCancelListener {
 
-    private static final String TAG = MainActivity.class.getName();
+    private static final String TAG = Start.class.getName();
     private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
-            Log.d("Aptoide-MainActivity", "onServiceConnected");
+            Log.d("Aptoide-Start", "onServiceConnected");
             parserServiceIsBound = true;
 
             lock.lock();
@@ -246,7 +246,7 @@ public class MainActivity extends ActionBarActivity implements
                     public void run() {
                         for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
                             if (Boolean.parseBoolean(changes.getHasupdates())) {
-//                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(Start.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
                                 spiceManager.removeDataFromCache(RepositoryChangeJson.class);
                                 final Store store = new Store();
                                 Cursor c = database.getStore(storesIds.get(changes.getRepo()));
@@ -431,7 +431,7 @@ public class MainActivity extends ActionBarActivity implements
                 public void run() {
                     try {
                         waitForServiceToBeBound();
-                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=" + AptoideUtils.getMyCountry(MainActivity.this));
+                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=" + AptoideUtils.getMyCountry(Start.this));
                         service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -670,7 +670,7 @@ public class MainActivity extends ActionBarActivity implements
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-                    Log.d("MainActivity-addDefaultRepo", "added default repo "+ repoUrl);
+                    Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
                 }
                 break;
         }
@@ -717,7 +717,6 @@ public class MainActivity extends ActionBarActivity implements
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }

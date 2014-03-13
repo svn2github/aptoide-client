@@ -163,7 +163,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                                     public void onRequestSuccess(ListRecomended listRecomended) {
 
                                         items.clear();
-                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true);
+                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
                                         for(ListRecomended.Repository repository : listRecomended.getRepository()){
 
                                             String repoName = repository.getName();

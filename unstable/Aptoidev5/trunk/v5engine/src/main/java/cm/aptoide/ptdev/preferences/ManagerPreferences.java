@@ -20,15 +20,14 @@
 
 package cm.aptoide.ptdev.preferences;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
 
 import java.util.UUID;
@@ -49,16 +48,18 @@ public class ManagerPreferences {
         public ManagerPreferences(Context context) {
             getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             setPreferences = getPreferences.edit();
+
             if(getAptoideClientUUID() == null){
     			createLauncherShortcut(context);
                 setAptoideClientUUID( UUID.randomUUID().toString() );
             }
 
-
         }
 
 
         public void createLauncherShortcut(Context context){
+
+            //removeLauncherShortcut(context);
 
             Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
@@ -69,20 +70,31 @@ public class ManagerPreferences {
 
             Parcelable iconResource;
 
-            iconResource = Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher);
+            iconResource = Intent.ShortcutIconResource.fromContext(context, R.drawable.icon_brand_aptoide);
 
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
             intent.putExtra("duplicate", false);
             intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 
             context.sendBroadcast(intent);
+
         }
 
+    private void removeLauncherShortcut(Context context) {
+        final Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+        shortcutIntent.setComponent(new ComponentName(context.getPackageName(), "cm.aptoide.ptdev.Start"));
+
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());
+        shortcutIntent.setComponent(new ComponentName(context.getPackageName(), "cm.aptoide.ptdev.Start"));
+        intent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+
+        context.sendBroadcast(intent, null);
+    }
 
 
-
-
-        public SharedPreferences getPreferences() {
+    public SharedPreferences getPreferences() {
             return getPreferences;
         }
 

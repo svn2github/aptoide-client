@@ -161,10 +161,21 @@ public class AptoideUtils {
 
         }
 
-        public static final String TERMINAL_INFO = android.os.Build.MODEL + "("+ android.os.Build.PRODUCT + ")"
-                +";v"+android.os.Build.VERSION.RELEASE+";"+System.getProperty("os.arch");
+        public static final String TERMINAL_INFO = getModel() + "("+ getProduct() + ")"
+                +";v"+getRelease()+";"+System.getProperty("os.arch");
+
+        public static String getProduct(){
+            return android.os.Build.PRODUCT.replace(";", " ");
+        }
+
+        public static String getModel(){
+            return android.os.Build.MODEL.replaceAll(";", " ");
+        }
 
 
+        public static String getRelease(){
+            return android.os.Build.VERSION.RELEASE.replaceAll(";", " ");
+        }
 
     }
 
@@ -355,7 +366,7 @@ public class AptoideUtils {
 //                partnerid = "PartnerID:" + Aptoide.PARTNERID + ";";
 //            }
 
-            return "aptoidedev-5.0.0;" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
+            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
         }
 
 

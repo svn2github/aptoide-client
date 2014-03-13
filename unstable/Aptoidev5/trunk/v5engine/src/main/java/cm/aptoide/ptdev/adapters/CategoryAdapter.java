@@ -138,6 +138,8 @@ public class CategoryAdapter extends CursorAdapter {
 
                 if(count>0){
                     ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+                }else{
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText("");
                 }
 
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);

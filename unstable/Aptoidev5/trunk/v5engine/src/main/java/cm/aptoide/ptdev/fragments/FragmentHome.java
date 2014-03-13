@@ -241,7 +241,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         final AccountManager accountManager = AccountManager.get(getActivity());
 
         if(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-            final SpiceManager manager = ((MainActivity) getActivity()).getSpiceManager();
+            final SpiceManager manager = ((Start) getActivity()).getSpiceManager();
 
             new Thread(new Runnable() {
                 @Override

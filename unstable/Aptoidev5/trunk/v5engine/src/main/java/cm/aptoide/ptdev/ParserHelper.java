@@ -53,7 +53,7 @@ public class ParserHelper {
 
                         for (RepositoryChangeJson.Listing changes : repositoryChangeJson.listing) {
                             if (Boolean.parseBoolean(changes.getHasupdates())) {
-//                                Toast.makeText(MainActivity.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(Start.this, changes.getRepo() + " has updates.", Toast.LENGTH_SHORT).show();
                                 spiceManager.removeDataFromCache(RepositoryChangeJson.class);
                                 final Store store = new Store();
                                 Cursor c = database.getStore(storesIds.get(changes.getRepo()));

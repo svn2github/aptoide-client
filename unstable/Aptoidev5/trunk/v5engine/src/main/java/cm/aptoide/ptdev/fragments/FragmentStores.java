@@ -315,7 +315,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     private void setMergeStore(boolean mergeStore) {
 
         isMergeStore = mergeStore;
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("mergeStores", mergeStore).commit();
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("mergeStores", mergeStore).commit();
 
         if(mergeStore){
             stores.clear();

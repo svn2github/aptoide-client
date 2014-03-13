@@ -11,6 +11,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import cm.aptoide.ptdev.adapters.ViewPagerAdapterScreenshots;
@@ -28,7 +29,18 @@ public class ScreenshotsViewer extends ActionBarActivity {
 	Context context;
 	private String hashCode;
 
-	@Override
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            // do nothing
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
 	protected void onCreate(Bundle arg0) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(arg0);

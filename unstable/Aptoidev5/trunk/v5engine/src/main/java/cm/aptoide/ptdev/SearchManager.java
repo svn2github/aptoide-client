@@ -110,6 +110,8 @@ public class SearchManager extends ActionBarActivity {
         private View v;
         TextView more;
 
+
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -120,13 +122,14 @@ public class SearchManager extends ActionBarActivity {
             cursorAdapter = new SearchAdapter(getActivity());
             adapter.addAdapter(cursorAdapter);
             query = getArguments().getString("query");
-            getLoaderManager().initLoader(60, getArguments(), this);
             setHasOptionsMenu(true);
 
 
 
 
         }
+
+
 
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -240,6 +243,7 @@ public class SearchManager extends ActionBarActivity {
             search.setOnClickListener(getSearchListener());
 
             getListView().addFooterView(footer);
+            getLoaderManager().initLoader(60, getArguments(), this);
 
         }
 

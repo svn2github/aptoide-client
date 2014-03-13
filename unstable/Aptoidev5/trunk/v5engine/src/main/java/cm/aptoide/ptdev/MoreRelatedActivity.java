@@ -124,7 +124,7 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
                 if (items.size() > 0) {
                     elements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true)) {
+                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)) {
 
 
                         for (RelatedApkJson.Item item : items) {

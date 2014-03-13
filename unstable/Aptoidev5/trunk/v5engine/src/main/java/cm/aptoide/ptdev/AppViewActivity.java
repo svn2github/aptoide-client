@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.*;
+import android.support.v4.content.*;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -92,6 +93,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private MoPubView moPubView;
 
     private GetApkInfoJson json;
+
     private String name;
     private boolean isFromActivityResult;
     private String wUrl;
@@ -111,7 +113,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onRequestFailure(SpiceException e) {
+
             AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
+
         }
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -284,9 +288,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
 
                     moPubView = (MoPubView) findViewById(R.id.adview);
+
                     if (Build.VERSION.SDK_INT > 11) {
                         moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     }
+
                     moPubView.setVisibility(View.VISIBLE);
                     moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
                     moPubView.loadAd();
@@ -384,7 +390,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> repo = new ArrayList<String>();
                 repo.add("http://" + repoName + ".store.aptoide.com/");
-                Intent i = new Intent(AppViewActivity.this, MainActivity.class);
+                Intent i = new Intent(AppViewActivity.this, Start.class);
                 i.putExtra("nodialog", true);
                 i.putExtra("newrepo", repo);
                 i.addFlags(12345);
@@ -813,14 +819,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onStart() {
-        super.onStart();
         spiceManager.start(this);
+        super.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
         BusProvider.getInstance().register(this);
         if(json != null){
             checkInstallation(json);
@@ -832,8 +838,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onStop() {
-        super.onStop();
         spiceManager.shouldStop();
+        super.onStop();
     }
 
     @Override

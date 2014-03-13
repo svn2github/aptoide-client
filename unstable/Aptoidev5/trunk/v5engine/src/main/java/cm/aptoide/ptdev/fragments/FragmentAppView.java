@@ -473,7 +473,7 @@ public abstract class FragmentAppView extends Fragment {
                     Log.d("FragmentRelated", "itembased: "+ Arrays.toString(relatedApkJson.getItembased().toArray()));
 
                     itemBasedElements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){
+                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox",true)){
 
 
                         for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
@@ -504,7 +504,7 @@ public abstract class FragmentAppView extends Fragment {
 
                 if(relatedApkJson.getDevelbased() != null && relatedApkJson.getDevelbased().size()>0){
                     develBasedElements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true)){
+                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)){
 
 
                         for (RelatedApkJson.Item item : relatedApkJson.getDevelbased()) {
@@ -537,7 +537,7 @@ public abstract class FragmentAppView extends Fragment {
                 if(relatedApkJson.getMultiversion()!=null && relatedApkJson.getMultiversion().size()>0){
                     multiVersionElements.clear();
 
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox",true)){
+                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox",true)){
 
 
                         for (RelatedApkJson.Item item : relatedApkJson.getMultiversion()) {
@@ -989,7 +989,7 @@ public abstract class FragmentAppView extends Fragment {
             private void addComment() {
 
 
-                if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "").equals("NOT_SIGNED_UP")) {
+                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "").equals("NOT_SIGNED_UP")) {
                     manager = ((AppViewActivity) getActivity()).getSpice();
 
                     AddCommentRequest request = new AddCommentRequest(getActivity());

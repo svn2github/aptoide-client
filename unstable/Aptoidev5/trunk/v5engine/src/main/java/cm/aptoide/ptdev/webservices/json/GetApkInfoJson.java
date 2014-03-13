@@ -134,6 +134,7 @@ public class GetApkInfoJson {
     }
 
     public static class Payment{
+
         @Key private Number amount;
         @Key private String status;
 

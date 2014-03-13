@@ -42,9 +42,7 @@ import com.facebook.model.GraphUser;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.*;
 import com.google.android.gms.plus.PlusClient;
 import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
@@ -217,19 +215,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     @Override
     public void onCancel() {
-        request.setRequestCancellationListener(new RequestCancellationListener() {
-            @Override
-            public void onRequestCancelled() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(LoginActivity.this, "Request canceled", Toast.LENGTH_LONG).show();
-                    }
-                });
+        if (request != null) {
+            spiceManager.cancel(request);
+        }
 
-            }
-        });
-        spiceManager.cancel(request);
     }
 
     public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
@@ -319,10 +308,24 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mConnectionProgressDialog = new ProgressDialog(this);
                 mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
 
-
                 uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
                 uiLifecycleHelper.onCreate(savedInstanceState);
+
+
                 mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+                int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+                boolean play_installed;
+                if (val == ConnectionResult.SUCCESS) {
+                    play_installed = true;
+                } else {
+                    play_installed = false;
+                }
+
+                SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
+                if(!play_installed){
+                    signInButton.setVisibility(View.GONE);
+                }
 
             }
             mAccountManager = AccountManager.get(getBaseContext());
@@ -340,9 +343,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 ((EditText) findViewById(R.id.username)).setText(PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.LOGIN_USER_LOGIN, ""));
                 fromPreviousAptoideVersion = true;
             }
-
-
-
 
 
             password_box = (EditText) findViewById(R.id.password);
@@ -371,9 +371,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
                         }
                     }
-
-
-
 
                     return false;
                 }
@@ -451,10 +448,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mPlusClient.connect();
             }
         }
+
         if(uiLifecycleHelper!=null){
             uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
         }
-
 
         // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
@@ -612,7 +609,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         Toast.makeText(getBaseContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
-
 
             }
         });

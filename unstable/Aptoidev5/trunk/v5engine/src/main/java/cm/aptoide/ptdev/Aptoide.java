@@ -46,8 +46,8 @@ import static org.acra.ReportField.*;
         formKey = "",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="rtarstorciestremndicaste",
-        formUriBasicAuthPassword="ri8QdfOYmRCummWsIRk3pbHI",
+        formUriBasicAuthLogin="mmorthemysisserealstandl",
+        formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
         // Your usual ACRA configuration
 
         formUri = "https://rmateus.cloudant.com/acra-aptoidev5-inhouse/_design/acra-storage/_update/report"
@@ -116,13 +116,12 @@ public class Aptoide extends Application {
 //                .build());
 
 
-
         ACRA.init(this);
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
             acraConfiguration.setMode(ReportingInteractionMode.TOAST);
             acraConfiguration.setCustomReportContent(new ReportField[]{ APP_VERSION_CODE, APP_VERSION_NAME,
-                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID });
+                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID, BUILD });
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
@@ -148,8 +147,6 @@ public class Aptoide extends Application {
 
         FileNameGenerator generator = new FileNameGenerator() {
 
-
-
             @Override
             public String generate(String s) {
 
@@ -167,6 +164,7 @@ public class Aptoide extends Application {
                 .imageDownloader(new ImageDownloaderWithPermissions(getContext(),managerPreferences))
                 .defaultDisplayImageOptions(options)
                 .build();
+
         ImageLoader.getInstance().init(config);
 
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class AptoideConfiguration {
     }
 
     public Class getShortcutClass() {
-        return MainActivity.class;
+        return Start.class;
     }
 
     public String getAutoUpdateUrl() {
@@ -166,7 +166,7 @@ public class AptoideConfiguration {
     }
 
     public int getIcon() {
-        return R.drawable.ic_launcher;
+        return R.drawable.icon_brand_aptoide;
     }
 
 //    public ActivitiesClasses getClasses(){

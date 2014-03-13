@@ -61,17 +61,15 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Subscribe
     public void refreshStoresEvent(RepoCompleteEvent event) {
-        setListShown(false);
+
         Log.d("Aptoide-", "OnEvent");
         getLoaderManager().restartLoader(91, null, this);
-
-
-
 
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        setListShown(false);
 
         return new SimpleCursorLoader(getActivity()) {
             @Override
@@ -84,7 +82,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
         SharedPreferences.Editor editor = sPref.edit();
         int updates = 0;
         if (data.getCount() > 1) {
@@ -99,11 +97,12 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
             editor.putInt("updates", updates);
         } else {
             updatesAdapter.swapCursor(null);
+
             editor.remove("updates");
         }
         editor.commit();
 
-        ((MainActivity) getActivity()).updateBadge(sPref);
+        ((Start) getActivity()).updateBadge(sPref);
         if (getListView().getAdapter() == null)
             setListAdapter(adapter);
 
@@ -112,7 +111,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        updatesAdapter.swapCursor(null);
     }
 
 

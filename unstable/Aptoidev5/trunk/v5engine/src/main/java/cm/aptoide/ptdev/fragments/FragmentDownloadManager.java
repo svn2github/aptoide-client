@@ -1,34 +1,33 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
+
 import android.os.Bundle;
-import android.os.IBinder;
+
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import cm.aptoide.ptdev.DownloadServiceConnected;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
+
 import cm.aptoide.ptdev.adapters.DownloadManagerSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
-import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
+
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
-import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
+
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
+
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,22 +58,20 @@ public class FragmentDownloadManager extends ListFragment {
 
     }
 
-    MainActivity callback;
+    Start callback;
     DownloadService service;
-
 
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.callback = (MainActivity) activity;
+        this.callback = (Start) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         this.callback = null;
-
     }
 
     @Override
@@ -82,7 +79,6 @@ public class FragmentDownloadManager extends ListFragment {
         super.onStart();
         BusProvider.getInstance().register(this);
     }
-
 
 
     @Override
@@ -97,16 +93,14 @@ public class FragmentDownloadManager extends ListFragment {
 
         service = callback.getDownloadService();
 
-        if(service!=null){
+        if (service != null) {
             ongoingList.clear();
             notOngoingList.clear();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList.addAll(service.getAllNotActiveDownloads());
             adapter.notifyDataSetChanged();
             getActivity().supportInvalidateOptionsMenu();
-
         }
-
 
     }
 
@@ -121,9 +115,10 @@ public class FragmentDownloadManager extends ListFragment {
 
     OngoingAdapter ongoingAdapter;
     NotOngoingAdapter notOngoingAdapter;
-    ArrayList<Download> ongoingList  = new ArrayList<Download>();
+    ArrayList<Download> ongoingList = new ArrayList<Download>();
     ArrayList<Download> notOngoingList = new ArrayList<Download>();
     DownloadManagerSectionAdapter sectionAdapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +140,7 @@ public class FragmentDownloadManager extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_download_manager, menu);
-        if(!notOngoingList.isEmpty()){
+        if (!notOngoingList.isEmpty()) {
             menu.findItem(R.id.menu_clear_downloads).setVisible(true);
         }
     }
@@ -155,8 +150,8 @@ public class FragmentDownloadManager extends ListFragment {
 
         int id = item.getItemId();
 
-        if(id == R.id.menu_retry){
-            ((Download)getListAdapter().getItem(((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position)).getParent().download();
+        if (id == R.id.menu_retry) {
+            ((Download) getListAdapter().getItem(((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position)).getParent().download();
         }
 
         return super.onContextItemSelected(item);
@@ -167,7 +162,7 @@ public class FragmentDownloadManager extends ListFragment {
 
         int id = item.getItemId();
 
-        if(id == R.id.menu_clear_downloads){
+        if (id == R.id.menu_clear_downloads) {
             service.removeNonActiveDownloads();
         }
 
@@ -181,15 +176,14 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
     @Subscribe
-    public void onDownloadStatus(DownloadEvent event){
+    public void onDownloadStatus(DownloadEvent event) {
 
 
-        if(service!=null && getActivity() != null){
+        if (service != null && getActivity() != null) {
             ongoingList.clear();
             notOngoingList.clear();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList.addAll(service.getAllNotActiveDownloads());
-
             adapter.notifyDataSetChanged();
 
             getActivity().supportInvalidateOptionsMenu();
@@ -200,21 +194,20 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
 
-
     @Subscribe
-    public void onDownloadUpdate(Download download){
+    public void onDownloadUpdate(Download download) {
         Log.d("Aptoide-DownloadManager", "onDownloadUpdate " + download.getId());
 
-        try{
+        try {
             int start = getListView().getFirstVisiblePosition();
-            for (int i = start, j = getListView().getLastVisiblePosition(); i <= j; i++){
+            for (int i = start, j = getListView().getLastVisiblePosition(); i <= j; i++) {
                 if (download.equals((getListView().getItemAtPosition(i)))) {
                     View view = getListView().getChildAt(i - start);
                     getListView().getAdapter().getView(i, view, getListView());
                     break;
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

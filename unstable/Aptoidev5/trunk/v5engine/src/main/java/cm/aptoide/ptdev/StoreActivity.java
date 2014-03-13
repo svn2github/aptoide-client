@@ -301,11 +301,13 @@ public class StoreActivity extends ActionBarActivity {
     }
 
     private void refreshList() {
-        isRefreshing = service.repoIsParsing(storeid);
-        FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-        fragStore.onRefresh();
-        fragStore.setListShown(false);
-        fragStore.setRefreshing(isRefreshing);
+        if(service!=null){
+            isRefreshing = service.repoIsParsing(storeid);
+            FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
+            fragStore.onRefresh();
+            fragStore.setListShown(false);
+            fragStore.setRefreshing(isRefreshing);
+        }
     }
 
     public void onRefreshStarted() {

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import com.facebook.Session;
+import com.facebook.TokenCachingStrategy;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -146,6 +147,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
 
         if (Build.VERSION.SDK_INT >= 8) {
+            Session session = new Session(mContext);
+            Session.setActiveSession(session);
             if (Session.getActiveSession() != null) {
                 Session.getActiveSession().closeAndClearTokenInformation();
             }

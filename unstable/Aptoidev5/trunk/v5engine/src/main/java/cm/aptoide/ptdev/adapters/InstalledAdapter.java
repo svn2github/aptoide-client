@@ -108,7 +108,7 @@ public class InstalledAdapter extends CursorAdapter {
 //                    @Override
 //                    public void onClick(View v) {
 //                        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(name, packageName, versionName, iconPath);
-//                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
+//                        ((Start) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
 //                    }
 //                });
 

@@ -22,7 +22,7 @@ import java.util.HashMap;
 public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
     private String email;
     private String pass;
     private String name = "";

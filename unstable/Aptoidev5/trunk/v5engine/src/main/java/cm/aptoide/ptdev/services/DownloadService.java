@@ -432,7 +432,7 @@ public class DownloadService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         Intent onClick = new Intent();
-        onClick.setClassName(getPackageName(), "cm.aptoide.ptdev.MainActivity");
+        onClick.setClassName(getPackageName(), "cm.aptoide.ptdev.Start");
         onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
         onClick.setAction(Intent.ACTION_VIEW);
         onClick.putExtra("fromDownloadNotification", true);

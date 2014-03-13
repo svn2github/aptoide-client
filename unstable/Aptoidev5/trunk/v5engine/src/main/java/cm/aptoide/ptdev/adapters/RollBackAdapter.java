@@ -84,7 +84,7 @@ public class RollBackAdapter extends CursorAdapter {
             appNameRes = EnumRollbackState.states.get(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION)));
         } catch (Exception e) {
             appStateString = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION));
-            Log.d("MainActivity-RollbackAdapter", "RollbackAdapter App state " + appStateString);
+            Log.d("Start-RollbackAdapter", "RollbackAdapter App state " + appStateString);
         }
         if (appStateString == null) {
             appStateString = context.getString(appNameRes);

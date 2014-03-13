@@ -30,15 +30,14 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
-            Log.d("Aptoide-SectionAdapter", "Updating session cache");
             updateSessionCache();
             super.onChanged();
         }
 
         @Override
         public void onInvalidated() {
-            super.onInvalidated();
             updateSessionCache();
+            super.onInvalidated();
         };
     };
 
@@ -73,6 +72,7 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     }
 
     private synchronized void updateSessionCache() {
+        Log.d("Aptoide-SectionAdapter", "Updating session cache");
         int currentPosition = 0;
         sectionPositions.clear();
         itemPositions.clear();
@@ -99,7 +99,9 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
 
     @Override
     public synchronized int getCount() {
-        return sectionPositions.size() + itemPositions.size();
+        int size = sectionPositions.size() + itemPositions.size();
+        Log.d("Aptoide-getCount", String.valueOf(size));
+        return size;
     }
 
     @Override

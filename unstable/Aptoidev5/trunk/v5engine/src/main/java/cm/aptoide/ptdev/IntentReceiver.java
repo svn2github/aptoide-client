@@ -84,7 +84,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         super.onCreate(savedInstanceState);
 
 //        if(savedInstanceState==null){
-//            Intent i = new Intent(this, MainActivity.class);
+//            Intent i = new Intent(this, Start.class);
 //            i.putExtra("newrepo", "");
 //            startActivity(i);
 //        }
@@ -116,7 +116,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
     private void proceed() {
         if(server!=null){
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
+            Intent i = new Intent(IntentReceiver.this,Start.class);
             i.putExtra("newrepo", server);
             i.addFlags(12345);
             startActivity(i);
@@ -132,18 +132,20 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         String uri = getIntent().getDataString();
         System.out.println(uri);
         if(uri.startsWith("aptoiderepo")){
+
             ArrayList<String> repo = new ArrayList<String>();
             repo.add(uri.substring(14));
-            Intent i = new Intent(IntentReceiver.this, MainActivity.class);
+            Intent i = new Intent(IntentReceiver.this, Start.class);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);
             finish();
 
         }else if(uri.startsWith("aptoidexml")){
+
             String repo = uri.substring(13);
             parseXmlString(repo);
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
+            Intent i = new Intent(IntentReceiver.this,Start.class);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);
@@ -236,15 +238,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
     }
 
-    public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-        }
-        return query_pairs;
-    }
+
 
     private void downloadMyappFile(String myappUri) throws Exception{
         try{
@@ -402,7 +396,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //                        Download download = new Download();
 //                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
 //                        download.setId(id);
-//                        ((MainActivity)getApplicationContext()).installApp(0);
+//                        ((Start)getApplicationContext()).installApp(0);
 
                         Toast toast = Toast.makeText(IntentReceiver.this, getString(R.string.starting_download), Toast.LENGTH_SHORT);
                         toast.show();

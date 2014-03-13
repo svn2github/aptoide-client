@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 
 /**
@@ -21,13 +22,13 @@ public class AllowRootDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("allowRoot", true).commit();
+                        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("allowRoot", true).commit();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("allowRoot", false).commit();
+                        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("allowRoot", false).commit();
                     }
                 })
                 .create();

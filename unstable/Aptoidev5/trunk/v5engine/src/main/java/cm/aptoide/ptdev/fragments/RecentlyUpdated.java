@@ -88,7 +88,7 @@ public class RecentlyUpdated extends CursorAdapter {
 
 
                 holder.appName.setText(name);
-                holder.appIcon.setImageResource(R.drawable.ic_launcher);
+                holder.appIcon.setImageResource(R.drawable.icon_brand_aptoide);
 
                 break;
 

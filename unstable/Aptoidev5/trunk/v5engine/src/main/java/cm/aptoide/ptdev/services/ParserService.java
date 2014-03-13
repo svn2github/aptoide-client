@@ -145,7 +145,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
                 Intent notificationIntent = new Intent();
 
-                notificationIntent.setClassName(getPackageName(), "cm.aptoide.ptdev.MainActivity");
+                notificationIntent.setClassName(getPackageName(), "cm.aptoide.ptdev.Start");
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                 notificationIntent.setAction("");
 

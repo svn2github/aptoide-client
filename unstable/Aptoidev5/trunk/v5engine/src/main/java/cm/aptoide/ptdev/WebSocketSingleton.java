@@ -9,6 +9,8 @@ import com.codebutler.android_websockets.WebSocketClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -27,10 +29,14 @@ public class WebSocketSingleton {
             "_id"};
     private String query;
     private String buffer;
+
     private WebSocketClient.Listener listener = new WebSocketClient.Listener() {
         @Override
         public void onConnect() {
             Log.d("TAG", "On Connect");
+
+
+
         }
 
         @Override
@@ -69,6 +75,7 @@ public class WebSocketSingleton {
         public void onDisconnect(int code, String reason) {
             //To change body of implemented methods use File | Settings | File Templates.
             Log.d("TAG", reason);
+
 
         }
 
