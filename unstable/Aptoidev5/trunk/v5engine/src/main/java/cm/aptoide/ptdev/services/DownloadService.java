@@ -21,7 +21,8 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
-import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
@@ -351,7 +352,15 @@ public class DownloadService extends Service {
 
         @Override
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-            if(getApkInfoJson!=null) startDownloadFromJson(getApkInfoJson, id, download);
+            if (getApkInfoJson != null) {
+                if (getApkInfoJson.getStatus().equals("OK")) {
+                    startDownloadFromJson(getApkInfoJson, id, download);
+                } else {
+                    for (Error error : getApkInfoJson.getErrors()) {
+                        Toast.makeText(getApplicationContext(), error.getMsg(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
 
         }
     }
