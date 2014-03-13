@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -251,14 +252,17 @@ public class SearchManager extends ActionBarActivity {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
-                    Log.d("TAG", "Searching for:" + url);
+                    try{
+                        String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
+                        Log.d("TAG", "Searching for:" + url);
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        url = url.replaceAll(" ", "%20");
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    } catch (ActivityNotFoundException e){
+                        Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+                    }
 
-
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    url = url.replaceAll(" ", "%20");
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
                 }
             };
         }

@@ -50,7 +50,7 @@ import static org.acra.ReportField.*;
         formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
         // Your usual ACRA configuration
 
-        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+        formUri = "https://rmateus.cloudant.com/acra-aptoidev5-inhouse/_design/acra-storage/_update/report"
 )
 public class Aptoide extends Application {
 

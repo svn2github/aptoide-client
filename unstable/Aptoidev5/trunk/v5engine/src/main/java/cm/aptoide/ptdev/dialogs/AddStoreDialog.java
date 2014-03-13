@@ -44,8 +44,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class AddStoreDialog extends DialogFragment {
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
-
-
     private Callback callback;
     public Callback dummyCallback = new Callback() {
         @Override
