@@ -48,6 +48,7 @@ public class ApkEditorsChoice extends Apk {
         values.add(Schema.Apk.COLUMN_SIGNATURE);
         values.add(Schema.Apk.COLUMN_PATH);
         values.add(Schema.Apk.COLUMN_MD5);
+        values.add(Schema.Apk.COLUMN_PRICE);
 
 
 
@@ -101,7 +102,8 @@ public class ApkEditorsChoice extends Apk {
                             String.valueOf(AptoideUtils.isCompatible(this) ? 1 : 0),
                             getSignature(),
                             getPath(),
-                            getMd5h()
+                            getMd5h(),
+                            String.valueOf(getPrice())
 
 
                     });

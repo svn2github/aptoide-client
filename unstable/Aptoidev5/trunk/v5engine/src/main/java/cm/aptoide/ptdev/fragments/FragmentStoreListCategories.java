@@ -61,7 +61,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         getListView().setDivider(null);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
+        getListView().setFastScrollEnabled(true);
         // We need to create a PullToRefreshLayout manually
 
 
@@ -149,9 +149,10 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(((StoreActivity)getActivity()).isRefreshing()){
+        if(getActivity() != null && ((StoreActivity)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
+
     }
 
     @Override

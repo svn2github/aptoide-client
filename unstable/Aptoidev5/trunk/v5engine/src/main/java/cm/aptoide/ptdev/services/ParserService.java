@@ -195,7 +195,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
-    public void startParse(final Database db, final Store store, boolean newStore) {
+    public synchronized void startParse(final Database db, final Store store, boolean newStore) {
         if(handlerBundleSparseArray.get((int) store.getId())!=null){
             return;
         }
@@ -254,8 +254,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
 
                     String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
-
-
                     String avatar = repositoryInfoJson.getListing().getAvatar_hd();
                     String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
                     avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];

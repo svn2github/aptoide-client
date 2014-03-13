@@ -524,8 +524,6 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-
-
     }
 
 
@@ -663,6 +661,7 @@ public class Start extends ActionBarActivity implements
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
                 break;
             case 50:
+                spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
                 spiceManager.getFromCache(RepositoryChangeJson.class, checkServerCacheString, DurationInMillis.ONE_DAY, requestListener);
                 if(resultCode == RESULT_OK && data.getBooleanExtra("addDefaultRepo", false)){
                     Store store = new Store();

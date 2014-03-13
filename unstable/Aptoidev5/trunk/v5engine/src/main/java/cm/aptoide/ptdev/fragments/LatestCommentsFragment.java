@@ -100,7 +100,6 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
 
         ListRepositoryCommentsRequest listRelatedApkRequest = new ListRepositoryCommentsRequest(repoName);
 
-
         Log.d("FragmentRelated", "onCreateView");
 
         spiceManager.execute(listRelatedApkRequest, repoName + "-latestComments", DurationInMillis.ONE_DAY, request);
@@ -160,7 +159,12 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
 
             appName.setText(item.getName());
             comment.setText(item.getText());
-            user.setText(item.getUsername());
+            if(user.equals("NOT_SIGNED_UP")){
+                user.setText("");
+            }else{
+                user.setText(item.getUsername());
+            }
+
             try {
                 Date date = Configs.TIME_STAMP_FORMAT.parse(item.getTimestamp());
                 time.setText(AptoideUtils.DateDiffUtils.getDiffDate(getContext(), date));

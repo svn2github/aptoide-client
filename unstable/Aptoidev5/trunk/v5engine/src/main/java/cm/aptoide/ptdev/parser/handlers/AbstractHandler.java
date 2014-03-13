@@ -472,7 +472,6 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 apk.setPrice(Double.parseDouble(sb.toString()));
-
             }
         });
 

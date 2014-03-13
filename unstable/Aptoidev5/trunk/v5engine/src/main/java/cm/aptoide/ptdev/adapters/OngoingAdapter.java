@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import com.mopub.mobileads.HtmlBanner;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
         final Download download = getItem(position);
 
-        ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
+        ((TextView) v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
         ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setIndeterminate(false);

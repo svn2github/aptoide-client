@@ -276,7 +276,7 @@ public class AddStoreDialog extends DialogFragment {
 
     void dismissDialog(String message){
         if(message!=null){
-            Toast.makeText(getActivity(),message, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(),message, Toast.LENGTH_LONG).show();
         }
 
         dismissDialog();

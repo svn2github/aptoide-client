@@ -216,7 +216,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     public void onCancel() {
         if (request != null) {
-            spiceManager.cancel(request);
+            if(spiceManager.isStarted())spiceManager.cancel(request);
         }
 
     }

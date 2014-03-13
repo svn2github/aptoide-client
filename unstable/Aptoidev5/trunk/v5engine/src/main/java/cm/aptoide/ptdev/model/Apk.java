@@ -51,7 +51,7 @@ public abstract class Apk {
     private Filters.Screen minScreen = Filters.Screen.notfound;
     private String screenCompat;
     private Date date;
-    private double price;
+    private double price = 0.0;
     private String minGlEs = "0.0";
     private Server server = new Server() {
         @Override

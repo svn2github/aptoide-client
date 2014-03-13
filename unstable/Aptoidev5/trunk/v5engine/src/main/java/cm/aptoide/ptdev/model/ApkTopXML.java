@@ -49,7 +49,7 @@ public class ApkTopXML extends Apk {
         values.add(Schema.Apk.COLUMN_SIGNATURE);
         values.add(Schema.Apk.COLUMN_PATH);
         values.add(Schema.Apk.COLUMN_MD5);
-
+        values.add(Schema.Apk.COLUMN_PRICE);
 
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
@@ -99,7 +99,8 @@ public class ApkTopXML extends Apk {
                             String.valueOf(AptoideUtils.isCompatible(this)?1:0),
                             getSignature(),
                             getPath(),
-                            getMd5h()
+                            getMd5h(),
+                            String.valueOf(getPrice())
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();

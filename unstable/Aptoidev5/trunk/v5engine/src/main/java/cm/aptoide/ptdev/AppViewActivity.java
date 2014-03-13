@@ -287,15 +287,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         autoDownload = false;
                     }
 
-                    moPubView = (MoPubView) findViewById(R.id.adview);
 
-                    if (Build.VERSION.SDK_INT > 11) {
-                        moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                    }
-
-                    moPubView.setVisibility(View.VISIBLE);
-                    moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
-                    moPubView.loadAd();
 
                     if(service !=null && service.getDownload(downloadId).getDownload() != null){
                         onDownloadUpdate(service.getDownload(downloadId).getDownload());
@@ -989,6 +981,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
             bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+
+            moPubView = (MoPubView) findViewById(R.id.adview);
+
+            if (Build.VERSION.SDK_INT > 11) {
+                moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+
+            moPubView.setVisibility(View.VISIBLE);
+            moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
+            moPubView.loadAd();
 
         }
 

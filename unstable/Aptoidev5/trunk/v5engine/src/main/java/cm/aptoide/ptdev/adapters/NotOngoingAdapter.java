@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         }
         final Download download = getItem(position);
 
-        ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
+        ((TextView)v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
 
 
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
