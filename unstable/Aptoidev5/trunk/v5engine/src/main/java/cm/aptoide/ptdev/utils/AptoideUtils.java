@@ -144,7 +144,25 @@ public class AptoideUtils {
             WindowManager manager = (WindowManager) context.getSystemService(Service.WINDOW_SERVICE);
             manager.getDefaultDisplay().getMetrics(metrics);
 
-            return metrics.densityDpi;
+
+            int dpi = metrics.densityDpi;
+
+
+            if(dpi <= 120){
+                dpi = 120;
+            }else if(dpi <= 160){
+                dpi = 160;
+            }else if(dpi <= 213){
+                dpi = 213;
+            }else if(dpi <= 240){
+                dpi = 240;
+            }else if(dpi <= 320){
+                dpi = 320;
+            }else{
+                dpi = 480;
+            }
+
+            return dpi;
         }
 
         public static String getCpuAbi() {

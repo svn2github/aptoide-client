@@ -88,7 +88,7 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
     @Subscribe
-    public void initAdapters(DownloadServiceConnected event) {
+    public synchronized void  initAdapters(DownloadServiceConnected event) {
 
 
         service = callback.getDownloadService();
@@ -176,7 +176,7 @@ public class FragmentDownloadManager extends ListFragment {
     }
 
     @Subscribe
-    public void onDownloadStatus(DownloadEvent event) {
+    public synchronized void onDownloadStatus(DownloadEvent event) {
 
 
         if (service != null && getActivity() != null) {
@@ -195,7 +195,7 @@ public class FragmentDownloadManager extends ListFragment {
 
 
     @Subscribe
-    public void onDownloadUpdate(Download download) {
+    public synchronized void onDownloadUpdate(Download download) {
         Log.d("Aptoide-DownloadManager", "onDownloadUpdate " + download.getId());
 
         try {

@@ -81,32 +81,43 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-        SharedPreferences.Editor editor = sPref.edit();
-        int updates = 0;
-        if (data.getCount() > 1) {
+    public synchronized void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
 
-            updatesAdapter.swapCursor(data);
-            for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
-                if(data.getInt(data.getColumnIndex("is_update"))==1){
-                    updates++;
+        if(getActivity()!=null){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                    SharedPreferences.Editor editor = sPref.edit();
+                    int updates = 0;
+                    if (data.getCount() > 1) {
+
+                        updatesAdapter.swapCursor(data);
+                        for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                            if(data.getInt(data.getColumnIndex("is_update"))==1){
+                                updates++;
+                            }
+                        }
+
+                        editor.putInt("updates", updates);
+                    } else {
+                        updatesAdapter.swapCursor(null);
+
+                        editor.remove("updates");
+                    }
+                    editor.commit();
+
+                    if(getActivity()!=null){
+                        ((Start) getActivity()).updateBadge(sPref);
+                    }
+                    if (getListView().getAdapter() == null)
+                        setListAdapter(adapter);
+
+                    setListShown(true);
                 }
-            }
-
-            editor.putInt("updates", updates);
-        } else {
-            updatesAdapter.swapCursor(null);
-
-            editor.remove("updates");
+            });
         }
-        editor.commit();
 
-        ((Start) getActivity()).updateBadge(sPref);
-        if (getListView().getAdapter() == null)
-            setListAdapter(adapter);
-
-        setListShown(true);
     }
 
     @Override
@@ -169,6 +180,12 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         BusProvider.getInstance().register(this);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getLoaderManager().destroyLoader(91);
     }
 
     @Override

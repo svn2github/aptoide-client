@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -14,6 +15,8 @@ import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
+import com.google.api.client.extensions.android.AndroidUtils;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -50,7 +53,7 @@ import static org.acra.ReportField.*;
         formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
         // Your usual ACRA configuration
 
-        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+        formUri = "https://rmateus.cloudant.com/acra-aptoidev5-inhouse/_design/acra-storage/_update/report"
 )
 public class Aptoide extends Application {
 

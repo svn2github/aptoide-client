@@ -28,6 +28,7 @@ public class ScreenshotsViewer extends ActionBarActivity {
 	private String[] images = new String[0];
 	Context context;
 	private String hashCode;
+    private int currentItem;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -49,6 +50,13 @@ public class ScreenshotsViewer extends ActionBarActivity {
 
         setContentView(R.layout.page_screenshots_viewer);
 
+        if(arg0 == null){
+            currentItem = getIntent().getIntExtra("position", 0);
+        }else{
+            currentItem = arg0.getInt("position", 0);
+        }
+
+        getIntent().getIntExtra("position", 0);
 //		getSupportActionBar().hide();
 		context = this;
 		final ViewPager screenshots = (ViewPager) findViewById(R.id.screenShotsPager);
@@ -59,32 +67,21 @@ public class ScreenshotsViewer extends ActionBarActivity {
 //		TypedValue a = new TypedValue();
 //		getTheme().resolveAttribute(R.attr.custom_color, a, true);
 //		pi.setFillColor(a.data);
+        ArrayList<String> uri = getIntent().getStringArrayListExtra("url");
+        hashCode = getIntent().getStringExtra("hashCode");
+        if (uri != null) {
+            images = uri.toArray(images);
+        }
+        if(images != null && images.length > 0){
+            screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,uri,hashCode,true));
+            screenshots.setCurrentItem(currentItem);
+        }
 
-		new Thread(new Runnable() {
-
-			ArrayList<String> uri;
-			public void run() {
-				try{
-					HttpClient client = new DefaultHttpClient();
-					HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000);
-					uri = getIntent().getStringArrayListExtra("url");
-					hashCode = getIntent().getStringExtra("hashCode");
-					images = uri.toArray(images);
-				}catch (Exception e) {
-					e.printStackTrace();
-				}finally{
-					runOnUiThread(new Runnable() {
-						public void run() {
-							if(images!=null&&images.length>0){
-								screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,uri,hashCode,true));
-//								pi.setViewPager(screenshots);
-								screenshots.setCurrentItem(getIntent().getIntExtra("position", 0));
-							}
-
-						}
-					});
-				}
-			}
-		}).start();
 	}
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", currentItem);
+    }
 }

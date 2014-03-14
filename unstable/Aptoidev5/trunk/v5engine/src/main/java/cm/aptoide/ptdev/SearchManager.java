@@ -151,14 +151,24 @@ public class SearchManager extends ActionBarActivity {
             int id = item.getItemId();
 
             if(id == R.id.name){
+                setListShown(false);
+
                 sort = StoreActivity.Sort.NAME;
             }else if(id == R.id.date){
+                setListShown(false);
+
                 sort = StoreActivity.Sort.DATE;
             }else if(id == R.id.download){
+                setListShown(false);
+
                 sort = StoreActivity.Sort.DOWNLOADS;
             }else if(id == R.id.rating){
+                setListShown(false);
+
                 sort = StoreActivity.Sort.RATING;
             }else if(id == R.id.price){
+                setListShown(false);
+
                 sort = StoreActivity.Sort.PRICE;
             }
 
@@ -179,8 +189,6 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
 
-
-
             return new SimpleCursorLoader(getActivity()) {
                 @Override
                 public Cursor loadInBackground() {
@@ -200,6 +208,7 @@ public class SearchManager extends ActionBarActivity {
                 foundResults.setText(getString(R.string.no_search_result, query));
             }
             setListAdapter(adapter);
+            setListShown(true);
             setEmptyText(getString(R.string.no_search_result, query));
 
             Handler handler = new Handler();

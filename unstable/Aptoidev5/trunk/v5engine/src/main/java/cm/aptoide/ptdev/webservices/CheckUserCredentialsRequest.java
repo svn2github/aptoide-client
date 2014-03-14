@@ -8,8 +8,13 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 import java.util.HashMap;
 
@@ -44,6 +49,7 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
 
     @Override
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
+
 
         GenericUrl url = new GenericUrl(baseUrl);
 

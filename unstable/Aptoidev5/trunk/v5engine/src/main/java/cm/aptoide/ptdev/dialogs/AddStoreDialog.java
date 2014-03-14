@@ -66,6 +66,7 @@ public class AddStoreDialog extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         callback = (Callback) activity;
+
     }
 
     @Override

@@ -26,7 +26,19 @@ public class IconSizes {
         int density = context.getResources().getDisplayMetrics().densityDpi;
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
-
+        if (densityMultiplier <= 0.75f) {
+            densityMultiplier = 0.75f;
+        } else if (densityMultiplier <= 1) {
+            densityMultiplier = 1f;
+        } else if (densityMultiplier <= 1.3125f) {
+            densityMultiplier = 1.3125f;
+        } else if (densityMultiplier <= 1.5f) {
+            densityMultiplier = 1.5f;
+        } else if (densityMultiplier <= 2f) {
+            densityMultiplier = 2f;
+        }else if (densityMultiplier <= 3f) {
+            densityMultiplier = 3f;
+        }
 //        switch (density){
 //            case 213:
 //                densityMultiplier = 1.5f;
@@ -42,9 +54,22 @@ public class IconSizes {
 
 
     public static String generateSizeStringAvatar(Context context) {
-        int density = context.getResources().getDisplayMetrics().densityDpi;
+
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
+        if (densityMultiplier <= 0.75f) {
+            densityMultiplier = 0.75f;
+        } else if (densityMultiplier <= 1) {
+            densityMultiplier = 1f;
+        } else if (densityMultiplier <= 1.3125f) {
+            densityMultiplier = 1.3125f;
+        } else if (densityMultiplier <= 1.5f) {
+            densityMultiplier = 1.5f;
+        } else if (densityMultiplier <= 2f) {
+            densityMultiplier = 2f;
+        }else if (densityMultiplier <= 3f) {
+            densityMultiplier = 3f;
+        }
 
 //        switch (density){
 //            case 213:
@@ -63,7 +88,21 @@ public class IconSizes {
         int density = context.getResources().getDisplayMetrics().densityDpi;
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
+        Log.d("Aptoide-IconSize", "Original mult is" + densityMultiplier);
 
+        if (densityMultiplier <= 0.75f) {
+            densityMultiplier = 0.75f;
+        } else if (densityMultiplier <= 1) {
+            densityMultiplier = 1f;
+        } else if (densityMultiplier <= 1.333f) {
+            densityMultiplier = 1.3312500f;
+        } else if (densityMultiplier <= 1.5f) {
+            densityMultiplier = 1.5f;
+        } else if (densityMultiplier <= 2f) {
+            densityMultiplier = 2f;
+        }else if (densityMultiplier <= 3f) {
+            densityMultiplier = 3f;
+        }
 
         int size;
         if(orient.equals("portrait")){

@@ -94,17 +94,18 @@ public class DownloadThread implements Runnable, Serializable {
             int bytesRead;
             BufferedInputStream mStream = mConnection.getStream();
 
-            StatFs stat = new StatFs(download.getDestination());
+            if(parent.getStatusState() instanceof ActiveState){
+                StatFs stat = new StatFs(download.getDestination());
 
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
+                long blockSize = stat.getBlockSize();
+                long availableBlocks = stat.getAvailableBlocks();
 
-            long avail = (blockSize * availableBlocks);
+                long avail = (blockSize * availableBlocks);
 
-            if( mRemainingSize > avail){
-                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+                if( mRemainingSize > avail){
+                    parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+                }
             }
-
 
             while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
                 file.write(bytes, 0, bytesRead);
