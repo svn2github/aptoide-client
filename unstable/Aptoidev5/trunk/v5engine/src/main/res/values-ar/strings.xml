@@ -342,7 +342,7 @@
   <string name="clear">مسح</string>
   <string name="link_device_webinstall">ربط الحساب بالتنزيل عن طريق الويب</string>
   <string name="update_self_title">تحديث متوفر</string>
-  <string name="update_self_msg">"هنالك نسخه جديدة متاحة من أبتويد n\\هل ترغب في التحديث؟ "</string>
+  <string name="update_self_msg">"هنالك نسخه جديدة متاحة من أبتويد \nهل ترغب في التحديث؟ "</string>
   <string name="retrieving_update">جلب التحديث...</string>
   <string name="no_related">لا توجد تطبيقات ذات صلة.</string>
   <string name="update_username">تحديث إسم المستخدم</string>

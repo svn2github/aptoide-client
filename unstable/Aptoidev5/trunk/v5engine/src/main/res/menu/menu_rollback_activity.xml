@@ -3,7 +3,6 @@
 
     <item android:id="@+id/menu_clear_rollback"
           app:showAsAction="ifRoom"
-          android:title="@string/clear"
-          android:icon="@drawable/ic_action_cancel_dark" />
+          android:title="@string/clear" />
 
 </menu>

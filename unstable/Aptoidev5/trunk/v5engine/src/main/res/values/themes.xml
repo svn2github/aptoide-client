@@ -112,7 +112,6 @@
         <item name="icWizardLeftArrowDrawable">@drawable/left_wizard_arrow_dark</item>
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse_dark</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
-
         <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
 
     </style>
@@ -127,6 +126,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="homeLabelbackground">@drawable/app_header_bgd_aptoide_light</item>
         <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAptoide</item>
     </style>
 
@@ -140,6 +140,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="homeLabelbackground">@drawable/app_header_bgd_aptoide_dark</item>
         <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAptoide</item>
     </style>
 
@@ -154,6 +155,8 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_midnight</item>
+
     </style>
 
 
@@ -167,6 +170,8 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_midnight_dark</item>
+
     </style>
 
 
@@ -180,6 +185,8 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
         <item name="customColor">@color/black</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_black</item>
+
     </style>
 
     <style name="AptoideThemeDefaultBlackDark" parent="AppBaseThemeDark">
@@ -192,6 +199,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlack</item>
         <item name="customColor">@color/black</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlack</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_black_dark</item>
     </style>
 
     <style name="AptoideThemeDefaultMaroon" parent="AppBaseTheme">
@@ -204,6 +212,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMaroon</item>
         <item name="customColor">@color/maroon</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMaroon</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_maroon</item>
     </style>
 
     <style name="AptoideThemeDefaultMaroonDark" parent="AppBaseThemeDark">
@@ -216,6 +225,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMidnight</item>
         <item name="customColor">@color/midnight</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleMidnight</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_maroon_dark</item>
     </style>
 
     <style name="AptoideThemeDefaultGold" parent="AppBaseTheme">
@@ -228,6 +238,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGold</item>
         <item name="customColor">@color/gold</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGold</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_gold</item>
     </style>
 
     <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
@@ -240,6 +251,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomOrange</item>
         <item name="customColor">@color/orange</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleOrange</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_orange</item>
     </style>
 
     <style name="AptoideThemeDefaultSpringgreen" parent="AppBaseTheme">
@@ -252,6 +264,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSpringgreen</item>
         <item name="customColor">@color/springgreen</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSpringgreen</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_springgreen</item>
     </style>
 
     <style name="AptoideThemeDefaultLightsky" parent="AppBaseTheme">
@@ -264,6 +277,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomLightsky</item>
         <item name="customColor">@color/lightsky</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleLightsky</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_lightsky</item>
     </style>
 
     <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
@@ -276,6 +290,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomPink</item>
         <item name="customColor">@color/pink</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStylePink</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_pink</item>
     </style>
 
     <style name="AptoideThemeDefaultBlue" parent="AppBaseTheme">
@@ -288,6 +303,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomBlue</item>
         <item name="customColor">@color/blue</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleBlue</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_blue</item>
     </style>
 
     <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
@@ -300,6 +316,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomRed</item>
         <item name="customColor">@color/red</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleRed</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_red</item>
     </style>
 
     <style name="AptoideThemeDefaultMagenta" parent="AppBaseTheme">
@@ -312,6 +329,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomMagenta</item>
         <item name="customColor">@color/magenta</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyle</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_magenta</item>
     </style>
 
     <style name="AptoideThemeDefaultSlategray" parent="AppBaseTheme">
@@ -336,6 +354,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSeagreen</item>
         <item name="customColor">@color/seagreen</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSeagreen</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_seagreen</item>
     </style>
 
     <style name="AptoideThemeDefaultSilver" parent="AppBaseTheme">
@@ -348,6 +367,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomSilver</item>
         <item name="customColor">@color/silver</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleSilver</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_silver</item>
     </style>
 
     <style name="AptoideThemeDefaultDimgray" parent="AppBaseTheme">
@@ -360,6 +380,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomDimgray</item>
         <item name="customColor">@color/dimgray</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleDimgray</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_dimgray</item>
     </style>
 
 
@@ -373,6 +394,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGreenApple</item>
         <item name="customColor">@color/greenapple</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreenApple</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_greenapple</item>
     </style>
 
     <style name="AptoideThemeDefaultHappyBlue" parent="AppBaseTheme">
@@ -397,6 +419,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomGreen</item>
         <item name="customColor">@color/green</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleGreen</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_green</item>
     </style>
 
     <style name="AptoideThemeDefaultYellow" parent="AppBaseTheme">
@@ -409,6 +432,7 @@
         <item name="customButtonColor">@style/WidgetButtonCustomYellow</item>
         <item name="customColor">@color/yellow</item>
         <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleYellow</item>
+        <item name="homeLabelbackground">@drawable/apk_info_separator_yellow</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">

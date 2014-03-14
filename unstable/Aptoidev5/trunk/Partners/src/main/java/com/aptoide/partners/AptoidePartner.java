@@ -19,7 +19,7 @@ public class AptoidePartner extends Aptoide {
     @Override
     public void bootImpl(ManagerPreferences managerPreferences) {
 //        super.bootImpl(managerPreferences);
-        managerPreferences.createLauncherShortcut(this);
+//        managerPreferences.createLauncherShortcut(this);
         new Thread(new Runnable() {
             @Override
             public void run() {

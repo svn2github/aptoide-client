@@ -332,7 +332,7 @@
   <string name="try_again">Spróbuj ponownie</string>
   <string name="clear">Wyczyść</string>
   <string name="update_self_title">Dostępne jest uaktualnienie</string>
-  <string name="update_self_msg">Dostępna jest nowa wersja %s,\nczy chcesz uaktualnić?</string>
+  <string name="update_self_msg">Dostępna jest nowa wersja %s, czy chcesz uaktualnić?</string>
   <string name="retrieving_update">Pobieranie uaktualnienia...</string>
   <string name="no_downloads">Nic nie pobrałeś - pobierz coś.</string>
   <string name="new_updates">Dostępne są aktualizacje dla %s!</string>

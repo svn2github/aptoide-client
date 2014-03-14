@@ -26,6 +26,7 @@
             android:id="@+id/search"
             style="?attr/customButtonColor"
             android:text="@string/search_more"
+            android:textStyle="italic"
             android:drawableLeft="@drawable/ic_action_web_site_dark"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>

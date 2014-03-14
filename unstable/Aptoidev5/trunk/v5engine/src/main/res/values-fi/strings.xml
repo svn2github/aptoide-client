@@ -8,6 +8,7 @@
   <string name="WidgetProvider_timestamp_just_now">Juuri nyt</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s viikkoa sitten</string>
   <string name="WidgetProvider_timestamp_week_ago">%s viikko sitten</string>
+  <string name="WidgetProvider_timestamp_this_week">Tällä viikolla</string>
   <string name="timestamp_months">%s kuukautta</string>
   <string name="timestamp_month">%s kuukausi</string>
   <string name="timestamp_weeks">%s viikkoa</string>
@@ -53,7 +54,7 @@
   <string name="follow_twitter">Seuraa meitä Twitterissä</string>
   <string name="loading_facebook">Ladataan Facebookia...</string>
   <string name="loading_twitter">Ladataan Twitteriä...</string>
-  <string name="new_to_aptoide">Uusi %s-käyttäjä? Luo ilmainen tili</string>
+  <string name="new_to_aptoide">Uusi Aptoide-käyttäjä? Luo ilmainen tili</string>
   <string name="forgot_passwd">Unohditko salasanasi?</string>
   <string name="check_your_credentials">Tarkista tilitietosi</string>
   <string name="settings_title_bar">Asetukset</string>
@@ -306,7 +307,7 @@
   <string name="create_username">Käyttäjänimi</string>
   <string name="all_stores">Kaikki kaupat</string>
   <string name="incompatible_store">Epäyhteensopiva kauppa</string>
-  <string name="incompatible_store_msg">Tämä kauppa ei ole vielä yhteensopiva tämän Aptoide-version kanssa. Odota muutamia päiviä kunnes päivitämme kaikki kaupat.</string>
+  <string name="incompatible_store_msg">Tämä kauppa ei ole vielä yhteensopiva tämän Aptoide-version kanssa. Odota joitakin päiviä, jotta saamme kaikki kaupat päivitetyksi.</string>
   <string name="privacy_policy">Yksityisyydensuoja</string>
   <string name="website">Kotisivu</string>
   <string name="downgrade_requires_uninstall">Vanhemman version asennus vaatii sovelluksen asennuksen poistoa</string>
@@ -351,4 +352,7 @@
   <string name="new_updates">%s uutta päivitystä saatavissa!</string>
   <string name="one_new_update">%s uusi päivitys saatavissa!</string>
   <string name="has_updates">%s uusia päivityksiä saatavissa!</string>
+  <string name="remaining_time">jäljellä</string>
+  <string name="sd_error">SD-kortille ei pysty kirjoittamaan.</string>
+  <string name="download_retry">Yritä uudelleen</string>
 </resources>

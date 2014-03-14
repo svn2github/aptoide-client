@@ -3,7 +3,6 @@
 
     <item android:id="@+id/menu_remove"
           app:showAsAction="ifRoom"
-          android:title="@string/restore_updates"
-          android:icon="@drawable/ic_action_cancel_dark" />
+          android:title="@string/restore_updates" />
 
 </menu>

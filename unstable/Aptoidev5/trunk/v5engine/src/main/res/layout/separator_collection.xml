@@ -6,33 +6,9 @@ are made available under the terms of the GNU Public License v2.0
 which accompanies this distribution, and is available at
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:id="@+id/separatorLayout"
-        android:background="?attr/selectableItemBackground">
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          style="@style/homeLabel"
+          android:id="@+id/collectionName"
+          android:gravity="left"
+          android:layout_weight="0.2"/>
 
-    <TextView style="@style/homeLabel"
-              android:id="@+id/collectionName"
-              android:padding="5dp"
-              android:gravity="left" android:layout_weight="0.2"/>
-
-    <TextView
-            android:id="@+id/more"
-            style="?attr/headerSeparatorButton"
-            android:clickable="false"
-            android:text="@string/more"
-            android:visibility="gone"/>
-
-    <ImageView
-            android:id="@+id/action"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="?attr/icExpandDrawable"
-            android:visibility="gone" />
-
-</LinearLayout>

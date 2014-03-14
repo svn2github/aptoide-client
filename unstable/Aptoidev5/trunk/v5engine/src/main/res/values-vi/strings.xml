@@ -33,7 +33,7 @@
   <string name="social_networks">Mạng Xã Hội</string>
   <string name="find_us_on_facebook">Tìm chúng tôi trên Facebook</string>
   <string name="follow_twitter">Theo dõi chúng tôi trên Twitter</string>
-  <string name="new_to_aptoide">Mới dùng %s? Tạo một tài khoản miễn phí</string>
+  <string name="new_to_aptoide">Mới dùng Aptoide? Tạo một tài khoản miễn phí</string>
   <string name="forgot_passwd">Quên mật khẩu?</string>
   <string name="settings_title_bar">Thiết lập</string>
   <string name="setting_icon_download_rules">Cài Đặt Biểu Tượng Tải Về</string>
@@ -209,4 +209,6 @@
   <string name="new_updates">Hiện có %s bản cập nhật mới!</string>
   <string name="one_new_update">Hiện có %s bản cập nhật mới!</string>
   <string name="has_updates">%s hiện có bản cập nhật mới!</string>
+  <string name="remote_in_noSD">Bạn không có thẻ SD, hoặc nó không hoạt động\nXin gắn một cái hoặc, hoặc thử gắn lại rồi thử lại.</string>
+  <string name="remote_in_noSDspace">Bạn không có đủ dung lượng trống trên thẻ SD của bạn. Xin giải phóng dung lượng trống và thử lại.</string>
 </resources>

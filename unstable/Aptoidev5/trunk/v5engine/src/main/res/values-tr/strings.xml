@@ -307,7 +307,7 @@
   <string name="create_username">Kullanıcı ismi</string>
   <string name="all_stores">Tüm mağazalar</string>
   <string name="incompatible_store">Uyumsuz mağaza</string>
-  <string name="incompatible_store_msg">Bu mağaza Aptoide\'nin bu sürümüyle henüz uyumlu değildir. Tüm mağazaları tekrar derlememiz için birkaç gün bekleyiniz.</string>
+  <string name="incompatible_store_msg">Bu mağaza henüz bu Aptoide sürümüyle uyumlu değildir. Lütfen tüm mağazaları tekrar derlememiz için gerekli birkaç gün bekleyiniz.</string>
   <string name="privacy_policy">Gizlilik politikası</string>
   <string name="website">İnternet sitesi</string>
   <string name="downgrade_requires_uninstall">Eski sürüme dönüş uygulama kaldırılması gerektirir</string>
@@ -354,4 +354,11 @@
   <string name="has_updates">%s için yeni güncelleme(ler) mevcuttur!</string>
   <string name="remaining_time">kaldı</string>
   <string name="sd_error">SD kartına yazma başarısız oldu.</string>
+  <string name="download_retry">Tekrar dene</string>
+  <string name="root_access_dialog">Root izinleriniz var gibi görünüyor. İndirmeden sonra uygulamanın otomatik olarak kurulmasını ister misiniz?</string>
+  <string name="remote_in_noSD_title">Bellek kalmadı</string>
+  <string name="remote_in_noSD">Ya SD kartınız yok ya da doğru şekilde monte edilmemiş\nLütfen bir kart takın ve tekrar deneyin.</string>
+  <string name="remote_in_noSDspace">SD kartınızda kafi yer yok. Lütfen boş alan oluşturup tekrar deneyin.</string>
+  <string name="more_recommended_apps">Daha fazla önerilen uygulama</string>
+  <string name="cannot_uninstall_self">Kurucu kaldırılamaz.</string>
 </resources>

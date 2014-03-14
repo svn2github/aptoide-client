@@ -19,18 +19,21 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
 
-
-    <application android:icon="@drawable/ic_launcher"
+    <application android:icon="@drawable/icon_brand_aptoide"
                  android:name="com.aptoide.partners.AptoidePartner"
                  android:label="AptoidePartner"
-                 android:theme="@style/AppBaseTheme"
+                 android:theme="@style/AptoideThemeDefault"
                  android:hardwareAccelerated="true">
+
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
-        <activity android:name="com.aptoide.partners.MainActivity"
+        <activity android:name="cm.aptoide.ptdev.Start"
                   android:launchMode="singleTask"
+                  android:label="Aptoide"
+                  android:icon="@drawable/icon_brand_aptoide"
                   android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -40,6 +43,22 @@
                     android:name="android.app.default_searchable"
                     android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
+
+        <activity-alias
+                android:enabled="true"
+                android:name=".Start"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:icon="@drawable/icon_brand_aptoide"
+                android:targetActivity="cm.aptoide.ptdev.Start">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.default_searchable"
+                    android:value="cm.aptoide.ptdev.SearchManager"/>
+        </activity-alias>
 
         <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
 
@@ -52,6 +71,8 @@
         <activity android:name="cm.aptoide.ptdev.MyAccountActivity" />
 
         <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity" />
+
+        <activity android:name="cm.aptoide.ptdev.MoreUserBasedActivity" />
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
 
@@ -95,7 +116,7 @@
                        android:resource="@xml/find"/>
         </activity>
 
-        <activity android:name="cm.aptoide.ptdev.IntentReceiver" >
+        <activity android:name="cm.aptoide.ptdev.IntentReceiver" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -140,9 +161,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="webservices.aptoide.com" android:pathPrefix="/apkinstall"/>
 
-                <data android:host="play.google.com"
-                      android:scheme="https" />
             </intent-filter>
 
             <intent-filter>
@@ -151,17 +172,35 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:host="play.google.com"
+                      android:scheme="https" />
+                <data android:host="play.google.com"
+                      android:scheme="http" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                       android:host="imgs.aptoide.com"
                       android:pathPattern="*//.myapp"/>
             </intent-filter>
+
+
         </activity>
 
         <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name="com.mopub.mobileads.MraidBrowser" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
 
+        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity"
+                  android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
+                  android:hardwareAccelerated="true"/>
         <activity android:name="com.adsdk.sdk.banner.InAppWebView"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
@@ -198,6 +237,16 @@
                   android:authorities="cm.aptoide.ptdev.StubProvider"
                   android:exported="false"/>
 
+        <provider android:name="cm.aptoide.ptdev.UpdatesProvider"
+                  android:authorities="cm.aptoide.ptdev.UpdatesProvider"
+                  android:label="Updates notification"
+                  android:exported="false"/>
+
+        <provider android:name="cm.aptoide.ptdev.AutoUpdateProvider"
+                  android:authorities="cm.aptoide.ptdev.AutoUpdateProvider"
+                  android:label="Auto-Update Apps"
+                  android:exported="false"/>
+
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
@@ -213,6 +262,24 @@
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
                        android:resource="@xml/sync_adapter" />
+        </service>
+
+        <service android:name="cm.aptoide.ptdev.services.UpdatesSyncService"
+                 android:exported="true" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/updates_sync_adapter" />
+        </service>
+
+        <service android:name="cm.aptoide.ptdev.services.AutoUpdateSyncService"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/autoupdate_sync_adapter"/>
         </service>
 
         <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >
@@ -242,6 +309,10 @@
             </intent-filter>
         </receiver>
 
-
+        <receiver android:name="cm.aptoide.ptdev.NetworkStateListener" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -125,7 +125,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
         if(holder == null){
             holder = new ViewHolder();
             holder.more = v.findViewById(R.id.more);
-            holder.separatorLayout = v.findViewById(R.id.separatorLayout);
+//            holder.separatorLayout = v.findViewById(R.id.separatorLayout);
             holder.collectionList = (LinearLayout) v.findViewById(R.id.collectionList);
             holder.collectionName = (TextView) v.findViewById(R.id.collectionName);
             containerLinearLayout.setTag(holder);
@@ -149,7 +149,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
 
     public static class ViewHolder{
         View more;
-        View separatorLayout;
+//        View separatorLayout;
         LinearLayout collectionList;
         TextView collectionName;
     }
@@ -165,7 +165,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
             holder = (ViewHolder) containerLinearLayout.getTag();
         }
         holder.more.setVisibility(View.VISIBLE);
-        holder.separatorLayout.setOnClickListener(new View.OnClickListener() {
+        holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(Aptoide.getContext(), MoreEditorsChoiceActitivy.class);
@@ -175,7 +175,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
             }
         });
 
-        holder.separatorLayout.setClickable(true);
+//        holder.separatorLayout.setClickable(true);
 
         if(appsList.isEmpty()) return;
         String name = appsList.get(counter).getName();

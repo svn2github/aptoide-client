@@ -19,6 +19,8 @@
 
     <attr name="headerSeparatorButton" format="reference"/>
 
+    <attr name="homeLabelbackground" format="reference"/>
+
     <attr name="secondaryTextColor" format="color" />
 
     <attr name="navigationDrawerColor" format="color" />

@@ -16,12 +16,11 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
@@ -66,6 +65,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private HomeBucketAdapter topAdapter;
     private HomeBucketAdapter recomendedAdapter;
     private View v2;
+    private TextView moreReTv;
 
 
     @Override
@@ -157,8 +157,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter.addAdapter(homeBucketAdapter);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
-        v.setClickable(true);
-        v.setOnClickListener(new View.OnClickListener() {
+//        v.setClickable(true);
+
+        View moreTop = View.inflate(getActivity(), R.layout.separator_home_footer, null);
+        TextView moreTopTv = (TextView) moreTop.findViewById(R.id.more);
+        moreTopTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), MoreTopAppsActivity.class);
@@ -166,15 +169,17 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             }
         });
 
-
-
         adapter.addView(v);
         adapter.addAdapter(topAdapter);
+        adapter.addView(moreTop);
 
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
-        v2.setClickable(true);
-        v2.setOnClickListener(new View.OnClickListener() {
+//        v2.setClickable(true);
+
+        View moreRecommended = View.inflate(getActivity(), R.layout.separator_home_footer, null);
+        moreReTv = (TextView) moreRecommended.findViewById(R.id.more);
+        moreReTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
@@ -184,9 +189,10 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
 
         v2.setVisibility(View.GONE);
-
+        moreReTv.setVisibility(View.GONE);
         adapter.addView(v2);
         adapter.addAdapter(recomendedAdapter);
+        adapter.addView(moreRecommended);
 
         //setListAdapter(adapter);
 
@@ -278,6 +284,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                 public void onRequestSuccess(ListRecomended listRecomended) {
                                     if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
                                         v2.setVisibility(View.VISIBLE);
+                                        moreReTv.setVisibility(View.VISIBLE);
                                         recommended.clear();
                                         final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
                                         for (ListRecomended.Repository repository : listRecomended.getRepository()) {
@@ -328,6 +335,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             recommended.clear();
             recomendedAdapter.notifyDataSetChanged();
             v2.setVisibility(View.GONE);
+            moreReTv.setVisibility(View.GONE);
         }
     }
 

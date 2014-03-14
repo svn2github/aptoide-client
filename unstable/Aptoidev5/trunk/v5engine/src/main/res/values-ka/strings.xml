@@ -307,7 +307,6 @@
   <string name="create_username">მომხმარებლის სახელი</string>
   <string name="all_stores">ყველა მარკეტი</string>
   <string name="incompatible_store">შეუთავსებადი მაღაზია</string>
-  <string name="incompatible_store_msg">ეს მარკეტი არ არის თავსებადი Aptoide-ს ამ ვერსიასთან. გთხოვთ მოიცადოთ რამდენიმე რე სანამ არ მოხდება ყველა მარკეტის მორგება ახალ ვერსიაზე.</string>
   <string name="privacy_policy">კონფიდენციალურობა</string>
   <string name="website">ვებსაიტი:</string>
   <string name="downgrade_requires_uninstall">ვერსიის დაქვეითებისთვის აუცილებელია აპლიკაციის წაშლა</string>

@@ -206,7 +206,7 @@
   <string name="error_SYS_1">Došlo k chybě. Zkuste to prosím znovu</string>
   <string name="more_editors_choice">Redakce doporučuje</string>
   <string name="update_self_title">Dostupná aktualizace</string>
-  <string name="update_self_msg">K dispozici je nová verze %s ,\npřejete si aktualizovat?</string>
+  <string name="update_self_msg">K dispozici je nová verze %s, přejete si aktualizovat?</string>
   <string name="retrieving_update">Načítání aktualizace...</string>
   <string name="no_downloads">Žádná stahování. Začněte stahovat!</string>
   <string name="new_updates">Je dostupných %s nových aktualizací!</string>

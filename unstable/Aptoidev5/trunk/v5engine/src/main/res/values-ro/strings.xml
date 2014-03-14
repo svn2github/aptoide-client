@@ -180,6 +180,6 @@
   <string name="error_SYS_1">A avut loc o eroare. Incearca din nou</string>
   <string name="more_editors_choice">Alegerea Editorului</string>
   <string name="update_self_title">Actualizare disponibilă</string>
-  <string name="update_self_msg">Este disponibilă o versiune nouă de %s,\nvreţi să actualizaţi?</string>
+  <string name="update_self_msg">Este disponibilă o versiune nouă de %s, vreţi să actualizaţi?</string>
   <string name="no_downloads">Nici o descarcare. Incepe descarcarea!</string>
 </resources>

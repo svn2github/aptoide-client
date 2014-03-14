@@ -178,7 +178,7 @@
   <string name="error_SYS_1">خطایی رخ داده است، لطفا دوباره سعی کنید.</string>
   <string name="more_editors_choice">انتخاب اصلاحگران</string>
   <string name="update_self_title">روز رسانی موجود است</string>
-  <string name="update_self_msg">یک نسخه از %s در دسترس است،n\\تمایل به به روز رسانی دارید؟</string>
+  <string name="update_self_msg">یک نسخه از %s در دسترس است،\nتمایل به به روز رسانی دارید؟</string>
   <string name="retrieving_update">در حال بازیابی به روزرسانی...</string>
   <string name="no_downloads">هیچ دانلودی انجام نداده اید. دانلود کنید!</string>
   <string name="new_updates">"تعداد %s به روز رسانی جدید  در دسترس است!"</string>

@@ -3,8 +3,7 @@
 
     <item android:id="@+id/menu_remove"
           app:showAsAction="ifRoom"
-          android:title="@string/schDown_removeselected"
-          android:icon="@drawable/ic_action_cancel_dark" />
+          android:title="@string/schDown_removeselected" />
 
     <item android:id="@+id/menu_invert"
           app:showAsAction="ifRoom"

@@ -88,7 +88,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
         if (b) {
             v.findViewById(R.id.more).setVisibility(View.VISIBLE);
-            v.findViewById(R.id.separatorLayout).setOnClickListener(new View.OnClickListener() {
+            v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, MoreEditorsChoiceActitivy.class);
@@ -98,7 +98,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
             });
 
-            v.findViewById(R.id.separatorLayout).setClickable(true);
+//            v.findViewById(R.id.separatorLayout).setClickable(true);
 
         }else{
             if(collection.isHasMore()){
@@ -115,12 +115,12 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
 
                 v.findViewById(R.id.action).setVisibility(View.VISIBLE);
-                v.findViewById(R.id.separatorLayout).setOnClickListener(new AnimationClickListener(iv, v, position, collection.getParentId()));
-                v.findViewById(R.id.separatorLayout).setClickable(true);
+                v.findViewById(R.id.action).setOnClickListener(new AnimationClickListener(iv, v, position, collection.getParentId()));
+                v.findViewById(R.id.action).setClickable(true);
             } else {
                 v.findViewById(R.id.action).setVisibility(View.GONE);
-                v.findViewById(R.id.separatorLayout).setOnClickListener(null);
-                v.findViewById(R.id.separatorLayout).setClickable(false);
+                v.findViewById(R.id.action).setOnClickListener(null);
+                v.findViewById(R.id.action).setClickable(false);
             }
         }
         TextView tv = (TextView) v.findViewById(R.id.collectionName);
@@ -149,6 +149,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             }
         }
         tv.setText(categoryName);
+
 //        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
 
 

@@ -38,6 +38,7 @@
                 android:singleLine="true"
                 android:text="App Name"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center|left"
                 android:layout_toRightOf="@+id/app_icon"

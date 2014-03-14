@@ -307,6 +307,7 @@
   <string name="create_username">Nome de utilizador</string>
   <string name="all_stores">Todas as lojas</string>
   <string name="incompatible_store">Loja incompatível</string>
+  <string name="incompatible_store_msg">Esta loja ainda não é compatível com esta versão do Aptoide. Por favor aguarde até uniformizarmos as lojas.</string>
   <string name="privacy_policy">Política de privacidade</string>
   <string name="website">Página web</string>
   <string name="downgrade_requires_uninstall">Requer a desinstalação da aplicação</string>
@@ -341,7 +342,7 @@
   <string name="clear">Limpar</string>
   <string name="link_device_webinstall">Associar conta à instalação Web</string>
   <string name="update_self_title">Actualização disponível</string>
-  <string name="update_self_msg">Existe uma nova versão de %sQuer actualizar agora?</string>
+  <string name="update_self_msg">Existe uma nova versão de %s. Quer actualizar agora?</string>
   <string name="retrieving_update">A obter a actualização...</string>
   <string name="no_related">Sem aplicações relacionadas.</string>
   <string name="update_username">Actualizar o nome de utilizador</string>
@@ -353,4 +354,11 @@
   <string name="has_updates">%s tem novas actualizações!</string>
   <string name="remaining_time">em falta</string>
   <string name="sd_error">não foi possível gravar para o SDCard</string>
+  <string name="download_retry">Repetir</string>
+  <string name="root_access_dialog">Parece que tem root no seu dispositivo. Deseja dar acesso para auto instalar a aplicação depois da transferência?</string>
+  <string name="remote_in_noSD_title">Sem memória</string>
+  <string name="remote_in_noSD">Não tem um SDcard, ou não está a funcionar correctamente\nPor favor, insira um, ou volte a inseri-lo e tente novamente.</string>
+  <string name="remote_in_noSDspace">Não tem espaço suficiente no seu cartão SD. Liberte algum espaço e tente novamente.</string>
+  <string name="more_recommended_apps">Mais Aplicações Recomendadas</string>
+  <string name="cannot_uninstall_self">Não é possível desinstalar instalador.</string>
 </resources>

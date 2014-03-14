@@ -355,5 +355,8 @@
   <string name="remaining_time">übrig</string>
   <string name="sd_error">Konnte nicht auf SD-Karte geschrieben werden.</string>
   <string name="download_retry">Wiederholen</string>
-  <string name="root_access_dialog">Es scheint so als ob du Root hättest. Möchtest du Apps nach dem Download automatisch installieren?</string>
+  <string name="root_access_dialog">Es scheint so als ob du Root hättest. Möchtest du das Auto-Installieren von Apps nach dem Download erlauben?</string>
+  <string name="remote_in_noSD_title">Kein Speicher</string>
+  <string name="remote_in_noSD">Sie haben keine SD-Karte, oder sie funktioniert nicht richtig\nBitte eine einsetzen oder erneut einsetzen, und erneut versuchen.</string>
+  <string name="remote_in_noSDspace">Sie haben nicht genug Platz auf der SD-Karte. Bitte machen Sie etwas Speicherplatz frei und versuchen Sie es erneut.</string>
 </resources>

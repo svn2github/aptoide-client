@@ -54,7 +54,7 @@
   <string name="follow_twitter">Ακολουθήστε μας στο Twitter</string>
   <string name="loading_facebook">Φόρτωση Facebook...</string>
   <string name="loading_twitter">Φόρτωση Twitter...</string>
-  <string name="new_to_aptoide">Νέος στο %s? Δημιουργήστε ένα δωρεάν λογαριασμό</string>
+  <string name="new_to_aptoide">Νέος στο Aptoide? Δημιουργήστε ένα δωρεάν λογαριασμό</string>
   <string name="forgot_passwd">Ξεχάσατε τον κωδικό?</string>
   <string name="check_your_credentials">Ελέγξτε τα διαπιστευτήριά σας</string>
   <string name="settings_title_bar">Ρυθμίσεις</string>
@@ -354,4 +354,6 @@
   <string name="has_updates">%s έχει νέα ενημέρωση διαθέσιμη!</string>
   <string name="remaining_time">απομένει</string>
   <string name="sd_error">Δεν μπορεί να γράψει στην SDCard.</string>
+  <string name="download_retry">Προσπαθήστε ξανά</string>
+  <string name="root_access_dialog">Φαίνεται ότι έχετε κάνει root. Θα θέλατε να επιτρέψετε την αυτόματη εγκατάσταση της εφαρμογής μετά την λήψη της?</string>
 </resources>

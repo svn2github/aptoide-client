@@ -341,7 +341,7 @@
   <string name="clear">Očisti</string>
   <string name="link_device_webinstall">Poveži račun sa WebInstall</string>
   <string name="update_self_title">Ažuriranje dostupno</string>
-  <string name="update_self_msg">Dostupna je nova verzija %s,\nželite li ju ažurirati?</string>
+  <string name="update_self_msg">Dostupna je nova verzija %s, želite li ju ažurirati?</string>
   <string name="retrieving_update">Dohvaćanje ažuriranja...</string>
   <string name="no_related">Nema pronađenih srodnih aplikacija.</string>
   <string name="update_username">Ažuriranje korisničkog imena</string>

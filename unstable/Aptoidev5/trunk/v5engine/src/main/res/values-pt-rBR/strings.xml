@@ -307,7 +307,6 @@
   <string name="create_username">Nome de usuário</string>
   <string name="all_stores">Todas as lojas</string>
   <string name="incompatible_store">Loja incompatível</string>
-  <string name="incompatible_store_msg">Esta loja é incompatível com esta versão do Aptoide. Por favor aguarde uns dias até reconstruirmos todas as lojas.</string>
   <string name="privacy_policy">Política de privacidade</string>
   <string name="website">Página web</string>
   <string name="downgrade_requires_uninstall">Downgrade requer a desinstalação do aplicativo</string>
