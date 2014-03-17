@@ -2,11 +2,10 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_remove"
-          app:showAsAction="ifRoom"
+          app:showAsAction="collapseActionView"
           android:title="@string/schDown_removeselected" />
 
     <item android:id="@+id/menu_invert"
-          app:showAsAction="ifRoom"
-          android:title="@string/schDown_invertselection"
-          android:icon="@drawable/ic_action_undo_dark"/>
+          app:showAsAction="collapseActionView"
+          android:title="@string/schDown_invertselection"/>
 </menu>

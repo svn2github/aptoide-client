@@ -334,7 +334,7 @@
   <string name="more_top_apps">Meer Top Apps</string>
   <string name="not_found">Niet gevonden</string>
   <string name="download_active">Actief</string>
-  <string name="download_completed">Compleet</string>
+  <string name="download_completed">Voltooid</string>
   <string name="download_pending">Wachten</string>
   <string name="download_inactive">Inactief</string>
   <string name="download_error">Fout</string>

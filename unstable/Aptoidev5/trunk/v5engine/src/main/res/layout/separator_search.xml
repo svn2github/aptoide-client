@@ -26,12 +26,15 @@
             android:layout_toLeftOf="@+id/more"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
 
-    <TextView
-            style="?attr/headerSeparatorButton"
+    <Button
+            android:id="@+id/more"
+            style="?attr/customButtonColor"
             android:text="@string/search_more"
-            android:drawableLeft="@drawable/ic_action_web_site_dark"
+            android:textStyle="italic"
             android:visibility="gone"
-            android:id="@+id/more"/>
+            android:drawableLeft="@drawable/ic_action_web_site_dark"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>

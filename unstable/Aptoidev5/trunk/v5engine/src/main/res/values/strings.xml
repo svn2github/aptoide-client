@@ -71,7 +71,7 @@
     <string name="setting_ethernet">Ethernet</string>
     <string name="setting_filters_title">Filters</string>
     <string name="setting_hwspecstitle">Hardware Specs</string>
-    <string name="setting_hwspecssum">Hardware Info about yout phone</string>
+    <string name="setting_hwspecssum">Hardware Info about your phone</string>
     <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
     <string name="setting_appfiltertitle">Filter Applications</string>
     <string name="setting_dont_show_mature_content">Don\'t show mature content</string>
