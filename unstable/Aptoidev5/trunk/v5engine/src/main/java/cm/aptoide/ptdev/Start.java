@@ -33,6 +33,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
+import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -83,7 +84,9 @@ public class Start extends ActionBarActivity implements
         DownloadManagerCallback,
         AddStoreDialog.Callback,
         DownloadInterface,
-        MyAppsAddStoreInterface, ProgressDialogFragment.OnCancelListener {
+        MyAppsAddStoreInterface,
+        ProgressDialogFragment.OnCancelListener,
+        AdultDialog.Callback {
 
     private static final String TAG = Start.class.getName();
     private static final int WIZARD_REQ_CODE = 50;
@@ -202,14 +205,24 @@ public class Start extends ActionBarActivity implements
 
         } else if ( i == R.id.menu_filter_mature_content){
 
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
-            item.setChecked(!item.isChecked());
-            BusProvider.getInstance().post(new RepoCompleteEvent(-2));
-            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+            if (item.isChecked()) {
+                new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
+            } else {
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
+                item.setChecked(false);
+                matureCheck = false;
+                BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+                BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+            }
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
     @Subscribe
@@ -234,7 +247,7 @@ public class Start extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        menu.findItem(R.id.menu_filter_mature_content).setChecked(matureCheck);
+        menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -303,6 +316,7 @@ public class Start extends ActionBarActivity implements
         mContext = this;
         setContentView(R.layout.activity_main);
 
+        matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
 
         pager = (ViewPager) findViewById(R.id.pager);
@@ -819,6 +833,15 @@ public class Start extends ActionBarActivity implements
         return spiceManager;
     }
 
+    @Override
+    public void onOk() {
+        matureCheck = true;
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
+        BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+        ActivityCompat.invalidateOptionsMenu(this);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -905,8 +928,6 @@ public class Start extends ActionBarActivity implements
             isLoggedin = false;
         }
         mDrawerList.setAdapter(mMenuAdapter);
-        matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-        ActivityCompat.invalidateOptionsMenu(this);
 
     }
 
