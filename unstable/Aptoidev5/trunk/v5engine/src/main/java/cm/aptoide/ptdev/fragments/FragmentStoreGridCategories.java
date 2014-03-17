@@ -288,9 +288,25 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
                 Cursor c = (Cursor) l.getAdapter().getItem(position);
-                String title = c.getString(c.getColumnIndex("name"));
+                String name;
+                int res = EnumCategories.getCategoryName((int) id);
+                if ( res == 0) {
+                    name = ((Cursor) l.getAdapter().getItem(position)).getString(0);
+                } else{
+                    name = getString(res);
+                }
+                switch ( (int) id) {
+                    case EnumCategories.LATEST_LIKES:
+                        fragment = new LatestLikesFragment();
+                        fragment.setArguments(args);
+                        break;
+                    case EnumCategories.LATEST_COMMENTS:
+                        fragment = new LatestCommentsFragment();
+                        fragment.setArguments(args);
+                        break;
+                }
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(EnumCategories.getCategoryName((int) id)).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 //                getFragmentManager().beginTransaction().setBreadCrumbTitle(title).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
                 break;
 

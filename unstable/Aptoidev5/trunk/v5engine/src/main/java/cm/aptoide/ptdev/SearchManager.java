@@ -257,6 +257,11 @@ public class SearchManager extends ActionBarActivity {
 
         }
 
+        @Override
+        public void onDetach() {
+            getLoaderManager().destroyLoader(60);
+        }
+
         private View.OnClickListener getSearchListener() {
             return new View.OnClickListener() {
                 @Override

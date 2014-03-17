@@ -23,93 +23,77 @@ import java.util.ArrayList;
  * Time: 15:46
  * To change this template use File | Settings | File Templates.
  */
-public class UpdatesAdapter extends CursorAdapter {
+public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.Sectionizer<UpdateItem>{
 
     final private String sizeString;
+    private final Context context;
+    private ArrayList<UpdateItem> items;
 
 
-    public UpdatesAdapter(Context context) {
-        super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
+    public UpdatesAdapter(Context context, ArrayList<UpdateItem> items) {
+        this.context = context;
+        this.items = items;
         sizeString = IconSizes.generateSizeString(context);
-
     }
 
     @Override
-    public int getItemViewType(int position) {
-        Cursor c = (Cursor) getItem(position);
-        return getItemViewType(c);
-    }
-
-    private int getItemViewType(Cursor cursor){
-        return cursor.getInt(cursor.getColumnIndex("is_update"));
-    }
-
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
+    public int getCount() {
+        return items.size();
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public UpdateItem getItem(int position) {
+        return items.get(position);
+    }
 
-        int type = getItemViewType(cursor.getPosition());
+    @Override
+    public long getItemId(int position) {
+        return items.get(position).getId();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        int type = getItemViewType(position);
         View v = null;
         switch (type){
             case 0:
-               v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_update, parent, false);
-            break;
+                break;
         }
 
-        return v;
-    }
-
-
-
-    @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
-
-        int type = getItemViewType(cursor.getPosition());
-
-        String name = cursor.getString(cursor.getColumnIndex("name"));
-
-        AppViewHolder holder = (AppViewHolder) view.getTag();
+        AppViewHolder holder = (AppViewHolder) v.getTag();
 
 
         if(holder==null){
             holder = new AppViewHolder();
-            holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            holder.manageIcon = (ImageView) view.findViewById(R.id.manage_icon);
-            holder.appName = (TextView) view.findViewById(R.id.app_name);
-            holder.versionName = (TextView) view.findViewById(R.id.app_version);
-            view.setTag(holder);
+            holder.appIcon = (ImageView) v.findViewById(R.id.app_icon);
+            holder.manageIcon = (ImageView) v.findViewById(R.id.manage_icon);
+            holder.appName = (TextView) v.findViewById(R.id.app_name);
+            holder.versionName = (TextView) v.findViewById(R.id.app_version);
+            v.setTag(holder);
         }
 
+        UpdateItem item = getItem(position);
 
+        holder.appName.setText(Html.fromHtml(item.getName()).toString());
+        String icon1 = item.getIcon();
 
-        holder.appName.setText(Html.fromHtml(name).toString());
-        String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
-        String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
         if(icon1.contains("_icon")){
             String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
             icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
-        ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
 
 
+        ImageLoader.getInstance().displayImage(icon1,holder.appIcon);
 
-
+        holder.versionName.setText(item.getVersionName());
         switch (type){
-            case 0:
-                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("installed_version_name")));
-
-                break;
             case 1:
-                holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
-                final long id = cursor.getLong(cursor.getColumnIndex("_id"));
+                final long id = getItemId(position);
 
                 holder.manageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,25 +106,50 @@ public class UpdatesAdapter extends CursorAdapter {
 
         }
 
-
-
+        return v;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getItem(position).isUpdate()?1:0;
+    }
+
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+
+
+
+
 
     public ArrayList<Long> getUpdateIds() {
 
-        Cursor c = getCursor();
-
         ArrayList<Long> ids = new ArrayList<Long>();
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+        for(UpdateItem item : items){
 
-                if(c.getLong(c.getColumnIndex("is_update"))==1){
-                    ids.add(c.getLong(c.getColumnIndex("_id")));
+                if(item.isUpdate()){
+                    ids.add(item.getId());
                 }
 
         }
 
         return ids;
+    }
+
+
+
+    @Override
+    public String getSectionTitleForItem(UpdateItem instance) {
+
+        if(instance.isUpdate()){
+            return "0";
+        }
+
+        return "1";
     }
 
     public static class AppViewHolder{

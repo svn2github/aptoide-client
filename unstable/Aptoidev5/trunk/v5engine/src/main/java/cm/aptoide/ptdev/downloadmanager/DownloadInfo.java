@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import android.widget.ListView;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
@@ -258,12 +259,15 @@ public class DownloadInfo implements Runnable, Serializable {
                     fileToDelete = file;
                 }
 
+
             }
             if (fileToDelete != null) {
                 Log.d("TAG", "Deleting " + fileToDelete.getName());
-                fileToDelete.delete();
+                if(!fileToDelete.delete()){
+                    return;
+                }
+                checkDirectorySize(dirPath);
             }
-            checkDirectorySize(dirPath);
         }
     }
 
@@ -326,6 +330,7 @@ public class DownloadInfo implements Runnable, Serializable {
     public void remove() {
         changeStatusState(new CompletedState(this));
 
+        if (mFilesToDownload == null) return;
         for (DownloadModel model : mFilesToDownload) {
             new File(model.getDestination()).delete();
         }

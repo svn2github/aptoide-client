@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.AllCommentsActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -32,7 +33,7 @@ public class FragmentComments extends ListFragment {
     private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(getActivity(), "Error request", Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 
         @Override

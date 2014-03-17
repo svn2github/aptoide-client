@@ -19,9 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.InstalledAdapter;
-import cm.aptoide.ptdev.adapters.UpdatesAdapter;
-import cm.aptoide.ptdev.adapters.UpdatesSectionListAdapter;
+import cm.aptoide.ptdev.adapters.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -30,6 +28,8 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,8 +45,9 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     private Database db;
     private RecentlyUpdated recentUpdates;
 
-    private UpdatesSectionListAdapter adapter;
+    //private UpdatesSectionListAdapter adapter;
     private int counter;
+    private SimpleSectionAdapter<UpdateItem> adapter;
 
 
     @Subscribe
@@ -92,20 +93,40 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
                     int updates = 0;
                     if (data.getCount() > 1) {
 
-                        updatesAdapter.swapCursor(data);
+                        //updatesAdapter.swapCursor(data);
+                        items.clear();
                         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                            UpdateItem item = new UpdateItem();
+
                             if(data.getInt(data.getColumnIndex("is_update"))==1){
+                                item.setUpdate(true);
+                                item.setVersionName(data.getString(data.getColumnIndex("version_name")));
                                 updates++;
+                            }else{
+                                item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
                             }
+
+                            String iconPath = data.getString(data.getColumnIndex("iconpath"));
+                            String icon = data.getString(data.getColumnIndex("icon"));
+                            item.setName(data.getString(data.getColumnIndex("name")));
+                            item.setIcon(iconPath+icon);
+                            item.setId(data.getLong(data.getColumnIndex("_id")));
+                            items.add(item);
+
                         }
 
                         editor.putInt("updates", updates);
                     } else {
-                        updatesAdapter.swapCursor(null);
+
+                        items.clear();
+                        //updatesAdapter.swapCursor(null);
 
                         editor.remove("updates");
                     }
+
                     editor.commit();
+
+                    adapter.notifyDataSetChanged();
 
                     if(getActivity()!=null){
                         ((Start) getActivity()).updateBadge(sPref);
@@ -122,10 +143,12 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        updatesAdapter.swapCursor(null);
+        items.clear();
+        //adapter.notifyDataSetChanged();
     }
 
 
+    ArrayList<UpdateItem> items = new ArrayList<UpdateItem>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,9 +157,9 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
         this.db = new Database(Aptoide.getDb());
 
-        updatesAdapter = new UpdatesAdapter(getActivity());
+        updatesAdapter = new UpdatesAdapter(getActivity(), items);
 
-        adapter = new UpdatesSectionListAdapter(getActivity(),getLayoutInflater(savedInstanceState), updatesAdapter);
+        adapter = new SimpleSectionAdapter<UpdateItem>(getActivity(),updatesAdapter);
 
         setHasOptionsMenu(true);
 

@@ -14,6 +14,7 @@ import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 
 import cm.aptoide.ptdev.adapters.DownloadManagerSectionAdapter;
+import cm.aptoide.ptdev.adapters.DownloadSimpleSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
 
@@ -98,7 +99,7 @@ public class FragmentDownloadManager extends ListFragment {
             notOngoingList.clear();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList.addAll(service.getAllNotActiveDownloads());
-            adapter.notifyDataSetChanged();
+            sectionAdapter.notifyDataSetChanged();
             getActivity().supportInvalidateOptionsMenu();
         }
 
@@ -117,7 +118,7 @@ public class FragmentDownloadManager extends ListFragment {
     NotOngoingAdapter notOngoingAdapter;
     ArrayList<Download> ongoingList = new ArrayList<Download>();
     ArrayList<Download> notOngoingList = new ArrayList<Download>();
-    DownloadManagerSectionAdapter sectionAdapter;
+    DownloadSimpleSectionAdapter<Download> sectionAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,7 @@ public class FragmentDownloadManager extends ListFragment {
         adapter.addAdapter(ongoingAdapter);
         adapter.addAdapter(notOngoingAdapter);
 
-        sectionAdapter = new DownloadManagerSectionAdapter(getActivity(), getActivity().getLayoutInflater(), adapter);
+        sectionAdapter = new DownloadSimpleSectionAdapter<Download>(getActivity(),  adapter);
 
         setListAdapter(sectionAdapter);
     }
@@ -184,7 +185,7 @@ public class FragmentDownloadManager extends ListFragment {
             notOngoingList.clear();
             ongoingList.addAll(service.getAllActiveDownloads());
             notOngoingList.addAll(service.getAllNotActiveDownloads());
-            adapter.notifyDataSetChanged();
+            sectionAdapter.notifyDataSetChanged();
 
             getActivity().supportInvalidateOptionsMenu();
             Log.d("Aptoide-DownloadManager", "On Download Status");

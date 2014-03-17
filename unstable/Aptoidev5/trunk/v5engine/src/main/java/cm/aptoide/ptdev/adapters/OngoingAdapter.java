@@ -49,7 +49,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        Log.d("Aptoide", "Updating view2");
         View v;
         if(convertView==null){
             v = LayoutInflater.from(context).inflate(R.layout.row_app_downloading, parent, false);

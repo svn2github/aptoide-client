@@ -836,8 +836,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onPause() {
-        super.onPause();
         BusProvider.getInstance().unregister(this);
+        super.onPause();
     }
 
 
@@ -880,11 +880,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             continueLoading(savedInstanceState);
 
         }
-
-
-
-
-
 
     }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.os.Build;
 import android.util.Log;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -24,7 +25,9 @@ import java.util.HashMap;
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
     String baseUrl = "https://webservices.aptoide.com/webservices/2/checkUserCredentials";
-            //"http://www.aptoide.com/webservices/checkUserCredentials/";
+    String baseUrlWithoutSsl = "http://webservices.aptoide.com/webservices/2/checkUserCredentials";
+
+    //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;
     private String password;
@@ -51,7 +54,15 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
 
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        GenericUrl url;
+
+        if (Build.VERSION.SDK_INT >= 10) {
+            url = new GenericUrl(baseUrl);
+        } else {
+            url = new GenericUrl(baseUrlWithoutSsl);
+        }
+
+
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 

@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapter,
         OnItemClickListener {
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
+
         @Override
         public void onChanged() {
             super.onChanged();
@@ -37,6 +38,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
             super.onInvalidated();
             updateSessionCache();
         };
+
     };
 
     private Context context;
@@ -95,7 +97,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
 
     @Override
     public synchronized int getCount() {
-        int size = sectionPositions.size() + itemPositions.size();
+        int size = sectionPositions.size() + linkedAdapter.getCount();
             Log.d("Aptoide-getCount", String.valueOf(size));
         return size;
     }

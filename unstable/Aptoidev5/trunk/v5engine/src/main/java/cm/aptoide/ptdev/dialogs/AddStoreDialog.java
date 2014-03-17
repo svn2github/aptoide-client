@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Login;
@@ -114,7 +115,7 @@ public class AddStoreDialog extends DialogFragment {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             dismissDialog();
-            Toast.makeText(getActivity(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -261,7 +262,7 @@ public class AddStoreDialog extends DialogFragment {
 
         @Override
         public void onRequestCancelled() {
-            Toast.makeText(getActivity(), "Request was canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), "Request was canceled", Toast.LENGTH_LONG).show();
         }
     }
 

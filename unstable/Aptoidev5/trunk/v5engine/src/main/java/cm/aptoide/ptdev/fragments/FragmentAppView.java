@@ -291,7 +291,7 @@ public abstract class FragmentAppView extends Fragment {
                                 .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - 1));
+                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i));
                     }
 
                     mainLayout.addView(cell);
@@ -692,12 +692,14 @@ public abstract class FragmentAppView extends Fragment {
                     noPermissions.setPadding(5,5,5,5);
                     permissionsContainer.addView(noPermissions);
                 }
-                FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
-                permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                permissionsContainer.setVisibility(View.VISIBLE);
-                loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                loadingPb.setVisibility(View.GONE);
-                setRetainInstance(false);
+                if(getActivity()!=null){
+                    FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
+                    permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                    permissionsContainer.setVisibility(View.VISIBLE);
+                    loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+                    loadingPb.setVisibility(View.GONE);
+                    setRetainInstance(false);
+                }
             }
         }
 
@@ -825,19 +827,22 @@ public abstract class FragmentAppView extends Fragment {
             RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+                    Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    pd.dismiss();
+                    if(pd!=null && pd.isAdded()) pd.dismiss();
                 }
 
                 @Override
                 public void onRequestSuccess(GenericResponse genericResponse) {
 
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    pd.dismiss();
+                    if(pd!=null && pd.isAdded()){
+                        pd.dismiss();
+                    }
+
 
                     if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Aptoide.getContext(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
                         BusProvider.getInstance().post(new AppViewRefresh());
                     }else{

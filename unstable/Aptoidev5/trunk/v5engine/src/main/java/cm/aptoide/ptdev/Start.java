@@ -101,6 +101,7 @@ public class Start extends ActionBarActivity implements
     private RepositoryChangeRequest request;
     private HashMap<String, Long> storesIds;
     private int checkServerCacheString;
+    private boolean isResumed;
     private boolean matureCheck;
 
     public DownloadService getDownloadService() {
@@ -209,7 +210,7 @@ public class Start extends ActionBarActivity implements
                 new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
             } else {
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
-                item.setChecked(false);
+                item.setChecked(true);
                 matureCheck = false;
                 BusProvider.getInstance().post(new RepoCompleteEvent(-1));
                 BusProvider.getInstance().post(new RepoCompleteEvent(-2));
@@ -232,7 +233,8 @@ public class Start extends ActionBarActivity implements
         long repoId = event.getRepoId();
 
         if (e instanceof InvalidVersionException) {
-            AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
+
+            if(isResumed)AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
         }
 
     }
@@ -892,7 +894,9 @@ public class Start extends ActionBarActivity implements
 
     @Override
     protected void onResume() {
+
         super.onResume();
+        isResumed = true;
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -929,6 +933,12 @@ public class Start extends ActionBarActivity implements
         }
         mDrawerList.setAdapter(mMenuAdapter);
 
+    }
+
+    @Override
+    protected void onPause() {
+        isResumed=false;
+        super.onPause();
     }
 
     @Override

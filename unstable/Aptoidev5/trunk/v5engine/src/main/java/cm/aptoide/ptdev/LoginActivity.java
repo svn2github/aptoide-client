@@ -424,7 +424,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onDestroy() {
         super.onDestroy();
         if (Build.VERSION.SDK_INT >= 8) {
-            uiLifecycleHelper.onDestroy();
+            if(uiLifecycleHelper!=null) uiLifecycleHelper.onDestroy();
         }
     }
 
