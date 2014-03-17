@@ -216,8 +216,6 @@ public class Start extends ActionBarActivity implements
                 BusProvider.getInstance().post(new RepoCompleteEvent(-2));
             }
 
-
-
         }
 
         return super.onOptionsItemSelected(item);
