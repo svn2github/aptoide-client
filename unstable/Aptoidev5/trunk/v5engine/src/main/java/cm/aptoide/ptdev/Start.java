@@ -13,6 +13,7 @@ import android.os.*;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -97,6 +98,7 @@ public class Start extends ActionBarActivity implements
     private RepositoryChangeRequest request;
     private HashMap<String, Long> storesIds;
     private int checkServerCacheString;
+    private boolean matureCheck;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -198,6 +200,12 @@ public class Start extends ActionBarActivity implements
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");
 
+        } else if ( i == R.id.menu_filter_mature_content){
+
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
+            item.setChecked(!item.isChecked());
+            BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
         }
 
         return super.onOptionsItemSelected(item);
@@ -225,6 +233,9 @@ public class Start extends ActionBarActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        menu.findItem(R.id.menu_filter_mature_content).setChecked(matureCheck);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -894,6 +905,8 @@ public class Start extends ActionBarActivity implements
             isLoggedin = false;
         }
         mDrawerList.setAdapter(mMenuAdapter);
+        matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+        ActivityCompat.invalidateOptionsMenu(this);
 
     }
 

@@ -291,7 +291,7 @@ public abstract class FragmentAppView extends Fragment {
                                 .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i));
+                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - 1));
                     }
 
                     mainLayout.addView(cell);
