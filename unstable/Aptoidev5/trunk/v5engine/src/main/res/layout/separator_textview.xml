@@ -9,6 +9,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
           style="@style/separatorLabel"
           android:id="@+id/separator_label"
+          android:background="?attr/selectableItemBackground"
           android:padding="5dp"
           android:gravity="left"
           android:layout_weight="0.2"/>
