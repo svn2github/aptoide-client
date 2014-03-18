@@ -19,14 +19,14 @@
               android:padding="5dp"
               android:layout_alignParentLeft="true"
               android:gravity="center|left"
+              android:layout_centerVertical="true"
               android:layout_width="wrap_content"/>
 
     <TextView
             style="?attr/headerSeparatorButton"
             android:text="@string/update_all"
             android:id="@+id/more"
-            android:layout_centerVertical="true"
-            />
+            android:layout_centerVertical="true" />
 
 
 </RelativeLayout>
