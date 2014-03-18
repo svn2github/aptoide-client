@@ -122,7 +122,7 @@ public class AddStoreDialog extends DialogFragment {
         public void onRequestSuccess(ResponseCode integer) {
 
             if (integer != null) {
-
+                Log.d("Aptoide", "Response was" + integer.responseCode);
                 switch (integer.responseCode) {
                     case 401:
                         //on401(url);
@@ -132,9 +132,10 @@ public class AddStoreDialog extends DialogFragment {
                         passDialog.show(getFragmentManager(), "passDialog");
                         break;
                     case -1:
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                         dismissDialog("Invalid Store added.");
                         break;
-                    default:
+                    case 0:
 
                         if (!url.endsWith(".store.aptoide.com/")) {
 
@@ -157,6 +158,10 @@ public class AddStoreDialog extends DialogFragment {
                             dismissDialog();
                             dismiss();
                         }
+                        break;
+                    default:
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                        dismissDialog();
                         break;
                 }
             }

@@ -150,6 +150,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
+                    downloadId = json.getApk().getMd5sum().hashCode();
+
 
                     findViewById(R.id.ic_action_cancel).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -247,7 +249,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     publishEvents();
                     supportInvalidateOptionsMenu();
                     //if (!isShown) show(true, true);
-                    downloadId = json.getApk().getMd5sum().hashCode();
 
                     if (isFromActivityResult || autoDownload) {
 
@@ -819,10 +820,21 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onResume() {
         super.onResume();
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
+
         BusProvider.getInstance().register(this);
         if(json != null){
             checkInstallation(json);
         }
+
+
+
+        if (service != null && service.getDownload(downloadId).getDownload() != null) {
+            onDownloadUpdate(service.getDownload(downloadId).getDownload());
+        } else {
+            findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+            findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+        }
+
 
     }
 
@@ -915,79 +927,76 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.applications);
 
-        if (savedInstanceState == null) {
 
-            if (getIntent().getBooleanExtra("fromRollback", false)) {
+        if (getIntent().getBooleanExtra("fromRollback", false)) {
 
-                GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
 
-                String md5sum = getIntent().getStringExtra("md5sum");
-                request.setMd5Sum(md5sum);
+            String md5sum = getIntent().getStringExtra("md5sum");
+            request.setMd5Sum(md5sum);
 
-                if (token != null) {
-                    request.setToken(token);
-                }
-                cacheKey = md5sum;
-
-                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
-
-            } else if (getIntent().getBooleanExtra("fromMyapp", false)) {
-
-                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
-
-                long id = getIntent().getLongExtra("id", 0);
-                request.setAppId(String.valueOf(id));
-
-                if (token != null) {
-                    request.setToken(token);
-                }
-                cacheKey = String.valueOf(id);
-
-                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
-
-            } else if (getIntent().getBooleanExtra("fromRelated", false)) {
-
-                GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
-                repoName = getIntent().getStringExtra("repoName");
-                String md5sum = getIntent().getStringExtra("md5sum");
-                request.setMd5Sum(md5sum);
-                request.setRepoName(repoName);
-                if (token != null) {
-                    request.setToken(token);
-                }
-                cacheKey = md5sum;
-                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-            } else if (getIntent().getBooleanExtra("fromApkInstaller", false)) {
-
-                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
-
-                long id = getIntent().getLongExtra("id", 0);
-                request.setAppId(String.valueOf(id));
-
-                if (token != null) {
-                    request.setToken(token);
-                }
-                cacheKey = String.valueOf(id);
-                autoDownload = true;
-                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-
-            } else {
-                getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
+            if (token != null) {
+                request.setToken(token);
             }
+            cacheKey = md5sum;
 
-            bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
 
-            moPubView = (MoPubView) findViewById(R.id.adview);
+        } else if (getIntent().getBooleanExtra("fromMyapp", false)) {
 
-            if (Build.VERSION.SDK_INT > 11) {
-                moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+            long id = getIntent().getLongExtra("id", 0);
+            request.setAppId(String.valueOf(id));
+
+            if (token != null) {
+                request.setToken(token);
             }
+            cacheKey = String.valueOf(id);
 
-            moPubView.setVisibility(View.VISIBLE);
-            moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
-            moPubView.loadAd();
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
+        } else if (getIntent().getBooleanExtra("fromRelated", false)) {
+
+            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+            repoName = getIntent().getStringExtra("repoName");
+            String md5sum = getIntent().getStringExtra("md5sum");
+            request.setMd5Sum(md5sum);
+            request.setRepoName(repoName);
+            if (token != null) {
+                request.setToken(token);
+            }
+            cacheKey = md5sum;
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+        } else if (getIntent().getBooleanExtra("fromApkInstaller", false)) {
+
+            GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+            long id = getIntent().getLongExtra("id", 0);
+            request.setAppId(String.valueOf(id));
+
+            if (token != null) {
+                request.setToken(token);
+            }
+            cacheKey = String.valueOf(id);
+            autoDownload = true;
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+
+        } else {
+            getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
         }
+
+        bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
+        moPubView = (MoPubView) findViewById(R.id.adview);
+
+        if (Build.VERSION.SDK_INT > 11) {
+            moPubView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+        moPubView.setVisibility(View.VISIBLE);
+        moPubView.setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
+        moPubView.loadAd();
+
 
     }
 

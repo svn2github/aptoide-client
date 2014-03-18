@@ -7,6 +7,7 @@ import android.util.Log;
 
 import android.widget.ListView;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.downloadmanager.state.*;
@@ -108,7 +109,7 @@ public class DownloadInfo implements Runnable, Serializable {
             }
 
 
-            checkDirectorySize(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/apks");
+            checkDirectorySize(Aptoide.getConfiguration().getPathCacheApks());
 
 
             mSize = getAllThreadSize();

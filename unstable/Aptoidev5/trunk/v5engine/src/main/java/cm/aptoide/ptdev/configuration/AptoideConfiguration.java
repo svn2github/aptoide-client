@@ -113,7 +113,11 @@ public class AptoideConfiguration {
     }
 
     public String getPathCacheApks() {
-        return sPref.getString(PREF_PATH_CACHE_APK, Defaults.PATH_CACHE_APKS);
+        String path = sPref.getString(PREF_PATH_CACHE_APK, Defaults.PATH_CACHE_APKS);
+
+        new File(path).mkdirs();
+
+        return path;
     }
 
     public void setPathCacheApks(String path) {
@@ -123,9 +127,9 @@ public class AptoideConfiguration {
     public String getPathCacheIcons() {
 
         String pathIcons = sPref.getString(PREF_PATH_CACHE_ICONS, Defaults.PATH_CACHE_ICONS);;
-        String path = getPathCache() + pathIcons;
-        new File(path).mkdirs();
-        return path;
+
+        new File(pathIcons).mkdirs();
+        return pathIcons;
     }
 
     public void setPathCacheIcons(String path) {

@@ -262,8 +262,9 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
         Log.d("Aptoide-StoreListCategories", "Counter is " + counter);
         if(data==null) return;
-        if(getListView().getAdapter()==null && data.getCount()>0)
+        if(getListView().getAdapter()==null && data.getCount()>0){
             setListAdapter(mainAdapter);
+        }
 
         if(data.getCount() > 0) setListShown(true);
 

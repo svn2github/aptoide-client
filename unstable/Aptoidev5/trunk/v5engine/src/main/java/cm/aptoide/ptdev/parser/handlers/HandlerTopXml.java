@@ -92,7 +92,6 @@ public class HandlerTopXml extends AbstractHandler {
     public void endDocument() throws SAXException {
         super.endDocument();
         getDb().updateServer(server, getRepoId());
-
         getDb().setTopTimestamp(getRepoId(), timestamp);
     }
 

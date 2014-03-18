@@ -292,7 +292,8 @@ public class Start extends ActionBarActivity implements
                                 c.close();
 
                                 Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
-                                startParse(store);
+                                service.setShowNotification(!isLoggedin);
+                                service.startParse(database, store, false);
                             }
 
                         }
@@ -455,7 +456,19 @@ public class Start extends ActionBarActivity implements
                 public void run() {
                     try {
                         waitForServiceToBeBound();
-                        service.parseEditorsChoice(database, "http://apps.store.aptoide.com/editors_more.xml?country=" + AptoideUtils.getMyCountry(Start.this));
+
+                        String countryCode = Geolocation.getCountryCode(Start.this);
+                        String url;
+
+                        if(countryCode.length()>0){
+                            url = "http://apps.store.aptoide.com/editors_more.xml?country=" + countryCode;
+                        }else{
+                            url = "http://apps.store.aptoide.com/editors_more.xml";
+                        }
+
+
+
+                        service.parseEditorsChoice(database, url);
                         service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -781,7 +794,8 @@ public class Start extends ActionBarActivity implements
                         }
 
                     }
-                    startParse(store);
+                    service.setShowNotification(!isLoggedin);
+                    service.startParse(db, store, false);
                 }
             };
             executorService.submit(runnable);

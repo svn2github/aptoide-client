@@ -104,7 +104,9 @@ public class Aptoide extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         context = getApplicationContext();
+
         try {
             IS_SYSTEM = (getPackageManager().getApplicationInfo(getPackageName(), 0).flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
         } catch (PackageManager.NameNotFoundException e) {

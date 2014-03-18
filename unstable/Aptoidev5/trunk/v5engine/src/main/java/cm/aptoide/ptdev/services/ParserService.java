@@ -315,13 +315,11 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         Log.d("Aptoide-Parser", "Delete");
         if (currentLatestTimestamp>store.getLatestTimestamp()) {
-
-            parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new LatestPreParseRunnable(handlerLatestXml, currentTopTimestamp, db, id) );
+            parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new LatestPreParseRunnable(handlerLatestXml, currentLatestTimestamp, db, id) );
         }
 
         if (currentTopTimestamp>store.getTopTimestamp()) {
-            handlerTopXml.setTimestamp(currentTopTimestamp);
-            parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new TopPreParseRunnable(handlerTopXml, currentLatestTimestamp, db, id));
+            parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new TopPreParseRunnable(handlerTopXml, currentTopTimestamp, db, id));
         }
 
 
