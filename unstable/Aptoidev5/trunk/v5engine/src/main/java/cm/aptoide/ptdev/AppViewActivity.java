@@ -471,7 +471,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 if(fragment!=null)fragment.dismiss();
 
                 if(createUserJson.getStatus().equals("OK")){
-                    Toast.makeText(AppViewActivity.this, R.string.username_success, Toast.LENGTH_LONG).show();
+                    Toast.makeText(Aptoide.getContext(), R.string.username_success, Toast.LENGTH_LONG).show();
                     PreferenceManager.getDefaultSharedPreferences(AppViewActivity.this).edit().putString("username", username).commit();
                 }else{
                     for(String error: createUserJson.getErrors()){

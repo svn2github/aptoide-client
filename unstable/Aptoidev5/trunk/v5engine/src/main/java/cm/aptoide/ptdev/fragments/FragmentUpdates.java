@@ -251,15 +251,18 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         //super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        int type = getListView().getAdapter().getItemViewType(info.position);
+
+
+
+        Object type =  getListView().getAdapter().getItem(info.position);
         MenuInflater inflater = this.getActivity().getMenuInflater();
-        switch (type){
-            case 1:
+
+        if(type instanceof UpdateItem){
+            if(((UpdateItem)type).isUpdate()){
                 inflater.inflate(R.menu.menu_updates_context, menu);
-                break;
-            case 0:
+            }else{
                 inflater.inflate(R.menu.menu_installed_context, menu);
-                break;
+            }
         }
 
     }

@@ -994,7 +994,7 @@ public abstract class FragmentAppView extends Fragment {
             private void addComment() {
 
 
-                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "").equals("NOT_SIGNED_UP")) {
+                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
                     manager = ((AppViewActivity) getActivity()).getSpice();
 
                     AddCommentRequest request = new AddCommentRequest(getActivity());

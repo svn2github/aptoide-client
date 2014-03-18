@@ -292,8 +292,7 @@ public class Start extends ActionBarActivity implements
                                 c.close();
 
                                 Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
-
-                                service.startParse(database, store, false);
+                                startParse(store);
                             }
 
                         }
@@ -698,6 +697,8 @@ public class Start extends ActionBarActivity implements
                 }
                 break;
         }
+        matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+        ActivityCompat.invalidateOptionsMenu(this);
 
     }
 
@@ -759,7 +760,6 @@ public class Start extends ActionBarActivity implements
 
         for (final Long storeid : checkedItems) {
 
-
             Runnable runnable = new Runnable() {
                 public void run() {
                     final Database db = new Database(Aptoide.getDb());
@@ -781,7 +781,7 @@ public class Start extends ActionBarActivity implements
                         }
 
                     }
-                    service.startParse(db, store, false);
+                    startParse(store);
                 }
             };
             executorService.submit(runnable);

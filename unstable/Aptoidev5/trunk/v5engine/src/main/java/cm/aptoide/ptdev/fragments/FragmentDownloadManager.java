@@ -50,11 +50,13 @@ public class FragmentDownloadManager extends ListFragment {
         Log.d("onCreateContextMenu", "OnCreate");
 
         if (type instanceof Download) {
+
             switch (((Download) type).getDownloadState()) {
                 case ERROR:
                     inflater.inflate(R.menu.menu_download_error, menu);
                     break;
             }
+
         }
 
     }

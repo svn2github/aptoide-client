@@ -10,6 +10,7 @@ import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
@@ -49,16 +50,16 @@ import static org.acra.ReportField.*;
         formKey = "",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="mmorthemysisserealstandl",
-        formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
+        //formUriBasicAuthLogin="mmorthemysisserealstandl",
+        //formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
         // Your usual ACRA configuration
 
-        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+        formUri = "http://acra.aptoide.com/acra-aptoide/_design/acra-storage/_update/report"
 )
 public class Aptoide extends Application {
 
 
-    public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
+    public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
@@ -121,6 +122,7 @@ public class Aptoide extends Application {
 
 
         ACRA.init(this);
+
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
             acraConfiguration.setMode(ReportingInteractionMode.TOAST);
@@ -170,7 +172,6 @@ public class Aptoide extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
-
 
 
     }

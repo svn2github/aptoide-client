@@ -259,6 +259,7 @@ public class SearchManager extends ActionBarActivity {
 
         @Override
         public void onDetach() {
+            super.onDetach();
             getLoaderManager().destroyLoader(60);
         }
 
