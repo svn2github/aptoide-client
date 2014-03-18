@@ -6,7 +6,7 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
@@ -16,15 +16,17 @@
 
     <TextView style="@style/separatorLabel"
               android:id="@+id/separator_label"
-              android:layout_weight="0.2"
               android:padding="5dp"
+              android:layout_alignParentLeft="true"
               android:gravity="center|left"
-              android:layout_width="0dp"/>
+              android:layout_width="wrap_content"/>
 
     <TextView
             style="?attr/headerSeparatorButton"
             android:text="@string/update_all"
-            android:id="@+id/more"/>
+            android:id="@+id/more"
+            android:layout_centerVertical="true"
+            />
 
 
-</LinearLayout>
+</RelativeLayout>

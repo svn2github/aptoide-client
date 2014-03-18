@@ -7,7 +7,7 @@ which accompanies this distribution, and is available at
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          style="@style/homeLabel"
+          style="@style/separatorLabel"
           android:id="@+id/collectionName"
           android:gravity="left"
           android:layout_weight="0.2"/>

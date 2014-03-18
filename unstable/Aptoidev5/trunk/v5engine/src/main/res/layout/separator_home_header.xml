@@ -11,7 +11,7 @@
               android:layout_height="wrap_content"
               android:background="?attr/selectableItemBackground">
 
-    <TextView style="@style/homeLabel"
+    <TextView style="@style/separatorLabel"
               android:layout_gravity="right"
               android:id="@+id/separator_label" />
 

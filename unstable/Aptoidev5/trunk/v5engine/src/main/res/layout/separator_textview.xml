@@ -11,4 +11,5 @@
           android:id="@+id/separator_label"
           android:padding="5dp"
           android:background="?attr/selectableItemBackground"
-          android:gravity="center|left"/>
+          android:gravity="left"
+          android:layout_weight="0.2"/>
