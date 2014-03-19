@@ -48,4 +48,6 @@ public class AptoidePartner extends Aptoide {
     public AptoideThemePicker getNewThemePicker() {
         return new com.aptoide.partners.AptoideThemePicker();
     }
+
+
 }

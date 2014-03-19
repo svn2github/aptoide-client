@@ -1,20 +1,21 @@
 <bootconf>
 	<aptoideconf>
-        <!--<partnertype>basic</partnertype>-->
-        <!--<partnerid>735f7a5ef72500285cf5c00b276e29b7</partnerid>-->
-        <!--<defaultstorename>magalhaest2</defaultstorename>-->
+        <partnertype>basic</partnertype>
+        <partnerid>735f7a5ef72500285cf5c00b276e29b7</partnerid>
+        <defaultstorename>magalhaest2</defaultstorename>
         <brand>brand_aptoide</brand>
-        <!--<splashscreen>https://dl.dropbox.com/u/54355993/magalhaes_splashscreen.png</splashscreen>-->
-        <!--<splashscreenland>https://dl.dropbox.com/u/54355993/magalhaes_splashscreen_land.png</splashscreenland>-->
+        <splashscreen>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</splashscreenland>
         <maturecontentswitch>true</maturecontentswitch>
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
         <multiplestores>true</multiplestores>
         <searchstores>true</searchstores>
         <customeditorschoice>false</customeditorschoice>
         <aptoidetheme>black</aptoidetheme>
-		<marketname>Aptoide</marketname>
+		<marketname>AptoideBasic</marketname>
 		<adunitid>414142966261b69daaad0956888da76d</adunitid>
- 	</aptoideconf>
+        <createshortcut>true</createshortcut>
+    </aptoideconf>
  	
 	<storeconf>
 		<!-- for OEM stores -->

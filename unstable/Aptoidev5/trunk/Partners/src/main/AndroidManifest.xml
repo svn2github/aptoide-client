@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.aptoide.partners"
-          android:versionCode="415"
-          android:versionName="5.0.0 Dev Version">
+          android:versionCode="431"
+          android:versionName="5.0.0">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
@@ -30,9 +30,9 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
-        <activity android:name="cm.aptoide.ptdev.Start"
+        <activity android:name="com.aptoide.partners.Start"
                   android:launchMode="singleTask"
-                  android:label="Aptoide"
+                  android:label="AptoidePartner"
                   android:icon="@drawable/icon_brand_aptoide"
                   android:exported="true">
             <intent-filter>
@@ -50,7 +50,7 @@
                 android:exported="true"
                 android:label="@string/app_name"
                 android:icon="@drawable/icon_brand_aptoide"
-                android:targetActivity="cm.aptoide.ptdev.Start">
+                android:targetActivity="com.aptoide.partners.Start">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -1,7 +1,10 @@
 package com.aptoide.partners;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -10,8 +13,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -33,16 +36,20 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String APTOIDETHEME = "";
     public static String MARKETNAME = "";
     public static String ADUNITID = "";
+    public static boolean CREATESHORTCUT = true;
 
     public static String THEME = null;
     public static String AVATAR = null;
     public static String DESCRIPTION = null;
     public static String VIEW = null;
     public static String ITEMS = null;
+    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID,
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
 
+    private static Context context = AptoidePartner.getContext();
+    private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
 
     public String getTheme() { return APTOIDETHEME.toUpperCase(Locale.ENGLISH); }
 
@@ -135,6 +142,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             ADUNITID = sb.toString();
                             Log.d("AdUnitId", ADUNITID+ "");
                             break;
+                        case CREATESHORTCUT:
+                            CREATESHORTCUT = Boolean.parseBoolean(sb.toString());
+                            Log.d("CREATESHORTCUT", CREATESHORTCUT+ "");
+                            break;
 
                         case THEME:
                             THEME = sb.toString();
@@ -164,26 +175,69 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             }
         });
 
-//        savePreferences();
+        savePreferences();
 
-//        createSdCardBinary();
+        createSdCardBinary();
     }
 
+    private static void createSdCardBinary() {
+        if (PARTNERID != null) {
 
-//    @Override
-//    public ActivitiesClasses getClasses(){
-//        return new ActivitiesClassesPartners();
-//    }
-//
-//    public static class ActivitiesClassesPartners extends ActivitiesClasses {
-//
-//        @Override
-//        public Class getAppViewActivity() {
-//            return this.AppViewActivity;
-//        }
-//
-//        private  final Class AppViewActivity = com.aptoide.partners.AppViewActivityPartners.class;
-//
-//    }
+            HashMap<String, String> map = new HashMap<String, String>();
+
+            map.put("PARTNERID", PARTNERID);
+            map.put("PARTNERTYPE", PARTNERTYPE);
+            map.put("DEFAULTSTORE", DEFAULTSTORENAME);
+            map.put("MATURECONTENTSWITCH", MATURECONTENTSWITCH + "");
+            map.put("BRAND", BRAND);
+            map.put("SPLASHSCREENLAND", SPLASHSCREENLAND);
+            map.put("SPLASHSCREEN", SPLASHSCREEN);
+            map.put("MATURECONTENTSWITCHVALUE", MATURECONTENTSWITCHVALUE + "");
+            map.put("MULTIPLESTORES", MULTIPLESTORES + "");
+            map.put("CUSTOMEDITORSCHOICE", CUSTOMEDITORSCHOICE + "");
+            map.put("SEARCHSTORES", SEARCHSTORES + "");
+            map.put("APTOIDETHEME", APTOIDETHEME);
+            map.put("MARKETNAME", MARKETNAME);
+            map.put("ADUNITID", ADUNITID);
+            map.put("CREATESHORTCUT", CREATESHORTCUT + "");
+            map.put("ITEMS", ITEMS);
+
+            try {
+                File fileDir = new File(SDCARD + "/.aptoide_settings");
+                if (fileDir.mkdir()) {
+                    ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(SDCARD + "/.aptoide_settings/oem")));
+                    oos.writeObject(map);
+                    oos.close();
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void savePreferences() {
+        sPref.edit().putString("PARTNERID", PARTNERID).putString("DEFAULTSTORE", DEFAULTSTORENAME)
+                .putString("PARTNERTYPE", PARTNERTYPE)
+                .putBoolean("MATURECONTENTSWITCH", MATURECONTENTSWITCH)
+                .putString("BRAND", BRAND)
+                .putString("SPLASHSCREENLAND", SPLASHSCREENLAND)
+                .putString("SPLASHSCREEN", SPLASHSCREEN)
+                .putBoolean("MATURECONTENTSWITCHVALUE", MATURECONTENTSWITCHVALUE)
+                .putBoolean("MULTIPLESTORES", MULTIPLESTORES)
+                .putBoolean("CUSTOMEDITORSCHOICE", CUSTOMEDITORSCHOICE)
+                .putBoolean("SEARCHSTORES", SEARCHSTORES)
+                .putString("APTOIDETHEME", APTOIDETHEME)
+                .putString("MARKETNAME", MARKETNAME)
+                .putString("ADUNITID", ADUNITID)
+                .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
+                .putString("ITEMS", ITEMS)
+                .commit();
+    }
+
+    @Override
+    public Class getStartActivityClass(){
+        return com.aptoide.partners.Start.class;
+    }
 
 }
