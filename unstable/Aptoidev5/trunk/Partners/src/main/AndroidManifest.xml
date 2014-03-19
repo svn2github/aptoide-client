@@ -30,7 +30,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
-        <activity android:name="com.aptoide.partners.Start"
+        <activity android:name=".Start"
                   android:launchMode="singleTask"
                   android:label="AptoidePartner"
                   android:icon="@drawable/icon_brand_aptoide"
@@ -50,7 +50,7 @@
                 android:exported="true"
                 android:label="@string/app_name"
                 android:icon="@drawable/icon_brand_aptoide"
-                android:targetActivity="com.aptoide.partners.Start">
+                android:targetActivity=".Start">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -80,7 +80,7 @@
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 
-        <activity android:name="com.aptoide.partners.AppViewActivity" />
+        <activity android:name=".AppViewActivityPartner" />
 
         <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
                   android:theme="@style/transparent"
@@ -100,7 +100,7 @@
 
         <activity android:name="cm.aptoide.ptdev.RollbackActivity"/>
 
-        <activity android:name="cm.aptoide.ptdev.Settings"
+        <activity android:name="com.aptoide.partners.SettingsPartner"
                   android:label="@string/settings_title_bar"
                   android:theme="@style/Settings"/>
 
@@ -252,7 +252,7 @@
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data android:name="android.accounts.AccountAuthenticator"
-                       android:resource="@xml/authenticator"/>
+                       android:resource="@xml/partners_authenticator"/>
         </service>
 
         <service android:name="cm.aptoide.ptdev.services.WebInstallSyncService"

@@ -45,6 +45,7 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
 
     SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
     private String repoName;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
 
     @Override
@@ -190,7 +191,7 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
         id =  new Database(Aptoide.getDb()).getApkFromPackage(item.getApkid(), repoName);
 
         if(id>0){
-            Intent i = new Intent(getActivity(), AppViewActivity.class);
+            Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
             startActivity(i);
         }

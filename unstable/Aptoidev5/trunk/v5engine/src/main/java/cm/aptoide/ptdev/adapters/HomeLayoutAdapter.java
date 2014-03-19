@@ -32,6 +32,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
     private boolean mWasEndedAlready;
     private ArrayList<Collection> list;
     private boolean b;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public HomeLayoutAdapter(Activity context, ArrayList<Collection> list, boolean b) {
         this.context = context;
@@ -210,7 +211,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             tvChild.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, AppViewActivity.class);
+                    Intent i = new Intent(context, appViewClass);
                     long id = item.getId();
                     i.putExtra("id", id);
                     context.startActivity(i);

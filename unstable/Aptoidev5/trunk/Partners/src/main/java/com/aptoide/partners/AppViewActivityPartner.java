@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by rmateus on 19-03-2014.
  */
-public class AppViewActivity extends cm.aptoide.ptdev.AppViewActivity {
+public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
 
     @Produce

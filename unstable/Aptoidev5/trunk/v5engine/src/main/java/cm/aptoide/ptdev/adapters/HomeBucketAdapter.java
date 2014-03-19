@@ -27,6 +27,8 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  */
 public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
     private final String sizeString;
 
     public HomeBucketAdapter(Activity ctx, List<HomeItem> elements) {
@@ -106,7 +108,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), AppViewActivity.class);
+                Intent i = new Intent(getContext(), appViewClass);
 
                 if(item.isRecommended()){
                     i.putExtra("fromRelated", true);

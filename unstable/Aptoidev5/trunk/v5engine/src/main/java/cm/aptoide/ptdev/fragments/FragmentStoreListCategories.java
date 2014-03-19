@@ -44,6 +44,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     private long storeId;
     private MergeAdapter mainAdapter;
     private CategoryAdapter apkAdapter;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     @Override
@@ -211,7 +213,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
 
             default:
-                Intent i = new Intent(getActivity(), AppViewActivity.class);
+                Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;

@@ -35,6 +35,8 @@ import java.util.Locale;
  */
 public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
     public WebInstallSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
@@ -93,7 +95,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
             JSONObject object = new JSONObject(body);
 
-            Intent i = new Intent(getContext(), AppViewActivity.class);
+            Intent i = new Intent(getContext(), appViewClass);
             String authToken = AccountManager.get(getContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
             String repo = object.getString("repo");

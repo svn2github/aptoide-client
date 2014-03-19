@@ -1,28 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
 <bootconf>
-	<aptoideconf>
-        <partnertype>basic</partnertype>
-        <partnerid>735f7a5ef72500285cf5c00b276e29b7</partnerid>
-        <defaultstorename>magalhaest2</defaultstorename>
-        <brand>brand_aptoide</brand>
-        <splashscreen>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <maturecontentswitch>true</maturecontentswitch>
-        <maturecontentswitchvalue>true</maturecontentswitchvalue>
-        <multiplestores>true</multiplestores>
-        <searchstores>true</searchstores>
-        <customeditorschoice>false</customeditorschoice>
-        <aptoidetheme>black</aptoidetheme>
-		<marketname>AptoideBasic</marketname>
-		<adunitid>414142966261b69daaad0956888da76d</adunitid>
-        <createshortcut>true</createshortcut>
-    </aptoideconf>
- 	
-	<storeconf>
-		<!-- for OEM stores -->
-        <theme>magalhaes</theme>
-        <avatar>http://cdn1.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
-        <description>Magalhães Market: free educational apps</description>
+    <storeconf>
+        <theme>default</theme>
+        <avatar>https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description></description>
         <view>list</view>
         <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
-	</storeconf>
+    </storeconf>
+    <aptoideconf>
+        <partnertype>premium</partnertype>
+        <partnerid>72d222a173fe656175e2940fafaf5295</partnerid>
+        <marketname>Aptoide Appstore</marketname>
+        <defaultstorename>nokia-appstore</defaultstorename>
+        <aptoidetheme>default</aptoidetheme>
+        <splashscreen>
+            http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png
+        </splashscreen>
+        <splashscreenland>
+            http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png
+        </splashscreenland>
+        <brand>brand_aptoide</brand>
+        <searchstores>true</searchstores>
+        <maturecontentswitch>false</maturecontentswitch>
+        <maturecontentswitchvalue>true</maturecontentswitchvalue>
+        <multiplestores>false</multiplestores>
+        <customeditorschoice>true</customeditorschoice>
+        <adunitid>f0408f8071a116ab47cabf5937d056d4</adunitid>
+        <createshortcut>true</createshortcut>
+    </aptoideconf>
 </bootconf>

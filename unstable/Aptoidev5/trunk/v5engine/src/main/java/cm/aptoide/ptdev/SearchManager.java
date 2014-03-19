@@ -110,7 +110,7 @@ public class SearchManager extends ActionBarActivity {
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
         TextView more;
-
+        private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
 
         @Override
@@ -181,7 +181,7 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
-            Intent i = new Intent(getActivity(), AppViewActivity.class);
+            Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
             startActivity(i);
         }

@@ -29,6 +29,8 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
     private boolean hasMore;
     private boolean expanded2;
     private int weeks = -1;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     public boolean isExpanded() {
@@ -204,7 +206,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
                 tvChild.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(context, AppViewActivity.class);
+                        Intent i = new Intent(context, appViewClass);
                         long id = item.getId();
                         i.putExtra("id", id);
                         context.startActivity(i);

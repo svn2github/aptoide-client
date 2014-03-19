@@ -90,6 +90,9 @@ public class Start extends ActionBarActivity implements
         AdultDialog.Callback {
 
     private static final String TAG = Start.class.getName();
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+    private Class settingsClass = Aptoide.getConfiguration().getSettingsActivityClass();
+
     private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
@@ -197,7 +200,7 @@ public class Start extends ActionBarActivity implements
                 mDrawerLayout.openDrawer(mDrawerList);
             }
         } else if (i == R.id.menu_settings) {
-            Intent settingsIntent = new Intent(this, Settings.class);
+            Intent settingsIntent = new Intent(this, settingsClass);
             startActivityForResult(settingsIntent, 0);
         } else if (i == R.id.menu_about) {
             showAbout();
@@ -443,7 +446,7 @@ public class Start extends ActionBarActivity implements
 
                 if (Long.valueOf(id) != savedId) {
                     sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
-                    Intent intent = new Intent(this, AppViewActivity.class);
+                    Intent intent = new Intent(this, appViewClass);
 
                     intent.putExtra("fromApkInstaller", true);
                     intent.putExtra("id", Long.valueOf(id));

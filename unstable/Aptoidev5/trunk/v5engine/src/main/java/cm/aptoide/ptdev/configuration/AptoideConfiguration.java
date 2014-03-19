@@ -52,7 +52,7 @@ public class AptoideConfiguration {
         return BRAND;
     }
 
-    public void setBrand(String brand) {
+    public static void setBrand(String brand) {
         AptoideConfiguration.BRAND = brand;
     }
 
@@ -177,21 +177,12 @@ public class AptoideConfiguration {
         return cm.aptoide.ptdev.Start.class;
     }
 
-//    public ActivitiesClasses getClasses(){
-//        return new ActivitiesClasses();
-//
-//    }
-//
-//    public static class ActivitiesClasses {
-//
-//
-//        public Class getAppViewActivity() {
-//            return AppViewActivity;
-//        }
-//
-//        private final Class AppViewActivity = cm.aptoide.ptdev.AppViewActivity.class;
-//
-//    }
+    public Class getAppViewActivityClass(){
+        return cm.aptoide.ptdev.AppViewActivity.class;
+    }
 
+    public Class getSettingsActivityClass() {
+        return cm.aptoide.ptdev.Settings.class;
+    }
 
 }

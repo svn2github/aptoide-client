@@ -43,7 +43,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String DESCRIPTION = null;
     public static String VIEW = null;
     public static String ITEMS = null;
-    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
@@ -51,11 +51,50 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     private static Context context = AptoidePartner.getContext();
     private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
 
-    public String getTheme() { return APTOIDETHEME.toUpperCase(Locale.ENGLISH); }
+    public String getPartnerType() { return PARTNERTYPE; }
+    public static void setPartnerType(String partnerType){ AptoideConfigurationPartners.PARTNERTYPE = partnerType; }
 
-    public static void setTheme(String appTheme) {
-        AptoideConfigurationPartners.APTOIDETHEME = appTheme;
-    }
+    public static String getPartnerId() { return PARTNERID; }
+    public static void setPartnerId(String partnerId){ AptoideConfigurationPartners.PARTNERID = partnerId; }
+
+    public String getDefaultStoreName() { return DEFAULTSTORENAME; }
+    public static void setDefaultStoreName(String defaultStoreName){ AptoideConfigurationPartners.DEFAULTSTORENAME = defaultStoreName; }
+
+    public boolean getMatureContentSwitch() { return MATURECONTENTSWITCH; }
+    public static void setMatureContentSwitch(boolean matureContentSwitch) { AptoideConfigurationPartners.MATURECONTENTSWITCH = matureContentSwitch; }
+
+    public String getSplashscreen(){ return SPLASHSCREEN; }
+    public static void setSplashscreen(String splashscreen){ AptoideConfigurationPartners.SPLASHSCREEN = splashscreen; }
+
+    public String getSplashscreenLand(){ return SPLASHSCREENLAND; }
+    public static void setSplashscreenLand(String splashscreenLand){ AptoideConfigurationPartners.SPLASHSCREENLAND = splashscreenLand; }
+
+    public String getBrand(){ return BRAND; }
+    public static void setBrand(String stringBrand){ AptoideConfigurationPartners.BRAND = stringBrand; }
+
+    public boolean getMatureContentSwitchValue() { return MATURECONTENTSWITCHVALUE; }
+    public void setMatureContentSwitchValue(boolean matureContentSwitchValue) { AptoideConfigurationPartners.MATURECONTENTSWITCHVALUE = matureContentSwitchValue; }
+
+    public boolean getMultistores() { return MULTIPLESTORES; }
+    public static void setMultistores(boolean multistores) { AptoideConfigurationPartners.MULTIPLESTORES = multistores; }
+
+    public boolean getCustomEditorsChoice() { return CUSTOMEDITORSCHOICE; }
+    public static void setCustomEditorsChoice(boolean customEditorsChoice) { AptoideConfigurationPartners.CUSTOMEDITORSCHOICE = customEditorsChoice; }
+
+    public boolean getSearchStores() { return SEARCHSTORES; }
+    public static void setSearchStores(boolean searchStores) { AptoideConfigurationPartners.SEARCHSTORES = searchStores; }
+
+    public String getTheme() { return APTOIDETHEME.toUpperCase(Locale.ENGLISH); }
+    public static void setTheme(String appTheme) { AptoideConfigurationPartners.APTOIDETHEME = appTheme; }
+
+    public String getMarketName(){ return MARKETNAME; }
+    public static void setMarketName(String marketName){ AptoideConfigurationPartners.MARKETNAME = marketName; }
+
+    public String getAdUnitId(){ return ADUNITID; }
+    public static void setAdUnitId(String adUnitId){ AptoideConfigurationPartners.ADUNITID = adUnitId; }
+
+    public boolean getCreateShortcut() { return CREATESHORTCUT; }
+    public static void setCreateShortcut(boolean createShortcut) { AptoideConfigurationPartners.CREATESHORTCUT = createShortcut; }
 
 
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
@@ -87,42 +126,52 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                     switch (element) {
                         case PARTNERTYPE:
                             PARTNERTYPE = sb.toString();
+                            AptoideConfigurationPartners.setPartnerType(PARTNERTYPE);
                             Log.d("Partner type", PARTNERTYPE + "");
                             break;
                         case PARTNERID:
                             PARTNERID = sb.toString();
+                            AptoideConfigurationPartners.setPartnerId(PARTNERID);
                             Log.d("Partner ID", PARTNERID + "");
                             break;
                         case DEFAULTSTORENAME:
                             DEFAULTSTORENAME = sb.toString();
+                            AptoideConfigurationPartners.setDefaultStoreName(DEFAULTSTORENAME);
                             Log.d("Default store", DEFAULTSTORENAME + "");
                             break;
                         case BRAND:
                             BRAND = sb.toString();
+                            AptoideConfigurationPartners.setBrand(BRAND);
                             Log.d("Brand", BRAND+ "");
                             break;
                         case SPLASHSCREEN:
                             SPLASHSCREEN = sb.toString();
+                            AptoideConfigurationPartners.setSplashscreen(SPLASHSCREEN);
                             Log.d("Splashscreen", SPLASHSCREEN+ "");
                             break;
                         case SPLASHSCREENLAND:
                             SPLASHSCREENLAND = sb.toString();
+                            AptoideConfigurationPartners.setSplashscreenLand(SPLASHSCREENLAND);
                             Log.d("Splashscreen landscape", SPLASHSCREENLAND+ "");
                             break;
                         case MATURECONTENTSWITCH:
                             MATURECONTENTSWITCH = Boolean.parseBoolean(sb.toString());
-                            Log.d("Mature content Switch", MATURECONTENTSWITCH+ "");
+                            AptoideConfigurationPartners.setMatureContentSwitch(MATURECONTENTSWITCH);
+                            Log.d("Mature content Switch", MATURECONTENTSWITCH + "");
                             break;
                         case MATURECONTENTSWITCHVALUE:
                             MATURECONTENTSWITCHVALUE = Boolean.parseBoolean(sb.toString());
+                            AptoideConfigurationPartners.setMatureContentSwitch(MATURECONTENTSWITCHVALUE);
                             Log.d("Mature content value", MATURECONTENTSWITCHVALUE+ "");
                             break;
                         case MULTIPLESTORES:
                             MULTIPLESTORES = Boolean.parseBoolean(sb.toString());
+                            AptoideConfigurationPartners.setMultistores(MULTIPLESTORES);
                             Log.d("Multiple stores", MULTIPLESTORES+ "");
                             break;
                         case CUSTOMEDITORSCHOICE:
                             CUSTOMEDITORSCHOICE = Boolean.parseBoolean(sb.toString());
+                            AptoideConfigurationPartners.setCustomEditorsChoice(CUSTOMEDITORSCHOICE);
                             Log.d("Custom editors choice", CUSTOMEDITORSCHOICE+ "");
                             break;
                         case APTOIDETHEME:
@@ -132,19 +181,23 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             break;
                         case MARKETNAME:
                             MARKETNAME = sb.toString();
+                            AptoideConfigurationPartners.setMarketName(MARKETNAME);
                             Log.d("Market name", MARKETNAME+ "");
                             break;
                         case SEARCHSTORES:
                             SEARCHSTORES = Boolean.parseBoolean(sb.toString());
+                            AptoideConfigurationPartners.setSearchStores(SEARCHSTORES);
                             Log.d("Search stores", SEARCHSTORES+ "");
                             break;
                         case ADUNITID:
                             ADUNITID = sb.toString();
+                            AptoideConfigurationPartners.setAdUnitId(ADUNITID);
                             Log.d("AdUnitId", ADUNITID+ "");
                             break;
                         case CREATESHORTCUT:
                             CREATESHORTCUT = Boolean.parseBoolean(sb.toString());
-                            Log.d("CREATESHORTCUT", CREATESHORTCUT+ "");
+                            AptoideConfigurationPartners.setCreateShortcut(CREATESHORTCUT);
+                            Log.d("Create Shortcut", CREATESHORTCUT+ "");
                             break;
 
                         case THEME:
@@ -180,7 +233,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         createSdCardBinary();
     }
 
-    private static void createSdCardBinary() {
+    public static void createSdCardBinary() {
         if (PARTNERID != null) {
 
             HashMap<String, String> map = new HashMap<String, String>();
@@ -216,7 +269,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         }
     }
 
-    private static void savePreferences() {
+    public static void savePreferences() {
         sPref.edit().putString("PARTNERID", PARTNERID).putString("DEFAULTSTORE", DEFAULTSTORENAME)
                 .putString("PARTNERTYPE", PARTNERTYPE)
                 .putBoolean("MATURECONTENTSWITCH", MATURECONTENTSWITCH)
@@ -237,12 +290,14 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     @Override
     public Class getStartActivityClass(){
-        return com.aptoide.partners.Start.class;
+        return StartPartner.class;
     }
 
-    @Override
-    public Class<?> getAppViewActivityClass() {
-        return com.aptoide.partners.AppViewActivity.class;
+    public Class getAppViewActivityClass() {
+        return com.aptoide.partners.AppViewActivityPartner.class;
     }
 
+    public Class getSettingsActivityClass() {
+        return com.aptoide.partners.SettingsPartner.class;
+    }
 }

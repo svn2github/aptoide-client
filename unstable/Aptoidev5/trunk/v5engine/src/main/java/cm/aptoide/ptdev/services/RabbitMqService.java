@@ -52,6 +52,7 @@ public class RabbitMqService extends Service {
     private ExecutorService thread_pool;
     private AMQConnection connection;
 
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
@@ -87,7 +88,7 @@ public class RabbitMqService extends Service {
                                 try {
                                     JSONObject object = new JSONObject(body);
 
-                                    Intent i = new Intent(getApplicationContext(), AppViewActivity.class);
+                                    Intent i = new Intent(getApplicationContext(), appViewClass);
                                     String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
                                     String repo = object.getString("repo");

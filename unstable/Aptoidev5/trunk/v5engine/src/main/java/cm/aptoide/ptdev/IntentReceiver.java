@@ -114,7 +114,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     }
 
     private Class startClass = Aptoide.getConfiguration().getStartActivityClass();
-
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     private void proceed() {
         if(server!=null){
@@ -185,7 +185,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             String[] strings = uri.split("-");
             long id = Long.parseLong(strings[strings.length-1].split("\\.myapp")[0]);
 
-            Intent i = new Intent(this, AppViewActivity.class);
+            Intent i = new Intent(this, appViewClass);
             i.putExtra("fromMyapp", true);
             i.putExtra("id", id);
 
@@ -209,7 +209,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             try {
 
                 long id = Long.parseLong(uid);
-                Intent i = new Intent(this, AppViewActivity.class);
+                Intent i = new Intent(this, appViewClass);
                 i.putExtra("fromMyapp", true);
                 i.putExtra("id", id);
                 startActivity(i);
@@ -228,7 +228,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         } else if (uri.startsWith("aptoideinstall://")) {
             long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
 
-            Intent i = new Intent(this, AppViewActivity.class);
+            Intent i = new Intent(this, appViewClass);
             i.putExtra("fromMyapp", true);
             i.putExtra("id", id);
 
@@ -341,7 +341,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         long id = db.getApkFromPackage(param);
         Intent i;
         if(id > 0){
-            i = new Intent(this,AppViewActivity.class);
+            i = new Intent(this, appViewClass);
             i.putExtra("id", id);
         }else{
             i = new Intent(this,SearchManager.class);

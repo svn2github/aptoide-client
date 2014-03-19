@@ -44,6 +44,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     private MergeAdapter mainAdapter;
     private CategoryGridAdapter apkAdapter;
     private GridView gridView;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     @Override
@@ -311,7 +313,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
                 break;
 
             default:
-                Intent i = new Intent(getActivity(), AppViewActivity.class);
+                Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;

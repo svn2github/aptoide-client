@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -33,6 +34,7 @@ import java.util.List;
 public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item> {
 
     private final String sizeString;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public RelatedBucketAdapter(Activity ctx, List<RelatedApkJson.Item> elements) {
 
@@ -106,7 +108,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), AppViewActivity.class);
+                Intent i = new Intent(getContext(), appViewClass);
                 i.putExtra("fromRelated", true);
                 i.putExtra("appName", item.getName());
 

@@ -48,6 +48,8 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     //private UpdatesSectionListAdapter adapter;
     private int counter;
     private SimpleSectionAdapter<UpdateItem> adapter;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     @Subscribe
@@ -191,7 +193,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         super.onListItemClick(l, v, position, id);
 
         if (id > 0) {
-            Intent i = new Intent(getActivity(), AppViewActivity.class);
+            Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
             startActivity(i);
         }
