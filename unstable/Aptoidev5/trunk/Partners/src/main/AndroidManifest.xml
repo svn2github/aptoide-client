@@ -80,7 +80,7 @@
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 
-        <activity android:name="cm.aptoide.ptdev.AppViewActivity" />
+        <activity android:name="com.aptoide.partners.AppViewActivity" />
 
         <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
                   android:theme="@style/transparent"

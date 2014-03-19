@@ -240,4 +240,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         return com.aptoide.partners.Start.class;
     }
 
+    @Override
+    public Class<?> getAppViewActivityClass() {
+        return com.aptoide.partners.AppViewActivity.class;
+    }
+
 }
