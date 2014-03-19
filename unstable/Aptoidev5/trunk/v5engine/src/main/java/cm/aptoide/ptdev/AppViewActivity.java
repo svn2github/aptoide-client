@@ -243,7 +243,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (getIntent().getBooleanExtra("fromMyapp", false)) {
                         getIntent().removeExtra("fromMyapp");
-                        AptoideDialog.myappInstall( name).show(getSupportFragmentManager(), "myApp");
+                        AptoideDialog.myappInstall( name ).show(getSupportFragmentManager(), "myApp");
                     }
                     md5 = json.getApk().getMd5sum();
                     publishEvents();

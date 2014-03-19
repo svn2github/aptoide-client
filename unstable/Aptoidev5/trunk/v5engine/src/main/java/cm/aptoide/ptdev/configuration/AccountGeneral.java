@@ -10,7 +10,7 @@ public class AccountGeneral {
     /**
      * Account type id
      */
-    public static final String ACCOUNT_TYPE = "cm.aptoide.ptdev";
+    public static final String ACCOUNT_TYPE = "cm.aptoide.pt";
 
     /**
      * Account name

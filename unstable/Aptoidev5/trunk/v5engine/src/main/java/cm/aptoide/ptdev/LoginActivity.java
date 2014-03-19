@@ -654,9 +654,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         */
         finish();
         if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
-        ContentResolver.setSyncAutomatically(account, "cm.aptoide.ptdev.UpdatesProvider", true);
-        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.ptdev.UpdatesProvider", new Bundle(), 43200);
-        ContentResolver.setSyncAutomatically(account, "cm.aptoide.ptdev.AutoUpdateProvider", true);
+        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.UpdatesProvider", true);
+        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.UpdatesProvider", new Bundle(), 43200);
+        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.AutoUpdateProvider", true);
 
     }
 
