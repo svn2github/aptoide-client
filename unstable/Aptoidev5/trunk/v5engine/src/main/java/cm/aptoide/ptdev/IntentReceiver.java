@@ -113,10 +113,12 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         proceed();
     }
 
+    private Class startClass = Aptoide.getConfiguration().getStartActivityClass();
+
 
     private void proceed() {
         if(server!=null){
-            Intent i = new Intent(IntentReceiver.this,Start.class);
+            Intent i = new Intent(IntentReceiver.this, startClass);
             i.putExtra("newrepo", server);
             i.addFlags(12345);
             startActivity(i);
@@ -135,7 +137,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             ArrayList<String> repo = new ArrayList<String>();
             repo.add(uri.substring(14));
-            Intent i = new Intent(IntentReceiver.this, Start.class);
+            Intent i = new Intent(IntentReceiver.this, startClass);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);
@@ -145,7 +147,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             String repo = uri.substring(13);
             parseXmlString(repo);
-            Intent i = new Intent(IntentReceiver.this,Start.class);
+            Intent i = new Intent(IntentReceiver.this, startClass);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);

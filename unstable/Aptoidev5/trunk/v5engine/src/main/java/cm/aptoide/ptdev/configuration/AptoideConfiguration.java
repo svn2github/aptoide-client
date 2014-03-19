@@ -57,7 +57,7 @@ public class AptoideConfiguration {
     }
 
     public Class getShortcutClass() {
-        return Start.class;
+        return cm.aptoide.ptdev.Start.class;
     }
 
     public String getAutoUpdateUrl() {
@@ -171,6 +171,10 @@ public class AptoideConfiguration {
 
     public int getIcon() {
         return R.drawable.icon_brand_aptoide;
+    }
+
+    public Class getStartActivityClass(){
+        return cm.aptoide.ptdev.Start.class;
     }
 
 //    public ActivitiesClasses getClasses(){

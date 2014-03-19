@@ -383,7 +383,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> repo = new ArrayList<String>();
                 repo.add("http://" + repoName + ".store.aptoide.com/");
-                Intent i = new Intent(AppViewActivity.this, Start.class);
+                Intent i = new Intent(AppViewActivity.this, startClass);
                 i.putExtra("nodialog", true);
                 i.putExtra("newrepo", repo);
                 i.addFlags(12345);
@@ -392,7 +392,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         };
     }
 
-
+    private Class startClass = Aptoide.getConfiguration().getStartActivityClass();
 
     public DialogInterface.OnDismissListener getOnDismissListener(){
         return onDismissListener;
