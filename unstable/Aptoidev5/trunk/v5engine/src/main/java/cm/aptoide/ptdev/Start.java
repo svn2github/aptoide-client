@@ -17,6 +17,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -96,11 +97,11 @@ public class Start extends ActionBarActivity implements
     private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
-    private ParserService service;
+    public ParserService service;
     private boolean parserServiceIsBound;
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
-    private ViewPager pager;
+    public ViewPager pager;
     private BadgeView badge;
     private RepositoryChangeRequest request;
     private HashMap<String, Long> storesIds;
@@ -330,8 +331,8 @@ public class Start extends ActionBarActivity implements
 
         pager = (ViewPager) findViewById(R.id.pager);
 
-        AptoidePagerAdapter adapter = new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
-        pager.setAdapter(adapter);
+
+        pager.setAdapter(getViewPagerAdapter());
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(pager);
@@ -866,6 +867,11 @@ public class Start extends ActionBarActivity implements
         ActivityCompat.invalidateOptionsMenu(this);
     }
 
+
+    public PagerAdapter getViewPagerAdapter() {
+        return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -934,14 +940,14 @@ public class Start extends ActionBarActivity implements
         mDrawerList.setAdapter(null);
 
         //Login Header
-        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+        if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
             isLoggedin = true;
 
             mDrawerList.addHeaderView(header, null, false);
 
             login_email = (TextView) header.findViewById(R.id.login_email);
-            login_email.setText(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0].name);
+            login_email.setText(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0].name);
 
             user_avatar = (ImageView) header.findViewById(R.id.user_avatar);
             String avatarUrl = PreferenceManager.getDefaultSharedPreferences(mContext).getString("useravatar",null);

@@ -83,10 +83,10 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
         mPlusClient = new PlusClient.Builder(this, this, this).build();
         mAccountManager = AccountManager.get(this);
 
-        if (mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+        if (mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
             setContentView(R.layout.form_logout);
-            final Account account = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            final Account account = mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
             ((TextView) findViewById(R.id.username)).setText(account.name);
 
@@ -144,7 +144,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     }
 
     private void addAccount() {
-        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
                 try {

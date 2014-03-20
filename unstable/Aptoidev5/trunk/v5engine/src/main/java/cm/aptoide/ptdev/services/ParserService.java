@@ -186,6 +186,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
     public boolean repoIsParsing(long id){
+
+
+
         return handlerBundleSparseArray.get((int) id)!=null;
     }
 
@@ -295,7 +298,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
         handlerBundleSparseArray.append((int) id, bundle);
-
+        BusProvider.getInstance().post(new RepoCompleteEvent(id));
         Log.d("Aptoide-Parser", "Checking timestamps");
 
         long currentLatestTimestamp = 0;
@@ -419,6 +422,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     @Override
     public void onComplete(long repoId) {
+        Log.d("Aptoide", "Removing" + repoId);
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
 

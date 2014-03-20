@@ -857,9 +857,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
 
-        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+        if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
-            Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
             accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
@@ -1680,22 +1680,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private static class Related {
     }
 
-    private Account getCurrentAccount() {
-        Account[] account = AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
-        if (account.length != 0) {
-            return account[0];
-
-        } else {
-
-            Intent i = new Intent(this, LoginActivity.class);
-            i.putExtra("login", true);
-            startActivityForResult(i, LOGIN_REQUEST_CODE);
-        }
-
-        return null;
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

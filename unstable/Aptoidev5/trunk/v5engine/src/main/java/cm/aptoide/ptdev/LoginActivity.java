@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
@@ -294,7 +295,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
 
-        if (AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+        if (AccountManager.get(this).getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
 
@@ -654,9 +655,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         */
         finish();
         if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
-        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.UpdatesProvider", true);
-        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.UpdatesProvider", new Bundle(), 43200);
-        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.AutoUpdateProvider", true);
+        ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
+        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
+        ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
 
     }
 
@@ -678,7 +679,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         AccountManager manager = AccountManager.get(context);
 
-        return manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length != 0;
+        return manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length != 0;
 
     }
 

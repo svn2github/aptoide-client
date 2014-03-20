@@ -63,9 +63,9 @@ public class RabbitMqService extends Service {
 
                 AccountManager manager = AccountManager.get(getApplicationContext());
 
-                if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
-                    final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                    final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     String queueName = sharedPreferences.getString("queueName", null);
@@ -158,8 +158,8 @@ public class RabbitMqService extends Service {
 
         Account account;
         AccountManager manager = AccountManager.get(getApplicationContext());
-        if(manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length>0){
-            account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        if(manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length>0){
+            account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
             if(Build.VERSION.SDK_INT >= 8) {
                 ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
             }
@@ -188,8 +188,8 @@ public class RabbitMqService extends Service {
             e.printStackTrace();
         }
 
-        if (AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
-            Account account = AccountManager.get(getApplicationContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        if (AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+            Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
             ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
             if (Build.VERSION.SDK_INT >= 8) {

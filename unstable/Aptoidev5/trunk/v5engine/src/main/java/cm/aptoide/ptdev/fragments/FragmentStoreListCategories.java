@@ -68,35 +68,35 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
 
         // We can now setup the PullToRefreshLayout
-        if (storeId > 0) {
-            mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+        if (storeId != -1) {
+            mPullToRefreshLayout = new PullToRefreshLayout(Aptoide.getContext());
 
+            if(getActivity()!=null){
+                ActionBarPullToRefresh.from(getActivity())
 
-            ActionBarPullToRefresh.from(getActivity())
+                        // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
+                        .insertLayoutInto((ViewGroup) view)
 
-                    // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                    .insertLayoutInto(viewGroup)
+                                // We need to mark the ListView and it's Empty View as pullable
+                                // This is because they are not dirent children of the ViewGroup
+                        .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
 
-                            // We need to mark the ListView and it's Empty View as pullable
-                            // This is because they are not dirent children of the ViewGroup
-                    .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
+                                // We can now complete the setup as desired
 
-                            // We can now complete the setup as desired
-
-                    .listener(this)
-                    .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
-                    .setup(mPullToRefreshLayout);
+                        .listener(FragmentStoreListCategories.this)
+                        .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
+                        .setup(mPullToRefreshLayout);
+            }
         }
 
     }
 
-    StoreActivity.SortObject sort;
+    StoreActivity.SortObject sort ;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sort = ((StoreActivity)getActivity()).getSort();
-
+        sort = ((CategoryCallback)getActivity()).getSort();
 
 
         if(parentId==0){
@@ -107,6 +107,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
             ((StoreActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
             ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
         }
+
     }
 
 
@@ -151,7 +152,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(getActivity() != null && ((StoreActivity)getActivity()).isRefreshing()){
+        if(getActivity() != null && ((CategoryCallback)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
 
@@ -160,13 +161,17 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void onResume() {
         super.onResume();
+
         Bundle bundle = new Bundle();
 
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
+
+
+
     }
 
     @Override
@@ -286,7 +291,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void onRefreshStarted(View view) {
 
-        ((StoreActivity)getActivity()).onRefreshStarted();
+        ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
@@ -295,13 +300,11 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        sort = ((StoreActivity) getActivity()).getSort();
+        sort = ((CategoryCallback) getActivity()).getSort();
 
         if(sort.isNoCategories()){
             categoryAdapter.swapCursor(null);
         }
-
-
 
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);

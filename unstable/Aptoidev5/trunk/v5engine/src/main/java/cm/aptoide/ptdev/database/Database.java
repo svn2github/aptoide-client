@@ -43,7 +43,10 @@ public class Database {
 
     public Database(SQLiteDatabase database) {
         this.database = database;
-        database.rawQuery("pragma synchronous = 0", null);
+        if(!database.inTransaction()){
+            database.rawQuery("pragma synchronous = 0", null);
+        }
+
     }
 
 
@@ -122,6 +125,7 @@ public class Database {
     public long insertStore(Store store) {
         ContentValues values = new ContentValues();
 
+        if(store.getId()!=0) values.put(Schema.Repo.COLUMN_ID, store.getId());
         values.put(Schema.Repo.COLUMN_URL, store.getBaseUrl());
         values.put(Schema.Repo.COLUMN_NAME, store.getName());
         values.put(Schema.Repo.COLUMN_AVATAR, store.getAvatar());
@@ -168,9 +172,8 @@ public class Database {
 
     public Cursor getCategories(long storeid, long parentid) {
 
-
         Cursor c = null;
-        if(storeid>0){
+        if(storeid!=-1){
             c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme as theme, repo.name as repo_name, repo.items as items from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
             c.getCount();
 
@@ -247,7 +250,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         Cursor c;
-        if(storeid>0){
+        if(storeid != -1){
             c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
         }else{
             c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk, repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " group by apk.package_name order by " + sort, null);

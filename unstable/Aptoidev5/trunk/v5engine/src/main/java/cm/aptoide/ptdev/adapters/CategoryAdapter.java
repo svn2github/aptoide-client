@@ -127,13 +127,20 @@ public class CategoryAdapter extends CursorAdapter {
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
 
                 String categoryName;
-                try {
-                    categoryName = context.getString(EnumCategories.getCategoryName(id));
-                    Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
-                }catch (Exception e){
-                    categoryName = name;
-                    Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
-                }
+
+
+                    int res = EnumCategories.getCategoryName(id);
+
+                    if (res > 0) {
+                        categoryName = context.getString(res);
+                        Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
+
+                    }else{
+                        categoryName = name;
+                        Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
+
+                    }
+
                 ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
 
                 if(count>0){

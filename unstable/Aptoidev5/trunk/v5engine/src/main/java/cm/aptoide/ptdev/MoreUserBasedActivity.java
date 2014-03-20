@@ -133,7 +133,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                 @Override
                 public void run() {
                     final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
-                    Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                    Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
                     String token = null;
                     try {
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);

@@ -91,7 +91,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
     void handleMessage(String body) {
         try {
-            Account account = AccountManager.get(getContext()).getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            Account account = AccountManager.get(getContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
             JSONObject object = new JSONObject(body);
 

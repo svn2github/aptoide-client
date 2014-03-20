@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
@@ -42,7 +43,7 @@ public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
         GenericUrl url = new GenericUrl(baseUrl);
         AccountManager manager = AccountManager.get(context);
-        Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
         String email = account.name.toLowerCase(Locale.ENGLISH);
         String pass = manager.getPassword(account);
 

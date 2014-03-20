@@ -231,19 +231,19 @@
                  android:exported="false"/>
 
         <provider android:name="cm.aptoide.ptdev.SuggestionProvider"
-                  android:authorities="cm.aptoide.ptdev.SuggestionProvider" android:exported="false"/>
+                  android:authorities="com.aptoide.partners.SuggestionProvider" android:exported="false"/>
 
         <provider android:name="cm.aptoide.ptdev.StubProvider"
-                  android:authorities="cm.aptoide.ptdev.StubProvider"
+                  android:authorities="com.aptoide.partners.StubProvider"
                   android:exported="false"/>
 
         <provider android:name="cm.aptoide.ptdev.UpdatesProvider"
-                  android:authorities="cm.aptoide.ptdev.UpdatesProvider"
+                  android:authorities="com.aptoide.partners.UpdatesProvider"
                   android:label="Updates notification"
                   android:exported="false"/>
 
         <provider android:name="cm.aptoide.ptdev.AutoUpdateProvider"
-                  android:authorities="cm.aptoide.ptdev.AutoUpdateProvider"
+                  android:authorities="com.aptoide.partners.AutoUpdateProvider"
                   android:label="Auto-Update Apps"
                   android:exported="false"/>
 
@@ -261,7 +261,7 @@
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/sync_adapter" />
+                       android:resource="@xml/partners_sync_adapter" />
         </service>
 
         <service android:name="cm.aptoide.ptdev.services.UpdatesSyncService"
@@ -270,7 +270,7 @@
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/updates_sync_adapter" />
+                       android:resource="@xml/partners_updates_sync_adapter" />
         </service>
 
         <service android:name="cm.aptoide.ptdev.services.AutoUpdateSyncService"
@@ -279,7 +279,7 @@
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/autoupdate_sync_adapter"/>
+                       android:resource="@xml/partners_autoupdate_sync_adapter"/>
         </service>
 
         <receiver android:name="cm.aptoide.ptdev.InstalledBroadcastReceiver" >

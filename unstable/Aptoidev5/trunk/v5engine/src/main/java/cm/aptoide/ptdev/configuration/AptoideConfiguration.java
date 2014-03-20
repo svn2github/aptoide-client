@@ -39,6 +39,16 @@ public class AptoideConfiguration {
     private static String BRAND;
 
 
+    public String getUpdatesSyncAdapterAuthority(){
+        return "cm.aptoide.pt.UpdatesProvider";
+    }
+
+    public String getAutoUpdatesSyncAdapterAuthority(){
+        return "cm.aptoide.pt.AutoUpdateProvider";
+    }
+
+    public String getAccountType() { return AccountGeneral.ACCOUNT_TYPE;
+    };
 
     public String getMarketName() {
         return MARKETNAME;

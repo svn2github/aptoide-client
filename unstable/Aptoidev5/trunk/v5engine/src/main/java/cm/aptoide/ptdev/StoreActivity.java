@@ -22,6 +22,7 @@ import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.DownloadService;
@@ -38,7 +39,9 @@ import java.util.concurrent.Executors;
  * To change this template use File | Settings | File Templates.
  */
 
-public class StoreActivity extends ActionBarActivity {
+public class StoreActivity extends ActionBarActivity implements CategoryCallback {
+
+
 
 
     private long storeid;
@@ -151,7 +154,7 @@ public class StoreActivity extends ActionBarActivity {
 
         getSupportFragmentManager().beginTransaction().add(R.id.content_layout, fragment, "fragStore").commit();
 
-        if(storeid>0){
+        if(storeid!=-1){
             getSupportFragmentManager().beginTransaction().add(R.id.store_header_layout, fragmentHeader, "fragStoreHeader").commit();
         }else{
             categories = true;
@@ -300,6 +303,9 @@ public class StoreActivity extends ActionBarActivity {
         return new SortObject(sort, !categories);
     }
 
+
+
+
     private void refreshList() {
         if(service!=null){
             isRefreshing = service.repoIsParsing(storeid);
@@ -344,9 +350,6 @@ public class StoreActivity extends ActionBarActivity {
             });
 
         }
-
-
-
 
     }
 

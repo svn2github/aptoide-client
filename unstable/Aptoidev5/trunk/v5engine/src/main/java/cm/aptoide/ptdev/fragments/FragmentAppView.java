@@ -864,15 +864,15 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
                 final AccountManager manager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                     addLike();
                 } else {
-                    manager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
 
                             if (LoginActivity.isLoggedIn(getActivity())) {
-                                Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
                                 manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                     @Override
                                     public void run(AccountManagerFuture<Bundle> future) {
@@ -959,16 +959,16 @@ public abstract class FragmentAppView extends Fragment {
 
                 final AccountManager manager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                     addComment();
                 } else {
 
-                    manager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
                             if (LoginActivity.isLoggedIn(getActivity())) {
 
-                                Account account = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
                                 manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                     @Override
                                     public void run(AccountManagerFuture<Bundle> future) {
