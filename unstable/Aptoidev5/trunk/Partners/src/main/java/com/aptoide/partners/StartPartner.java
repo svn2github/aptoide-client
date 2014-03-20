@@ -1,5 +1,6 @@
 package com.aptoide.partners;
 
+import android.view.Menu;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -83,6 +84,15 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 //        Toast.makeText(getApplicationContext(), "SKIP WIZARD", Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
+            menu.findItem(cm.aptoide.ptdev.R.id.menu_filter_mature_content).setVisible(false);
+        }
+        menu.findItem(cm.aptoide.ptdev.R.id.menu_about).setVisible(false);
+        return true;
+    }
 
 
     public PagerAdapter getViewPagerAdaFragmentManager(){

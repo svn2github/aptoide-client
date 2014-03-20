@@ -23,7 +23,7 @@
 
     <application android:icon="@drawable/icon_brand_aptoide"
                  android:name="com.aptoide.partners.AptoidePartner"
-                 android:label="AptoidePartner"
+                 android:label="@string/app_name"
                  android:theme="@style/AptoideThemeDefault"
                  android:hardwareAccelerated="true">
 
@@ -32,7 +32,7 @@
 
         <activity android:name=".StartPartner"
                   android:launchMode="singleTask"
-                  android:label="AptoidePartner"
+                  android:label="@string/app_name"
                   android:icon="@drawable/icon_brand_aptoide"
                   android:exported="true">
             <intent-filter>

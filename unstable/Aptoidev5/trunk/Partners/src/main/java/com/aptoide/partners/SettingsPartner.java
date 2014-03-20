@@ -4,9 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
+import android.preference.*;
+
+import android.util.Log;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
@@ -34,7 +35,7 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
                                 getString(cm.aptoide.ptdev.R.string.setting_esgl_version)+ ": "+AptoideUtils.HWSpecifications.getGlEsVer(mctx) +"\n" +
                                 getString(cm.aptoide.ptdev.R.string.screenCode)+ ": "+AptoideUtils.HWSpecifications.getNumericScreenSize(mctx) + "/" + AptoideUtils.HWSpecifications.getDensityDpi(mctx) +"\n" +
                                 getString(cm.aptoide.ptdev.R.string.cpuAbi)+ ": "+AptoideUtils.HWSpecifications.getCpuAbi() + " " + AptoideUtils.HWSpecifications.getCpuAbi2() +"\n" +
-                                (AptoideConfigurationPartners.PARTNERID!=null ? "\nPartner ID: " + AptoideConfigurationPartners.PARTNERID : "")
+                                (AptoideConfigurationPartners.PARTNERID!=null ? "Partner ID: " + AptoideConfigurationPartners.PARTNERID : "")
                         )
                         .setCancelable(false)
                         .setNeutralButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
@@ -47,6 +48,17 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
                 return true;
             }
         });
+
+//        Log.d("MatureContentSwitch","value: "+((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch());
+		if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
+			CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference("matureChkBox");
+            PreferenceCategory mCategory = (PreferenceCategory) findPreference("filters");
+			mCategory.removePreference(mCheckBoxPref);
+		}
+
+
+        PreferenceCategory changeTheme = (PreferenceCategory) findPreference("changetheme");
+        changeTheme.removeAll();
 
     }
 }

@@ -426,8 +426,8 @@
     </style>
 
     <style name="Settings" parent="@style/Theme.AppCompat">
-        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
-        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <!--<item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>-->
+        <!--<item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>-->
     </style>
 
     <style name="transparent" parent="@style/AppBaseTheme">

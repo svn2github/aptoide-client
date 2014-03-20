@@ -2,6 +2,7 @@ package com.aptoide.partners;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.AptoideThemePicker;
@@ -39,7 +40,7 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.MULTIPLESTORES = sPref.getBoolean("MULTIPLESTORES", true);
             AptoideConfigurationPartners.CUSTOMEDITORSCHOICE = sPref.getBoolean("CUSTOMEDITORSCHOICE", false);
             AptoideConfigurationPartners.SEARCHSTORES = sPref.getBoolean("SEARCHSTORES", true);
-            AptoideConfigurationPartners.APTOIDETHEME = sPref.getString("APTOIDETHEME", "DEFAULT");
+            AptoideConfigurationPartners.APTOIDETHEME = sPref.getString("APTOIDETHEME", "");
             AptoideConfigurationPartners.MARKETNAME = sPref.getString("MARKETNAME", "Aptoide");
             AptoideConfigurationPartners.ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
             AptoideConfigurationPartners.CREATESHORTCUT = sPref.getBoolean("CREATESHORTCUT", true);
@@ -76,7 +77,7 @@ public class AptoidePartner extends Aptoide {
         } else if (new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem").exists() && !getPackageName().equals("cm.aptoide.pt")) {
 
             try {
-                Toast.makeText(this, "Regenerating settings from SDCard.", Toast.LENGTH_LONG).show();
+                Log.d("AptoidePartner", "Regenerating settings from SDCard.");
                 HashMap<String, String> map = (HashMap<String, String>) new ObjectInputStream(new FileInputStream(new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem"))).readObject();
 
                 AptoideConfigurationPartners.PARTNERID = map.get("PARTNERID");

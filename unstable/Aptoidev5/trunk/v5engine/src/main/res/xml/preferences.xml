@@ -105,10 +105,13 @@
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/change_theme">
-    <ListPreference android:key="theme" android:title="@string/theme"
+    <PreferenceCategory android:title="@string/change_theme"
+                        android:key="changetheme" >
+    <ListPreference android:key="theme"
+                    android:title="@string/theme"
                     android:defaultValue="light"
-                    android:entries="@array/theme_names" android:entryValues="@array/themes" />
+                    android:entries="@array/theme_names"
+                    android:entryValues="@array/themes" />
     </PreferenceCategory>
 
     <!--<PreferenceCategory-->

@@ -11,7 +11,7 @@
     <!-- main color -->
     <item android:bottom="3dp">
         <shape>
-            <solid android:color="@color/transparent_black" />
+            <solid android:color="@color/black" />
         </shape>
     </item>
 

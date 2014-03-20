@@ -10,7 +10,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:id="@+id/apkinfoheader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="?attr/apkInfoBackgroundHeader"
+                android:background="?attr/homeLabelbackground"
                 android:paddingBottom="5dp">
 
     <ImageView
