@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -49,7 +50,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
 
     private static Context context = AptoidePartner.getContext();
-    private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
+
 
     public String getPartnerType() { return PARTNERTYPE; }
     public static void setPartnerType(String partnerType){ AptoideConfigurationPartners.PARTNERTYPE = partnerType; }
@@ -270,6 +271,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     }
 
     public static void savePreferences() {
+
+        SharedPreferences sPref = context.getSharedPreferences("aptoide_settings", 0);
+
         sPref.edit().putString("PARTNERID", PARTNERID).putString("DEFAULTSTORE", DEFAULTSTORENAME)
                 .putString("PARTNERTYPE", PARTNERTYPE)
                 .putBoolean("MATURECONTENTSWITCH", MATURECONTENTSWITCH)
@@ -300,4 +304,15 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public Class getSettingsActivityClass() {
         return com.aptoide.partners.SettingsPartner.class;
     }
+
+    public String getUpdatesSyncAdapterAuthority(){
+        return "com.aptoide.partners.UpdatesProvider";
+    }
+
+    public String getAutoUpdatesSyncAdapterAuthority(){
+        return "com.aptoide.partners.AutoUpdateProvider";
+    }
+
+    public String getAccountType() { return AccountGeneralPartners.ACCOUNT_TYPE;
+    };
 }
