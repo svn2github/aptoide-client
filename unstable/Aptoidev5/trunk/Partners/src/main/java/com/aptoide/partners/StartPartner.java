@@ -1,5 +1,7 @@
 package com.aptoide.partners;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.view.Menu;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,10 +13,9 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.CategoryCallback;
-import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
@@ -26,8 +27,15 @@ import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
 import com.squareup.otto.Subscribe;
 
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.Executors;
 
@@ -42,19 +50,68 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     private boolean categories;
 
     @Override
+    public void loadTopApps(String url) throws IOException {
+
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+
+        GenericUrl genericUrl = new GenericUrl(url);
+
+        HttpRequest request = transport.createRequestFactory().buildHeadRequest(genericUrl);
+
+        int code;
+        try{
+            code = request.execute().getStatusCode();
+        }catch (HttpResponseException e){
+            code = e.getStatusCode();
+        }
+
+        if (code != 200) {
+            url = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getDefaultTopAppsUrl();
+        }
+
+        super.loadTopApps(url);
+    }
+
+    @Override
+    public void loadEditorsChoice(String url, String countryCode) throws IOException {
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        GenericUrl genericUrl = new GenericUrl(url);
+        HttpRequest request = transport.createRequestFactory().buildHeadRequest(genericUrl);
+        int code;
+        try{
+            code = request.execute().getStatusCode();
+        }catch (HttpResponseException e){
+            code = e.getStatusCode();
+        }
+
+        if (code != 200) {
+            url = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getDefaultEditorsUrl();
+        }
+
+        super.loadEditorsChoice(url, countryCode);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-        if(savedInstanceState==null){
+        if(savedInstanceState == null && sharedPreferences.getBoolean("firstrun", true) ){
             final Database database = new Database(Aptoide.getDb());
             final Store store = new Store();
-            String repoUrl = "http://apps.store.aptoide.com/";
+
+
+            String storeName = Aptoide.getConfiguration().getDefaultStore();
+            String repoUrl = "http://"+storeName+".store.aptoide.com/";
             store.setId(storeid);
             store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
             store.setName(AptoideUtils.RepoUtils.split(repoUrl));
             store.setDelta("empty");
             database.insertStore(store);
+
+            sharedPreferences.edit().putBoolean("firstrun", false).commit();
+
         }
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
@@ -81,6 +138,13 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     @Override
     public void executeWizard() {
+        try {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        new SplashDialogFragment().show(getSupportFragmentManager(), "splashDialog");
+
 //        Toast.makeText(getApplicationContext(), "SKIP WIZARD", Toast.LENGTH_LONG).show();
     }
 
@@ -95,8 +159,15 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     }
 
 
-    public PagerAdapter getViewPagerAdaFragmentManager(){
-        return super.getViewPagerAdapter();
+    @Override
+    public PagerAdapter getViewPagerAdapter(){
+
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()){
+            return super.getViewPagerAdapter();
+        }else{
+            return new PartnersPagerAdapter(getSupportFragmentManager(), this);
+        }
+
     }
 
     @Subscribe

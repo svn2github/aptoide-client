@@ -70,6 +70,14 @@ public class AptoideConfiguration {
         return cm.aptoide.ptdev.Start.class;
     }
 
+    public String getTopAppsUrl(){
+        return "http://apps.store.aptoide.com/top.xml";
+    }
+
+    public String getEditorsUrl(){
+        return "http://apps.store.aptoide.com/editors_more.xml";
+    }
+
     public String getAutoUpdateUrl() {
         return sPref.getString(PREF_AUTO_UPDATE_URL, Defaults.AUTO_UPDATE_URL);
     }
@@ -177,6 +185,10 @@ public class AptoideConfiguration {
 
     public void setDefaultStore(String store) {
         sPref.edit().putString(PREF_DEFAULT_STORE, store).commit();
+    }
+
+    public String getExtraId(){
+        return "";
     }
 
     public int getIcon() {

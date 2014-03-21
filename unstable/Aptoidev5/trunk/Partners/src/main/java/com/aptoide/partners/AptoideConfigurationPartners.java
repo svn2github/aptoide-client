@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.configuration.Defaults;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -45,12 +46,48 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String VIEW = null;
     public static String ITEMS = null;
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
-
+    public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
     static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
 
     private static Context context = AptoidePartner.getContext();
 
+    @Override
+    public String getAutoUpdateUrl(){
+        return String.format(OEM_AUTO_UPDATE_URL, DEFAULTSTORENAME, DEFAULTSTORENAME);
+    }
+
+
+    public String getDefaultTopAppsUrl(){
+        return super.getTopAppsUrl();
+    }
+
+
+    public String getDefaultEditorsUrl(){
+
+        return super.getEditorsUrl();
+    }
+
+    @Override
+    public String getTopAppsUrl(){
+
+        if(CUSTOMEDITORSCHOICE){
+            return "http://" + DEFAULTSTORENAME + ".store.aptoide.com/top.xml";
+        }
+
+        return super.getTopAppsUrl();
+    }
+
+
+    @Override
+    public String getEditorsUrl(){
+
+        if(CUSTOMEDITORSCHOICE){
+            return "http://" + DEFAULTSTORENAME + ".store.aptoide.com/editors_more.xml";
+        }
+
+        return super.getEditorsUrl();
+    }
 
     public String getPartnerType() { return PARTNERTYPE; }
     public static void setPartnerType(String partnerType){ AptoideConfigurationPartners.PARTNERTYPE = partnerType; }
@@ -58,7 +95,8 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String getPartnerId() { return PARTNERID; }
     public static void setPartnerId(String partnerId){ AptoideConfigurationPartners.PARTNERID = partnerId; }
 
-    public String getDefaultStoreName() { return DEFAULTSTORENAME; }
+    @Override
+    public String getDefaultStore() { return DEFAULTSTORENAME; }
     public static void setDefaultStoreName(String defaultStoreName){ AptoideConfigurationPartners.DEFAULTSTORENAME = defaultStoreName; }
 
     public boolean getMatureContentSwitch() { return MATURECONTENTSWITCH; }
@@ -93,6 +131,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     public String getAdUnitId(){ return ADUNITID; }
     public static void setAdUnitId(String adUnitId){ AptoideConfigurationPartners.ADUNITID = adUnitId; }
+
+    @Override
+    public String getExtraId(){
+        return PARTNERID;
+    }
 
     public boolean getCreateShortcut() { return CREATESHORTCUT; }
     public static void setCreateShortcut(boolean createShortcut) { AptoideConfigurationPartners.CREATESHORTCUT = createShortcut; }

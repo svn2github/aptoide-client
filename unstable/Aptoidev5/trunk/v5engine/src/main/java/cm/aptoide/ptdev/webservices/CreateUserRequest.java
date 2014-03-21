@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import com.google.api.client.http.GenericUrl;
@@ -49,6 +50,10 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
         parameters.put("mode", "json");
         parameters.put("email", email);
         parameters.put("passhash", passhash);
+
+        if(Aptoide.getConfiguration().getExtraId().length()>0){
+            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
+        }
 
         parameters.put("hmac", AptoideUtils.Algorithms.computeHmacSha1(email+passhash+name, "bazaar_hmac"));
 

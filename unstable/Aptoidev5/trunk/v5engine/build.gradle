@@ -27,10 +27,6 @@ android {
         targetSdkVersion 19
     }
 
-
-
-
-
 }
 
 apply plugin: 'idea'

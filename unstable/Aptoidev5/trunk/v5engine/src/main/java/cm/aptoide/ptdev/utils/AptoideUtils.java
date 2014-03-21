@@ -306,11 +306,6 @@ public class AptoideUtils {
             connection.setRequestProperty("User-Agent", getUserAgentString(mctx));
             BufferedInputStream bis = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 
-
-
-
-            
-
             return bis;
 
         }
@@ -379,12 +374,10 @@ public class AptoideUtils {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            String partnerid = "";
-//            if (Aptoide.PARTNERID != null) {
-//                partnerid = "PartnerID:" + Aptoide.PARTNERID + ";";
-//            }
 
-            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
+            String extraId = Aptoide.getConfiguration().getExtraId();
+
+            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + extraId;
         }
 
 

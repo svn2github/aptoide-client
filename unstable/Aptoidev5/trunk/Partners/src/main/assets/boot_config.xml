@@ -13,12 +13,8 @@
         <marketname>Aptoide Appstore</marketname>
         <defaultstorename>nokia-appstore</defaultstorename>
         <aptoidetheme>default</aptoidetheme>
-        <splashscreen>
-            http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png
-        </splashscreen>
-        <splashscreenland>
-            http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png
-        </splashscreenland>
+        <splashscreen>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</splashscreenland>
         <brand>brand_aptoide</brand>
         <searchstores>true</searchstores>
         <maturecontentswitch>false</maturecontentswitch>

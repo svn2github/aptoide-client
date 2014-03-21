@@ -466,20 +466,12 @@ public class Start extends ActionBarActivity implements
                 public void run() {
                     try {
                         waitForServiceToBeBound();
-
                         String countryCode = Geolocation.getCountryCode(Start.this);
-                        String url;
+                        String url = Aptoide.getConfiguration().getEditorsUrl();
 
-                        if(countryCode.length()>0){
-                            url = "http://apps.store.aptoide.com/editors_more.xml?country=" + countryCode;
-                        }else{
-                            url = "http://apps.store.aptoide.com/editors_more.xml";
-                        }
+                        loadEditorsChoice(url, countryCode);
+                        loadTopApps(Aptoide.getConfiguration().getTopAppsUrl());
 
-
-
-                        service.parseEditorsChoice(database, url);
-                        service.parseTopApps(database, "http://apps.store.aptoide.com/top.xml");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (MalformedURLException e) {
@@ -571,6 +563,24 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    }
+
+    public void loadTopApps(String url) throws IOException {
+
+        Log.d("Aptoide-Featured", "Loading " + url);
+
+        service.parseTopApps(database, url);
+    }
+
+    public void loadEditorsChoice(String url, String countryCode) throws IOException {
+
+        if (countryCode.length() > 0) {
+            url = url + "?country=" + countryCode;
+        }
+
+        Log.d("Aptoide-Featured", "Loading " + url);
+
+        service.parseEditorsChoice(database, url);
     }
 
 

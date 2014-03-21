@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:key="root"
                   android:title="@string/settings_title_bar">
 
     <PreferenceCategory android:title="@string/clear_dwn_title">

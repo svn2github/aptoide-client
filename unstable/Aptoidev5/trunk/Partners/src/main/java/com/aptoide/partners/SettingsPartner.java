@@ -56,9 +56,8 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
 			mCategory.removePreference(mCheckBoxPref);
 		}
 
-
-        PreferenceCategory changeTheme = (PreferenceCategory) findPreference("changetheme");
-        changeTheme.removeAll();
+        PreferenceScreen screen = (PreferenceScreen) findPreference("root");
+        screen.removePreference(findPreference("changetheme"));
 
     }
 }
