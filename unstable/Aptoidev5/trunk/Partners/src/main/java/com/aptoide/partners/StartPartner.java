@@ -97,22 +97,29 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-        if(savedInstanceState == null && sharedPreferences.getBoolean("firstrun", true) ){
-            final Database database = new Database(Aptoide.getDb());
-            final Store store = new Store();
+        try{
 
 
-            String storeName = Aptoide.getConfiguration().getDefaultStore();
-            String repoUrl = "http://"+storeName+".store.aptoide.com/";
-            store.setId(storeid);
-            store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-            store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-            store.setDelta("empty");
-            database.insertStore(store);
+            if(savedInstanceState == null && ((sharedPreferences.getBoolean("firstrun", true) || Aptoide.isUpdate())) ){
+                final Database database = new Database(Aptoide.getDb());
+                final Store store = new Store();
 
-            sharedPreferences.edit().putBoolean("firstrun", false).commit();
+                String storeName = Aptoide.getConfiguration().getDefaultStore();
+                String repoUrl = "http://"+storeName+".store.aptoide.com/";
+                store.setId(storeid);
+                store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                store.setDelta("empty");
+                database.insertStore(store);
+
+                sharedPreferences.edit().putBoolean("firstrun", false).commit();
+
+            }
+
+        }catch (PackageManager.NameNotFoundException e){
 
         }
+
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
         super.onCreate(savedInstanceState);
@@ -139,10 +146,13 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     public void executeWizard() {
         try {
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+            if (Aptoide.isUpdate()) {
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
         new SplashDialogFragment().show(getSupportFragmentManager(), "splashDialog");
 
 //        Toast.makeText(getApplicationContext(), "SKIP WIZARD", Toast.LENGTH_LONG).show();
