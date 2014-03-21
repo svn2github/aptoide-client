@@ -140,6 +140,20 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public boolean getCreateShortcut() { return CREATESHORTCUT; }
     public static void setCreateShortcut(boolean createShortcut) { AptoideConfigurationPartners.CREATESHORTCUT = createShortcut; }
 
+    public String getStoreAvatar(){ return AVATAR; }
+    public static void setStoreAvatar(String avatar){ AptoideConfigurationPartners.AVATAR = avatar; }
+
+    public String getStoreTheme(){ return THEME; }
+    public static void setStoreTheme(String theme){ AptoideConfigurationPartners.THEME = theme; }
+
+    public String getDescription(){ return DESCRIPTION; }
+    public static void setDescription(String description){ AptoideConfigurationPartners.DESCRIPTION = description; }
+
+    public String getView(){ return VIEW; }
+    public static void setView(String view){ AptoideConfigurationPartners.VIEW = view; }
+
+    public String getItems(){ return ITEMS; }
+    public static void setItems(String items){ AptoideConfigurationPartners.ITEMS = items; }
 
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -246,22 +260,27 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
                         case THEME:
                             THEME = sb.toString();
+                            AptoideConfigurationPartners.setStoreTheme(THEME);
                             Log.d("Store Theme", THEME+ "");
                             break;
                         case AVATAR:
                             AVATAR = sb.toString();
+                            AptoideConfigurationPartners.setStoreAvatar(AVATAR);
                             Log.d("Store avatar", AVATAR+ "");
                             break;
                         case DESCRIPTION:
                             DESCRIPTION = sb.toString();
+                            AptoideConfigurationPartners.setDescription(DESCRIPTION);
                             Log.d("Store description", DESCRIPTION+ "");
                             break;
                         case ITEMS:
                             ITEMS = sb.toString();
+                            AptoideConfigurationPartners.setItems(ITEMS);
                             Log.d("Store items", ITEMS+ "");
                             break;
                         case VIEW:
                             VIEW = sb.toString();
+                            AptoideConfigurationPartners.setView(VIEW);
                             Log.d("Store view", VIEW+ "");
                             break;
 
@@ -297,7 +316,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             map.put("MARKETNAME", MARKETNAME);
             map.put("ADUNITID", ADUNITID);
             map.put("CREATESHORTCUT", CREATESHORTCUT + "");
-            map.put("ITEMS", ITEMS);
+            map.put("STOREDESCRIPTION", DESCRIPTION);
+            map.put("STORETHEME", THEME);
+            map.put("STOREAVATAR", AVATAR);
+            map.put("STOREITEMS", ITEMS);
+            map.put("STOREVIEW", VIEW);
 
             try {
                 File fileDir = new File(SDCARD + "/.aptoide_settings");
@@ -317,7 +340,8 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
         SharedPreferences sPref = context.getSharedPreferences("aptoide_settings", 0);
 
-        sPref.edit().putString("PARTNERID", PARTNERID).putString("DEFAULTSTORE", DEFAULTSTORENAME)
+        sPref.edit().putString("PARTNERID", PARTNERID)
+                .putString("DEFAULTSTORE", DEFAULTSTORENAME)
                 .putString("PARTNERTYPE", PARTNERTYPE)
                 .putBoolean("MATURECONTENTSWITCH", MATURECONTENTSWITCH)
                 .putString("BRAND", BRAND)
@@ -331,7 +355,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("MARKETNAME", MARKETNAME)
                 .putString("ADUNITID", ADUNITID)
                 .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
-                .putString("ITEMS", ITEMS)
+                .putString("STOREDESCRIPTION", DESCRIPTION)
+                .putString("STOREAVATAR", AVATAR)
+                .putString("STORETHEME", THEME)
+                .putString("STOREITEMS", ITEMS)
+                .putString("STOREVIEW", VIEW)
                 .commit();
     }
 

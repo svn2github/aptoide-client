@@ -8,6 +8,7 @@ import cm.aptoide.ptdev.SuggestionProvider;
 public class SuggestionProviderPartners extends SuggestionProvider {
 
     public SuggestionProviderPartners() {
+
         setupSuggestions("com.aptoide.partners.SuggestionProvider", DATABASE_MODE_QUERIES);
     }
 }

@@ -116,11 +116,25 @@
 
     </style>
 
+
     <style name="AptoideThemeDefault" parent="AppBaseTheme">
         <item name="backgroundCard">@style/backgroundCardStyleLight</item>
         <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
+        <item name="customColor">@color/custom_color</item>
+        <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
+        <item name="homeLabelbackground">@drawable/app_header_bgd_aptoide_light</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallAptoide</item>
+    </style>
+
+    <style name="AptoideThemeDefaultOEM" parent="AppBaseTheme">
+        <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+        <item name="backgroundTabs">@style/backgroundTabsStyleLight</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.White</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar.White</item>
         <item name="android:windowBackground">@color/background_window</item>
         <item name="customButtonColor">@style/WidgetButtonCustomAptoide</item>
         <item name="customColor">@color/custom_color</item>
@@ -607,6 +621,13 @@
     <style name="titleStyle" parent="@style/TextAppearance.AppCompat.Widget.Base.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
     </style>
+
+
+    <style name="Widget.Styled.ActionBar.White" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@android:color/white</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="icon">@drawable/ic_widget_launcher</item>

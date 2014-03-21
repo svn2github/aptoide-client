@@ -49,6 +49,9 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     private StoreActivity.Sort sort;
     private boolean categories;
 
+
+
+
     @Override
     public void loadTopApps(String url) throws IOException {
 

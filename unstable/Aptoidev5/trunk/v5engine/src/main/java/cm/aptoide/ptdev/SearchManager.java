@@ -46,6 +46,7 @@ public class SearchManager extends ActionBarActivity {
 
     private CursorAdapter adapter;
     private DownloadService downloadService;
+    String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class SearchManager extends ActionBarActivity {
         setContentView(R.layout.page_search);
 
         Bundle args = new Bundle();
-        String query;
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -211,29 +212,26 @@ public class SearchManager extends ActionBarActivity {
             setListShown(true);
             setEmptyText(getString(R.string.no_search_result, query));
 
-            Handler handler = new Handler();
 
-
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+            if(isAdded()){
+                Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
 
 //                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
 
-                    if(visibleItems < data.getCount()){
-                        more.setVisibility(View.VISIBLE);
-                        more.setOnClickListener(getSearchListener());
-                    }else{
-                        more.setVisibility(View.GONE);
+                        if( ((SearchManager)getActivity()).isSearchMoreVisible() && visibleItems < data.getCount() ){
+                            more.setVisibility(View.VISIBLE);
+                            more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
+                        }else{
+                            more.setVisibility(View.GONE);
+                        }
                     }
-                }
-            });
-
-
-
-
+                });
+            }
 
         }
 
@@ -248,11 +246,8 @@ public class SearchManager extends ActionBarActivity {
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
-            View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
-            Button search = (Button) footer.findViewById(R.id.search);
-            search.setOnClickListener(getSearchListener());
+            ((SearchManager)getActivity()).setFooterView(getListView());
 
-            getListView().addFooterView(footer);
             getLoaderManager().initLoader(60, getArguments(), this);
 
         }
@@ -263,24 +258,38 @@ public class SearchManager extends ActionBarActivity {
             getLoaderManager().destroyLoader(60);
         }
 
-        private View.OnClickListener getSearchListener() {
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(getActivity());
-                        Log.d("TAG", "Searching for:" + url);
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        url = url.replaceAll(" ", "%20");
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    } catch (ActivityNotFoundException e){
-                        Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                    }
 
+    }
+
+    public boolean isSearchMoreVisible() {
+        return true;
+    }
+
+    private View.OnClickListener getSearchListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(SearchManager.this);
+                    Log.d("TAG", "Searching for:" + url);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    url = url.replaceAll(" ", "%20");
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                } catch (ActivityNotFoundException e){
+                    Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                 }
-            };
-        }
+
+            }
+        };
+    }
+
+    public void setFooterView(ListView lv){
+        View footer = LayoutInflater.from(this).inflate(R.layout.footer_search, null);
+        Button search = (Button) footer.findViewById(R.id.search);
+        search.setOnClickListener(getSearchListener());
+
+        lv.addFooterView(footer);
     }
 
     public void installApp(long id) {

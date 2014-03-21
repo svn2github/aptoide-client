@@ -2,6 +2,7 @@ package com.aptoide.partners;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
@@ -24,7 +25,6 @@ public class AptoidePartner extends Aptoide {
     @Override
     public void bootImpl(ManagerPreferences managerPreferences) {
 //        super.bootImpl(managerPreferences);
-//        managerPreferences.createLauncherShortcut(this);
 
         SharedPreferences sPref = getContext().getSharedPreferences("aptoide_settings", 0);
         if (sPref.contains("PARTNERID") && sPref.getString("PARTNERID", null) != null) {
@@ -44,8 +44,11 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.MARKETNAME = sPref.getString("MARKETNAME", "Aptoide");
             AptoideConfigurationPartners.ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
             AptoideConfigurationPartners.CREATESHORTCUT = sPref.getBoolean("CREATESHORTCUT", true);
-            AptoideConfigurationPartners.ITEMS = sPref.getString("ITEMS", "applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
-
+            AptoideConfigurationPartners.ITEMS = sPref.getString("STOREITEMS", "applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
+            AptoideConfigurationPartners.DESCRIPTION = sPref.getString("STOREDESCRIPTION", "");
+            AptoideConfigurationPartners.THEME = sPref.getString("STORETHEME", "default");
+            AptoideConfigurationPartners.AVATAR = sPref.getString("STOREAVATAR", "https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
+            AptoideConfigurationPartners.VIEW = sPref.getString("STOREVIEW", "list");
 
             if (AptoideConfigurationPartners.PARTNERID != null && !new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem").exists()) {
                 AptoideConfigurationPartners.createSdCardBinary();
@@ -95,7 +98,11 @@ public class AptoidePartner extends Aptoide {
                 AptoideConfigurationPartners.MARKETNAME = map.get("MARKETNAME");
                 AptoideConfigurationPartners.ADUNITID = map.get("ADUNITID");
                 AptoideConfigurationPartners.CREATESHORTCUT = Boolean.parseBoolean(map.get("CREATESHORTCUT"));
-                AptoideConfigurationPartners.ITEMS = map.get("ITEMS");
+                AptoideConfigurationPartners.ITEMS = map.get("STOREITEMS");
+                AptoideConfigurationPartners.DESCRIPTION = map.get("STOREDESCRIPTION");
+                AptoideConfigurationPartners.THEME = map.get("STORETHEME");
+                AptoideConfigurationPartners.AVATAR = map.get("STOREAVATAR");
+                AptoideConfigurationPartners.VIEW = map.get("STOREVIEW");
 
                 new Thread(new Runnable() {
                     @Override
@@ -147,27 +154,9 @@ public class AptoidePartner extends Aptoide {
 
         }
 
+        managerPreferences.createLauncherShortcut(this, R.drawable.ic_launcher);
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", AptoideConfigurationPartners.MATURECONTENTSWITCHVALUE);
 
-//        if(!getContext().getSharedPreferences("aptoide_settings", 0).contains("PARTNERID")){
-//
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//
-//                        InputStream inputStream = getContext().getAssets().open("boot_config.xml");
-//                        AptoideConfigurationPartners.parseBootConfigStream(inputStream);
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (ParserConfigurationException e) {
-//                        e.printStackTrace();
-//                    } catch (SAXException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }).start();
-//        }
     }
 
 

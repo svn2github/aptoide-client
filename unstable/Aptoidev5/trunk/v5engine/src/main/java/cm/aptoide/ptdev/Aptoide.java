@@ -182,7 +182,7 @@ public class Aptoide extends Application {
 
 
     public void bootImpl(ManagerPreferences managerPreferences) {
-
+        managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
     }
 
     public AptoideConfiguration getAptoideConfiguration() {
