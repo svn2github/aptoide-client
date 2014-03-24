@@ -252,7 +252,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "DatabaseHelper onUpgrade()");
         ArrayList<Server> oldServers = new ArrayList<Server>();
-        if (oldVersion == 13) {
+
+        if (oldVersion == 13 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             try {
                 Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, null, null, null, null, null);
@@ -286,7 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        if (oldVersion == 13) {
+        if (oldVersion == 13 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             for (Server server : oldServers) {
                 ContentValues values = new ContentValues();

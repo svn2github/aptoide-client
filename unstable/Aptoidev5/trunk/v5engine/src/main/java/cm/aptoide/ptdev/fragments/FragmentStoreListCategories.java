@@ -70,7 +70,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         // We can now setup the PullToRefreshLayout
         if (storeId != -1) {
             mPullToRefreshLayout = new PullToRefreshLayout(Aptoide.getContext());
-
             if(getActivity()!=null){
                 ActionBarPullToRefresh.from(getActivity())
 
@@ -79,8 +78,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
                                 // We need to mark the ListView and it's Empty View as pullable
                                 // This is because they are not dirent children of the ViewGroup
-                        .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
-
+                        .theseChildrenArePullable(getListView().getId(), getListView().getEmptyView().getId())
                                 // We can now complete the setup as desired
 
                         .listener(FragmentStoreListCategories.this)
@@ -313,7 +311,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
     @Override
     public void onError() {
-
         setEmptyText(getString(R.string.connection_error));
     }
 

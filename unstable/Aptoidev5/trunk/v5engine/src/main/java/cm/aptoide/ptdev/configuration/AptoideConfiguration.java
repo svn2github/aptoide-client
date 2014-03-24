@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.SearchManager;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 
@@ -38,6 +39,9 @@ public class AptoideConfiguration {
     private static String MARKETNAME = "Aptoide";
     private static String BRAND;
 
+    public boolean isSaveOldRepos(){
+        return true;
+    }
 
     public String getUpdatesSyncAdapterAuthority(){
         return "cm.aptoide.pt.UpdatesProvider";
@@ -207,4 +211,7 @@ public class AptoideConfiguration {
         return cm.aptoide.ptdev.Settings.class;
     }
 
+    public Class<?> getSearchActivityClass() {
+        return SearchManager.class;
+    }
 }

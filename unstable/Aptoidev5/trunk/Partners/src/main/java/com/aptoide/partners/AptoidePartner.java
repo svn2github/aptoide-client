@@ -154,7 +154,8 @@ public class AptoidePartner extends Aptoide {
 
         }
 
-        managerPreferences.createLauncherShortcut(this, R.drawable.ic_launcher);
+
+
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", AptoideConfigurationPartners.MATURECONTENTSWITCHVALUE);
 
     }

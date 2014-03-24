@@ -18,6 +18,7 @@ import android.util.SparseArray;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
@@ -441,7 +442,7 @@ public class DownloadService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         Intent onClick = new Intent();
-        onClick.setClassName(getPackageName(), "cm.aptoide.ptdev.Start");
+        onClick.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
         onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
         onClick.setAction(Intent.ACTION_VIEW);
         onClick.putExtra("fromDownloadNotification", true);

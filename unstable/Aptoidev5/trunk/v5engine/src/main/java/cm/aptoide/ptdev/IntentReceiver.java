@@ -77,6 +77,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         }
     };
+    private AsyncTask<String, Void, Void> asyncTask;
 
 
     @Override
@@ -99,6 +100,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     protected void onDestroy() {
         super.onDestroy();
 
+        if(asyncTask!=null){
+            asyncTask.cancel(true);
+        }
 //        if(isFinishing()){
 //            Log.d("RabbitMqService", "onDestroy");
 //            unbindService(wConnection);
@@ -118,16 +122,16 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
     private void proceed() {
         if(server!=null){
-            Intent i = new Intent(IntentReceiver.this, startClass);
-            i.putExtra("newrepo", server);
-            i.addFlags(12345);
-            startActivity(i);
-            finish();
+            startActivityWithRepo(server);
         }else{
             Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             finish();
         }
     }
+
+
+
+
 
     private void continueLoading(){
         TMP_MYAPP_FILE = getCacheDir()+"/myapp.myapp";
@@ -137,11 +141,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             ArrayList<String> repo = new ArrayList<String>();
             repo.add(uri.substring(14));
-            Intent i = new Intent(IntentReceiver.this, startClass);
-            i.putExtra("newrepo", repo);
-            i.addFlags(12345);
-            startActivity(i);
-            finish();
+            startActivityWithRepo(repo);
 
         }else if(uri.startsWith("aptoidexml")){
 
@@ -224,7 +224,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
 
         } else if (uri.startsWith("file://")) {
-            new MyAppDownloader().execute(getIntent().getDataString());
+
+            downloadMyApp();
+
         } else if (uri.startsWith("aptoideinstall://")) {
             long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
 
@@ -237,9 +239,19 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         } else {
             finish();
         }
-
     }
 
+    public void startActivityWithRepo(ArrayList<String> repo) {
+        Intent i = new Intent(IntentReceiver.this, startClass);
+        i.putExtra("newrepo", repo);
+        i.addFlags(12345);
+        startActivity(i);
+        finish();
+    }
+
+    private void downloadMyApp() {
+        asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
+    }
 
 
     private void downloadMyappFile(String myappUri) throws Exception{
@@ -328,7 +340,6 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         } catch (IOException e) {
             e.printStackTrace();
-
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
@@ -336,7 +347,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         }
     }
 
-    private void startMarketIntent(String param) {
+    public void startMarketIntent(String param) {
         System.out.println(param);
         long id = db.getApkFromPackage(param);
         Intent i;
@@ -344,7 +355,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             i = new Intent(this, appViewClass);
             i.putExtra("id", id);
         }else{
-            i = new Intent(this,SearchManager.class);
+            i = new Intent(this,Aptoide.getConfiguration().getSearchActivityClass());
             i.putExtra("search", param);
         }
 
@@ -381,7 +392,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if(pd.isShowing()&&!isFinishing())pd.dismiss();
-            if(app!=null&&!app.isEmpty()){
+            if (app != null && !app.isEmpty()) {
 
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
                 final AlertDialog installAppDialog = dialogBuilder.create();

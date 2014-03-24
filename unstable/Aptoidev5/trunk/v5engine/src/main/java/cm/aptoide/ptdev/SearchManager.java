@@ -309,4 +309,12 @@ public class SearchManager extends ActionBarActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+
+        if (downloadService !=null){
+            unbindService(conn2);
+        }
+        super.onDestroy();
+    }
 }

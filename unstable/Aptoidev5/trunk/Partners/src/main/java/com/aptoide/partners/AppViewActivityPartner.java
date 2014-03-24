@@ -1,5 +1,6 @@
 package com.aptoide.partners;
 
+import android.content.DialogInterface;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
@@ -24,6 +25,12 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
 
     private AdView mAdView;
+    private DialogInterface.OnDismissListener defaultDismissListener = new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+
+        }
+    };
 
     @Produce
     @Override
@@ -48,6 +55,21 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     @Override
     public DetailsEvent publishDetails() {
         return super.publishDetails();
+    }
+
+    @Override
+    public DialogInterface.OnDismissListener getOnDismissListener() {
+
+        if(Aptoide.getConfiguration() instanceof AptoideConfigurationPartners){
+            if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()){
+                return super.getOnDismissListener();
+            }else{
+                return defaultDismissListener;
+            }
+        }else{
+            return defaultDismissListener;
+        }
+
     }
 
     @Subscribe

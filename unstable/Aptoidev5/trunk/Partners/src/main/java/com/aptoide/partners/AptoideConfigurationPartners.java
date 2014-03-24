@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import cm.aptoide.ptdev.SearchManager;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.configuration.Defaults;
@@ -146,13 +147,18 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public String getStoreTheme(){ return THEME; }
     public static void setStoreTheme(String theme){ AptoideConfigurationPartners.THEME = theme; }
 
-    public String getDescription(){ return DESCRIPTION; }
+    public String getStoreDescription(){ return DESCRIPTION; }
     public static void setDescription(String description){ AptoideConfigurationPartners.DESCRIPTION = description; }
 
-    public String getView(){ return VIEW; }
+    public String getStoreView(){ return VIEW; }
     public static void setView(String view){ AptoideConfigurationPartners.VIEW = view; }
 
-    public String getItems(){ return ITEMS; }
+    @Override
+    public boolean isSaveOldRepos(){
+        return false;
+    }
+
+    public String getStoreItems(){ return ITEMS; }
     public static void setItems(String items){ AptoideConfigurationPartners.ITEMS = items; }
 
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
@@ -386,4 +392,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     public String getAccountType() { return AccountGeneralPartners.ACCOUNT_TYPE;
     };
+
+    @Override
+    public Class<?> getSearchActivityClass() {
+        return com.aptoide.partners.SearchManagerPartners.class;
+    }
 }

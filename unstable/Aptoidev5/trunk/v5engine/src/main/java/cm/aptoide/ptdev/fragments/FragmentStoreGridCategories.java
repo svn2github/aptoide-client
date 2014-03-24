@@ -94,8 +94,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sort = ((StoreActivity)getActivity()).getSort();
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
+        sort = ((CategoryCallback)getActivity()).getSort();
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
     }
 
     @Override
@@ -142,7 +142,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(((StoreActivity)getActivity()).isRefreshing()){
+        if(((CategoryCallback)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
     }
@@ -156,7 +156,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
 
 
     }
@@ -220,7 +220,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     @Override
     public void onRefreshStarted(View view) {
 
-        ((StoreActivity)getActivity()).onRefreshStarted();
+        ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
@@ -229,7 +229,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        sort = ((StoreActivity)getActivity()).getSort();
+        sort = ((CategoryCallback)getActivity()).getSort();
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
     }

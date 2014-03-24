@@ -367,6 +367,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public DialogInterface.OnClickListener getOnMyAppAddStoreListener(String repo) {
         return new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> repo = new ArrayList<String>();
@@ -376,11 +377,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 i.putExtra("newrepo", repo);
                 i.addFlags(12345);
                 startActivity(i);
+
             }
         };
     }
 
     private Class startClass = Aptoide.getConfiguration().getStartActivityClass();
+
     public DialogInterface.OnDismissListener getOnDismissListener() {
         return onDismissListener;
     }

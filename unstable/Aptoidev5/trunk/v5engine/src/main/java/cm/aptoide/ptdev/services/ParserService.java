@@ -57,7 +57,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     Parser parser;
     private SpiceManager spiceManager = new SpiceManager(ParserHttp.class);
     private boolean showNotification = true;
-    private Object lock = new Object();
+
 
 
     @Override
@@ -138,14 +138,14 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 Context context = getApplicationContext();
                 CharSequence contentTitle = Aptoide.getConfiguration().getMarketName();
                 CharSequence contentText = getString(R.string.new_updates, updates);
+
                 if(updates==1){
                     contentText = getString(R.string.one_new_update, updates);
                 }
 
-
                 Intent notificationIntent = new Intent();
 
-                notificationIntent.setClassName(getPackageName(), "cm.aptoide.ptdev.Start");
+                notificationIntent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                 notificationIntent.setAction("");
 

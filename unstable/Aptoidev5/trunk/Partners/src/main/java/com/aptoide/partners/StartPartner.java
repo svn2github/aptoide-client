@@ -2,6 +2,7 @@ package com.aptoide.partners;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.view.Menu;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
+import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
@@ -26,6 +28,7 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -37,6 +40,8 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
@@ -97,34 +102,9 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-
-        try{
-
-
-            if(savedInstanceState == null && ((sharedPreferences.getBoolean("firstrun", true) || Aptoide.isUpdate())) ){
-                final Database database = new Database(Aptoide.getDb());
-                final Store store = new Store();
-
-                String storeName = Aptoide.getConfiguration().getDefaultStore();
-                String repoUrl = "http://"+storeName+".store.aptoide.com/";
-                store.setId(storeid);
-                store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-                store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                store.setDelta("empty");
-                database.insertStore(store);
-
-                sharedPreferences.edit().putBoolean("firstrun", false).commit();
-
-            }
-
-        }catch (PackageManager.NameNotFoundException e){
-
-        }
-
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
+
         super.onCreate(savedInstanceState);
 
 
@@ -150,6 +130,29 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     public void executeWizard() {
         try {
             if (Aptoide.isUpdate()) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+
+                final Database database = new Database(Aptoide.getDb());
+                final Store store = new Store();
+
+                String storeName = Aptoide.getConfiguration().getDefaultStore();
+                String repoUrl = "http://"+storeName+".store.aptoide.com/";
+                store.setId(storeid);
+                store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
+                store.setName(AptoideUtils.RepoUtils.split(repoUrl));
+                store.setDelta("empty");
+                store.setView("list");
+                store.setTheme("default");
+                store.setAvatar("https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
+                store.setItems("applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
+                database.insertStore(store);
+
+                if(!PreferenceManager.getDefaultSharedPreferences(this).contains("version")){
+                    new ManagerPreferences(this).createLauncherShortcut(this, R.drawable.ic_launcher);
+                }
+
+                sharedPreferences.edit().putBoolean("firstrun", false).commit();
+
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -192,6 +195,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     @Subscribe
     public void onStoreError(RepoErrorEvent event) {
+        Toast.makeText(this, "OnStoreError", Toast.LENGTH_LONG).show();
         if (event.getRepoId() == storeid) {
 
             if(fragmentStore!=null){
@@ -235,6 +239,41 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     }
 
 
+    @Override
+    public List<Object> getDrawerList() {
+
+        List<Object> mItems = new ArrayList<Object>();
+        int[] attrs = new int[] {
+                cm.aptoide.ptdev.R.attr.icMyAccountDrawable /* index 0 */,
+                cm.aptoide.ptdev.R.attr.icRollbackDrawable /* index 1 */,
+                cm.aptoide.ptdev.R.attr.icScheduledDrawable /* index 2 */,
+                cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable /* index 3 */
+        };
+
+        TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
+
+        int myAccountRes = typedArray.getResourceId(0, cm.aptoide.ptdev.R.drawable.ic_action_accounts_dark);
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.my_account), myAccountRes, 0));
+
+        int rollbackRes = typedArray.getResourceId(1, cm.aptoide.ptdev.R.drawable.ic_action_time_dark);
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.rollback), rollbackRes, 1));
+
+        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icScheduledDrawable});
+        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
+        scheduleTypedArray.recycle();
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.setting_schdwntitle), scheduleRes, 2));
+
+        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable});
+        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
+        excludedUpdatesTypedArray.recycle();
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.excluded_updates), excludedUpdatesRes, 3));
+
+
+        typedArray.recycle();
+
+        return mItems;
+    }
+
     public void setSort(StoreActivity.Sort sort){
         this.sort = sort;
     }
@@ -242,7 +281,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     public void onRefreshStarted() {
 
 
-        //if(!isRefreshing){
+        if(!isRefreshing){
 
 
             Executors.newSingleThreadExecutor().submit(new Runnable() {
@@ -272,8 +311,9 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                     service.startParse(db, store, false);
                 }
             });
-
         }
+
+    }
     private Fragment fragmentStore;
 
     public void toggleCategories() {

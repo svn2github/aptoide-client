@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -538,7 +539,7 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mMenuAdapter = new MenuListAdapter(mContext);
+        mMenuAdapter = new MenuListAdapter(mContext, getDrawerList());
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -563,6 +564,43 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    }
+
+    public List<Object> getDrawerList() {
+
+        List<Object> mItems = new ArrayList<Object>();
+        int[] attrs = new int[] {
+                R.attr.icMyAccountDrawable /* index 0 */,
+                R.attr.icRollbackDrawable /* index 1 */,
+                R.attr.icScheduledDrawable /* index 2 */,
+                R.attr.icExcludedUpdatesDrawable /* index 3 */
+        };
+
+        TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
+
+        int myAccountRes = typedArray.getResourceId(0, R.drawable.ic_action_accounts_dark);
+        mItems.add(new MenuListAdapter.Item(getString(R.string.my_account), myAccountRes, 0));
+
+        int rollbackRes = typedArray.getResourceId(1, R.drawable.ic_action_time_dark);
+        mItems.add(new MenuListAdapter.Item(getString(R.string.rollback), rollbackRes, 1));
+
+        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icScheduledDrawable});
+        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
+        scheduleTypedArray.recycle();
+        mItems.add(new MenuListAdapter.Item(getString(R.string.setting_schdwntitle), scheduleRes, 2));
+
+        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icExcludedUpdatesDrawable});
+        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
+        excludedUpdatesTypedArray.recycle();
+        mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
+
+
+        mItems.add(new MenuListAdapter.Category(getString(R.string.social_networks)));
+        mItems.add(new MenuListAdapter.Item(getString(R.string.facebook), R.drawable.ic_action_facebook, 4));
+        mItems.add(new MenuListAdapter.Item(getString(R.string.twitter), R.drawable.ic_action_twitter, 5));
+
+        typedArray.recycle();
+        return mItems;
     }
 
     public void loadTopApps(String url) throws IOException {

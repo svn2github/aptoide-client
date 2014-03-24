@@ -2,14 +2,15 @@ package com.aptoide.partners;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentBreadCrumbs;
 import android.support.v4.app.FragmentBreadCrumbsPartners;
 import android.support.v4.app.FragmentManager;
 import android.view.*;
+import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
 import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 
 /**
@@ -140,7 +141,16 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
         if (savedInstanceState == null) {
 
-            android.support.v4.app.Fragment fragment= new FragmentStoreListCategories();
+            android.support.v4.app.Fragment fragment;
+
+            if("list".equals(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getStoreView())){
+                fragment= new FragmentStoreListCategories();
+                Toast.makeText(getActivity(), "Loading list category", Toast.LENGTH_LONG).show();
+            }else{
+                fragment= new FragmentStoreListCategories();
+                Toast.makeText(getActivity(), "Loading grid category", Toast.LENGTH_LONG).show();
+            }
+
             Bundle args = new Bundle();
             args.putLong("storeid", -200);
             fragment.setArguments(args);
