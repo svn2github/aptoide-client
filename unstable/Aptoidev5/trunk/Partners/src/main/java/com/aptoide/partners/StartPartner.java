@@ -197,7 +197,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     @Subscribe
     public void onStoreError(RepoErrorEvent event) {
-        Toast.makeText(this, "OnStoreError", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "OnStoreError", Toast.LENGTH_LONG).show();
+        Log.d("OnStoreError","Error parsing store. Refreshing...");
         if (event.getRepoId() == storeid) {
 
             if(fragmentStore!=null){

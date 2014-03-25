@@ -3,10 +3,7 @@ package cm.aptoide.ptdev.configuration;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.SearchManager;
-import cm.aptoide.ptdev.Start;
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.*;
 
 import java.io.File;
 
@@ -209,6 +206,10 @@ public class AptoideConfiguration {
 
     public Class getSettingsActivityClass() {
         return cm.aptoide.ptdev.Settings.class;
+    }
+
+    public Class getSignUpActivityClass() {
+        return cm.aptoide.ptdev.SignUpActivity.class;
     }
 
     public Class<?> getSearchActivityClass() {

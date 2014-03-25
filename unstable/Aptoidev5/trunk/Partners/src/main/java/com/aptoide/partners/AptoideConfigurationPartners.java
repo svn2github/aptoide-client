@@ -382,6 +382,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         return com.aptoide.partners.SettingsPartner.class;
     }
 
+    public Class getSignUpActivityClass() {
+        return com.aptoide.partners.SignUpActivityPartner.class;
+    }
+
     public String getUpdatesSyncAdapterAuthority(){
         return "com.aptoide.partners.UpdatesProvider";
     }

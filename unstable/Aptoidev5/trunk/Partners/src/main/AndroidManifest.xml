@@ -79,7 +79,7 @@
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.SignUpActivity" />
+        <activity android:name=".SignUpActivityPartner" />
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 

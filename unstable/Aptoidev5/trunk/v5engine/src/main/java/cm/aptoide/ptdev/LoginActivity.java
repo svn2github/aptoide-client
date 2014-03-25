@@ -70,6 +70,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private boolean hasQueue;
     private CheckUserCredentialsRequest request;
     private boolean fromPreviousAptoideVersion;
+    private Class signupClass = Aptoide.getConfiguration().getSignUpActivityClass();
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -394,7 +395,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             new_to_aptoide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent signup = new Intent(LoginActivity.this, SignUpActivity.class);
+                    Intent signup = new Intent(LoginActivity.this, signupClass);
                     startActivityForResult(signup, REQ_SIGNUP);
                 }
             });

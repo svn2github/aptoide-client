@@ -156,7 +156,7 @@ public class AptoidePartner extends Aptoide {
 
 
 
-        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", AptoideConfigurationPartners.MATURECONTENTSWITCHVALUE);
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitchValue());
 
     }
 

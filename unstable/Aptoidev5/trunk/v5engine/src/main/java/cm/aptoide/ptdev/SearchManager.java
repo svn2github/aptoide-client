@@ -246,7 +246,7 @@ public class SearchManager extends ActionBarActivity {
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
-            ((SearchManager)getActivity()).setFooterView(getListView());
+            ((SearchManager)getActivity()).setFooterView(getListView(), R.layout.footer_search);
 
             getLoaderManager().initLoader(60, getArguments(), this);
 
@@ -284,8 +284,8 @@ public class SearchManager extends ActionBarActivity {
         };
     }
 
-    public void setFooterView(ListView lv){
-        View footer = LayoutInflater.from(this).inflate(R.layout.footer_search, null);
+    public void setFooterView(ListView lv, int res){
+        View footer = LayoutInflater.from(this).inflate(res, null);
         Button search = (Button) footer.findViewById(R.id.search);
         search.setOnClickListener(getSearchListener());
 

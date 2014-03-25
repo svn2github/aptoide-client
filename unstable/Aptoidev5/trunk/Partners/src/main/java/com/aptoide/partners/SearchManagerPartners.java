@@ -11,9 +11,9 @@ import cm.aptoide.ptdev.SearchManager;
 public class SearchManagerPartners extends SearchManager {
 
     @Override
-    public void setFooterView(ListView lv) {
+    public void setFooterView(ListView lv, int res) {
         if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getSearchStores()){
-            super.setFooterView(lv);
+            super.setFooterView(lv, R.layout.partner_footer_search);
         }
     }
 
