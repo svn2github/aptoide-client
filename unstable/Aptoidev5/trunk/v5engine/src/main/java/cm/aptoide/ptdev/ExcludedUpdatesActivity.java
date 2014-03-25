@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
         lv = (ListView) findViewById(R.id.excluded_updates_list);
         lv.setDivider(null);
         tv_no_excluded_downloads = (TextView) findViewById(R.id.tv_no_excluded_downloads);
+        final String sizeString = IconSizes.generateSizeString(this);
         adapter = new ArrayAdapter<ExcludedUpdate>(this, 0, excludedUpdates) {
 
             @Override
@@ -91,7 +93,15 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
                 }
                 cb_exclude.setTag(excludedUpdate);
                 cb_exclude.setChecked(cb_exclude.isChecked());
-                ImageLoader.getInstance().displayImage(excludedUpdate.getIcon(), icon);
+
+                String iconString = excludedUpdate.getIcon();
+
+                if (iconString.contains("_icon")) {
+                    String[] splittedUrl = iconString.split("\\.(?=[^\\.]+$)");
+                    iconString = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                }
+
+                ImageLoader.getInstance().displayImage(iconString, icon);
                 tv_name.setText(excludedUpdate.getName());
                 tv_vercode.setText("" + excludedUpdate.getVercode());
                 tv_apkid.setText(excludedUpdate.getApkid());

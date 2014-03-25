@@ -35,62 +35,63 @@ public class NetworkStateListener extends BroadcastReceiver {
             final Database db = new Database(Aptoide.getDb());
 
             service = ((ParserService.MainServiceBinder) binder).getService();
-
-            ArrayList<Number> storeids = db.getFailedStores();
-
-            for (Number number : storeids) {
-
-                final Store store = new Store();
-                Cursor c = db.getStore(number.longValue());
-
-                if (c.moveToFirst()) {
-                    store.setBaseUrl(c.getString(c.getColumnIndex("url")));
-                    store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
-                    store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
-                    store.setDelta(c.getString(c.getColumnIndex("hash")));
-                    store.setId(c.getLong(c.getColumnIndex("id_repo")));
-                    if (c.getString(c.getColumnIndex("username")) != null) {
-                        Login login = new Login();
-                        login.setUsername(c.getString(c.getColumnIndex("username")));
-                        login.setPassword(c.getString(c.getColumnIndex("password")));
-                        store.setLogin(login);
-                    }
-                    service.startParse(db, store, false);
-                    BusProvider.getInstance().post(new RepoCompleteEvent(store.getId()));
-                }
-                c.close();
-            }
-
-
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+
+                    ArrayList<Number> storeids = db.getFailedStores();
+
+                    for (Number number : storeids) {
+
+                        final Store store = new Store();
+                        Cursor c = db.getStore(number.longValue());
+
+                        if (c.moveToFirst()) {
+                            store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                            store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                            store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                            store.setDelta(c.getString(c.getColumnIndex("hash")));
+                            store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                            if (c.getString(c.getColumnIndex("username")) != null) {
+                                Login login = new Login();
+                                login.setUsername(c.getString(c.getColumnIndex("username")));
+                                login.setPassword(c.getString(c.getColumnIndex("password")));
+                                store.setLogin(login);
+                            }
+                            service.startParse(db, store, false);
+                            BusProvider.getInstance().post(new RepoCompleteEvent(store.getId()));
+                        }
+                        c.close();
+                    }
+
+
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
                     long cachedTimestamp = preferences.getLong("editorschoiceTimestamp", 0);
-                    if(cachedTimestamp==0){
-                        try {
+                    if (cachedTimestamp == 0) {
 
-                            service.parseEditorsChoice(new Database(Aptoide.getDb()),"http://apps.store.aptoide.com/editors_more.xml?country=us");
+                        String countryCode = Geolocation.getCountryCode(Aptoide.getContext());
+                        try {
+                            loadEditorsChoice(db, Aptoide.getConfiguration().getEditorsUrl(), countryCode );
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
 
                     cachedTimestamp = preferences.getLong("topappsTimestamp", 0);
-                    if(cachedTimestamp==0){
+                    if (cachedTimestamp == 0) {
                         try {
-                            service.parseTopApps(new Database(Aptoide.getDb()),"http://apps.store.aptoide.com/top.xml");
+                            loadTopApps(db, Aptoide.getConfiguration().getTopAppsUrl());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+
+                    Aptoide.getContext().unbindService(conn);
+
                 }
             }).start();
 
 
-
-            Aptoide.getContext().unbindService(conn);
 
         }
 
@@ -99,6 +100,25 @@ public class NetworkStateListener extends BroadcastReceiver {
 
         }
     };
+
+    public void loadTopApps(Database database, String url) throws IOException {
+
+        Log.d("Aptoide-Featured", "Loading " + url);
+
+        service.parseTopApps(database, url);
+    }
+
+    public void loadEditorsChoice(Database database, String url, String countryCode) throws IOException {
+
+        if (countryCode.length() > 0) {
+            url = url + "?country=" + countryCode;
+        }
+
+        Log.d("Aptoide-Featured", "Loading " + url);
+
+        service.parseEditorsChoice(database, url);
+    }
+
     private Object lock = new Object();
     private DownloadService downloadService;
     private ServiceConnection downloadConn = new ServiceConnection() {

@@ -1,10 +1,12 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkEditorsChoice;
 import cm.aptoide.ptdev.model.Server;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -164,6 +166,8 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
                 category.real_id= Integer.parseInt(sb.toString());
             }
         });
+
+
 
 
 

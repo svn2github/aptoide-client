@@ -113,7 +113,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     public void onBackPressed() {
 
-        if(pager.getCurrentItem()==1){
+        if(fragmentStore!=null && pager.getCurrentItem()==1){
             if(fragmentStore.getChildFragmentManager().getBackStackEntryCount()>0){
                 fragmentStore.getChildFragmentManager().popBackStack();
             }else{
@@ -137,14 +137,16 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
                 String storeName = Aptoide.getConfiguration().getDefaultStore();
                 String repoUrl = "http://"+storeName+".store.aptoide.com/";
+
+                AptoideConfigurationPartners config = (AptoideConfigurationPartners) Aptoide.getConfiguration();
                 store.setId(storeid);
                 store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                 store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                store.setDelta("empty");
-                store.setView("list");
-                store.setTheme("default");
-                store.setAvatar("https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
-                store.setItems("applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
+                store.setDelta(null);
+                store.setView(config.getStoreView());
+                store.setTheme(config.getStoreTheme());
+                store.setAvatar(config.getStoreAvatar());
+                store.setItems(config.getStoreItems());
                 database.insertStore(store);
 
                 if(!PreferenceManager.getDefaultSharedPreferences(this).contains("version")){
@@ -276,6 +278,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     public void setSort(StoreActivity.Sort sort){
         this.sort = sort;
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("order_list", sort.ordinal()).commit();
     }
 
     public void onRefreshStarted() {
@@ -327,7 +330,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
         public PartnersPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
-            TITLES = new String[] { context.getString(cm.aptoide.ptdev.R.string.home), context.getString(cm.aptoide.ptdev.R.string.stores), context.getString(cm.aptoide.ptdev.R.string.updates_tab), context.getString(cm.aptoide.ptdev.R.string.download_manager)};
+            TITLES = new String[] { context.getString(cm.aptoide.ptdev.R.string.home), context.getString(cm.aptoide.ptdev.R.string.store), context.getString(cm.aptoide.ptdev.R.string.updates_tab), context.getString(cm.aptoide.ptdev.R.string.download_manager)};
 
         }
 

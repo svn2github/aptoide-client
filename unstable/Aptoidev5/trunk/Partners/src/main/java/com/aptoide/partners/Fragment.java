@@ -145,10 +145,8 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
             if("list".equals(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getStoreView())){
                 fragment= new FragmentStoreListCategories();
-                Toast.makeText(getActivity(), "Loading list category", Toast.LENGTH_LONG).show();
             }else{
-                fragment= new FragmentStoreListCategories();
-                Toast.makeText(getActivity(), "Loading grid category", Toast.LENGTH_LONG).show();
+                fragment= new FragmentStoreGridCategories();
             }
 
             Bundle args = new Bundle();

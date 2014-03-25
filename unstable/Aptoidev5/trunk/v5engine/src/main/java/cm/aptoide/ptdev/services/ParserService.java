@@ -230,9 +230,11 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         RepositoryInfoJson repositoryInfoJson = null;
         getRepoInfoRequest.setHttpRequestFactory(Jackson2GoogleHttpClientSpiceService.createRequestFactory());
+
         try {
             repositoryInfoJson = getRepoInfoRequest.loadDataFromNetwork();
         } catch (Exception e) {
+            onError(e, id);
             e.printStackTrace();
         }
 

@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
@@ -24,6 +25,7 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLa
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 import java.util.ArrayList;
 
@@ -75,7 +77,12 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
                         // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
                         .insertLayoutInto((ViewGroup) view)
-
+                        .useViewDelegate(TextView.class, new ViewDelegate() {
+                            @Override
+                            public boolean isReadyForPull(View view, float v, float v2) {
+                                return Boolean.TRUE;
+                            }
+                        })
                                 // We need to mark the ListView and it's Empty View as pullable
                                 // This is because they are not dirent children of the ViewGroup
                         .theseChildrenArePullable(getListView().getId(), getListView().getEmptyView().getId())

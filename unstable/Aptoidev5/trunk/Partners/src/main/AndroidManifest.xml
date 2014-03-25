@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.aptoide.partners"
           android:versionCode="431"
-          android:versionName="5.0.0">
+          android:versionName="5.0.0" android:installLocation="auto" >
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
@@ -313,7 +313,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="cm.aptoide.ptdev.NetworkStateListener" >
+        <receiver android:name="com.aptoide.partners.NetworkStateListenerPartners" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>

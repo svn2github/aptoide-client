@@ -262,7 +262,10 @@ public class Start extends ActionBarActivity implements
     RequestListener<RepositoryChangeJson> requestListener = new RequestListener<RepositoryChangeJson>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-
+            for(Map.Entry entry : storesIds.entrySet()){
+                database.setFailedRepo((Long) entry.getValue());
+                BusProvider.getInstance().post(new RepoErrorEvent(spiceException, (Long) entry.getValue()));
+            }
         }
 
         @Override

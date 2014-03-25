@@ -1,10 +1,12 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.database.sqlite.SQLiteStatement;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 import com.squareup.otto.Subscribe;
 import org.xml.sax.Attributes;
@@ -13,6 +15,7 @@ import org.xml.sax.ext.DefaultHandler2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -224,7 +227,17 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         });
 
 
+        elements.put(AptoideUtils.getMyCountry(Aptoide.getContext()).toUpperCase(Locale.ENGLISH), new ElementHandler() {
+            @Override
+            public void startElement(Attributes attributes) throws SAXException {
 
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setName(sb.toString());
+            }
+        });
 
 
 
