@@ -19,6 +19,14 @@ public class IntentReceiverPartners extends IntentReceiver {
         }
     }
 
+    @Override
+    public void startFromMyApp(long id) {
+
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getSearchStores()){
+            super.startFromMyApp(id);
+        }
+
+    }
 
     @Override
     public void startMarketIntent(String param) {
