@@ -202,33 +202,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                     versionCode = json.getApk().getVercode().intValue();
-                    latestVersion = (TextView) findViewById(R.id.app_get_latest);
-                    if (json.getLatest() != null) {
-                        latestVersion.setVisibility(View.VISIBLE);
-
-                        String getLatestString;
-                        if (showLatestString) {
-                            getLatestString = getString(R.string.get_latest_version);
-                        } else {
-                            getLatestString = getString(R.string.get_latest_version_and_trusted);
-                        }
-
-                        SpannableString spanString = new SpannableString(getLatestString);
-                        spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
-                        latestVersion.setText(spanString);
-                        latestVersion.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String url = json.getLatest();
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                url = url.replaceAll(" ", "%20");
-                                i.setData(Uri.parse(url));
-                                startActivity(i);
-                            }
-                        });
-                    } else {
-                        latestVersion.setVisibility(View.GONE);
-                    }
+                    loadGetLatest(showLatestString);
 
                     if (getIntent().getBooleanExtra("fromMyapp", false)) {
                         getIntent().removeExtra("fromMyapp");
@@ -293,6 +267,36 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         }
     };
+
+    public void loadGetLatest(boolean showLatestString) {
+        latestVersion = (TextView) findViewById(R.id.app_get_latest);
+        if (json.getLatest() != null) {
+            latestVersion.setVisibility(View.VISIBLE);
+
+            String getLatestString;
+            if (showLatestString) {
+                getLatestString = getString(R.string.get_latest_version);
+            } else {
+                getLatestString = getString(R.string.get_latest_version_and_trusted);
+            }
+
+            SpannableString spanString = new SpannableString(getLatestString);
+            spanString.setSpan(new UnderlineSpan(), 0, spanString.length(), 0);
+            latestVersion.setText(spanString);
+            latestVersion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = json.getLatest();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    url = url.replaceAll(" ", "%20");
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
+            });
+        } else {
+            latestVersion.setVisibility(View.GONE);
+        }
+    }
 
     protected void waitForServiceToBeBound() throws InterruptedException {
         lock.lock();

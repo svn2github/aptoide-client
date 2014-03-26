@@ -103,9 +103,8 @@ public class SplashDialogFragment extends DialogFragment {
         }
 
 
-        String url =  ((AptoideConfigurationPartners) AptoidePartner.getConfiguration()).getSplashscreen();
-
-        Log.e("Aptoide-Image-Url", url);
+//        String url =  ((AptoideConfigurationPartners) AptoidePartner.getConfiguration()).getSplashscreen();
+//        Log.e("Aptoide-Image-Url", url);
 
     }
 

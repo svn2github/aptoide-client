@@ -138,4 +138,11 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
         mAdView.release();
 
     }
+
+    @Override
+    public void loadGetLatest(boolean showLatestString) {
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getSearchStores()){
+            super.loadGetLatest(showLatestString);
+        }
+    }
 }
