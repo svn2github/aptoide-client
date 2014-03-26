@@ -185,11 +185,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             String[] strings = uri.split("-");
             long id = Long.parseLong(strings[strings.length-1].split("\\.myapp")[0]);
 
-            Intent i = new Intent(this, appViewClass);
-            i.putExtra("fromMyapp", true);
-            i.putExtra("id", id);
-
-            startActivity(i);
+            startFromMyApp(id);
             finish();
 
         } else if (uri.startsWith("http://webservices.aptoide.com")) {
@@ -209,10 +205,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             try {
 
                 long id = Long.parseLong(uid);
-                Intent i = new Intent(this, appViewClass);
-                i.putExtra("fromMyapp", true);
-                i.putExtra("id", id);
-                startActivity(i);
+                startFromMyApp(id);
 
             } catch (Exception e){
                 e.printStackTrace();
@@ -230,15 +223,19 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         } else if (uri.startsWith("aptoideinstall://")) {
             long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
 
-            Intent i = new Intent(this, appViewClass);
-            i.putExtra("fromMyapp", true);
-            i.putExtra("id", id);
-
-            startActivity(i);
+            startFromMyApp(id);
             finish();
         } else {
             finish();
         }
+    }
+
+    public void startFromMyApp(long id) {
+        Intent i = new Intent(this, appViewClass);
+        i.putExtra("fromMyapp", true);
+        i.putExtra("id", id);
+
+        startActivity(i);
     }
 
     public void startActivityWithRepo(ArrayList<String> repo) {
