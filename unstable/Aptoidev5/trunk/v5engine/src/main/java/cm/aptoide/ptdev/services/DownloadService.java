@@ -402,8 +402,9 @@ public class DownloadService extends Service {
                     request.setMd5Sum(md5sum);
 
 
+
                     Download download = new Download();
-                    download.setId(id);
+                    download.setId(md5sum.hashCode());
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
@@ -416,7 +417,7 @@ public class DownloadService extends Service {
 
                     download.setIcon(iconpath + icon);
 
-                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, repoName + md5sum, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));
+                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, repoName + md5sum, DurationInMillis.ONE_HOUR, new DownloadRequest(download.getId(), download));
                     apkCursor.close();
                 }
 
