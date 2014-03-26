@@ -141,6 +141,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
+
                     downloadId = json.getApk().getMd5sum().hashCode();
 
 
