@@ -149,7 +149,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 store.setItems(config.getStoreItems());
                 database.insertStore(store);
 
-                if(!PreferenceManager.getDefaultSharedPreferences(this).contains("version")){
+                if(!PreferenceManager.getDefaultSharedPreferences(this).contains("version") && ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getCreateShortcut()){
                     new ManagerPreferences(this).createLauncherShortcut(this, R.drawable.ic_launcher);
                 }
 
