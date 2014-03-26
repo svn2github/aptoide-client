@@ -217,7 +217,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                         break;
                 }
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
 
                 break;
 

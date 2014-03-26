@@ -49,6 +49,7 @@ import cm.aptoide.ptdev.webservices.UpdateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -861,6 +862,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             cacheKey = savedInstanceState.getString("cacheKey");
         }
 
+        
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
 

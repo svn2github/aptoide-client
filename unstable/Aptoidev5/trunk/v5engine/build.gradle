@@ -46,11 +46,18 @@ dependencies {
     compile 'com.rabbitmq:amqp-client:3.2.0'
     compile 'com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.0.1'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abc:+'
-    compile ('com.android.support:appcompat-v7:18.0.+')
+    compile ('com.android.support:appcompat-v7:19.0.+')
     compile ('com.android.support:gridlayout-v7:18.0.+')
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
-    compile 'com.octo.android.robospice:robospice-google-http-client:1.4.11'
-    compile 'com.google.http-client:google-http-client-jackson2:+'
+    compile ('com.octo.android.robospice:robospice-google-http-client:1.4.11'){
+        exclude (group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+    }
+    compile ('com.google.http-client:google-http-client-jackson2:+'){
+        exclude (group: 'xpp3', module: 'xpp3') //by both name and group
+        exclude (group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+        exclude (group: 'junit', module: 'junit') //by both name and group
+        exclude (group: 'com.google.android', module: 'android') //by both name and group
+    }
     compile project (':pagerslidertabstrip')
     compile project (':hanselandgretel')
     compile project (':android-websockets')
