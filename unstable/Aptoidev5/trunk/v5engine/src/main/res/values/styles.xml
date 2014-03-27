@@ -78,64 +78,6 @@
     <style name="headerSeparatorButtonStyleAptoide" parent="headerSeparatorButtonStyle">
         <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
     </style>
-    <style name="headerSeparatorButtonStyleMidnight" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_midnight</item>
-    </style>
-    <style name="headerSeparatorButtonStyleBlack" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_black</item>
-    </style>
-    <style name="headerSeparatorButtonStyleMaroon" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_maroon</item>
-    </style>
-    <style name="headerSeparatorButtonStyleGold" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_gold</item>
-    </style>
-    <style name="headerSeparatorButtonStyleOrange" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_orange</item>
-    </style>
-    <style name="headerSeparatorButtonStyleSpringgreen" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_springgreen</item>
-    </style>
-    <style name="headerSeparatorButtonStyleLightsky" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_lightsky</item>
-    </style>
-    <style name="headerSeparatorButtonStylePink" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_pink</item>
-    </style>
-    <style name="headerSeparatorButtonStyleBlue" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_blue</item>
-    </style>
-    <style name="headerSeparatorButtonStyleRed" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_red</item>
-    </style>
-    <style name="headerSeparatorButtonStyleMagenta" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_magenta</item>
-    </style>
-    <style name="headerSeparatorButtonStyleSlategray" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_slategray</item>
-    </style>
-    <style name="headerSeparatorButtonStyleSeagreen" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_seagreen</item>
-    </style>
-    <style name="headerSeparatorButtonStyleSilver" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_silver</item>
-    </style>
-    <style name="headerSeparatorButtonStyleDimgray" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_dimgray</item>
-    </style>
-    <style name="headerSeparatorButtonStyleGreenApple" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_greenapple</item>
-    </style>
-    <style name="headerSeparatorButtonStyleHappyBlue" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_happyblue</item>
-    </style>
-    <style name="headerSeparatorButtonStyleGreen" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_green</item>
-    </style>
-    <style name="headerSeparatorButtonStyleYellow" parent="headerSeparatorButtonStyle">
-        <item name="android:background">@drawable/custom_color_button_yellow</item>
-    </style>
-
 
     <style name="backgroundTabsStyleLight">
         <item name="android:background">@drawable/background_tabs_light</item>
@@ -143,80 +85,6 @@
 
     <style name="backgroundTabsStyleDark">
         <item name="android:background">@drawable/background_tabs_dark</item>
-    </style>
-
-    <style name="apkInfoBackgroundStyleAptoideLight">
-        <item name="android:background">@drawable/app_header_bgd_aptoide_light</item>
-    </style>
-    <style name="apkInfoBackgroundStyleMidnightLight">
-        <item name="android:background">@drawable/apk_info_separator_midnight</item>
-    </style>
-    <style name="apkInfoBackgroundStyleBlackLight">
-        <item name="android:background">@drawable/apk_info_separator_black</item>
-    </style>
-    <style name="apkInfoBackgroundStyleMaroonLight">
-        <item name="android:background">@drawable/apk_info_separator_maroon</item>
-    </style>
-    <style name="apkInfoBackgroundStyleGoldLight">
-        <item name="android:background">@drawable/apk_info_separator_gold</item>
-    </style>
-    <style name="apkInfoBackgroundStyleOrangeLight">
-        <item name="android:background">@drawable/apk_info_separator_orange</item>
-    </style>
-    <style name="apkInfoBackgroundStyleSpringgreenLight">
-        <item name="android:background">@drawable/apk_info_separator_springgreen</item>
-    </style>
-    <style name="apkInfoBackgroundStyleLightskyLight">
-        <item name="android:background">@drawable/apk_info_separator_lightsky</item>
-    </style>
-    <style name="apkInfoBackgroundStylePinkLight">
-        <item name="android:background">@drawable/apk_info_separator_pink</item>
-    </style>
-    <style name="apkInfoBackgroundStyleBlueLight">
-        <item name="android:background">@drawable/apk_info_separator_blue</item>
-    </style>
-    <style name="apkInfoBackgroundStyleRedLight">
-        <item name="android:background">@drawable/apk_info_separator_red</item>
-    </style>
-    <style name="apkInfoBackgroundStyleMagentaLight">
-        <item name="android:background">@drawable/apk_info_separator_magenta</item>
-    </style>
-    <style name="apkInfoBackgroundStyleSlategrayLight">
-        <item name="android:background">@drawable/apk_info_separator_slategray</item>
-    </style>
-    <style name="apkInfoBackgroundStyleSeagreenLight">
-        <item name="android:background">@drawable/apk_info_separator_seagreen</item>
-    </style>
-    <style name="apkInfoBackgroundStyleSilverLight">
-        <item name="android:background">@drawable/apk_info_separator_silver</item>
-    </style>
-    <style name="apkInfoBackgroundStyleDimgrayLight">
-        <item name="android:background">@drawable/apk_info_separator_dimgray</item>
-    </style>
-    <style name="apkInfoBackgroundStyleGreenAppleLight">
-        <item name="android:background">@drawable/apk_info_separator_greenapple</item>
-    </style>
-    <style name="apkInfoBackgroundStyleHappyBlueLight">
-        <item name="android:background">@drawable/apk_info_separator_happyblue</item>
-    </style>
-    <style name="apkInfoBackgroundStyleGreenLight">
-        <item name="android:background">@drawable/apk_info_separator_green</item>
-    </style>
-    <style name="apkInfoBackgroundStyleYellowLight">
-        <item name="android:background">@drawable/apk_info_separator_yellow</item>
-    </style>
-
-    <style name="apkInfoBackgroundStyleAptoideDark">
-        <item name="android:background">@drawable/app_header_bgd_aptoide_dark</item>
-    </style>
-    <style name="apkInfoBackgroundStyleMidnightDark">
-        <item name="android:background">@drawable/apk_info_separator_midnight_dark</item>
-    </style>
-    <style name="apkInfoBackgroundStyleBlackDark">
-        <item name="android:background">@drawable/apk_info_separator_black_dark</item>
-    </style>
-    <style name="apkInfoBackgroundStyleMaroonDark">
-        <item name="android:background">@drawable/apk_info_separator_maroon_dark</item>
     </style>
 
     <style name="navigationDrawerColorLight">
@@ -329,63 +197,7 @@
     <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
         <item name="android:background">@drawable/aptoide_btn_default_holo_light</item>
     </style>
-    <style name="WidgetButtonCustomMidnight" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_midnight</item>
-    </style>
-    <style name="WidgetButtonCustomBlack" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_dimgray</item>
-    </style>
-    <style name="WidgetButtonCustomMaroon" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_maroon</item>
-    </style>
-    <style name="WidgetButtonCustomGold" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_gold</item>
-    </style>
-    <style name="WidgetButtonCustomOrange" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_orange</item>
-    </style>
-    <style name="WidgetButtonCustomSpringgreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_springgreen</item>
-    </style>
-    <style name="WidgetButtonCustomLightsky" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_lightsky</item>
-    </style>
-    <style name="WidgetButtonCustomPink" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_pink</item>
-    </style>
-    <style name="WidgetButtonCustomBlue" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_blue</item>
-    </style>
-    <style name="WidgetButtonCustomRed" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_red</item>
-    </style>
-    <style name="WidgetButtonCustomMagenta" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_magenta</item>
-    </style>
-    <style name="WidgetButtonCustomSlategray" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_slategray</item>
-    </style>
-    <style name="WidgetButtonCustomSeagreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_seagreen</item>
-    </style>
-    <style name="WidgetButtonCustomSilver" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_silver</item>
-    </style>
-    <style name="WidgetButtonCustomDimgray" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_dimgray</item>
-    </style>
-    <style name="WidgetButtonCustomGreenApple" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_greenapple</item>
-    </style>
-    <style name="WidgetButtonCustomHappyBlue" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_happyblue</item>
-    </style>
-    <style name="WidgetButtonCustomGreen" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_green</item>
-    </style>
-    <style name="WidgetButtonCustomYellow" parent="WidgetButtonCustom">
-        <item name="android:background">@drawable/custom_color_button_yellow</item>
-    </style>
+
 
     <style name="Animations"/>
     <!--  PopDownMenu  -->

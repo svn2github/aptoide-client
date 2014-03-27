@@ -169,9 +169,9 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
-            menu.findItem(cm.aptoide.ptdev.R.id.menu_filter_mature_content).setVisible(false);
-        }
+        boolean value = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch();
+        menu.findItem(cm.aptoide.ptdev.R.id.menu_filter_mature_content).setVisible(value);
+
         menu.findItem(cm.aptoide.ptdev.R.id.menu_about).setVisible(false);
         return true;
     }

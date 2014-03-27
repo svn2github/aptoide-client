@@ -190,103 +190,83 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                     switch (element) {
                         case PARTNERTYPE:
                             PARTNERTYPE = sb.toString();
-                            AptoideConfigurationPartners.setPartnerType(PARTNERTYPE);
                             Log.d("Partner type", PARTNERTYPE + "");
                             break;
                         case PARTNERID:
                             PARTNERID = sb.toString();
-                            AptoideConfigurationPartners.setPartnerId(PARTNERID);
                             Log.d("Partner ID", PARTNERID + "");
                             break;
                         case DEFAULTSTORENAME:
                             DEFAULTSTORENAME = sb.toString();
-                            AptoideConfigurationPartners.setDefaultStoreName(DEFAULTSTORENAME);
                             Log.d("Default store", DEFAULTSTORENAME + "");
                             break;
                         case BRAND:
                             BRAND = sb.toString();
-                            AptoideConfigurationPartners.setBrand(BRAND);
                             Log.d("Brand", BRAND+ "");
                             break;
                         case SPLASHSCREEN:
                             SPLASHSCREEN = sb.toString();
-                            AptoideConfigurationPartners.setSplashscreen(SPLASHSCREEN);
                             Log.d("Splashscreen", SPLASHSCREEN+ "");
                             break;
                         case SPLASHSCREENLAND:
                             SPLASHSCREENLAND = sb.toString();
-                            AptoideConfigurationPartners.setSplashscreenLand(SPLASHSCREENLAND);
                             Log.d("Splashscreen landscape", SPLASHSCREENLAND+ "");
                             break;
                         case MATURECONTENTSWITCH:
                             MATURECONTENTSWITCH = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setMatureContentSwitch(MATURECONTENTSWITCH);
                             Log.d("Mature content Switch", MATURECONTENTSWITCH + "");
                             break;
                         case MATURECONTENTSWITCHVALUE:
                             MATURECONTENTSWITCHVALUE = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setMatureContentSwitch(MATURECONTENTSWITCHVALUE);
                             Log.d("Mature content value", MATURECONTENTSWITCHVALUE+ "");
                             break;
                         case MULTIPLESTORES:
                             MULTIPLESTORES = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setMultistores(MULTIPLESTORES);
                             Log.d("Multiple stores", MULTIPLESTORES+ "");
                             break;
                         case CUSTOMEDITORSCHOICE:
                             CUSTOMEDITORSCHOICE = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setCustomEditorsChoice(CUSTOMEDITORSCHOICE);
                             Log.d("Custom editors choice", CUSTOMEDITORSCHOICE+ "");
                             break;
                         case APTOIDETHEME:
                             APTOIDETHEME = sb.toString();
-                            AptoideConfigurationPartners.setTheme(APTOIDETHEME);
                             Log.d("APTOIDETHEME", APTOIDETHEME+ "");
                             break;
                         case MARKETNAME:
                             MARKETNAME = sb.toString();
-                            AptoideConfigurationPartners.setMarketName(MARKETNAME);
                             Log.d("Market name", MARKETNAME+ "");
                             break;
                         case SEARCHSTORES:
                             SEARCHSTORES = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setSearchStores(SEARCHSTORES);
                             Log.d("Search stores", SEARCHSTORES+ "");
                             break;
                         case ADUNITID:
                             ADUNITID = sb.toString();
-                            AptoideConfigurationPartners.setAdUnitId(ADUNITID);
                             Log.d("AdUnitId", ADUNITID+ "");
                             break;
                         case CREATESHORTCUT:
                             CREATESHORTCUT = Boolean.parseBoolean(sb.toString());
-                            AptoideConfigurationPartners.setCreateShortcut(CREATESHORTCUT);
                             Log.d("Create Shortcut", CREATESHORTCUT+ "");
                             break;
 
                         case THEME:
                             THEME = sb.toString();
-                            AptoideConfigurationPartners.setStoreTheme(THEME);
                             Log.d("Store Theme", THEME+ "");
                             break;
                         case AVATAR:
                             AVATAR = sb.toString();
-                            AptoideConfigurationPartners.setStoreAvatar(AVATAR);
                             Log.d("Store avatar", AVATAR+ "");
                             break;
                         case DESCRIPTION:
                             DESCRIPTION = sb.toString();
-                            AptoideConfigurationPartners.setDescription(DESCRIPTION);
                             Log.d("Store description", DESCRIPTION+ "");
                             break;
                         case ITEMS:
                             ITEMS = sb.toString();
-                            AptoideConfigurationPartners.setItems(ITEMS);
                             Log.d("Store items", ITEMS+ "");
                             break;
                         case VIEW:
                             VIEW = sb.toString();
-                            AptoideConfigurationPartners.setView(VIEW);
                             Log.d("Store view", VIEW+ "");
                             break;
 

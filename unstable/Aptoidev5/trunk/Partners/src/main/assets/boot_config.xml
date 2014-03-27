@@ -9,18 +9,19 @@
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid>6520c9616894aef755e1943d127af3e4</partnerid>
-        <marketname>Seleclineplay Market</marketname>
-        <defaultstorename>seleclineplay</defaultstorename>
-        <aptoidetheme>lightsky</aptoidetheme>
-        <splashscreen>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/seleclineplay/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/seleclineplay/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_seleclineplay</brand>
+        <partnerid>72d222a173fe656175e2940fafaf5295</partnerid>
+        <marketname>Aptoide Appstore</marketname>
+        <defaultstorename>nokia-appstore</defaultstorename>
+        <aptoidetheme>default</aptoidetheme>
+        <splashscreen>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_nokia_appstore</brand>
         <searchstores>true</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
         <multiplestores>false</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid>8c2b5f9a1375691ada1bcc66670a8182</adunitid>
+        <adunitid>f0408f8071a116ab47cabf5937d056d4</adunitid>
+        <createshortcut>false</createshortcut>
     </aptoideconf>
 </bootconf>

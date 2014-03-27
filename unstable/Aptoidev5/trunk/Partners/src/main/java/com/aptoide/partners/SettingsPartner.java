@@ -50,7 +50,7 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
         });
 
 //        Log.d("MatureContentSwitch","value: "+((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch());
-		if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
+		if(!((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
 			CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference("matureChkBox");
             PreferenceCategory mCategory = (PreferenceCategory) findPreference("filters");
 			mCategory.removePreference(mCheckBoxPref);

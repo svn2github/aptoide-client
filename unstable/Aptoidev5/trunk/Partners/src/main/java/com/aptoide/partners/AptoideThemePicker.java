@@ -3,7 +3,6 @@ package com.aptoide.partners;
 import android.content.Context;
 import android.util.Log;
 import cm.aptoide.ptdev.EnumAptoideThemes;
-import cm.aptoide.ptdev.R;
 
 public class AptoideThemePicker extends cm.aptoide.ptdev.AptoideThemePicker{
 
