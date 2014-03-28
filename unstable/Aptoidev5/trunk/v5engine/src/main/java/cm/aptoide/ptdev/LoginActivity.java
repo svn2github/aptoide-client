@@ -35,6 +35,7 @@ import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Configs;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
@@ -595,6 +596,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 .putString("username", checkUserCredentialsJson.getUsername())
                                 .commit();
                     }
+
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                            .edit()
+                            .putString(Configs.LOGIN_USER_LOGIN, username)
+                            .commit();
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);

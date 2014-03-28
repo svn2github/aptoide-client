@@ -27,6 +27,15 @@ public class ApkFeaturedTopXml extends Apk{
 
     private long repoId;
 
+    public ApkFeaturedTopXml() {
+        super();
+    }
+
+    public ApkFeaturedTopXml(ApkFeaturedTopXml apkFeaturedTopXml) {
+        super(apkFeaturedTopXml);
+        this.repoId = apkFeaturedTopXml.repoId;
+    }
+
     @Override
     public List<String> getStatements() {
 
@@ -128,6 +137,11 @@ public class ApkFeaturedTopXml extends Apk{
         }
 
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkFeaturedTopXml(this));
     }
 
     public void setRepoId(long repoId) {

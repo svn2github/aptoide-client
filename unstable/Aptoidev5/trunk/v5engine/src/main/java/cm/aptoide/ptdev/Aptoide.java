@@ -59,6 +59,8 @@ import static org.acra.ReportField.*;
 public class Aptoide extends Application {
 
 
+
+
     public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
@@ -182,7 +184,9 @@ public class Aptoide extends Application {
 
 
     public void bootImpl(ManagerPreferences managerPreferences) {
-        managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
+        if (managerPreferences.getAptoideClientUUID() == null) {
+            managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
+        }
     }
 
     public AptoideConfiguration getAptoideConfiguration() {

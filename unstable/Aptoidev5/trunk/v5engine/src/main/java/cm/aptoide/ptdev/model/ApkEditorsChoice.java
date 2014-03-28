@@ -25,6 +25,14 @@ import java.util.List;
 public class ApkEditorsChoice extends Apk {
 
 
+    public ApkEditorsChoice(){
+        super();
+    }
+
+    public ApkEditorsChoice(ApkEditorsChoice apkEditorsChoice) {
+        super(apkEditorsChoice);
+    }
+
     @Override
     public List<String> getStatements() {
 
@@ -132,6 +140,13 @@ public class ApkEditorsChoice extends Apk {
 
 
     }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkEditorsChoice(this));
+    }
+
+
 
 
 }

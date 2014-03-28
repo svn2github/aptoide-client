@@ -85,9 +85,7 @@ public class HandlerInfoXml extends AbstractHandler {
                         isRemove = false;
                     } else if (apk.getChildren() != null) {
                         for (Apk theApk : apk.getChildren()) {
-
                             Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
-
                             theApk.databaseInsert(statements, categoriesIds);
                         }
                         apk.setChildren(null);
@@ -181,18 +179,7 @@ public class HandlerInfoXml extends AbstractHandler {
             }
         });
 
-        elements.put("apk", new ElementHandler() {
-            public void startElement(Attributes atts) throws SAXException {
 
-            }
-
-            @Override
-            public void endElement() throws SAXException {
-                if(multipleApk){
-                    apk.getChildren().add(apk);
-                }
-            }
-        });
 
         elements.put("del", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {

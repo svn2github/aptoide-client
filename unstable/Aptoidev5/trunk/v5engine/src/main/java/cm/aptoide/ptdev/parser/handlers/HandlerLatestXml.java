@@ -68,7 +68,17 @@ public class HandlerLatestXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
-                apk.databaseInsert(statements, categoriesIds);
+                if (isRunning()) {
+                    if (apk.getChildren() != null) {
+                        for (Apk theApk : apk.getChildren()) {
+                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
+                            theApk.databaseInsert(statements, categoriesIds);
+                        }
+                        apk.setChildren(null);
+                    } else {
+                        apk.databaseInsert(statements, categoriesIds);
+                    }
+                }
             }
         });
 

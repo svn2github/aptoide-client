@@ -153,7 +153,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 service.stopDownload(downloadId);
                             }
 
-
                         }
                     });
 

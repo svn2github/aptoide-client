@@ -1,9 +1,11 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.model.ApkEditorsChoice;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -235,7 +237,17 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
             @Override
             public void endElement() throws SAXException {
-                apk.setName(sb.toString());
+
+                if(apk.getChildren()!=null){
+                    apk.setName(sb.toString());
+                    for(Apk theApk: apk.getChildren()){
+                        theApk.setName(sb.toString());
+                    }
+                }else{
+                    apk.setName(sb.toString());
+                }
+
+
             }
         });
 
@@ -366,6 +378,20 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 if(apk.getIconPath()==null) apk.setIconPath(sb.toString());
+            }
+        });
+
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(multipleApk){
+                    apk.addApkToChildren();
+                    Log.d("MultipleApk", "adding " + apk + " " + apk.getChildren());
+                }
             }
         });
 
@@ -502,6 +528,8 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
     }
+
+
 
     protected abstract Apk getApk();
     protected abstract void loadSpecificElements();

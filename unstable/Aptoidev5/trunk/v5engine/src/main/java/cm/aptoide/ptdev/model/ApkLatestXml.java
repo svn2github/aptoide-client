@@ -24,7 +24,13 @@ import java.util.List;
 public class ApkLatestXml extends Apk {
 
 
+    public ApkLatestXml(ApkLatestXml apkLatestXml) {
+        super(apkLatestXml);
+    }
 
+    public ApkLatestXml() {
+        super();
+    }
 
     @Override
     public List<String> getStatements() {
@@ -151,6 +157,11 @@ public class ApkLatestXml extends Apk {
             }
         }
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkLatestXml(this));
     }
 
     @Override

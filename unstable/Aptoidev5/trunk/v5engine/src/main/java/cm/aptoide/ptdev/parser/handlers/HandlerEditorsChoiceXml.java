@@ -77,7 +77,15 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             @Override
             public void endElement() throws SAXException {
                 if (isRunning()) {
-                    apk.databaseInsert(statements, categoriesIds);
+                    if (apk.getChildren() != null) {
+                        for (Apk theApk : apk.getChildren()) {
+                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk " + theApk + " " + apk.getChildren());
+                            theApk.databaseInsert(statements, categoriesIds);
+                        }
+                        apk.setChildren(null);
+                    } else {
+                        apk.databaseInsert(statements, categoriesIds);
+                    }
                 }
                 insidePackage = false;
             }

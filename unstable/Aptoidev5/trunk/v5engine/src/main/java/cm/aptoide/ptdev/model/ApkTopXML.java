@@ -23,8 +23,13 @@ import java.util.List;
  */
 public class ApkTopXML extends Apk {
 
+    public ApkTopXML() {
+        super();
+    }
 
-
+    public ApkTopXML(ApkTopXML apkTopXML) {
+        super(apkTopXML);
+    }
 
     @Override
     public List<String> getStatements() {
@@ -152,6 +157,11 @@ public class ApkTopXML extends Apk {
             }
         }
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkTopXML(this));
     }
 
     @Override

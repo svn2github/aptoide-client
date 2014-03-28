@@ -329,12 +329,20 @@ public class DownloadInfo implements Runnable, Serializable {
     }
 
     public void remove() {
+
+
+        boolean isRemove = !getStatusState().getEnumState().equals(EnumState.COMPLETE);
+
         changeStatusState(new CompletedState(this));
 
         if (mFilesToDownload == null) return;
-        for (DownloadModel model : mFilesToDownload) {
-            new File(model.getDestination()).delete();
+
+        if(isRemove){
+            for (DownloadModel model : mFilesToDownload) {
+                new File(model.getDestination()).delete();
+            }
         }
+
         mProgress = 0;
         mSize = 0;
         mFilesToDownload.clear();

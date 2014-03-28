@@ -305,6 +305,8 @@ public class DownloadService extends Service {
 
     }
 
+
+
     public void resumeDownload(int downloadId) {
         startService(new Intent(getApplicationContext(), DownloadService.class));
         mBuilder = setNotification();

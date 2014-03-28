@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public class DownloadModel implements Serializable {
         return new DownloadConnectionImpl(new URL(url));
     }
 
-    public DownloadFile createFile() throws FileNotFoundException {
+    public DownloadFile createFile() throws FileNotFoundException, CompletedDownloadException {
         this.file = new DownloadFile(destination,md5);
         return file;
     }
@@ -37,10 +38,19 @@ public class DownloadModel implements Serializable {
         this.destination = destination;
         this.md5 = md5;
         this.size = size;
+
     }
 
     public String getDestination() {
-        return destination;
+
+        File file = new File(destination +"--downloading");
+
+        if(file.exists()){
+            return destination +"--downloading";
+        }else{
+            return destination;
+        }
+
     }
 
     public boolean isAutoExecute() {

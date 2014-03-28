@@ -115,10 +115,8 @@ public class DownloadThread implements Runnable, Serializable {
 
             if(parent.getStatusState() instanceof ActiveState){
                 mDownloadFile.checkMd5();
+                mDownloadFile.rename();
             }
-
-
-
 
 //            Log.d("DownloadManager", "Download done with " + new Md5Handler().md5Calc(new File(mDestination)));
         }catch (NotFoundException exception){

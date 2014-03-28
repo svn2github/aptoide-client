@@ -25,6 +25,14 @@ import java.util.List;
 public class ApkInfoXML extends Apk {
 
 
+    public ApkInfoXML(ApkInfoXML apkInfoXML) {
+        super(apkInfoXML);
+
+    }
+
+    public ApkInfoXML() {
+        super();
+    }
 
     @Override
     public List<String> getStatements() {
@@ -139,6 +147,11 @@ public class ApkInfoXML extends Apk {
         }
 
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkInfoXML(this));
     }
 
     @Override
