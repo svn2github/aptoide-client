@@ -242,7 +242,7 @@ public class CategoryAdapter extends CursorAdapter {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-                ((StoreActivity)context).installApp(id);
+                ((CategoryCallback)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {
