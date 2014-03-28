@@ -8,4 +8,6 @@ public interface CategoryCallback{
     StoreActivity.SortObject getSort();
 
     void onRefreshStarted();
+
+    void installApp(long id);
 }
