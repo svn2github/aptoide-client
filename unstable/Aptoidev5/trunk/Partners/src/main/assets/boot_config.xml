@@ -22,6 +22,6 @@
         <multiplestores>false</multiplestores>
         <customeditorschoice>true</customeditorschoice>
         <adunitid>f0408f8071a116ab47cabf5937d056d4</adunitid>
-        <createshortcut>false</createshortcut>
+        <createshortcut>true</createshortcut>
     </aptoideconf>
 </bootconf>

@@ -122,7 +122,7 @@ public class SplashDialogFragment extends DialogFragment {
 
         String extStorageDirectory = Environment
                 .getExternalStorageDirectory().getAbsolutePath()
-                + "/.aptoide";
+                + "/.aptoide_settings";
         File wallpaperDirectory = new File(extStorageDirectory);
 
         OutputStream outStream = null;

@@ -44,7 +44,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String THEME = null;
     public static String AVATAR = null;
     public static String DESCRIPTION = null;
-    public static String VIEW = null;
+    public static String VIEW = "list";
     public static String ITEMS = null;
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
