@@ -354,26 +354,37 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         return StartPartner.class;
     }
 
+    @Override
     public Class getAppViewActivityClass() {
         return com.aptoide.partners.AppViewActivityPartner.class;
     }
 
+    @Override
     public Class getSettingsActivityClass() {
         return com.aptoide.partners.SettingsPartner.class;
     }
 
+    @Override
     public Class getSignUpActivityClass() {
         return com.aptoide.partners.SignUpActivityPartner.class;
     }
 
+    @Override
     public String getUpdatesSyncAdapterAuthority(){
         return "com.aptoide.partners.UpdatesProvider";
     }
 
+    @Override
     public String getAutoUpdatesSyncAdapterAuthority(){
         return "com.aptoide.partners.AutoUpdateProvider";
     }
 
+    @Override
+    public String getSearchAuthority() {
+        return "com.aptoide.partners.SuggestionProvider";
+    }
+
+    @Override
     public String getAccountType() { return AccountGeneralPartners.ACCOUNT_TYPE;
     };
 
