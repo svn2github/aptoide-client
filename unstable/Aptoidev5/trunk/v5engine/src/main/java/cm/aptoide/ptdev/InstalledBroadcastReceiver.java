@@ -71,7 +71,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 BusProvider.getInstance().post(new InstalledApkEvent(apk));
 
                 if(Build.VERSION.SDK_INT >= 11 && context.getPackageManager().getInstallerPackageName(intent.getData().getEncodedSchemeSpecificPart())==null){
-                    context.getPackageManager().setInstallerPackageName(intent.getData().getEncodedSchemeSpecificPart() , "cm.aptoide.pt.dev");
+                    context.getPackageManager().setInstallerPackageName(intent.getData().getEncodedSchemeSpecificPart() , context.getPackageName());
                 }
 
             } catch (Exception e) {
