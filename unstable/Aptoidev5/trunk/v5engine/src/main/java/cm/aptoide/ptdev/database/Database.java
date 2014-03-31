@@ -225,7 +225,7 @@ public class Database {
     public Cursor getApks(long storeid, long parentid, StoreActivity.SortObject sortObject) {
 
 
-        String sort = "apk.name";
+        String sort = "name";
 
         switch (sortObject.getSort()){
 
@@ -250,8 +250,23 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         Cursor c;
+
+
         if(storeid != -1){
-            c = database.rawQuery("select * from (select apk.package_name, apk.name , apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+
+            if(parentid==500 || parentid == 501){
+                String order = " name";
+                if(parentid==500){
+                    order = "downloads desc";
+                }else if (parentid == 501){
+                    order = "date desc";
+                }
+
+                c = database.rawQuery("select * from (select apk.package_name, apk.name , apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + order , new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+            }else{
+                c = database.rawQuery("select * from (select apk.package_name, apk.name , apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+            }
+
         }else{
             c = database.rawQuery("select * from (select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk, repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk) group by package_name order by " + sort, null);
         }
@@ -264,30 +279,30 @@ public class Database {
     public Cursor getAllStoreApks(long storeid, StoreActivity.SortObject sortObject) {
 
 
-        String sort = "apk.name";
+        String sort = "name";
 
         switch (sortObject.getSort()){
 
             case NAME:
-                sort = "apk.name collate nocase";
+                sort = "name collate nocase";
                 break;
             case DATE:
-                sort = "apk.date desc";
+                sort = "date desc";
                 break;
             case DOWNLOADS:
-                sort = "apk.downloads desc";
+                sort = "downloads desc";
                 break;
             case RATING:
-                sort = "apk.rating desc";
+                sort = "rating desc";
                 break;
             case PRICE:
-                sort = "apk.price desc";
+                sort = "price desc";
                 break;
         }
 
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
-        Cursor c = database.rawQuery("select apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by " + sort, new String[]{String.valueOf(storeid)  });
+        Cursor c = database.rawQuery("select * from (select apk.package_name, apk.name, apk.downloads, apk.rating, apk.price, apk.date ,apk.id_apk as _id, apk.downloads as count,apk.version_name ,'0' as type, apk.icon, repo.icons_path as iconpath, repo.theme as theme from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(storeid)  });
         c.getCount();
 
         return c;
