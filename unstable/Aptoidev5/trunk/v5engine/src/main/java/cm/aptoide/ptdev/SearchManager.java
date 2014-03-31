@@ -69,7 +69,7 @@ public class SearchManager extends ActionBarActivity {
             query = query.replaceAll("\\s{2,}", " ");
         }
 
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,"cm.aptoide.pt.SuggestionProvider", 1);
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,Aptoide.getConfiguration().getSearchAuthority(), 1);
         suggestions.saveRecentQuery(query, null);
 
 //        Toast.makeText(this, "Searched: " + query, Toast.LENGTH_LONG).show();
