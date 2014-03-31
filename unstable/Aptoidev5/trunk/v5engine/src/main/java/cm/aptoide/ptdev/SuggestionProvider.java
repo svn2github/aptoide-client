@@ -26,7 +26,7 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
 
 
     public SuggestionProvider(){
-        setupSuggestions(Aptoide.getConfiguration().getSearchAuthority(), DATABASE_MODE_QUERIES);
+        setupSuggestions("com.aptoide.partners.SuggestionProvider", DATABASE_MODE_QUERIES);
     }
 
 
