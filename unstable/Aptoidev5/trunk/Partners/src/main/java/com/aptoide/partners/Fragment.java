@@ -143,10 +143,10 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
             android.support.v4.app.Fragment fragment;
             String storeView = ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getStoreView();
-            if("list".equals(storeView) || storeView==null){
-                fragment= new FragmentStoreListCategories();
-            }else{
+            if("grid".equals(storeView)){
                 fragment= new FragmentStoreGridCategories();
+            }else{
+                fragment= new FragmentStoreListCategories();
             }
 
             Bundle args = new Bundle();
