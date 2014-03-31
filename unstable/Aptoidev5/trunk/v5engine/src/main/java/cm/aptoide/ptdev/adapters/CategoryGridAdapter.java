@@ -218,7 +218,6 @@ public class CategoryGridAdapter extends CursorAdapter {
             this.context = context;
             this.id = id;
 
-
         }
 
         @Override

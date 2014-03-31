@@ -44,6 +44,10 @@ public class AptoideConfiguration {
         return "cm.aptoide.pt.UpdatesProvider";
     }
 
+    public String getSearchAuthority(){
+        return "cm.aptoide.pt.SuggestionProvider";
+    }
+
     public String getAutoUpdatesSyncAdapterAuthority(){
         return "cm.aptoide.pt.AutoUpdateProvider";
     }
