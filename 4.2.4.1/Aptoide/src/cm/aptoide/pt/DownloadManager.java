@@ -1,0 +1,706 @@
+/*
+ * DownloadManager, part of Aptoide
+ * Copyright (C) 2012 Duarte Silveira
+ * duarte.silveira@caixamagica.pt
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+package cm.aptoide.pt;
+
+import android.content.*;
+import android.content.DialogInterface.OnDismissListener;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.*;
+import cm.aptoide.pt.download.DownloadInfo;
+import cm.aptoide.pt.download.Utils;
+import cm.aptoide.pt.download.event.DownloadStatusEvent;
+import cm.aptoide.pt.events.BusProvider;
+import cm.aptoide.pt.services.ServiceManagerDownload;
+import cm.aptoide.pt.sharing.DialogShareOnFacebook;
+import cm.aptoide.pt.util.quickaction.ActionItem;
+import cm.aptoide.pt.util.quickaction.EnumQuickActions;
+import cm.aptoide.pt.util.quickaction.QuickAction;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+/**
+ * DownloadManager
+ *
+ * @author dsilveira
+ *
+ */
+public class DownloadManager extends SherlockFragmentActivity {
+
+
+
+
+	private TextView noDownloads;
+
+
+
+
+
+    private ArrayList<DownloadInfo> notOnGoingArrayList;
+    private ServiceConnection serviceManagerConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// This is called when the connection with the service has been
+			// established, giving us the object we can use to
+			// interact with the service.  We are communicating with the
+			// service using AIDL, so here we set the remote service interface.
+//			serviceManager = AIDLServiceDownloadManager.Stub.asInterface(service);
+//			serviceManagerIsBound = true;
+//
+//			Log.v("Aptoide-DownloadManager", "Connected to ServiceDownloadManager");
+//
+//			try {
+//				serviceManager.callRegisterDownloadManager(serviceManagerCallback);
+//			} catch (RemoteException e) {
+//				e.printStackTrace();
+//			}
+//
+//			continueLoading();
+
+            dm = ((ServiceManagerDownload.LocalBinder) service).getService();
+
+
+            onGoingArrayList = dm.getOngoingDownloads();
+            notOnGoingArrayList = dm.getNotOngoingDownloads();
+//            sort(onGoingArrayList);
+            onGoingadapter = new MyAdapter(DownloadManager.this, onGoingArrayList);
+            notOngoingAdapter = new MyAdapter(DownloadManager.this, notOnGoingArrayList);
+
+            sort(onGoingArrayList);
+
+            onGoingListView.setAdapter(onGoingadapter);
+            notOngoingListView.setAdapter(notOngoingAdapter);
+            
+            refreshListViews();
+
+            BusProvider.getInstance().register(DownloadManager.this);
+            registered = true;
+
+        }
+
+
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been
+			// unexpectedly disconnected -- that is, its process crashed.
+			
+
+
+			Log.v("Aptoide-DownloadManager", "Disconnected from ServiceDownloadManager");
+		}
+	};
+
+    ServiceManagerDownload dm;
+    ArrayList<DownloadInfo> onGoingArrayList;
+    MyAdapter onGoingadapter;
+    MyAdapter notOngoingAdapter;
+
+
+    private ListView onGoingListView;
+    private TextView onGoingTextView;
+    private ListView notOngoingListView;
+    private TextView notOngoingTextView;
+    private boolean registered;
+
+
+    @Subscribe
+    public void onDownloadTick(DownloadInfo download){
+            refreshDownload(download, onGoingListView);
+            refreshDownload(download, notOngoingListView);
+    }
+
+
+	private void refreshDownload(DownloadInfo download, ListView list) {
+		try{
+			int start = list.getFirstVisiblePosition();
+			for (int i = start, j = list.getLastVisiblePosition(); i <= j; i++)
+			    if (download == list.getItemAtPosition(i)) {
+			        View view = list.getChildAt(i - start);
+			        list.getAdapter().getView(i, view, list);
+			        break;
+			    }
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+
+    @Subscribe public void onDownloadEvent(DownloadStatusEvent event){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                onGoingadapter.clear();
+//                notOngoingAdapter.clear();
+
+                onGoingArrayList.clear();
+                onGoingArrayList.addAll(dm.getOngoingDownloads());
+                sort(onGoingArrayList);
+                onGoingadapter.notifyDataSetChanged();
+                
+                notOnGoingArrayList.clear();
+                notOnGoingArrayList.addAll(dm.getNotOngoingDownloads());
+                notOngoingAdapter.notifyDataSetChanged();
+                
+                refreshListViews();
+                
+                
+            }
+        });
+
+        
+        
+
+    }
+    
+    private void refreshListViews() {
+		if(notOnGoingArrayList.isEmpty()){
+			notOngoingTextView.setVisibility(View.GONE);
+			notOngoingListView.setVisibility(View.GONE);
+	    }else{
+	    	notOngoingTextView.setVisibility(View.VISIBLE);
+	    	notOngoingListView.setVisibility(View.VISIBLE);
+	    }
+		
+		if(onGoingArrayList.isEmpty()){
+			onGoingTextView.setVisibility(View.GONE);
+			onGoingListView.setVisibility(View.GONE);
+		}else{
+			onGoingTextView.setVisibility(View.VISIBLE);
+			onGoingListView.setVisibility(View.VISIBLE);
+		}
+		
+		if(onGoingArrayList.isEmpty() && notOnGoingArrayList.isEmpty()){
+			noDownloads.setVisibility(View.VISIBLE);
+		}else{
+			noDownloads.setVisibility(View.GONE);
+		}
+		
+	}
+
+    private void sort(ArrayList<DownloadInfo> list) {
+
+
+        Collections.sort(list, new Comparator<DownloadInfo>() {
+            @Override
+            public int compare(DownloadInfo lhs, DownloadInfo rhs) {
+                return lhs.getStatusState().getEnumState().ordinal() - rhs.getStatusState().getEnumState().ordinal();  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+
+
+    }
+
+    @Override
+	public void onCreate(Bundle savedInstanceState) {
+		AptoideThemePicker.setAptoideTheme(this);
+		super.onCreate(savedInstanceState);
+
+//		if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("jblow")){
+//			getSupportActionBar().setIcon(R.drawable.brand_jblow);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("magalhaes")){
+//			getSupportActionBar().setIcon(R.drawable.brand_magalhaes);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("timwe")){
+//			getSupportActionBar().setIcon(R.drawable.brand_timwe);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("digitallydifferent")){
+//			getSupportActionBar().setIcon(R.drawable.brand_digitallydifferent);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("eocean")){
+//			getSupportActionBar().setIcon(R.drawable.brand_eocean);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("educomp")){
+//			getSupportActionBar().setIcon(R.drawable.brand_educomp);
+//		}else if(ApplicationAptoide.APTOIDETHEME.equalsIgnoreCase("peoplenet")){
+//			getSupportActionBar().setIcon(R.drawable.brand_peoplenet);
+//		}else if(ApplicationAptoide.BRAND!=null){
+//			getSupportActionBar().setIcon(getBrandDrawableResource());
+//		}else{
+//			getSupportActionBar().setIcon(R.drawable.brand_aptoide_padding);
+//		}
+//		getSupportActionBar().setTitle(getString(R.string.download_manager));
+//		getSupportActionBar().setHomeButtonEnabled(true);
+//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setContentView(R.layout.download_manager);
+//        ViewPager vp = (ViewPager) findViewById(R.id.downloadManagerViewPager);
+
+//        ArrayList<View> views = new ArrayList<View>();
+//        onGoingList = new ListView(this);
+//        notOngoingList = new ListView(this);
+
+        onGoingListView = (ListView) findViewById(R.id.downloading_list);
+        notOngoingListView = (ListView) findViewById(R.id.downloaded_list);
+        
+        onGoingTextView = (TextView) findViewById(R.id.downloading_intro);
+        notOngoingTextView = (TextView) findViewById(R.id.downloaded_intro);
+        
+        noDownloads = (TextView) findViewById(R.id.no_downloads);
+        
+       
+//        views.add(onGoingList);
+//        views.add(notOngoingList);
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(this, views);
+//        vp.setAdapter(adapter);
+//        adapter.setTitles(new String[]{getString(R.string.downloading_apps), getString(R.string.downloaded_apps)});
+//        TitlePageIndicator pageIndicator = (TitlePageIndicator) findViewById(R.id.downloadManagerPageIndicator);
+//        pageIndicator.setViewPager(vp);
+
+        onGoingListView.setAdapter(onGoingadapter);
+        notOngoingListView.setAdapter(notOngoingAdapter);
+        
+        
+        registerForContextMenu(onGoingListView);
+
+        notOngoingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((DownloadInfo)parent.getItemAtPosition(position)).download();
+            }
+        });
+
+//		if(!isRunning){
+//			isRunning = true;
+//
+//			if(!serviceManagerIsBound){
+	    bindService(new Intent(this, ServiceManagerDownload.class), serviceManagerConnection, Context.BIND_AUTO_CREATE);
+//	    	}
+//
+//			setContentView(R.layout.download_manager);
+//			downloading = (LinearLayout) findViewById(R.id.downloading_apps);
+//			downloading.setVisibility(View.GONE);
+//
+//			downloaded = (LinearLayout) findViewById(R.id.downloaded_apps);
+//			downloaded.setVisibility(View.GONE);
+//
+//			notDownloaded = (LinearLayout) findViewById(R.id.failed_apps);
+//			notDownloaded.setVisibility(View.GONE);
+//
+//			exitButton = (Button) findViewById(R.id.exit);
+//			exitButton.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					finish();
+//				}
+//			});
+//
+//			noDownloads = (TextView) findViewById(R.id.no_downloads);
+//			noDownloads.setVisibility(View.VISIBLE);
+//		}
+
+	}
+
+//    private int getBrandDrawableResource() {
+//    	int brandDrawableResource = this.getResources().getIdentifier("brand_aptoide_padding", "drawable", this.getPackageName());
+//		EnumAptoideThemes enumAptoideTheme = null;
+//		String aptoideThemeString = "APTOIDE_THEME_"+ ApplicationAptoide.APTOIDETHEME.toUpperCase(Locale.ENGLISH);
+//		try {
+//			enumAptoideTheme = EnumAptoideThemes.valueOf(aptoideThemeString);
+//		} catch (Exception e) {
+//			enumAptoideTheme = EnumAptoideThemes.APTOIDE_THEME_DEFAULT;
+//		}
+//		switch(enumAptoideTheme){
+//		case APTOIDE_THEME_DIGITALLYDIFFERENT:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_digitallydifferent", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//		case APTOIDE_THEME_EOCEAN:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_eocean", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//		case APTOIDE_THEME_JBLOW:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_jblow", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//		case APTOIDE_THEME_LAZERPLAY:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_lazerplay", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//		case APTOIDE_THEME_MAGALHAES:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_magalhaes", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//		case APTOIDE_THEME_TIMWE:
+//			brandDrawableResource = this.getResources().getIdentifier("brand_timwe", "drawable", this.getPackageName());
+//			Log.d("MainActivity-brand", ApplicationAptoide.BRAND);
+//			break;
+//
+//		}
+//		return brandDrawableResource;
+//	}
+
+
+	@Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(0, 0, 0, "Pause");
+        menu.add(0, 1, 1, "Resume");
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()){
+
+            case 0:
+                onGoingadapter.getItem(info.position).pause();
+                break;
+            case 1:
+                onGoingadapter.getItem(info.position).download();
+                break;
+
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+
+
+    public static class DownloadingRowViewHolder{
+        TextView app_name;
+        ImageView app_icon;
+        ProgressBar app_download_progress;
+        TextView app_progress;
+        TextView app_speed;
+        TextView app_eta;
+        ImageView manageDownloadsButton;
+
+    }
+
+    public class MyAdapter extends ArrayAdapter<DownloadInfo> {
+
+
+        private final ActionItem playItem;
+        private final ActionItem pauseItem;
+        private final ActionItem stopItem;
+        private final ActionItem deleteItem;
+        private final ActionItem shareItem;
+
+        public MyAdapter(Context context, ArrayList<DownloadInfo> list) {
+            super(context, 0, list);
+            playItem = new ActionItem(EnumQuickActions.PLAY.ordinal(), getString(R.string.resume), context.getResources().getDrawable(R.drawable.ic_media_play));
+            pauseItem = new ActionItem(EnumQuickActions.PAUSE.ordinal(), getString(R.string.pause), context.getResources().getDrawable(R.drawable.ic_media_pause));
+            stopItem = new ActionItem(EnumQuickActions.STOP.ordinal(), getString(R.string.stop), context.getResources().getDrawable(R.drawable.ic_media_stop));
+            deleteItem = new ActionItem(EnumQuickActions.STOP.ordinal(), getString(R.string.clear), context.getResources().getDrawable(R.drawable.ic_menu_close_clear_cancel));
+            shareItem = new ActionItem(EnumQuickActions.SHARE.ordinal(), getString(R.string.share), context.getResources().getDrawable(R.drawable.ic_menu_share));
+        }
+
+
+        @Override
+        public long getItemId(int position) {
+        	
+        	long id = 0;
+        	
+        	try{
+        		id = getItem(position).getId();
+        	}catch(Exception e){
+        		e.printStackTrace();
+        	}
+            return id;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+
+
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            DownloadingRowViewHolder rowViewHolder;
+
+            if(convertView == null){
+                convertView = getLayoutInflater().inflate(R.layout.row_app_downloading, null);
+                rowViewHolder = new DownloadingRowViewHolder();
+                rowViewHolder.app_name = (TextView) convertView.findViewById(R.id.downloading_name);
+                rowViewHolder.app_download_progress = (ProgressBar) convertView.findViewById(R.id.downloading_progress);
+                rowViewHolder.app_icon = (ImageView) convertView.findViewById(R.id.downloading_icon);
+                rowViewHolder.app_progress = (TextView) convertView.findViewById(R.id.progress);
+                rowViewHolder.app_speed = (TextView) convertView.findViewById(R.id.speed);
+                rowViewHolder.app_eta = (TextView) convertView.findViewById(R.id.eta);
+                rowViewHolder.manageDownloadsButton = (ImageView) convertView.findViewById(R.id.icon_manage);
+                convertView.setTag(rowViewHolder);
+            }else{
+                rowViewHolder = (DownloadingRowViewHolder) convertView.getTag();
+            }
+
+            final DownloadInfo download = getItem(position);
+
+            rowViewHolder.app_name.setText(download.getViewApk().getName()+"  "+download.getViewApk().getVername());
+            rowViewHolder.app_progress.setText(download.getPercentDownloaded() + "%");
+
+            rowViewHolder.app_eta.setText(Utils.formatEta(download.getEta(), getString(R.string.time_left)));
+
+            if(download.getPercentDownloaded()==0){
+            	 rowViewHolder.app_download_progress.setIndeterminate(true);
+            	 rowViewHolder.app_speed.setText(R.string.starting);
+             }else{
+            	 rowViewHolder.app_download_progress.setIndeterminate(false);
+            	 rowViewHolder.app_speed.setText(Utils.formatBits((long) download.getSpeed()) + "ps ");
+            }
+
+            switch (download.getStatusState().getEnumState()){
+                case ERROR:
+                    rowViewHolder.app_speed.setText(getString(R.string.download_failed_due_to) +": "+ download.getFailReason().toString(getContext()));
+
+                    rowViewHolder.app_progress.setVisibility(View.GONE);
+                    rowViewHolder.app_download_progress.setVisibility(View.GONE);
+                    rowViewHolder.app_eta.setVisibility(View.GONE);
+                    break;
+                case COMPLETE:
+                	rowViewHolder.app_speed.setText(getString(R.string.completed));
+
+                    rowViewHolder.app_download_progress.setVisibility(View.GONE);
+                    rowViewHolder.app_progress.setVisibility(View.GONE);
+                    rowViewHolder.app_eta.setVisibility(View.GONE);
+                    break;
+                case PENDING:
+                    rowViewHolder.app_speed.setText(getString(R.string.waiting));
+
+                    rowViewHolder.app_eta.setVisibility(View.GONE);
+                    break;
+                case INACTIVE:
+                    rowViewHolder.app_speed.setText(getString(R.string.paused));
+
+                    rowViewHolder.app_eta.setVisibility(View.GONE);
+                    break;
+                case ACTIVE:
+                    rowViewHolder.app_eta.setVisibility(View.VISIBLE);
+                    rowViewHolder.app_progress.setVisibility(View.VISIBLE);
+                    rowViewHolder.app_download_progress.setVisibility(View.VISIBLE);
+                    break;
+            }
+
+//            if(download.getProgress() != 0 && download.getProgress() < 99){
+//                rowViewHolder.app_download_progress.setIndeterminate(false);
+//                rowViewHolder.app_download_progress.setMax(100);
+//            }else{
+//                rowViewHolder.app_download_progress.setIndeterminate(true);
+//            }
+            rowViewHolder.app_download_progress.setProgress(download.getPercentDownloaded());
+            String iconUrl = download.getViewApk().getIcon();
+
+            ImageLoader.getInstance().displayImage(iconUrl, rowViewHolder.app_icon);
+
+
+            rowViewHolder.manageDownloadsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    QuickAction actionBar  = new QuickAction(getContext());
+
+                    switch (download.getStatusState().getEnumState()) {
+
+                    case ACTIVE:
+                    	actionBar.addActionItem(pauseItem);
+                    	actionBar.addActionItem(stopItem);
+                    	break;
+                    case PENDING:
+                        actionBar.addActionItem(stopItem);
+                        break;
+                    case COMPLETE:
+                    	actionBar.addActionItem(deleteItem);
+                    	actionBar.addActionItem(shareItem);
+                    	break;
+                    case ERROR:
+                    	actionBar.addActionItem(playItem);
+                    	actionBar.addActionItem(stopItem);
+                    	break;
+                    default:
+                    	actionBar.addActionItem(playItem);
+                    	break;
+                    }
+
+                    actionBar.show(view);
+                    actionBar.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+                        @Override
+                        public void onItemClick(QuickAction quickAction, int pos, int actionId) {
+                            switch (EnumQuickActions.reverseOrdinal(actionId)) {
+                                    case PLAY:
+                                        download.download();
+                                        break;
+
+                                    case PAUSE:
+                                        download.pause();
+                                        break;
+
+                                    case DELETE:
+                                    case STOP:
+                                        download.remove();
+                                        break;
+                                    case SHARE:
+                                    	shareOnFacebook(download);
+                                    	break;
+
+                                    default:
+                                        break;
+                            }
+                        }
+
+
+
+
+
+                    });
+
+                }
+            });
+
+            return convertView;
+        }
+    }
+
+    private void shareOnFacebook(DownloadInfo download) {
+    	String facebookShareName = download.getViewApk().getName()+"  "+download.getViewApk().getVername();
+    	String facebookShareIcon = download.getViewApk().getIcon();
+    	String facebookShareMessage = getString(R.string.i_downloaded_to_install, facebookShareName);
+    	String facebookShareDescription;
+    	String facebookShareStoreLink;
+    	if(download.getViewApk().getRepoName().equals("apps")){
+    		facebookShareDescription = getString(R.string.visit_and_install_the_best_apps, ApplicationAptoide.MARKETNAME);
+    		facebookShareStoreLink = getString(R.string.aptoide_url_topapps);
+    	}else{
+    		facebookShareDescription = getString(R.string.visit_and_install, download.getViewApk().getRepoName());
+    		facebookShareStoreLink = "http://"+download.getViewApk().getRepoName()+".store.aptoide.com";
+    	}
+
+    	Log.d("Aptoide-sharing", "NameToPost: "+facebookShareName+", IconToPost: "+facebookShareIcon +", DescriptionToPost: "+facebookShareDescription+", MessageToPost: "+facebookShareMessage+", StoreLinkToPost: "+facebookShareStoreLink);
+
+    	final DialogShareOnFacebook shareFacebook = new DialogShareOnFacebook(this, facebookShareName, facebookShareIcon, facebookShareMessage, facebookShareDescription, facebookShareStoreLink);
+
+    	shareFacebook.setOnDismissListener(new OnDismissListener() {
+    		@Override
+    		public void onDismiss(DialogInterface dialog) {
+    			shareFacebook.dismiss();
+    		}
+    	});
+
+    	shareFacebook.show();
+    }
+
+//	private void continueLoading(){
+//		ListView uploadingList = (ListView) findViewById(R.id.downloading_list);
+//		downloadingAdapter = new DownloadingListAdapter(this, serviceManager, ImageLoader.getInstance());
+//		uploadingList.setAdapter(downloadingAdapter);
+//
+//		ListView uploadedList = (ListView) findViewById(R.id.downloaded_list);
+//		downloadedAdapter = new DownloadedListAdapter(this, ImageLoader.getInstance());
+//		uploadedList.setAdapter(downloadedAdapter);
+//
+//		uploadedList.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				try {
+//					serviceManager.callInstallApp(downloadedAdapter.getItem(position));
+//				} catch (RemoteException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//
+//		});
+//
+//		ListView notUploadedList = (ListView) findViewById(R.id.failed_list);
+//		notDownloadedAdapter = new NotDownloadedListAdapter(this, ImageLoader.getInstance());
+//		notUploadedList.setAdapter(notDownloadedAdapter);
+//		notUploadedList.setOnItemClickListener(new OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> adapterView, View view, int position, long positionLong) {
+//				try {
+//					serviceManager.callRestartDownload(notDownloadedAdapter.getItem(position).hashCode());
+//				} catch (RemoteException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//
+//		prePopulateLists();
+//		registerForContextMenu(uploadedList);
+//	}
+
+	@Override
+	protected void onDestroy() {
+//		try {
+//			serviceManager.callUnregisterDownloadManager();
+//		} catch (RemoteException e) {
+//			e.printStackTrace();
+//		}
+		unbindService(serviceManagerConnection);
+
+        if(registered){
+            BusProvider.getInstance().unregister(this);
+        }
+        super.onDestroy();
+	}
+
+
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v,
+//			ContextMenuInfo menuInfo) {
+//
+//		menu.add(0, 0, 0, getString(R.string.export_apk));
+//
+//		super.onCreateContextMenu(menu, v, menuInfo);
+//	}
+//
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {
+//
+//		switch (item.getItemId()) {
+//		case 0:
+//
+//			break;
+//
+//		default:
+//			break;
+//		}
+//
+//		return super.onContextItemSelected(item);
+//	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		menu.add(Menu.NONE, 0, 0, R.string.clear_all).setIcon(android.R.drawable.ic_notification_clear_all);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+//	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		switch (item.getItemId()) {
+		case 0:
+				dm.clearCompletedDownloads();
+			break;
+		default:
+			break;
+		}
+
+		return true;
+	}
+}

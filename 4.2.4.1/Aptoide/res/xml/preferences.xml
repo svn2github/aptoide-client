@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_title_bar" >
+
+    <PreferenceCategory android:title="@string/clear_dwn_title" >
+        <PreferenceScreen
+            android:key="second_preferencescreen"
+            android:title="@string/setting_icon_download_rules" >
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="wifi"
+                android:title="@string/setting_wifi" />
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="3g"
+                android:title="@string/setting_3g" />
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="4g"
+                android:title="@string/setting_4g" />
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="ethernet"
+                android:title="@string/setting_ethernet" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="filters"
+        android:title="@string/setting_filters_title" >
+        <Preference
+            android:key="hwspecs"
+            android:summary="@string/setting_hwspecstitle"
+            android:title="@string/setting_hwspecstitle" >
+        </Preference>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="hwspecsChkBox"
+            android:summary="@string/setting_appfiltersum"
+            android:title="@string/setting_appfiltertitle" />
+
+        <CheckBoxPreference
+            android:key="matureChkBox"
+            android:summary="@string/setting_dont_show_mature_content"
+            android:title="@string/setting_mature_filtering" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_updates" >
+        <Preference
+                android:key="showexcludedupdates"
+                android:summary="@string/excluded_updates_sum"
+                android:title="@string/excluded_updates" />
+        <CheckBoxPreference
+                android:key="showUpdatesNotification"
+                android:summary="@string/setting_updates_notification_sum"
+                android:defaultValue="true"
+                android:title="@string/setting_updates_notification_title" />
+        <CheckBoxPreference
+                android:key="auto_update"
+                android:summary="@string/setting_auto_update_sum"
+                android:title="@string/setting_auto_update_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_schdwntitle" >
+        <CheckBoxPreference
+            android:key="schDwnBox"
+            android:summary="@string/setting_schdwninstallsum"
+            android:title="@string/setting_schdwninstalltitle" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_clear_memory" >
+        <Preference
+            android:key="clearapk"
+            android:title="@string/clearcontent_title" />
+        <Preference
+            android:key="clearcache"
+            android:title="@string/clearcache_title" />
+
+        <EditTextPreference
+            android:key="maxFileCache"
+            android:summary="@string/settings_maxFileCache_sum"
+            android:title="@string/settings_maxFileCache_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/crash_reports" >
+        <PreferenceScreen
+                android:key="second_preferencescreen"
+                android:title="@string/crash_reports_settings" >
+            <CheckBoxPreference android:key="acra.enable"
+                                android:title="@string/pref_enable_acra"
+                                android:summary="@string/pref_acra_enabled"
+                                android:defaultValue="true"/>
+            <CheckBoxPreference android:key="acra.syslog.enable"
+                                android:summary="@string/pref_acra_syslog_enabled"
+                                android:title="@string/pref_acra_syslog"
+                                android:defaultValue="true"/>
+            <EditTextPreference android:key="acra.user.email"
+                                android:title="@string/pref_acra_user_email"
+                                android:summary="@string/pref_acra_user_email_summary"/>
+            <CheckBoxPreference android:key="acra.alwaysaccept"
+                                android:title="@string/pref_acra_alwaysaccept"
+                                android:summary="@string/pref_acra_alwaysaccept_enabled"
+                                android:defaultValue="false"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="about"
+        android:title="@string/about_us" >
+        <Preference
+            android:key="aboutDialog"
+            android:title="@string/about_us" >
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:key="devmode"
+            android:title="@string/dev_mode">
+        <Preference
+                android:key="devmode"
+
+                android:title="@string/dev_mode">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:targetPackage="cm.aptoide.pt"
+                    android:targetClass="cm.aptoide.pt.DeveloperMode" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

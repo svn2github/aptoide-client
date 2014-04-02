@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+
+    <string-array name="icon_rules">
+        <item>@string/setting_wifi</item>
+        <item>@string/setting_3g</item>
+        <item>@string/setting_4g</item>
+        <item>@string/setting_ethernet</item>
+    </string-array>
+
+</resources>

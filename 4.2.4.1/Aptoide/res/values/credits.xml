@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="aptoide_version">Version 4.2.4.1</string>
+    <string name="aptoide_brand">APTOiDE</string>
+
+    <string name="credits">
+    \tAptoide Team:\n\n
+    \t\t Rui Mateus\n
+    \t\t rui.mateus@aptoide.com\n\n
+    \t\t Teresa Deus\n
+    \t\t teresa.deus@aptoide.com\n\n
+    \t\t Duarte Silveira\n
+    \t\t duarte.silveira@aptoide.com\n\n
+    \t\t Roberto Jacinto\n
+    \t\t roberto.jacinto@aptoide.com\n\n
+
+    \tThank you to our Translators Team:\n\n
+    \t\t
+
+    Albanian: Eni Çuçka |
+    Arabic: Manaa Alshihe, Zuheir Sharafeldin, Mohamed Gorrab, Ahmed Sami, omarioamriky |
+    Bosnian/Serbian: Rijad Spahic, Toni Grubisic  |
+    Catalan: Francisco Villalba Segarra, Marc Bres Gil |
+    Croatian: Roko Jurjevic, Rijad Spahic, Toni Grubisic |
+    Chinese: Theodore Wte |
+    Czech: Jan Krumpholc |
+    Dutch: Ismail Gürol Celiktas, Stefan de Jong |
+    Finnish: Sami Kuusisto |
+    French: Alexis Bonvin, Ultrapeer |
+    Georgian: Sandro Kakabadze |
+    German: Martin Nehrdich, Robert Reep, Manuel Stroh, Michael Mayer, Marlon Bruske |
+    Greek: Basileios Pitas |
+    Hebrew: שלו מויאל , David Liron |
+    Indonesian: Adi Juarsa |
+    Italian: Pavo Baxter, Gabry Carne, Simili Giuseppe, Rapper Skull, Damiano Chiacchiaretta |
+    Lithuanian: Saulius Pranckevicius |
+    Polish: Stanislaw, Tomasz Gregorczyk, Trurl |
+    Portuguese (Brazil): Edu Salgado, Joao Redondo, Maurilio Filho |
+ 	Portuguese: Joao Redondo |
+ 	Romanian: Munteanu Ovidiu, Heim Bogdan, Tudor Bobei |
+    Russian: Kanat Yesseyev |
+    Spanish: Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Ronnie Simon |
+    Turkish: Ultrapeer
+
+
+        \n\n
+ 	\t\tAptoide is using Universal-Image-Loader &#169; 2013, Sergey Tarasevich; View Pager Indicator &#169; 2012, Jake Wharton
+ 	</string>
+
+</resources>
+
+<!--
+ * Copyright (C) 2009  Roberto Jacinto
+ * roberto.jacinto@caixamagica.pt
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->

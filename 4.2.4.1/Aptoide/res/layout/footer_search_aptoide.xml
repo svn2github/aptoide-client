@@ -1,0 +1,73 @@
+
+
+<!--
+  Copyright (c) 2012 rmateus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10dp"
+              android:tag="bazaar">
+
+
+        <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/results_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_toLeftOf="@+id/baz_src"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+
+
+
+
+        <Button
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/baz_src"
+                style="@style/custom_button_style"
+                android:text="@string/searchmore"
+                android:layout_centerHorizontal="true"
+                android:drawableLeft="@drawable/ic_search_aptoide"/>
+
+    <TextView
+            android:id="@+id/search_in_other_stores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/baz_src"
+            android:layout_alignLeft="@id/baz_src"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:text="@string/search_in_other_stores"/>
+
+
+
+
+</RelativeLayout><!--
+ * Copyright (C) 2011  Roberto Jacinto
+ * roberto.jacinto@caixamagica.pt
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+-->
+
+
