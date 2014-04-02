@@ -77,7 +77,7 @@ public class SplashDialogFragment extends DialogFragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                dismiss();
+                dismissAllowingStateLoss();
             }
         }, 3000);
     }

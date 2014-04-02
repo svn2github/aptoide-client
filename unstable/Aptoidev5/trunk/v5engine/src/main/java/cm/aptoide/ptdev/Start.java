@@ -456,7 +456,8 @@ public class Start extends ActionBarActivity implements
                     intent.putExtra("fromApkInstaller", true);
                     intent.putExtra("id", Long.valueOf(id));
 
-                    startActivity(intent);
+                    startActivityForResult(intent, 50);
+
                 }
 
             } catch (IOException e) {
