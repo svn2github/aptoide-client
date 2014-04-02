@@ -68,7 +68,10 @@ public class SplashDialogFragment extends DialogFragment {
         @Override
         public void onLoadingCancelled(String uri, View v) {
             Log.e("Start-loading splash image", "Image canceled");
-            dismiss();
+            if(isAdded()){
+                dismiss();
+            }
+
         }
     };
 
@@ -77,7 +80,9 @@ public class SplashDialogFragment extends DialogFragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                dismissAllowingStateLoss();
+                if(isAdded()){
+                    dismissAllowingStateLoss();
+                }
             }
         }, 3000);
     }
