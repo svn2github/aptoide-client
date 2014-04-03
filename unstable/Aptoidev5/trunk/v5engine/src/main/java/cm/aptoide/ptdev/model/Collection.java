@@ -180,7 +180,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
 //        holder.separatorLayout.setClickable(true);
 
         if(appsList.isEmpty()) return;
-        String name = appsList.get(counter).getName();
+        String name = getName();
         String categoryName;
         try {
             categoryName = Aptoide.getContext().getString(EnumCategories.getCategoryName(getParentId()));
