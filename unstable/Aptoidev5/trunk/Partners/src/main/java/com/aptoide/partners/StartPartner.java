@@ -93,7 +93,18 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         }
 
         if (code != 200) {
-            url = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getDefaultEditorsUrl();
+            url = ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getFallbackEditorsChoiceUrl();
+            genericUrl = new GenericUrl(url);
+            request = transport.createRequestFactory().buildHeadRequest(genericUrl);
+            try{
+                code = request.execute().getStatusCode();
+            }catch (HttpResponseException e){
+                code = e.getStatusCode();
+            }
+
+            if(code!=200){
+                url = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getDefaultEditorsUrl();
+            }
         }
 
         super.loadEditorsChoice(url, countryCode);

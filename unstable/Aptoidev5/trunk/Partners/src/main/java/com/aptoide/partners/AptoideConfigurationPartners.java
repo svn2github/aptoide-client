@@ -48,6 +48,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String ITEMS = null;
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
+
+    public String getFallbackEditorsChoiceUrl() {
+        return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
+    }
+
     static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
 
@@ -65,7 +70,6 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
 
     public String getDefaultEditorsUrl(){
-
         return super.getEditorsUrl();
     }
 
