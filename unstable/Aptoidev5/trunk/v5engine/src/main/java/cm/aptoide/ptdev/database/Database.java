@@ -656,7 +656,10 @@ public class Database {
             collection1.setName(collection);
             collection1.setAppsList(tempList.get(collection));
             collection1.setParentId(tempList2.get(collection));
-            items.add(collection1);
+            if(!collection1.getAppsList().isEmpty()){
+                items.add(collection1);
+            }
+
         }
 
         Collections.sort(items, new Comparator<Collection>() {
