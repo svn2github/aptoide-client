@@ -93,7 +93,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
                     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
                     SharedPreferences.Editor editor = sPref.edit();
                     int updates = 0;
-                    if (data.getCount() > 1) {
+                    if (data.getCount() > 0) {
 
                         //updatesAdapter.swapCursor(data);
                         items.clear();
