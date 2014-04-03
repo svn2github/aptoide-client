@@ -68,6 +68,22 @@ public class EnumCategories {
             put(47, R.string.racing);
             put(293, R.string.sport_games);
 
+            put(1697, R.string.board);
+            put(1696, R.string.music);
+            put(1695, R.string.educational);
+            put(1693, R.string.role_playing);
+            put(1692, R.string.card);
+            put(1691, R.string.trivia);
+            put(1690, R.string.arcade);
+            put(1677, R.string.word);
+            put(1675, R.string.adventure);
+            put(1674, R.string.simulation);
+            put(1672, R.string.family);
+            put(1671, R.string.strategy);
+            put(1670, R.string.action);
+            put(1669, R.string.casino);
+            put(1668, R.string.puzzle);
+
             put(500, R.string.top_apps);
             put(501, R.string.latest_apps);
             put(502, R.string.latest_likes);

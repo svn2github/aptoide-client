@@ -290,6 +290,24 @@
     <string name="sport_games">Sports Games</string>
     <string name="racing">Racing</string>
 
+    <string name="puzzle">Puzzle</string>
+    <string name="casino">Casino</string>
+    <string name="action">Action</string>
+    <string name="strategy">Strategy</string>
+    <string name="family">Family</string>
+    <string name="simulation">Simulation</string>
+    <string name="adventure">Adventure</string>
+    <string name="word">Word</string>
+    <string name="arcade">Arcade</string>
+    <string name="trivia">Trivia</string>
+    <string name="card">Card</string>
+    <string name="role_playing">Role Playing</string>
+    <string name="educational">Educational</string>
+    <string name="music">Music</string>
+    <string name="widgets">Widgets</string>
+    <string name="board">Board</string>
+    <string name="live_wallpaper">Live Wallpaper</string>
+
     <string name="editors_choice_new">New Editors\' Choice</string>
     <string name="editors_choice">Editors\' Choice</string>
     <string name="top_apps">Top Apps</string>
