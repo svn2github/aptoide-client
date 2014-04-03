@@ -296,7 +296,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="cm.aptoide.ptdev.widget.SearchWidgetProvider" >
+        <receiver android:name=".SearchWidgetProviderPartner" >
             <intent-filter >
                 <action
                         android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -304,7 +304,7 @@
 
             <meta-data
                     android:name="android.appwidget.provider"
-                    android:resource="@xml/search_widget_info" />
+                    android:resource="@xml/partners_search_widget_info" />
         </receiver>
 
         <receiver android:name="cm.aptoide.ptdev.WifiStateListener" >
