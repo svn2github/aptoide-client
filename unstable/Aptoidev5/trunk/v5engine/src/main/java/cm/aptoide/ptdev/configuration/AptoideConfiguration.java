@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.*;
+import cm.aptoide.ptdev.widget.SearchWidgetActivity;
 
 import java.io.File;
 
@@ -219,4 +220,6 @@ public class AptoideConfiguration {
     public Class<?> getSearchActivityClass() {
         return SearchManager.class;
     }
+
+
 }

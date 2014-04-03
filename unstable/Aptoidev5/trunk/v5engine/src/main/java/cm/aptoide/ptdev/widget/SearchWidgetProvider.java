@@ -22,11 +22,19 @@ public class SearchWidgetProvider extends AppWidgetProvider {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.search_widget);
-            remoteViews.setOnClickPendingIntent(R.id.search_widget_text, pendingIntent);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), getLayout());
+            remoteViews.setOnClickPendingIntent(getLayoutTextId(), pendingIntent);
 //            remoteViews.setOnClickPendingIntent(R.id.search_widget_button, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }
+    }
+
+    public int getLayoutTextId() {
+        return R.id.search_widget_text;
+    }
+
+    public int getLayout() {
+        return R.layout.search_widget;
     }
 }
