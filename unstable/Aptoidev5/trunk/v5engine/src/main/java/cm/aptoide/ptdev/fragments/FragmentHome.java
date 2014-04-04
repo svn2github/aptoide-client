@@ -300,7 +300,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                                 } else {
                                                     icon = aPackage.getIcon();
                                                 }
-                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue());
+                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
                                                 item.setRecommended(true);
                                                 item.setRepoName(repoName);
                                                 item.setMd5(aPackage.getMd5h());

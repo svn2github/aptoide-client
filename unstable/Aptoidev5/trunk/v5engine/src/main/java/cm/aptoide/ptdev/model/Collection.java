@@ -179,7 +179,10 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
 
 //        holder.separatorLayout.setClickable(true);
 
-        if(appsList.isEmpty()) return;
+        if(appsList.isEmpty()){
+            Toast.makeText(context, "AppsList was empty", Toast.LENGTH_LONG).show();
+            return;
+        }
         String name = getName();
         String categoryName;
         try {
@@ -223,8 +226,8 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
                     int cat = Integer.parseInt(item.getCategory());
                     category = context.getString(EnumCategories.getCategoryName(cat));
                     Log.d("Home-categ", "Category Name: " + category);
-                }catch (Exception e){
-                    category = item.getCategory();
+                }catch (Exception e) {
+                    category = item.getCategoryString();
                     Log.d("Home-categ", "Untranslated Category Name: " + category);
                 }
 

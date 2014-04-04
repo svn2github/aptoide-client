@@ -62,6 +62,7 @@ public class SearchManager extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 
+
         if(getIntent().hasExtra("search")){
             query = getIntent().getExtras().getString("search");
         } else {

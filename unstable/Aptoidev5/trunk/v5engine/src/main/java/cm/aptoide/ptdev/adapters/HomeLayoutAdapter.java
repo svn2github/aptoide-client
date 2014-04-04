@@ -224,7 +224,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 category = context.getString(EnumCategories.getCategoryName(cat));
                 Log.d("Home-categ", "Category Name: " + category);
             }catch (Exception e){
-                category = item.getCategory();
+                category = item.getCategoryString();
                 Log.d("Home-categ", "Untranslated Category Name: " + category);
             }
 
