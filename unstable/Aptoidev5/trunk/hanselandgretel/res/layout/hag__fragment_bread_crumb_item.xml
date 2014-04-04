@@ -36,6 +36,7 @@
             android:paddingRight="8dip"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:focusable="true"
             android:background="?attr/hagSelectableItemBackground"
             />
 </LinearLayout>

@@ -65,7 +65,7 @@
   <string name="setting_ethernet">Por cabo</string>
   <string name="setting_filters_title">Filtros</string>
   <string name="setting_hwspecstitle">Especificações de Hardware</string>
-  <string name="setting_hwspecssum">Verifique as especificações do seu dispositivo</string>
+  <string name="setting_hwspecssum">Especificações hardware do seu dispositivo</string>
   <string name="setting_appfiltersum">Esconder aplicações não compatíveis com este dispositivo</string>
   <string name="setting_appfiltertitle">Filtrar Aplicações</string>
   <string name="setting_dont_show_mature_content">Não mostrar conteúdo adulto</string>
@@ -166,6 +166,7 @@
   <string name="password_tip">Escolha uma palavra-passe</string>
   <string name="add_pvt_store">Adicionar loja privada</string>
   <string name="accept_terms">Ao registar, está a concordar com os Termos de Serviço do Aptoide e Política de Conteúdo para Desenvolvedores</string>
+  <string name="accept_oem_terms">Ao registar, está a concordar com os Termos de Serviço de %s</string>
   <string name="register">Registar</string>
   <string name="or">Ou</string>
   <string name="showpass">Mostrar password</string>
@@ -279,6 +280,23 @@
   <string name="casual">Casual</string>
   <string name="sport_games">Jogos Desportivos</string>
   <string name="racing">Corridas</string>
+  <string name="puzzle">Puzzle</string>
+  <string name="casino">Casino</string>
+  <string name="action">Acção</string>
+  <string name="strategy">Estratégia</string>
+  <string name="family">Família</string>
+  <string name="simulation">Simulação</string>
+  <string name="adventure">Aventura</string>
+  <string name="word">Palavra</string>
+  <string name="arcade">Arcada</string>
+  <string name="trivia">Cultura Geral</string>
+  <string name="card">Cartas</string>
+  <string name="role_playing">Dramatização</string>
+  <string name="educational">Educativo</string>
+  <string name="music">Música</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Tabuleiro</string>
+  <string name="live_wallpaper">Imagem de fundo dinâmico</string>
   <string name="editors_choice_new">Novas Escolhas do Editor</string>
   <string name="editors_choice">Escolhas do Editor</string>
   <string name="top_apps">Aplicações Principais</string>
@@ -361,4 +379,5 @@
   <string name="remote_in_noSDspace">Não tem espaço suficiente no seu cartão SD. Liberte algum espaço e tente novamente.</string>
   <string name="more_recommended_apps">Mais Aplicações Recomendadas</string>
   <string name="cannot_uninstall_self">Não é possível desinstalar instalador.</string>
+  <string name="are_you_adult">Tem mais de 21 anos?</string>
 </resources>
