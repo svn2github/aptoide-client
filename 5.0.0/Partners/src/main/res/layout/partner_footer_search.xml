@@ -1,0 +1,33 @@
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:gravity="right">
+
+    <TextView
+            android:id="@+id/search_in_other_stores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:paddingRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/search"/>
+    <Button
+            android:id="@+id/search"
+            style="?attr/customButtonColor"
+            android:text="@string/search_more"
+            android:textStyle="italic"
+            android:drawableLeft="@drawable/ic_action_web_site_dark"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
