@@ -97,4 +97,7 @@
     <attr name="sectionListView.listItemPadding" format="dimension" />
     <attr name="sectionListView.listItemBackground" format="color|reference" />
 
+    <attr name="icPaypalDrawable" format="reference"/>
+    <attr name="icCreditCardDrawable" format="reference"/>
+
 </resources>
