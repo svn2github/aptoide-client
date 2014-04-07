@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="false"><shape>
+            <solid android:color="@color/dark_custom_color_dimgray" />
+        </shape></item>
+    <item android:state_pressed="true"><shape>
+            <solid android:color="@color/dimgray" />
+        </shape></item>
+    <item><shape>
+            <gradient android:angle="270" android:endColor="@color/dark_custom_color_dimgray" android:startColor="@color/light_custom_color_dimgray" />
+        </shape></item>
+
+</selector>
