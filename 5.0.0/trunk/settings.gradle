@@ -1,1 +1,0 @@
-include ':Aptoide', ':pagerslidertabstrip', ':v5engine', ':multichoiceadapter', ':multichoiceadapter-actionbarcompat', ':hanselandgretel', ':Partners', 'android-websockets', 'android-section-list', ':facebook', ':google-play-services', ':mopub-sdk'
