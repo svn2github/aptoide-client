@@ -278,6 +278,23 @@
   <string name="casual">Casual</string>
   <string name="sport_games">Permainan olahraga</string>
   <string name="racing">Balapan</string>
+  <string name="puzzle">Teka-teki</string>
+  <string name="casino">Kasino</string>
+  <string name="action">Tindakan</string>
+  <string name="strategy">Strategi</string>
+  <string name="family">Keluarga</string>
+  <string name="simulation">Simulasi</string>
+  <string name="adventure">Petualangan</string>
+  <string name="word">Kata</string>
+  <string name="arcade">Arkade</string>
+  <string name="trivia">Trivia</string>
+  <string name="card">Kartu</string>
+  <string name="role_playing">RPG</string>
+  <string name="educational">Pendidikan</string>
+  <string name="music">Musik</string>
+  <string name="widgets">Widget</string>
+  <string name="board">Papan</string>
+  <string name="live_wallpaper">Wallpaper Animasi</string>
   <string name="editors_choice_new">Pilihan Editor Baru</string>
   <string name="editors_choice">Pilihan Editor</string>
   <string name="top_apps">Aplikasi Top</string>
@@ -306,7 +323,6 @@
   <string name="create_username">Username</string>
   <string name="all_stores">Semua Toko</string>
   <string name="incompatible_store">Toko tidak kompatibel</string>
-  <string name="incompatible_store_msg">Toko ini masih tidak kompatibel dengan versi Aptoide ini. Harap tunggu beberapa hari sampai kami membuat ulang semua toko.</string>
   <string name="privacy_policy">Kebijakan Privasi</string>
   <string name="website">Website</string>
   <string name="downgrade_requires_uninstall">Downgrade dibutuhkan untuk meng-uninstall Aplikasi</string>
@@ -341,11 +357,13 @@
   <string name="clear">Bersihkan</string>
   <string name="link_device_webinstall">Hubungkan akun dengan webinstall</string>
   <string name="update_self_title">Pembaruan tersedia</string>
-  <string name="update_self_msg">Versi baru %s tersedia. Anda ingin memperbarui?</string>
+  <string name="update_self_msg">Versi baru %s tersedia,\nAnda ingin memperbarui?</string>
   <string name="retrieving_update">Mengambil pembaruan...</string>
   <string name="no_related">Tidak ada aplikasi terhubung yang ditemukan.</string>
   <string name="no_downloads">Tidak ada unduh. Mulai mengunduh!</string>
   <string name="new_updates">Ada %s update baru yang tersedia!</string>
   <string name="one_new_update">Ada %s update baru tersedia!</string>
   <string name="has_updates">%s tersedia update baru!</string>
+  <string name="remote_in_noSD">Anda tidak memiliki SDcard, atau tidak berfungsi sebagaimana mestinya \nSilakan masukkan satu, atau masukkan kembali dan coba lagi.</string>
+  <string name="remote_in_noSDspace">Anda tidak memiliki ruang cukup di SDcard anda. Silahkan bersihkan sebagian ruang dan mencoba lagi.</string>
 </resources>

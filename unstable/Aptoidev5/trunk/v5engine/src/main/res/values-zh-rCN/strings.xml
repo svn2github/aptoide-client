@@ -65,7 +65,7 @@
   <string name="setting_ethernet">以太网</string>
   <string name="setting_filters_title">过滤器</string>
   <string name="setting_hwspecstitle">硬件规格</string>
-  <string name="setting_hwspecssum">你手机的硬件信息</string>
+  <string name="setting_hwspecssum">您手机的硬件信息</string>
   <string name="setting_appfiltersum">不要显示与该设备部兼容的应用</string>
   <string name="setting_appfiltertitle">过滤应用</string>
   <string name="setting_dont_show_mature_content">不显示成人内容</string>
@@ -279,6 +279,23 @@
   <string name="casual">休闲游戏</string>
   <string name="sport_games">体育游戏</string>
   <string name="racing">赛车</string>
+  <string name="puzzle">解谜</string>
+  <string name="casino">赌场</string>
+  <string name="action">动作</string>
+  <string name="strategy">策略</string>
+  <string name="family">家庭片</string>
+  <string name="simulation">模拟</string>
+  <string name="adventure">冒险</string>
+  <string name="word">文字</string>
+  <string name="arcade">街机</string>
+  <string name="trivia">益智问答</string>
+  <string name="card">纸牌</string>
+  <string name="role_playing">角色扮演</string>
+  <string name="educational">教育</string>
+  <string name="music">音乐</string>
+  <string name="widgets">小部件</string>
+  <string name="board">桌面和棋类</string>
+  <string name="live_wallpaper">动态壁纸</string>
   <string name="editors_choice_new">新的编辑精选</string>
   <string name="editors_choice">编辑精选</string>
   <string name="top_apps">热门应用</string>
@@ -355,4 +372,11 @@
   <string name="remaining_time">剩余的</string>
   <string name="sd_error">无法写入SD卡。</string>
   <string name="download_retry">重试</string>
+  <string name="root_access_dialog">您拥有Root访问权限，是否允许下载后自动安装？</string>
+  <string name="remote_in_noSD_title">内存已满</string>
+  <string name="remote_in_noSD">您没有插入SDcard,或没有插好。请重新插入然后重试。</string>
+  <string name="remote_in_noSDspace">您SDcard没有足够空间，请释放一些空间后重试。</string>
+  <string name="more_recommended_apps">更多推荐软件</string>
+  <string name="cannot_uninstall_self">无法卸载安装包。</string>
+  <string name="are_you_adult">您是否满21岁？</string>
 </resources>

@@ -166,6 +166,7 @@
   <string name="password_tip">Kies een wachtwoord</string>
   <string name="add_pvt_store">Voeg een prive winkel toe</string>
   <string name="accept_terms">Door aanmelden ga je akkoord met de Aptoide Terms of Service and Content Policy for Developers</string>
+  <string name="accept_oem_terms">Bij het registreren ga je akkoord met de %s Voorwaarden van de Dienst</string>
   <string name="register">Aanmelden</string>
   <string name="or">Of</string>
   <string name="showpass">Toon wachtwoord</string>
@@ -279,6 +280,23 @@
   <string name="casual">Casual</string>
   <string name="sport_games">Sport Games</string>
   <string name="racing">Racing</string>
+  <string name="puzzle">Puzzel</string>
+  <string name="casino">Casino</string>
+  <string name="action">Actie</string>
+  <string name="strategy">Strategie</string>
+  <string name="family">Familie</string>
+  <string name="simulation">Simulatie</string>
+  <string name="adventure">Avontuur</string>
+  <string name="word">Woord</string>
+  <string name="arcade">Arcade</string>
+  <string name="trivia">Trivia</string>
+  <string name="card">Kaart</string>
+  <string name="role_playing">Rollenspel</string>
+  <string name="educational">Onderwijs</string>
+  <string name="music">Muziek</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Bord</string>
+  <string name="live_wallpaper">Live Wallpaper</string>
   <string name="editors_choice_new">Nieuwe Editors Keuze</string>
   <string name="editors_choice">Editors Keuze</string>
   <string name="top_apps">Top Apps</string>
@@ -361,4 +379,5 @@
   <string name="remote_in_noSDspace">Je hebt geen voldende ruimte op je SD kaart. Maak eerst ruimte vrij en probeer opnieuw.</string>
   <string name="more_recommended_apps">Meer Aanbevolen Apps</string>
   <string name="cannot_uninstall_self">Kan de installer niet deinstalleren</string>
+  <string name="are_you_adult">Ben je minstens 21 jaar oud?</string>
 </resources>

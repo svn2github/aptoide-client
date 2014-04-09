@@ -166,6 +166,7 @@
   <string name="password_tip">Elige una contraseña</string>
   <string name="add_pvt_store">Añadir tienda privada</string>
   <string name="accept_terms">Registrándote estarás aceptando los Términos de Servicio de Aptoide y la Política de Contenido para los Desarrolladores</string>
+  <string name="accept_oem_terms">Registrándote estarás aceptando los Términos de Servicio de %s</string>
   <string name="register">Registrarse</string>
   <string name="or">O</string>
   <string name="showpass">Mostrar contraseña</string>
@@ -279,6 +280,23 @@
   <string name="casual">Casual</string>
   <string name="sport_games">Juegos Deportivos</string>
   <string name="racing">Carreras</string>
+  <string name="puzzle">Puzle</string>
+  <string name="casino">Casino</string>
+  <string name="action">Acción</string>
+  <string name="strategy">Estrategia</string>
+  <string name="family">Cine familiar</string>
+  <string name="simulation">Simulación</string>
+  <string name="adventure">Aventura</string>
+  <string name="word">Palabras</string>
+  <string name="arcade">Sala de juegos</string>
+  <string name="trivia">Juego de preguntas y respuestas</string>
+  <string name="card">Cartas</string>
+  <string name="role_playing">Juegos de rol</string>
+  <string name="educational">Educativos</string>
+  <string name="music">Música</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Juegos de mesa</string>
+  <string name="live_wallpaper">Fondos animados</string>
   <string name="editors_choice_new">Nueva Elección de Editores</string>
   <string name="editors_choice">Elección Editores</string>
   <string name="top_apps">Aplicaciones Destacadas</string>
@@ -361,4 +379,5 @@
   <string name="remote_in_noSDspace">No tienes suficiente espacio en tu tarjeta SD. Por favor libera un poco de espacio e inténtalo nuevamente.</string>
   <string name="more_recommended_apps">Más Aplicaciones Recomendadas</string>
   <string name="cannot_uninstall_self">No se ha podido desinstalar el instalador.</string>
+  <string name="are_you_adult">¿Tienes por lo menos 21 años?</string>
 </resources>

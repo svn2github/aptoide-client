@@ -166,6 +166,7 @@
   <string name="password_tip">Wählen Sie ein Passwort</string>
   <string name="add_pvt_store">Privaten Store hinzufügen</string>
   <string name="accept_terms">Durch die Anmeldung erklären Sie sich mit den Aptoide Nutzungsbedingungen und Inhaltsrichtlinien für Entwickler einverstanden</string>
+  <string name="accept_oem_terms">Durch die Anmeldung erklären Sie sich mit den %s Nutzungsbedingungen</string>
   <string name="register">Registrieren</string>
   <string name="or">Oder</string>
   <string name="showpass">Passwort anzeigen</string>
@@ -279,6 +280,23 @@
   <string name="casual">Gelegenheitsspiele</string>
   <string name="sport_games">Sport-Spiele</string>
   <string name="racing">Rennen</string>
+  <string name="puzzle">Geduldsspiele</string>
+  <string name="casino">Kasino</string>
+  <string name="action">Action</string>
+  <string name="strategy">Strategie</string>
+  <string name="family">Familie</string>
+  <string name="simulation">Simulation</string>
+  <string name="adventure">Abenteuer</string>
+  <string name="word">Worträtsel</string>
+  <string name="arcade">Arcade</string>
+  <string name="trivia">Quizspiele</string>
+  <string name="card">Kartenspiele</string>
+  <string name="role_playing">Rollenspiele</string>
+  <string name="educational">Lernspiele</string>
+  <string name="music">Musik</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Brettspiele</string>
+  <string name="live_wallpaper">Live-Hintergründe</string>
   <string name="editors_choice_new">Neuer Redaktionstipp</string>
   <string name="editors_choice">Redaktionstipp</string>
   <string name="top_apps">Top Apps</string>
@@ -359,4 +377,6 @@
   <string name="remote_in_noSD_title">Kein Speicher</string>
   <string name="remote_in_noSD">Sie haben keine SD-Karte, oder sie funktioniert nicht richtig\nBitte eine einsetzen oder erneut einsetzen, und erneut versuchen.</string>
   <string name="remote_in_noSDspace">Sie haben nicht genug Platz auf der SD-Karte. Bitte machen Sie etwas Speicherplatz frei und versuchen Sie es erneut.</string>
+  <string name="more_recommended_apps">Mehr empfohlene Apps</string>
+  <string name="are_you_adult">Bist du mindestens 21 Jahre alt?</string>
 </resources>

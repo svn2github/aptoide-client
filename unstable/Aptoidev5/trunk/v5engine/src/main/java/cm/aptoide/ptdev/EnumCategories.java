@@ -177,7 +177,36 @@ public class EnumCategories {
             put(47, "f1e6961a8c7671793deba9295426877b_categ_" + sizeString + ".png");
             //Sports Games
             put(293, "87be84837667190abf4f0882158bfc04_categ_" + sizeString + ".png");
-
+//            Board
+            put(1697, "261cb6802fd85c7f69b4ffeb6fed8dce_categ_" + sizeString + ".png");
+//            Music
+            put(1696, "3b7745079baaf24b8e7862bfeadd80d4_categ_" + sizeString + ".png");
+//            Educational
+            put(1695, "8165a22b5cac711a261a2d269a36a870_categ_" + sizeString + ".png");
+//            Role Playing
+            put(1693, "17fa95c14854cd86d8c5cd910bcdecd6_categ_" + sizeString + ".png");
+//            Card
+            put(1692, "d7ff1dcb17606cce55f842edffa10d96_categ_" + sizeString + ".png");
+//            Trivia
+            put(1691, "9315abb6fd50441bb0b5fccb4bd9c8e9_categ_" + sizeString + ".png");
+//            Arcade
+            put(1690, "12b53a3632c0704d98ae04f99686ff4d_categ_" + sizeString + ".png");
+//            Word
+            put(1677, "ae5dab768f9bbaf395545844a40553d4_categ_" + sizeString + ".png");
+//            Adventure
+            put(1675, "812a313805d3b2c5e925a3b458c1a4e7_categ_" + sizeString + ".png");
+//            Simulation
+            put(1674, "f86bf8795011523b5e08059b40cc2766_categ_" + sizeString + ".png");
+//            Family
+            put(1672, "459687ffc601db55ceca496baebc15ee_categ_" + sizeString + ".png");
+//            Strategy
+            put(1671, "1d57891ddd4b03d00e02f243152d619f_categ_" + sizeString + ".png");
+//            Action
+            put(1670, "e442a9cb17c3e668459d40fab964ca55_categ_" + sizeString + ".png");
+//            Casino
+            put(1669, "6a4df03ff54e0457dd436773e9cb500b_categ_" + sizeString + ".png");
+//            Puzzle
+            put(1668, "8551ac94b3f706590be3cdc723f98a30_categ_" + sizeString + ".png");
 
         }
 

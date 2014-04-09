@@ -279,6 +279,23 @@
   <string name="casual">Détendu</string>
   <string name="sport_games">Jeux de sport</string>
   <string name="racing">Course</string>
+  <string name="puzzle">Réflexion</string>
+  <string name="casino">Casino</string>
+  <string name="action">Action</string>
+  <string name="strategy">Stratégie</string>
+  <string name="family">Famille</string>
+  <string name="simulation">Simulation</string>
+  <string name="adventure">Aventure</string>
+  <string name="word">Jeux littéraires</string>
+  <string name="arcade">Arcade</string>
+  <string name="trivia">Culture générale</string>
+  <string name="card">Cartes</string>
+  <string name="role_playing">Jeux de rôles</string>
+  <string name="educational">Éducatif</string>
+  <string name="music">Musique</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Jeux de société</string>
+  <string name="live_wallpaper">Fond d\'écran animé</string>
   <string name="editors_choice_new">Nouveaux choix de l\'éditeur</string>
   <string name="editors_choice">Choix de l\'éditeur</string>
   <string name="top_apps">Meilleures applications</string>
@@ -361,4 +378,5 @@
   <string name="remote_in_noSDspace">Vous n\'avez pas assez d\'espace sur votre carte SD. Veuillez faire de la place et réessayez.</string>
   <string name="more_recommended_apps">Plus d\'applications recommandées</string>
   <string name="cannot_uninstall_self">Impossible de désinstaller l\'installeur</string>
+  <string name="are_you_adult">Avez-vous au moins 21 ans ?</string>
 </resources>

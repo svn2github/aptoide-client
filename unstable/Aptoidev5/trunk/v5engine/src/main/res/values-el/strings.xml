@@ -166,6 +166,7 @@
   <string name="password_tip">Επιλέξτε κωδικό</string>
   <string name="add_pvt_store">Προσθήκη ιδιωτικού καταστήματος</string>
   <string name="accept_terms">Με την εγγραφή σας συμφωνείτε με τους Όρους Χρήσης της Aptoide Υπηρεσίας και την Πολιτική Περιεχομένου για Προγραμματιστές</string>
+  <string name="accept_oem_terms">Με την εγγραφή σας συμφωνείτε με τους %s Όρους Χρήσης</string>
   <string name="register">Εγγραφή</string>
   <string name="or">Ή</string>
   <string name="showpass">Εμφάνιση κωδικού</string>
@@ -194,7 +195,7 @@
   <string name="restore">Εγκατάσταση</string>
   <string name="x_app">%d εφαρμογή</string>
   <string name="x_apps">%d εφαρμογές</string>
-  <string name="aptoide_downloading">%s κατεβαίνει</string>
+  <string name="aptoide_downloading">%s λαμβάνει</string>
   <string name="min_sdk">Min SDK</string>
   <string name="min_screen">Min Screen</string>
   <string name="found_results">Βρέθηκαν %s αποτελέσμα(τα)</string>
@@ -279,6 +280,23 @@
   <string name="casual">Εύκολα</string>
   <string name="sport_games">Αθλητικά Παιχνίδια</string>
   <string name="racing">Αγώνες</string>
+  <string name="puzzle">Παζλ</string>
+  <string name="casino">Καζίνο</string>
+  <string name="action">Δράσης</string>
+  <string name="strategy">Στρατηγικής</string>
+  <string name="family">Οικογένειας</string>
+  <string name="simulation">Προσομοίωσης</string>
+  <string name="adventure">Περιπέτειας</string>
+  <string name="word">Λέξεων</string>
+  <string name="arcade">Arcade</string>
+  <string name="trivia">Trivia</string>
+  <string name="card">Καρτών</string>
+  <string name="role_playing">Παιχνίδια ρόλου</string>
+  <string name="educational">Εκπαιδευτικά</string>
+  <string name="music">Μουσικής</string>
+  <string name="widgets">Widgets</string>
+  <string name="board">Επιτραπέζια</string>
+  <string name="live_wallpaper">Ζωντανή Ταπετσαρία</string>
   <string name="editors_choice_new">Νέα Επιλογή Συντακτών</string>
   <string name="editors_choice">Επιλογή Συντακτών</string>
   <string name="top_apps">Κορυφαίες Εφαρμογές</string>
@@ -356,4 +374,10 @@
   <string name="sd_error">Δεν μπορεί να γράψει στην SDCard.</string>
   <string name="download_retry">Προσπαθήστε ξανά</string>
   <string name="root_access_dialog">Φαίνεται ότι έχετε κάνει root. Θα θέλατε να επιτρέψετε την αυτόματη εγκατάσταση της εφαρμογής μετά την λήψη της?</string>
+  <string name="remote_in_noSD_title">Καθόλου μνήμη</string>
+  <string name="remote_in_noSD">Δεν έχετε SDcard, ή δεν λειτουργεί σωστά\nΠαρακαλώ εισάγετε μία, ή επανεισάγετέ την και προσπαθήστε ξανά.</string>
+  <string name="remote_in_noSDspace">Δεν έχετε αρκετό χώρο στην SDcard σας. Παρακαλώ ελευθερώστε χώρο και προσπαθήστε ξανά.</string>
+  <string name="more_recommended_apps">Περισσότερες Προτεινόμενες Εφαρμογές</string>
+  <string name="cannot_uninstall_self">Δεν είναι δυνατή η απεγκατάσταση του εγκαταστάτη.</string>
+  <string name="are_you_adult">Είστε τουλάχιστον 21 ετών?</string>
 </resources>

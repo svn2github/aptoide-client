@@ -108,8 +108,8 @@
   <string name="setting_auto_update_sum">Ota sovellusten automaattipäivitys käyttöön</string>
   <string name="setting_auto_update_title">Ota automaattipäivitys käyttöön</string>
   <string name="setting_updates">Päivitykset</string>
-  <string name="setting_updates_notification_title">Päivityshuomautukset</string>
-  <string name="setting_updates_notification_sum">Näytä huomautus uusista päivityksistä</string>
+  <string name="setting_updates_notification_title">Päivitysilmoitukset</string>
+  <string name="setting_updates_notification_sum">Näytä ilmoitus uusista päivityksistä</string>
   <string name="clear_dwn_title">Kuvakkeet</string>
   <string name="description">Kuvaus</string>
   <string name="add_store">Lisää kauppa</string>
@@ -279,6 +279,23 @@
   <string name="casual">Vapaa-ajan pelit</string>
   <string name="sport_games">Urheilupelit</string>
   <string name="racing">Kilpa-ajo</string>
+  <string name="puzzle">Pulma</string>
+  <string name="casino">Kasino</string>
+  <string name="action">Toiminto</string>
+  <string name="strategy">Strategia</string>
+  <string name="family">Perhe</string>
+  <string name="simulation">Simulaatio</string>
+  <string name="adventure">Seikkailu</string>
+  <string name="word">Sanapelit</string>
+  <string name="arcade">Pelihalli</string>
+  <string name="trivia">Trivia</string>
+  <string name="card">Kortti</string>
+  <string name="role_playing">Roolipelit</string>
+  <string name="educational">Opetus</string>
+  <string name="music">Musiikki</string>
+  <string name="widgets">Widgetit</string>
+  <string name="board">Lautapelit</string>
+  <string name="live_wallpaper">Live-taustakuva</string>
   <string name="editors_choice_new">Uudet toimittajan valinnat</string>
   <string name="editors_choice">Toimittajan valinta</string>
   <string name="top_apps">Huippusovellukset</string>
@@ -314,7 +331,7 @@
   <string name="signing_in">Kirjautuu sisään...</string>
   <string name="search_on_aptoide">Hae lisää Aptoiden kotisivuilta</string>
   <string name="reinstall">Asenna uudelleen</string>
-  <string name="at_time">ajassa %s</string>
+  <string name="at_time">aikaleima %s</string>
   <string name="webinstall_relogin">Sinun pitää kirjautua uudelleen aktivoidaksesi web-asennuksen</string>
   <string name="error_MARG_1">Puuttuva repo-parametri</string>
   <string name="error_MARG_2">Puuttuva apkid-parametri</string>
@@ -355,4 +372,11 @@
   <string name="remaining_time">jäljellä</string>
   <string name="sd_error">SD-kortille ei pysty kirjoittamaan.</string>
   <string name="download_retry">Yritä uudelleen</string>
+  <string name="root_access_dialog">Näyttää siltä, että laitteesi on rootattu. Haluatko sallia sovellusten automaattisen asentamisen latauksen jälkeen?</string>
+  <string name="remote_in_noSD_title">Ei muistia</string>
+  <string name="remote_in_noSD">Sinulla ei ole SD-korttia tai se toimii virheellisesti\nAseta uusi tai uudelleenaseta nykyinen ja yritä uudelleen.</string>
+  <string name="remote_in_noSDspace">SD-kortillasi ei ole riittävästi tilaa. Vapauta tilaa ja yritä uudelleen.</string>
+  <string name="more_recommended_apps">Lisää suositeltuja sovelluksia</string>
+  <string name="cannot_uninstall_self">Asennusohjelman poisto ei onnistu.</string>
+  <string name="are_you_adult">Oletko vähintään 21-vuotias?</string>
 </resources>

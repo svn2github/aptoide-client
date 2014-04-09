@@ -65,7 +65,7 @@
   <string name="setting_ethernet">Ethernet</string>
   <string name="setting_filters_title">Filtros</string>
   <string name="setting_hwspecstitle">Especificações de Hardware</string>
-  <string name="setting_hwspecssum">Especificações hardware do seu dispositivo</string>
+  <string name="setting_hwspecssum">Informações de hardware do seu dispositivo</string>
   <string name="setting_appfiltersum">Esconder aplicativos não compatíveis com este dispositivo</string>
   <string name="setting_appfiltertitle">Filtrar Aplicativos</string>
   <string name="setting_dont_show_mature_content">Não mostrar conteúdo adulto</string>
@@ -361,4 +361,5 @@
   <string name="remote_in_noSDspace">Não tem espaço suficiente no seu cartão SD. Liberte algum espaço e tente novamente.</string>
   <string name="more_recommended_apps">Mais Aplicativos Recomendados</string>
   <string name="cannot_uninstall_self">Não é possível desinstalar instalador.</string>
+  <string name="are_you_adult">Você é maior de 18 anos?</string>
 </resources>

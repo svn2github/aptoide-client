@@ -279,6 +279,23 @@
   <string name="casual">Neformalno</string>
   <string name="sport_games">Sportske Igre</string>
   <string name="racing">Utrke</string>
+  <string name="puzzle">Slagalice</string>
+  <string name="casino">Kockarske igre</string>
+  <string name="action">Radnja</string>
+  <string name="strategy">Strateške igre</string>
+  <string name="family">Obiteljski</string>
+  <string name="simulation">Simulacije</string>
+  <string name="adventure">Avanture</string>
+  <string name="word">Igre riječima</string>
+  <string name="arcade">Arkadne igre</string>
+  <string name="trivia">Trivija</string>
+  <string name="card">Kartaške igre</string>
+  <string name="role_playing">Igranje uloga</string>
+  <string name="educational">Edukativne igre</string>
+  <string name="music">Glazba</string>
+  <string name="widgets">Widgeti</string>
+  <string name="board">Društvene igre</string>
+  <string name="live_wallpaper">Pozadinske slike uživo</string>
   <string name="editors_choice_new">Novi Izbor Urednika</string>
   <string name="editors_choice">Izbor Urednika</string>
   <string name="top_apps">Najpopularnije Aplikacije</string>
@@ -353,4 +370,6 @@
   <string name="has_updates">"%s ima dostupna novo(a) ažuriranje(a) "</string>
   <string name="remaining_time">preostalo</string>
   <string name="sd_error">Nije moguće zapisati na SD Karticu.</string>
+  <string name="remote_in_noSD">Nemate SD karticu, ili ne radi pravilno\nMolimo umetnite jednu, ili ju ponovo ubacite pa probajte ponovno.</string>
+  <string name="remote_in_noSDspace">Nemate dovoljno mjesta na vašoj SD kartici. Molimo oslobodite nešto mjesta i pokušajte ponovno.</string>
 </resources>
