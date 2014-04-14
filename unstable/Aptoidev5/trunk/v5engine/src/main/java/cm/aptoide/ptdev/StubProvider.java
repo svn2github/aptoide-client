@@ -2,8 +2,13 @@ package cm.aptoide.ptdev;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Binder;
 
 /**
  * Created by j-pac on 29-01-2014.
@@ -16,6 +21,29 @@ public class StubProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+
+        int uid = Binder.getCallingUid();
+
+        PackageManager pm = getContext().getPackageManager();
+        String callerPackage = pm.getNameForUid(uid);
+
+        if("PKG_NAME".equals(callerPackage)) {
+            try {
+                String signature = pm.getPackageInfo(callerPackage, 0).signatures[0].toCharsString();
+
+                if(signature.equals("PKG_SIGNATURE")) {
+                    MatrixCursor mx = new MatrixCursor(new String[]{"userRepo"});
+                    mx.addRow();
+                    return mx;
+                }
+
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         return null;
     }
 
