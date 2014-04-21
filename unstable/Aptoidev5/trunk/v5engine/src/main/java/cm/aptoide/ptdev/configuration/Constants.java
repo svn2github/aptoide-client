@@ -24,4 +24,6 @@ public class Constants {
     public static final String WEBINSTALL_SYNC_AUTHORITY = "cm.aptoide.pt.StubProvider";
     public static final long WEBINSTALL_SYNC_POLL_FREQUENCY = 360;
 
+    public static final String STUB_PROVIDER_AUTHORITY = "cm.aptoide.pt.StubProvider";
+
 }

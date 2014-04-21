@@ -159,6 +159,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         sPref.edit().remove(Configs.LOGIN_USER_LOGIN).commit();
         sPref.edit().remove("username").commit();
         sPref.edit().remove("useravatar").commit();
+        sPref.edit().remove("userRepo").commit();
         mContext.stopService(new Intent(mContext, RabbitMqService.class));
 
         return result;

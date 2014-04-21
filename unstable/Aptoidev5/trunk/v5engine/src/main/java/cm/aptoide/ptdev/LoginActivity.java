@@ -574,8 +574,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                 if ("OK".equals(checkUserCredentialsJson.getStatus())) {
 
-                    //Toast.makeText(getBaseContext(), "Token is: " + checkUserCredentialsJson.getToken(), Toast.LENGTH_SHORT).show();
-
                     if(!Data.isNull(checkUserCredentialsJson.getQueue())){
                         hasQueue = true;
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
@@ -589,6 +587,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 .putString("useravatar", checkUserCredentialsJson.getAvatar())
                                 .commit();
 
+                    }
+                    if(!Data.isNull(checkUserCredentialsJson.getRepo())) {
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("userRepo", checkUserCredentialsJson.getRepo())
+                                .commit();
                     }
                     if(!Data.isNull(checkUserCredentialsJson.getUsername())){
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)

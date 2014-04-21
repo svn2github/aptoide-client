@@ -19,6 +19,8 @@ public class CheckUserCredentialsJson {
     @Key
     private String token;
 
+    @Key String repo;
+
     @Key
     private String avatar;
 
@@ -69,6 +71,8 @@ public class CheckUserCredentialsJson {
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public String getRepo() { return repo; }
 
     /*
     public String getQueueName() { return queueName; }
