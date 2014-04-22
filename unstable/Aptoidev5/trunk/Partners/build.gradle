@@ -7,7 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'android'
-apply from: "signing.gradle"
+
 
 repositories {
     mavenCentral()
@@ -28,11 +28,7 @@ android {
 
     }
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-    }
+  
 }
 
 dependencies {
