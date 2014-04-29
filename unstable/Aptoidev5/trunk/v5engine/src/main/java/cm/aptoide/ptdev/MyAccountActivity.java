@@ -152,7 +152,6 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                     //showMessage("Account was created");
                     if (bnd.containsKey(AccountManager.KEY_AUTHTOKEN)) {
                         setContentView(R.layout.form_logout);
-                        Toast.makeText(MyAccountActivity.this, "Account was created", Toast.LENGTH_LONG).show();
                         Log.d("udinic", "AddNewAccount Bundle is " + bnd);
                     } else {
                         finish();
