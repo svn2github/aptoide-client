@@ -145,4 +145,9 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
             super.loadGetLatest(showLatestString);
         }
     }
+
+    @Override
+    public boolean isMultipleStores() {
+        return ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores();
+    }
 }

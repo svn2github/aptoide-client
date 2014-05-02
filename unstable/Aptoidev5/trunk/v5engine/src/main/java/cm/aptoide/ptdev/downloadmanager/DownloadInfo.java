@@ -245,7 +245,13 @@ public class DownloadInfo implements Runnable, Serializable {
         }
         double size = getDirSize(dir) / 1024 / 1024;
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-        long maxFileCache = Long.parseLong((sPref.getString("maxFileCache", "200")));
+        long maxFileCache;
+        try{
+            maxFileCache = Long.parseLong((sPref.getString("maxFileCache", "200")));
+        }catch (Exception e){
+            maxFileCache = 50;
+        }
+
         if (maxFileCache < 50) maxFileCache = 50;
         if (maxFileCache > 0 && size > maxFileCache) {
             File[] files = dir.listFiles();

@@ -27,9 +27,12 @@ import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.SpiceService;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -73,6 +76,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
 
 
+
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
@@ -101,6 +105,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
+
         Intent i = new Intent(this, ParserService.class);
         setContentView(R.layout.page_store_list);
 

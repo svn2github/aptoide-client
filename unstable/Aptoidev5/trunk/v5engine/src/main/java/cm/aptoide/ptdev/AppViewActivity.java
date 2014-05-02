@@ -33,6 +33,7 @@ import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.OnMultiVersionClick;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
@@ -59,6 +60,8 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
 import roboguice.util.temp.Ln;
 
 import java.io.File;
@@ -104,9 +107,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onRequestFailure(SpiceException e) {
-
             AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
-
         }
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -273,6 +274,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         latestVersion = (TextView) findViewById(R.id.app_get_latest);
         if (json.getLatest() != null) {
             latestVersion.setVisibility(View.VISIBLE);
+
+
 
             String getLatestString;
             if (showLatestString) {
@@ -671,6 +674,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String cacheKey;
     private String token;
 
+    public boolean isMultipleStores(){
+        return false;
+    }
+
     public String getRepoName() {
         return repoName;
     }
@@ -725,6 +732,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setRating(json.getMeta().getLikevotes().getRating().floatValue());
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
                 details.setDontLikes("" + json.getMeta().getLikevotes().getDislikes());
+
+                Log.d("AptoideTAG", package_name + " " + versionName + " " + repoName);
+
+                MultiStoreItem[] items = new Database(Aptoide.getDb()).getOtherReposVersions(id, package_name, versionName, repoName, versionCode);
+                details.setOtherVersions(items);
             } else {
 
                 //for(String error : json.getErrors()){
@@ -860,6 +872,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             package_name = savedInstanceState.getString("packageName");
             downloadId = savedInstanceState.getInt("downloadId");
             cacheKey = savedInstanceState.getString("cacheKey");
+        }else{
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DateTime time = new DateTime();
+                    Hours.hoursBetween(time, time);
+                }
+            }).start();
         }
 
         
@@ -1075,6 +1095,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         };
     }
 
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
@@ -1083,8 +1105,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
             name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
             package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
-            versionName = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERNAME));
 
+            versionName = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERNAME));
             String localIcon = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_ICON));
             final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
             downloads = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_DOWNLOADS));
@@ -1233,6 +1255,23 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Subscribe
+    public void onSpinnerItemClick(OnMultiVersionClick event) {
+
+        GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+
+        request.setRepoName(event.getRepoName());
+        request.setPackageName(event.getPackage_name());
+        request.setVersionName(event.getVersionName());
+        request.setVercode(event.getVersionCode());
+        if (token != null) request.setToken(token);
+        cacheKey = event.getPackage_name() + event.getRepoName() + event.getVersionCode();
+
+        spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+
+
+    }
+
+    @Subscribe
     public void onDownloadUpdate(Download download) {
 
 
@@ -1331,7 +1370,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 case 1:
                     return new FragmentAppView.FragmentAppViewRating();
                 case 2:
-                    return new FragmentAppView.FragmentAppViewRelated();
+                   return new FragmentAppView.FragmentAppViewRelated();
                 case 3:
                     return new FragmentAppView.FragmentAppViewSpecs();
                 default:
@@ -1363,6 +1402,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static class DetailsEvent {
 
         Details details;
+
 
         public DetailsEvent(Details details) {
             this.details = details;
@@ -1456,6 +1496,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public String getStore() {
             return details.getStore();
+        }
+
+        public MultiStoreItem[] getOtherVersions() {
+            return details.getVersions();
         }
     }
 
@@ -1554,6 +1598,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public float rating;
         private List<GetApkInfoJson.Media.Screenshots> screenshotsHd;
         private List<GetApkInfoJson.Media.Videos> videos;
+        private MultiStoreItem[] versions;
 
         public void setDescription(String description) {
             this.description = description;
@@ -1677,6 +1722,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public void setVideos(List<GetApkInfoJson.Media.Videos> videos) {
             this.videos = videos;
+        }
+
+        public void setOtherVersions(MultiStoreItem[] versions){ this.versions = versions;}
+
+        public MultiStoreItem[] getVersions() {
+            return versions;
         }
     }
 

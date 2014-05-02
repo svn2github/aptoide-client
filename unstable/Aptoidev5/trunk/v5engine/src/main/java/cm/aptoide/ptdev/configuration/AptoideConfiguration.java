@@ -42,15 +42,15 @@ public class AptoideConfiguration {
     }
 
     public String getUpdatesSyncAdapterAuthority(){
-        return "cm.aptoide.pt.UpdatesProvider";
+        return Aptoide.getContext().getPackageName() + ".UpdatesProvider";
     }
 
     public String getSearchAuthority(){
-        return "cm.aptoide.pt.SuggestionProvider";
+        return Aptoide.getContext().getPackageName() + ".SuggestionProvider";
     }
 
     public String getAutoUpdatesSyncAdapterAuthority(){
-        return "cm.aptoide.pt.AutoUpdateProvider";
+        return Aptoide.getContext().getPackageName() + ".AutoUpdateProvider";
     }
 
     public String getAccountType() { return AccountGeneral.ACCOUNT_TYPE;

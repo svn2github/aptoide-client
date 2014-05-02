@@ -123,6 +123,9 @@ public class Schema {
         public final static String COLUMN_NAME = "name";
 
         @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_ORDER = "order_column";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
         public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
 
         @ColumnDefinition(type = SQLType.INTEGER)

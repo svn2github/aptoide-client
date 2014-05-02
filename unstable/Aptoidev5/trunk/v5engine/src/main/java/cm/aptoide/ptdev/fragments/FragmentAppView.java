@@ -19,12 +19,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
+import cm.aptoide.ptdev.adapters.StoreSpinnerAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.OnMultiVersionClick;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -44,6 +46,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -103,7 +106,7 @@ public abstract class FragmentAppView extends Fragment {
         private TextView size;
         private TextView publisher;
 
-        private HorizontalScrollView layoutScreenshots;
+
 
         private ProgressBar loadingPb;
 
@@ -117,6 +120,7 @@ public abstract class FragmentAppView extends Fragment {
         private LinearLayout detailsContainer;
         private View row2;
         private View row3;
+        private Spinner spinner;
 
 
         @Subscribe
@@ -195,11 +199,39 @@ public abstract class FragmentAppView extends Fragment {
             }
 
 
+            MultiStoreItem[] items = event.getOtherVersions();
+
+            if(items != null) {
+                StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
+
+                spinner.setAdapter(adapter);
+                spinner.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                spinner.setOnItemSelectedListener(null);
+                                MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
+                                BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode()));
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                    }
+                });
+
+            }
+
+
             publisher.setText(Html.fromHtml("<b>" + getString(R.string.publisher) + "</b>" + ": " + event.getPublisher()));
             size.setText(Html.fromHtml("<b>" + getString(R.string.size) + "</b>" + ": " + AptoideUtils.formatBytes(event.getSize())));
             if(event.getStore()!=null){
                 store.setVisibility(View.VISIBLE);
-                store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": " + event.getStore()));
+                store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "));
             }else{
                 store.setVisibility(View.INVISIBLE);
             }
@@ -249,7 +281,7 @@ public abstract class FragmentAppView extends Fragment {
                 publisherWebsite.setText(website);
             }
 
-            LinearLayout mainLayout = (LinearLayout) layoutScreenshots.findViewById(R.id._linearLayout);
+            LinearLayout mainLayout = (LinearLayout) getView().findViewById(R.id.layout_screenshots).findViewById(R.id._linearLayout);
 
             mainLayout.removeAllViews();
             ArrayList<MediaObject> mediaObjects;
@@ -295,7 +327,6 @@ public abstract class FragmentAppView extends Fragment {
                     }
 
                     mainLayout.addView(cell);
-
                     ImageLoader.getInstance().displayImage(imagePath, imageView, options, new ImageLoadingListener() {
 
                         @Override
@@ -381,7 +412,7 @@ public abstract class FragmentAppView extends Fragment {
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
             publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
 
-            layoutScreenshots = (HorizontalScrollView) v.findViewById(R.id.layout_screenshots);
+
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
@@ -393,6 +424,8 @@ public abstract class FragmentAppView extends Fragment {
 
             row2 = v.findViewById(R.id.row2);
             row3 = v.findViewById(R.id.row3);
+
+            spinner = (Spinner) v.findViewById(R.id.store_spinner);
 
             return v;
         }
@@ -449,6 +482,9 @@ public abstract class FragmentAppView extends Fragment {
 
                     }
                 });
+
+
+
                 setEmptyText(getString(R.string.connection_error));
                 setListAdapter(new ArrayAdapter<String>(getActivity(), 0));
 
@@ -599,7 +635,11 @@ public abstract class FragmentAppView extends Fragment {
             View v = super.onCreateView(inflater, container, savedInstanceState);
             ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
             Log.d("FragmentRelated", "onCreateView");
-            //listRelatedApkRequest.setRepos("apps");
+
+            if(((AppViewActivity)getActivity()).isMultipleStores()){
+                listRelatedApkRequest.setRepos(((AppViewActivity)getActivity()).getRepoName());
+            }
+
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
@@ -728,7 +768,7 @@ public abstract class FragmentAppView extends Fragment {
         }
     }
 
-    public static class FragmentAppViewRating extends FragmentAppView{
+    public static class FragmentAppViewRating extends FragmentAppView {
 
         private TextView commentsTitle;
         private LinearLayout commentsLayout;
@@ -753,6 +793,7 @@ public abstract class FragmentAppView extends Fragment {
                     noComments.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     noComments.setVisibility(View.VISIBLE);
                 }else if (event.getComments().size() > 4) {
+                    noComments.setVisibility(View.GONE);
                     commentsTitle.setVisibility(View.VISIBLE);
                     commentsLayout.setVisibility(View.VISIBLE);
                     commentsLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));

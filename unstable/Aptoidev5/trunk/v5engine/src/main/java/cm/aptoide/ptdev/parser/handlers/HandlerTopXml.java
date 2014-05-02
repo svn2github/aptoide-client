@@ -50,7 +50,7 @@ public class HandlerTopXml extends AbstractHandler {
     @Override
     public void startDocument() throws SAXException {
         super.startDocument();
-        getDb().insertCategory("Top Apps", 0, TOPAPPS_ID, 0, getRepoId());
+        getDb().insertCategory("Top Apps", 0, TOPAPPS_ID, Integer.MIN_VALUE, getRepoId());
     }
 
     @Override

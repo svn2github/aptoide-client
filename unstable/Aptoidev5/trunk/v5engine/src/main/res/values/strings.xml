@@ -398,7 +398,9 @@
     <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
     <string name="are_you_adult">Are you at least 21 years old?</string>
     <string name="buy">Buy</string>
-    <string name="payment_methods">Payment methods:</string>
-    <string name="buy_now">Buy now?</string>
+    <string name="payment_methods">Pay with:</string>
+    <string name="buy_now">Confirm Payment</string>
+    <string name="root">Root</string>
+    <string name="allow_root">Allow root installation</string>
 
 </resources>

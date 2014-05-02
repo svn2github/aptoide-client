@@ -115,6 +115,12 @@
                     android:entryValues="@array/themes" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/root"
+                         >
+        <CheckBoxPreference android:key="allowRoot"
+                            android:title="@string/allow_root" />
+    </PreferenceCategory>
+
     <!--<PreferenceCategory-->
             <!--android:key="devmode"-->
             <!--android:title="@string/dev_mode">-->

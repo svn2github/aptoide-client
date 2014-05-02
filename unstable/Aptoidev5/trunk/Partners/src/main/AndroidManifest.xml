@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
 
     <application android:icon="@drawable/ic_launcher"
                  android:name="com.aptoide.partners.AptoidePartner"
@@ -249,7 +249,8 @@
         <provider android:name="cm.aptoide.ptdev.AutoUpdateProvider"
                   android:authorities="com.aptoide.partners.AutoUpdateProvider"
                   android:label="Auto-Update Apps"
-                  android:exported="false"/>
+                  android:exported="false"
+                  />
 
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>

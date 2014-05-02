@@ -11,6 +11,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 
 /**
@@ -55,7 +56,12 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
             if(responseCode == 404){
                 throw new NotFoundException();
             }else if(responseCode == 403){
-                ACRA.getErrorReporter().handleException(new Exception("403 on "+ mURL.toString()));
+                InetAddress address = InetAddress.getByName(mURL.getHost());
+                String ip = "";
+                if (address != null) {
+                    ip = address.getHostAddress();
+                }
+                ACRA.getErrorReporter().handleException(new Exception("403 on "+ ip+"/"+mURL.toString()));
                 throw new IPBlackListedException();
             }
             // response not ok

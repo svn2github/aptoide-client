@@ -85,7 +85,9 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         GenericUrl genericUrl = new GenericUrl(url);
         HttpRequest request = transport.createRequestFactory().buildHeadRequest(genericUrl);
+
         int code;
+
         try{
             code = request.execute().getStatusCode();
         }catch (HttpResponseException e){

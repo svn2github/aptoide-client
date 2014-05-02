@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.services;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -401,19 +402,22 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         return new RepoAddedEvent();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public Notification createDefaultNotification() {
-        Notification notification = new Notification();
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+        Notification notification = null;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notification = new Notification.Builder(this).setSmallIcon(getApplicationInfo().icon).build();
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            notification = new Notification.Builder(this).setSmallIcon(getApplicationInfo().icon).getNotification();
+        } else {
+            notification = new Notification();
             notification.icon = getApplicationInfo().icon;
-            //temporary fix https://github.com/octo-online/robospice/issues/200
+            // temporary fix https://github.com/octo-online/robospice/issues/200
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
             notification.setLatestEventInfo(this, "", "", pendingIntent);
-        } else {
-            notification.icon = 0;
+            notification.tickerText = null;
+            notification.when = System.currentTimeMillis();
         }
-
-        notification.tickerText = null;
-        notification.when = System.currentTimeMillis();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = Notification.PRIORITY_MIN;

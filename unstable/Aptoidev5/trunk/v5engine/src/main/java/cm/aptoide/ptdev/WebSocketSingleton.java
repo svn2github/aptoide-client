@@ -6,9 +6,13 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 import com.codebutler.android_websockets.WebSocketClient;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -94,8 +98,24 @@ public class WebSocketSingleton {
     public void send(String query) {
         this.query = query;
         if (web_socket_client.isConnected() && query.length() > 2 && ( buffer==null || !query.startsWith(buffer))) {
-            web_socket_client.send("{\"query\":\"" + query + "\"}");
-            Log.d("TAG", "Sending " + query);
+
+            JsonFactory f = new JsonFactory();
+
+            StringWriter writer = new StringWriter();
+            try {
+                JsonGenerator g = f.createJsonGenerator(writer);
+                g.writeStartObject();
+                g.writeStringField("query", query);
+                g.writeEndObject();
+                g.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //"{\"query\":\"" + query + "\"}"
+
+            web_socket_client.send(writer.toString());
+
+            Log.d("TAG", "Sending " + writer.toString());
         }else{
             MatrixCursor mCursor = null;
             blockingQueue.add(mCursor);

@@ -1,29 +1,12 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
-    }
-}
+
 apply plugin: 'android'
 
+apply from: "signing.gradle"
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://raw.github.com/ark/ark/master/snapshots/'
-    }
 }
 
-apply plugin: 'idea'
-
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
 
 android {
     compileSdkVersion 18
@@ -40,14 +23,34 @@ android {
 
     }
 
-    
+    buildTypes {
+
+        debug {
+            zipAlign  true
+
+        }
+
+
+        release {
+            signingConfig signingConfigs.release
+        }
+
+
+
+    }
+
+
 
 
 
 }
+
+
 
 dependencies {
     compile project (':v5engine')
 }
+
+
 
 

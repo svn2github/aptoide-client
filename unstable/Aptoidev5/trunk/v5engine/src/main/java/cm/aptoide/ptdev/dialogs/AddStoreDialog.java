@@ -25,6 +25,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
+
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -322,10 +323,11 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
                 String url = ((EditText)view.findViewById(R.id.edit_store_uri)).getText().toString();
-                get(url, null);
-                showDialog();
+                if(url!=null&&url.length()>0){
+                    get(url, null);
+                    showDialog();
+                }
             }
         });
 

@@ -87,7 +87,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                                 // This is because they are not dirent children of the ViewGroup
                         .theseChildrenArePullable(getListView().getId(), getListView().getEmptyView().getId())
                                 // We can now complete the setup as desired
-
                         .listener(FragmentStoreListCategories.this)
                         .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
                         .setup(mPullToRefreshLayout);

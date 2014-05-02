@@ -296,7 +296,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-        <item name="android:layout_gravity">center_horizontal|left</item>
+        <item name="android:layout_gravity">center|left</item>
     </style>
 
     <style name="SectionTextViewStyle" parent="@android:style/Widget.TextView">
@@ -309,5 +309,22 @@
         <item name="android:padding">?sectionListView.sectionItemPadding</item>
         <item name="android:background">?sectionListView.sectionItemBackground</item>
     </style>
+
+    <style name="FinskyLightDialogTheme" parent="AptoideThemeDefault">
+        <item name="android:windowBackground">@drawable/dialog_full_holo_light</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowSoftInputMode">stateUnchanged|adjustResize</item>
+
+    </style>
+    <style name="PurchaseDialog" parent="@style/FinskyLightDialogTheme">
+        <item name="android:windowNoTitle">true</item>
+
+    </style>
+
+
 
 </resources>

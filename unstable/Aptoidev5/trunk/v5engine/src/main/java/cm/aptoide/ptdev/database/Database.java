@@ -174,7 +174,7 @@ public class Database {
 
         Cursor c = null;
         if(storeid!=-1){
-            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme as theme, repo.name as repo_name, repo.items as items from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by count desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
+            c = database.rawQuery("select cat.name as name, id_real_category as _id, apps_count as count, null as version_name, '1' as type, null as icon, null as iconpath, repo.theme as theme, repo.name as repo_name, repo.items as items from category as cat join repo on cat.id_repo = repo.id_repo where cat.id_repo = ? and id_category_parent = ? order by order_column desc, _id desc", new String[]{String.valueOf(storeid), String.valueOf(parentid) });
             c.getCount();
 
             if(parentid==0){
@@ -963,7 +963,7 @@ public class Database {
         values.put(Schema.Category.COLUMN_NAME, name);
         values.put(Schema.Category.COLUMN_RID, real_id);
         values.put(Schema.Category.COLUMN_REPO_ID, repoId);
-
+        values.put(Schema.Category.COLUMN_ORDER, order);
 
         database.insert(Schema.Category.getName(), null, values);
 
@@ -1226,4 +1226,32 @@ public class Database {
     public void clearInstalled() {
         database.delete(Schema.Installed.getName(), null, null);
     }
+
+    public MultiStoreItem[] getOtherReposVersions(long id, String packageName, String version, String repoName, int versionCode){
+
+        Cursor c = database.rawQuery("select * from (select apk.version_code as version_code, apk.version_name as version, id_apk as id, repo.name as name from apk join repo on apk.id_repo = repo.id_repo where package_name = ? and repo.is_user = 1 and is_compatible = 1 order by apk.sdk) group by version, name", new String[]{packageName});
+        ArrayList<MultiStoreItem> items = new ArrayList<MultiStoreItem>();
+        items.add(new MultiStoreItem(version, repoName, versionCode, packageName));
+        ArrayList<MultiStoreItem> itemsTemp = new ArrayList<MultiStoreItem>();
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+
+            String apkVersion = c.getString(c.getColumnIndex("version"));
+            String apkRepoName = c.getString(c.getColumnIndex("name"));
+            long apkId = c.getLong(c.getColumnIndex("id"));
+            int apkVersionCode = c.getInt(c.getColumnIndex("version_code"));
+            if(!repoName.equals(apkRepoName) || versionCode!=apkVersionCode) itemsTemp.add(new MultiStoreItem(apkVersion, apkRepoName, apkVersionCode, packageName));
+        }
+
+        Collections.sort(itemsTemp, new Comparator<MultiStoreItem>() {
+            @Override
+            public int compare(MultiStoreItem lhs, MultiStoreItem rhs) {
+                return lhs.getVersionCode()-rhs.getVersionCode();
+            }
+        });
+
+        items.addAll(itemsTemp);
+
+        return items.toArray(new MultiStoreItem[items.size()]);
+    };
 }

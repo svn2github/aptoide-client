@@ -133,6 +133,8 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
             Intent install = new Intent(Intent.ACTION_VIEW);
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 14)
+                install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
             install.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
             Log.d("Aptoide", "Installing app: " + path);
             context.startActivity(install);
@@ -270,6 +272,8 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                                     Log.e("MYTAG-CENAS", "Package not found");
                                     Intent install = new Intent(Intent.ACTION_VIEW);
                                     install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    if (Build.VERSION.SDK_INT >= 14)
+                                        install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
                                     install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                                     Log.d("Aptoide", "Installing app: " + apk.getPath());
                                     context.startActivity(install);
@@ -297,6 +301,8 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                             managerNotification.cancel((int) apk.getAppHashId());
                             Intent install = new Intent(Intent.ACTION_VIEW);
                             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            if (Build.VERSION.SDK_INT >= 14)
+                                install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
                             install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                             Log.d("Aptoide", "Installing app: " + apk.getPath());
                             context.startActivity(install);
@@ -308,6 +314,9 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                         managerNotification.cancel((int) apk.getAppHashId());
                         Intent install = new Intent(Intent.ACTION_VIEW);
                         install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        if (Build.VERSION.SDK_INT >= 14)
+                            install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
+
                         install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                         Log.d("Aptoide", "Installing app: " + apk.getPath());
                         context.startActivity(install);

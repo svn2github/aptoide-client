@@ -10,7 +10,6 @@
              android:id="@+id/media_layout"
              android:layout_width="wrap_content"
              android:layout_height="match_parent"
-             android:layout_gravity="center"
              android:gravity="center">
 
     <FrameLayout style="@style/focusableBackground">

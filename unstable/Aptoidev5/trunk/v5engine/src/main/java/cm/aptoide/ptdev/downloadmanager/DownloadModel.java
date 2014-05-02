@@ -45,9 +45,9 @@ public class DownloadModel implements Serializable {
 
         File file = new File(destination +"--downloading");
 
-        if(file.exists()){
-            return destination +"--downloading";
-        }else{
+        if (file.exists()) {
+            return destination + "--downloading";
+        } else {
             return destination;
         }
 

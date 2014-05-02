@@ -26,7 +26,7 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
 
 
     public SuggestionProvider(){
-        setupSuggestions("com.aptoide.partners.SuggestionProvider", DATABASE_MODE_QUERIES);
+        setupSuggestions("cm.aptoide.pt.dev.SuggestionProvider", DATABASE_MODE_QUERIES);
     }
 
 

@@ -52,7 +52,7 @@ public class HandlerLatestXml extends AbstractHandler {
     public void startDocument() throws SAXException {
         super.startDocument();
 
-        getDb().insertCategory("Latest Apps", 0, LATESTAPPS_ID, 0, getRepoId());
+        getDb().insertCategory("Latest Apps", 0, LATESTAPPS_ID, Integer.MIN_VALUE, getRepoId());
 
     }
 
