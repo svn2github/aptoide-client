@@ -598,10 +598,12 @@ public class Start extends ActionBarActivity implements
         excludedUpdatesTypedArray.recycle();
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
 
-
         mItems.add(new MenuListAdapter.Category(getString(R.string.social_networks)));
         mItems.add(new MenuListAdapter.Item(getString(R.string.facebook), R.drawable.ic_action_facebook, 4));
         mItems.add(new MenuListAdapter.Item(getString(R.string.twitter), R.drawable.ic_action_twitter, 5));
+
+        mItems.add(new MenuListAdapter.Category(getString(R.string.other)));
+        mItems.add(new MenuListAdapter.Item(getString(R.string.backup_apps), R.drawable.ic_action_backup_custom, 6));
 
         typedArray.recycle();
         return mItems;

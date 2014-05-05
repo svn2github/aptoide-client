@@ -402,5 +402,7 @@
     <string name="buy_now">Confirm Payment</string>
     <string name="root">Root</string>
     <string name="allow_root">Allow root installation</string>
+    <string name="other">Other</string>
+    <string name="backup_apps">Backup Apps</string>
 
 </resources>
