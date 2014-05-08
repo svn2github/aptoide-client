@@ -166,6 +166,7 @@
   <string name="password_tip">Parolanızı yazın</string>
   <string name="add_pvt_store">Özel mağaza ekle</string>
   <string name="accept_terms">Hesap açarak Aptoide kullanım koşulları ve geliştiriciler için içerik politikasını kabul etmiş olursunuz</string>
+  <string name="accept_oem_terms">Kaydolarak %s kullanış şartlarını kabul etmiş olursunuz</string>
   <string name="register">Hesap aç</string>
   <string name="or">Ya da</string>
   <string name="showpass">Parolayı göster</string>

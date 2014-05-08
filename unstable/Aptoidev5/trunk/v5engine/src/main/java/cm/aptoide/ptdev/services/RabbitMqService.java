@@ -32,9 +32,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,84 +61,107 @@ public class RabbitMqService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        if(!isRunning) {
+            Toast.makeText(getApplicationContext(), "Starting amqp service", Toast.LENGTH_LONG).show();
+            Aptoide.setWebInstallServiceRunning(true);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                AccountManager manager = AccountManager.get(getApplicationContext());
+                    AccountManager manager = AccountManager.get(getApplicationContext());
 
-                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
-                    final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                        final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String queueName = sharedPreferences.getString("queueName", null);
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        String queueName = sharedPreferences.getString("queueName", null);
+                        ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
+                        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
 
-                    String host = Constants.WEBINSTALL_HOST;
+                        if (Build.VERSION.SDK_INT >= 8) {
+                            ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
+                        }
 
-                    try {
-                        ConnectionFactory factory = new ConnectionFactory();
-                        factory.setHost(host);
-                        factory.setUsername("public");
-                        factory.setPassword("public");
-                        factory.setConnectionTimeout(20000);
+                        String host = Constants.WEBINSTALL_HOST;
+                        isRunning = true;
+                        try {
+                            ConnectionFactory factory = new ConnectionFactory();
+                            factory.setHost(host);
+                            factory.setUsername("public");
+                            factory.setPassword("public");
+                            factory.setConnectionTimeout(20000);
 
-                        factory.setVirtualHost("webinstall");
-                        connection = (AMQConnection) factory.newConnection();
-                        newChannel(queueName, new AMQHandler() {
-                            @Override
-                            void handleMessage(String body) {
+                            factory.setVirtualHost("webinstall");
+                            connection = (AMQConnection) factory.newConnection();
+                            newChannel(queueName, new AMQHandler() {
+                                @Override
+                                void handleMessage(String body) {
 
-                                try {
-                                    JSONObject object = new JSONObject(body);
+                                    try {
+                                        JSONObject object = new JSONObject(body);
 
-                                    Intent i = new Intent(getApplicationContext(), appViewClass);
-                                    String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                        Intent i = new Intent(getApplicationContext(), appViewClass);
+                                        String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
 
-                                    String repo = object.getString("repo");
-                                    long id = object.getLong("id");
-                                    String md5sum = object.getString("md5sum");
-                                    i.putExtra("fromMyapp", true);
-                                    i.putExtra("repoName", repo);
-                                    i.putExtra("id", id);
-                                    i.putExtra("md5sum", md5sum);
+                                        String repo = object.getString("repo");
+                                        long id = object.getLong("id");
+                                        String md5sum = object.getString("md5sum");
+                                        i.putExtra("fromMyapp", true);
+                                        i.putExtra("repoName", repo);
+                                        i.putExtra("id", id);
+                                        i.putExtra("md5sum", md5sum);
 
-                                    String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    String hmac = object.getString("hmac");
-                                    String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo + id + md5sum, authToken + deviceId);
-                                    if (hmac.equals(calculatedHmac)) {
-                                        getApplicationContext().startActivity(i);
-                                    } else {
-                                        Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        String hmac = object.getString("hmac");
+                                        String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo + id + md5sum, authToken + deviceId);
+                                        if (hmac.equals(calculatedHmac)) {
+                                            getApplicationContext().startActivity(i);
+                                        } else {
+                                            Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (AuthenticatorException e) {
+                                        e.printStackTrace();
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (NoSuchAlgorithmException e) {
+                                        e.printStackTrace();
+                                    } catch (OperationCanceledException e) {
+                                        e.printStackTrace();
+                                    } catch (InvalidKeyException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (AuthenticatorException e) {
-                                    e.printStackTrace();
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (NoSuchAlgorithmException e) {
-                                    e.printStackTrace();
-                                } catch (OperationCanceledException e) {
-                                    e.printStackTrace();
-                                } catch (InvalidKeyException e) {
-                                    e.printStackTrace();
+
+
+                                }
+                            });
+                        } catch (IOException e) {
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
+                            e.printStackTrace();
+                            try {
+                                if (channel != null && channel.isOpen()) {
+                                    channel.close();
                                 }
 
-
+                                if (connection != null && connection.isOpen()) {
+                                    connection.close();
+                                }
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
                             }
-                        });
-                    } catch (IOException e) {
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
-                        e.printStackTrace();
+                            isRunning = false;
+
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
 
         return START_STICKY;
     }
@@ -150,21 +177,42 @@ public class RabbitMqService extends Service {
         return wBinder;
     }
 
+    public void startAmqpService(){
+        if(!isRunning){
+            startService(new Intent(getApplicationContext(), RabbitMqService.class));
+        }
+        if(timer!=null){
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+
+
+    }
+
+    Timer timer;
+
+    public void stopAmqpService(){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                stopSelf();
+                isRunning = false;
+            }
+        }, 30000);
+
+        Toast.makeText(getApplicationContext(), "OnUnbind timer started", Toast.LENGTH_LONG).show();
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d("Aptoide-RabbitMqService", "RabbitMqService created!");
         thread_pool = Executors.newCachedThreadPool();
 
-        Account account;
-        AccountManager manager = AccountManager.get(getApplicationContext());
-        if(manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length>0){
-            account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-            if(Build.VERSION.SDK_INT >= 8) {
-                ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
-            }
-            ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
-        }
+
 
 
     }
@@ -172,13 +220,21 @@ public class RabbitMqService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        if(timer!=null){
+            timer.cancel();
+            timer.purge();
+        }
         Log.d("Aptoide-RabbitMqService", "RabbitMqService Destroyed!");
+
         try {
+
             isRunning = false;
+
+            if(channel!=null && channel.isOpen()){
+                channel.close();
+            }
+
             if(connection != null && connection.isOpen()){
-                if(channel!=null) channel.close();
-                connection.disconnectChannel(channel);
                 connection.close();
             }
 
@@ -188,14 +244,7 @@ public class RabbitMqService extends Service {
             e.printStackTrace();
         }
 
-        if (AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-            Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-            ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
-            ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
-            if (Build.VERSION.SDK_INT >= 8) {
-                ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
-            }
-        }
+        Aptoide.setWebInstallServiceRunning(false);
 
     }
 
@@ -211,6 +260,7 @@ public class RabbitMqService extends Service {
     private QueueingConsumer consumer;
 
     public void newChannel(String queue_id, AMQHandler task) throws IOException {
+
         channel = (ChannelN) connection.createChannel();
         //channel.queueDeclare(queue_id, true, false, false, null);
         channel.basicQos(0);
@@ -218,9 +268,10 @@ public class RabbitMqService extends Service {
         channel.basicConsume(queue_id, false, consumer);
         task.setConsumer(consumer);
         thread_pool.execute(task);
+
     }
 
-    private boolean isRunning = true;
+    private boolean isRunning = false;
 
     public abstract class AMQHandler implements Runnable {
 
@@ -246,7 +297,12 @@ public class RabbitMqService extends Service {
                     e.printStackTrace();
                 } catch (ShutdownSignalException e){
                     isRunning = false;
-                    Log.d("Aptoide-WebInstall", "Connection closed with reason " + e.getReason().toString());
+                    try{
+                        Log.d("Aptoide-WebInstall", "Connection closed with reason " + e.getReason().toString());
+                    }catch (NullPointerException e1){
+                        e1.printStackTrace();
+                        Log.d("Aptoide-WebInstall", "Connection closed with unkonwn reason" );
+                    }
                 } catch (ConsumerCancelledException e){
                     isRunning = false;
                     Log.d("Aptoide-WebInstall", "Connection was canceled");
@@ -257,6 +313,9 @@ public class RabbitMqService extends Service {
                 if(channel != null && channel.isOpen()){
                     channel.close();
                     connection.disconnectChannel(channel);
+                }
+
+                if(connection!=null && connection.isOpen()){
                     connection.close();
                 }
 

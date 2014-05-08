@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
@@ -48,11 +49,15 @@ public class ManagerPreferences {
         getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         setPreferences = getPreferences.edit();
 
+
+
+    }
+
+    public void init(){
         if (getAptoideClientUUID() == null) {
             //createLauncherShortcut(context);
             setAptoideClientUUID(UUID.randomUUID().toString());
         }
-
     }
 
 
@@ -62,7 +67,7 @@ public class ManagerPreferences {
 
         Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
-
+        Log.d("Aptoide-Shortcut", "Creating Intent");
         final Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());

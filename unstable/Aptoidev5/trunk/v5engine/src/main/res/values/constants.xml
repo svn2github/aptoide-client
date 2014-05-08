@@ -29,4 +29,6 @@
         <item>@string/dark</item>
         <item>@string/light</item>
     </array>
+    <string name="backup_apps">Backup Apps</string>
+
 </resources>

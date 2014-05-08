@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -109,6 +111,9 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
                     sharedPreferences.edit().remove("queueName").commit();
                     stopService(new Intent(MyAccountActivity.this, RabbitMqService.class));
+                    ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 0);
+                    ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
+                    ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
                     mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
                         @Override
                         public void run(AccountManagerFuture<Boolean> future) {
@@ -193,4 +198,5 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
 }

@@ -43,14 +43,10 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
-import cm.aptoide.ptdev.webservices.UpdateUserRequest;
+import cm.aptoide.ptdev.webservices.*;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -256,6 +252,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (service != null && service.getDownload(downloadId).getDownload() != null) {
                         onDownloadUpdate(service.getDownload(downloadId).getDownload());
+                    } else {
+                        findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
+                        findViewById(R.id.download_progress).setVisibility(View.GONE);
+                        findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                        findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
                     }
 
                 } else {
@@ -568,15 +569,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String package_name;
         private final String md5;
         private final String url;
+        private String repoName;
 
 
-        public InstallFromUrlListener(String icon, String name, String versionName, String package_name, String md5, String url) {
+        public InstallFromUrlListener(String icon, String name, String versionName, String package_name, String md5, String url, String repoName) {
             this.icon = icon;
             this.name = name;
             this.versionName = versionName;
             this.package_name = package_name;
             this.md5 = md5;
             this.url = url;
+            this.repoName = repoName;
         }
 
         @Override
@@ -607,7 +610,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
 
-            service.startDownloadFromUrl(url, md5, downloadId, download);
+            service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
 
@@ -823,13 +826,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onStart() {
-        spiceManager.start(this);
         super.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        spiceManager.start(this);
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
 
         BusProvider.getInstance().register(this);
@@ -851,12 +854,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onStop() {
-        spiceManager.shouldStop();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
+        spiceManager.shouldStop();
         BusProvider.getInstance().unregister(this);
         super.onPause();
     }
@@ -944,63 +947,83 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setTitle(R.string.applications);
 
 
-        if (getIntent().getBooleanExtra("fromRollback", false)) {
 
-            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+        if(savedInstanceState==null) {
 
-            String md5sum = getIntent().getStringExtra("md5sum");
-            request.setMd5Sum(md5sum);
+            if (getIntent().getBooleanExtra("getBackupApps", false)) {
 
-            if (token != null) {
-                request.setToken(token);
+                GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
+
+
+                request.setPackageName("pt.aptoide.backupapps");
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+
+                cacheKey = "pt.aptoide.backupapps";
+
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, "pt.aptoide.backupapps", DurationInMillis.ONE_HOUR, requestListener);
+
+            } else if (getIntent().getBooleanExtra("fromRollback", false)) {
+
+                GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+
+                String md5sum = getIntent().getStringExtra("md5sum");
+                request.setMd5Sum(md5sum);
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = md5sum;
+
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
+
+            } else if (getIntent().getBooleanExtra("fromMyapp", false)) {
+
+                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+                long id = getIntent().getLongExtra("id", 0);
+                request.setAppId(String.valueOf(id));
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = String.valueOf(id);
+
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
+
+            } else if (getIntent().getBooleanExtra("fromRelated", false)) {
+
+                GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+                repoName = getIntent().getStringExtra("repoName");
+                String md5sum = getIntent().getStringExtra("md5sum");
+                request.setMd5Sum(md5sum);
+                request.setRepoName(repoName);
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = md5sum;
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+            } else if (getIntent().getBooleanExtra("fromApkInstaller", false)) {
+
+                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+                long id = getIntent().getLongExtra("id", 0);
+                request.setAppId(String.valueOf(id));
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = String.valueOf(id);
+                autoDownload = true;
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+
+            } else {
+                getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
             }
-            cacheKey = md5sum;
-
-            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, md5sum, DurationInMillis.ONE_HOUR, requestListener);
-
-        } else if (getIntent().getBooleanExtra("fromMyapp", false)) {
-
-            GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
-
-            long id = getIntent().getLongExtra("id", 0);
-            request.setAppId(String.valueOf(id));
-
-            if (token != null) {
-                request.setToken(token);
-            }
-            cacheKey = String.valueOf(id);
-
-            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
-
-        } else if (getIntent().getBooleanExtra("fromRelated", false)) {
-
-            GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
-            repoName = getIntent().getStringExtra("repoName");
-            String md5sum = getIntent().getStringExtra("md5sum");
-            request.setMd5Sum(md5sum);
-            request.setRepoName(repoName);
-            if (token != null) {
-                request.setToken(token);
-            }
-            cacheKey = md5sum;
-            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-        } else if (getIntent().getBooleanExtra("fromApkInstaller", false)) {
-
-            GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
-
-            long id = getIntent().getLongExtra("id", 0);
-            request.setAppId(String.valueOf(id));
-
-            if (token != null) {
-                request.setToken(token);
-            }
-            cacheKey = String.valueOf(id);
-            autoDownload = true;
-            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-
-        } else {
-            getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
         }
+
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
         loadPublicity();
@@ -1155,7 +1178,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     isUpdate = true;
                     ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
                     findViewById(R.id.btinstall).setEnabled(true);
-                    findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path));
+                    findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
                     ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
                     ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
                 } else if (versionCode < info.versionCode) {
@@ -1191,7 +1214,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             } catch (PackageManager.NameNotFoundException e) {
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.install));
-                findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path));
+                findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
             }
 
 
@@ -1229,7 +1252,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Subscribe
     public void onUnInstalledEvent(UnInstalledApkEvent event) {
         onRefresh(null);
-        Toast.makeText(this, "Uninstalled", Toast.LENGTH_LONG).show();
     }
 
     @Override

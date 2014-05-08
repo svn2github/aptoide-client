@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority=".StubProvider"
-    android:accountType="cm.aptoide.pt.dev"
+    android:contentAuthority="cm.aptoide.pt.StubProvider"
+    android:accountType="cm.aptoide.pt"
     android:userVisible="false"
     android:supportsUploading="false"
     android:allowParallelSyncs="false"

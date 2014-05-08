@@ -9,7 +9,7 @@ package cm.aptoide.ptdev.configuration;
  */
 public class Constants {
 
-    public static final int DATABASE_VERSION = 21;
+    public static final int DATABASE_VERSION = 22;
     public static final String LOGIN_USER_ID 	= "useridLogin";
     public static final String LOGIN_PASSWORD 	= "passwordLogin";
     public static final String LOGIN_USER_LOGIN 	= "usernameLogin";
@@ -24,6 +24,6 @@ public class Constants {
     public static final String WEBINSTALL_SYNC_AUTHORITY = "cm.aptoide.pt.StubProvider";
     public static final long WEBINSTALL_SYNC_POLL_FREQUENCY = 360;
 
-    public static final String STUB_PROVIDER_AUTHORITY = "cm.aptoide.pt.dev.StubProvider";
+    public static final String STUB_PROVIDER_AUTHORITY = "cm.aptoide.pt.StubProvider";
 
 }

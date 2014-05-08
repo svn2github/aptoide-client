@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.Preference;
@@ -82,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             table_columns = table.getDeclaredFields();
             table_definition = ((TableDefinition) table.getAnnotation(TableDefinition.class));
 
-            sql_stmt = "CREATE TABLE " + table.getSimpleName().toLowerCase(Locale.ENGLISH) + " (";
+            sql_stmt = "CREATE TABLE IF NOT EXISTS " + table.getSimpleName().toLowerCase(Locale.ENGLISH) + " (";
 
             // Table_collumns
             Field column;
@@ -157,7 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 indexes_stmt += "UNIQUE ";
             }
 
-            indexes_stmt += "INDEX " + index.index_name() + " ON " + table_name + " (";
+            indexes_stmt += "INDEX IF NOT EXISTS " + index.index_name() + " ON " + table_name + " (";
 
             TableDefinition.Key[] keys = index.keys();
             Iterator<TableDefinition.Key> keys_iterator = Arrays.asList(keys).iterator();
@@ -253,7 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "DatabaseHelper onUpgrade()");
         ArrayList<Server> oldServers = new ArrayList<Server>();
 
-        if (oldVersion == 13 && Aptoide.getConfiguration().isSaveOldRepos()) {
+        if (oldVersion >= 13 && oldVersion <= 20 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             try {
                 Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, null, null, null, null, null);
@@ -275,11 +276,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else if (oldVersion >= 21 && Aptoide.getConfiguration().isSaveOldRepos()){
+            try {
+                Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
+                for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+
+                    Server server = new Server();
+                    server.setUrl(c.getString(0));
+                    server.setName(c.getString(1));
+
+                    if(c.getString(2)!=null){
+                        server.login = new Login();
+                        server.login.setUsername(c.getString(2));
+                        server.login.setPassword(c.getString(3));
+                    }
+
+                    oldServers.add(server);
+                }
+                c.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if( oldVersion == 21 ){
+            db.delete(Schema.RollbackTbl.getName(), "confirmed = ?", new String[]{"0"});
         }
 
 
-        dropIndexes(db);
-        dropTables(db);
+
+
+        dropIndexes(db, oldVersion);
+        dropTables(db, oldVersion);
 
         try {
             createDb(db);
@@ -287,7 +315,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        if (oldVersion == 13 && Aptoide.getConfiguration().isSaveOldRepos()) {
+        if (oldVersion >= 13 && oldVersion <= 21 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             for (Server server : oldServers) {
                 ContentValues values = new ContentValues();
@@ -305,6 +333,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
+
+
+
+
         removeSharedPreferences();
 
     }
@@ -316,7 +348,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private void dropIndexes(SQLiteDatabase db) {
+    private void dropIndexes(SQLiteDatabase db, int newVersion) {
         Class[] db_tables = Schema.class.getDeclaredClasses();
 
         String drop_stmt = "";
@@ -331,12 +363,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void dropTables(SQLiteDatabase db) {
+    private void dropTables(SQLiteDatabase db, int oldVersion) {
         Class[] db_tables = Schema.class.getDeclaredClasses();
 
-        String drop_stmt = "";
+
+        String drop_stmt;
+
+        boolean dropRollback = oldVersion < 21 ;
+
+
         for (Class table : db_tables) {
-            drop_stmt = "DROP TABLE IF EXISTS " + table.getSimpleName().toLowerCase(Locale.ENGLISH);
+            String tableName = table.getSimpleName().toLowerCase(Locale.ENGLISH);
+
+            if (dropRollback) {
+                drop_stmt = "DROP TABLE IF EXISTS " + tableName;
+            } else if (!tableName.equals(Schema.RollbackTbl.getName())) {
+                drop_stmt = "DROP TABLE IF EXISTS " + tableName;
+            }else{
+                continue;
+            }
+
+            Log.d("Aptoide-Database", "executing " + drop_stmt);
+
             db.execSQL(drop_stmt);
         }
     }

@@ -46,44 +46,66 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d("Aptoide-WebInstall", "onPerformSync()");
 
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String queueName = sPref.getString("queueName", "");
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(Constants.WEBINSTALL_HOST);
-        factory.setConnectionTimeout(20000);
-        factory.setVirtualHost("webinstall");
-        factory.setUsername("public");
-        factory.setPassword("public");
-        AMQConnection connection = null;
-        ChannelN channel = null;
-        try {
+        if(!Aptoide.isWebInstallServiceRunning()) {
 
-            connection = (AMQConnection) factory.newConnection();
-            channel = (ChannelN) connection.createChannel();
-            channel.basicQos(0);
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String queueName = sPref.getString("queueName", "");
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost(Constants.WEBINSTALL_HOST);
+            factory.setConnectionTimeout(20000);
+            factory.setVirtualHost("webinstall");
+            factory.setUsername("public");
+            factory.setPassword("public");
+            AMQConnection connection = null;
+            ChannelN channel = null;
+            try {
 
-            GetResponse response;
-            while((response = channel.basicGet(queueName, false)) != null) {
-                String message = new String(response.getBody(), "UTF-8");
-                Log.d("syncAdapter", "MESSAGE: " + message);
+                connection = (AMQConnection) factory.newConnection();
+                channel = (ChannelN) connection.createChannel();
+                channel.basicQos(0);
 
-                handleMessage(message);
-                channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
-            }
-            channel.close();
-            connection.disconnectChannel(channel);
-            connection.close();
-            //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
-        } catch (ShutdownSignalException e){
-            if (connection != null && channel != null) {
+                GetResponse response;
+                while ((response = channel.basicGet(queueName, false)) != null) {
+                    String message = new String(response.getBody(), "UTF-8");
+                    Log.d("syncAdapter", "MESSAGE: " + message);
+
+                    handleMessage(message);
+                    channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
+                }
+                channel.close();
                 connection.disconnectChannel(channel);
+                connection.close();
+                //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+            } catch (ShutdownSignalException e) {
+                e.printStackTrace();
+
+                try {
+                    if (connection != null && channel != null) {
+                        connection.disconnectChannel(channel);
+                    }
+
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                try {
+                    if (connection != null && channel != null) {
+                        connection.disconnectChannel(channel);
+                    }
+
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (connection != null && channel != null) {
-                connection.disconnectChannel(channel);
-            }
-            //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
         }
 
 

@@ -113,7 +113,7 @@ public class UninstallRetainFragment extends Fragment {
 
                         apkMd5 = calcApkMd5(packageName);
 
-                        rollBackItem = new RollBackItem(appName, packageName, versionToDowngrade, versionName, iconPath, null, apkMd5, null);
+                        rollBackItem = new RollBackItem(appName, packageName, versionToDowngrade, versionName, iconPath, null, apkMd5, null, "");
                         break;
 
                     default:
@@ -122,7 +122,7 @@ public class UninstallRetainFragment extends Fragment {
                         if (db.getUnistallingActionMd5(packageName) == null) {
                             apkMd5 = calcApkMd5(packageName);
                         }
-                        rollBackItem = new RollBackItem(appName, packageName, versionName, null, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING);
+                        rollBackItem = new RollBackItem(appName, packageName, versionName, null, iconPath, null, apkMd5, RollBackItem.Action.UNINSTALLING, "");
                         break;
                 }
 

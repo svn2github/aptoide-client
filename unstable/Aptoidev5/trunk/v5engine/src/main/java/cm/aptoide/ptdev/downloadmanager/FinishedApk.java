@@ -24,7 +24,7 @@ public class FinishedApk implements Parcelable, Serializable{
     private String iconpath;
     private String path;
     private ArrayList<String> permissionsList;
-
+    private String repoName;
 
 
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
@@ -74,6 +74,8 @@ public class FinishedApk implements Parcelable, Serializable{
         this.iconpath = iconpath;
     }
 
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,6 +89,7 @@ public class FinishedApk implements Parcelable, Serializable{
         dest.writeString(iconpath);
         dest.writeString(path);
         dest.writeStringList(permissionsList);
+        dest.writeString(repoName);
         Log.d("Aptoide-FinishedApkParcel", "" + path);
 
     }
@@ -108,9 +111,11 @@ public class FinishedApk implements Parcelable, Serializable{
         appHashId = in.readLong();
         iconpath = in.readString();
         path = in.readString();
-
         permissionsList = new ArrayList<String>();
         in.readStringList(permissionsList);
+        repoName = in.readString();
+
+
         Log.d("Aptoide-FinishedApkParceOut", "Path" + path);
 
 
@@ -126,5 +131,13 @@ public class FinishedApk implements Parcelable, Serializable{
 
     public void setPermissionsList(ArrayList<String> permissionsList) {
         this.permissionsList = permissionsList;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 }

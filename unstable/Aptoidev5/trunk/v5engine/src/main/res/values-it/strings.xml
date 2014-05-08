@@ -16,7 +16,7 @@
   <string name="timestamp_days">%s giorni</string>
   <string name="timestamp_day">%s giorno</string>
   <string name="action_contact">Contatta</string>
-  <string name="installed_tab">Installate</string>
+  <string name="installed_tab">Installata</string>
   <string name="update">Aggiorna</string>
   <string name="uninstall">Disinstalla</string>
   <string name="downloading_apps">Scaricamento</string>

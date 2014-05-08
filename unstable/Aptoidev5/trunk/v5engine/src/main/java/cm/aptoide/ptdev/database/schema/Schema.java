@@ -293,6 +293,9 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_CONFIRMED = "confirmed";
 
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_REPO = "reponame";
+
 
         public static String getName() {
             return "rollbacktbl";

@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.LauncherActivity;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -110,6 +111,24 @@ public class Start extends ActionBarActivity implements
     private boolean isResumed;
     private boolean matureCheck;
 
+    private boolean rabbitMqConnBound;
+    RabbitMqService rabbitMqService;
+    private ServiceConnection rabbitMqConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            rabbitMqConnBound = true;
+            rabbitMqService = ((RabbitMqService.RabbitMqBinder)binder).getService();
+            rabbitMqService.startAmqpService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            rabbitMqConnBound = false;
+
+        }
+    };
+    private String queueName;
+
     public DownloadService getDownloadService() {
         return downloadService;
     }
@@ -188,6 +207,8 @@ public class Start extends ActionBarActivity implements
         }
 
         if(isFinishing()) stopService(new Intent(this, RabbitMqService.class));
+
+
     }
 
     @Override
@@ -242,6 +263,8 @@ public class Start extends ActionBarActivity implements
         }
 
     }
+
+
 
     @Subscribe
     public void onRepoComplete(RepoCompleteEvent event) {
@@ -428,13 +451,10 @@ public class Start extends ActionBarActivity implements
                 pager.setCurrentItem(3);
             }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String queueName = sharedPreferences.getString("queueName", null);
+            queueName = sharedPreferences.getString("queueName", null);
 
 
-            if (queueName != null) {
-                Intent serviceIntent = new Intent(this, RabbitMqService.class);
-                startService(serviceIntent);
-            }
+
 
 
             new AutoUpdate(this).execute();
@@ -681,10 +701,15 @@ public class Start extends ActionBarActivity implements
 
             try {
                 if (Aptoide.isUpdate()) {
+
+                    if(PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0) < 431){
+                        Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
+                        whatsNewTutorial.putExtra("isUpdate", true);
+                        startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
+                    }
+
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
-                    Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
-                    whatsNewTutorial.putExtra("isUpdate", true);
-                    startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
+
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -962,6 +987,9 @@ public class Start extends ActionBarActivity implements
                     Log.d("MenuDrawer-position", "pos: " + position);
                     showTwitter();
                     break;
+                case 6:
+                    initBackupApps();
+                    break;
                 default:
                     break;
             }
@@ -972,12 +1000,49 @@ public class Start extends ActionBarActivity implements
 
     }
 
+    private void initBackupApps() {
+
+        try {
+            getPackageManager().getPackageInfo("pt.aptoide.backupapps", 0);
+            Intent intent = getPackageManager().getLaunchIntentForPackage("pt.aptoide.backupapps");
+
+            if (intent != null) {
+                startActivity(intent);
+            }
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            Intent i = new Intent(this, AppViewActivity.class);
+            i.putExtra("getBackupApps", true);
+            startActivity(i);
+        }
+
+    }
+
     boolean isLoggedin = false;
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("queueName", queueName);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        queueName = savedInstanceState.getString("queueName");
+    }
 
     @Override
     protected void onResume() {
-
         super.onResume();
+
+        if (queueName != null) {
+            bindService(new Intent(this, RabbitMqService.class), rabbitMqConn, Context.BIND_AUTO_CREATE);
+        }
+
         isResumed = true;
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -986,19 +1051,24 @@ public class Start extends ActionBarActivity implements
         ImageView user_avatar;
         accountManager = AccountManager.get(this);
 
+        Log.d("Aptoide-DrawerHeader", String.valueOf(mDrawerList.getHeaderViewsCount()));
+
         if(mDrawerList.getHeaderViewsCount()>0){
-            View v = mDrawerList.getChildAt(0);
+            View v = (mDrawerList.getAdapter()).getView(0, null, null);
             mDrawerList.removeHeaderView(v);
         }
+
 
         mDrawerList.setAdapter(null);
 
         //Login Header
         if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
             isLoggedin = true;
 
+
+            View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
             mDrawerList.addHeaderView(header, null, false);
+
 
             login_email = (TextView) header.findViewById(R.id.login_email);
             login_email.setText(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0].name);
@@ -1017,10 +1087,23 @@ public class Start extends ActionBarActivity implements
 
     }
 
+
+
+
     @Override
     protected void onPause() {
         isResumed=false;
         super.onPause();
+        Toast.makeText(this, "OnPause", Toast.LENGTH_LONG).show();
+
+
+
+        if(rabbitMqConnBound){
+            rabbitMqService.stopAmqpService();
+            unbindService(rabbitMqConn);
+        }
+
+
     }
 
     @Override

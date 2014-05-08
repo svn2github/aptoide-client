@@ -81,16 +81,12 @@ public class Aptoide extends Application {
 
 
     public static SQLiteDatabase getDb() {
-
         return db.getWritableDatabase();
-
     }
 
     public static Context getContext() {
         return context;
     }
-
-
 
     public void setThemePicker(AptoideThemePicker themePicker) {
         Aptoide.themePicker = themePicker;
@@ -99,7 +95,6 @@ public class Aptoide extends Application {
     public void setConfiguration(AptoideConfiguration configuration) {
         Aptoide.configuration = configuration;
     }
-
 
     public static boolean IS_SYSTEM;
 
@@ -135,7 +130,7 @@ public class Aptoide extends Application {
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
-        acraConfiguration.setResDialogText(R.string.crash_text);
+        //acraConfiguration.setResDialogText(R.string.crash_text);
 
         ACRA.setConfig(acraConfiguration);
 
@@ -145,6 +140,7 @@ public class Aptoide extends Application {
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
+        managerPreferences.init();
         setThemePicker(getNewThemePicker());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -176,12 +172,7 @@ public class Aptoide extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
-
-
     }
-
-
-
 
     public void bootImpl(ManagerPreferences managerPreferences) {
         if (managerPreferences.getAptoideClientUUID() == null) {
@@ -215,7 +206,6 @@ public class Aptoide extends Application {
 
         public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {
             super(context, connectTimeout, readTimeout);
-
             this.connectTimeout = connectTimeout;
             this.readTimeout = readTimeout;
         }
@@ -245,8 +235,6 @@ public class Aptoide extends Application {
                 default:
                     return getStreamFromOtherSource(imageUri, extra);
             }
-
-
 
         }
 

@@ -127,9 +127,6 @@ public class SearchManager extends ActionBarActivity {
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
 
-
-
-
         }
 
 
@@ -246,11 +243,14 @@ public class SearchManager extends ActionBarActivity {
             super.onViewCreated(view, savedInstanceState);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
             ((SearchManager)getActivity()).setFooterView(getListView(), R.layout.footer_search);
 
-            getLoaderManager().initLoader(60, getArguments(), this);
+        }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            getLoaderManager().initLoader(60, getArguments(), this);
         }
 
         @Override

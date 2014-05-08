@@ -166,6 +166,7 @@
   <string name="password_tip">Choisir un mot de passe</string>
   <string name="add_pvt_store">Ajouter un dépôt privé</string>
   <string name="accept_terms">En créant un compte vous donnez votre accord aux conditions d\'utilisation d\'Aptoide et à la politique de contenu pour les développeurs</string>
+  <string name="accept_oem_terms">En vous inscrivant, vous acceptez les conditions d\'utilisation de %s</string>
   <string name="register">Inscription</string>
   <string name="or">Ou</string>
   <string name="showpass">Afficher le mot de passe</string>

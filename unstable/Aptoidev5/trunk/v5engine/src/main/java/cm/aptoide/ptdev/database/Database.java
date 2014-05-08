@@ -981,6 +981,7 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
         values.put(Schema.RollbackTbl.COLUMN_ACTION, (rollBackItem.getAction() == null ? "" : rollBackItem.getAction().toString()));
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 0);
+        values.put(Schema.RollbackTbl.COLUMN_REPO, rollBackItem.getRepoName());
 
         Cursor cursor = database.rawQuery("select 1 from rollbacktbl  where package_name = ? and confirmed = 0", new String[]{rollBackItem.getPackageName()});
         if (cursor.getCount() == 0) {

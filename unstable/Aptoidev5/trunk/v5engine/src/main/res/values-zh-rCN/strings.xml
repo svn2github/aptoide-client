@@ -28,10 +28,10 @@
   <string name="like">喜欢</string>
   <string name="dont_like">不喜欢</string>
   <string name="comments">评论</string>
-  <string name="write_your_comment">写下你的评论</string>
+  <string name="write_your_comment">写下您的评论</string>
   <string name="add_comment">添加评论</string>
-  <string name="opinion_success">已成功提交了你的请求</string>
-  <string name="comment_submitted">已成功提交了你的评论</string>
+  <string name="opinion_success">已成功提交了您的请求</string>
+  <string name="comment_submitted">已成功提交了您的评论</string>
   <string name="no_comments">还没有评论。成为第一个评论者吧！</string>
   <string name="comment_see_all">查看所有</string>
   <string name="related_apps">相关应用</string>
@@ -56,7 +56,7 @@
   <string name="loading_twitter">正在加载Twitter...</string>
   <string name="new_to_aptoide">刚来%s吗？创建一个免费账户吧</string>
   <string name="forgot_passwd">忘记了密码？</string>
-  <string name="check_your_credentials">检查你的证书</string>
+  <string name="check_your_credentials">检查您的证书</string>
   <string name="settings_title_bar">设置</string>
   <string name="setting_icon_download_rules">图标下载规则</string>
   <string name="setting_wifi">WiFi</string>
@@ -70,7 +70,7 @@
   <string name="setting_appfiltertitle">过滤应用</string>
   <string name="setting_dont_show_mature_content">不显示成人内容</string>
   <string name="setting_mature_filtering">过滤成人内容</string>
-  <string name="excluded_updates_sum">恢复你已排除的更新</string>
+  <string name="excluded_updates_sum">恢复您已排除的更新</string>
   <string name="setting_schdwntitle">已计划的下载</string>
   <string name="setting_schdwninstallsum">当存在WiFi连接时，自动安装已计划的下载</string>
   <string name="setting_sdk_version">SDK版本</string>
@@ -166,6 +166,7 @@
   <string name="password_tip">选择一个密码</string>
   <string name="add_pvt_store">添加私有商店</string>
   <string name="accept_terms">注册则意味着您同意Aptoide的服务条款及开发人员的内容政策。</string>
+  <string name="accept_oem_terms">注册则意味着您同意%s的服务条款</string>
   <string name="register">注册</string>
   <string name="or">或者</string>
   <string name="showpass">显示密码</string>
@@ -198,7 +199,7 @@
   <string name="min_sdk">最低的SDK</string>
   <string name="min_screen">最小的屏幕</string>
   <string name="found_results">找到了%s个结果</string>
-  <string name="no_search_result">在你已添加的商店里，你没有‘%s’。</string>
+  <string name="no_search_result">您在您已添加的商店里没有‘%s’。</string>
   <string name="error_occured">出错了。请重试</string>
   <string name="installapp_alrt">您想安装吗？：\n\n</string>
   <string name="starting_download">开始下载</string>
@@ -314,8 +315,8 @@
   <string name="wizard_rollback">2- 回滚</string>
   <string name="wizard_widget">3- 控件</string>
   <string name="wizard_new_account">4- 客户经理</string>
-  <string name="wizard_add_more_stores">你可以添加新的Android商店</string>
-  <string name="wizard_rollback_description">你可以重装或恢复应用</string>
+  <string name="wizard_add_more_stores">您可以添加新的Android商店</string>
+  <string name="wizard_rollback_description">您可以重装或恢复应用</string>
   <string name="wizard_widget_description">快速搜索应用</string>
   <string name="wizard_account_description">Aptoide的应用可以使用同样的登录</string>
   <string name="wizard_secure_fast_reliable">安全。迅速。可靠。</string>
@@ -332,7 +333,7 @@
   <string name="search_on_aptoide">在Aptoide的网站上搜索更多</string>
   <string name="reinstall">重装</string>
   <string name="at_time">在%s</string>
-  <string name="webinstall_relogin">你需要重新登录以激活WebInstall</string>
+  <string name="webinstall_relogin">您需要重新登录以激活WebInstall</string>
   <string name="error_MARG_1">缺少repo参数</string>
   <string name="error_MARG_2">缺少apkid参数</string>
   <string name="error_MARG_3">缺少apkversion参数</string>
@@ -364,7 +365,7 @@
   <string name="no_related">未找到相关应用。</string>
   <string name="update_username">更新用户名</string>
   <string name="username_success">已成功更新用户名。</string>
-  <string name="please_update_username">请更新你的用户名以插入评论</string>
+  <string name="please_update_username">请更新您的用户名以插入评论</string>
   <string name="no_downloads">没有下载。开始下载吧！</string>
   <string name="new_updates">有%s项可用的新的更新!</string>
   <string name="one_new_update">有%s项可用的新的更新!</string>

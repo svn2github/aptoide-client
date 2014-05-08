@@ -135,6 +135,7 @@
   <string name="search_other_stores">Lub szukaj innych...</string>
   <string name="see_top_stores">"Zobacz najlepsze  repozytoria"</string>
   <string name="setcredentials">Login</string>
+  <string name="rollback">powrócć</string>
   <string name="rollback_installed">Zainstalowane</string>
   <string name="rollback_uninstalled">Odinstalowane</string>
   <string name="rollback_updated">Zaktualizowane</string>
@@ -192,6 +193,7 @@
   <string name="x_app">appka %d</string>
   <string name="x_apps">appki %d</string>
   <string name="aptoide_downloading">%s pobiera się</string>
+  <string name="min_screen">Min Wyświetlacz</string>
   <string name="found_results">Znaleziono %s wynik(ów)</string>
   <string name="no_search_result">Nie masz ‘%s’ w swoich repozytoriach.</string>
   <string name="error_occured">Wystąpił błąd. Spróbuj ponownie</string>
@@ -272,6 +274,18 @@
   <string name="casual">Swobodne</string>
   <string name="sport_games">Gry sportowe</string>
   <string name="racing">Wyścigi</string>
+  <string name="puzzle">puzzle</string>
+  <string name="action">Akcja</string>
+  <string name="strategy">Strategja</string>
+  <string name="family">Rodzinne</string>
+  <string name="simulation">Symulacja</string>
+  <string name="adventure">Przygoda</string>
+  <string name="word">Słowa</string>
+  <string name="trivia">zagadki</string>
+  <string name="card">Karty</string>
+  <string name="educational">Edukacja</string>
+  <string name="music">Muzyka</string>
+  <string name="board">Gry planszowe</string>
   <string name="editors_choice_new">Nasz wybór</string>
   <string name="editors_choice">Nasz wybór</string>
   <string name="top_apps">Najlepsze aplikacje</string>
@@ -300,7 +314,6 @@
   <string name="create_username">Nazwa użytkownika</string>
   <string name="all_stores">Wszystkie repozytoria</string>
   <string name="incompatible_store">Niekompatybilne repozytorium</string>
-  <string name="incompatible_store_msg">To repozytorium jest na razie niekompatybilne z tą wersją Aptoide. Poczekaj kilka dni na przebudowę wszystkich repozytoriów.</string>
   <string name="privacy_policy">Zasady prywatności</string>
   <string name="website">Strona</string>
   <string name="downgrade_requires_uninstall">Dezaktualizacja wymaga odinstalowania ptoide</string>
@@ -332,10 +345,13 @@
   <string name="try_again">Spróbuj ponownie</string>
   <string name="clear">Wyczyść</string>
   <string name="update_self_title">Dostępne jest uaktualnienie</string>
-  <string name="update_self_msg">Dostępna jest nowa wersja %s, czy chcesz uaktualnić?</string>
+  <string name="update_self_msg">Dostępna jest nowa wersja %s,\nczy chcesz uaktualnić?</string>
   <string name="retrieving_update">Pobieranie uaktualnienia...</string>
   <string name="no_downloads">Nic nie pobrałeś - pobierz coś.</string>
   <string name="new_updates">Dostępne są aktualizacje dla %s!</string>
   <string name="one_new_update">Dostępna jest aktualizacja dla %s!</string>
   <string name="has_updates">Dostępne są aktualizacje dla %s!</string>
+  <string name="remote_in_noSD">Nie masz karty SD albo nie pracuje właściwie\nWłóż kartę lub popraw jej włożenie i spróbuj ponownie.</string>
+  <string name="remote_in_noSDspace">Nie masz wystarczającej ilości miejsca na karcie SD. Zwolnij trochę miejsca i spróbuj ponownie.</string>
+  <string name="are_you_adult">czy masz ukończone 21 lat?</string>
 </resources>

@@ -378,5 +378,6 @@
   <string name="remote_in_noSD">Sie haben keine SD-Karte, oder sie funktioniert nicht richtig\nBitte eine einsetzen oder erneut einsetzen, und erneut versuchen.</string>
   <string name="remote_in_noSDspace">Sie haben nicht genug Platz auf der SD-Karte. Bitte machen Sie etwas Speicherplatz frei und versuchen Sie es erneut.</string>
   <string name="more_recommended_apps">Mehr empfohlene Apps</string>
+  <string name="cannot_uninstall_self">Kann Installer nicht deinstallieren</string>
   <string name="are_you_adult">Bist du mindestens 21 Jahre alt?</string>
 </resources>

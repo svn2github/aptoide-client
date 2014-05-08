@@ -177,7 +177,7 @@ public class DownloadService extends Service {
     private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 
 
-    public void startDownloadFromUrl(String remotePath, String md5, long id, Download download){
+    public void startDownloadFromUrl(String remotePath, String md5, long id, Download download, String repoName){
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
@@ -186,8 +186,9 @@ public class DownloadService extends Service {
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
-
-        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + md5 + ".apk", new ArrayList<String>())));
+        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + md5 + ".apk", new ArrayList<String>());
+        apk.setRepoName(repoName);
+        info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 
@@ -228,8 +229,9 @@ public class DownloadService extends Service {
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
-
-        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()))));
+        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));
+        apk.setRepoName(json.getApk().getRepo());
+        info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 
