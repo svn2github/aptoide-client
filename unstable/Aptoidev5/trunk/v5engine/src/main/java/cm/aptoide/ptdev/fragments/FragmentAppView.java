@@ -295,7 +295,7 @@ public abstract class FragmentAppView extends Fragment {
                         .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
                         .cacheOnDisc(true)
                         .build();
-
+                int screenshotIndexToAdd = 0;
                 for (int i=0; i!=mediaObjects.size(); i++) {
                     cell = getActivity().getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
                     final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
@@ -304,7 +304,7 @@ public abstract class FragmentAppView extends Fragment {
                     final FrameLayout mediaLayout = (FrameLayout) cell.findViewById(R.id.media_layout);
 
                     if(mediaObjects.get(i) instanceof Video){
-
+                        screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
                         Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
@@ -323,7 +323,7 @@ public abstract class FragmentAppView extends Fragment {
                                 .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i));
+                        imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
                     }
 
                     mainLayout.addView(cell);

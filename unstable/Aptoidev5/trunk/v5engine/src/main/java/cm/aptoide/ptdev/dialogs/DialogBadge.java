@@ -42,7 +42,7 @@ public class DialogBadge extends DialogFragment {
 
 
         if (reason != null) {
-            if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && reason.getScanned().getStatus().equals("passed")) {
+            if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && (reason.getScanned().getStatus().equals("passed") || reason.getScanned().getStatus().equals("warn"))) {
 
                 if (reason.getScanned().getAv_info() != null) {
                     StringBuffer av = new StringBuffer();
@@ -54,7 +54,7 @@ public class DialogBadge extends DialogFragment {
                             av.append(", ");
                         }
                     }
-
+                    
                     v.findViewById(R.id.reason_scanned_description).setVisibility(View.VISIBLE);
                     v.findViewById(R.id.reason_scanned).setVisibility(View.VISIBLE);
                     ((TextView) v.findViewById(R.id.reason_scanned_description)).setText(getString(R.string.scanned_with_av));
@@ -95,6 +95,8 @@ public class DialogBadge extends DialogFragment {
                 ((TextView) v.findViewById(R.id.reason_manual_qa_description)).setText(getString(R.string.scanned_manually_by_aptoide_team));
                 ((TextView) v.findViewById(R.id.reason_manual_qa)).setText(getString(R.string.scanned_verified_by_tester));
             }
+
+
         }
 
         return builder;

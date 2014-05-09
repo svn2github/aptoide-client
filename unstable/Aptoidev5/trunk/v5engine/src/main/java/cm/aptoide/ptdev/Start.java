@@ -1094,7 +1094,7 @@ public class Start extends ActionBarActivity implements
     protected void onPause() {
         isResumed=false;
         super.onPause();
-        Toast.makeText(this, "OnPause", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "OnPause", Toast.LENGTH_LONG).show();
 
 
 

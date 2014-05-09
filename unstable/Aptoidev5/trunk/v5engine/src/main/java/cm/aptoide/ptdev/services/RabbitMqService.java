@@ -62,7 +62,7 @@ public class RabbitMqService extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
 
         if(!isRunning) {
-            Toast.makeText(getApplicationContext(), "Starting amqp service", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Starting amqp service", Toast.LENGTH_LONG).show();
             Aptoide.setWebInstallServiceRunning(true);
             new Thread(new Runnable() {
                 @Override
@@ -200,9 +200,9 @@ public class RabbitMqService extends Service {
                 stopSelf();
                 isRunning = false;
             }
-        }, 30000);
+        }, 600000);
 
-        Toast.makeText(getApplicationContext(), "OnUnbind timer started", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "OnUnbind timer started", Toast.LENGTH_LONG).show();
     }
 
 
