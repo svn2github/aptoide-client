@@ -300,6 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         if( oldVersion == 21 ){
+            db.execSQL("ALTER TABLE " +Schema.RollbackTbl.getName()+ " ADD COLUMN reponame TEXT");
             db.delete(Schema.RollbackTbl.getName(), "confirmed = ?", new String[]{"0"});
         }
 
