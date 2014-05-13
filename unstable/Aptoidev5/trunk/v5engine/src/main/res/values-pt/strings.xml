@@ -380,4 +380,9 @@
   <string name="more_recommended_apps">Mais Aplicações Recomendadas</string>
   <string name="cannot_uninstall_self">Não é possível desinstalar instalador.</string>
   <string name="are_you_adult">Tem mais de 21 anos?</string>
+  <string name="buy">Comprar</string>
+  <string name="payment_methods">Comprar com:</string>
+  <string name="buy_now">Confirmar Pagamento</string>
+  <string name="allow_root">Permitir instalação root</string>
+  <string name="other">Outro</string>
 </resources>

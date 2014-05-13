@@ -380,4 +380,10 @@
   <string name="more_recommended_apps">Altre App Raccomandate</string>
   <string name="cannot_uninstall_self">Impossibile disinstallare l\'installer.</string>
   <string name="are_you_adult">Hai almeno 21 anni?</string>
+  <string name="buy">Compra</string>
+  <string name="payment_methods">Paga con:</string>
+  <string name="buy_now">Conferma Pagamento</string>
+  <string name="root">Root</string>
+  <string name="allow_root">Consenti installazione root</string>
+  <string name="other">Altro</string>
 </resources>

@@ -380,4 +380,10 @@
   <string name="more_recommended_apps">Περισσότερες Προτεινόμενες Εφαρμογές</string>
   <string name="cannot_uninstall_self">Δεν είναι δυνατή η απεγκατάσταση του εγκαταστάτη.</string>
   <string name="are_you_adult">Είστε τουλάχιστον 21 ετών?</string>
+  <string name="buy">Αγορά</string>
+  <string name="payment_methods">Πληρωμή με:</string>
+  <string name="buy_now">Επιβεβαίωση Πληρωμής</string>
+  <string name="root">Root</string>
+  <string name="allow_root">Επιτρέψτε root εγκατάσταση</string>
+  <string name="other">Άλλο</string>
 </resources>
