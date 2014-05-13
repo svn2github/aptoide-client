@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cm.aptoide.pt"
-          android:versionCode="431"
-          android:versionName="5.0.0">
+          android:versionCode="433"
+          android:versionName="5.1.0" android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
@@ -37,21 +38,10 @@
                   android:label="Aptoide"
                   android:icon="@drawable/icon_brand_aptoide"
                   android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <meta-data
-                    android:name="android.app.default_searchable"
-                    android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
 
-        <activity-alias
-                android:enabled="true"
-                android:name=".Start"
-                android:exported="true"
-                android:label="@string/app_name"
-                android:icon="@drawable/icon_brand_aptoide"
-                android:targetActivity="cm.aptoide.ptdev.Start">
+        <activity-alias android:name=".Start"
+                        android:targetActivity="cm.aptoide.ptdev.Start" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -60,8 +50,6 @@
                     android:name="android.app.default_searchable"
                     android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity-alias>
-
-
 
 
         <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
@@ -190,8 +178,6 @@
                       android:host="imgs.aptoide.com"
                       android:pathPattern="*//.myapp"/>
             </intent-filter>
-
-
         </activity>
 
         <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation"/>
@@ -329,6 +315,27 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.aptoide.openiab.StoreService"
+                 android:exported="true"
+                 >
+            <intent-filter >
+                <action android:name="org.onepf.oms.openappstore.BIND"/>
+            </intent-filter>/>
+        </service>
+
+        <service android:name="com.aptoide.openiab.BillingService"
+                 android:exported="true">
+
+            <intent-filter >
+                <action android:name="org.onepf.oms.billing.BIND"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog" />
+        <activity android:name="com.aptoide.openiab.Buy" />
+        <activity android:name="com.aptoide.openiab.CreditCard" />
+        <activity android:name="com.paypal.android.MEP.PayPalActivity" android:configChanges="keyboardHidden|orientation" />
 
 
     </application>
