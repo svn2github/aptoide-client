@@ -72,6 +72,7 @@
                       android:gravity="center"
                       android:onClick="createUser"
                       android:padding="10dp"
+                      android:textAppearance="?android:attr/textAppearanceLarge"
                       android:text="@string/dont_have_an_account"/>
 
             <TextView android:id="@+id/forgot_password"
@@ -79,6 +80,7 @@
                       android:layout_height="match_parent"
                       android:layout_gravity="center_horizontal"
                       android:padding="10dp"
+                      android:textAppearance="?android:attr/textAppearanceLarge"
                       android:text="@string/forgot_passwd"/>
         </LinearLayout>
     </LinearLayout>
