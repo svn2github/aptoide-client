@@ -72,15 +72,16 @@
                       android:gravity="center"
                       android:onClick="createUser"
                       android:padding="10dp"
-                      android:textAppearance="?android:attr/textAppearanceLarge"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="@string/dont_have_an_account"/>
 
             <TextView android:id="@+id/forgot_password"
                       android:layout_width="wrap_content"
                       android:layout_height="match_parent"
                       android:layout_gravity="center_horizontal"
+                      android:gravity="center"
                       android:padding="10dp"
-                      android:textAppearance="?android:attr/textAppearanceLarge"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
                       android:text="@string/forgot_passwd"/>
         </LinearLayout>
     </LinearLayout>
