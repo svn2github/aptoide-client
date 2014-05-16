@@ -132,11 +132,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Resources res = getResources();
-        Bitmap bMap = BitmapFactory.decodeResource(res, storeTheme.getActionBarColor());
-        BitmapDrawable actionBarBackground = new BitmapDrawable(res, bMap);
-        getSupportActionBar().setBackgroundDrawable(actionBarBackground);
-
 
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);

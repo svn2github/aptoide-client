@@ -1,7 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
 
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
@@ -35,6 +32,8 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
     TextView banner_store_name;
     TextView banner_description;
     ImageView avatar;
+    View view_gradient;
+
 //    FrameLayout store_background;
 //    FrameLayout.LayoutParams params;
 
@@ -52,6 +51,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
         banner_store_name = (TextView) header.findViewById(R.id.banner_store_name);
         banner_description = (TextView) header.findViewById(R.id.store_description);
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
+        view_gradient = header.findViewById(R.id.view_gradient);
 
 //        store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
 //
@@ -90,11 +90,17 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             String url = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR));
             String store_name = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME));
             String description = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DESCRIPTION));
+
             String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
+            EnumStoreTheme storeTheme;
+            if(theme!=null){
+                storeTheme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_"+theme.toUpperCase());
+            }else{
+                storeTheme = EnumStoreTheme.APTOIDE_STORE_THEME_BLACK;
+            }
+            view_gradient.setBackgroundResource(storeTheme.getStoreViewGradient());
 
-            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_GREEN");
-
-            //store_background.setBackgroundResource( storeTheme.getStoreHeader() );
+//            store_background.setBackgroundResource( storeTheme.getStoreHeader() );
             if(url!=null && url.length()>0){
                 ImageLoader.getInstance().displayImage(url, avatar);
             }else{
