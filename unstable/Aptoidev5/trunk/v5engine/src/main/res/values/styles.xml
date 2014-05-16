@@ -199,6 +199,28 @@
     </style>
 
 
+    <style name="WidgetButtonCarrierBilling" parent="WidgetButtonCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableLeft">@drawable/ic_action_ic_cellphone_dark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/carrier_billing_btn_default_holo_light</item>
+    </style>
+
+    <style name="WidgetButtonVisa" parent="WidgetButtonCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableLeft">@drawable/ic_action_credit_card_dark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/visa_btn_default_holo_light</item>
+    </style>
+
+    <style name="WidgetButtonPaypal" parent="WidgetButtonCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableLeft">@drawable/ic_action_paypal_dark</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/paypal_btn_default_holo_light</item>
+    </style>
+
+
     <style name="Animations"/>
     <!--  PopDownMenu  -->
     <style name="Animations.PopDownMenu"/>

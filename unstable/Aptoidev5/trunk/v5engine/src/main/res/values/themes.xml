@@ -58,8 +58,7 @@
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
         <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
-        <item name="icPaypalDrawable">@drawable/ic_action_paypal_light</item>
-        <item name="icCreditCardDrawable">@drawable/ic_action_credit_card_light</item>
+
     </style>
 
 
@@ -117,8 +116,7 @@
         <item name="icCollapseDrawable">@drawable/ic_action_home_collapse_dark</item>
         <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
         <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
-        <item name="icPaypalDrawable">@drawable/ic_action_paypal_dark</item>
-        <item name="icCreditCardDrawable">@drawable/ic_action_credit_card_dark</item>
+
     </style>
 
 

@@ -2,6 +2,9 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
+
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.utils.Filters;
@@ -90,7 +93,8 @@ public class Utils {
             e.printStackTrace();
         }
 
-        String filters = "maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density+"&myApt="+myversionCode;
+
+        String filters = (Build.DEVICE.equals("alien_jolla_bionic")?"apkdwn=myapp&":"")+"maxSdk="+minSdk+"&maxScreen="+minScreen+"&maxGles="+minGlEs+"&myCPU="+cpuAbi+"&myDensity="+density+"&myApt="+myversionCode;
 
         return Base64.encodeToString(filters.getBytes(), 0).replace("=","").replace("/","*").replace("+","_").replace("\n", "");
 

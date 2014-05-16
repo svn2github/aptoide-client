@@ -2,11 +2,15 @@ package cm.aptoide.ptdev.fragments;
 
 import android.accounts.*;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -903,39 +907,56 @@ public abstract class FragmentAppView extends Fragment {
 
             @Override
             public void onClick(View v) {
-                final AccountManager manager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                    addLike();
-                } else {
-                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> future) {
+                if(!Build.DEVICE.equals("alien_jolla_bionic")) {
 
-                            if (LoginActivity.isLoggedIn(getActivity())) {
-                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                    @Override
-                                    public void run(AccountManagerFuture<Bundle> future) {
-                                        try {
-                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                        } catch (OperationCanceledException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (AuthenticatorException e) {
-                                            e.printStackTrace();
+                    final AccountManager manager = AccountManager.get(getActivity());
+
+                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                        addLike();
+                    } else {
+                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+
+                                if (LoginActivity.isLoggedIn(getActivity())) {
+                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                        @Override
+                                        public void run(AccountManagerFuture<Bundle> future) {
+                                            try {
+                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                            } catch (OperationCanceledException e) {
+                                                e.printStackTrace();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            } catch (AuthenticatorException e) {
+                                                e.printStackTrace();
+                                            }
+
                                         }
+                                    }, null);
+                                }
 
-                                    }
-                                }, null);
+
                             }
-
-
+                        }, null);
+                    }
+                }else{
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                    final AlertDialog loginAlert = dialogBuilder.create();
+                    loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
+                    loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
+                    loginAlert.setMessage(getText(R.string.jolla_not_supported));
+                    loginAlert.setCancelable(false);
+                    loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            arg0.dismiss();
                         }
-                    }, null);
+                    });
+                    loginAlert.show();
                 }
-
             }
 
             private void addLike() {
@@ -997,38 +1018,54 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(!Build.DEVICE.equals("alien_jolla_bionic")) {
 
-                final AccountManager manager = AccountManager.get(getActivity());
+                    final AccountManager manager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                    addComment();
-                } else {
+                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                        addComment();
+                    } else {
 
-                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> future) {
-                            if (LoginActivity.isLoggedIn(getActivity())) {
+                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                if (LoginActivity.isLoggedIn(getActivity())) {
 
-                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                    @Override
-                                    public void run(AccountManagerFuture<Bundle> future) {
-                                        try {
+                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                        @Override
+                                        public void run(AccountManagerFuture<Bundle> future) {
+                                            try {
 
-                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                            //addComment();
-                                        } catch (OperationCanceledException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (AuthenticatorException e) {
-                                            e.printStackTrace();
+                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                                //addComment();
+                                            } catch (OperationCanceledException e) {
+                                                e.printStackTrace();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            } catch (AuthenticatorException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                    }
-                                }, null);
+                                    }, null);
+                                }
                             }
+                        }, null);
+                    }
+                }else{
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                    final AlertDialog loginAlert = dialogBuilder.create();
+                    loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
+                    loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
+                    loginAlert.setMessage(getText(R.string.jolla_not_supported));
+                    loginAlert.setCancelable(false);
+                    loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            arg0.dismiss();
                         }
-                    }, null);
+                    });
+                    loginAlert.show();
                 }
             }
 

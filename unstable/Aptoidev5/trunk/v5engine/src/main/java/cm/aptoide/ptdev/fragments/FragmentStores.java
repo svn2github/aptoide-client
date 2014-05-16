@@ -158,6 +158,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 i.putExtra("storeid", id);
                 i.putExtra("isrefreshing", callback.isRefreshing(id));
                 i.putExtra("list", store.isList());
+                i.putExtra("theme", store.getTheme().ordinal());
                 startActivity(i);
 
 

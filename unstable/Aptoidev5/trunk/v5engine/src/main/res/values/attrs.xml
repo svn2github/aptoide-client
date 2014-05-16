@@ -99,5 +99,6 @@
 
     <attr name="icPaypalDrawable" format="reference"/>
     <attr name="icCreditCardDrawable" format="reference"/>
+    <attr name="icCellphoneDrawable" format="reference"/>
 
 </resources>

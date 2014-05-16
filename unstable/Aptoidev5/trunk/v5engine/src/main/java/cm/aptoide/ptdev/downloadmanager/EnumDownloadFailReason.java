@@ -21,6 +21,7 @@
 package cm.aptoide.ptdev.downloadmanager;
 
 import android.content.Context;
+import android.os.Build;
 import cm.aptoide.ptdev.R;
 
 /**
@@ -61,7 +62,7 @@ public enum EnumDownloadFailReason {
             case NO_FREE_SPACE:
                 return context.getString(R.string.remote_in_nospace);
             case SD_ERROR:
-                return context.getString(R.string.sd_error);
+                return (!Build.DEVICE.equals("alien_jolla_bionic"))?context.getString(R.string.sd_error):context.getString(R.string.sd_error_jolla);
 			default:
 				return  context.getString(R.string.server_error);
 		}

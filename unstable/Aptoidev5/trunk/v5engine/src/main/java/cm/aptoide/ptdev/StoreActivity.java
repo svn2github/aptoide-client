@@ -3,7 +3,12 @@ package cm.aptoide.ptdev;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -113,7 +118,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         //storeName = getIntent().getStringExtra("storename");
         storeid = getIntent().getLongExtra("storeid", 0);
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
-        //themeordinal = getIntent().getIntExtra("theme", 0);
+        storeTheme = EnumStoreTheme.values()[getIntent().getIntExtra("theme", 0)];
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
         FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
 
@@ -127,6 +132,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Resources res = getResources();
+        Bitmap bMap = BitmapFactory.decodeResource(res, storeTheme.getActionBarColor());
+        BitmapDrawable actionBarBackground = new BitmapDrawable(res, bMap);
+        getSupportActionBar().setBackgroundDrawable(actionBarBackground);
 
 
         bindService(i, conn, BIND_AUTO_CREATE);

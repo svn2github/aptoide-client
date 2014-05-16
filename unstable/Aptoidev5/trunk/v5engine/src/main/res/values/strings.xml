@@ -90,7 +90,9 @@
     <string name="clearcache_title">Clear cache</string>
     <string name="clear_cache_sucess">Content successfully deleted</string>
     <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
+    <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
     <string name="clearcontent_sum">Deletes the data from the SD card.</string>
+    <string name="clearcontent_sum_jolla">Deletes data</string>
     <string name="about_site">Website: </string>
     <string name="about_mail">Contact: </string>
     <string name="about_us">About us</string>
@@ -389,10 +391,12 @@
     <string name="has_updates">%s has new updates available!</string>
     <string name="remaining_time">remaining</string>
     <string name="sd_error">Couldn\'t write to SDCard.</string>
+    <string name="sd_error_jolla">Couldn\'t download properly</string>
     <string name="download_retry">Retry</string>
     <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
     <string name="remote_in_noSD_title">No memory</string>
     <string name="remote_in_noSD">You don\'t have an SDcard, or it isn\'t mounted properly\nPlease insert one, or re-insert it and try again.</string>
+    <string name="remote_in_noSD_jolla">You don\'t have enough space. Please free up some space and try again.</string>
     <string name="remote_in_noSDspace">You don\'t have enough space on your SDcard. Please free up some space and try again.</string>
     <string name="more_recommended_apps">More Recommended Apps</string>
     <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
@@ -403,5 +407,10 @@
     <string name="root">Root</string>
     <string name="allow_root">Allow root installation</string>
     <string name="other">Other</string>
+    <string name="jolla_not_supported">This feature is not yet supported by Jolla platform.</string>
+    <string name="carrier_billing">Carrier billing</string>
+    <string name="visa">Visa</string>
+    <string name="paypal_future_payments">Paypal future payments</string>
+    <string name="paypal_single_payment">Paypal single payment</string>
 
 </resources>

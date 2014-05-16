@@ -40,6 +40,7 @@ import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
@@ -384,7 +385,13 @@ public class Start extends ActionBarActivity implements
                 final AlertDialog noSDDialog = dialogBuilder.create();
                 noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
                 noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                noSDDialog.setMessage(getText(R.string.remote_in_noSD));
+                String message;
+                if(!Build.DEVICE.equals("alien_jolla_bionic")){
+                    message=""+getText(R.string.remote_in_noSD);
+                }else{
+                    message=""+getText(R.string.remote_in_noSD_jolla);
+                }
+                noSDDialog.setMessage(message);
                 noSDDialog.setCancelable(false);
                 noSDDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
                     @Override
@@ -414,7 +421,7 @@ public class Start extends ActionBarActivity implements
                     final AlertDialog noSpaceDialog = dialogBuilder.create();
                     noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
                     noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
-                    noSpaceDialog.setMessage(getText(R.string.remote_in_noSDspace));
+                    noSpaceDialog.setMessage(getText(R.string.remote_in_noSD_jolla));
                     noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -961,8 +968,24 @@ public class Start extends ActionBarActivity implements
             switch (switchId) {
                 case 0:
                     Log.d("MenuDrawer-position", "pos: " + position);
-                    Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
-                    startActivity(loginIntent);
+                    if(!Build.DEVICE.equals("alien_jolla_bionic")){
+                        Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
+                        startActivity(loginIntent);
+                    }else{
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+                        final AlertDialog loginAlert = dialogBuilder.create();
+                        loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
+                        loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
+                        loginAlert.setMessage(getText(R.string.jolla_not_supported));
+                        loginAlert.setCancelable(false);
+                        loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                arg0.dismiss();
+                            }
+                        });
+                        loginAlert.show();
+                    }
                     break;
                 case 1:
                     Log.d("MenuDrawer-position", "pos: " + position);
