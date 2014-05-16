@@ -91,14 +91,14 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             String store_name = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME));
             String description = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DESCRIPTION));
 
-            String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
-            EnumStoreTheme storeTheme;
-            if(theme!=null){
-                storeTheme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_"+theme.toUpperCase());
-            }else{
-                storeTheme = EnumStoreTheme.APTOIDE_STORE_THEME_BLACK;
-            }
-            view_gradient.setBackgroundResource(storeTheme.getStoreViewGradient());
+//            String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
+//            EnumStoreTheme storeTheme;
+//            if(theme!=null){
+//                storeTheme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_"+theme.toUpperCase());
+//            }else{
+//                storeTheme = EnumStoreTheme.APTOIDE_STORE_THEME_BLACK;
+//            }
+//            view_gradient.setBackgroundResource(storeTheme.getStoreViewGradient());
 
 //            store_background.setBackgroundResource( storeTheme.getStoreHeader() );
             if(url!=null && url.length()>0){
