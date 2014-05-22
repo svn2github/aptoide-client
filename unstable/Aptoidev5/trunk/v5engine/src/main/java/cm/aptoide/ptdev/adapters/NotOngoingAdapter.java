@@ -42,7 +42,11 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         }
         final Download download = getItem(position);
 
-        ((TextView)v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
+        if(download.getName()!=null){
+            ((TextView) v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
+        }else{
+            ((TextView) v.findViewById(R.id.app_name)).setText("");
+        }
 
 
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {

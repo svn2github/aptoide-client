@@ -17,12 +17,9 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.CreateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import static cm.aptoide.ptdev.LoginActivity.ARG_ACCOUNT_TYPE;
 
 /**
  * Created by rmateus on 30-12-2013.
@@ -107,6 +104,15 @@ public class SignUpActivity extends ActionBarActivity{
 
         // Validation!
 
+        if(emailBox.getText().toString().length()==0 || passBox.getText().toString().length()==0 ){
+            Toast.makeText(getApplicationContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG).show();
+            return;
+        }
+        String pass = passBox.getText().toString();
+        if( pass.length() < 8 || !hasValidChars(pass)){
+            Toast.makeText(getApplicationContext(), R.string.password_validation_text, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -223,6 +229,32 @@ public class SignUpActivity extends ActionBarActivity{
 //        }.execute();
     }
 
+    private boolean hasValidChars(String pass) {
+
+        return has1number1letter(pass);
+
+    }
+
+    private boolean has1number1letter(String pass) {
+        boolean hasLetter = false;
+        boolean hasNumber = false;
+
+        if (pass.contains("!") || pass.contains("@") || pass.contains("#") || pass.contains("$") || pass.contains("#") || pass.contains("*")) {
+
+            hasNumber = true;
+
+        }
+
+        for(char c : pass.toCharArray()){
+            if(Character.isLetter(c) && !hasLetter){
+                hasLetter = true;
+            }else if(Character.isDigit(c)&& !hasNumber){
+                hasNumber = true;
+            }
+        }
+
+        return hasNumber&&hasLetter;
+    }
 
 
     @Override

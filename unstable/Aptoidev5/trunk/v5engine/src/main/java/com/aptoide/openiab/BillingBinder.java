@@ -105,7 +105,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
         try {
             AccountManager accountManager = AccountManager.get(context);
-            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt.dev")[0], "Full access", true);
+            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt")[0], "Full access", true);
 
             if(token != null) {
                 IabSkuDetailsRequest request = new IabSkuDetailsRequest();
@@ -186,7 +186,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
             result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
         } else {
             AccountManager accountManager = AccountManager.get(context);
-            Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt.dev");
+            Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt");
 
             if(accounts.length == 0) {
                 Log.d("AptoideBillingService", "BillingUnavailable: user not logged in");
@@ -239,7 +239,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
         }
 
         AccountManager accountManager = AccountManager.get(context);
-        Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt.dev");
+        Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt");
 
         if(accounts.length == 0) {
 
@@ -321,7 +321,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
         try {
             AccountManager accountManager = AccountManager.get(context);
-            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt.dev")[0], "Full access", true);
+            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt")[0], "Full access", true);
 
             final int[] result = {RESULT_OK};
             if(token != null) {

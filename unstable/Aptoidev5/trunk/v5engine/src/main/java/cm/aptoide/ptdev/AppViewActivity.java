@@ -164,9 +164,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         }
                     });
+                    boolean showBadgeLayout = false;
 
                     if (getApkInfoJson.getMalware() != null) {
-                        boolean showBadgeLayout = false;
+
                         Log.d("AppViewActivity-malwareStatus", "status: " + (getApkInfoJson.getMalware().getStatus()));
                         if (getApkInfoJson.getMalware().getStatus().equals("scanned")) {
                             ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
@@ -256,7 +257,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                         findViewById(R.id.download_progress).setVisibility(View.GONE);
                         findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
-                        findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+
+                        if(showBadgeLayout){
+                            findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                        }
+
                     }
 
                 } else {
@@ -549,7 +554,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
 
-            if (service != null) {
+            if (service != null && json!=null) {
                 service.startDownloadFromJson(json, downloadId, download);
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
             }

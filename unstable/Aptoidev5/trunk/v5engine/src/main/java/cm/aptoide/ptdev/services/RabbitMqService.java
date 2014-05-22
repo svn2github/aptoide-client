@@ -154,6 +154,8 @@ public class RabbitMqService extends Service {
                                 }
                             } catch (IOException e1) {
                                 e1.printStackTrace();
+                            }catch (ShutdownSignalException e1){
+                                e1.printStackTrace();
                             }
                             isRunning = false;
 

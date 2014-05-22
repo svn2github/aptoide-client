@@ -113,7 +113,9 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                     stopService(new Intent(MyAccountActivity.this, RabbitMqService.class));
                     ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 0);
                     ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
-                    ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+                    if(Build.VERSION.SDK_INT>=8){
+                        ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+                    }
                     mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
                         @Override
                         public void run(AccountManagerFuture<Boolean> future) {

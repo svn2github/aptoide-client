@@ -89,6 +89,8 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();
+                } catch (ShutdownSignalException e1){
+                    e1.printStackTrace();
                 }
 
             } catch (IOException e) {
@@ -98,10 +100,13 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                         connection.disconnectChannel(channel);
                     }
 
-                    if (connection != null) {
+                    if (connection != null && connection.isOpen()) {
                         connection.close();
                     }
+
                 } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (ShutdownSignalException e1){
                     e1.printStackTrace();
                 }
                 //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();

@@ -387,6 +387,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 public void onClick(View v) {
                     String username = ((EditText) findViewById(R.id.username)).getText().toString();
                     String password = ((EditText) findViewById(R.id.password)).getText().toString();
+
+                    if(username.length()==0 || password.length()==0 ){
+                        Toast.makeText(getApplicationContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
                     submit(Mode.APTOIDE, username, password, null);
                 }
             });
@@ -513,7 +519,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
 
-    public void submit(Mode mode, final String username, final String passwordOrToken, String nameForGoogle) {
+    public void submit(final Mode mode, final String username, final String passwordOrToken, String nameForGoogle) {
 
         //final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
         //final String userPass = ((EditText) findViewById(R.id.password)).getText().toString();
@@ -608,6 +614,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             .edit()
                             .putString(Configs.LOGIN_USER_LOGIN, username)
                             .commit();
+
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                            .edit()
+                            .putString("loginType", mode.name())
+                            .commit();
+
+
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);

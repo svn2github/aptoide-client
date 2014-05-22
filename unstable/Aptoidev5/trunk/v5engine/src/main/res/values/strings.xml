@@ -407,6 +407,10 @@
     <string name="root">Root</string>
     <string name="allow_root">Allow root installation</string>
     <string name="other">Other</string>
+    <string name="fields_cannot_empty">Please check your email and password.</string>
+    <string name="password_validation_text">Password must be at least 8 caracters and should have at least one letter
+        and one number or special caracter (!@#$%*)
+    </string>
     <string name="jolla_not_supported">This feature is not yet supported by Jolla platform.</string>
     <string name="carrier_billing">Carrier billing</string>
     <string name="visa">Visa</string>

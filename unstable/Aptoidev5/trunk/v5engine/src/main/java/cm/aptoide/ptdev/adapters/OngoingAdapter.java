@@ -59,7 +59,11 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
 
         final Download download = getItem(position);
 
-        ((TextView) v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
+        if(download.getName()!=null){
+            ((TextView) v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
+        }else{
+            ((TextView) v.findViewById(R.id.app_name)).setText("");
+        }
         ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setIndeterminate(false);

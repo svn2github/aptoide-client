@@ -251,14 +251,17 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                                 @Override
                                 public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
 
-                                    Download download = new Download();
-                                    download.setId(schDown.getId());
-                                    download.setName(schDown.getName());
-                                    download.setVersion(schDown.getVername());
-                                    download.setIcon(schDown.getIconPath());
-                                    download.setPackageName(schDown.getApkid());
-                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
-                                    Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                                    if(getApkInfoJson!=null){
+                                        Download download = new Download();
+                                        download.setId(schDown.getId());
+                                        download.setName(schDown.getName());
+                                        download.setVersion(schDown.getVername());
+                                        download.setIcon(schDown.getIconPath());
+                                        download.setPackageName(schDown.getApkid());
+                                        downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                                    }
+
 
 
                                 }
