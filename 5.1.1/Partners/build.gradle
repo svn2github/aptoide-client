@@ -1,0 +1,38 @@
+
+apply plugin: 'android'
+apply from: "signing.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.0.1"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+    }
+
+buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
+
+}
+
+dependencies {
+	compile 'com.android.support:appcompat-v7:+'
+    compile project (':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+}

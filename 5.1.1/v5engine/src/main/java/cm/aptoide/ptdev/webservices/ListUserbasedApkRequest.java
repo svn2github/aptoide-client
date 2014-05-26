@@ -1,0 +1,118 @@
+package cm.aptoide.ptdev.webservices;
+
+import android.content.Context;
+import android.util.Log;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.json.ListRecomended;
+import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: rmateus
+ * Date: 04-11-2013
+ * Time: 11:29
+ * To change this template use File | Settings | File Templates.
+ */
+
+public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRecomended> {
+
+
+    String baseUrl = "http://webservices.aptoide.com/webservices/listUserBasedApks";
+
+    private Context context;
+    private String packageName;
+    private int limit;
+
+
+    public ListUserbasedApkRequest(Context context) {
+        super(ListRecomended.class);
+        this.context = context;
+    }
+
+
+    @Override
+    public ListRecomended loadDataFromNetwork() throws Exception {
+        ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
+
+        GenericUrl url = new GenericUrl(baseUrl);
+
+        HashMap<String, String > parameters = new HashMap<String, String>();
+
+        parameters.put("mode", "json");
+        parameters.put("token", packageName);
+
+        options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
+
+        if(limit>0)options.add(new WebserviceOptions("limit", String.valueOf(limit)));
+        options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
+
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for(WebserviceOptions option: options){
+            sb.append(option);
+            sb.append(";");
+        }
+        sb.append(")");
+
+        parameters.put("options", sb.toString());
+
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        Log.d("Aptoide-ApkUserBased", url.toString());
+
+        request.setParser(new JacksonFactory().createJsonObjectParser());
+
+        return request.execute().parseAs( getResultType() );
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+
+    public class WebserviceOptions {
+        String key;
+        String value;
+
+
+        private WebserviceOptions(String key,String value) {
+            this.value = value;
+            this.key = key;
+        }
+
+        /**
+         * Returns a string containing a concise, human-readable description of this
+         * object. Subclasses are encouraged to override this method and provide an
+         * implementation that takes into account the object's type and data. The
+         * default implementation is equivalent to the following expression:
+         * <pre>
+         *   getClass().getName() + '@' + Integer.toHexString(hashCode())</pre>
+         * <p>See <a href="{@docRoot}reference/java/lang/Object.html#writing_toString">Writing a useful
+         * {@code toString} method</a>
+         * if you intend implementing your own {@code toString} method.
+         *
+         * @return a printable representation of this object.
+         */
+        @Override
+        public String toString() {
+            return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+    }
+}
