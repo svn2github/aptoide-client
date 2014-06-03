@@ -968,24 +968,9 @@ public class Start extends ActionBarActivity implements
             switch (switchId) {
                 case 0:
                     Log.d("MenuDrawer-position", "pos: " + position);
-                    if(!Build.DEVICE.equals("alien_jolla_bionic")){
-                        Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
-                        startActivity(loginIntent);
-                    }else{
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
-                        final AlertDialog loginAlert = dialogBuilder.create();
-                        loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
-                        loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
-                        loginAlert.setMessage(getText(R.string.jolla_not_supported));
-                        loginAlert.setCancelable(false);
-                        loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                arg0.dismiss();
-                            }
-                        });
-                        loginAlert.show();
-                    }
+                    Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
+                    startActivity(loginIntent);
+
                     break;
                 case 1:
                     Log.d("MenuDrawer-position", "pos: " + position);

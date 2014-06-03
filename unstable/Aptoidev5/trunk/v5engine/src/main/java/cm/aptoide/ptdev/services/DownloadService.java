@@ -224,6 +224,9 @@ public class DownloadService extends Service {
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
 
+        if(json.getApk().getMd5sum()!=null){
+            download.setId(json.getApk().getMd5sum().hashCode());
+        }
 
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());
         downloadModel.setAutoExecute(true);
@@ -395,16 +398,18 @@ public class DownloadService extends Service {
                     final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
                     String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
                     final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
+                    final int versionCode = apkCursor.getInt(apkCursor.getColumnIndex("version_code"));
                     final String md5sum = apkCursor.getString(apkCursor.getColumnIndex("md5"));
                     String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
 
-                    GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(getApplicationContext());
+                    GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
                     request.setRepoName(repoName);
-                    request.setMd5Sum(md5sum);
-
+                    request.setPackageName(package_name);
+                    request.setVersionName(versionName);
+                    request.setVercode(versionCode);
 
 
                     Download download = new Download();

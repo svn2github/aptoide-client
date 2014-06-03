@@ -1,4 +1,7 @@
+
+
 apply plugin: 'android-library'
+
 
 repositories {
     mavenCentral()
@@ -6,7 +9,7 @@ repositories {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1"
 
     defaultConfig {
         minSdkVersion 7
@@ -16,6 +19,8 @@ android {
 }
 
 dependencies {
+
+
     compile 'joda-time:joda-time:2.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup:otto:1.3.4'
@@ -35,6 +40,7 @@ dependencies {
         exclude (group: 'junit', module: 'junit') //by both name and group
         exclude (group: 'com.google.android', module: 'android') //by both name and group
     }
+
     compile project (':pagerslidertabstrip')
     compile project (':hanselandgretel')
     compile project (':android-websockets')
@@ -42,5 +48,6 @@ dependencies {
     compile project (':google-play-services')
     compile project (':mopub-sdk')
     compile fileTree(dir: 'lib', include: '*.jar')
+
 }
 

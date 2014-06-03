@@ -300,7 +300,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     url = url.replaceAll(" ", "%20");
                     i.setData(Uri.parse(url));
-                    startActivity(i);
+                    try{
+                        startActivity(i);
+                    }catch (ActivityNotFoundException e){
+                    }
                 }
             });
         } else {

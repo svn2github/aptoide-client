@@ -199,34 +199,43 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
             cursorAdapter.swapCursor(data);
-            TextView foundResults = (TextView) v.findViewById(R.id.results);
-            more = (TextView) v.findViewById(R.id.more);
-            if(data.getCount()>0){
-                foundResults.setText(getString(R.string.found_results, data.getCount()));
-            }else{
-                foundResults.setText(getString(R.string.no_search_result, query));
-            }
-            setListAdapter(adapter);
-            setListShown(true);
-            setEmptyText(getString(R.string.no_search_result, query));
 
 
             if(isAdded()){
+
+                TextView foundResults = (TextView) v.findViewById(R.id.results);
+                more = (TextView) v.findViewById(R.id.more);
+                if(data.getCount()>0){
+                    foundResults.setText(getString(R.string.found_results, data.getCount()));
+                }else{
+                    foundResults.setText(getString(R.string.no_search_result, query));
+                }
+                setListAdapter(adapter);
+                setListShown(true);
+                setEmptyText(getString(R.string.no_search_result, query));
+
+
+
                 Handler handler = new Handler();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+                        try{
+                            int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+                            if( ((SearchManager)getActivity()).isSearchMoreVisible() && visibleItems < data.getCount() ){
+                                more.setVisibility(View.VISIBLE);
+                                more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
+                            }else{
+                                more.setVisibility(View.GONE);
+                            }
+                        }catch (IllegalStateException e){
+
+                        }
 
 //                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
 //                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
 
-                        if( ((SearchManager)getActivity()).isSearchMoreVisible() && visibleItems < data.getCount() ){
-                            more.setVisibility(View.VISIBLE);
-                            more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
-                        }else{
-                            more.setVisibility(View.GONE);
-                        }
+
                     }
                 });
             }
@@ -244,19 +253,24 @@ public class SearchManager extends ActionBarActivity {
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             ((SearchManager)getActivity()).setFooterView(getListView(), R.layout.footer_search);
+            getLoaderManager().restartLoader(60, getArguments(), this);
 
+        }
+
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+            getLoaderManager().destroyLoader(60);
         }
 
         @Override
         public void onResume() {
             super.onResume();
-            getLoaderManager().initLoader(60, getArguments(), this);
         }
 
         @Override
         public void onDetach() {
             super.onDetach();
-            getLoaderManager().destroyLoader(60);
         }
 
 

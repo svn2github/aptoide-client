@@ -908,7 +908,6 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(!Build.DEVICE.equals("alien_jolla_bionic")) {
 
                     final AccountManager manager = AccountManager.get(getActivity());
 
@@ -942,21 +941,7 @@ public abstract class FragmentAppView extends Fragment {
                             }
                         }, null);
                     }
-                }else{
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                    final AlertDialog loginAlert = dialogBuilder.create();
-                    loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
-                    loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
-                    loginAlert.setMessage(getText(R.string.jolla_not_supported));
-                    loginAlert.setCancelable(false);
-                    loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            arg0.dismiss();
-                        }
-                    });
-                    loginAlert.show();
-                }
+
             }
 
             private void addLike() {
@@ -1018,7 +1003,6 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(!Build.DEVICE.equals("alien_jolla_bionic")) {
 
                     final AccountManager manager = AccountManager.get(getActivity());
 
@@ -1052,21 +1036,7 @@ public abstract class FragmentAppView extends Fragment {
                             }
                         }, null);
                     }
-                }else{
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                    final AlertDialog loginAlert = dialogBuilder.create();
-                    loginAlert.setTitle(getText(android.R.string.dialog_alert_title));
-                    loginAlert.setIcon(android.R.drawable.ic_dialog_alert);
-                    loginAlert.setMessage(getText(R.string.jolla_not_supported));
-                    loginAlert.setCancelable(false);
-                    loginAlert.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            arg0.dismiss();
-                        }
-                    });
-                    loginAlert.show();
-                }
+
             }
 
             private void addComment() {

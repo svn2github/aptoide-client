@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.os.Build;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
@@ -24,6 +25,9 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
 
     String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
+
+    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/createUser";
+
     private String email;
     private String pass;
     private String name = "";
@@ -42,8 +46,16 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
     @Override
     public CreateUserJson loadDataFromNetwork() throws Exception {
+        GenericUrl url;
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1){
+            url = new GenericUrl(baseUrl);
+        }else{
+            url = new GenericUrl(baseUrlNonSsl);
+        }
+
+
+
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         String passhash = AptoideUtils.Algorithms.computeSHA1sum(pass);

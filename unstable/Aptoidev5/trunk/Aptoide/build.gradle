@@ -3,9 +3,7 @@ apply plugin: 'android'
 
 apply from: "signing.gradle"
 
-repositories {
-    mavenCentral()
-}
+
 
 
 android {
@@ -22,6 +20,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
 
     }
+
 
     buildTypes {
 
