@@ -5,6 +5,7 @@
     <color name="transparent_white">#CCFFFFFF</color>
 
     <color name="custom_color">#ea7117</color>
+    <color name="overlay_black">#77000000</color>
 
     <color name="transparent_green">#99547c00</color>
     <color name="transparent_midnight">#99547c90</color>

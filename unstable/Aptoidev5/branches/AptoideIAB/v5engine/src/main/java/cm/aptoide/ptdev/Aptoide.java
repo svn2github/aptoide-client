@@ -3,15 +3,21 @@ package cm.aptoide.ptdev;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.http.AndroidHttpClient;
+import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.google.android.gms.auth.GoogleAuthUtil;
+
+import com.google.api.client.extensions.android.AndroidUtils;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -44,16 +50,18 @@ import static org.acra.ReportField.*;
         formKey = "",
         reportType = org.acra.sender.HttpSender.Type.JSON,
         httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="mmorthemysisserealstandl",
-        formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
+        //formUriBasicAuthLogin="mmorthemysisserealstandl",
+        //formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
         // Your usual ACRA configuration
 
-        formUri = "https://rmateus.cloudant.com/acra-aptoidev5/_design/acra-storage/_update/report"
+        formUri = "http://acra.aptoide.com/acra-aptoide/_design/acra-storage/_update/report"
 )
 public class Aptoide extends Application {
 
 
-    public static final boolean DEBUG_MODE = true;/**Log.isLoggable("Aptoide", Log.DEBUG);**/
+
+
+    public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
@@ -73,16 +81,12 @@ public class Aptoide extends Application {
 
 
     public static SQLiteDatabase getDb() {
-
         return db.getWritableDatabase();
-
     }
 
     public static Context getContext() {
         return context;
     }
-
-
 
     public void setThemePicker(AptoideThemePicker themePicker) {
         Aptoide.themePicker = themePicker;
@@ -92,34 +96,51 @@ public class Aptoide extends Application {
         Aptoide.configuration = configuration;
     }
 
-
+    public static boolean IS_SYSTEM;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         context = getApplicationContext();
 
+        try {
+            IS_SYSTEM = (getPackageManager().getApplicationInfo(getPackageName(), 0).flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()  // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .build());
 
 
         ACRA.init(this);
+
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
             acraConfiguration.setMode(ReportingInteractionMode.TOAST);
             acraConfiguration.setCustomReportContent(new ReportField[]{ APP_VERSION_CODE, APP_VERSION_NAME,
-                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID });
+                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID, BUILD });
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
-        acraConfiguration.setResDialogText(R.string.crash_text);
+        //acraConfiguration.setResDialogText(R.string.crash_text);
 
         ACRA.setConfig(acraConfiguration);
 
         db = DatabaseHelper.getInstance(getApplicationContext());
+        setConfiguration(getAptoideConfiguration());
+
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
-        setConfiguration(getAptoideConfiguration());
+        managerPreferences.init();
         setThemePicker(getNewThemePicker());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -131,6 +152,7 @@ public class Aptoide extends Application {
 
 
         FileNameGenerator generator = new FileNameGenerator() {
+
             @Override
             public String generate(String s) {
 
@@ -148,19 +170,14 @@ public class Aptoide extends Application {
                 .imageDownloader(new ImageDownloaderWithPermissions(getContext(),managerPreferences))
                 .defaultDisplayImageOptions(options)
                 .build();
+
         ImageLoader.getInstance().init(config);
-
-
-
-
-
     }
 
-
-
-
     public void bootImpl(ManagerPreferences managerPreferences) {
-
+        if (managerPreferences.getAptoideClientUUID() == null) {
+            managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
+        }
     }
 
     public AptoideConfiguration getAptoideConfiguration() {
@@ -189,7 +206,6 @@ public class Aptoide extends Application {
 
         public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {
             super(context, connectTimeout, readTimeout);
-
             this.connectTimeout = connectTimeout;
             this.readTimeout = readTimeout;
         }
@@ -220,10 +236,7 @@ public class Aptoide extends Application {
                     return getStreamFromOtherSource(imageUri, extra);
             }
 
-
-
         }
-
 
     }
 

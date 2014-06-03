@@ -26,6 +26,7 @@ import java.util.List;
  */
 public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
 
+
     private static final String TAG = "BucketListAdapter";
     private final boolean DEBUG = true;
 

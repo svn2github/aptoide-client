@@ -1,10 +1,14 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.model.ApkEditorsChoice;
 import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.exceptions.ParseStoppedException;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 import com.squareup.otto.Subscribe;
 import org.xml.sax.Attributes;
@@ -13,6 +17,7 @@ import org.xml.sax.ext.DefaultHandler2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -155,6 +160,11 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 apk.setSignature(sb.toString());
+                if (apk.getChildren() != null) {
+                    for (Apk theApk : apk.getChildren()) {
+                        theApk.setSignature(sb.toString());
+                    }
+                }
             }
         });
 
@@ -162,12 +172,13 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             public void startElement(Attributes atts) throws SAXException {
 
                 multipleApk = true;
+                apk.setChildren(new ArrayList<Apk>());
 
             }
 
             @Override
             public void endElement() throws SAXException {
-
+                multipleApk = false;
             }
         });
 
@@ -193,6 +204,18 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
+        elements.put("path", new ElementHandler() {
+            @Override
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                apk.setPath(sb.toString());
+            }
+        });
+
         elements.put("screenCompat", new ElementHandler() {
             @Override
             public void startElement(Attributes atts) throws SAXException {
@@ -206,7 +229,27 @@ public abstract class AbstractHandler extends DefaultHandler2 {
         });
 
 
+        elements.put(AptoideUtils.getMyCountry(Aptoide.getContext()).toUpperCase(Locale.ENGLISH), new ElementHandler() {
+            @Override
+            public void startElement(Attributes attributes) throws SAXException {
 
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+
+                if(apk.getChildren()!=null){
+                    apk.setName(sb.toString());
+                    for(Apk theApk: apk.getChildren()){
+                        theApk.setName(sb.toString());
+                    }
+                }else{
+                    apk.setName(sb.toString());
+                }
+
+
+            }
+        });
 
 
 
@@ -338,6 +381,20 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
 
+        elements.put("apk", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                if(multipleApk){
+                    apk.addApkToChildren();
+                    Log.d("MultipleApk", "adding " + apk + " " + apk.getChildren());
+                }
+            }
+        });
+
         elements.put("icon_hd", new ElementHandler() {
             public void startElement(Attributes atts) throws SAXException {
 
@@ -454,11 +511,10 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             @Override
             public void endElement() throws SAXException {
                 apk.setPrice(Double.parseDouble(sb.toString()));
-
             }
         });
 
-        elements.put("md5", new ElementHandler() {
+        elements.put("md5h", new ElementHandler() {
 
 
             public void startElement(Attributes atts) throws SAXException {
@@ -472,6 +528,8 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             }
         });
     }
+
+
 
     protected abstract Apk getApk();
     protected abstract void loadSpecificElements();

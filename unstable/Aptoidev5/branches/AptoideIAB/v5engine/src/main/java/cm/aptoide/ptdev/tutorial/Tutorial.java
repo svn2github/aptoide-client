@@ -43,6 +43,7 @@ public class Tutorial extends ActionBarActivity {
 
         if(getIntent().hasExtra("isUpdate")){
             wizard_fragments = Wizard.getWizardUpdate();
+            addDefaultRepo = false;
         }else{
             wizard_fragments = Wizard.getWizardNewToAptoide();
         }
@@ -91,6 +92,8 @@ public class Tutorial extends ActionBarActivity {
 
         }
 
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.app_name);
     }
 
     @Override

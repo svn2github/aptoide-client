@@ -10,7 +10,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:id="@+id/apkinfoheader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="?attr/apkInfoBackgroundHeader"
+                android:background="?attr/homeLabelbackground"
                 android:paddingBottom="5dp">
 
     <ImageView
@@ -41,7 +41,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                   android:layout_height="wrap_content"
                   android:layout_alignLeft="@+id/app_name"
                   android:layout_below="@+id/app_name"
-                  android:layout_toLeftOf="@+id/badge_layout" android:orientation="horizontal">
+                  android:layout_toLeftOf="@+id/badge_layout"
+                  android:orientation="horizontal">
 
         <TextView android:id="@+id/app_version"
                   android:layout_width="wrap_content"
@@ -49,8 +50,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                   android:ellipsize="end"
                   android:gravity="center_vertical"
                   android:maxLines="1"
-                  android:singleLine="true"
-                />
+                  android:singleLine="true" />
 
         <TextView android:id="@+id/app_get_latest"
                   android:layout_width="wrap_content"
@@ -65,7 +65,17 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
     </LinearLayout>
 
-
+    <TextView android:id="@+id/app_version_installed"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:singleLine="true"
+              android:layout_toRightOf="@+id/app_icon"
+              android:visibility="gone"
+              android:layout_below="@+id/version_layout"
+              android:layout_toLeftOf="@+id/badge_layout"/>
     <include
             android:id="@+id/download_progress"
             android:layout_width="match_parent"
@@ -74,7 +84,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/app_icon"
             android:visibility="gone"
-            android:layout_below="@+id/version_layout"/>
+            android:layout_below="@+id/app_version_installed"/>
 
     <Button
             android:id="@+id/btinstall"
@@ -89,7 +99,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
     <LinearLayout
             android:id="@+id/badge_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/btinstall"
             android:layout_alignTop="@+id/btinstall"
             android:layout_marginRight="5dp"

@@ -15,7 +15,7 @@ import java.io.*;
  */
 public class DownloadFile implements Serializable{
 
-    private final File file;
+    private File file;
 
     public RandomAccessFile getmFile() throws FileNotFoundException {
         return new RandomAccessFile(file, "rw");
@@ -33,14 +33,35 @@ public class DownloadFile implements Serializable{
 
 
 
-    public DownloadFile(String destination, String md5) throws FileNotFoundException {
+    public DownloadFile(String destination, String md5) throws FileNotFoundException, CompletedDownloadException {
         this.md5 = md5;
         this.mDestination = destination;
         file = new File(this.mDestination);
 
+        if(file.exists()){
+
+            try {
+                checkMd5();
+                throw new CompletedDownloadException();
+            } catch (Md5FailedException e) {
+
+                if (!file.delete()) {
+                    throw new FileNotFoundException();
+                }
+
+                e.printStackTrace();
+            }
+
+        }else{
+            this.mDestination = this.mDestination +"--downloading";
+            file = new File(this.mDestination);
+        }
+
         File dir = file.getParentFile();
         if ((dir != null) && (!dir.isDirectory())) {
-            dir.mkdirs();
+            if(!dir.mkdirs()){
+                throw new FileNotFoundException();
+            };
         }
 
     }
@@ -93,10 +114,19 @@ public class DownloadFile implements Serializable{
 
                 Log.d("TAG", "Failed Md5: " + mDestination + "   calculated " + calculatedMd5 + " vs " + md5);
                 throw new Md5FailedException();
+
             }
 
         }
 
+
+    }
+
+    public void rename() throws FileNotFoundException {
+
+        if(!file.renameTo(new File(this.mDestination.replaceAll("--downloading", "")))){
+            throw new FileNotFoundException();
+        };
 
     }
 }

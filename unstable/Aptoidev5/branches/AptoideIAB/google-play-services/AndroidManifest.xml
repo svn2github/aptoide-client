@@ -4,6 +4,6 @@
     android:versionCode="4132530"
     android:versionName="4.1.32 (978161-30)" >
 
-    <uses-sdk android:minSdkVersion="7"/>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="18"/>
 
 </manifest>

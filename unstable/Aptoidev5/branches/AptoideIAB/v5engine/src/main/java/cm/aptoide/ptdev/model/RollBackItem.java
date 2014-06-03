@@ -11,6 +11,12 @@ import android.graphics.drawable.Drawable;
  */
 public class RollBackItem {
 
+    private final String repoName;
+
+    public String getRepoName() {
+        return repoName;
+    }
+
     public enum Action {
         INSTALLING("Installing"),
         UNINSTALLING("Unistalling"),
@@ -50,7 +56,7 @@ public class RollBackItem {
     private Action action;
 
 
-    public RollBackItem(String name, String packageName, String version, String previousVersion, String pathIcon, String timestamp, String md5, Action action){
+    public RollBackItem(String name, String packageName, String version, String previousVersion, String pathIcon, String timestamp, String md5, Action action, String repoName){
         this.name = name;
         this.packageName = packageName;
         this.version = version;
@@ -59,6 +65,7 @@ public class RollBackItem {
         this.timestamp = timestamp;
         this.md5 = md5;
         this.action = action;
+        this.repoName = repoName;
     }
 
     public String getName() {

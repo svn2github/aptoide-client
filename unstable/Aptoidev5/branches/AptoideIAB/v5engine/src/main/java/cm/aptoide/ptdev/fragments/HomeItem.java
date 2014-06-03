@@ -10,6 +10,11 @@ package cm.aptoide.ptdev.fragments;
 public class HomeItem {
 
 
+    private final String categoryString;
+    private boolean recommended;
+    private String md5;
+    private String repoName;
+
     public long getId() {
         return id;
     }
@@ -36,13 +41,41 @@ public class HomeItem {
     private String downloads;
     private float rating;
 
-    public HomeItem(String name, String category, String icon, long id, String downloads, float rating) {
+    public HomeItem(String name, String category, String icon, long id, String downloads, float rating, String categoryString) {
         this.category = category;
         this.icon = icon;
         this.name = name;
         this.id = id;
         this.downloads = downloads;
         this.rating = rating;
+        this.categoryString = categoryString;
     }
 
+    public boolean isRecommended() {
+        return recommended;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRecommended(boolean recommended) {
+        this.recommended = recommended;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
+    }
+
+    public String getCategoryString() {
+        return categoryString;
+    }
 }

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="aptoide_version">Version 5 Dev</string>
+    <string name="aptoide_version">Version 5.1.2</string>
     <string name="aptoide_brand">APTOiDE</string>
 
     <string name="credits">
-    \tAptoide Team:\n\n
+    \tAptoide Android Native Team:\n\n
     \t\t Rui Mateus\n
-    \t\t rui.mateus@aptoide.com\n\n
+    \t\t rui.mateus [at] aptoide.com\n\n
     \t\t Teresa Deus\n
-    \t\t teresa.deus@aptoide.com\n\n
+    \t\t teresa.deus [at] aptoide.com\n\n
     \t\t Jose Costa\n
-    \t\t jose.costa@aptoide.com\n\n
-    \t\t Duarte Silveira\n
-    \t\t duarte.silveira@aptoide.com\n\n
+    \t\t jose.costa [at] aptoide.com\n\n
     \t\t Roberto Jacinto\n
-    \t\t roberto.jacinto@aptoide.com\n\n
+    \t\t roberto.jacinto [at] aptoide.com\n\n
 
     \tThank you to our Translators Team:\n\n
     \t\t
@@ -27,24 +25,24 @@
     Croatian: Roko Jurjevic, Rijad Spahic, Toni Grubisic |
     Chinese: Theodore Wte |
     Czech: Jan Krumpholc |
-    Dutch: Ismail Gürol Celiktas, Stefan de Jong |
+    Dutch: Shane Kloosterman, Ismail Gürol Celiktas, Stefan de Jong |
     Finnish: Sami Kuusisto |
-    French: Alexis Bonvin, Ultrapeer |
+    French: Ultrapeer, Alexis Bonvin, Guillaume NV |
     Georgian: Sandro Kakabadze |
-    German: Martin Nehrdich, Robert Reep, Manuel Stroh, Michael Mayer, Marlon Bruske |
+    German: Martin Nehrdich, Robert Reep, Manuel Stroh, Michael Mayer, Marlon Bruske, Simon Grabert, Lionel Wyser |
     Greek: Basileios Pitas |
-    Hebrew: שלו מויאל , David Liron |
+    Hebrew: שלו מויאל , David Liron, shiranbfree |
     Indonesian: Adi Juarsa |
-    Italian: Pavo Baxter, Gabry Carne, Simili Giuseppe, Rapper Skull, Damiano Chiacchiaretta |
-    Lithuanian: Saulius Pranckevicius |
+    Italian: Rapper Skull Pavo Baxter, Gabry Carne, Simili Giuseppe, Damiano Chiacchiaretta |
+    Lithuanian: Saulius Pranckevicius, Titus Virbickas |
     Persian:  Mehrdad Allahkarami |
-    Polish: Stanislaw, Tomasz Gregorczyk, Trurl |
-    Portuguese (Brazil): Edu Salgado, Joao Redondo, Maurilio Filho |
- 	Portuguese: Joao Redondo |
+    Polish: Trurl, Stanislaw, Tomasz Gregorczyk |
+    Portuguese (Brazil): Caio Fonseca, Paulo Henrique, Maurilio Filho, Marchus Santos, Edu Salgado |
+ 	Portuguese (Portugal): Joao Redondo |
  	Romanian: Munteanu Ovidiu, Heim Bogdan, Tudor Bobei |
-    Russian: Kanat Yesseyev |
-    Spanish: Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Ronnie Simon |
-    Turkish: Ultrapeer
+    Russian: Kanat Yesseyev, Leonid Bogolubov |
+    Spanish: Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Ronnie Simon, jvnski, Denis Arroyabe |
+    Turkish: Ultrapeer, Zeynal Zeynalov
  	</string>
 
 </resources>

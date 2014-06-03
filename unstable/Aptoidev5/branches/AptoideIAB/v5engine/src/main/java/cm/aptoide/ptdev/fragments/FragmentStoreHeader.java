@@ -1,16 +1,15 @@
 package cm.aptoide.ptdev.fragments;
 
 
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
@@ -28,17 +27,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Time: 17:24
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreHeader extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentStoreHeader extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, FragmentStore{
 
     TextView banner_store_name;
     TextView banner_description;
     ImageView avatar;
+    View view_gradient;
+
 //    FrameLayout store_background;
 //    FrameLayout.LayoutParams params;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -49,6 +51,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
         banner_store_name = (TextView) header.findViewById(R.id.banner_store_name);
         banner_description = (TextView) header.findViewById(R.id.store_description);
         avatar = (ImageView) header.findViewById(R.id.banner_store_avatar);
+        view_gradient = header.findViewById(R.id.view_gradient);
 
 //        store_background = (FrameLayout) header.findViewById(R.id.banner_background_layout);
 //
@@ -87,15 +90,30 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
             String url = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR));
             String store_name = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME));
             String description = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DESCRIPTION));
-            String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
 
-            EnumStoreTheme storeTheme = EnumStoreTheme.get("APTOIDE_STORE_THEME_GREEN");
+//            String theme = data.getString(data.getColumnIndex(Schema.Repo.COLUMN_THEME));
+//            EnumStoreTheme storeTheme;
+//            if(theme!=null){
+//                storeTheme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_"+theme.toUpperCase());
+//            }else{
+//                storeTheme = EnumStoreTheme.APTOIDE_STORE_THEME_BLACK;
+//            }
+//            view_gradient.setBackgroundResource(storeTheme.getStoreViewGradient());
 
-            //store_background.setBackgroundResource( storeTheme.getStoreHeader() );
-            ImageLoader.getInstance().displayImage(url, avatar);
+//            store_background.setBackgroundResource( storeTheme.getStoreHeader() );
+            if(url!=null && url.length()>0){
+                ImageLoader.getInstance().displayImage(url, avatar);
+            }else{
+                avatar.setImageResource(R.drawable.avatar_apps);
+            }
             banner_store_name.setText(store_name);
             banner_description.setText(description);
+
+            ((ActionBarActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+            ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(store_name);
         }
+
+
 
 
 
@@ -103,6 +121,29 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void onRefresh() {
+
+    }
+
+    @Override
+    public void onError() {
+
+
+
+
+    }
+
+    @Override
+    public void setRefreshing(boolean bool) {
+
+    }
+
+    @Override
+    public void setListShown(boolean b) {
 
     }
 }

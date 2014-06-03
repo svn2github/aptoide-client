@@ -31,6 +31,7 @@ import java.util.Locale;
 public class RollBackAdapter extends CursorAdapter {
 
     private final RollbackActivity activity;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public RollBackAdapter(RollbackActivity context) {
         super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
@@ -84,7 +85,7 @@ public class RollBackAdapter extends CursorAdapter {
             appNameRes = EnumRollbackState.states.get(cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION)));
         } catch (Exception e) {
             appStateString = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ACTION));
-            Log.d("MainActivity-RollbackAdapter", "RollbackAdapter App state " + appStateString);
+            Log.d("Start-RollbackAdapter", "RollbackAdapter App state " + appStateString);
         }
         if (appStateString == null) {
             appStateString = context.getString(appNameRes);
@@ -110,7 +111,7 @@ public class RollBackAdapter extends CursorAdapter {
                         break;
 
                     default:
-                        Intent intent = new Intent(context, AppViewActivity.class);
+                        Intent intent = new Intent(context, appViewClass);
                         intent.putExtra("fromRollback", true);
                         intent.putExtra("md5sum", md5sum);
                         context.startActivity(intent);

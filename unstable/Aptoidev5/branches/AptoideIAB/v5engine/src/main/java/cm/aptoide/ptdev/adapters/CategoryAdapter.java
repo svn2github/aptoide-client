@@ -127,21 +127,34 @@ public class CategoryAdapter extends CursorAdapter {
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
 
                 String categoryName;
-                try {
-                    categoryName = context.getString(EnumCategories.getCategoryName(id));
-                    Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
-                }catch (Exception e){
-                    categoryName = name;
-                    Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
-                }
+
+
+                    int res = EnumCategories.getCategoryName(id);
+
+                    if (res > 0) {
+                        categoryName = context.getString(res);
+                        Log.d("CategoryAdapter-categ", "Category Name: " + categoryName);
+
+                    }else{
+                        categoryName = name;
+                        Log.d("CategoryAdapter-categ", "Untranslated Category Name: " + categoryName);
+
+                    }
+
                 ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
 
-                ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
-                String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
+                if(count>0){
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+                }else{
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText("");
+                }
+
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
 
                 EnumStoreTheme theme;
                 try{
+                    String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
+
                     theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
                 }catch (Exception e){
                     theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;
@@ -229,7 +242,7 @@ public class CategoryAdapter extends CursorAdapter {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-                ((StoreActivity)context).installApp(id);
+                ((CategoryCallback)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {

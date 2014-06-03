@@ -2,16 +2,20 @@ package cm.aptoide.ptdev.parser;
 
 
 import android.app.Application;
+import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
+import cm.aptoide.ptdev.parser.handlers.HandlerFeaturedTop;
 import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.services.FileRequest;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -82,7 +86,9 @@ public class Parser{
         i++;
         final long repoId = handler.getRepoId();
         Log.d("Aptoide-Parser", "Starting request: " + url);
-
+        if(!spiceManager.isStarted()){
+            spiceManager.start(Aptoide.getContext());
+        }
         spiceManager.execute(new FileRequest(url,file, login), new RequestListener<InputStream>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -91,6 +97,10 @@ public class Parser{
                 if(threadPoolIsIdle() && poolEndedCallback!=null){
                     poolEndedCallback.onEnd();
                 }
+                if(handler instanceof HandlerInfoXml){
+                    new Database(Aptoide.getDb()).setFailedRepo(repoId);
+                }
+
                 if (errorCallback != null) errorCallback.onError(spiceException, repoId);
             }
 
@@ -113,6 +123,9 @@ public class Parser{
 
                             if(handler instanceof HandlerInfoXml){
                                 ((HandlerInfoXml)handler).setFile(file);
+                                ContentValues values = new ContentValues();
+                                values.putNull("is_failed");
+                                Aptoide.getDb().update(Schema.Repo.getName(), values, "id_repo = ?", new String[]{String.valueOf(repoId)});
                             }
 
                             parser.parse(inputStream, handler);

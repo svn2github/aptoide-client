@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -20,6 +21,7 @@ import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +34,7 @@ import java.util.List;
 public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item> {
 
     private final String sizeString;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public RelatedBucketAdapter(Activity ctx, List<RelatedApkJson.Item> elements) {
 
@@ -84,27 +87,8 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         holder.repo.setText(getContext().getString(R.string.store)+": "+item.getRepo());
 
         try {
-            boolean month = true;
-            DateTime startDate = new DateTime(dateFormater.parse(item.getTimestamp()));
-            DateTime now = DateTime.now();
-
-            int time = Months.monthsBetween(startDate, now).getMonths();
-
-            if(time == 0){
-                month = false;
-                time = Days.daysBetween(startDate, now).getDays();
-            }
-
-            if(time == 0){
-                time = Hours.hoursBetween(startDate, now).getHours();
-            }
-
-
-            if(month){
-                holder.timestamp.setText(getContext().getString(R.string.timestamp_months, String.valueOf(time)));
-            }else{
-                holder.timestamp.setText(getContext().getString(R.string.timestamp_days, String.valueOf(time)));
-            }
+            Date date = dateFormater.parse(item.getTimestamp());
+            holder.timestamp.setText(AptoideUtils.DateDiffUtils.getDiffDate(getContext(), date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -124,8 +108,10 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), AppViewActivity.class);
+                Intent i = new Intent(getContext(), appViewClass);
                 i.putExtra("fromRelated", true);
+                i.putExtra("appName", item.getName());
+
                 i.putExtra("repoName", item.getRepo());
                 i.putExtra("md5sum", item.getMd5sum());
                 getContext().startActivity(i);

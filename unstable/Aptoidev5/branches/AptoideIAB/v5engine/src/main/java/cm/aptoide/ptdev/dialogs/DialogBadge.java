@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
@@ -20,25 +21,19 @@ import java.util.Iterator;
 public class DialogBadge extends DialogFragment {
 
 
-
-    private String appName;
-    private String status;
-    private GetApkInfoJson.Malware.Reason reason;
-
-    public DialogBadge(String appName, String status, GetApkInfoJson.Malware.Reason reason) {
-        this.appName = appName;
-        this.status = status;
-        this.reason = reason;
-    }
+    public DialogBadge() {}
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_anti_malware, null);
+        String appName = getArguments().getString("appName");
+        String status = getArguments().getString("status");
+        GetApkInfoJson.Malware.Reason reason = ((AppViewActivity) getActivity()).getReason();
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(status.equals("scanned")?getString(R.string.app_trusted, appName):getString(R.string.app_warning, appName))
                 .setIcon(status.equals("scanned")?getResources().getDrawable(R.drawable.ic_trusted):getResources().getDrawable(R.drawable.ic_warning))
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -47,7 +42,7 @@ public class DialogBadge extends DialogFragment {
 
 
         if (reason != null) {
-            if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && reason.getScanned().getStatus().equals("passed")) {
+            if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && (reason.getScanned().getStatus().equals("passed") || reason.getScanned().getStatus().equals("warn"))) {
 
                 if (reason.getScanned().getAv_info() != null) {
                     StringBuffer av = new StringBuffer();
@@ -59,7 +54,7 @@ public class DialogBadge extends DialogFragment {
                             av.append(", ");
                         }
                     }
-
+                    
                     v.findViewById(R.id.reason_scanned_description).setVisibility(View.VISIBLE);
                     v.findViewById(R.id.reason_scanned).setVisibility(View.VISIBLE);
                     ((TextView) v.findViewById(R.id.reason_scanned_description)).setText(getString(R.string.scanned_with_av));
@@ -100,6 +95,8 @@ public class DialogBadge extends DialogFragment {
                 ((TextView) v.findViewById(R.id.reason_manual_qa_description)).setText(getString(R.string.scanned_manually_by_aptoide_team));
                 ((TextView) v.findViewById(R.id.reason_manual_qa)).setText(getString(R.string.scanned_verified_by_tester));
             }
+
+
         }
 
         return builder;

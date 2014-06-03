@@ -29,7 +29,7 @@ public class PasswordDialog extends DialogFragment {
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(getString(R.string.add_pvt_store))
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

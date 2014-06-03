@@ -7,13 +7,19 @@
 
     <attr name="customRowForeground" format="reference"/>
 
+    <attr name="customRowForegroundHomeLayout" format="reference"/>
+
     <attr name="backgroundCard" format="reference"/>
 
     <attr name="backgroundTabs" format="reference"/>
 
+    <attr name="backgroundHeaderLoggedIn" format="reference"/>
+
     <attr name="apkInfoBackgroundHeader" format="reference"/>
 
     <attr name="headerSeparatorButton" format="reference"/>
+
+    <attr name="homeLabelbackground" format="reference"/>
 
     <attr name="secondaryTextColor" format="color" />
 
@@ -69,10 +75,30 @@
 
     <attr name="icAddStoreDrawable" format="reference"/>
 
-    <attr name="icWizardArrowDrawable" format="reference"/>
+    <attr name="icWizardLeftArrowDrawable" format="reference"/>
+
+    <attr name="icWizardRightArrowDrawable" format="reference"/>
 
     <attr name="icCollapseDrawable" format="reference"/>
 
     <attr name="icExpandDrawable" format="reference"/>
+
+    <attr name="sectionListView.sectionTextViewPadding" format="dimension" />
+    <attr name="sectionListView.sectionTextViewTextColor" format="color" />
+    <attr name="sectionListView.sectionTextViewTextSize" format="dimension" />
+
+    <attr name="sectionListView.sectionItemPadding" format="dimension" />
+    <attr name="sectionListView.sectionItemBackground" format="color|reference" />
+
+    <attr name="sectionListView.listTextViewPadding" format="dimension" />
+    <attr name="sectionListView.listTextViewTextColor" format="color" />
+    <attr name="sectionListView.listTextViewTextSize" format="dimension" />
+
+    <attr name="sectionListView.listItemPadding" format="dimension" />
+    <attr name="sectionListView.listItemBackground" format="color|reference" />
+
+    <attr name="icPaypalDrawable" format="reference"/>
+    <attr name="icCreditCardDrawable" format="reference"/>
+    <attr name="icCellphoneDrawable" format="reference"/>
 
 </resources>

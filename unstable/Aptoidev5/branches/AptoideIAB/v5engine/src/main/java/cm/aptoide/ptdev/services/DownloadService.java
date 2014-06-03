@@ -18,12 +18,15 @@ import android.util.SparseArray;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
-import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -168,10 +171,43 @@ public class DownloadService extends Service {
         }
 
 
+    }
+
+
+    private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
+
+
+    public void startDownloadFromUrl(String remotePath, String md5, long id, Download download, String repoName){
+        ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
+
+        String path = Aptoide.getConfiguration().getPathCacheApks();
+
+        DownloadModel downloadModel = new DownloadModel(remotePath, path + md5 + ".apk", md5, 0);
+        downloadModel.setAutoExecute(true);
+        filesToDownload.add(downloadModel);
+        DownloadInfo info = getDownload(id);
+        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + md5 + ".apk", new ArrayList<String>());
+        apk.setRepoName(repoName);
+        info.setDownloadExecutor(new DownloadExecutorImpl(apk));
+        info.setDownload(download);
+        info.setFilesToDownload(filesToDownload);
+
+        downloads.put(info.getId(), info);
+        info.download();
+
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+        mBuilder = setNotification();
+        startForeground(-3, mBuilder.build());
+
+        if(isStopped){
+            isStopped = false;
+            timer = new Timer();
+            timer.schedule(getTask(), 0, 1000);
+        }
 
     }
 
-    private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
+
 
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
 
@@ -188,14 +224,17 @@ public class DownloadService extends Service {
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
 
-
+        if(json.getApk().getMd5sum()!=null){
+            download.setId(json.getApk().getMd5sum().hashCode());
+        }
 
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
-
-        info.setDownloadExecutor(new DownloadExecutorImpl(new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()))));
+        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));
+        apk.setRepoName(json.getApk().getRepo());
+        info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 
@@ -222,6 +261,7 @@ public class DownloadService extends Service {
                 updateDownload();
                 Log.d("Aptoide-DownloadService", "Updating progress bar");
             }
+
         };
     }
 
@@ -269,6 +309,8 @@ public class DownloadService extends Service {
         info.remove();
 
     }
+
+
 
     public void resumeDownload(int downloadId) {
         startService(new Intent(getApplicationContext(), DownloadService.class));
@@ -318,8 +360,15 @@ public class DownloadService extends Service {
 
         @Override
         public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-
-            startDownloadFromJson(getApkInfoJson, id, download);
+            if (getApkInfoJson != null) {
+                if (getApkInfoJson.getStatus().equals("OK")) {
+                    startDownloadFromJson(getApkInfoJson, id, download);
+                } else {
+                    for (Error error : getApkInfoJson.getErrors()) {
+                        Toast.makeText(getApplicationContext(), error.getMsg(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
 
         }
     }
@@ -349,6 +398,8 @@ public class DownloadService extends Service {
                     final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
                     String package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
                     final String versionName = apkCursor.getString(apkCursor.getColumnIndex("version_name"));
+                    final int versionCode = apkCursor.getInt(apkCursor.getColumnIndex("version_code"));
+                    final String md5sum = apkCursor.getString(apkCursor.getColumnIndex("md5"));
                     String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
@@ -358,12 +409,15 @@ public class DownloadService extends Service {
                     request.setRepoName(repoName);
                     request.setPackageName(package_name);
                     request.setVersionName(versionName);
+                    request.setVercode(versionCode);
+
 
                     Download download = new Download();
-                    download.setId(id);
+                    download.setId(md5sum.hashCode());
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
+
 
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
@@ -372,7 +426,7 @@ public class DownloadService extends Service {
 
                     download.setIcon(iconpath + icon);
 
-                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, package_name + repoName, DurationInMillis.ONE_HOUR, new DownloadRequest(id, download));
+                    manager.getFromCacheAndLoadFromNetworkIfExpired(request, repoName + md5sum, DurationInMillis.ONE_HOUR, new DownloadRequest(download.getId(), download));
                     apkCursor.close();
                 }
 
@@ -398,10 +452,10 @@ public class DownloadService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         Intent onClick = new Intent();
-        onClick.setClassName(getPackageName(), getApplicationContext().getPackageName()+".DownloadManager");
+        onClick.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
         onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        onClick.setAction("");
-        onClick.putExtra("", "");
+        onClick.setAction(Intent.ACTION_VIEW);
+        onClick.putExtra("fromDownloadNotification", true);
 
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent onClickAction = PendingIntent.getActivity(getApplicationContext(), 0, onClick, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -413,6 +467,7 @@ public class DownloadService extends Service {
                 .setProgress(0, 0, true)
                 .setContentIntent(onClickAction);
         updateProgress(mBuilder, getOngoingDownloads());
+
         return mBuilder;
     }
 

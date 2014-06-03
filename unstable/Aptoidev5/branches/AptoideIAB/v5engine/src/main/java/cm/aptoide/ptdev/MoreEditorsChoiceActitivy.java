@@ -13,9 +13,11 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -78,6 +80,8 @@ public class MoreEditorsChoiceActitivy extends ActionBarActivity implements Down
             adapter = new HomeLayoutAdapter(getActivity(), editorsChoice, false);
             getLoaderManager().restartLoader(0, getArguments(), this);
 
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
         }
 
         @Override

@@ -1,28 +1,10 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
-    }
-}
+
 apply plugin: 'android'
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://raw.github.com/ark/ark/master/snapshots/'
-    }
-}
 
-apply plugin: 'idea'
 
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
+
+
 
 android {
     compileSdkVersion 18
@@ -40,10 +22,32 @@ android {
     }
 
 
+    buildTypes {
+
+        debug {
+            zipAlign  true
+
+        }
+
+
+        
+
+
+
+    }
+
+
+
+
+
 }
+
+
 
 dependencies {
     compile project (':v5engine')
 }
+
+
 
 

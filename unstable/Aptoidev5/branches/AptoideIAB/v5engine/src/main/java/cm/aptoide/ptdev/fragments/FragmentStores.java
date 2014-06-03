@@ -2,9 +2,11 @@ package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -70,6 +72,8 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         setHasOptionsMenu(true);
         if(savedInstanceState!=null){
             isMergeStore = savedInstanceState.getBoolean("isMerge");
+        }else{
+            isMergeStore = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false);
         }
     }
 
@@ -86,8 +90,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     public void refreshStoresEvent(RepoAddedEvent event){
 
         Log.d("Aptoide-", "OnEvent");
-
-        getLoaderManager().restartLoader(0, null, this);
+        if(!isMergeStore) getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -155,6 +158,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 i.putExtra("storeid", id);
                 i.putExtra("isrefreshing", callback.isRefreshing(id));
                 i.putExtra("list", store.isList());
+                i.putExtra("theme", store.getTheme().ordinal());
                 startActivity(i);
 
 
@@ -163,7 +167,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(isMergeStore){
             stores.clear();
-            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
+            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             getLoaderManager().restartLoader(0, null, this);
@@ -208,7 +212,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
                     data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
                     EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme),
-                    "list".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
+                    "grid".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );
             Log.d("Aptoide-", "Added store");
@@ -256,7 +260,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialogRemove");
-                pd.dismiss();
+                pd.dismissAllowingStateLoss();
                 setRetainInstance(false);
                 getLoaderManager().restartLoader(0,null,FragmentStores.this);
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));
@@ -312,10 +316,11 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     private void setMergeStore(boolean mergeStore) {
 
         isMergeStore = mergeStore;
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("mergeStores", mergeStore).commit();
 
         if(mergeStore){
             stores.clear();
-            stores.add(new StoreItem(getString(R.string.all_stores), "", "", EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, true, -1));
+            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://"+R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             refreshStoresEvent(null);

@@ -35,12 +35,14 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:orientation="vertical">
 
             <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:hint="@string/write_your_comment"
                     android:id="@+id/editText_addcomment"
-                    android:inputType="textMultiLine"/>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:hint="@string/write_your_comment"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:lines="3"
+                    android:gravity="top|left"/>
 
             <Button android:id="@+id/button_add_comment"
                     android:layout_width="match_parent"
@@ -51,39 +53,46 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
             <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
                     android:layout_gravity="center"
                     android:id="@+id/layout_likes">
 
                 <Button android:id="@+id/button_like"
+                        style="@style/WidgetButtonCustomGray"
                         android:layout_width="fill_parent"
                         android:text="@string/like"
-                        android:background="?attr/selectableItemBackground"
+                        android:layout_weight="1"
                         android:drawableLeft="?attr/icRatingGoodDrawable"
                         android:layout_margin="10dp"
                         android:layout_height="wrap_content"/>
 
                 <Button android:id="@+id/button_dont_like"
+                        style="@style/WidgetButtonCustomGray"
                         android:layout_width="fill_parent"
                         android:text="@string/dont_like"
-                        android:background="?attr/selectableItemBackground"
                         android:drawableLeft="?attr/icRatingBadDrawable"
                         android:layout_margin="10dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"/>
 
             </LinearLayout>
+
         </LinearLayout>
 
         <TextView android:id="@+id/title_comments"
                 style="@style/titleLabel"
                 android:text="@string/comments"/>
 
+        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+
         <LinearLayout android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
                       android:gravity="center_horizontal"
                       android:orientation="vertical"
                       android:layout_margin="5dp"
+                      android:visibility="gone"
                       style="?attr/backgroundCard"
                       android:id="@+id/layout_comments">
 
@@ -116,11 +125,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingBottom="5.0dp"
-                android:paddingLeft="5.0dp"
-                android:paddingRight="5.0dp"
+                android:padding="5.0dp"
                 android:visibility="gone"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_comments"/>
         <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->

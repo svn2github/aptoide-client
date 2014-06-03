@@ -54,5 +54,6 @@ public class AccountAuthenticatorActivity extends ActionBarActivity {
             mAccountAuthenticatorResponse = null;
         }
         super.finish();
+
     }
 }

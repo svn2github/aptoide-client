@@ -46,7 +46,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:maxLines="1"
-                    android:inputType="textUri"
+                    android:inputType="textUri|textNoSuggestions"
                     android:singleLine="true"
                     android:layout_toLeftOf="@+id/button_dialog_add_store"
                     android:layout_alignParentLeft="true"

@@ -16,19 +16,46 @@ import java.util.List;
  * Time: 16:08
  * To change this template use File | Settings | File Templates.
  */
-public abstract class Apk {
+public abstract class Apk implements Cloneable {
+
+    public Apk() {
+
+    }
 
 
+    public Apk(Apk apk) {
+        this.children = apk.children;
+        this.signature = apk.signature;
+        this.path = apk.path;
+        this.repoId = apk.repoId;
+        this.name = apk.name;
+        this.remotePath = apk.remotePath;
+        this.versionName = apk.versionName;
+        this.versionCode = apk.versionCode;
+        this.packageName = apk.packageName;
+        this.iconPath = apk.iconPath;
+        this.md5h = apk.md5h;
+        this.downloads = apk.downloads;
+        this.rating = apk.rating;
+        this.category1 = apk.category1;
+        this.category2 = apk.category2;
+        this.categoryId = apk.categoryId;
+        this.size = apk.size;
+        this.age = apk.age;
+        this.minSdk = apk.minSdk;
+        this.minScreen = apk.minScreen;
+        this.minGlEs = apk.minGlEs;
+        this.screenCompat = apk.screenCompat;
+        this.date = apk.date;
+        this.price = apk.price;
+        this.server = apk.server;
+        this.cpuAbi = apk.cpuAbi;
+        this.isRunning = apk.isRunning;
+    }
+
+    private ArrayList<Apk> children;
     private String signature = "";
-
-    public long getRepoId() {
-        return repoId;
-    }
-
-    public void setRepoId(long repoId) {
-        this.repoId = repoId;
-    }
-
+    private String path;
     private long repoId;
     private String name = "";
     private String remotePath = "";
@@ -41,7 +68,6 @@ public abstract class Apk {
     private double rating;
     private String category1 = "";
     private String category2 = "";
-
     private List<Integer> categoryId = new ArrayList<Integer>();
     private long size;
     private Filters.Age age = Filters.Age.All;
@@ -49,7 +75,7 @@ public abstract class Apk {
     private Filters.Screen minScreen = Filters.Screen.notfound;
     private String screenCompat;
     private Date date;
-    private double price;
+    private double price = 0.0;
     private String minGlEs = "0.0";
     private Server server = new Server() {
         @Override
@@ -57,6 +83,19 @@ public abstract class Apk {
             return super.getApkpath();
         }
     };
+    private String cpuAbi;
+    boolean isRunning = true;
+
+    public long getRepoId() {
+        return repoId;
+    }
+
+    public void setRepoId(long repoId) {
+        this.repoId = repoId;
+    }
+
+
+    public abstract List<String> getStatements();
 
     public String getCpuAbi() {
         return cpuAbi;
@@ -65,11 +104,6 @@ public abstract class Apk {
     public void setCpuAbi(String cpuAbi) {
         this.cpuAbi = cpuAbi;
     }
-
-    private String cpuAbi;
-
-
-    public abstract List<String> getStatements();
 
 
     public String getCategory2() {
@@ -193,7 +227,6 @@ public abstract class Apk {
     }
 
 
-
     public void setScreenCompat(String screenCompat) {
         this.screenCompat = screenCompat;
     }
@@ -234,7 +267,6 @@ public abstract class Apk {
         isRunning = running;
     }
 
-    boolean isRunning = true;
 
     public abstract void databaseDelete(Database db);
 
@@ -267,4 +299,28 @@ public abstract class Apk {
     public String getSignature() {
         return signature.replaceAll(":", "");
     }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public ArrayList<Apk> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<Apk> children) {
+        this.children = children;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + versionCode;
+    }
+
+
+    public abstract void addApkToChildren();
 }

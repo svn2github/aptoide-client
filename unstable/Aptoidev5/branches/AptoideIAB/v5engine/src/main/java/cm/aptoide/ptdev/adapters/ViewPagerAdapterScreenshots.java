@@ -48,8 +48,8 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
 		options = new DisplayImageOptions.Builder()
 		 .displayer(new FadeInBitmapDisplayer(1000))
-		 .resetViewBeforeLoading()
-		 .cacheOnDisc()
+		 .resetViewBeforeLoading(true)
+		 .cacheOnDisc(true)
 
 		 .build();
 	}

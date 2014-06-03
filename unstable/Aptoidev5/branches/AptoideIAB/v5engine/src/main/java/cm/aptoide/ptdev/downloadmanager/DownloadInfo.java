@@ -5,7 +5,9 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import android.widget.ListView;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.downloadmanager.state.*;
@@ -61,7 +63,7 @@ public class DownloadInfo implements Runnable, Serializable {
     private DownloadExecutor downloadExecutor;
     private long mProgress = 0;
     private boolean isPaused = false;
-    private ArrayList<String> downloadingFilenames;
+    private ArrayList<String> downloadingFilenames = new ArrayList<String>();
 
     public void setDownloadManager(DownloadManager downloadManager) {
         this.downloadManager = downloadManager;
@@ -107,7 +109,7 @@ public class DownloadInfo implements Runnable, Serializable {
             }
 
 
-            //checkDirectorySize(Environment.getExternalStorageDirectory().getAbsolutePath()+"/.aptoide/apks");
+            checkDirectorySize(Aptoide.getConfiguration().getPathCacheApks());
 
 
             mSize = getAllThreadSize();
@@ -133,7 +135,7 @@ public class DownloadInfo implements Runnable, Serializable {
                     // Difference between last time and this time = how much was downloaded since last run.
                     long downloadedSinceLastTime = mDownloadedSize - iMLastDownloadedSize;
                     iMLastDownloadedSize = mDownloadedSize;
-                    if (timeElapsedSinceLastTime > 0) {
+                    if (timeElapsedSinceLastTime > 0 && timeElapsed > 0) {
                         // Speed (bytes per second) = downloaded bytes / time in seconds (nanoseconds / 1000000000)
                         mAvgSpeed = (mDownloadedSize) * 1000 / timeElapsed;
                         mSpeed = downloadedSinceLastTime * 1000 / timeElapsedSinceLastTime;
@@ -156,6 +158,7 @@ public class DownloadInfo implements Runnable, Serializable {
 
 
                     download.setSpeed(getSpeed());
+                    download.setTimeLeft(mETA);
                     download.setProgress(getPercentDownloaded());
                     BusProvider.getInstance().post(getDownloadEvent());
 //                    mSpeed = 0;
@@ -242,7 +245,13 @@ public class DownloadInfo implements Runnable, Serializable {
         }
         double size = getDirSize(dir) / 1024 / 1024;
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-        long maxFileCache = Long.parseLong((sPref.getString("maxFileCache", "200")));
+        long maxFileCache;
+        try{
+            maxFileCache = Long.parseLong((sPref.getString("maxFileCache", "200")));
+        }catch (Exception e){
+            maxFileCache = 50;
+        }
+
         if (maxFileCache < 50) maxFileCache = 50;
         if (maxFileCache > 0 && size > maxFileCache) {
             File[] files = dir.listFiles();
@@ -257,12 +266,15 @@ public class DownloadInfo implements Runnable, Serializable {
                     fileToDelete = file;
                 }
 
+
             }
             if (fileToDelete != null) {
                 Log.d("TAG", "Deleting " + fileToDelete.getName());
-                fileToDelete.delete();
+                if(!fileToDelete.delete()){
+                    return;
+                }
+                checkDirectorySize(dirPath);
             }
-            checkDirectorySize(dirPath);
         }
     }
 
@@ -323,11 +335,20 @@ public class DownloadInfo implements Runnable, Serializable {
     }
 
     public void remove() {
+
+
+        boolean isRemove = !getStatusState().getEnumState().equals(EnumState.COMPLETE);
+
         changeStatusState(new CompletedState(this));
 
-        for (DownloadModel model : mFilesToDownload) {
-            new File(model.getDestination()).delete();
+        if (mFilesToDownload == null) return;
+
+        if(isRemove){
+            for (DownloadModel model : mFilesToDownload) {
+                new File(model.getDestination()).delete();
+            }
         }
+
         mProgress = 0;
         mSize = 0;
         mFilesToDownload.clear();

@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 
@@ -21,33 +22,35 @@ public class MyAppInstallDialog extends DialogFragment {
     private String appName;
     private DialogInterface.OnDismissListener dismissListener;
 
-    public MyAppInstallDialog(DialogInterface.OnClickListener okListener, String appName, DialogInterface.OnDismissListener dismissListener) {
-        this.okListener = okListener;
-        this.appName = appName;
-        this.dismissListener = dismissListener;
+    public MyAppInstallDialog() {
+
     }
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        okListener = ((AppViewActivity)getActivity()).getMyAppListener();
 
+        dismissListener = ((AppViewActivity)getActivity()).getOnDismissListener();
+        this.appName = getArguments().getString("appName");
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setTitle(Aptoide.getConfiguration().getMarketName())
                 .setIcon(android.R.drawable.ic_menu_more)
                 .setMessage(getString(R.string.installapp_alrt) + appName + "?")
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(android.R.string.ok, okListener)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
         setCancelable(false);
+
         //builder.setOnDismissListener(dismissListener);
         return builder;
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        if(dismissListener!=null && isAdded()) dismissListener.onDismiss(dialog);
         super.onDismiss(dialog);
-        if(dismissListener!=null) dismissListener.onDismiss(dialog);
     }
 }

@@ -12,4 +12,5 @@ public interface FragmentStore {
     void onRefresh();
     void onError();
     void setRefreshing(boolean bool);
+    void setListShown(boolean b);
 }

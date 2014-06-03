@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.os.Build;
 import android.util.Log;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -8,8 +9,13 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 import java.util.HashMap;
 
@@ -18,12 +24,15 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/checkUserCredentials";
-            //"http://www.aptoide.com/webservices/checkUserCredentials/";
+    String baseUrl = "https://webservices.aptoide.com/webservices/2/checkUserCredentials";
+    String baseUrlWithoutSsl = "http://webservices.aptoide.com/webservices/2/checkUserCredentials";
+
+    //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
     private String user;
     private String password;
     private String repo;
+    private String avatar;
 
     private boolean registerDevice;
 
@@ -44,7 +53,16 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     @Override
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
 
-        GenericUrl url = new GenericUrl(baseUrl);
+
+        GenericUrl url;
+
+        if (Build.VERSION.SDK_INT >= 10) {
+            url = new GenericUrl(baseUrl);
+        } else {
+            url = new GenericUrl(baseUrlWithoutSsl);
+        }
+
+
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
@@ -173,4 +191,6 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     public LoginActivity.Mode getMode() {
         return mode;
     }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

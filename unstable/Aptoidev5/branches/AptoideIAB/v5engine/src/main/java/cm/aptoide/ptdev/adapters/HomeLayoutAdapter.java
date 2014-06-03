@@ -32,6 +32,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
     private boolean mWasEndedAlready;
     private ArrayList<Collection> list;
     private boolean b;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public HomeLayoutAdapter(Activity context, ArrayList<Collection> list, boolean b) {
         this.context = context;
@@ -88,7 +89,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
         if (b) {
             v.findViewById(R.id.more).setVisibility(View.VISIBLE);
-            v.findViewById(R.id.separatorLayout).setOnClickListener(new View.OnClickListener() {
+            v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, MoreEditorsChoiceActitivy.class);
@@ -98,7 +99,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
             });
 
-            v.findViewById(R.id.separatorLayout).setClickable(true);
+//            v.findViewById(R.id.separatorLayout).setClickable(true);
 
         }else{
             if(collection.isHasMore()){
@@ -115,12 +116,12 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 }
 
                 v.findViewById(R.id.action).setVisibility(View.VISIBLE);
-                v.findViewById(R.id.separatorLayout).setOnClickListener(new AnimationClickListener(iv, v, position, collection.getParentId()));
-                v.findViewById(R.id.separatorLayout).setClickable(true);
+                v.findViewById(R.id.action).setOnClickListener(new AnimationClickListener(iv, v, position, collection.getParentId()));
+                v.findViewById(R.id.action).setClickable(true);
             } else {
                 v.findViewById(R.id.action).setVisibility(View.GONE);
-                v.findViewById(R.id.separatorLayout).setOnClickListener(null);
-                v.findViewById(R.id.separatorLayout).setClickable(false);
+                v.findViewById(R.id.action).setOnClickListener(null);
+                v.findViewById(R.id.action).setClickable(false);
             }
         }
         TextView tv = (TextView) v.findViewById(R.id.collectionName);
@@ -128,8 +129,15 @@ public class HomeLayoutAdapter extends BaseAdapter {
         String name = list.get(position).getName();
         String categoryName;
 
+
         if (list.get(position).getWeeks() > -1) {
-            categoryName = context.getString(R.string.timestamp_weeks, list.get(position).getWeeks());
+            if (list.get(position).getWeeks() == 0) {
+                categoryName = context.getString(R.string.WidgetProvider_timestamp_this_week);
+            }else if (list.get(position).getWeeks() == 1) {
+                categoryName = context.getString(R.string.timestamp_week, 1);
+            }else{
+                categoryName = context.getString(R.string.timestamp_weeks, list.get(position).getWeeks());
+            }
 
         } else {
 
@@ -142,6 +150,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             }
         }
         tv.setText(categoryName);
+
 //        tv.setText(Html.fromHtml(list.get(position).getName()).toString());
 
 
@@ -202,7 +211,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             tvChild.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, AppViewActivity.class);
+                    Intent i = new Intent(context, appViewClass);
                     long id = item.getId();
                     i.putExtra("id", id);
                     context.startActivity(i);
@@ -215,7 +224,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 category = context.getString(EnumCategories.getCategoryName(cat));
                 Log.d("Home-categ", "Category Name: " + category);
             }catch (Exception e){
-                category = item.getCategory();
+                category = item.getCategoryString();
                 Log.d("Home-categ", "Untranslated Category Name: " + category);
             }
 

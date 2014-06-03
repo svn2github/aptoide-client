@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
@@ -64,17 +65,26 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
             if (getArguments().containsKey("version")) {
                 mode = "multiversion";
-                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.multiversion));
             } else if (getArguments().containsKey("developer")) {
                 mode = "develbased";
-                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.more_from_publisher));
             } else if (getArguments().containsKey("item")) {
                 mode = "itembased";
-                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.related_apps));
             }
             adapter = new MergeAdapter();
             listAdapter = new RelatedBucketAdapter(getActivity(), elements);
 
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            if (getArguments().containsKey("version")) {
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.multiversion));
+            } else if (getArguments().containsKey("developer")) {
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.more_from_publisher));
+            } else if (getArguments().containsKey("item")) {
+                ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.related_apps));
+            }
         }
 
         SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
@@ -82,8 +92,8 @@ public class MoreRelatedActivity extends ActionBarActivity {
         RequestListener<RelatedApkJson> request = new RequestListener<RelatedApkJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Toast.makeText(getActivity(), "Error listRelated", Toast.LENGTH_SHORT).show();
-
+                setEmptyText(getString(R.string.connection_error));
+                setListShown(true);
             }
 
             @Override
@@ -97,18 +107,24 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
                 ArrayList<RelatedApkJson.Item> items;
 
-                if (mode.equals("multiversion")) {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getMultiversion());
-                } else if (mode.equals("itembased")) {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getItembased());
-                } else {
-                    items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getDevelbased());
+                if(relatedApkJson!=null){
+                    if (mode.equals("multiversion")) {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getMultiversion());
+                    } else if (mode.equals("itembased")) {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getItembased());
+                    } else {
+                        items = new ArrayList<RelatedApkJson.Item>(relatedApkJson.getDevelbased());
+                    }
+                }else{
+                    items = new ArrayList<RelatedApkJson.Item>();
                 }
+
+
 
 
                 if (items.size() > 0) {
                     elements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("matureChkBox", true)) {
+                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)) {
 
 
                         for (RelatedApkJson.Item item : items) {
@@ -127,6 +143,7 @@ public class MoreRelatedActivity extends ActionBarActivity {
                 listAdapter.notifyDataSetChanged();
 
                 setListAdapter(adapter);
+                setEmptyText(getString(R.string.no_related));
             }
         };
 
@@ -154,8 +171,17 @@ public class MoreRelatedActivity extends ActionBarActivity {
             listRelatedApkRequest.setPackageName(packageName);
             listRelatedApkRequest.setVercode(versionCode);
             listRelatedApkRequest.setLimit(listAdapter.getBucketSize() * 5);
-
+            View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_frag_more, null);
+            if (header != null) {
+                TextView title = (TextView) header.findViewById(R.id.separator_label);
+                title.setText(getArguments().getString("appName"));
+            }
+            getListView().addHeaderView(header);
             spiceManager.execute(listRelatedApkRequest, packageName + "-related-" + mode, DurationInMillis.ONE_DAY, request);
+
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+
 
 
         }

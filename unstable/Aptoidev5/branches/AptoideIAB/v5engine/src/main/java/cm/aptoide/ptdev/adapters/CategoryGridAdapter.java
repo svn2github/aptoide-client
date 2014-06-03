@@ -52,7 +52,7 @@ public class CategoryGridAdapter extends CursorAdapter {
 
         switch (type){
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.row_app_standard_grid, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_grid, parent, false);
@@ -135,7 +135,13 @@ public class CategoryGridAdapter extends CursorAdapter {
                     Log.d("CategoryGridAdapter-categ", "Untranslated Category Name: " + categoryName);
                 }
                 ((TextView) view.findViewById(R.id.category_first_level_name)).setText(categoryName);
-                ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+
+                if(count>0){
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText(String.valueOf(count));
+                }else{
+                    ((TextView) view.findViewById(R.id.category_first_level_number)).setText("");
+                }
+
                 String themeString = cursor.getString(cursor.getColumnIndex("theme")).toUpperCase(Locale.ENGLISH);
                 String repoName = cursor.getString(cursor.getColumnIndex("repo_name")).toUpperCase(Locale.ENGLISH);
                 EnumStoreTheme theme;
@@ -212,7 +218,6 @@ public class CategoryGridAdapter extends CursorAdapter {
             this.context = context;
             this.id = id;
 
-
         }
 
         @Override
@@ -220,7 +225,7 @@ public class CategoryGridAdapter extends CursorAdapter {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-                ((StoreActivity)context).installApp(id);
+                ((CategoryCallback)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {

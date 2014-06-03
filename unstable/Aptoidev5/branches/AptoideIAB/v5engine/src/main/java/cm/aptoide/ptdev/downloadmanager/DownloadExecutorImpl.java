@@ -4,13 +4,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -39,7 +44,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
     private final FinishedApk apk;
     private final String path;
 
-    public DownloadExecutorImpl(FinishedApk apk){
+    public DownloadExecutorImpl(FinishedApk apk) {
         this.apk = apk;
         this.path = apk.getPath();
     }
@@ -88,57 +93,59 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         final Context context = Aptoide.getContext();
 
-                Database db = new Database(Aptoide.getDb());
-                RollBackItem rollBackItem = null;
+        Database db = new Database(Aptoide.getDb());
+        RollBackItem rollBackItem = null;
 
-                try {
+        try {
 
-                    PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
+            PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
 
-                    // Update
-                    File apkFile = new File(pkgInfo.applicationInfo.sourceDir);
-                    String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
+            // Update
+            File apkFile = new File(pkgInfo.applicationInfo.sourceDir);
+            String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
 
-                    db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), pkgInfo.versionName, apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING));
+            db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), pkgInfo.versionName, apk.getIconPath(), null, md5_sum, RollBackItem.Action.UPDATING, apk.getRepoName()));
+
+        } catch (PackageManager.NameNotFoundException e) {
+
+            // Check if its a downgrade
+            if (!db.updateDowngradingAction(apk.getApkid())) {
+                // New Installation
+                db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING, apk.getRepoName()));
+            }
+        }
 
 
-                } catch (PackageManager.NameNotFoundException e) {
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-                    // Check if its a downgrade
-                    if(!db.updateDowngradingAction(apk.getApkid())) {
-                        // New Installation
-                        db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING));
 
-                    }
-                }
+        if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
 
-                if(canRunRootCommands()){
+            Intent i = new Intent(context, PermissionsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            i.putExtra("apk", (Parcelable) apk);
+            i.putStringArrayListExtra("permissions", apk.getPermissionsList());
+            context.startActivity(i);
 
-                    Intent i = new Intent(context, PermissionsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                    i.putExtra("apk", (Parcelable)apk);
-                    i.putStringArrayListExtra("permissions", apk.getPermissionsList());
-                    context.startActivity(i);
+        } else {
 
-                }else{
+            Intent install = new Intent(Intent.ACTION_VIEW);
+            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= 14)
+                install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
+            install.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
+            Log.d("Aptoide", "Installing app: " + path);
+            context.startActivity(install);
 
-                    Intent install = new Intent(Intent.ACTION_VIEW);
-                    install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    install.setDataAndType(Uri.fromFile(new File(path)),"application/vnd.android.package-archive");
-                    Log.d("Aptoide", "Installing app: "+path);
-                    context.startActivity(install);
-
-                }
+        }
     }
 
 
-    public static boolean canRunRootCommands()
-    {
+    public static boolean canRunRootCommands() {
         boolean retval;
         Process suProcess;
 
-        try
-        {
+        try {
             suProcess = Runtime.getRuntime().exec("su");
 
             DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
@@ -150,33 +157,25 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
             String currUid = osRes.readLine();
             boolean exitSu;
-            if (null == currUid)
-            {
+            if (null == currUid) {
                 retval = false;
                 exitSu = false;
                 Log.d("ROOT", "Can't get root access or denied by user");
-            }
-            else if (currUid.contains("uid=0"))
-            {
+            } else if (currUid.contains("uid=0")) {
                 retval = true;
                 exitSu = true;
                 Log.d("ROOT", "Root access granted");
-            }
-            else
-            {
+            } else {
                 retval = false;
                 exitSu = true;
                 Log.d("ROOT", "Root access rejected: " + currUid);
             }
 
-            if (exitSu)
-            {
+            if (exitSu) {
                 os.writeBytes("exit\n");
                 os.flush();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // Can't get root !
             // Probably broken pipe exception on trying to write to output stream (os) after su failed, meaning that the device is not rooted
 
@@ -192,21 +191,31 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         return (int) (dpi * dm.density);
     }
 
+
     public static void installWithRoot(final FinishedApk apk) {
         try {
             final Context context = Aptoide.getContext();
             final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            final Process p = Runtime.getRuntime().exec("su");
+            final Process p;
+            DataOutputStream os;
 
-            DataOutputStream os = new DataOutputStream(p.getOutputStream());
-            // Execute commands that require root access
-            os.writeBytes("pm install -r \"" + apk.getPath() + "\"\n");
-            os.flush();
+            if (!Aptoide.IS_SYSTEM) {
+                p = Runtime.getRuntime().exec("su");
+                os = new DataOutputStream(p.getOutputStream());
+                // Execute commands that require root access
+                os.writeBytes("pm install -r \"" + apk.getPath() + "\"\n");
+                os.flush();
+            } else {
+                p = Runtime.getRuntime().exec("pm install -r " + apk.getPath());
+                os = new DataOutputStream(p.getOutputStream());
+            }
+
+
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
             Intent onClick = new Intent(Intent.ACTION_VIEW);
             onClick.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            onClick.setDataAndType(Uri.fromFile(new File(apk.getPath())),"application/vnd.android.package-archive");
+            onClick.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
 
             // The PendingIntent to launch our activity if the user selects this notification
             PendingIntent onClickAction = PendingIntent.getActivity(context, 0, onClick, 0);
@@ -215,7 +224,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
             int size = dpToPixels(context, 36);
-            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(),size,size));
+            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size));
             mBuilder.setSmallIcon(android.R.drawable.stat_sys_download);
             mBuilder.setContentIntent(onClickAction);
             mBuilder.setAutoCancel(true);
@@ -238,17 +247,16 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                         p.waitFor();
 
                         String failure = output.toString();
-
                         if (p.exitValue() != 255 && !failure.toLowerCase(Locale.ENGLISH).contains("failure") && !failure.toLowerCase(Locale.ENGLISH).contains("segmentation")) {
                             // Sucess :-)
+                            Log.e("MYTAG-CENAS", String.valueOf(p.exitValue() + " " + failure.toString()));
 
                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
                             Intent onClick = context.getPackageManager().getLaunchIntentForPackage(apk.getApkid());
 
 
-
-                            if(onClick == null){
+                            if (onClick == null) {
 //                                    onClick = new Intent(Intent.ACTION_VIEW);
 //                                    onClick.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                                    onClick.setDataAndType(Uri.fromFile(new File(path)),"application/vnd.android.package-archive");
@@ -256,12 +264,15 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
                                 onClick = new Intent();
 
-                                try{
-                                    context.getPackageManager().getPackageInfo(apk.getApkid(),0);
-                                } catch (PackageManager.NameNotFoundException e){
+                                try {
+                                    context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    Log.e("MYTAG-CENAS", "Package not found");
                                     Intent install = new Intent(Intent.ACTION_VIEW);
                                     install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    install.setDataAndType(Uri.fromFile(new File(apk.getPath())),"application/vnd.android.package-archive");
+                                    if (Build.VERSION.SDK_INT >= 14)
+                                        install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
+                                    install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                                     Log.d("Aptoide", "Installing app: " + apk.getPath());
                                     context.startActivity(install);
                                     return;
@@ -274,31 +285,37 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                                     .setContentText(context.getString(R.string.finished_install, apk.getName()));
 
                             int size = dpToPixels(context, 36);
-                            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(),size,size));
+                            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size));
                             mBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done);
                             mBuilder.setContentIntent(onClickAction);
                             mBuilder.setAutoCancel(true);
                             managerNotification.notify((int) apk.getAppHashId(), mBuilder.build());
+                            if (Build.VERSION.SDK_INT >= 11)
+                                context.getPackageManager().setInstallerPackageName(apk.getApkid(), context.getPackageName());
 
 
-
-                        }else{
+                        } else {
 
                             managerNotification.cancel((int) apk.getAppHashId());
                             Intent install = new Intent(Intent.ACTION_VIEW);
                             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            install.setDataAndType(Uri.fromFile(new File(apk.getPath())),"application/vnd.android.package-archive");
+                            if (Build.VERSION.SDK_INT >= 14)
+                                install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
+                            install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                             Log.d("Aptoide", "Installing app: " + apk.getPath());
                             context.startActivity(install);
                         }
 
 
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                         managerNotification.cancel((int) apk.getAppHashId());
                         Intent install = new Intent(Intent.ACTION_VIEW);
                         install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        install.setDataAndType(Uri.fromFile(new File(apk.getPath())),"application/vnd.android.package-archive");
+                        if (Build.VERSION.SDK_INT >= 14)
+                            install.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getPackageName());
+
+                        install.setDataAndType(Uri.fromFile(new File(apk.getPath())), "application/vnd.android.package-archive");
                         Log.d("Aptoide", "Installing app: " + apk.getPath());
                         context.startActivity(install);
                     }
@@ -307,11 +324,14 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                 }
             }).start();
 
-            os.writeBytes("exit\n");
-            os.flush();
+            if (!Aptoide.IS_SYSTEM) {
+                os.writeBytes("exit\n");
+                os.flush();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

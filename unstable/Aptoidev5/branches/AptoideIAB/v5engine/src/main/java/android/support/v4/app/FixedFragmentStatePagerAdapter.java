@@ -22,7 +22,7 @@ public abstract class FixedFragmentStatePagerAdapter extends FragmentStatePagerA
         Bundle savedFragmentState = f.mSavedFragmentState;
 
         if (savedFragmentState != null) {
-            savedFragmentState.setClassLoader(f.getClass().getClassLoader());
+            savedFragmentState.setClassLoader(((Object)f).getClass().getClassLoader());
         }
 
         return f;

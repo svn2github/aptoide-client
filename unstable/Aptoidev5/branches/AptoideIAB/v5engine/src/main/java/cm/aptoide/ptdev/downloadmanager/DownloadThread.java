@@ -6,11 +6,8 @@ import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
+import java.io.*;
 
-import java.io.RandomAccessFile;
-import java.io.Serializable;
 import java.net.UnknownHostException;
 
 /**
@@ -97,17 +94,18 @@ public class DownloadThread implements Runnable, Serializable {
             int bytesRead;
             BufferedInputStream mStream = mConnection.getStream();
 
-            StatFs stat = new StatFs(download.getDestination());
+            if(parent.getStatusState() instanceof ActiveState){
+                StatFs stat = new StatFs(download.getDestination());
 
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
+                long blockSize = stat.getBlockSize();
+                long availableBlocks = stat.getAvailableBlocks();
 
-            long avail = (blockSize * availableBlocks);
+                long avail = (blockSize * availableBlocks);
 
-            if( mRemainingSize > avail){
-                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+                if( mRemainingSize > avail){
+                    parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+                }
             }
-
 
             while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
                 file.write(bytes, 0, bytesRead);
@@ -117,15 +115,16 @@ public class DownloadThread implements Runnable, Serializable {
 
             if(parent.getStatusState() instanceof ActiveState){
                 mDownloadFile.checkMd5();
+                mDownloadFile.rename();
             }
-
-
-
 
 //            Log.d("DownloadManager", "Download done with " + new Md5Handler().md5Calc(new File(mDestination)));
         }catch (NotFoundException exception){
             exception.printStackTrace();
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NOT_FOUND));
+        }catch (FileNotFoundException exception){
+            exception.printStackTrace();
+            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.SD_ERROR));
         }catch (ContentTypeNotApkException e){
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
         }catch (IPBlackListedException e){

@@ -3,13 +3,15 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
 
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Map.Entry;
 public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapter,
         OnItemClickListener {
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
+
         @Override
         public void onChanged() {
             super.onChanged();
@@ -35,6 +38,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
             super.onInvalidated();
             updateSessionCache();
         };
+
     };
 
     private Context context;
@@ -68,14 +72,15 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
     }
 
     private synchronized void updateSessionCache() {
+        Log.d("Aptoide-SectionAdapter", "Updating session cache");
         int currentPosition = 0;
         sectionPositions.clear();
         itemPositions.clear();
         viewTypeCount = linkedAdapter.getViewTypeCount() + 1;
         String currentSection = null;
         final int count = linkedAdapter.getCount();
-        for (int i = 0; i < count; i++) {
 
+        for (int i = 0; i < count; i++) {
 
             final Cursor item = (Cursor) linkedAdapter.getItem(i);
 
@@ -92,7 +97,9 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
 
     @Override
     public synchronized int getCount() {
-        return sectionPositions.size() + itemPositions.size();
+        int size = sectionPositions.size() + linkedAdapter.getCount();
+            Log.d("Aptoide-getCount", String.valueOf(size));
+        return size;
     }
 
     @Override
@@ -165,10 +172,12 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
                 sectionView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
+                        ((Start)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
+                sectionView.findViewById(R.id.more).setVisibility(View.VISIBLE);
+
                 break;
             case 2:
                 break;

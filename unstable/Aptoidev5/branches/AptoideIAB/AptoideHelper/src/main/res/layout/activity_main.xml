@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.aptoidehelper.app.MainActivity">
+
+    <TextView android:layout_above="@+id/layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="These buttons will delete .aptoide and .aptoide_settings from SDCard." android:layout_centerHorizontal="true" android:gravity="center"/>
+
+
+    <LinearLayout android:id="@+id/layout" android:orientation="vertical" android:layout_centerInParent="true"
+                  android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Aptoide Cache"
+                android:id="@+id/delete_aptoide_cache"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Aptoide OEM Settings"
+                android:id="@+id/delete_aptoide_settings_cache"/>
+
+    </LinearLayout>
+</RelativeLayout>

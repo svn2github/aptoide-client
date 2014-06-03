@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.ptdev.MainActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.UninstallRetainFragment;
 import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -54,7 +52,7 @@ public class InstalledAdapter extends CursorAdapter {
         View v = null;
         switch (type) {
             case 0:
-                v = LayoutInflater.from(context).inflate(R.layout.separator_installed, parent, false);
+                v = LayoutInflater.from(context).inflate(R.layout.separator_textview, parent, false);
                 break;
             case 1:
                 v = LayoutInflater.from(context).inflate(R.layout.row_app_installed, parent, false);
@@ -110,7 +108,7 @@ public class InstalledAdapter extends CursorAdapter {
 //                    @Override
 //                    public void onClick(View v) {
 //                        UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(name, packageName, versionName, iconPath);
-//                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
+//                        ((Start) context).getSupportFragmentManager().beginTransaction().add(uninstallRetainFragment, name + "UnistallTask").commit();
 //                    }
 //                });
 

@@ -4,9 +4,15 @@
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="customRowStyleHomeLayout">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="Settings" parent="AppBaseTheme">
-        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
-        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>
+        <!--<item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>-->
+        <!--<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>-->
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
 
@@ -22,20 +28,21 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:textColor">?attr/customColor</item>
     </style>
 
     <style name="separatorLabel">
-        <item name="android:padding">8dp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_margin">8dp</item>
         <item name="android:maxLines">1</item>
         <item name="android:gravity">left</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:background">?attr/homeLabelbackground</item>
     </style>
 
 </resources>

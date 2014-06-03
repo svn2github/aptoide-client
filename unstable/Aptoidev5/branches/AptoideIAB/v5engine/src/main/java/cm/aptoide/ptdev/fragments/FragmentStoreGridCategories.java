@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -12,10 +13,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.adapters.CategoryGridAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -46,6 +44,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     private MergeAdapter mainAdapter;
     private CategoryGridAdapter apkAdapter;
     private GridView gridView;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     @Override
@@ -94,8 +94,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        sort = ((StoreActivity)getActivity()).getSort();
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
+        sort = ((CategoryCallback)getActivity()).getSort();
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
     }
 
     @Override
@@ -142,7 +142,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(((StoreActivity)getActivity()).isRefreshing()){
+        if(((CategoryCallback)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
     }
@@ -156,7 +156,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
-
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
 
 
     }
@@ -208,7 +208,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
         if(gridView.getAdapter()==null)
             gridView.setAdapter(mainAdapter);
-
+        setListShown(true);
 
     }
 
@@ -220,7 +220,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     @Override
     public void onRefreshStarted(View view) {
 
-        ((StoreActivity)getActivity()).onRefreshStarted();
+        ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
@@ -229,7 +229,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        sort = ((StoreActivity)getActivity()).getSort();
+        sort = ((CategoryCallback)getActivity()).getSort();
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
     }
@@ -259,6 +259,12 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         getActivity().supportInvalidateOptionsMenu();
     }
 
+
+    @Override
+    public void setListShown(boolean b) {
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
@@ -284,13 +290,30 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
                 Cursor c = (Cursor) l.getAdapter().getItem(position);
-                String title = c.getString(c.getColumnIndex("name"));
+                String name;
+                int res = EnumCategories.getCategoryName((int) id);
+                if ( res == 0) {
+                    name = ((Cursor) l.getAdapter().getItem(position)).getString(0);
+                } else{
+                    name = getString(res);
+                }
+                switch ( (int) id) {
+                    case EnumCategories.LATEST_LIKES:
+                        fragment = new LatestLikesFragment();
+                        fragment.setArguments(args);
+                        break;
+                    case EnumCategories.LATEST_COMMENTS:
+                        fragment = new LatestCommentsFragment();
+                        fragment.setArguments(args);
+                        break;
+                }
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(title).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+//                getFragmentManager().beginTransaction().setBreadCrumbTitle(title).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
                 break;
 
             default:
-                Intent i = new Intent(getActivity(), AppViewActivity.class);
+                Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;

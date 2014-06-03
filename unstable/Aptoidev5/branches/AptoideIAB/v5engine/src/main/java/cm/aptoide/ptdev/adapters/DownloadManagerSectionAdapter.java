@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.Download;
@@ -29,14 +30,14 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     private final DataSetObserver dataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
-            super.onChanged();
             updateSessionCache();
+            super.onChanged();
         }
 
         @Override
         public void onInvalidated() {
-            super.onInvalidated();
             updateSessionCache();
+            super.onInvalidated();
         };
     };
 
@@ -71,6 +72,7 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     }
 
     private synchronized void updateSessionCache() {
+        Log.d("Aptoide-SectionAdapter", "Updating session cache");
         int currentPosition = 0;
         sectionPositions.clear();
         itemPositions.clear();
@@ -88,6 +90,8 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
                 currentPosition++;
             }
 
+
+
             itemPositions.put(currentPosition, i);
             currentPosition++;
         }
@@ -95,7 +99,9 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
 
     @Override
     public synchronized int getCount() {
-        return sectionPositions.size() + itemPositions.size();
+        int size = sectionPositions.size() + itemPositions.size();
+        Log.d("Aptoide-getCount", String.valueOf(size));
+        return size;
     }
 
     @Override
@@ -197,17 +203,28 @@ public class DownloadManagerSectionAdapter extends BaseAdapter implements ListAd
     }
 
     protected View createNewSectionView() {
-        return inflater.inflate(R.layout.separator_installed, null);
+        return inflater.inflate(R.layout.separator_textview, null);
     }
 
     @Override
     public View getView(final int position, final View convertView,
             final ViewGroup parent) {
+        Log.d("Aptoide-SectionAdapter", "GetView " + position);
+
+        View v;
         if (isSection(position)) {
-            return getSectionView(convertView, sectionPositions.get(position));
+            v = getSectionView(convertView, sectionPositions.get(position));
+        } else {
+            v = linkedAdapter.getView(getLinkedPosition(position), convertView, parent);
+
+            if(v==null){
+                Log.e("Aptoide-SectionAdapter", "GetView " + position +" " + " is null as adapter" + linkedAdapter.getClass().getCanonicalName());
+                v = new View(Aptoide.getContext());
+            }
         }
-        return linkedAdapter.getView(getLinkedPosition(position), convertView,
-                parent);
+
+
+        return v;
     }
 
     @Override

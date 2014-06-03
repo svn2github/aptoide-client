@@ -25,6 +25,14 @@ import java.util.List;
 public class ApkInfoXML extends Apk {
 
 
+    public ApkInfoXML(ApkInfoXML apkInfoXML) {
+        super(apkInfoXML);
+
+    }
+
+    public ApkInfoXML() {
+        super();
+    }
 
     @Override
     public List<String> getStatements() {
@@ -47,7 +55,9 @@ public class ApkInfoXML extends Apk {
         values.add(Schema.Apk.COLUMN_ICON);
         values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
         values.add(Schema.Apk.COLUMN_SIGNATURE);
-
+        values.add(Schema.Apk.COLUMN_PATH);
+        values.add(Schema.Apk.COLUMN_MD5);
+        values.add(Schema.Apk.COLUMN_PRICE);
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
@@ -94,8 +104,11 @@ public class ApkInfoXML extends Apk {
                             String.valueOf(getMinScreen()),
                             getMinGlEs(),
                             getIconPath(),
-                            String.valueOf(AptoideUtils.isCompatible(this)?1:0),
-                            getSignature()
+                            String.valueOf(AptoideUtils.isCompatible(this) ? 1 : 0),
+                            getSignature(),
+                            getPath(),
+                            getMd5h(),
+                            String.valueOf(getPrice())
                     });
 
             apkid = sqLiteStatements.get(0).executeInsert();
@@ -134,6 +147,11 @@ public class ApkInfoXML extends Apk {
         }
 
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkInfoXML(this));
     }
 
     @Override

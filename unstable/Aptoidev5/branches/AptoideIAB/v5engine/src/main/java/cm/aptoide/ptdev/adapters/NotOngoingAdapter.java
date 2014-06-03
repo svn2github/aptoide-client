@@ -2,11 +2,16 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import cm.aptoide.ptdev.EnumDownloadStates;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.downloadmanager.EnumDownloadFailReason;
+import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.model.Download;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -37,7 +42,11 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         }
         final Download download = getItem(position);
 
-        ((TextView)v.findViewById(R.id.app_name)).setText(download.getName());
+        if(download.getName()!=null){
+            ((TextView) v.findViewById(R.id.app_name)).setText(Html.fromHtml(download.getName()).toString());
+        }else{
+            ((TextView) v.findViewById(R.id.app_name)).setText("");
+        }
 
 
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
@@ -51,6 +60,20 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         ProgressBar pb = (ProgressBar) v.findViewById(R.id.downloading_progress);
         pb.setVisibility(View.GONE);
 
+        EnumState downloadState = download.getDownloadState();
+        switch(downloadState){
+            case ERROR:
+                ((TextView)v.findViewById(R.id.app_error)).setText(download.getParent().getFailReason().toString(getContext()));
+                v.findViewById(R.id.app_error).setVisibility(View.VISIBLE);
+                break;
+            case COMPLETE:
+                v.findViewById(R.id.app_error).setVisibility(View.GONE);
+                break;
+        }
+
+        if(v==null){
+            Log.e("Aptoide-Section", "View is null");
+        }
         return v;
     }
 }

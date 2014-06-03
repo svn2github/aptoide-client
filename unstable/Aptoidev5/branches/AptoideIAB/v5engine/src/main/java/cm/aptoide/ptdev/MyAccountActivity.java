@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -32,7 +34,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
     private AccountManager mAccountManager;
     private UiLifecycleHelper uiLifecycleHelper;
-    private Session.StatusCallback statusCallback= new Session.StatusCallback() {
+    private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
 
@@ -43,7 +45,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onResume() {
         super.onResume();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
 
             uiLifecycleHelper.onResume();
         }
@@ -52,7 +54,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onPause() {
         super.onPause();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onPause();
         }
     }
@@ -60,7 +62,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onDestroy();
         }
     }
@@ -68,7 +70,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= 8) {
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -83,12 +85,12 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
         mPlusClient = new PlusClient.Builder(this, this, this).build();
         mAccountManager = AccountManager.get(this);
 
-        if (mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+        if (mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
             setContentView(R.layout.form_logout);
-            final Account account = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+            final Account account = mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
-            ((TextView)findViewById(R.id.username)).setText(account.name);
+            ((TextView) findViewById(R.id.username)).setText(account.name);
 
             findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,11 +98,11 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
                     Session session = Session.getActiveSession();
 
-                    if(session != null && session.isOpened()){
+                    if (session != null && session.isOpened()) {
                         session.closeAndClearTokenInformation();
                     }
 
-                    if(mPlusClient.isConnected()){
+                    if (mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
@@ -109,10 +111,15 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
 
                     sharedPreferences.edit().remove("queueName").commit();
                     stopService(new Intent(MyAccountActivity.this, RabbitMqService.class));
+                    ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 0);
+                    ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, false);
+                    if(Build.VERSION.SDK_INT>=8){
+                        ContentResolver.removePeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle());
+                    }
                     mAccountManager.removeAccount(account, new AccountManagerCallback<Boolean>() {
                         @Override
                         public void run(AccountManagerFuture<Boolean> future) {
-                            addAccount();
+                            //addAccount();
                             finish();
                         }
                     }, null);
@@ -120,12 +127,13 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                 }
             });
 
-        }else{
+        } else {
             addAccount();
             finish();
         }
 
-        getSupportActionBar().setTitle(getString(R.string.setcredentials));
+        getSupportActionBar().setTitle(getString(R.string.sign_out));
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -133,27 +141,26 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onStart() {
         super.onStart();
-        mPlusClient.connect();
+        if (Build.VERSION.SDK_INT >= 8) mPlusClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPlusClient.disconnect();
+        if (Build.VERSION.SDK_INT >= 8) mPlusClient.disconnect();
     }
 
     private void addAccount() {
-        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
                     Bundle bnd = future.getResult();
                     //showMessage("Account was created");
-                    if(bnd.containsKey(AccountManager.KEY_AUTHTOKEN)){
+                    if (bnd.containsKey(AccountManager.KEY_AUTHTOKEN)) {
                         setContentView(R.layout.form_logout);
-                        Toast.makeText(MyAccountActivity.this, "Account was created", Toast.LENGTH_LONG).show();
                         Log.d("udinic", "AddNewAccount Bundle is " + bnd);
-                    }else{
+                    } else {
                         finish();
                     }
 
@@ -193,4 +200,5 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
 }

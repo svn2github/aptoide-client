@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
+ */
 
 package cm.aptoide.ptdev.preferences;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
 
 import java.util.UUID;
@@ -37,81 +38,93 @@ import java.util.UUID;
  *
  * @author dsilveira
  * @since 3.0
- *
  */
 public class ManagerPreferences {
 
-        private SharedPreferences getPreferences;
-        private SharedPreferences.Editor setPreferences;
+    private SharedPreferences getPreferences;
+    private SharedPreferences.Editor setPreferences;
 
 
-        public ManagerPreferences(Context context) {
-            getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            setPreferences = getPreferences.edit();
-            if(getAptoideClientUUID() == null){
-//    			createLauncherShortcut(context);
-                setAptoideClientUUID( UUID.randomUUID().toString() );
-            }
+    public ManagerPreferences(Context context) {
+        getPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        setPreferences = getPreferences.edit();
 
 
+
+    }
+
+    public void init(){
+        if (getAptoideClientUUID() == null) {
+            //createLauncherShortcut(context);
+            setAptoideClientUUID(UUID.randomUUID().toString());
         }
+    }
 
 
-        public void createLauncherShortcut(Context context){
+    public void createLauncherShortcut(Context context, int drawable) {
 
-            Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        //removeLauncherShortcut(context);
 
+        Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
-            final Intent intent = new Intent();
-            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());
+        Log.d("Aptoide-Shortcut", "Creating Intent");
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());
 
-            Parcelable iconResource;
-            try{
-            	iconResource = Intent.ShortcutIconResource.fromContext(context, context.getResources().getIdentifier("icon_" + Aptoide.getConfiguration().getBrand(),"drawable",context.getPackageName()));
-            }catch(Exception e){
-            	e.printStackTrace();
-            	iconResource = Intent.ShortcutIconResource.fromContext(context, context.getResources().getIdentifier("ic_launcher","drawable",context.getPackageName()));
-            }
-            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
-            intent.putExtra("duplicate", false);
-            intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        Parcelable iconResource;
 
-            context.sendBroadcast(intent);
-        }
+        iconResource = Intent.ShortcutIconResource.fromContext(context, drawable);
 
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+        intent.putExtra("duplicate", false);
+        intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 
+        context.sendBroadcast(intent);
 
+    }
 
+    private void removeLauncherShortcut(Context context) {
+        final Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
+        shortcutIntent.setComponent(new ComponentName(context.getPackageName(), "cm.aptoide.ptdev.Start"));
 
-        public SharedPreferences getPreferences() {
-            return getPreferences;
-        }
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, Aptoide.getConfiguration().getMarketName());
+        shortcutIntent.setComponent(new ComponentName(context.getPackageName(), "cm.aptoide.ptdev.Start"));
+        intent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
 
-        public SharedPreferences.Editor setPreferences() {
-            return setPreferences;
-        }
-
-
-        public void setAptoideClientUUID(String uuid){
-            setPreferences.putString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), uuid);
-            setPreferences.commit();
-        }
-
-        public String getAptoideClientUUID(){
-            return getPreferences.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), null);
-        }
+        context.sendBroadcast(intent, null);
+    }
 
 
+    public SharedPreferences getPreferences() {
+        return getPreferences;
+    }
 
-        public IconDownloadPermissions getIconDownloadPermissions(){
-            IconDownloadPermissions permissions = new IconDownloadPermissions(
-                                                        getPreferences.getBoolean("wifi", true),
-                                                        getPreferences.getBoolean("ethernet", true),
-                                                        getPreferences.getBoolean("4g", true),
-                                                        getPreferences.getBoolean("3g", true) );
-            return permissions;
-        }
+    public SharedPreferences.Editor setPreferences() {
+        return setPreferences;
+    }
+
+
+    public void setAptoideClientUUID(String uuid) {
+        setPreferences.putString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), uuid);
+        setPreferences.commit();
+    }
+
+    public String getAptoideClientUUID() {
+        return getPreferences.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), null);
+    }
+
+
+    public IconDownloadPermissions getIconDownloadPermissions() {
+        IconDownloadPermissions permissions = new IconDownloadPermissions(
+                getPreferences.getBoolean("wifi", true),
+                getPreferences.getBoolean("ethernet", true),
+                getPreferences.getBoolean("4g", true),
+                getPreferences.getBoolean("3g", true));
+        return permissions;
+    }
 
 
 }

@@ -2,10 +2,13 @@ package cm.aptoide.ptdev;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.EditText;
@@ -14,12 +17,9 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.CreateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import static cm.aptoide.ptdev.LoginActivity.ARG_ACCOUNT_TYPE;
 
 /**
  * Created by rmateus on 30-12-2013.
@@ -29,6 +29,9 @@ public class SignUpActivity extends ActionBarActivity{
     private String TAG = "SignUp";
     private String mAccountType;
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+    private boolean showPassword = true;
+    private EditText passBox;
+    private EditText emailBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,42 @@ public class SignUpActivity extends ActionBarActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         getSupportActionBar().setTitle(getString(R.string.register));
+        emailBox = (EditText) findViewById(R.id.email_box);
+        passBox = (EditText) findViewById(R.id.password_box);
+        passBox.setTransformationMethod(new PasswordTransformationMethod());
+
+        final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
+        final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
+        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+        passBox.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (passBox.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP){
+                    return false;
+                }
+                if (event.getX() > passBox.getWidth() - passBox.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
+                    if(showPassword){
+                        showPassword=false;
+                        passBox.setTransformationMethod(null);
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                    }else{
+                        showPassword=true;
+                        passBox.setTransformationMethod(new PasswordTransformationMethod());
+                        passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                    }
+                }
+
+
+
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -66,15 +104,23 @@ public class SignUpActivity extends ActionBarActivity{
 
         // Validation!
 
+        if(emailBox.getText().toString().length()==0 || passBox.getText().toString().length()==0 ){
+            Toast.makeText(getApplicationContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG).show();
+            return;
+        }
+        String pass = passBox.getText().toString();
+        if( pass.length() < 8 || !hasValidChars(pass)){
+            Toast.makeText(getApplicationContext(), R.string.password_validation_text, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
 
-        final EditText emailBox = (EditText) findViewById(R.id.email_box);
-        EditText nameBox = (EditText) findViewById(R.id.name_box);
-        final EditText passBox = (EditText) findViewById(R.id.password_box);
+
+
 
         createUserRequest.setEmail(emailBox.getText().toString());
-        createUserRequest.setName(nameBox.getText().toString());
+//        createUserRequest.setName(nameBox.getText().toString());
         createUserRequest.setPass(passBox.getText().toString());
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
@@ -102,6 +148,10 @@ public class SignUpActivity extends ActionBarActivity{
                 }
             }
         });
+
+
+
+
 
 //        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
 //
@@ -179,6 +229,32 @@ public class SignUpActivity extends ActionBarActivity{
 //        }.execute();
     }
 
+    private boolean hasValidChars(String pass) {
+
+        return has1number1letter(pass);
+
+    }
+
+    private boolean has1number1letter(String pass) {
+        boolean hasLetter = false;
+        boolean hasNumber = false;
+
+        if (pass.contains("!") || pass.contains("@") || pass.contains("#") || pass.contains("$") || pass.contains("#") || pass.contains("*")) {
+
+            hasNumber = true;
+
+        }
+
+        for(char c : pass.toCharArray()){
+            if(Character.isLetter(c) && !hasLetter){
+                hasLetter = true;
+            }else if(Character.isDigit(c)&& !hasNumber){
+                hasNumber = true;
+            }
+        }
+
+        return hasNumber&&hasLetter;
+    }
 
 
     @Override

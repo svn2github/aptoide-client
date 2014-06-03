@@ -27,6 +27,15 @@ public class ApkFeaturedTopXml extends Apk{
 
     private long repoId;
 
+    public ApkFeaturedTopXml() {
+        super();
+    }
+
+    public ApkFeaturedTopXml(ApkFeaturedTopXml apkFeaturedTopXml) {
+        super(apkFeaturedTopXml);
+        this.repoId = apkFeaturedTopXml.repoId;
+    }
+
     @Override
     public List<String> getStatements() {
 
@@ -48,8 +57,9 @@ public class ApkFeaturedTopXml extends Apk{
         values.add(Schema.Apk.COLUMN_ICON);
         values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
         values.add(Schema.Apk.COLUMN_SIGNATURE);
-
-
+        values.add(Schema.Apk.COLUMN_PATH);
+        values.add(Schema.Apk.COLUMN_MD5);
+        values.add(Schema.Apk.COLUMN_PRICE);
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
@@ -98,14 +108,17 @@ public class ApkFeaturedTopXml extends Apk{
                             getMinGlEs(),
                             getIconPath(),
                             String.valueOf(AptoideUtils.isCompatible(this) ? 1 :0),
-                            getSignature()
+                            getSignature(),
+                            getPath(),
+                            getMd5h(),
+                            String.valueOf(getPrice())
 
 
                     });
             apkid = sqLiteStatements.get(0).executeInsert();
 
         } catch (SQLiteException e) {
-            e.printStackTrace();
+            if(Aptoide.DEBUG_MODE) e.printStackTrace();
 
             Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(2), new String[]{ String.valueOf(getRepoId()), getPackageName(), String.valueOf(getVersionCode()) });
@@ -124,6 +137,11 @@ public class ApkFeaturedTopXml extends Apk{
         }
 
 
+    }
+
+    @Override
+    public void addApkToChildren() {
+        getChildren().add(new ApkFeaturedTopXml(this));
     }
 
     public void setRepoId(long repoId) {

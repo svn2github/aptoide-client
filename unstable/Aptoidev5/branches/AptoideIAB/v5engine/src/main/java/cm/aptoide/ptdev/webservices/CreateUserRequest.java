@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.os.Build;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import com.google.api.client.http.GenericUrl;
@@ -22,7 +24,10 @@ import java.util.HashMap;
 public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
+
+    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/createUser";
+
     private String email;
     private String pass;
     private String name = "";
@@ -41,15 +46,26 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
     @Override
     public CreateUserJson loadDataFromNetwork() throws Exception {
+        GenericUrl url;
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1){
+            url = new GenericUrl(baseUrl);
+        }else{
+            url = new GenericUrl(baseUrlNonSsl);
+        }
+
+
+
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         String passhash = AptoideUtils.Algorithms.computeSHA1sum(pass);
         parameters.put("mode", "json");
         parameters.put("email", email);
-        parameters.put("name", name);
         parameters.put("passhash", passhash);
+
+        if(Aptoide.getConfiguration().getExtraId().length()>0){
+            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
+        }
 
         parameters.put("hmac", AptoideUtils.Algorithms.computeHmacSha1(email+passhash+name, "bazaar_hmac"));
 

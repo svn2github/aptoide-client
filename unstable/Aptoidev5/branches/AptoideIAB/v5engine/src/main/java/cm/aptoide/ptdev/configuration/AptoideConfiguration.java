@@ -3,8 +3,8 @@ package cm.aptoide.ptdev.configuration;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MainActivity;
+import cm.aptoide.ptdev.*;
+import cm.aptoide.ptdev.widget.SearchWidgetActivity;
 
 import java.io.File;
 
@@ -37,17 +37,34 @@ public class AptoideConfiguration {
     private static String MARKETNAME = "Aptoide";
     private static String BRAND;
 
+    public boolean isSaveOldRepos(){
+        return true;
+    }
 
+    public String getUpdatesSyncAdapterAuthority(){
+        return Aptoide.getContext().getPackageName() + ".UpdatesProvider";
+    }
 
-    public static String getMarketName() {
+    public String getSearchAuthority(){
+        return Aptoide.getContext().getPackageName() + ".SuggestionProvider";
+    }
+
+    public String getAutoUpdatesSyncAdapterAuthority(){
+        return Aptoide.getContext().getPackageName() + ".AutoUpdateProvider";
+    }
+
+    public String getAccountType() { return AccountGeneral.ACCOUNT_TYPE;
+    };
+
+    public String getMarketName() {
         return MARKETNAME;
     }
 
-    public static void setMARKETNAME(String MARKETNAME) {
+    public void setMARKETNAME(String MARKETNAME) {
         AptoideConfiguration.MARKETNAME = MARKETNAME;
     }
 
-    public static String getBrand() {
+    public String getBrand() {
         return BRAND;
     }
 
@@ -55,8 +72,16 @@ public class AptoideConfiguration {
         AptoideConfiguration.BRAND = brand;
     }
 
-    public static Class getShortcutClass() {
-        return MainActivity.class;
+    public Class getShortcutClass() {
+        return cm.aptoide.ptdev.Start.class;
+    }
+
+    public String getTopAppsUrl(){
+        return "http://apps.store.aptoide.com/top.xml";
+    }
+
+    public String getEditorsUrl(){
+        return "http://apps.store.aptoide.com/editors_more.xml";
     }
 
     public String getAutoUpdateUrl() {
@@ -112,7 +137,11 @@ public class AptoideConfiguration {
     }
 
     public String getPathCacheApks() {
-        return sPref.getString(PREF_PATH_CACHE_APK, Defaults.PATH_CACHE_APKS);
+        String path = sPref.getString(PREF_PATH_CACHE_APK, Defaults.PATH_CACHE_APKS);
+
+        new File(path).mkdirs();
+
+        return path;
     }
 
     public void setPathCacheApks(String path) {
@@ -122,9 +151,9 @@ public class AptoideConfiguration {
     public String getPathCacheIcons() {
 
         String pathIcons = sPref.getString(PREF_PATH_CACHE_ICONS, Defaults.PATH_CACHE_ICONS);;
-        String path = getPathCache() + pathIcons;
-        new File(path).mkdirs();
-        return path;
+
+        new File(pathIcons).mkdirs();
+        return pathIcons;
     }
 
     public void setPathCacheIcons(String path) {
@@ -164,21 +193,33 @@ public class AptoideConfiguration {
         sPref.edit().putString(PREF_DEFAULT_STORE, store).commit();
     }
 
-//    public ActivitiesClasses getClasses(){
-//        return new ActivitiesClasses();
-//
-//    }
-//
-//    public static class ActivitiesClasses {
-//
-//
-//        public Class getAppViewActivity() {
-//            return AppViewActivity;
-//        }
-//
-//        private final Class AppViewActivity = cm.aptoide.ptdev.AppViewActivity.class;
-//
-//    }
+    public String getExtraId(){
+        return "";
+    }
+
+    public int getIcon() {
+        return R.drawable.icon_brand_aptoide;
+    }
+
+    public Class getStartActivityClass(){
+        return cm.aptoide.ptdev.Start.class;
+    }
+
+    public Class getAppViewActivityClass(){
+        return cm.aptoide.ptdev.AppViewActivity.class;
+    }
+
+    public Class getSettingsActivityClass() {
+        return cm.aptoide.ptdev.Settings.class;
+    }
+
+    public Class getSignUpActivityClass() {
+        return cm.aptoide.ptdev.SignUpActivity.class;
+    }
+
+    public Class<?> getSearchActivityClass() {
+        return SearchManager.class;
+    }
 
 
 }

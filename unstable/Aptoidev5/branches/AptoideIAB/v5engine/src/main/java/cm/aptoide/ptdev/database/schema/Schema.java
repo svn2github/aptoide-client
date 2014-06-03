@@ -60,9 +60,14 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_SCREEN = "screen";
 
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_PATH = "path";
+
+        @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_MD5 = "md5";
+
+
         @ColumnDefinition(type = SQLType.TEXT) public final static String COLUMN_GLES = "gles";
 
-        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
+        @ColumnDefinition(type = SQLType.FLOAT, defaultValue = "0") public final static String COLUMN_PRICE = "price";
 
         @ColumnDefinition(type = SQLType.INTEGER) public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
 
@@ -116,6 +121,9 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_ORDER = "order_column";
 
         @ColumnDefinition(type = SQLType.INTEGER)
         public static final String COLUMN_REPO_ID = Repo.COLUMN_ID;
@@ -193,6 +201,9 @@ public class Schema {
         public final static String COLUMN_URL = "url";
 
         @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_APK_PATH = "apk_path";
+
+        @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_ICONS_PATH = "icons_path";
 
         @ColumnDefinition(type = SQLType.TEXT)
@@ -227,6 +238,9 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.BOOLEAN)
         public final static String COLUMN_IS_USER = "is_user";
+
+        @ColumnDefinition(type = SQLType.BOOLEAN)
+        public final static String COLUMN_FAILED = "is_failed";
 
         @ColumnDefinition(type = SQLType.TEXT)
         public final static String COLUMN_NAME = "name";
@@ -278,6 +292,9 @@ public class Schema {
 
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_CONFIRMED = "confirmed";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_REPO = "reponame";
 
 
         public static String getName() {

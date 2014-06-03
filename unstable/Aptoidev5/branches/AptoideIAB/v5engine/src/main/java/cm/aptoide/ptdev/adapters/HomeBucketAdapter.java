@@ -27,6 +27,8 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  */
 public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
     private final String sizeString;
 
     public HomeBucketAdapter(Activity ctx, List<HomeItem> elements) {
@@ -106,9 +108,17 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), AppViewActivity.class);
-                long id = item.getId();
-                i.putExtra("id", id);
+                Intent i = new Intent(getContext(), appViewClass);
+
+                if(item.isRecommended()){
+                    i.putExtra("fromRelated", true);
+                    i.putExtra("md5sum", item.getMd5());
+                    i.putExtra("repoName", item.getRepoName());
+                }else{
+                    long id = item.getId();
+                    i.putExtra("id", id);
+                }
+
                 getContext().startActivity(i);
             }
         });
@@ -154,7 +164,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_install) {
-                ((MainActivity)context).installApp(id);
+                ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                 return true;
             } else if (i == R.id.menu_schedule) {

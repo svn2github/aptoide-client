@@ -13,11 +13,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
+import android.preference.*;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,7 +26,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import java.io.File;
 import java.text.DecimalFormat;
 
-public class Settings extends PreferenceActivity {
+public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 	String aptoide_path = Aptoide.getConfiguration().getPathCache();
 	String icon_path = aptoide_path + "icons/";
 	ManagerPreferences preferences;
@@ -83,9 +81,27 @@ public class Settings extends PreferenceActivity {
 
 
 
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
+
 //		Preference hwspecs = (Preference) findPreference("hwspecs");
 //		hwspecs.setIntent(new Intent(getBaseContext(), HWSpecActivity.class));
 		Preference hwSpecs = findPreference("hwspecs");
+
+        findPreference("theme").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                Toast.makeText(Settings.this, getString(R.string.restart_aptoide), Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
+
+
+
+
 		hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -192,8 +208,14 @@ public class Settings extends PreferenceActivity {
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-	public class DeleteDir extends AsyncTask<File, Void, Void> {
+
+    }
+
+
+    public class DeleteDir extends AsyncTask<File, Void, Void> {
 		ProgressDialog pd;
 		@Override
 		protected void onPreExecute() {
@@ -265,8 +287,14 @@ public class Settings extends PreferenceActivity {
 	}
 
 	private void redrawSizes(Double[] size) {
-		findPreference("clearapk").setSummary(getString(R.string.clearcontent_sum)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0]))+")");
-		findPreference("clearcache").setSummary(getString(R.string.clearcache_sum)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[1]))+")");
+		if(!Build.DEVICE.equals("alien_jolla_bionic")){
+            findPreference("clearapk").setSummary(getString(R.string.clearcontent_sum)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0]))+")");
+            findPreference("clearcache").setSummary(getString(R.string.clearcache_sum)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[1]))+")");
+        }else{
+            findPreference("clearapk").setSummary(getString(R.string.clearcontent_sum_jolla)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[0]))+")");
+            findPreference("clearcache").setSummary(getString(R.string.clearcache_sum_jolla)+" ("+getString(R.string.cache_using_X_mb, new DecimalFormat("#.##").format(size[1]))+")");
+        }
+
 	}
 
 

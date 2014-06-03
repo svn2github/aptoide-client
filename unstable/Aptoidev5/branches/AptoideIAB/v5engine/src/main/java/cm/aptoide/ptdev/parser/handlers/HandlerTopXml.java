@@ -44,13 +44,13 @@ public class HandlerTopXml extends AbstractHandler {
 
     @Override
     protected Apk getApk() {
-        return new ApkLatestXml();
+        return new ApkTopXML();
     }
 
     @Override
     public void startDocument() throws SAXException {
         super.startDocument();
-        getDb().insertCategory("Top Apps", 0, TOPAPPS_ID, 0, getRepoId());
+        getDb().insertCategory("Top Apps", 0, TOPAPPS_ID, Integer.MIN_VALUE, getRepoId());
     }
 
     @Override
@@ -66,7 +66,19 @@ public class HandlerTopXml extends AbstractHandler {
 
             @Override
             public void endElement() throws SAXException {
-                apk.databaseInsert(statements, categoriesIds);
+
+                if (isRunning()) {
+                    if (apk.getChildren() != null) {
+                        for (Apk theApk : apk.getChildren()) {
+                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
+                            theApk.databaseInsert(statements, categoriesIds);
+                        }
+                        apk.setChildren(null);
+                    } else {
+                        apk.databaseInsert(statements, categoriesIds);
+                    }
+                }
+
                 insidePackage = false;
             }
         });
@@ -92,7 +104,6 @@ public class HandlerTopXml extends AbstractHandler {
     public void endDocument() throws SAXException {
         super.endDocument();
         getDb().updateServer(server, getRepoId());
-
         getDb().setTopTimestamp(getRepoId(), timestamp);
     }
 

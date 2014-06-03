@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,9 +18,18 @@ import cm.aptoide.ptdev.R;
  */
 public class ProgressDialogFragment extends DialogFragment {
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(activity instanceof OnCancelListener){
+            onCancelListener = ((OnCancelListener) activity);
+        }
+    }
+
     public interface OnCancelListener{
         void onCancel();
     }
+
 
     OnCancelListener onCancelListener;
 
@@ -38,7 +48,4 @@ public class ProgressDialogFragment extends DialogFragment {
         if(onCancelListener!=null)onCancelListener.onCancel();
     }
 
-    public void setOnCancelListener(OnCancelListener onCancelListener){
-        this.onCancelListener = onCancelListener;
-    }
 }

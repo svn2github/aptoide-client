@@ -31,7 +31,7 @@ public class GetApkInfoJson {
     private ObbObject obb;
 
     @Key
-    private List<cm.aptoide.ptdev.model.Error> errors;
+    List<cm.aptoide.ptdev.model.Error> errors;
 
     public Apk getApk() {
         return apk;
@@ -90,6 +90,9 @@ public class GetApkInfoJson {
             this.sshots = sshots;
         }
 
+        public List<Videos> getVideos() { return videos; }
+        public void setVideos(List<Videos> videos) { this.videos = videos; }
+
         public static class Videos{
             @Key private String thumb;
             @Key private String type;
@@ -131,6 +134,7 @@ public class GetApkInfoJson {
     }
 
     public static class Payment{
+
         @Key private Number amount;
         @Key private String status;
 
@@ -480,6 +484,12 @@ public class GetApkInfoJson {
         private Number id;
         @Key
         private String md5sum;
+
+        @Key
+        private Number minSdk;
+
+        @Key
+        private String minScreen;
         @Key("package")
         private String packageName;
         @Key
@@ -564,6 +574,13 @@ public class GetApkInfoJson {
         }
 
 
+        public Number getMinSdk() {
+            return minSdk;
+        }
+
+        public String getMinScreen() {
+            return minScreen;
+        }
     }
 
 

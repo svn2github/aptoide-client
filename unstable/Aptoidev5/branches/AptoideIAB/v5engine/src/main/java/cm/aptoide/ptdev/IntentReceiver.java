@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,6 +17,8 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -24,11 +27,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -77,6 +77,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         }
     };
+    private AsyncTask<String, Void, Void> asyncTask;
 
 
     @Override
@@ -84,7 +85,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         super.onCreate(savedInstanceState);
 
 //        if(savedInstanceState==null){
-//            Intent i = new Intent(this, MainActivity.class);
+//            Intent i = new Intent(this, Start.class);
 //            i.putExtra("newrepo", "");
 //            startActivity(i);
 //        }
@@ -99,6 +100,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     protected void onDestroy() {
         super.onDestroy();
 
+        if(asyncTask!=null){
+            asyncTask.cancel(true);
+        }
 //        if(isFinishing()){
 //            Log.d("RabbitMqService", "onDestroy");
 //            unbindService(wConnection);
@@ -113,37 +117,37 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         proceed();
     }
 
+    private Class startClass = Aptoide.getConfiguration().getStartActivityClass();
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     private void proceed() {
         if(server!=null){
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
-            i.putExtra("newrepo", server);
-            i.addFlags(12345);
-            startActivity(i);
-            finish();
+            startActivityWithRepo(server);
         }else{
             Toast.makeText(this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
+
+
+
+
     private void continueLoading(){
         TMP_MYAPP_FILE = getCacheDir()+"/myapp.myapp";
         String uri = getIntent().getDataString();
         System.out.println(uri);
         if(uri.startsWith("aptoiderepo")){
+
             ArrayList<String> repo = new ArrayList<String>();
             repo.add(uri.substring(14));
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
-            i.putExtra("newrepo", repo);
-            i.addFlags(12345);
-            startActivity(i);
-            finish();
+            startActivityWithRepo(repo);
 
         }else if(uri.startsWith("aptoidexml")){
+
             String repo = uri.substring(13);
             parseXmlString(repo);
-            Intent i = new Intent(IntentReceiver.this,MainActivity.class);
+            Intent i = new Intent(IntentReceiver.this, startClass);
             i.putExtra("newrepo", repo);
             i.addFlags(12345);
             startActivity(i);
@@ -181,30 +185,71 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             String[] strings = uri.split("-");
             long id = Long.parseLong(strings[strings.length-1].split("\\.myapp")[0]);
 
-            Intent i = new Intent(this, AppViewActivity.class);
-            i.putExtra("fromMyapp", true);
-            i.putExtra("id", id);
-
-            startActivity(i);
+            startFromMyApp(id);
             finish();
 
-        }else if(uri.startsWith("file://")){
-            new MyAppDownloader().execute(getIntent().getDataString());
-        } else if(uri.startsWith("aptoideinstall://")){
+        } else if (uri.startsWith("http://webservices.aptoide.com")) {
 
+            List<NameValuePair> params = URLEncodedUtils.parse(URI.create(uri), "UTF-8");
+
+            String uid = null;
+            for (NameValuePair param : params) {
+
+                if(param.getName().equals("uid")){
+                    uid = param.getValue();
+                }
+
+                System.out.println(param.getName() + " : " + param.getValue());
+            }
+
+            try {
+
+                long id = Long.parseLong(uid);
+                startFromMyApp(id);
+
+            } catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            }
+
+
+            finish();
+
+
+        } else if (uri.startsWith("file://")) {
+
+            downloadMyApp();
+
+        } else if (uri.startsWith("aptoideinstall://")) {
             long id = Long.parseLong(uri.substring("aptoideinstall://".length()));
 
-            Intent i = new Intent(this, AppViewActivity.class);
-            i.putExtra("fromMyapp", true);
-            i.putExtra("id", id);
-
-            startActivity(i);
+            startFromMyApp(id);
             finish();
-        }else{
+        } else {
             finish();
         }
-
     }
+
+    public void startFromMyApp(long id) {
+        Intent i = new Intent(this, appViewClass);
+        i.putExtra("fromMyapp", true);
+        i.putExtra("id", id);
+
+        startActivity(i);
+    }
+
+    public void startActivityWithRepo(ArrayList<String> repo) {
+        Intent i = new Intent(IntentReceiver.this, startClass);
+        i.putExtra("newrepo", repo);
+        i.addFlags(12345);
+        startActivity(i);
+        finish();
+    }
+
+    private void downloadMyApp() {
+        asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
+    }
+
 
     private void downloadMyappFile(String myappUri) throws Exception{
         try{
@@ -292,7 +337,6 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         } catch (IOException e) {
             e.printStackTrace();
-
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (ParserConfigurationException e) {
@@ -300,15 +344,15 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         }
     }
 
-    private void startMarketIntent(String param) {
+    public void startMarketIntent(String param) {
         System.out.println(param);
         long id = db.getApkFromPackage(param);
         Intent i;
         if(id > 0){
-            i = new Intent(this,AppViewActivity.class);
+            i = new Intent(this, appViewClass);
             i.putExtra("id", id);
         }else{
-            i = new Intent(this,SearchManager.class);
+            i = new Intent(this,Aptoide.getConfiguration().getSearchActivityClass());
             i.putExtra("search", param);
         }
 
@@ -345,7 +389,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if(pd.isShowing()&&!isFinishing())pd.dismiss();
-            if(app!=null&&!app.isEmpty()){
+            if (app != null && !app.isEmpty()) {
 
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
                 final AlertDialog installAppDialog = dialogBuilder.create();
@@ -362,7 +406,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //                        Download download = new Download();
 //                        Log.d("Aptoide-IntentReceiver", "getapk id: " + id);
 //                        download.setId(id);
-//                        ((MainActivity)getApplicationContext()).installApp(0);
+//                        ((Start)getApplicationContext()).installApp(0);
 
                         Toast toast = Toast.makeText(IntentReceiver.this, getString(R.string.starting_download), Toast.LENGTH_SHORT);
                         toast.show();

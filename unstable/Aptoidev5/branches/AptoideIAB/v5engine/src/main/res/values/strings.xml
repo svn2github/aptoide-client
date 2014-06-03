@@ -10,6 +10,7 @@
     <string name="WidgetProvider_timestamp_just_now">Just now</string>
     <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
     <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
+    <string name="WidgetProvider_timestamp_this_week">This week</string>
 
     <string name="timestamp_months">%s months</string>
     <string name="timestamp_month">%s month</string>
@@ -59,7 +60,7 @@
     <string name="follow_twitter">Follow us on Twitter</string>
     <string name="loading_facebook">Loading Facebook...</string>
     <string name="loading_twitter">Loading Twitter...</string>
-    <string name="new_to_aptoide">New to Aptoide? Create a free account</string>
+    <string name="new_to_aptoide">New to %s? Create a free account</string>
     <string name="forgot_passwd">Forgot password?</string>
     <string name="check_your_credentials">Check your credentials</string>
     <string name="settings_title_bar">Settings</string>
@@ -70,7 +71,7 @@
     <string name="setting_ethernet">Ethernet</string>
     <string name="setting_filters_title">Filters</string>
     <string name="setting_hwspecstitle">Hardware Specs</string>
-    <string name="setting_hwspecssum">Hardware Info about yout phone</string>
+    <string name="setting_hwspecssum">Hardware Info about your phone</string>
     <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
     <string name="setting_appfiltertitle">Filter Applications</string>
     <string name="setting_dont_show_mature_content">Don\'t show mature content</string>
@@ -89,7 +90,9 @@
     <string name="clearcache_title">Clear cache</string>
     <string name="clear_cache_sucess">Content successfully deleted</string>
     <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
+    <string name="clearcache_sum_jolla">Deletes cache (icons, screenshots)</string>
     <string name="clearcontent_sum">Deletes the data from the SD card.</string>
+    <string name="clearcontent_sum_jolla">Deletes data</string>
     <string name="about_site">Website: </string>
     <string name="about_mail">Contact: </string>
     <string name="about_us">About us</string>
@@ -172,6 +175,7 @@
     <string name="password_tip">Choose a password</string>
     <string name="add_pvt_store">Add private store</string>
     <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
+    <string name="accept_oem_terms">By signing up you are agreeing to the %s Terms of Service</string>
     <string name="register">Sign Up</string>
     <string name="or">Or</string>
     <string name="showpass">Show password</string>
@@ -288,6 +292,24 @@
     <string name="sport_games">Sports Games</string>
     <string name="racing">Racing</string>
 
+    <string name="puzzle">Puzzle</string>
+    <string name="casino">Casino</string>
+    <string name="action">Action</string>
+    <string name="strategy">Strategy</string>
+    <string name="family">Family</string>
+    <string name="simulation">Simulation</string>
+    <string name="adventure">Adventure</string>
+    <string name="word">Word</string>
+    <string name="arcade">Arcade</string>
+    <string name="trivia">Trivia</string>
+    <string name="card">Card</string>
+    <string name="role_playing">Role Playing</string>
+    <string name="educational">Educational</string>
+    <string name="music">Music</string>
+    <string name="widgets">Widgets</string>
+    <string name="board">Board</string>
+    <string name="live_wallpaper">Live Wallpaper</string>
+
     <string name="editors_choice_new">New Editors\' Choice</string>
     <string name="editors_choice">Editors\' Choice</string>
     <string name="top_apps">Top Apps</string>
@@ -319,7 +341,7 @@
     <string name="create_username">Username</string>
     <string name="all_stores">All Stores</string>
     <string name="incompatible_store">Incompatible store</string>
-    <string name="incompatible_store_msg">This store is not yet incompatible with this version of Aptoide. Please wait some days until we rebuild all stores.</string>
+    <string name="incompatible_store_msg">This store is not yet compatible with this version of Aptoide. Please wait some days until we rebuild all stores.</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="website">Website</string>
     <string name="downgrade_requires_uninstall">Downgrade requires Application uninstall</string>
@@ -355,6 +377,44 @@
     <string name="download_error">Error</string>
     <string name="try_again">Try again</string>
     <string name="clear">Clear</string>
-
+    <string name="link_device_webinstall">Link account with Webinstall</string>
+    <string name="update_self_title">Update available</string>
+    <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
+    <string name="retrieving_update">Retrieving update...</string>
+    <string name="no_related">No related apps found.</string>
+    <string name="update_username">Update username</string>
+    <string name="username_success">Username updated with success.</string>
+    <string name="please_update_username">Please update your username to insert comment</string>
+    <string name="no_downloads">No downloads. Start downloading!</string>
+    <string name="new_updates">There are %s new updates available!</string>
+    <string name="one_new_update">There is %s new update available!</string>
+    <string name="has_updates">%s has new updates available!</string>
+    <string name="remaining_time">remaining</string>
+    <string name="sd_error">Couldn\'t write to SDCard.</string>
+    <string name="sd_error_jolla">Couldn\'t download properly</string>
+    <string name="download_retry">Retry</string>
+    <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
+    <string name="remote_in_noSD_title">No memory</string>
+    <string name="remote_in_noSD">You don\'t have an SDcard, or it isn\'t mounted properly\nPlease insert one, or re-insert it and try again.</string>
+    <string name="remote_in_noSD_jolla">You don\'t have enough space. Please free up some space and try again.</string>
+    <string name="remote_in_noSDspace">You don\'t have enough space on your SDcard. Please free up some space and try again.</string>
+    <string name="more_recommended_apps">More Recommended Apps</string>
+    <string name="cannot_uninstall_self">Cannot uninstall installer.</string>
+    <string name="are_you_adult">Are you at least 21 years old?</string>
+    <string name="buy">Buy</string>
+    <string name="payment_methods">Pay with:</string>
+    <string name="buy_now">Confirm Payment</string>
+    <string name="root">Root</string>
+    <string name="allow_root">Allow root installation</string>
+    <string name="other">Other</string>
+    <string name="fields_cannot_empty">Please check your email and password.</string>
+    <string name="password_validation_text">Password must be at least 8 caracters and should have at least one letter
+        and one number or special caracter (!@#$%*)
+    </string>
+    <string name="jolla_not_supported">This feature is not yet supported by Jolla platform.</string>
+    <string name="carrier_billing">Carrier billing</string>
+    <string name="visa">Visa</string>
+    <string name="paypal_future_payments">Paypal future payments</string>
+    <string name="paypal_single_payment">Paypal single payment</string>
 
 </resources>

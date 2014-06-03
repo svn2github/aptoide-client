@@ -6,20 +6,16 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.*;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
+import cm.aptoide.ptdev.adapters.ListSocialAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -29,6 +25,9 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLa
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,13 +46,12 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     private long storeId;
     private MergeAdapter mainAdapter;
     private CategoryAdapter apkAdapter;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -66,47 +64,57 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         setEmptyText(getString(R.string.preparing_to_load));
 
         getListView().setDivider(null);
-
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        getListView().setFastScrollEnabled(true);
         // We need to create a PullToRefreshLayout manually
 
 
         // We can now setup the PullToRefreshLayout
-        if (storeId > 0) {
-            mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+        if (storeId != -1) {
+            mPullToRefreshLayout = new PullToRefreshLayout(Aptoide.getContext());
+            if(getActivity()!=null){
+                ActionBarPullToRefresh.from(getActivity())
+
+                        // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
+                        .insertLayoutInto((ViewGroup) view)
+                        .useViewDelegate(TextView.class, new ViewDelegate() {
+                            @Override
+                            public boolean isReadyForPull(View view, float v, float v2) {
+                                return Boolean.TRUE;
+                            }
+                        })
+                                // We need to mark the ListView and it's Empty View as pullable
+                                // This is because they are not dirent children of the ViewGroup
+                        .theseChildrenArePullable(getListView().getId(), getListView().getEmptyView().getId())
+                                // We can now complete the setup as desired
+                        .listener(FragmentStoreListCategories.this)
+                        .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
+                        .setup(mPullToRefreshLayout);
+            }
+        }
+
+    }
+
+    StoreActivity.SortObject sort ;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        sort = ((CategoryCallback)getActivity()).getSort();
 
 
-            ActionBarPullToRefresh.from(getActivity())
+        if(parentId==0){
+            setListAdapter(mainAdapter);
+        }
 
-                    // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                    .insertLayoutInto(viewGroup)
-
-                            // We need to mark the ListView and it's Empty View as pullable
-                            // This is because they are not dirent children of the ViewGroup
-                    .theseChildrenArePullable(android.R.id.list, android.R.id.empty)
-
-                            // We can now complete the setup as desired
-
-                    .listener(this)
-
-                    .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
-                    .setup(mPullToRefreshLayout);
+        if(storeId == -1){
+            ((StoreActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+            ((StoreActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.all_stores));
         }
 
     }
 
 
-
-
-
-    StoreActivity.SortObject sort;
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        sort = ((StoreActivity)getActivity()).getSort();
-        setRefreshing(((StoreActivity) getActivity()).isRefreshing());
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +126,8 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         apkAdapter = new CategoryAdapter(getActivity());
         mainAdapter.addAdapter(categoryAdapter);
         mainAdapter.addAdapter(apkAdapter);
+
+
         setHasOptionsMenu(true);
 
         if(savedInstanceState==null){
@@ -127,13 +137,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
             parentId = savedInstanceState.getLong("parentid");
             storeId = savedInstanceState.getLong("storeid");
         }
-
-
-        if(parentId==0){
-            setListAdapter(mainAdapter);
-        }
-
-
 
 
         Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
@@ -153,20 +156,23 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if(((StoreActivity)getActivity()).isRefreshing()){
+        if(getActivity() != null && ((CategoryCallback)getActivity()).isRefreshing()){
             inflater.inflate(R.menu.category_refresh, menu);
         }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         Bundle bundle = new Bundle();
 
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
+        setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
 
 
 
@@ -191,14 +197,32 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
                 args.putLong("storeid", storeId);
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
-                Cursor c = (Cursor) l.getAdapter().getItem(position);
-                String title = c.getString(c.getColumnIndex("name"));
+                String name;
+                int res = EnumCategories.getCategoryName((int) id);
+                if ( res == 0) {
+                    name = ((Cursor) l.getAdapter().getItem(position)).getString(0);
+                } else{
+                    name = getString(res);
+                }
 
-                getFragmentManager().beginTransaction().setBreadCrumbTitle(title).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+                switch ( (int) id) {
+                    case EnumCategories.LATEST_LIKES:
+                        fragment = new LatestLikesFragment();
+                        fragment.setArguments(args);
+                        break;
+                    case EnumCategories.LATEST_COMMENTS:
+                        fragment = new LatestCommentsFragment();
+                        fragment.setArguments(args);
+                        break;
+                }
+
+                getFragmentManager().beginTransaction().setBreadCrumbTitle(name).replace(R.id.content_layout, fragment, "fragStore").addToBackStack(String.valueOf(id)).commit();
+
                 break;
 
+
             default:
-                Intent i = new Intent(getActivity(), AppViewActivity.class);
+                Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
                 startActivity(i);
                 break;
@@ -248,10 +272,18 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         }
 
         Log.d("Aptoide-StoreListCategories", "Counter is " + counter);
-
-        if(getListView().getAdapter()==null)
+        if(data==null) return;
+        if(getListView().getAdapter()==null && data.getCount()>0){
             setListAdapter(mainAdapter);
+        }
 
+        if(data.getCount() > 0) setListShown(true);
+
+        if(new Database(Aptoide.getDb()).isStoreError(getArguments().getLong("storeid")) ){
+            setListAdapter(null);
+            setListShown(true);
+            setEmptyText(getString(R.string.connection_error));
+        }
 
     }
 
@@ -263,7 +295,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void onRefreshStarted(View view) {
 
-        ((StoreActivity)getActivity()).onRefreshStarted();
+        ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
@@ -272,7 +304,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
-        sort = ((StoreActivity) getActivity()).getSort();
+        sort = ((CategoryCallback) getActivity()).getSort();
 
         if(sort.isNoCategories()){
             categoryAdapter.swapCursor(null);
@@ -285,7 +317,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
     @Override
     public void onError() {
-
+        setEmptyText(getString(R.string.connection_error));
     }
 
     @Override

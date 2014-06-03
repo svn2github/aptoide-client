@@ -28,6 +28,7 @@ import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.IconDownloadPermissions;
 
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import org.joda.time.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,10 +42,8 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -145,7 +144,25 @@ public class AptoideUtils {
             WindowManager manager = (WindowManager) context.getSystemService(Service.WINDOW_SERVICE);
             manager.getDefaultDisplay().getMetrics(metrics);
 
-            return metrics.densityDpi;
+
+            int dpi = metrics.densityDpi;
+
+
+            if(dpi <= 120){
+                dpi = 120;
+            }else if(dpi <= 160){
+                dpi = 160;
+            }else if(dpi <= 213){
+                dpi = 213;
+            }else if(dpi <= 240){
+                dpi = 240;
+            }else if(dpi <= 320){
+                dpi = 320;
+            }else{
+                dpi = 480;
+            }
+
+            return dpi;
         }
 
         public static String getCpuAbi() {
@@ -162,8 +179,21 @@ public class AptoideUtils {
 
         }
 
-        public static final String TERMINAL_INFO = android.os.Build.MODEL + "("+ android.os.Build.PRODUCT + ")"
-                +";v"+android.os.Build.VERSION.RELEASE+";"+System.getProperty("os.arch");
+        public static final String TERMINAL_INFO = getModel() + "("+ getProduct() + ")"
+                +";v"+getRelease()+";"+System.getProperty("os.arch");
+
+        public static String getProduct(){
+            return android.os.Build.PRODUCT.replace(";", " ");
+        }
+
+        public static String getModel(){
+            return android.os.Build.MODEL.replaceAll(";", " ");
+        }
+
+
+        public static String getRelease(){
+            return android.os.Build.VERSION.RELEASE.replaceAll(";", " ");
+        }
 
     }
 
@@ -181,7 +211,7 @@ public class AptoideUtils {
 
             byte[] bytes = mac.doFinal(value.getBytes("UTF-8"));
 
-            return new String(convToHex(bytes));
+            return convToHex(bytes);
 
         }
 
@@ -276,11 +306,6 @@ public class AptoideUtils {
             connection.setRequestProperty("User-Agent", getUserAgentString(mctx));
             BufferedInputStream bis = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 
-
-
-
-            
-
             return bis;
 
         }
@@ -349,12 +374,10 @@ public class AptoideUtils {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            String partnerid = "";
-//            if (Aptoide.PARTNERID != null) {
-//                partnerid = "PartnerID:" + Aptoide.PARTNERID + ";";
-//            }
 
-            return "aptoidedev-5.0.0;" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + partnerid;
+            String extraId = Aptoide.getConfiguration().getExtraId();
+
+            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + extraId;
         }
 
 
@@ -423,6 +446,7 @@ public class AptoideUtils {
             connection.setConnectTimeout(TIME_OUT);
             connection.setReadTimeout(TIME_OUT);
             long lastModified = connection.getLastModified();
+
             connection.disconnect();
             return lastModified;
 
@@ -435,6 +459,7 @@ public class AptoideUtils {
 
         public static String split(String repo) {
             Log.d("Aptoide-RepoUtils", "Splitting " + repo);
+            repo = formatRepoUri(repo);
             return repo.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
         }
 
@@ -452,6 +477,90 @@ public class AptoideUtils {
                 Log.d("Aptoide-ManageRepo", "repo uri: " + uri_str);
             }
             return uri_str;
+        }
+
+    }
+
+
+
+    public static class DateDiffUtils{
+
+        final static int MONTHS = 0;
+        final static int DAYS = 1;
+        final static int HOURS = 2;
+        final static int MINUTES = 3;
+        final static int SECONDS = 4;
+
+        public static String getDiffDate(Context context, Date date){
+
+            int TIME_TYPE = MONTHS;
+            DateTime startDate = new DateTime(date);
+            DateTime now = DateTime.now();
+
+            int time = Months.monthsBetween(startDate, now).getMonths();
+
+            if(time == 0){
+                TIME_TYPE = DAYS;
+                time = Days.daysBetween(startDate, now).getDays();
+            }
+
+            if(time == 0){
+                TIME_TYPE = HOURS;
+                time = Hours.hoursBetween(startDate, now).getHours();
+            }
+
+            if(time == 0){
+                TIME_TYPE = MINUTES;
+                time = Minutes.minutesBetween(startDate, now).getMinutes();
+            }
+
+            if(time == 0){
+                TIME_TYPE = SECONDS;
+                time = Seconds.secondsBetween(startDate, now).getSeconds();
+            }
+
+
+            if(time == 1){
+                return getSingleUnitStringBasedOnType(context, TIME_TYPE);
+            }else{
+                return getStringBasedOnType(context, TIME_TYPE, time);
+            }
+
+
+        }
+
+        private static String getSingleUnitStringBasedOnType(Context context, int type){
+
+            switch (type){
+                case MONTHS:
+                    return context.getString(R.string.timestamp_month, 1);
+                case DAYS:
+                    return context.getString(R.string.timestamp_day, 1);
+                case HOURS:
+                    return context.getString(R.string.WidgetProvider_timestamp_hour_ago, 1);
+                case MINUTES:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+                case SECONDS:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+            }
+            return null;
+        }
+
+        private static String getStringBasedOnType(Context context, int type, int time){
+
+            switch (type){
+                case MONTHS:
+                    return context.getString(R.string.timestamp_months, time);
+                case DAYS:
+                    return context.getString(R.string.timestamp_days, time);
+                case HOURS:
+                    return context.getString(R.string.WidgetProvider_timestamp_hours_ago, time);
+                case MINUTES:
+                    return context.getString(R.string.WidgetProvider_timestamp_minutes_ago, time);
+                case SECONDS:
+                    return context.getString(R.string.WidgetProvider_timestamp_just_now);
+            }
+            return null;
         }
 
     }
@@ -650,6 +759,35 @@ public class AptoideUtils {
         return String.format("%.1f %c",
                 count / Math.pow(1000, exp),
                 "kMGTPE".charAt(exp-1));
+    }
+
+    public static String screenshotToThumb(Context context, String imageUrl, String orientation) {
+
+        String screen;
+        String sizeString;
+
+        if (imageUrl.contains("_screen")) {
+
+            sizeString = IconSizes.generateSizeStringScreenshots(context, orientation);
+
+            String[] splittedUrl = imageUrl.split("\\.(?=[^\\.]+$)");
+            screen = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+
+        } else {
+
+
+            String[] splitedString = imageUrl.split("/");
+            StringBuilder db = new StringBuilder();
+            for (int i = 0; i != splitedString.length - 1; i++) {
+                db.append(splitedString[i]);
+                db.append("/");
+            }
+            db.append("thumbs/mobile/");
+            db.append(splitedString[splitedString.length - 1]);
+            screen = db.toString();
+        }
+
+        return screen;
     }
 }
 
