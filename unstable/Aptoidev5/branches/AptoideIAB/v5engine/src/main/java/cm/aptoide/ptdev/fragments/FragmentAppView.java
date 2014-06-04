@@ -233,11 +233,24 @@ public abstract class FragmentAppView extends Fragment {
 
             publisher.setText(Html.fromHtml("<b>" + getString(R.string.publisher) + "</b>" + ": " + event.getPublisher()));
             size.setText(Html.fromHtml("<b>" + getString(R.string.size) + "</b>" + ": " + AptoideUtils.formatBytes(event.getSize())));
-            if(event.getStore()!=null){
-                store.setVisibility(View.VISIBLE);
-                store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "));
+
+            if(((AppViewActivity)getActivity()).isMultipleStores()){
+
+                if(event.getStore()!=null){
+                    store.setVisibility(View.VISIBLE);
+                    store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "));
+                }else{
+                    store.setVisibility(View.INVISIBLE);
+                }
+
             }else{
-                store.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.GONE);
+                if(event.getStore()!=null){
+                    store.setVisibility(View.VISIBLE);
+                    store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "+event.getStore()));
+                }else{
+                    store.setVisibility(View.INVISIBLE);
+                }
             }
 
             downloads.setText(Html.fromHtml("<b>" + getString(R.string.downloads) + "</b>" + ": " + withSuffix(String.valueOf(event.getDownloads()))));
@@ -640,7 +653,7 @@ public abstract class FragmentAppView extends Fragment {
             ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
             Log.d("FragmentRelated", "onCreateView");
 
-            if(((AppViewActivity)getActivity()).isMultipleStores()){
+            if(!((AppViewActivity)getActivity()).isMultipleStores()){
                 listRelatedApkRequest.setRepos(((AppViewActivity)getActivity()).getRepoName());
             }
 
@@ -784,6 +797,14 @@ public abstract class FragmentAppView extends Fragment {
         private Button dontLikeBtn;
         private Button likeBtn;
         private View loadingPb;
+        private TextView goodVotes;
+        private TextView licenseVotes;
+        private TextView fakeVotes;
+        private TextView freezeVotes;
+        private TextView virusVotes;
+        private Button flagThisApp;
+        private LinearLayout flags_container;
+        private ProgressBar loading_flags;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
@@ -839,8 +860,23 @@ public abstract class FragmentAppView extends Fragment {
 
             }
 
+            if(event.getFlagVotes()!=null){
+                loading_flags.setVisibility(View.GONE);
+                flags_container.setVisibility(View.VISIBLE);
+                goodVotes.setText(getString(R.string.flag_good) +": "+event.getFlagVotes().getGood());
+                licenseVotes.setText(getString(R.string.flag_license)+ ": "+ event.getFlagVotes().getLicense());
+                fakeVotes.setText(getString(R.string.flag_fake)+": "+event.getFlagVotes().getFake());
+                freezeVotes.setText(getString(R.string.flag_freeze)+": "+event.getFlagVotes().getFreeze());
+                virusVotes.setText(getString(R.string.flag_virus)+": "+event.getFlagVotes().getVirus());
+            }
 
+            flagThisApp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AptoideDialog.flagAppDialog().show(getFragmentManager(), "flagAppDialog");
 
+                }
+            });
 
         }
 
@@ -863,6 +899,14 @@ public abstract class FragmentAppView extends Fragment {
             addComment.setOnClickListener(new AddCommentListener());
             loadingPb = v.findViewById(R.id.loadingPb);
 
+            goodVotes = (TextView) v.findViewById(R.id.flag_good);
+            licenseVotes = (TextView) v.findViewById(R.id.flag_license);
+            fakeVotes = (TextView) v.findViewById(R.id.flag_fake);
+            freezeVotes = (TextView) v.findViewById(R.id.flag_freeze);
+            virusVotes = (TextView) v.findViewById(R.id.flag_virus);
+            flagThisApp = (Button) v.findViewById(R.id.button_flag);
+            flags_container = (LinearLayout) v.findViewById(R.id.flags_container);
+            loading_flags = (ProgressBar) v.findViewById(R.id.loading_flags);
             return v;
 
         }

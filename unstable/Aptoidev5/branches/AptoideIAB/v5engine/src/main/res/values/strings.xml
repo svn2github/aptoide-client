@@ -416,5 +416,11 @@
     <string name="visa">Visa</string>
     <string name="paypal_future_payments">Paypal future payments</string>
     <string name="paypal_single_payment">Paypal single payment</string>
+    <string name="flags">Flags</string>
+    <string name="flag_good">Good</string>
+    <string name="flag_license">Needs License</string>
+    <string name="flag_fake">Fake</string>
+    <string name="flag_freeze">Freeze</string>
+    <string name="flag_virus">Virus</string>
 
 </resources>

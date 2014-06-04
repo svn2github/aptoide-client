@@ -8,6 +8,7 @@ import cm.aptoide.ptdev.InstalledApkEvent;
 import cm.aptoide.ptdev.UnInstalledApkEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
+import cm.aptoide.ptdev.events.OnMultiVersionClick;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
@@ -107,6 +108,12 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     @Subscribe
     public void onUnInstalledEvent(UnInstalledApkEvent event) {
         super.onUnInstalledEvent(event);
+    }
+
+    @Override
+    @Subscribe
+    public void onSpinnerItemClick(OnMultiVersionClick event) {
+        super.onSpinnerItemClick(event);
     }
 
 

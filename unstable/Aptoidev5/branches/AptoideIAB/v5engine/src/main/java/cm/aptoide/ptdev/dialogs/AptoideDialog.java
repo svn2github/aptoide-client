@@ -80,4 +80,6 @@ public class AptoideDialog {
     public static DialogFragment updateUsernameDialog() {
         return new UsernameDialog();
     }
+
+    public static FlagAppDialog flagAppDialog() { return new FlagAppDialog(); }
 }

@@ -686,7 +686,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String token;
 
     public boolean isMultipleStores(){
-        return false;
+        return true;
     }
 
     public String getRepoName() {
@@ -808,6 +808,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             if (json.getMeta().getLikevotes().getUservote() != null) {
                 event.setUservote(json.getMeta().getLikevotes().getUservote());
+            }
+            if (json.getMeta().getFlags() != null){
+                event.setFlagVotes(json.getMeta().getFlags().getVotes());
             }
 
         }
@@ -1537,6 +1540,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static class RatingEvent {
         private ArrayList<Comment> comments;
         private String uservote;
+        private GetApkInfoJson.Meta.Votes flagVotes;
 
         public String getCacheString() {
             return cacheString;
@@ -1566,6 +1570,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public String getUservote() {
             return uservote;
+        }
+
+        public GetApkInfoJson.Meta.Votes getFlagVotes() {
+            return flagVotes;
+        }
+
+        public void setFlagVotes(GetApkInfoJson.Meta.Votes flagVotes) {
+            this.flagVotes = flagVotes;
         }
     }
 

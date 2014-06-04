@@ -160,6 +160,7 @@ public class GetApkInfoJson {
         @Key private String news;
         @Key private String title;
         @Key private String wurl;
+        @Key private Flags flags;
 
         public List<Comment> getComments(){
             return this.comments;
@@ -179,9 +180,7 @@ public class GetApkInfoJson {
         public void setDeveloper(Developer developer){
             this.developer = developer;
         }
-        public Likevotes getLikevotes(){
-            return this.likevotes;
-        }
+        public Likevotes getLikevotes(){ return this.likevotes; }
         public void setLikevotes(Likevotes likevotes){
             this.likevotes = likevotes;
         }
@@ -198,6 +197,9 @@ public class GetApkInfoJson {
             this.title = title;
         }
         public String getWUrl() { return wurl; }
+
+        public Flags getFlags() { return flags; }
+        public void setFlags(Flags flags) { this.flags = flags;}
 
         public static class Likevotes{
             @Key private Number dislikes;
@@ -231,6 +233,56 @@ public class GetApkInfoJson {
             }
             public void setRating(Number rating){
                 this.rating = rating;
+            }
+        }
+
+        public static class Flags{
+            @Key private Votes votes;
+
+            public Votes getVotes(){
+                return this.votes;
+            }
+            public void setVotes(Votes votes){
+                this.votes = votes;
+            }
+        }
+
+        public static class Votes{
+            @Key private Number fake;
+            @Key private Number freeze;
+            @Key private Number good;
+            @Key private Number license;
+            @Key private Number virus;
+
+            public Number getFake(){
+                return this.fake;
+            }
+            public void setFake(Number fake){
+                this.fake = fake;
+            }
+            public Number getFreeze(){
+                return this.freeze;
+            }
+            public void setFreeze(Number freeze){
+                this.freeze = freeze;
+            }
+            public Number getGood(){
+                return this.good;
+            }
+            public void setGood(Number good){
+                this.good = good;
+            }
+            public Number getLicense(){
+                return this.license;
+            }
+            public void setLicense(Number license){
+                this.license = license;
+            }
+            public Number getVirus(){
+                return this.virus;
+            }
+            public void setVirus(Number virus){
+                this.virus = virus;
             }
         }
 
