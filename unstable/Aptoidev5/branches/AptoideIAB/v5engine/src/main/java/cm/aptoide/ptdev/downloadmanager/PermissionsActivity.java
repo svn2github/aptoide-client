@@ -127,6 +127,26 @@ public class PermissionsActivity extends Activity {
         return list;
     }
 
+    public static boolean hasPermission(Context context, String permission) {
+        PackageManager pm = context.getPackageManager();
+
+        List<PermissionGroupInfo> lstGroups = pm.getAllPermissionGroups(0);
+
+        for (PermissionGroupInfo pgi : lstGroups) {
+            try {
+                List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, 0);
+                for (PermissionInfo pi : lstPermissions) {
+                    if(pi.name.equals(permission)) {
+                        return true;
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     private void permissionsDialog(final FinishedApk viewApk, ArrayList<ApkPermission> permissions) {
 
 

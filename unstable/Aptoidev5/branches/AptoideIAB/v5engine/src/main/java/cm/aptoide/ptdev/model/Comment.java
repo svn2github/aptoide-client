@@ -26,6 +26,9 @@ public class Comment {
     @Key
    	private String username;
 
+    @Key
+    private Number answerto;
+
  	public Number getId(){
 		return this.id;
 	}
@@ -71,7 +74,6 @@ public class Comment {
  	public String getUsername(){
 		return this.username;
 	}
-	public void setUsername(String username){
-		this.username = username;
-	}
+	public void setUsername(String username){ this.username = username;	}
+    public Number getAnswerTo() { return answerto; }
 }

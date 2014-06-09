@@ -354,12 +354,47 @@
     <string name="error_MARG_1">Missing repo parameter</string>
     <string name="error_MARG_2">Missing apkid parameter</string>
     <string name="error_MARG_3">Missing apkversion parameter</string>
+    <string name="error_MARG_4">Missing token parameter</string>
+    <string name="error_MARG_6">Missing md5sum parameter</string>
+    <string name="error_MARG_104">Missing flag parameter</string>
+    <string name="error_MARG_105">Missing cmtid parameter</string>
+    <string name="error_MARG_106">Missing vote parameter</string>
+    <string name="error_MARG_200">Missing authentication parameter: oauthToken</string>
+    <string name="error_MARG_201">Missing authentication parameter(s): user and/or passhash</string>
 
     <string name="error_IARG_1">Invalid repo!</string>
     <string name="error_IARG_2">Invalid token!</string>
     <string name="error_IARG_3">Invalid identifier!</string>
+    <string name="error_IARG_4">Invalid md5sum</string>
     <string name="error_IARG_100">Invalid comment limit!</string>
+    <string name="error_IARG_101">Invalid subcomment limit!!</string>
     <string name="error_IARG_102">Invalid types!</string>
+    <string name="error_IARG_107">Invalid flag!</string>
+    <string name="error_IARG_108">Invalid cmtid</string>
+    <string name="error_IARG_109">Invalid vote!</string>
+    <string name="error_IARG_200">Invalid oauthToken!</string>
+    <string name="error_IARG_201">Invalid authMode!</string>
+
+    <string name="error_AUTH_1">Invalid login credentials!</string>
+    <string name="error_AUTH_2">Invalid credentials!</string>
+    <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+    <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
+    <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
+    <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
+    <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
+
+    <string name="error_WOP_1">Your account has a store already. You cannot create another one under the same account.</string>
+    <string name="error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters (A to Z and 0 to 9) or hyphens (-), and it cannot start nor end with a hyphen.</string>
+    <string name="error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
+    <string name="error_WOP_4">The store could not be created. Please try again.</string>
+    <string name="error_WOP_5">You need to give a name for your store.</string>
+
+    <string name="error_REPO_1">The provided store does not exist.</string>
+    <string name="error_REPO_2">The provided store was cancelled.</string>
+    <string name="error_REPO_3">The provided store does not belong to this user.</string>
+
+    <string name="error_APK_1">No apk was found with the given apkid and apkversion.</string>
+    <string name="error_APK_4">No apk was found with the given identifier."</string>
 
     <string name="error_SYS_1">An unknown error occurred, please try again</string>
     <string name="error_SYS_2">No data found, please try again later</string>

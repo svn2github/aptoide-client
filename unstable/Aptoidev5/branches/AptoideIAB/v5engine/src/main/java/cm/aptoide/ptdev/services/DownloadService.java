@@ -25,6 +25,7 @@ import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
@@ -36,10 +37,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Collection;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by rmateus on 11-12-2013.
@@ -364,8 +363,9 @@ public class DownloadService extends Service {
                 if (getApkInfoJson.getStatus().equals("OK")) {
                     startDownloadFromJson(getApkInfoJson, id, download);
                 } else {
+                    final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
                     for (Error error : getApkInfoJson.getErrors()) {
-                        Toast.makeText(getApplicationContext(), error.getMsg(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_LONG).show();
                     }
                 }
             }

@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,12 +71,18 @@ public class FragmentComments extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View v;
 
+            Comment comment = getItem(position);
+
             if(convertView == null){
-                v = LayoutInflater.from(getContext()).inflate(R.layout.row_comment, parent, false);
+                if(comment.getAnswerTo() == null) {
+                    v = LayoutInflater.from(getContext()).inflate(R.layout.row_comment, parent, false);
+                } else {
+                    v = LayoutInflater.from(getContext()).inflate(R.layout.row_subcomment, parent, false);
+                    Log.d("fillComments", "subcomment: " + "aswerTo: " + comment.getAnswerTo() + " text: " + comment.getText());
+                }
             }else{
                 v = convertView;
             }
-            Comment comment = getItem(position);
 
             TextView content = (TextView) v.findViewById(R.id.content);
             TextView date = (TextView) v.findViewById(R.id.date);

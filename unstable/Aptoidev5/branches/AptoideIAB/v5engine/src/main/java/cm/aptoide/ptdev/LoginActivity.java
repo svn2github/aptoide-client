@@ -38,6 +38,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import com.facebook.*;
 import com.facebook.model.GraphUser;
@@ -54,6 +55,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -633,8 +635,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     res.putExtras(data);
                     finishLogin(res);
                 } else {
+                    final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
                     for (cm.aptoide.ptdev.model.Error error : checkUserCredentialsJson.getErrors()) {
-                        Toast.makeText(getBaseContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_SHORT).show();
                     }
                 }
 

@@ -16,13 +16,13 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.ResponseCode;
-import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 
@@ -34,6 +34,9 @@ import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -228,7 +231,15 @@ public class AddStoreDialog extends DialogFragment {
 
                 if ("FAIL".equals(repositoryInfoJson.getStatus())) {
 
-                    message = "Store doesn't exist.";
+                    if(!repositoryInfoJson.getErrors().isEmpty()) {
+                        final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
+
+                        Iterator i = repositoryInfoJson.getErrors().iterator();
+                        message = getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error)i.next()).getCode()));
+                        while (i.hasNext()) {
+                            message += ", " + getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error) i.next()).getCode()));
+                        }
+                    }
                     dismissDialog(message);
 
                 } else {
@@ -275,8 +286,8 @@ public class AddStoreDialog extends DialogFragment {
     void dismissDialog(){
         setRetainInstance(false);
         DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
-            if(pd!=null)
-                pd.dismissAllowingStateLoss();
+        if(pd!=null)
+            pd.dismissAllowingStateLoss();
 
     }
 

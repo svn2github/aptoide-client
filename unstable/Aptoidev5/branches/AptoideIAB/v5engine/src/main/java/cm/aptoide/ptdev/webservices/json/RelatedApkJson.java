@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.webservices.json;
 
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import com.google.api.client.util.Key;
 
 import java.util.List;
@@ -13,6 +15,13 @@ public class RelatedApkJson {
     @Key("itembased") private List<Item> itembased;
     @Key("multiversion") private List<Item> multiversion;
     @Key private String status;
+
+
+    @Key private List<cm.aptoide.ptdev.model.Error> errors;
+
+    public List<Error> getErrors() {
+        return errors;
+    }
 
     public List<Item> getDevelbased(){
         return this.develbased;
