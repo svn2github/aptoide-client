@@ -5,5 +5,4 @@ package cm.aptoide.ptdev.fragments.callbacks;
  */
 public interface ApkFlagCallback {
     void addApkFlagClick(String flag);
-
 }
