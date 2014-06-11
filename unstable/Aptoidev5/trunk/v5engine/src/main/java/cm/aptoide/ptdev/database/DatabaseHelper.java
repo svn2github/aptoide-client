@@ -69,6 +69,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+
+        dropTables(db, 0);
+        dropIndexes(db, 0);
+
+        try {
+            createDb(db);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     private void createDb(SQLiteDatabase db) throws IllegalAccessException {
         Class[] db_tables = Schema.class.getDeclaredClasses();
 
