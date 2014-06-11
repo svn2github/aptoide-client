@@ -868,16 +868,41 @@ public abstract class FragmentAppView extends Fragment {
                 fakeVotes.setText(getString(R.string.flag_fake)+": "+event.getFlagVotes().getFake());
                 freezeVotes.setText(getString(R.string.flag_freeze)+": "+event.getFlagVotes().getFreeze());
                 virusVotes.setText(getString(R.string.flag_virus)+": "+event.getFlagVotes().getVirus());
+                flagThisApp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final AccountManager ac = AccountManager.get(getActivity());
+
+                        if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                            AptoideDialog.flagAppDialog().show(getFragmentManager(), "flagAppDialog");
+                        } else {
+                            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                @Override
+                                public void run(AccountManagerFuture<Bundle> future) {
+
+                                    if (LoginActivity.isLoggedIn(getActivity())) {
+                                        Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                        ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                            @Override
+                                            public void run(AccountManagerFuture<Bundle> future) {
+                                                try {
+                                                    ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                                } catch (OperationCanceledException e) {
+                                                    e.printStackTrace();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (AuthenticatorException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, null);
+                                    }
+                                }
+                            }, null);
+                        }
+                    }
+                });
             }
-
-            flagThisApp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AptoideDialog.flagAppDialog().show(getFragmentManager(), "flagAppDialog");
-
-                }
-            });
-
         }
 
         @Override
@@ -904,6 +929,7 @@ public abstract class FragmentAppView extends Fragment {
             fakeVotes = (TextView) v.findViewById(R.id.flag_fake);
             freezeVotes = (TextView) v.findViewById(R.id.flag_freeze);
             virusVotes = (TextView) v.findViewById(R.id.flag_virus);
+
             flagThisApp = (Button) v.findViewById(R.id.button_flag);
             flags_container = (LinearLayout) v.findViewById(R.id.flags_container);
             loading_flags = (ProgressBar) v.findViewById(R.id.loading_flags);

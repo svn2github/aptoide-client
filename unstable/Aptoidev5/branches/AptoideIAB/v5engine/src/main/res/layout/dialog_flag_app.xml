@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -10,32 +11,38 @@
             android:layout_margin="5dp"
             android:orientation="vertical">
 
-        <RadioButton
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_good"
-                android:id="@+id/radioButton" android:checked="false"/>
-        <RadioButton
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_license"
-                android:id="@+id/radioButton1" android:checked="false"/>
-        <RadioButton
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_fake"
-                android:id="@+id/radioButton2" android:checked="false"/>
-        <RadioButton
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_freeze"
-                android:id="@+id/radioButton3" android:checked="false"/>
-        <RadioButton
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/flag_virus"
-                android:id="@+id/radioButton4" android:layout_gravity="center" android:checked="false"/>
+        <RadioGroup
+                android:id="@+id/flag_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_good"
+                    android:id="@+id/radioButton" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_license"
+                    android:id="@+id/radioButton1" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_fake"
+                    android:id="@+id/radioButton2" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_freeze"
+                    android:id="@+id/radioButton3" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_virus"
+                    android:id="@+id/radioButton4" android:layout_gravity="center" android:checked="false"/>
+
+        </RadioGroup>
 
         <Button android:id="@+id/button_mark_flag"
                 style="?attr/customButtonColor"

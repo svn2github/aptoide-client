@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/2/addApkCommentVote";
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkCommentVote";
 
     private String token;
     private String repo;

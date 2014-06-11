@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/2/addApkFlag";
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkFlag";
 
     private String token;
     private String repo;
