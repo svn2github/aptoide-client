@@ -35,6 +35,7 @@ import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
+import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.services.DownloadService;
@@ -45,6 +46,7 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.*;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.google.api.client.util.Data;
@@ -74,7 +76,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * Time: 15:04
  * To change this template use File | Settings | File Templates.
  */
-public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyAppsAddStoreInterface {
+public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyAppsAddStoreInterface, ApkFlagCallback {
+
 
     private static final int LOGIN_REQUEST_CODE = 123;
     public static final int DOWGRADE_REQUEST_CODE = 456;
@@ -515,6 +518,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
 
+
     public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
         private String icon;
@@ -896,7 +900,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }).start();
         }
 
-        
+
         AccountManager accountManager = AccountManager.get(AppViewActivity.this);
 
 
@@ -1378,6 +1382,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         this.token = token;
     }
 
+    public String getMd5() {
+        return md5;
+    }
 
     public static class AppViewPager extends FixedFragmentStatePagerAdapter {
 
@@ -1403,7 +1410,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 case 1:
                     return new FragmentAppView.FragmentAppViewRating();
                 case 2:
-                   return new FragmentAppView.FragmentAppViewRelated();
+                    return new FragmentAppView.FragmentAppViewRelated();
                 case 3:
                     return new FragmentAppView.FragmentAppViewSpecs();
                 default:
@@ -1885,5 +1892,63 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }*/
 
+    @Override
+    public void addApkFlagClick(String flag) {
+
+        final AccountManager ac = AccountManager.get(this);
+
+        if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+
+            AddApkFlagRequest flagRequest = new AddApkFlagRequest();
+            flagRequest.setToken(token);
+            flagRequest.setRepo(repoName);
+            flagRequest.setMd5sum(md5);
+            flagRequest.setFlag(flag);
+
+            spiceManager.execute(flagRequest, new RequestListener<GenericResponseV2>() {
+                @Override
+                public void onRequestFailure(SpiceException e) {
+                    Log.d("TAG", "AddApkFlagRequest failed: " + e.getMessage());
+                }
+
+                @Override
+                public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
+                    Log.d("TAG", "AddApkFlagRequest status: " + genericResponseV2.getStatus());
+
+                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                    BusProvider.getInstance().post(new AppViewRefresh());
+
+                    if("FAIL".equals(genericResponseV2.getStatus())) {
+                        Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
+                    }
+                }
+            });
+
+        } else {
+            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+
+                    if (LoginActivity.isLoggedIn(AppViewActivity.this)) {
+                        Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                        ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                } catch (OperationCanceledException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (AuthenticatorException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, null);
+                    }
+                }
+            }, null);
+        }
+    }
 
 }
