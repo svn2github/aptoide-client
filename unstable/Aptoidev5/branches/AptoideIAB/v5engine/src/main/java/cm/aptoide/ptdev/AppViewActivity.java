@@ -1170,7 +1170,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             ImageLoader.getInstance().displayImage(icon = iconpath + localIcon, appIcon);
             downloadId = md5.hashCode();
 
-
             GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
             request.setRepoName(repoName);
@@ -1892,8 +1891,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }*/
 
+
+
     @Override
     public void addApkFlagClick(String flag) {
+
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+
 
         final AccountManager ac = AccountManager.get(this);
 
@@ -1909,6 +1913,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 @Override
                 public void onRequestFailure(SpiceException e) {
                     Log.d("TAG", "AddApkFlagRequest failed: " + e.getMessage());
+                    DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    if (fragment != null) fragment.dismiss();
                 }
 
                 @Override
@@ -1921,6 +1927,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     if("FAIL".equals(genericResponseV2.getStatus())) {
                         Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
                     }
+
+                    DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                    if (fragment != null) fragment.dismiss();
                 }
             });
 
@@ -1945,7 +1954,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             }
                         }, null);
                     }
-
             }, null);
         }
     }

@@ -1051,7 +1051,6 @@ public abstract class FragmentAppView extends Fragment {
                         pd.dismissAllowingStateLoss();
                     }
 
-
                     if(genericResponse.getStatus().equals("OK")){
                         Toast.makeText(getActivity(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
                         editText.setText("");

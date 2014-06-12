@@ -26,6 +26,8 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
     private String apkversion;
     private String text;
 
+    private String answearTo;
+
     public void setToken(String token) {
         this.token = token;
     }
@@ -46,6 +48,8 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         this.text = text;
     }
 
+    public void setAnswearTo(String answearTo) { this.answearTo = answearTo; }
+
     public AddCommentRequest(Context context) {
         super(GenericResponse.class);
         this.context = context;
@@ -65,7 +69,9 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         parameters.put("apkversion", apkversion);
         parameters.put("text", text);
         parameters.put("lang", AptoideUtils.getMyCountry(context)+"_"+AptoideUtils.getMyCountryCode(context));
-
+        if(answearTo != null) {
+            parameters.put("answerto", answearTo);
+        }
 
         HttpContent content = new UrlEncodedContent(parameters);
 

@@ -355,12 +355,19 @@
     <string name="error_MARG_2">Missing apkid parameter</string>
     <string name="error_MARG_3">Missing apkversion parameter</string>
     <string name="error_MARG_4">Missing token parameter</string>
+    <string name="error_MARG_5">Missing apk parameter</string>
     <string name="error_MARG_6">Missing md5sum parameter</string>
+    <string name="error_MARG_100">Missing apkname parameter</string>
+    <string name="error_MARG_101">Missing description parameter</string>
+    <string name="error_MARG_102">Missing category parameter</string>
+    <string name="error_MARG_103">Missing rating parameter</string>
     <string name="error_MARG_104">Missing flag parameter</string>
     <string name="error_MARG_105">Missing cmtid parameter</string>
     <string name="error_MARG_106">Missing vote parameter</string>
+    <string name="error_MARG_107">Missing text parameter</string>
     <string name="error_MARG_200">Missing authentication parameter: oauthToken</string>
-    <string name="error_MARG_201">Missing authentication parameter(s): user and/or passhash</string>
+    <string name="error_MARG_201">Missing authentication parameter(s): user and/or pass</string>
+    <string name="error_MARG_202">Missing authentication parameter(s): token or user/pass</string>
 
     <string name="error_IARG_1">Invalid repo!</string>
     <string name="error_IARG_2">Invalid token!</string>
@@ -369,15 +376,25 @@
     <string name="error_IARG_100">Invalid comment limit!</string>
     <string name="error_IARG_101">Invalid subcomment limit!!</string>
     <string name="error_IARG_102">Invalid types!</string>
+    <string name="error_IARG_103">Invalid category!</string>
+    <string name="error_IARG_104">Invalid rating!</string>
+    <string name="error_IARG_105">The website is not a valid URL</string>
+    <string name="error_IARG_106">The e-mail address is not valid</string>
     <string name="error_IARG_107">Invalid flag!</string>
     <string name="error_IARG_108">Invalid cmtid</string>
     <string name="error_IARG_109">Invalid vote!</string>
+    <string name="error_IARG_110">Invalid answerto!</string>
     <string name="error_IARG_200">Invalid oauthToken!</string>
     <string name="error_IARG_201">Invalid authMode!</string>
+    <string name="error_IARG_202">Invalid upload_from!</string>
+    <string name="error_IARG_300">Invalid user_categs!</string>
+    <string name="error_IARG_301">Invalid user category</string>
+    <string name="error_IARG_302">The application provided already exists in the user category</string>
 
     <string name="error_AUTH_1">Invalid login credentials!</string>
     <string name="error_AUTH_2">Invalid credentials!</string>
     <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+    <string name="error_AUTH_4">HMAC Authentication failure</string>
     <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
     <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
     <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
@@ -388,6 +405,8 @@
     <string name="error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
     <string name="error_WOP_4">The store could not be created. Please try again.</string>
     <string name="error_WOP_5">You need to give a name for your store.</string>
+    <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
+    <string name="error_WOP_7">Comment error</string>
 
     <string name="error_REPO_1">The provided store does not exist.</string>
     <string name="error_REPO_2">The provided store was cancelled.</string>
