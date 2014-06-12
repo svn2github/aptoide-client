@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.preference.Preference;
@@ -139,6 +140,8 @@ public class Aptoide extends Application {
 
 
         db = DatabaseHelper.getInstance(getApplicationContext());
+        initDatabase(db);
+
         setConfiguration(getAptoideConfiguration());
 
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
@@ -176,6 +179,11 @@ public class Aptoide extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config);
+    }
+
+    private void initDatabase(SQLiteOpenHelper dbHelper) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if(db!=null) db.rawQuery("pragma synchronous = 0", null);
     }
 
     public void bootImpl(ManagerPreferences managerPreferences) {

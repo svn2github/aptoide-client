@@ -43,10 +43,6 @@ public class Database {
 
     public Database(SQLiteDatabase database) {
         this.database = database;
-        if(!database.inTransaction()){
-            database.rawQuery("pragma synchronous = 0", null);
-        }
-
     }
 
 

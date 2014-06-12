@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
@@ -26,7 +27,8 @@ public class WifiStateListener extends BroadcastReceiver {
         if (wifi.getState() == NetworkInfo.State.CONNECTED) {
             Database db = new Database(Aptoide.getDb());
             Log.d("Receiver", "Wireless Connected");
-            if (sPref.getBoolean("schDwnBox", false) && db.getScheduledDownloads().getCount() != 0 && sPref.getBoolean("schTrigger", true)) {
+            Cursor c = db.getScheduledDownloads();
+            if (sPref.getBoolean("schDwnBox", false) && c.getCount() != 0 && sPref.getBoolean("schTrigger", true)) {
                 Intent intent = new Intent(context, ScheduledDownloadsActivity.class);
                 sPref.edit().putBoolean("schTrigger", false).commit();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |-Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -34,6 +36,7 @@ public class WifiStateListener extends BroadcastReceiver {
                 Log.i("Reeceiver", sPref.getBoolean("intentChanged", true) + "");
                 context.startActivity(intent);
             }
+            if(c!=null)c.close();
         }
 
     }
