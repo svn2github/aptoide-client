@@ -1929,7 +1929,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
 
-                    if (LoginActivity.isLoggedIn(AppViewActivity.this)) {
                         Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
                         ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
                             @Override
@@ -1946,7 +1945,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             }
                         }, null);
                     }
-                }
+
             }, null);
         }
     }

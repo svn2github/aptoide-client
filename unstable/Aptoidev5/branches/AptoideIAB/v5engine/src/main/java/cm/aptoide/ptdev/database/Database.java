@@ -1253,6 +1253,8 @@ public class Database {
 
         items.addAll(itemsTemp);
 
+        c.close();
+
         return items.toArray(new MultiStoreItem[items.size()]);
     };
 }

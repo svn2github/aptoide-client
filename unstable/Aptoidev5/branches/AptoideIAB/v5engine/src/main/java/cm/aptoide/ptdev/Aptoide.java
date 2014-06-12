@@ -16,6 +16,8 @@ import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.CrashlyticsListener;
 import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -133,6 +135,8 @@ public class Aptoide extends Application {
         //acraConfiguration.setResDialogText(R.string.crash_text);
 
         ACRA.setConfig(acraConfiguration);
+        Crashlytics.start(this);
+
 
         db = DatabaseHelper.getInstance(getApplicationContext());
         setConfiguration(getAptoideConfiguration());
