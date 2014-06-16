@@ -81,5 +81,13 @@ public class AptoideDialog {
         return new UsernameDialog();
     }
 
-    public static FlagApkDialog flagAppDialog() { return new FlagApkDialog(); }
+    public static FlagApkDialog flagAppDialog(String uservote) {
+        FlagApkDialog flagApkDialog = new FlagApkDialog();
+        if(uservote != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(FlagApkDialog.USERVOTE_ARGUMENT_KEY, uservote);
+            flagApkDialog.setArguments(bundle);
+        }
+        return flagApkDialog;
+    }
 }

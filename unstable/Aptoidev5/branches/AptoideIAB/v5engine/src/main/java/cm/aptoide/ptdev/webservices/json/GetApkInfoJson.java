@@ -238,6 +238,11 @@ public class GetApkInfoJson {
 
         public static class Flags{
             @Key private Votes votes;
+            @Key private String uservote;
+
+            public String getUservote() {
+                return uservote;
+            }
 
             public Votes getVotes(){
                 return this.votes;

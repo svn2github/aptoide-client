@@ -815,7 +815,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
             if (json.getMeta().getFlags() != null){
                 event.setFlagVotes(json.getMeta().getFlags().getVotes());
+
+                if (json.getMeta().getFlags().getUservote() != null) {
+                    event.setFlagUservote(json.getMeta().getFlags().getUservote());
+                }
             }
+
 
         }
         return event;
@@ -1547,6 +1552,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private ArrayList<Comment> comments;
         private String uservote;
         private GetApkInfoJson.Meta.Votes flagVotes;
+        private String flagUservote;
 
         public String getCacheString() {
             return cacheString;
@@ -1560,6 +1566,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public RatingEvent() {
 
+        }
+
+        public String getFlagUservote() {
+            return flagUservote;
+        }
+
+        public void setFlagUservote(String flagUservote) {
+            this.flagUservote = flagUservote;
         }
 
         public ArrayList<Comment> getComments() {
@@ -1897,7 +1911,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public void addApkFlagClick(String flag) {
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
-
 
         final AccountManager ac = AccountManager.get(this);
 

@@ -874,7 +874,7 @@ public abstract class FragmentAppView extends Fragment {
                         final AccountManager ac = AccountManager.get(getActivity());
 
                         if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                            AptoideDialog.flagAppDialog().show(getFragmentManager(), "flagAppDialog");
+                            AptoideDialog.flagAppDialog(event.getFlagUservote()).show(getFragmentManager(), "flagAppDialog");
                         } else {
                             ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                 @Override
@@ -903,6 +903,7 @@ public abstract class FragmentAppView extends Fragment {
                     }
                 });
             }
+
         }
 
         @Override

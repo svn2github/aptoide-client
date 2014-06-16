@@ -20,27 +20,27 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/flag_good"
-                    android:id="@+id/radioButton" android:checked="false"/>
+                    android:id="@+id/button_good" android:checked="false"/>
             <RadioButton
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/flag_license"
-                    android:id="@+id/radioButton1" android:checked="false"/>
+                    android:id="@+id/button_license" android:checked="false"/>
             <RadioButton
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/flag_fake"
-                    android:id="@+id/radioButton2" android:checked="false"/>
+                    android:id="@+id/button_fake" android:checked="false"/>
             <RadioButton
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/flag_freeze"
-                    android:id="@+id/radioButton3" android:checked="false"/>
+                    android:id="@+id/button_freeze" android:checked="false"/>
             <RadioButton
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/flag_virus"
-                    android:id="@+id/radioButton4" android:layout_gravity="center" android:checked="false"/>
+                    android:id="@+id/button_virus" android:layout_gravity="center" android:checked="false"/>
 
         </RadioGroup>
 

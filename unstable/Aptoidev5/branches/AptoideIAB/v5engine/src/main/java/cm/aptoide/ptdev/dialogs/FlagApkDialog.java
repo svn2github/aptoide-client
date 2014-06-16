@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
@@ -21,6 +22,12 @@ import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
  * To change this template use File | Settings | File Templates.
  */
 public class FlagApkDialog extends DialogFragment {
+
+    public enum Uservote {
+        good, license, fake, freeze, virus, novote;
+    }
+
+    public static final String USERVOTE_ARGUMENT_KEY = "uservote";
 
     ApkFlagCallback flagApkCallback;
 
@@ -46,6 +53,18 @@ public class FlagApkDialog extends DialogFragment {
                 .setTitle(getString(R.string.flag_this_app))
                 .create();
 
+
+
+        if(getArguments().containsKey(FlagApkDialog.USERVOTE_ARGUMENT_KEY)) {
+            Log.d("apkflag", "uservote: " + getArguments().getString(FlagApkDialog.USERVOTE_ARGUMENT_KEY));
+            Uservote uservote = Uservote.valueOf(getArguments().getString(FlagApkDialog.USERVOTE_ARGUMENT_KEY));
+
+            int uservoteButtonId = getButtonIdFromUservote(uservote);
+            if(uservoteButtonId != -1) {
+                ((RadioButton) view.findViewById(uservoteButtonId)).setChecked(true);
+            }
+        }
+
         view.findViewById(R.id.button_mark_flag).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,24 +72,8 @@ public class FlagApkDialog extends DialogFragment {
                     int checkedButtonId = ((RadioGroup) view.findViewById(R.id.flag_group)).getCheckedRadioButtonId();
 
                     if (checkedButtonId != -1) {
-                        Button checkedButton = ((Button) view.findViewById(checkedButtonId));
-
-                        String flag = "";
-                        int i = checkedButton.getId();
-                        if (i == R.id.radioButton) {
-                            flag = "good";
-                        } else if (i == R.id.radioButton1) {
-                            flag = "license";
-                        } else if (i == R.id.radioButton2) {
-                            flag = "fake";
-                        } else if (i == R.id.radioButton3) {
-                            flag = "freeze";
-                        } else if (i == R.id.radioButton4) {
-                            flag = "virus";
-                        }
-
-                        Log.d("apkflag", "flag: " + flag);
-                        flagApkCallback.addApkFlagClick(flag);
+                        Log.d("apkflag", "flag: " + getUservoteFromButtonId(checkedButtonId).name());
+                        flagApkCallback.addApkFlagClick(getUservoteFromButtonId(checkedButtonId).name());
                         dismiss();
                     }
                 }
@@ -79,6 +82,39 @@ public class FlagApkDialog extends DialogFragment {
 
         return builder;
     }
+
+    private static int getButtonIdFromUservote(Uservote uservote) {
+        switch (uservote) {
+            case good:
+                return R.id.button_good;
+            case license:
+                return R.id.button_license;
+            case fake:
+                return R.id.button_fake;
+            case freeze:
+                return R.id.button_freeze;
+            case virus:
+                return R.id.button_virus;
+            default:
+                return -1;
+        }
+    }
+
+    private static Uservote getUservoteFromButtonId(int buttonId) {
+        if (buttonId == R.id.button_good) {
+            return Uservote.good;
+        } else if (buttonId == R.id.button_license) {
+            return Uservote.license;
+        } else if (buttonId == R.id.button_fake) {
+            return Uservote.fake;
+        } else if (buttonId == R.id.button_freeze) {
+            return Uservote.freeze;
+        } else if (buttonId == R.id.button_virus) {
+            return Uservote.virus;
+        }
+        return Uservote.novote;
+    }
+
 
 
 }
