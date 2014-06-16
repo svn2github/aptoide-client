@@ -263,4 +263,5 @@ public class Aptoide extends Application {
     public static void setWebInstallServiceRunning(boolean webInstallServiceRunning) {
         Aptoide.webInstallServiceRunning = webInstallServiceRunning;
     }
+
 }

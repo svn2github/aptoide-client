@@ -1,15 +1,14 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
+import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
+import android.os.*;
 import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.support.v4.content.Loader;
@@ -803,7 +802,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Produce
     public RatingEvent publishRating() {
-
         RatingEvent event = new RatingEvent();
         if (json != null && !json.getStatus().equals("FAIL")) {
 
@@ -1934,11 +1932,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
                     Log.d("TAG", "AddApkFlagRequest status: " + genericResponseV2.getStatus());
 
-                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-                    BusProvider.getInstance().post(new AppViewRefresh());
 
                     if("FAIL".equals(genericResponseV2.getStatus())) {
                         Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
+                    } else {
+                        spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                        BusProvider.getInstance().post(new AppViewRefresh());
                     }
 
                     DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
@@ -1951,22 +1950,25 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
 
-                        Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                        ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-                                try {
-                                    setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                } catch (OperationCanceledException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (AuthenticatorException e) {
-                                    e.printStackTrace();
-                                }
+                    Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                    ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+                            try {
+                                setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                Log.d("apkflag", "appViewRefresh()");
+                                spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                                BusProvider.getInstance().post(new AppViewRefresh());
+                            } catch (OperationCanceledException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (AuthenticatorException e) {
+                                e.printStackTrace();
                             }
-                        }, null);
-                    }
+                        }
+                    }, null);
+                }
             }, null);
         }
     }

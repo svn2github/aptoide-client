@@ -74,7 +74,6 @@ public class AptoideDialog {
         fragment.setArguments(bundle);
 
         return fragment;
-
     }
 
     public static DialogFragment updateUsernameDialog() {
