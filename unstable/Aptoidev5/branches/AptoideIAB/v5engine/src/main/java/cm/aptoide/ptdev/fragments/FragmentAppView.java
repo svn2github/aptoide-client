@@ -887,6 +887,8 @@ public abstract class FragmentAppView extends Fragment {
                                             public void run(AccountManagerFuture<Bundle> future) {
                                                 try {
                                                     ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                                    ((AppViewActivity) getActivity()).getSpice().removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
+                                                    BusProvider.getInstance().post(new AppViewRefresh());
                                                 } catch (OperationCanceledException e) {
                                                     e.printStackTrace();
                                                 } catch (IOException e) {

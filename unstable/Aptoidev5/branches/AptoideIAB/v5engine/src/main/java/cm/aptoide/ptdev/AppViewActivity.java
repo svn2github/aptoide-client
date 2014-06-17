@@ -802,6 +802,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Produce
     public RatingEvent publishRating() {
+        Log.d("apkflag", "publishRating() ratingEvent");
         RatingEvent event = new RatingEvent();
         if (json != null && !json.getStatus().equals("FAIL")) {
 
@@ -1280,7 +1281,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Subscribe
     public void onRefresh(AppViewRefresh event) {
-
+        Log.d("apkflag", "onRefresh() appviewrefresh");
         GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
         request.setRepoName(repoName);
@@ -1381,6 +1382,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public void setToken(String token) {
+        Log.d("apkflag", "setToken()");
         this.token = token;
     }
 
@@ -1910,67 +1912,37 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
 
-        final AccountManager ac = AccountManager.get(this);
+        AddApkFlagRequest flagRequest = new AddApkFlagRequest();
+        flagRequest.setToken(token);
+        flagRequest.setRepo(repoName);
+        flagRequest.setMd5sum(md5);
+        flagRequest.setFlag(flag);
 
-        if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+        spiceManager.execute(flagRequest, new RequestListener<GenericResponseV2>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.d("TAG", "AddApkFlagRequest failed: " + e.getMessage());
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if (fragment != null) fragment.dismiss();
+            }
 
-            AddApkFlagRequest flagRequest = new AddApkFlagRequest();
-            flagRequest.setToken(token);
-            flagRequest.setRepo(repoName);
-            flagRequest.setMd5sum(md5);
-            flagRequest.setFlag(flag);
+            @Override
+            public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
+                Log.d("TAG", "AddApkFlagRequest status: " + genericResponseV2.getStatus());
 
-            spiceManager.execute(flagRequest, new RequestListener<GenericResponseV2>() {
-                @Override
-                public void onRequestFailure(SpiceException e) {
-                    Log.d("TAG", "AddApkFlagRequest failed: " + e.getMessage());
-                    DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if (fragment != null) fragment.dismiss();
+                if("FAIL".equals(genericResponseV2.getStatus())) {
+                    Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
+                } else {
+                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                    BusProvider.getInstance().post(new AppViewRefresh());
                 }
 
-                @Override
-                public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
-                    Log.d("TAG", "AddApkFlagRequest status: " + genericResponseV2.getStatus());
-
-
-                    if("FAIL".equals(genericResponseV2.getStatus())) {
-                        Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
-                    } else {
-                        spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-                        BusProvider.getInstance().post(new AppViewRefresh());
-                    }
-
-                    DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if (fragment != null) fragment.dismiss();
-                }
-            });
-
-        } else {
-            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-
-                    Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                    ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> future) {
-                            try {
-                                setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                Log.d("apkflag", "appViewRefresh()");
-                                spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-                                BusProvider.getInstance().post(new AppViewRefresh());
-                            } catch (OperationCanceledException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (AuthenticatorException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, null);
-                }
-            }, null);
-        }
+                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if (fragment != null) fragment.dismiss();
+            }
+        });
     }
 
 }
+
+
