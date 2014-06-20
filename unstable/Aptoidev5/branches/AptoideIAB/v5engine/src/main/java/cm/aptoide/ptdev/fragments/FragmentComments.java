@@ -7,9 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import cm.aptoide.ptdev.AllCommentsActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
@@ -23,12 +21,80 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by rmateus on 26-12-2013.
  */
 public class FragmentComments extends ListFragment {
+
+
+    public static View createCommentView(Context context, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
+        View view = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
+        fillViewCommentFields(context, view, comment, dateFormater);
+        final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
+
+        Log.d("subcomments", "createCommentView()");
+
+        if(comment.getSubComments().size() != 0) {
+            for (Comment subComment : comment.getSubComments()) {
+                View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, null, false);
+                fillViewCommentFields(context, subview, subComment, dateFormater);
+                subcommentsContainer.addView(subview);
+            }
+
+            view.findViewById(R.id.hasComments).setVisibility(View.VISIBLE);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int visibility;
+                    if (subcommentsContainer.getVisibility() == View.GONE) {
+                        visibility = View.VISIBLE;
+                    } else {
+                        visibility = View.GONE;
+                    }
+                    subcommentsContainer.setVisibility(visibility);
+                }
+            });
+        }
+        return view;
+    }
+
+    public static List<Comment> getCompoundedComments(List<Comment> allComents) {
+        List<Comment> principalComments = new ArrayList<Comment>();
+        Comment lastComment = null;
+        Log.d("subcomments", "getCompoundedComments()");
+
+        for (Comment comment : allComents) {
+
+            if (comment.getAnswerTo() == null) {
+                lastComment = comment;
+                principalComments.add(comment);
+            } else {
+                lastComment.addSubComment(comment);
+                Log.d("subcomments", "subcomment from: " + comment.getUsername() + " in " + lastComment.getUsername());
+            }
+        }
+        Log.d("subcomments", "numberOfComments: " + principalComments.size() + " allcomments: " + allComents.size());
+        return principalComments;
+    }
+
+    private static void fillViewCommentFields(Context context, View view, Comment comment, SimpleDateFormat dateFormater) {
+        TextView content = (TextView) view.findViewById(R.id.content);
+        TextView date = (TextView) view.findViewById(R.id.date);
+        TextView author = (TextView) view.findViewById(R.id.author);
+
+        content.setText(comment.getText());
+
+        try {
+            date.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        author.setText(comment.getUsername());
+    }
 
 
     private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
@@ -39,7 +105,8 @@ public class FragmentComments extends ListFragment {
 
         @Override
         public void onRequestSuccess(AllCommentsJson allCommentsJson) {
-            setListAdapter(new AllCommentsAdapter(getActivity(), allCommentsJson.getListing()));
+            Log.d("subcomments", "total comments: " + allCommentsJson.getListing().size());
+            setListAdapter(new AllCommentsAdapter(getActivity(), R.layout.all_comments, getCompoundedComments(allCommentsJson.getListing())));
         }
     };
     private SpiceManager spiceManager;
@@ -59,52 +126,41 @@ public class FragmentComments extends ListFragment {
         spiceManager.execute(request, requestListener);
     }
 
-    public class AllCommentsAdapter extends ArrayAdapter<Comment>{
+    public class AllCommentsAdapter extends ArrayAdapter<Comment> {
         final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        public AllCommentsAdapter(Context context,  List<Comment> objects) {
-            super(context, 0, objects);
+
+        public AllCommentsAdapter(Context context, int resourceId, List<Comment> objects) {
+            super(context, resourceId, objects);
+            notifyDataSetChanged();
         }
 
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v;
+        public int getPosition(Comment item) {
+            return super.getPosition(item);
+        }
 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
             Comment comment = getItem(position);
 
-            if(convertView == null){
-                if(comment.getAnswerTo() == null) {
-                    v = LayoutInflater.from(getContext()).inflate(R.layout.row_comment, parent, false);
-                } else {
-                    v = LayoutInflater.from(getContext()).inflate(R.layout.row_subcomment, parent, false);
-                    Log.d("fillComments", "subcomment: " + "aswerTo: " + comment.getAnswerTo() + " text: " + comment.getText());
-                }
-            }else{
-                v = convertView;
+            if (view == null) {
+               view = createCommentView(getContext(), parent, comment, dateFormater);
+            } else {
+                fillViewCommentFields(getContext(), view, comment, dateFormater);
             }
 
-            TextView content = (TextView) v.findViewById(R.id.content);
-            TextView date = (TextView) v.findViewById(R.id.date);
-            TextView author = (TextView) v.findViewById(R.id.author);
-
-            content.setText(comment.getText());
-
-            try {
-                date.setText(AptoideUtils.DateTimeUtils.getInstance(getActivity()).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            author.setText(comment.getUsername());
-
-            return v;
+            return view;
         }
     }
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            getListView().setDivider(null);
+            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getListView().setDivider(null);
-        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-    }
+
 }

@@ -3,6 +3,9 @@ package cm.aptoide.ptdev.model;
 
 import com.google.api.client.util.Key;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 
 public class Comment {
 
@@ -28,6 +31,8 @@ public class Comment {
 
     @Key
     private Number answerto;
+
+    private ArrayList<Comment> subComments = new ArrayList<Comment>();
 
  	public Number getId(){
 		return this.id;
@@ -76,4 +81,12 @@ public class Comment {
 	}
 	public void setUsername(String username){ this.username = username;	}
     public Number getAnswerTo() { return answerto; }
+
+    public ArrayList<Comment> getSubComments() {
+        return subComments;
+    }
+
+    public void addSubComment(Comment subComment) {
+        subComments.add(subComment);
+    }
 }

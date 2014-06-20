@@ -7,13 +7,29 @@ which accompanies this distribution, and is available at
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/hasComments"
+            android:layout_alignTop="@+id/author"
+            android:layout_width="wrap_content"
+            android:text="Click to open more comments"
+            android:textColor="@android:color/black"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
+            android:layout_gravity="right"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="2dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="right"
+            android:visibility="gone"/>
 
     <View android:id="@+id/view"
           android:layout_width="fill_parent"
@@ -56,6 +72,13 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:paddingBottom="12dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"/>
+
+    <LinearLayout android:id="@+id/subcomments"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_below="@+id/content"
+                  android:visibility="gone"/>
 
 
 </RelativeLayout>

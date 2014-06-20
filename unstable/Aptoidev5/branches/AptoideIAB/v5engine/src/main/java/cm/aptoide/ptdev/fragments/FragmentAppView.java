@@ -2,15 +2,11 @@ package cm.aptoide.ptdev.fragments;
 
 import android.accounts.*;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -40,8 +36,6 @@ import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.nostra13.universalimageloader.cache.disc.BaseDiscCache;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -50,7 +44,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -59,7 +52,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -982,38 +974,38 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
 
 
-                    final AccountManager manager = AccountManager.get(getActivity());
+                final AccountManager manager = AccountManager.get(getActivity());
 
-                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                        addLike();
-                    } else {
-                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
+                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    addLike();
+                } else {
+                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
 
-                                if (LoginActivity.isLoggedIn(getActivity())) {
-                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                        @Override
-                                        public void run(AccountManagerFuture<Bundle> future) {
-                                            try {
-                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                            } catch (OperationCanceledException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
-
+                            if (LoginActivity.isLoggedIn(getActivity())) {
+                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                    @Override
+                                    public void run(AccountManagerFuture<Bundle> future) {
+                                        try {
+                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                        } catch (OperationCanceledException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (AuthenticatorException e) {
+                                            e.printStackTrace();
                                         }
-                                    }, null);
-                                }
 
-
+                                    }
+                                }, null);
                             }
-                        }, null);
-                    }
+
+
+                        }
+                    }, null);
+                }
 
             }
 
@@ -1076,38 +1068,38 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
 
 
-                    final AccountManager manager = AccountManager.get(getActivity());
+                final AccountManager manager = AccountManager.get(getActivity());
 
-                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                        addComment();
-                    } else {
+                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    addComment();
+                } else {
 
-                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-                                if (LoginActivity.isLoggedIn(getActivity())) {
+                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+                            if (LoginActivity.isLoggedIn(getActivity())) {
 
-                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                        @Override
-                                        public void run(AccountManagerFuture<Bundle> future) {
-                                            try {
+                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                    @Override
+                                    public void run(AccountManagerFuture<Bundle> future) {
+                                        try {
 
-                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                                //addComment();
-                                            } catch (OperationCanceledException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
+                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                            //addComment();
+                                        } catch (OperationCanceledException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (AuthenticatorException e) {
+                                            e.printStackTrace();
                                         }
-                                    }, null);
-                                }
+                                    }
+                                }, null);
                             }
-                        }, null);
-                    }
+                        }
+                    }, null);
+                }
 
             }
 
@@ -1139,41 +1131,19 @@ public abstract class FragmentAppView extends Fragment {
         public static class FillComments{
 
             public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
-                final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
-                final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
-
                 final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                View v;
+                View view;
                 commentsContainer.removeAllViews();
+                Log.d("subcomments", "total comments: " + comments.size());
+                for(Comment comment : FragmentComments.getCompoundedComments(comments)) {
 
-                for(Comment comment : comments){
+                    view = FragmentComments.createCommentView(context, commentsContainer, comment, dateFormater);
 
-                    v = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
-
-                    TextView content = (TextView) v.findViewById(R.id.content);
-                    TextView dateTv = (TextView) v.findViewById(R.id.date);
-                    TextView author = (TextView) v.findViewById(R.id.author);
-
-                    content.setText(comment.getText());
-
-                    try {
-                        dateTv.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    author.setText(comment.getUsername());
-                    commentsContainer.addView(v);
+                    commentsContainer.addView(view);
                 }
-
             }
         }
-
-
     }
-
-
-
 
 }
 
