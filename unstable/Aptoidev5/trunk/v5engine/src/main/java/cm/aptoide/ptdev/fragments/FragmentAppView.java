@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
@@ -125,7 +126,7 @@ public abstract class FragmentAppView extends Fragment {
         private View row2;
         private View row3;
         private Spinner spinner;
-
+        private boolean initializedView = false;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
@@ -205,28 +206,37 @@ public abstract class FragmentAppView extends Fragment {
 
             MultiStoreItem[] items = event.getOtherVersions();
 
-            if(items != null) {
-                StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
+            if (items != null) {
+                final StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
 
                 spinner.setAdapter(adapter);
-                spinner.post(new Runnable() {
+
+                initializedView = false;
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void run() {
-                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                spinner.setOnItemSelectedListener(null);
-                                MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
-                                BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode()));
-                            }
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if(!initializedView){
+                            initializedView = true;
+                        }else{
+                            MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
+                            BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode()));
+                        }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                    }
 
-                            }
-                        });
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
                 });
+
+
+
+
+
+
+
 
             }
 
@@ -430,7 +440,6 @@ public abstract class FragmentAppView extends Fragment {
             row3 = v.findViewById(R.id.row3);
 
             spinner = (Spinner) v.findViewById(R.id.store_spinner);
-
             return v;
         }
 

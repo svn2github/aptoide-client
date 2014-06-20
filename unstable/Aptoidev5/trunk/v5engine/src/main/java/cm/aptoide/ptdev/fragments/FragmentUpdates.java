@@ -72,7 +72,6 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        setListShown(false);
 
         return new SimpleCursorLoader(getActivity()) {
             @Override
@@ -86,60 +85,56 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     @Override
     public synchronized void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
 
-        if(getActivity()!=null){
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-                    SharedPreferences.Editor editor = sPref.edit();
-                    int updates = 0;
-                    if (data.getCount() > 0) {
+        if (getActivity() != null) {
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+            SharedPreferences.Editor editor = sPref.edit();
+            int updates = 0;
+            if (data.getCount() > 0) {
 
-                        //updatesAdapter.swapCursor(data);
-                        items.clear();
-                        for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
-                            UpdateItem item = new UpdateItem();
+                //updatesAdapter.swapCursor(data);
+                items.clear();
+                for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
+                    UpdateItem item = new UpdateItem();
 
-                            if(data.getInt(data.getColumnIndex("is_update"))==1){
-                                item.setUpdate(true);
-                                item.setVersionName(data.getString(data.getColumnIndex("version_name")));
-                                updates++;
-                            }else{
-                                item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
-                            }
-
-                            String iconPath = data.getString(data.getColumnIndex("iconpath"));
-                            String icon = data.getString(data.getColumnIndex("icon"));
-                            item.setName(data.getString(data.getColumnIndex("name")));
-                            item.setIcon(iconPath+icon);
-                            item.setId(data.getLong(data.getColumnIndex("_id")));
-                            items.add(item);
-
-                        }
-
-                        editor.putInt("updates", updates);
+                    if (data.getInt(data.getColumnIndex("is_update")) == 1) {
+                        item.setUpdate(true);
+                        item.setVersionName(data.getString(data.getColumnIndex("version_name")));
+                        updates++;
                     } else {
-
-                        items.clear();
-                        //updatesAdapter.swapCursor(null);
-
-                        editor.remove("updates");
+                        item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
                     }
 
-                    editor.commit();
+                    String iconPath = data.getString(data.getColumnIndex("iconpath"));
+                    String icon = data.getString(data.getColumnIndex("icon"));
+                    item.setName(data.getString(data.getColumnIndex("name")));
+                    item.setIcon(iconPath + icon);
+                    item.setId(data.getLong(data.getColumnIndex("_id")));
+                    items.add(item);
 
-                    adapter.notifyDataSetChanged();
-
-                    if(getActivity()!=null){
-                        ((Start) getActivity()).updateBadge(sPref);
-                    }
-                    if (getListView().getAdapter() == null)
-                        setListAdapter(adapter);
-
-                    setListShown(true);
                 }
-            });
+
+                editor.putInt("updates", updates);
+            } else {
+
+                items.clear();
+                //updatesAdapter.swapCursor(null);
+
+                editor.remove("updates");
+            }
+
+            editor.commit();
+
+            adapter.notifyDataSetChanged();
+
+            if (getActivity() != null) {
+                ((Start) getActivity()).updateBadge(sPref);
+            }
+            if (getListView().getAdapter() == null)
+                setListAdapter(adapter);
+
+            setListShown(true);
         }
+
 
     }
 
@@ -223,7 +218,6 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-        getListView().setDivider(null);
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
