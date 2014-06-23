@@ -33,31 +33,9 @@ public class FragmentComments extends ListFragment {
     public static View createCommentView(Context context, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
         fillViewCommentFields(context, view, comment, dateFormater);
-        final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
-
-        Log.d("subcomments", "createCommentView()");
 
         if(comment.getSubComments().size() != 0) {
-            for (Comment subComment : comment.getSubComments()) {
-                View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, null, false);
-                fillViewCommentFields(context, subview, subComment, dateFormater);
-                subcommentsContainer.addView(subview);
-            }
-
-            view.findViewById(R.id.hasComments).setVisibility(View.VISIBLE);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int visibility;
-                    if (subcommentsContainer.getVisibility() == View.GONE) {
-                        visibility = View.VISIBLE;
-                    } else {
-                        visibility = View.GONE;
-                    }
-                    subcommentsContainer.setVisibility(visibility);
-                }
-            });
+            fillViewSubcommentsFields(context, view, comment.getSubComments(), dateFormater);
         }
         return view;
     }
@@ -96,8 +74,33 @@ public class FragmentComments extends ListFragment {
         author.setText(comment.getUsername());
     }
 
+    private static void fillViewSubcommentsFields(Context context, View view, List<Comment> subcomments, SimpleDateFormat dateFormater) {
+        final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
 
-    private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
+        for (Comment subComment : subcomments) {
+            View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, null, false);
+            fillViewCommentFields(context, subview, subComment, dateFormater);
+            subcommentsContainer.addView(subview);
+        }
+
+        view.findViewById(R.id.hasComments).setVisibility(View.VISIBLE);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int visibility;
+                if (subcommentsContainer.getVisibility() == View.GONE) {
+                    visibility = View.VISIBLE;
+                } else {
+                    visibility = View.GONE;
+                }
+                subcommentsContainer.setVisibility(visibility);
+            }
+        });
+    }
+
+
+        private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
             Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
@@ -149,7 +152,16 @@ public class FragmentComments extends ListFragment {
             if (view == null) {
                view = createCommentView(getContext(), parent, comment, dateFormater);
             } else {
+                LinearLayout ll = ((LinearLayout)view.findViewById(R.id.subcomments));
+                if(ll.getChildCount() > 0) {
+                    ll.removeAllViews();
+                    view.findViewById(R.id.hasComments).setVisibility(View.GONE);
+                }
+
                 fillViewCommentFields(getContext(), view, comment, dateFormater);
+                if(comment.getSubComments().size() != 0) {
+                    fillViewSubcommentsFields(getContext(), view, comment.getSubComments(), dateFormater);
+                }
             }
 
             return view;
