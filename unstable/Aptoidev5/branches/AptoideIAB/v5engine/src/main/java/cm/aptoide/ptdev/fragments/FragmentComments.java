@@ -31,11 +31,14 @@ public class FragmentComments extends ListFragment {
 
 
     public static View createCommentView(Context context, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
-        fillViewCommentFields(context, view, comment, dateFormater);
-
-        if(comment.getSubComments().size() != 0) {
-            fillViewSubcommentsFields(context, view, comment.getSubComments(), dateFormater);
+        View view;
+        if(comment.hasSubComments()) {
+            view = LayoutInflater.from(context).inflate(R.layout.row_expandable_comment, commentsContainer, false);
+            fillViewCommentFields(context, view, comment, dateFormater);
+            fillViewSubcommentsFields(context, view, comment, dateFormater);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
+            fillViewCommentFields(context, view, comment, dateFormater);
         }
         return view;
     }
@@ -43,7 +46,6 @@ public class FragmentComments extends ListFragment {
     public static List<Comment> getCompoundedComments(List<Comment> allComents) {
         List<Comment> principalComments = new ArrayList<Comment>();
         Comment lastComment = null;
-        Log.d("subcomments", "getCompoundedComments()");
 
         for (Comment comment : allComents) {
 
@@ -52,10 +54,8 @@ public class FragmentComments extends ListFragment {
                 principalComments.add(comment);
             } else {
                 lastComment.addSubComment(comment);
-                Log.d("subcomments", "subcomment from: " + comment.getUsername() + " in " + lastComment.getUsername());
             }
         }
-        Log.d("subcomments", "numberOfComments: " + principalComments.size() + " allcomments: " + allComents.size());
         return principalComments;
     }
 
@@ -74,10 +74,10 @@ public class FragmentComments extends ListFragment {
         author.setText(comment.getUsername());
     }
 
-    private static void fillViewSubcommentsFields(Context context, View view, List<Comment> subcomments, SimpleDateFormat dateFormater) {
+    private static void fillViewSubcommentsFields(Context context, View view, final Comment comment, SimpleDateFormat dateFormater) {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
 
-        for (Comment subComment : subcomments) {
+        for (Comment subComment : comment.getSubComments()) {
             View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, null, false);
             fillViewCommentFields(context, subview, subComment, dateFormater);
             subcommentsContainer.addView(subview);
@@ -91,8 +91,10 @@ public class FragmentComments extends ListFragment {
                 int visibility;
                 if (subcommentsContainer.getVisibility() == View.GONE) {
                     visibility = View.VISIBLE;
+                    comment.setShowingSubcomments(true);
                 } else {
                     visibility = View.GONE;
+                    comment.setShowingSubcomments(false);
                 }
                 subcommentsContainer.setVisibility(visibility);
             }
@@ -100,7 +102,7 @@ public class FragmentComments extends ListFragment {
     }
 
 
-        private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
+    private RequestListener<AllCommentsJson> requestListener = new RequestListener<AllCommentsJson>() {
         @Override
         public void onRequestFailure(SpiceException e) {
             Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
@@ -135,8 +137,8 @@ public class FragmentComments extends ListFragment {
 
         public AllCommentsAdapter(Context context, int resourceId, List<Comment> objects) {
             super(context, resourceId, objects);
-            notifyDataSetChanged();
         }
+
 
 
         @Override
@@ -150,29 +152,43 @@ public class FragmentComments extends ListFragment {
             Comment comment = getItem(position);
 
             if (view == null) {
-               view = createCommentView(getContext(), parent, comment, dateFormater);
+                view = createCommentView(getContext(), parent, comment, dateFormater);
             } else {
-                LinearLayout ll = ((LinearLayout)view.findViewById(R.id.subcomments));
-                if(ll.getChildCount() > 0) {
-                    ll.removeAllViews();
-                    view.findViewById(R.id.hasComments).setVisibility(View.GONE);
-                }
-
                 fillViewCommentFields(getContext(), view, comment, dateFormater);
-                if(comment.getSubComments().size() != 0) {
-                    fillViewSubcommentsFields(getContext(), view, comment.getSubComments(), dateFormater);
+                if(comment.hasSubComments()) {
+                    LinearLayout ll = ((LinearLayout)view.findViewById(R.id.subcomments));
+                    ll.removeAllViews();
+                    fillViewSubcommentsFields(getContext(), view, comment, dateFormater);
+                    if(comment.isShowingSubcomments()) {
+                        ll.setVisibility(View.VISIBLE);
+                    } else {
+                        ll.setVisibility(View.GONE);
+                    }
                 }
             }
 
             return view;
         }
-    }
+
         @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            getListView().setDivider(null);
-            getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        public int getItemViewType(int position) {
+            if(getItem(position).hasSubComments()) {
+                return 1;
+            }
+            return 0;
         }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setDivider(null);
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+    }
 
 
 }

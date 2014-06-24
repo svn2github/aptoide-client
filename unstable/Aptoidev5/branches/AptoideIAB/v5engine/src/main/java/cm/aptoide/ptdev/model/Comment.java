@@ -34,6 +34,8 @@ public class Comment {
 
     private ArrayList<Comment> subComments = new ArrayList<Comment>();
 
+    private boolean isShowingSubcomments;
+
  	public Number getId(){
 		return this.id;
 	}
@@ -88,5 +90,17 @@ public class Comment {
 
     public void addSubComment(Comment subComment) {
         subComments.add(subComment);
+    }
+
+    public boolean hasSubComments() {
+        return subComments.size() != 0;
+    }
+
+    public boolean isShowingSubcomments() {
+        return isShowingSubcomments;
+    }
+
+    public void setShowingSubcomments(boolean isShowingSubcomments) {
+        this.isShowingSubcomments = isShowingSubcomments;
     }
 }
