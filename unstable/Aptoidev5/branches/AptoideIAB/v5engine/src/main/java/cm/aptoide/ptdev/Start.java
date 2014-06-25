@@ -223,9 +223,9 @@ public class Start extends ActionBarActivity implements
             } else {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
-        } else if (i == R.id.menu_settings) {
-            Intent settingsIntent = new Intent(this, settingsClass);
-            startActivityForResult(settingsIntent, 0);
+//        } else if (i == R.id.menu_settings) {
+//            Intent settingsIntent = new Intent(this, settingsClass);
+//            startActivityForResult(settingsIntent, 0);
         } else if (i == R.id.menu_about) {
             showAbout();
         } else if (i == R.id.menu_search) {
@@ -604,7 +604,8 @@ public class Start extends ActionBarActivity implements
                 R.attr.icMyAccountDrawable /* index 0 */,
                 R.attr.icRollbackDrawable /* index 1 */,
                 R.attr.icScheduledDrawable /* index 2 */,
-                R.attr.icExcludedUpdatesDrawable /* index 3 */
+                R.attr.icExcludedUpdatesDrawable /* index 3 */,
+                R.attr.icSettingsDrawable /* index 4 */
         };
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
@@ -615,15 +616,14 @@ public class Start extends ActionBarActivity implements
         int rollbackRes = typedArray.getResourceId(1, R.drawable.ic_action_time_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.rollback), rollbackRes, 1));
 
-        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icScheduledDrawable});
-        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
-        scheduleTypedArray.recycle();
+        int scheduleRes = typedArray.getResourceId(2, R.drawable.ic_schedule);
         mItems.add(new MenuListAdapter.Item(getString(R.string.setting_schdwntitle), scheduleRes, 2));
 
-        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icExcludedUpdatesDrawable});
-        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
-        excludedUpdatesTypedArray.recycle();
+        int excludedUpdatesRes = typedArray.getResourceId(3, R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
+
+        int settingsRes = typedArray.getResourceId(4, R.drawable.ic_action_settings_dark);
+        mItems.add(new MenuListAdapter.Item(getString(R.string.settings), settingsRes, 7));
 
         mItems.add(new MenuListAdapter.Category(getString(R.string.social_networks)));
         mItems.add(new MenuListAdapter.Item(getString(R.string.facebook), R.drawable.ic_action_facebook, 4));
@@ -631,6 +631,7 @@ public class Start extends ActionBarActivity implements
 
         mItems.add(new MenuListAdapter.Category(getString(R.string.other)));
         mItems.add(new MenuListAdapter.Item(getString(R.string.backup_apps), R.drawable.ic_action_backup_custom, 6));
+
 
         typedArray.recycle();
         return mItems;
@@ -997,6 +998,10 @@ public class Start extends ActionBarActivity implements
                     break;
                 case 6:
                     initBackupApps();
+                    break;
+                case 7:
+                    Intent settingsIntent = new Intent(mContext, settingsClass);
+                    startActivityForResult(settingsIntent, 0);
                     break;
                 default:
                     break;

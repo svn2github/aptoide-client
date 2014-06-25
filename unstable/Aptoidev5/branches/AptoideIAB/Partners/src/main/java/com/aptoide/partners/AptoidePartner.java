@@ -8,6 +8,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import com.crashlytics.android.Crashlytics;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +26,7 @@ public class AptoidePartner extends Aptoide {
     @Override
     public void bootImpl(ManagerPreferences managerPreferences) {
 //        super.bootImpl(managerPreferences);
+        Crashlytics.start(this);
 
         SharedPreferences sPref = getContext().getSharedPreferences("aptoide_settings", 0);
         if (sPref.contains("PARTNERID") && sPref.getString("PARTNERID", null) != null) {

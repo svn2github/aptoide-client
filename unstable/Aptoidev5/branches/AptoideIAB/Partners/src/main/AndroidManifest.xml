@@ -342,6 +342,7 @@
         <activity android:name="com.aptoide.openiab.Buy" />
         <activity android:name="com.aptoide.openiab.CreditCard" />
         <activity android:name="com.paypal.android.MEP.PayPalActivity" android:configChanges="keyboardHidden|orientation" />
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="df90b10add729d8e34d67f6d4f0bb3dddce5b7eb"/>
 
     </application>
 </manifest>

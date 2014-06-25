@@ -17,7 +17,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
@@ -228,53 +227,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             pd.show(getSupportFragmentManager(), "installAllScheduled");
         }
 
-        Button installButton = (Button) findViewById(R.id.sch_down);
-        installButton.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-                if (isAllChecked()) {
-                    for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-                        if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
-                            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-
-
-                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
-                            requestFromMd5.setRepoName(schDown.getRepoName());
-                            requestFromMd5.setMd5Sum(schDown.getMd5());
-
-                            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
-                                @Override
-                                public void onRequestFailure(SpiceException spiceException) {
-
-                                }
-
-                                @Override
-                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-
-                                    if(getApkInfoJson!=null){
-                                        Download download = new Download();
-                                        download.setId(schDown.getId());
-                                        download.setName(schDown.getName());
-                                        download.setVersion(schDown.getVername());
-                                        download.setIcon(schDown.getIconPath());
-                                        download.setPackageName(schDown.getApkid());
-                                        downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
-                                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                                    }
-
-
-
-                                }
-                            });
-                        }
-                    }
-
-                } else {
-                    Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
 
 
         lv.setAdapter(adapter);
@@ -336,14 +289,61 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if (i == R.id.menu_install) {
+
+            if (isAllChecked()) {
+                for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                    if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
+                        final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+
+
+                        GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
+                        requestFromMd5.setRepoName(schDown.getRepoName());
+                        requestFromMd5.setMd5Sum(schDown.getMd5());
+
+                        spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {
+
+                            }
+
+                            @Override
+                            public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+
+                                if (getApkInfoJson != null) {
+                                    Download download = new Download();
+                                    download.setId(schDown.getId());
+                                    download.setName(schDown.getName());
+                                    download.setVersion(schDown.getVername());
+                                    download.setIcon(schDown.getIconPath());
+                                    download.setPackageName(schDown.getApkid());
+                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                                }
+
+
+                            }
+                        });
+                    }
+                }
+
+            } else {
+                Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         } else if (i == R.id.menu_remove) {
             Log.d("ScheduledDownloadsActivity-onOptionsItemSelected", "remove");
-            for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-                if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
-                    db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
+            if (isAllChecked()) {
+                for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                    if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
+                        db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
+                    }
                 }
+                getSupportLoaderManager().restartLoader(0, null, this);
+            }else{
+                Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                toast.show();
             }
-            getSupportLoaderManager().restartLoader(0, null, this);
         } else if (i == R.id.menu_invert) {
             for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                 scheduledDownloadsHashMap.get(scheduledDownload).checked =
@@ -355,7 +355,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAllChecked() {
+    public boolean isAllChecked() {
         if (scheduledDownloadsHashMap.isEmpty()) {
             return false;
         }

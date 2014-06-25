@@ -239,6 +239,7 @@ public class GetApkInfoJson {
         public static class Flags{
             @Key private Votes votes;
             @Key private String uservote;
+            @Key private Veredict veredict;
 
             public String getUservote() {
                 return uservote;
@@ -249,6 +250,27 @@ public class GetApkInfoJson {
             }
             public void setVotes(Votes votes){
                 this.votes = votes;
+            }
+
+            public Veredict getVeredict(){ return this.veredict;}
+            public void setVeredict(Veredict veredict){ this.veredict = veredict;}
+        }
+
+        public static class Veredict{
+            @Key private String flag;
+            @Key private String review;
+
+            public String getFlag(){
+                return this.flag;
+            }
+            public void setFlag(String flag){
+                this.flag = flag;
+            }
+            public String getReview(){
+                return this.review;
+            }
+            public void setReview(String review){
+                this.review = review;
             }
         }
 

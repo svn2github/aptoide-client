@@ -263,7 +263,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 cm.aptoide.ptdev.R.attr.icMyAccountDrawable /* index 0 */,
                 cm.aptoide.ptdev.R.attr.icRollbackDrawable /* index 1 */,
                 cm.aptoide.ptdev.R.attr.icScheduledDrawable /* index 2 */,
-                cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable /* index 3 */
+                cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable /* index 3 */,
+                cm.aptoide.ptdev.R.attr.icSettingsDrawable /* index 4 */
         };
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
@@ -274,16 +275,14 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         int rollbackRes = typedArray.getResourceId(1, cm.aptoide.ptdev.R.drawable.ic_action_time_dark);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.rollback), rollbackRes, 1));
 
-        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icScheduledDrawable});
-        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
-        scheduleTypedArray.recycle();
+        int scheduleRes = typedArray.getResourceId(2, cm.aptoide.ptdev.R.drawable.ic_schedule);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.setting_schdwntitle), scheduleRes, 2));
 
-        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable});
-        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
-        excludedUpdatesTypedArray.recycle();
+        int excludedUpdatesRes = typedArray.getResourceId(3, cm.aptoide.ptdev.R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.excluded_updates), excludedUpdatesRes, 3));
 
+        int settingsRes = typedArray.getResourceId(4, cm.aptoide.ptdev.R.drawable.ic_action_settings_dark);
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.settings), settingsRes, 7));
 
         typedArray.recycle();
 

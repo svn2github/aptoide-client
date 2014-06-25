@@ -125,7 +125,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
             getListView().setPadding(0, AptoideUtils.getPixels(getActivity(), 10), 0, 0);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
+            getListView().setItemsCanFocus(true);
 
             final AccountManager accountManager = AccountManager.get(getActivity());
 

@@ -94,6 +94,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
             getListView().setPadding(0, AptoideUtils.getPixels(getActivity(), 10), 0, 0);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+            getListView().setItemsCanFocus(true);
         }
 
 

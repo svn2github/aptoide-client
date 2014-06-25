@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class FragmentComments extends ListFragment {
         TextView author = (TextView) view.findViewById(R.id.author);
 
         content.setText(comment.getText());
-
+//        comment.getSubComments().size();
         try {
             date.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
         } catch (ParseException e) {
@@ -78,14 +79,14 @@ public class FragmentComments extends ListFragment {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
 
         for (Comment subComment : comment.getSubComments()) {
-            View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, null, false);
+            View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, subcommentsContainer, false);
             fillViewCommentFields(context, subview, subComment, dateFormater);
             subcommentsContainer.addView(subview);
         }
 
-        view.findViewById(R.id.hasComments).setVisibility(View.VISIBLE);
-
-        view.setOnClickListener(new View.OnClickListener() {
+        ((TextView) view.findViewById(R.id.hasComments)).setVisibility(View.VISIBLE);
+        ((TextView) view.findViewById(R.id.hasComments)).setText(""+comment.getSubComments().size());
+        ((TextView) view.findViewById(R.id.hasComments)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int visibility;

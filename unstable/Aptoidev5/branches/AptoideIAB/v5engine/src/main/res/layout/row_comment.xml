@@ -9,17 +9,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:orientation="vertical">
-
-
-    <View android:id="@+id/view"
-          android:layout_width="fill_parent"
-          android:layout_height="2dp"
-          android:background="@android:color/darker_gray"/>
+                style="?attr/backgroundCard">
 
 
     <TextView
@@ -57,5 +47,51 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:paddingBottom="12dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/reply"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            android:layout_margin="2dp"
+            android:textColor="@android:color/darker_gray"
+            android:drawableLeft="?attr/icReplyComment"
+            android:id="@+id/reply_comment"
+            android:layout_below="@+id/content"
+            android:layout_alignParentRight="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/vote_down"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            android:layout_margin="2dp"
+            android:textColor="@android:color/darker_gray"
+            android:drawableLeft="?attr/icVoteDownComment"
+            android:layout_toLeftOf="@+id/reply_comment"
+            android:id="@+id/vote_down"
+            android:layout_below="@+id/content"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/vote_up"
+            android:text="@string/vote_up"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            android:layout_margin="2dp"
+            android:textColor="@android:color/darker_gray"
+            android:drawableLeft="?attr/icVoteUpComment"
+            android:layout_below="@+id/content"
+            android:layout_toLeftOf="@+id/vote_down"/>
+
 
 </RelativeLayout>

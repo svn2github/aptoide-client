@@ -818,6 +818,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 if (json.getMeta().getFlags().getUservote() != null) {
                     event.setFlagUservote(json.getMeta().getFlags().getUservote());
                 }
+                if (json.getMeta().getFlags().getVeredict() != null){
+                    event.setFlagVeredict(json.getMeta().getFlags().getVeredict());
+                }
             }
 
 
@@ -1553,6 +1556,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String uservote;
         private GetApkInfoJson.Meta.Votes flagVotes;
         private String flagUservote;
+        private GetApkInfoJson.Meta.Veredict flagVeredict;
 
         public String getCacheString() {
             return cacheString;
@@ -1599,6 +1603,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void setFlagVotes(GetApkInfoJson.Meta.Votes flagVotes) {
             this.flagVotes = flagVotes;
         }
+
+        public GetApkInfoJson.Meta.Veredict getVeredict(){ return flagVeredict; }
+        public void setFlagVeredict(GetApkInfoJson.Meta.Veredict flagVeredict){ this.flagVeredict = flagVeredict; }
     }
 
     public static class SpecsEvent {

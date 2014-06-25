@@ -50,6 +50,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
         <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -59,6 +60,10 @@
         <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
         <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
 
+        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+        <item name="icReplyComment">@drawable/ic_action_reply_light</item>
+        <item name="icVoteUpComment">@drawable/ic_action_comment_vote_up_light</item>
+        <item name="icVoteDownComment">@drawable/ic_action_comment_vote_down_light</item>
     </style>
 
 
@@ -108,6 +113,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
         <item name="icScheduledDrawable">@drawable/ic_action_go_to_today_dark</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo_dark</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new_dark</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept_dark</item>
@@ -117,6 +123,10 @@
         <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
         <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
 
+        <item name="icViewMoreComments">@drawable/ic_action_comments_dark</item>
+        <item name="icReplyComment">@drawable/ic_action_reply_dark</item>
+        <item name="icVoteUpComment">@drawable/ic_action_comment_vote_up_dark</item>
+        <item name="icVoteDownComment">@drawable/ic_action_comment_vote_down_dark</item>
     </style>
 
 

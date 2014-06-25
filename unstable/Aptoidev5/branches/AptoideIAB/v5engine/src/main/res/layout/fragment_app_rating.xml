@@ -93,7 +93,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                       android:orientation="vertical"
                       android:layout_margin="5dp"
                       android:visibility="gone"
-                      style="?attr/backgroundCard"
                       android:id="@+id/layout_comments">
 
             <LinearLayout

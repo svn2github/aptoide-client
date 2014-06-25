@@ -136,7 +136,6 @@ public class Aptoide extends Application {
         //acraConfiguration.setResDialogText(R.string.crash_text);
 
         ACRA.setConfig(acraConfiguration);
-        Crashlytics.start(this);
 
 
         db = DatabaseHelper.getInstance(getApplicationContext());
@@ -187,6 +186,7 @@ public class Aptoide extends Application {
     }
 
     public void bootImpl(ManagerPreferences managerPreferences) {
+        Crashlytics.start(this);
         if (managerPreferences.getAptoideClientUUID() == null) {
             managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
         }
