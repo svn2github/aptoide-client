@@ -8,6 +8,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import com.crashlytics.android.Crashlytics;
 import org.xml.sax.SAXException;
 
@@ -52,6 +53,8 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.AVATAR = sPref.getString("STOREAVATAR", "https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
             AptoideConfigurationPartners.VIEW = sPref.getString("STOREVIEW", "list");
 
+            AptoideConfigurationPartners.RESTRICTIONLIST = new SecurePreferences(getContext()).getString("RESTRICTIONLIST", null);
+            Log.d("Restriction List", "Retrived from secure preferences: " + AptoideConfigurationPartners.RESTRICTIONLIST);
             if (AptoideConfigurationPartners.PARTNERID != null && !new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem").exists()) {
                 AptoideConfigurationPartners.createSdCardBinary();
             }

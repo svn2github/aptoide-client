@@ -3,12 +3,9 @@ package com.aptoide.partners;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.SearchManager;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.configuration.Defaults;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -17,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.lang.String;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -41,6 +39,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String ADUNITID = "";
     public static boolean CREATESHORTCUT = true;
 
+
     public static String THEME = null;
     public static String AVATAR = null;
     public static String DESCRIPTION = null;
@@ -49,12 +48,15 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
 
+    public static String RESTRICTIONLIST;
+
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
     static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
-        STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
+        STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
+    }
 
     private static Context context = AptoidePartner.getContext();
 
@@ -165,6 +167,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public String getStoreItems(){ return ITEMS; }
     public static void setItems(String items){ AptoideConfigurationPartners.ITEMS = items; }
 
+    public static String getRestrictionlist() {
+        return RESTRICTIONLIST;
+    }
+
+
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
@@ -273,6 +280,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             VIEW = sb.toString();
                             Log.d("Store view", VIEW+ "");
                             break;
+                        case RESTRICTIONLIST:
+                            RESTRICTIONLIST = sb.toString();
+                            Log.d("Restriction list", RESTRICTIONLIST + "");
+                            break;
 
                     }
                 }catch (Exception e){
@@ -351,6 +362,17 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("STOREITEMS", ITEMS)
                 .putString("STOREVIEW", VIEW)
                 .commit();
+
+        if(RESTRICTIONLIST != null && !RESTRICTIONLIST.equals("")) {
+            SecurePreferences ssPref = new SecurePreferences(context);
+            if (ssPref.contains("RESTRICTIONLIST")) {
+                RESTRICTIONLIST += ", " + ssPref.getString("RESTRICTIONLIST", "");
+            }
+            Log.d("Restriction List", "Restriction List saved: " + RESTRICTIONLIST);
+            ssPref.edit().putString("RESTRICTIONLIST", RESTRICTIONLIST).commit();
+        }
+
+
     }
 
     @Override

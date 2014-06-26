@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="device_not_allowed">This app is not allowed to run on this device model!</string>
+</resources>
