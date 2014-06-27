@@ -78,4 +78,6 @@ public class HomeItem {
     public String getCategoryString() {
         return categoryString;
     }
+
+
 }

@@ -1,7 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 /**
- * Created by rmateus on 17-03-2014.
+ * Created by rmateus on 25-06-2014.
  */
 /*
  * Copyright (C) 2012 Mobs and Geeks
@@ -19,19 +19,24 @@ package cm.aptoide.ptdev.adapters;
  * limitations under the License.
  */
 
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import cm.aptoide.ptdev.TestActivity;
+import cm.aptoide.ptdev.fragments.HomeItem;
+
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 
-        import android.content.Context;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.*;
-        import cm.aptoide.ptdev.R;
-        import cm.aptoide.ptdev.Start;
 
-        import java.util.LinkedHashMap;
-        import java.util.Map.Entry;
-        import java.util.Set;
+
 
 /**
  * A very simple adapter that adds sections to adapters written for {@link ListView}s.
@@ -41,8 +46,7 @@ package cm.aptoide.ptdev.adapters;
  * @author Ragunath Jawahar R <rj@mobsandgeeks.com>
  * @version 0.2
  */
-public class SimpleSectionAdapter<T> extends BaseAdapter {
-
+public class SectionAdapter<T> extends BaseAdapter {
     // Debug
     static final boolean DEBUG = false;
     static final String TAG = SimpleSectionAdapter.class.getSimpleName();
@@ -55,41 +59,36 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     private BaseAdapter mListAdapter;
     private int mSectionHeaderLayoutId;
     private int mSectionTitleTextViewId;
-    private Sectionizer<UpdateItem> mSectionizer = new Sectionizer<UpdateItem>() {
-        @Override
-        public String getSectionTitleForItem(UpdateItem instance) {
-            return instance.isUpdate()?"1":"0";
-        }
-    };
+    private Sectionizer<HomeItem> mSectionizer;
     private LinkedHashMap<String, Integer> mSections;
-
-    public interface Sectionizer<T> {
-
-        /**
-         * Returns the title for the given instance from the data source.
-         *
-         * @param instance The instance obtained from the data source of the decorated list adapter.
-         * @return section title for the given instance.
-         */
-        String getSectionTitleForItem(T instance);
-    }
 
     /**
      * Constructs a {@linkplain SimpleSectionAdapter}.
      *
      * @param context The context for this adapter.
      * @param listAdapter A {@link ListAdapter} that has to be sectioned.
+     * @param sectionHeaderLayoutId Layout Id of the layout that is to be used for the header.
+     * @param sectionTitleTextViewId Id of a TextView present in the section header layout.
+     * @param sectionizer Sectionizer for sectioning the {@link ListView}.
      */
-    public SimpleSectionAdapter(Context context, BaseAdapter listAdapter) {
+    public SectionAdapter(Context context, BaseAdapter listAdapter,
+                                int sectionHeaderLayoutId, int sectionTitleTextViewId,
+                                Sectionizer<HomeItem> sectionizer) {
         if(context == null) {
             throw new IllegalArgumentException("context cannot be null.");
         } else if(listAdapter == null) {
             throw new IllegalArgumentException("listAdapter cannot be null.");
+        } else if(sectionizer == null) {
+            throw new IllegalArgumentException("sectionizer cannot be null.");
+        } else if(!isTextView(context, sectionHeaderLayoutId, sectionTitleTextViewId)) {
+            throw new IllegalArgumentException("sectionTitleTextViewId should be a TextView.");
         }
 
         this.mContext = context;
         this.mListAdapter = listAdapter;
-
+        this.mSectionHeaderLayoutId = sectionHeaderLayoutId;
+        this.mSectionTitleTextViewId = sectionTitleTextViewId;
+        this.mSectionizer = sectionizer;
         this.mSections = new LinkedHashMap<String, Integer>();
 
         // Find sections
@@ -111,24 +110,15 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-
-        if(DEBUG) {
-            Log.d(TAG, "DEBUG TRUE");
-        }
-
-        Log.d(TAG, "DEBUG is " + DEBUG);
-
         SectionHolder sectionHolder = null;
 
         switch (getItemViewType(position)) {
             case VIEW_TYPE_SECTION_HEADER:
                 if(view == null) {
-
-                    view = View.inflate(mContext, R.layout.separator_updates, null);
+                    view = View.inflate(mContext, mSectionHeaderLayoutId, null);
 
                     sectionHolder = new SectionHolder();
-                    sectionHolder.titleTextView = (TextView) view.findViewById(R.id.separator_label);
-                    sectionHolder.more = (TextView) view.findViewById(R.id.more);
+                    sectionHolder.titleTextView = (TextView) view.findViewById(mSectionTitleTextViewId);
 
                     view.setTag(sectionHolder);
                 } else {
@@ -143,32 +133,8 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
         }
 
         if(sectionHolder != null) {
-
             String sectionName = sectionTitleForPosition(position);
-
-            String sectionLabel = "";
-            switch (Integer.parseInt(sectionName)){
-                case 0:
-                    sectionLabel = mContext.getString(R.string.installed_tab);
-                    sectionHolder.more.findViewById(R.id.more).setVisibility(View.GONE);
-                    break;
-                case 1:
-                    sectionLabel = mContext.getString(R.string.updates_tab);
-                    sectionHolder.more.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ((Start)mContext).updateAll(((UpdatesAdapter)mListAdapter).getUpdateIds());
-                            Toast.makeText(mContext, mContext.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    sectionHolder.more.findViewById(R.id.more).setVisibility(View.VISIBLE);
-
-                    break;
-                case 2:
-                    break;
-            }
-
-            sectionHolder.titleTextView.setText(sectionLabel);
+            sectionHolder.titleTextView.setText(sectionName);
         }
 
         return view;
@@ -237,7 +203,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
 
     static class SectionHolder {
         public TextView titleTextView;
-        public TextView more;
     }
 
     private void findSections() {
@@ -246,12 +211,15 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
         mSections.clear();
 
         for(int i=0; i<n; i++) {
-            String sectionName = mSectionizer.getSectionTitleForItem((UpdateItem) mListAdapter.getItem(i));
+            Object item = mListAdapter.getItem(i);
 
-            if(!mSections.containsKey(sectionName)) {
-                mSections.put(sectionName, i + nSections);
-                nSections ++;
-            }
+
+                String sectionName = mSectionizer.getSectionTitleForItem((HomeItem) item);
+
+                if(!mSections.containsKey(sectionName)) {
+                    mSections.put(sectionName, i + nSections);
+                    nSections ++;
+                }
 
         }
 
@@ -267,17 +235,13 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     private String sectionTitleForPosition(int position) {
         String title = null;
 
-        int type = mListAdapter.getItemViewType(getIndexForPosition(position));
-
-        switch (type){
-            case 0:
-                title = "0";
+        Set<Entry<String, Integer>> entrySet = mSections.entrySet();
+        for(Entry<String, Integer> entry : entrySet) {
+            if(entry.getValue() == position) {
+                title = entry.getKey();
                 break;
-            case 1:
-                title = "1";
-                break;
+            }
         }
-
         return title;
     }
 

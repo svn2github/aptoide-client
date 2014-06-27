@@ -6,10 +6,7 @@ import android.support.v4.app.*;
 import android.util.Log;
 import android.view.ViewGroup;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome;
-import cm.aptoide.ptdev.fragments.FragmentStores;
-import cm.aptoide.ptdev.fragments.FragmentUpdates;
+import cm.aptoide.ptdev.fragments.*;
 
 import java.lang.reflect.Field;
 

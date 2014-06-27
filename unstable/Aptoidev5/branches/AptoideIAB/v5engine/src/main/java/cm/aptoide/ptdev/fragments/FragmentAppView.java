@@ -45,7 +45,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -663,6 +662,7 @@ public abstract class FragmentAppView extends Fragment {
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
+
             Log.d("FragmentRelated", "onViewCreated");
 
 
@@ -795,7 +795,6 @@ public abstract class FragmentAppView extends Fragment {
         private TextView fakeVotes;
         private TextView freezeVotes;
         private TextView virusVotes;
-        private TextView review;
         private Button flagThisApp;
         private LinearLayout flags_container;
         private ProgressBar loading_flags;
@@ -854,35 +853,7 @@ public abstract class FragmentAppView extends Fragment {
 
             }
 
-            if(event.getVeredict()!=null){
-
-                loading_flags.setVisibility(View.GONE);
-                flagThisApp.setVisibility(View.GONE);
-                flags_container.setVisibility(View.VISIBLE);
-                goodVotes.setVisibility(View.GONE);
-                licenseVotes.setVisibility(View.GONE);
-                fakeVotes.setVisibility(View.GONE);
-                freezeVotes.setVisibility(View.GONE);
-                virusVotes.setVisibility(View.GONE);
-
-                review.setVisibility(View.VISIBLE);
-                review.setText("" + event.getVeredict().getReview());
-                if(event.getVeredict().getFlag().equals("good")) {
-                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_good), null, null, null);
-                }
-                if(event.getVeredict().getFlag().equals("license")) {
-                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_license), null, null, null);
-                }
-                if(event.getVeredict().getFlag().equals("fake")) {
-                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_fake), null, null, null);
-                }
-                if(event.getVeredict().getFlag().equals("freeze")) {
-                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_freeze), null, null, null);
-                }
-                if(event.getVeredict().getFlag().equals("virus")) {
-                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_virus), null, null, null);
-                }
-            }else if(event.getFlagVotes()!=null){
+            if(event.getFlagVotes()!=null){
                 loading_flags.setVisibility(View.GONE);
                 flags_container.setVisibility(View.VISIBLE);
                 goodVotes.setText(getString(R.string.flag_good) +": "+event.getFlagVotes().getGood());
@@ -954,7 +925,7 @@ public abstract class FragmentAppView extends Fragment {
             fakeVotes = (TextView) v.findViewById(R.id.flag_fake);
             freezeVotes = (TextView) v.findViewById(R.id.flag_freeze);
             virusVotes = (TextView) v.findViewById(R.id.flag_virus);
-            review = (TextView) v.findViewById(R.id.flag_review);
+
             flagThisApp = (Button) v.findViewById(R.id.button_flag);
             flags_container = (LinearLayout) v.findViewById(R.id.flags_container);
             loading_flags = (ProgressBar) v.findViewById(R.id.loading_flags);

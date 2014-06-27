@@ -134,6 +134,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
         }
 
 
+        
 
 
         return v;

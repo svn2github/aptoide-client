@@ -810,7 +810,6 @@ public class Start extends ActionBarActivity implements
         matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
         ActivityCompat.invalidateOptionsMenu(this);
 
-        ActivityCompat.invalidateOptionsMenu(this);
     }
 
 

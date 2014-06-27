@@ -205,7 +205,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
 
         startService(new Intent(getApplicationContext(), ParserService.class));
-        startForeground(45, createDefaultNotification());
+        startForeground(45, createDefaultNotification("Loading stores"));
         final long id;
         if(newStore){
             if(db.existsServer(store.getBaseUrl())){
@@ -403,25 +403,27 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public Notification createDefaultNotification() {
+    public Notification createDefaultNotification(String string) {
         Notification notification = null;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            notification = new Notification.Builder(this).setSmallIcon(getApplicationInfo().icon).build();
+            notification = new NotificationCompat.Builder(this).setSmallIcon(getApplicationInfo().icon).setContentTitle("Aptoide is working").setContentText(string).build();
         } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            notification = new Notification.Builder(this).setSmallIcon(getApplicationInfo().icon).getNotification();
+            notification = new NotificationCompat.Builder(this).setSmallIcon(getApplicationInfo().icon).setContentTitle("Aptoide is working").setContentText(string).build();
         } else {
-            notification = new Notification();
-            notification.icon = getApplicationInfo().icon;
+            notification = new NotificationCompat.Builder(this).setSmallIcon(getApplicationInfo().icon).setContentTitle("Aptoide is working").setContentText(string).build();
             // temporary fix https://github.com/octo-online/robospice/issues/200
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
             notification.setLatestEventInfo(this, "", "", pendingIntent);
-            notification.tickerText = null;
             notification.when = System.currentTimeMillis();
         }
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = Notification.PRIORITY_MIN;
         }
+
+
+
+
 
         return notification;
     }
@@ -431,7 +433,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         Log.d("Aptoide", "Removing" + repoId);
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
-
     }
 
     @Override
@@ -476,7 +477,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
 
             startService(new Intent(getApplicationContext(), ParserService.class));
-            startForeground(45, createDefaultNotification());
+            startForeground(45, createDefaultNotification("Loading Editors' Choice"));
             parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), editorsErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {
@@ -487,6 +488,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
 
     }
+
+
+
+
 
     public void parseTopApps(final Database database, String url) throws IOException {
 
@@ -502,7 +507,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 spiceManager.start(getApplicationContext());
             }
             startService(new Intent(getApplicationContext(), ParserService.class));
-            startForeground(45, createDefaultNotification());
+            startForeground(45, createDefaultNotification("Loading Top Apps"));
             parser.parse(url, null, 2, new HandlerFeaturedTop(database), topErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {

@@ -123,7 +123,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
 
         breadCrumbs.setActivity(this);
-        breadCrumbs.setTitle("Home", null);
+        breadCrumbs.setTitle(getString(R.string.categories), null);
 
         if (savedInstanceState == null) {
             setFragment();

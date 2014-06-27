@@ -68,9 +68,7 @@ public class AptoideDialog {
         DialogFragment fragment = new MyAppStoreDialog();
 
         Bundle bundle = new Bundle();
-
         bundle.putString("repoName", repoName);
-
         fragment.setArguments(bundle);
 
         return fragment;

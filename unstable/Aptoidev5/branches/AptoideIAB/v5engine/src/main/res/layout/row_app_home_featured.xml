@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:padding="5dp"
+            style="?attr/backgroundCard">
+
+        <ImageView
+                android:contentDescription="@null"
+                android:padding="-5dp"
+                android:id="@+id/app_icon"
+                android:adjustViewBounds="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"/>
+
+    <RelativeLayout android:layout_width="match_parent"                 android:layout_below="@+id/app_icon"
+                    android:layout_height="wrap_content">
+
+        <ImageView android:id="@+id/ic_action"
+                   style="@style/overflowMenuButton" />
+
+        <TextView
+                android:id="@+id/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_toLeftOf="@+id/ic_action" android:text="NAME"/>
+
+    </RelativeLayout>
+
+
+        <!--<TextView-->
+                <!--android:id="@+id/app_category"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:gravity="center|left"-->
+                <!--android:layout_marginRight="12dp"-->
+                <!--android:layout_below="@+id/app_name"-->
+                <!--android:text="CATEGORY"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_alignLeft="@+id/app_name"-->
+                <!--android:textColor="@android:color/darker_gray" />-->
+
+
+        <!--<TextView-->
+                <!--android:id="@+id/app_downloads"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:gravity="center|left"-->
+                <!--android:layout_marginRight="12dp"-->
+                <!--android:layout_below="@+id/app_name"-->
+                <!--android:text="DOWNLOADS"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_alignLeft="@+id/app_name"-->
+                <!--android:textColor="@android:color/darker_gray"/>-->
+
+        <!--<RatingBar-->
+                <!--android:id="@+id/app_rating"-->
+                <!--style="?android:attr/ratingBarStyleSmall"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:numStars="5"-->
+                <!--android:layout_alignParentBottom="true"/>-->
+
+    </RelativeLayout>
+
+

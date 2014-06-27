@@ -119,8 +119,6 @@ public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
     public View getView(final int bucketPosition, View convertView, ViewGroup parent)
     {
 
-
-
         final LinearLayout bucket;
         if (convertView != null) {
             bucket = (LinearLayout)convertView;

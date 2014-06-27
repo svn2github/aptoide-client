@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
@@ -39,8 +40,6 @@ public class WebSocketSingleton {
         public void onConnect() {
             Log.d("TAG", "On Connect");
 
-
-
         }
 
         @Override
@@ -77,10 +76,7 @@ public class WebSocketSingleton {
 
         @Override
         public void onDisconnect(int code, String reason) {
-            //To change body of implemented methods use File | Settings | File Templates.
             Log.d("TAG", reason);
-
-
         }
 
         @Override
@@ -91,7 +87,7 @@ public class WebSocketSingleton {
     };
     private Uri mNotificationUri;
     private Context mContext;
-    private BlockingQueue blockingQueue;
+    private BlockingQueue<Cursor> blockingQueue;
 
     private WebSocketSingleton() {}
 

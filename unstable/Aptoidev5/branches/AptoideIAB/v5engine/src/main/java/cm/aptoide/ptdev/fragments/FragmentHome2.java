@@ -6,8 +6,6 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,16 +18,13 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
-import cm.aptoide.ptdev.adapters.HomeFeaturedAdapter;
-import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
-import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
+import cm.aptoide.ptdev.adapters.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -37,15 +32,9 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.imbryk.viewPager.LoopPagerAdapterWrapper;
-import com.imbryk.viewPager.LoopViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -54,11 +43,9 @@ import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,29 +54,36 @@ import java.util.TimerTask;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<Collection>> {
+public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
 
 
-    private MergeAdapter adapter;
-    private ArrayList<Collection> editorsChoice = new ArrayList<Collection>();
-    private List<HomeItem> top = new ArrayList<HomeItem>();
-    private List<HomeItem> recommended = new ArrayList<HomeItem>();
+    private SectionAdapter<HomeItem> adapter;
+    private ArrayList<HomeItem> editorsChoice = new ArrayList<HomeItem>();
+    private ArrayList<HomeItem> top = new ArrayList<HomeItem>();
 
 
-    private PrincipalLayoutAdapter homeBucketAdapter;
-    private HomeBucketAdapter topAdapter;
-    private HomeBucketAdapter recomendedAdapter;
+    private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
+
+
+    private HomeTopAdapter homeBucketAdapter;
+    private HomeTopAdapter topAdapter;
+    private HomeTopAdapter recomendedAdapter;
     private View v2;
     private TextView moreReTv;
-    private ArrayList<HomeItem> featuredGraphics = new ArrayList<HomeItem>();
+    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
+    private MergeAdapter mergeAdapter;
+
+
+
 
 
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(50, null, this);
-        getLoaderManager().initLoader(51, null, loader);
-        getLoaderManager().initLoader(52, null, featuredGraphicLoader);
+        getLoaderManager().restartLoader(50, null, this);
+        getLoaderManager().restartLoader(51, null, loader);
+        getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
+
         refreshRecommendedList();
         if(!isNetworkAvailable(Aptoide.getContext())){
             setListShown(true);
@@ -130,11 +124,12 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
 
     private void refreshEditorsList() {
-        editorsChoice.clear();
-        featuredGraphics.clear();
-        if(adapter != null) adapter.notifyDataSetChanged();
-        getLoaderManager().restartLoader(50, null, this);
-        getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
+       editorsChoice.clear();
+       featuredGraphicItems.clear();
+       if(adapter != null) adapter.notifyDataSetChanged();
+       getLoaderManager().restartLoader(50, null, this);
+       getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
+
     }
 
     private void refreshTopList() {
@@ -144,8 +139,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     }
 
     private void refreshRecommendedList() {
-
-        loadRecommended(v2);
+        //loadRecommended(v2);
     }
 
     TopFeaturedLoader loader = new TopFeaturedLoader();
@@ -167,19 +161,18 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     ViewPager pager;
 
+
+
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mergeAdapter = new MergeAdapter();
 
-        featurededchoice = new HomeFeaturedAdapter(getActivity(), featuredGraphics, 2);
-
-
-
-        adapter = new MergeAdapter();
-
-        homeBucketAdapter = new PrincipalLayoutAdapter(getActivity(), editorsChoice, true);
-        topAdapter = new HomeBucketAdapter(getActivity(), top);
-        recomendedAdapter = new HomeBucketAdapter(getActivity(), recommended);
+        homeBucketAdapter = new HomeTopAdapter(getActivity(), editorsChoice, 3);
+        topAdapter = new HomeTopAdapter(getActivity(), top, 3);
+        recomendedAdapter = new HomeTopAdapter(getActivity(), recommended, 3);
 //        View editorsView = View.inflate(getActivity(), R.layout.separator_home_header, null);
 //        ((TextView) editorsView.findViewById(R.id.separator_label)).setText(getString(R.string.editors_choice));
 //        editorsView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
@@ -193,11 +186,12 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         //adapter.addView(editorsView);
         //editorsChoiceBucketSize = homeBucketAdapter.getBucketSize();
 
+        //adapter.addAdapter(featurededchoice);
 
 
-        adapter.addAdapter(featurededchoice);
 
-        adapter.addAdapter(homeBucketAdapter);
+
+        mergeAdapter.addAdapter(homeBucketAdapter);
         View v = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.top_apps));
 //        v.setClickable(true);
@@ -212,9 +206,9 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             }
         });
 
-        adapter.addView(v);
-        adapter.addAdapter(topAdapter);
-        adapter.addView(moreTop);
+
+        mergeAdapter.addAdapter(topAdapter);
+
 
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
@@ -233,15 +227,18 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         v2.setVisibility(View.GONE);
         moreReTv.setVisibility(View.GONE);
-        adapter.addView(v2);
-        adapter.addAdapter(recomendedAdapter);
-        adapter.addView(moreRecommended);
+        mergeAdapter.addAdapter(recomendedAdapter);
 
         //setListAdapter(adapter);
 
         //loadRecommended(v2);
 
-
+        adapter = new SectionAdapter<HomeItem>(getActivity(), mergeAdapter, R.layout.separator_home_header, R.id.separator_label, new Sectionizer<HomeItem>() {
+            @Override
+            public String getSectionTitleForItem(HomeItem instance) {
+                return instance.getCategory();
+            }
+        });
 
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
         getListView().setItemsCanFocus(true);
@@ -286,101 +283,101 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         });
     }
 
-    private void loadRecommended(final View v2) {
-        final AccountManager accountManager = AccountManager.get(getActivity());
-
-        if(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length>0){
-            final SpiceManager manager = ((Start) getActivity()).getSpiceManager();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
-                    Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                    String token = null;
-                    try {
-                        token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
-
-                        request.setLimit(recomendedAdapter.getBucketSize()*2);
-                        request.setPackageName(token);
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
-                    }
-
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    final String finalToken = token + recomendedAdapter.getBucketSize()*2;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(finalToken !=null){
-                            manager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
-                                @Override
-                                public void onRequestFailure(SpiceException e) {
-
-                                }
-
-                                @Override
-                                public void onRequestSuccess(ListRecomended listRecomended) {
-                                    if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
-                                        v2.setVisibility(View.VISIBLE);
-                                        moreReTv.setVisibility(View.VISIBLE);
-                                        recommended.clear();
-                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-                                        for (ListRecomended.Repository repository : listRecomended.getRepository()) {
-
-                                            String repoName = repository.getName();
-                                            String iconPath = repository.getIconspath();
-                                            for (ListRecomended.Repository.Package aPackage : repository.getPackage()) {
-
-                                                String icon;
-
-                                                if (aPackage.getIcon_hd() != null) {
-                                                    icon = aPackage.getIcon_hd();
-                                                } else {
-                                                    icon = aPackage.getIcon();
-                                                }
-                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
-                                                item.setRecommended(true);
-                                                item.setRepoName(repoName);
-                                                item.setMd5(aPackage.getMd5h());
-
-                                                if (matureCheck) {
-                                                    if (!aPackage.getAge().equals("Mature")) {
-                                                        recommended.add(item);
-                                                    }
-                                                } else {
-                                                    recommended.add(item);
-                                                }
-
-                                            }
-
-                                        }
-                                    }
-                                    recomendedAdapter.notifyDataSetChanged();
-                                }
-                            });
-                            }
-                        }
-                    });
-                }
-            }).start();
-
-
-
-
-
-
-        }else{
-            recommended.clear();
-            recomendedAdapter.notifyDataSetChanged();
-            v2.setVisibility(View.GONE);
-            moreReTv.setVisibility(View.GONE);
-        }
-    }
+//    private void loadRecommended(final View v2) {
+//        final AccountManager accountManager = AccountManager.get(getActivity());
+//
+//        if(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length>0){
+//            final SpiceManager manager = ((Start) getActivity()).getSpiceManager();
+//
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
+//                    Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+//                    String token = null;
+//                    try {
+//                        token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
+//
+//                        request.setLimit(recomendedAdapter.getBucketSize()*2);
+//                        request.setPackageName(token);
+//                    } catch (OperationCanceledException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (AuthenticatorException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    Handler handler = new Handler(Looper.getMainLooper());
+//                    final String finalToken = token + recomendedAdapter.getBucketSize()*2;
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(finalToken !=null){
+//                            manager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
+//                                @Override
+//                                public void onRequestFailure(SpiceException e) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onRequestSuccess(ListRecomended listRecomended) {
+//                                    if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
+//                                        v2.setVisibility(View.VISIBLE);
+//                                        moreReTv.setVisibility(View.VISIBLE);
+//                                        recommended.clear();
+//                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+//                                        for (ListRecomended.Repository repository : listRecomended.getRepository()) {
+//
+//                                            String repoName = repository.getName();
+//                                            String iconPath = repository.getIconspath();
+//                                            for (ListRecomended.Repository.Package aPackage : repository.getPackage()) {
+//
+//                                                String icon;
+//
+//                                                if (aPackage.getIcon_hd() != null) {
+//                                                    icon = aPackage.getIcon_hd();
+//                                                } else {
+//                                                    icon = aPackage.getIcon();
+//                                                }
+//                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
+//                                                item.setRecommended(true);
+//                                                item.setRepoName(repoName);
+//                                                item.setMd5(aPackage.getMd5h());
+//
+//                                                if (matureCheck) {
+//                                                    if (!aPackage.getAge().equals("Mature")) {
+//                                                        recommended.add(item);
+//                                                    }
+//                                                } else {
+//                                                    recommended.add(item);
+//                                                }
+//
+//                                            }
+//
+//                                        }
+//                                    }
+//                                    recomendedAdapter.notifyDataSetChanged();
+//                                }
+//                            });
+//                            }
+//                        }
+//                    });
+//                }
+//            }).start();
+//
+//
+//
+//
+//
+//
+//        }else{
+//            recommended.clear();
+//            recomendedAdapter.notifyDataSetChanged();
+//            v2.setVisibility(View.GONE);
+//            moreReTv.setVisibility(View.GONE);
+//        }
+//    }
 
 
     @Override
@@ -404,7 +401,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
                 @Override
                 public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getTopFeatured(topAdapter.getBucketSize()*2);
+                    return new Database(Aptoide.getDb()).getTopFeatured(3*2);
                 }
             };
 
@@ -436,42 +433,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         }
     }
 
-    @Override
-    public Loader<ArrayList<Collection>> onCreateLoader(final int id, final Bundle args) {
-
-
-
-        AsyncTaskLoader<ArrayList<Collection>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<Collection>>(getActivity()) {
-            @Override
-            public ArrayList<Collection> loadInBackground() {
-                return new Database(Aptoide.getDb()).getFeatured(homeBucketAdapter.getBucketSize()*2);
-            }
-        };
-
-        asyncTaskLoader.forceLoad();
-
-        return asyncTaskLoader;
-    }
-//
-    @Override
-    public void onLoadFinished(Loader<ArrayList<Collection>> loader, ArrayList<Collection> data) {
-        editorsChoice.clear();
-        editorsChoice.addAll(data);
-
-        if(getListView().getAdapter()==null){
-            if(data.size()>1) setListAdapter(adapter);
-        }else{
-            adapter.notifyDataSetChanged();
-        }
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<Collection>> loader) {
-        if(editorsChoice != null) editorsChoice.clear();
-        if(adapter != null) adapter.notifyDataSetChanged();
-    }
-
     public class FeaturedGraphicLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
 
         @Override
@@ -482,7 +443,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
                 @Override
                 public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getFeaturedGraphics(topAdapter.getBucketSize()*2);
+                    return new Database(Aptoide.getDb()).getTopFeatured(3*2);
                 }
             };
 
@@ -494,8 +455,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         //
         @Override
         public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
-            featuredGraphics.clear();
-            featuredGraphics.addAll(data);
+            featuredGraphicItems.clear();
+            featuredGraphicItems.addAll(data);
 
             if(getListView().getAdapter()==null){
                 if(!data.isEmpty()){
@@ -512,5 +473,40 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             if(top!=null) top.clear();
             if(adapter!=null) adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public Loader<ArrayList<HomeItem>> onCreateLoader(final int id, final Bundle args) {
+
+
+        AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
+            @Override
+            public ArrayList<HomeItem> loadInBackground() {
+                return null;
+            }
+        };
+
+        asyncTaskLoader.forceLoad();
+
+        return asyncTaskLoader;
+    }
+//
+    @Override
+    public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
+        editorsChoice.clear();
+        editorsChoice.addAll(data);
+
+        if(getListView().getAdapter()==null){
+            if(data.size()>1) setListAdapter(adapter);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
+        if(editorsChoice != null) editorsChoice.clear();
+        if(adapter != null) adapter.notifyDataSetChanged();
     }
 }

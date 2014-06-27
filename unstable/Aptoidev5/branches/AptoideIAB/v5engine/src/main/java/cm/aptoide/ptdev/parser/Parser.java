@@ -57,22 +57,14 @@ public class Parser{
 
 
 
-    ExecutorService service = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, pq, new ThreadFactory() {
+    ExecutorService service = new ThreadPoolExecutor(1, 2, 0L, TimeUnit.MILLISECONDS, pq, new ThreadFactory() {
         @Override
         public Thread newThread(Runnable r) {
-
             Thread t = new Thread(r);
             t.setPriority(3);
-
             return t;
         }
     });
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        Log.d("Aptoide-Parser", "GC on Parser");
-    }
 
     public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback, final Runnable runnable) {
 

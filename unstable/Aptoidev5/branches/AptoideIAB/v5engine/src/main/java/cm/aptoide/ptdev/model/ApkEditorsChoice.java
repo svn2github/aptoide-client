@@ -25,6 +25,9 @@ import java.util.List;
 public class ApkEditorsChoice extends Apk {
 
 
+    private String featuredGraphic;
+
+
     public ApkEditorsChoice(){
         super();
     }
@@ -74,6 +77,11 @@ public class ApkEditorsChoice extends Apk {
 
         statements.add(2, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
 
+
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_FEATURED_GRAPHIC_PATH);
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_ID);
+
+        statements.add(3, StatementHelper.getInsertStatment(Schema.FeaturedEditorsChoice.getName(), values));
 
 
         return statements;
@@ -138,6 +146,14 @@ public class ApkEditorsChoice extends Apk {
             }
         }
 
+        if(featuredGraphic != null){
+            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{
+                    String.valueOf(featuredGraphic),
+                    String.valueOf(apkid)
+            });
+            sqLiteStatements.get(3).executeInsert();
+        }
+
 
     }
 
@@ -147,6 +163,9 @@ public class ApkEditorsChoice extends Apk {
     }
 
 
+    public void setFeaturedGraphic(String featuredGraphic) {
+        this.featuredGraphic = featuredGraphic;
+    }
 
 
 }

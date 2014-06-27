@@ -76,6 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         dropTables(db, 0);
         dropIndexes(db, 0);
+        removeSharedPreferences();
 
 
         try {

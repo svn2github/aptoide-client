@@ -127,7 +127,6 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         mainAdapter.addAdapter(categoryAdapter);
         mainAdapter.addAdapter(apkAdapter);
 
-
         setHasOptionsMenu(true);
 
         if(savedInstanceState==null){

@@ -18,6 +18,7 @@ public class Server {
     private String iconspath;
     private String basepath;
     public Login login;
+    private String featuredGraphicPath;
 
     public String getName() {
         return name;
@@ -84,5 +85,13 @@ public class Server {
 
     public String getBasepath() {
         return basepath;
+    }
+
+    public void setFeaturedGraphicPath(String featuredGraphicPath) {
+        this.featuredGraphicPath = featuredGraphicPath;
+    }
+
+    public String getFeaturedGraphicPath() {
+        return featuredGraphicPath;
     }
 }

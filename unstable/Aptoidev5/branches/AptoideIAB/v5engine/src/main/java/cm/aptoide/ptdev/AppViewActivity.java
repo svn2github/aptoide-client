@@ -305,6 +305,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     try{
                         startActivity(i);
                     }catch (ActivityNotFoundException e){
+
                     }
                 }
             });
@@ -1278,7 +1279,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
         spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
     }
 

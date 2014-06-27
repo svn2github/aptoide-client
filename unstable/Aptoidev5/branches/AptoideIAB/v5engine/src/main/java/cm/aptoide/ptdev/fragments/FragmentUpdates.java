@@ -29,6 +29,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -87,9 +88,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     public synchronized void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
 
         if(getActivity()!=null){
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+
                     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
                     SharedPreferences.Editor editor = sPref.edit();
                     int updates = 0;
@@ -138,8 +137,8 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
                     setListShown(true);
                 }
-            });
-        }
+
+
 
     }
 
@@ -161,7 +160,27 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
         updatesAdapter = new UpdatesAdapter(getActivity(), items);
 
+
+
+
+
         adapter = new SimpleSectionAdapter<UpdateItem>(getActivity(),updatesAdapter);
+
+        Field[] fields = adapter.getClass().getDeclaredFields();
+
+        for(Field field: fields){
+            if(field.getName().equals("DEBUG")){
+                field.setAccessible(true);
+
+                try {
+                    field.setBoolean(adapter, true);
+                    Toast.makeText(Aptoide.getContext(), String.valueOf(field.get(adapter)),Toast.LENGTH_LONG).show();
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         setHasOptionsMenu(true);
 

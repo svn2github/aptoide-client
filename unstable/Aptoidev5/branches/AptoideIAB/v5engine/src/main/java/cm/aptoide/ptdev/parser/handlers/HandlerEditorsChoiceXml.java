@@ -63,6 +63,30 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             }
         });
 
+        elements.put("featuregraphic", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                ((ApkEditorsChoice)apk).setFeaturedGraphic(server.getFeaturedGraphicPath() + sb.toString());
+            }
+        });
+
+        elements.put("featuregraphicpath", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                server.setFeaturedGraphicPath(sb.toString());
+            }
+        });
+
+
+
         elements.put("package", new ElementHandler() {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
