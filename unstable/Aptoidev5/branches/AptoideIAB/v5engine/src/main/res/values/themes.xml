@@ -61,9 +61,7 @@
         <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
 
         <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
-        <item name="icReplyComment">@drawable/ic_action_reply_light</item>
-        <item name="icVoteUpComment">@drawable/ic_action_comment_vote_up_light</item>
-        <item name="icVoteDownComment">@drawable/ic_action_comment_vote_down_light</item>
+        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
     </style>
 
 
@@ -124,9 +122,7 @@
         <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
 
         <item name="icViewMoreComments">@drawable/ic_action_comments_dark</item>
-        <item name="icReplyComment">@drawable/ic_action_reply_dark</item>
-        <item name="icVoteUpComment">@drawable/ic_action_comment_vote_up_dark</item>
-        <item name="icVoteDownComment">@drawable/ic_action_comment_vote_down_dark</item>
+        <item name="icDialogDrawable">@drawable/dialog_background_dark</item>
     </style>
 
 

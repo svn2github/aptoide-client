@@ -28,33 +28,16 @@
                 android:contentDescription="@null"
                 android:layout_gravity="center_vertical"/>
 
-        <LinearLayout
-                android:layout_width="0dp"
+        <TextView
+                android:id="@+id/category_first_level_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center_vertical"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/category_first_level_number"
-                android:layout_toRightOf="@+id/category_first_level_icon">
-
-            <TextView
-                    android:id="@+id/category_first_level_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/category_first_level_desc"
-                    android:layout_gravity="left|bottom"
-                    android:maxLines="2"
-                    android:ellipsize="end"/>
-        </LinearLayout>
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_toRightOf="@+id/category_first_level_icon"
+                android:layout_toLeftOf="@+id/category_first_level_number" android:layout_centerVertical="true"/>
 
         <TextView
                 android:id="@+id/category_first_level_number"

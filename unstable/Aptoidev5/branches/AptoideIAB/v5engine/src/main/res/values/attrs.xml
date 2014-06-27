@@ -104,8 +104,6 @@
     <attr name="icCellphoneDrawable" format="reference"/>
 
     <attr name="icViewMoreComments" format="reference"/>
-    <attr name="icReplyComment" format="reference"/>
-    <attr name="icVoteUpComment" format="reference"/>
-    <attr name="icVoteDownComment" format="reference"/>
+    <attr name="icDialogDrawable" format="reference"/>
 
 </resources>

@@ -476,9 +476,10 @@
     <string name="flag_fake">Fake</string>
     <string name="flag_freeze">Freeze</string>
     <string name="flag_virus">Virus</string>
-    <string name="view_replies">View replies</string>
     <string name="reply">Reply</string>
     <string name="vote_down">Vote Down</string>
     <string name="vote_up">Vote Up</string>
+    <string name="view_more_comments">View more %s comment(s)</string>
+    <string name="votes">%s vote(s)</string>
 
 </resources>

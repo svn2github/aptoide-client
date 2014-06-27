@@ -23,27 +23,30 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_toLeftOf="@+id/date"
             android:layout_below="@+id/view"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Daniel Batalha" />
+            android:text="Daniel Batalha" android:layout_toLeftOf="@+id/ic_action"/>
 
-    <TextView
-            android:id="@+id/date"
-            android:layout_alignTop="@+id/author"
-            android:layout_width="wrap_content"
-            android:textColor="@android:color/white"
-            android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
-            android:layout_gravity="right"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="2dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:gravity="right" android:text="February 27, 2009 at 9:30 am"
-            android:layout_alignParentRight="true"/>
+    <ImageView android:id="@+id/ic_action"
+               style="@style/overflowMenuButton"
+               android:layout_alignParentRight="true"/>
+
+    <!--<TextView-->
+            <!--android:id="@+id/date"-->
+            <!--android:layout_alignTop="@+id/author"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@android:color/darker_gray"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:ellipsize="end"-->
+            <!--android:maxLines="1"-->
+            <!--android:padding="2dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:gravity="right" android:text="February 27, 2009 at 9:30 am"-->
+            <!--android:layout_alignParentRight="true"/>-->
 
     <TextView
             android:id="@+id/content"
@@ -52,7 +55,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_below="@+id/author"
             android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
             android:paddingBottom="12dp"
-            android:paddingRight="10dp"/>
+            android:paddingRight="10dp"
+            android:layout_toLeftOf="@+id/ic_action"/>
 
 
 </RelativeLayout>

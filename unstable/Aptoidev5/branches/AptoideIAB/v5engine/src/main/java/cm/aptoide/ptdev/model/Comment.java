@@ -9,31 +9,18 @@ import java.util.ArrayList;
 
 public class Comment {
 
-    @Key
-   	private Number id;
-    @Key
-   	private String lang;
-    @Key
-   	private String reponame;
-    @Key
-   	private String subject;
-    @Key
-   	private String text;
-
-    @Key
-   	private String timestamp;
-
-    @Key
-   	private String useridhash;
-
-    @Key
-   	private String username;
-
-    @Key
-    private Number answerto;
+    @Key private Number id;
+    @Key private String lang;
+    @Key private String reponame;
+    @Key private String subject;
+    @Key private String text;
+    @Key private String timestamp;
+    @Key private String useridhash;
+    @Key private String username;
+    @Key private Number answerto;
+    @Key private Number votes;
 
     private ArrayList<Comment> subComments = new ArrayList<Comment>();
-
     private boolean isShowingSubcomments;
 
  	public Number getId(){
@@ -83,24 +70,18 @@ public class Comment {
 	}
 	public void setUsername(String username){ this.username = username;	}
     public Number getAnswerTo() { return answerto; }
-
     public ArrayList<Comment> getSubComments() {
         return subComments;
     }
-
     public void addSubComment(Comment subComment) {
         subComments.add(subComment);
     }
-
     public boolean hasSubComments() {
         return subComments.size() != 0;
     }
-
     public boolean isShowingSubcomments() {
         return isShowingSubcomments;
     }
-
-    public void setShowingSubcomments(boolean isShowingSubcomments) {
-        this.isShowingSubcomments = isShowingSubcomments;
-    }
+    public void setShowingSubcomments(boolean isShowingSubcomments) { this.isShowingSubcomments = isShowingSubcomments; }
+    public Number getVotes() {  return votes; }
 }

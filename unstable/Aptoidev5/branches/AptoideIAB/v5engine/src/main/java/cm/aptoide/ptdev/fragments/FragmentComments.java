@@ -3,9 +3,10 @@ package cm.aptoide.ptdev.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -62,21 +63,37 @@ public class FragmentComments extends ListFragment {
 
     private static void fillViewCommentFields(Context context, View view, Comment comment, SimpleDateFormat dateFormater) {
         TextView content = (TextView) view.findViewById(R.id.content);
-        TextView date = (TextView) view.findViewById(R.id.date);
         TextView author = (TextView) view.findViewById(R.id.author);
+        String dateString = "";
+        String votesString = "";
 
-        content.setText(comment.getText());
-//        comment.getSubComments().size();
         try {
-            date.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
+            dateString = AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime());
+//            date.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        if(comment.getVotes() != null && comment.getVotes().intValue() != 0){
+            votesString = " | " + context.getString(R.string.votes, comment.getVotes());
+        }else{
+            votesString = "";
+        }
+
+        content.setText(Html.fromHtml(comment.getText()+ " &bull; " + "<i>" + dateString + votesString  + "</i>"));
+
         author.setText(comment.getUsername());
+
+        ((ImageView) view.findViewById(R.id.ic_action)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v, (long) 0);
+            }
+        });
     }
 
     private static void fillViewSubcommentsFields(Context context, View view, final Comment comment, SimpleDateFormat dateFormater) {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
+        final TextView viewComments = (TextView) view.findViewById(R.id.hasComments);
 
         for (Comment subComment : comment.getSubComments()) {
             View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, subcommentsContainer, false);
@@ -84,22 +101,35 @@ public class FragmentComments extends ListFragment {
             subcommentsContainer.addView(subview);
         }
 
-        ((TextView) view.findViewById(R.id.hasComments)).setVisibility(View.VISIBLE);
-        ((TextView) view.findViewById(R.id.hasComments)).setText(""+comment.getSubComments().size());
-        ((TextView) view.findViewById(R.id.hasComments)).setOnClickListener(new View.OnClickListener() {
+        viewComments.setText(context.getString(R.string.view_more_comments, comment.getSubComments().size()));
+        viewComments.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
+        view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
+
+        ((ImageView) view.findViewById(R.id.ic_action)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v, (long) 0);
+            }
+        });
+    }
+
+    private static View.OnClickListener getMoreCommentsListener(final Comment comment, final LinearLayout subcommentsContainer, final TextView viewComments) {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int visibility;
                 if (subcommentsContainer.getVisibility() == View.GONE) {
                     visibility = View.VISIBLE;
+                    viewComments.setVisibility(View.GONE);
                     comment.setShowingSubcomments(true);
                 } else {
                     visibility = View.GONE;
+                    viewComments.setVisibility(View.VISIBLE);
                     comment.setShowingSubcomments(false);
                 }
                 subcommentsContainer.setVisibility(visibility);
             }
-        });
+        };
     }
 
 
@@ -191,5 +221,41 @@ public class FragmentComments extends ListFragment {
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
     }
 
+    public static void showPopup(View v, long id) {
+        android.support.v7.widget.PopupMenu popup = new android.support.v7.widget.PopupMenu(v.getContext(), v);
+        popup.setOnMenuItemClickListener(new MenuListener(v.getContext(), id));
+        popup.inflate(R.menu.menu_comments);
+        popup.show();
+    }
 
+    static class MenuListener implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == R.id.menu_reply) {
+                Toast.makeText(context, context.getString(R.string.reply), Toast.LENGTH_LONG).show();
+                return true;
+            } else if (i == R.id.menu_vote_up) {
+                Toast.makeText(context, context.getString(R.string.vote_up), Toast.LENGTH_LONG).show();
+                return true;
+            } else if (i == R.id.menu_vote_down) {
+                Toast.makeText(context, context.getString(R.string.vote_down), Toast.LENGTH_LONG).show();
+                return true;
+            } else{
+                return false;
+            }
+        }
+    }
 }
