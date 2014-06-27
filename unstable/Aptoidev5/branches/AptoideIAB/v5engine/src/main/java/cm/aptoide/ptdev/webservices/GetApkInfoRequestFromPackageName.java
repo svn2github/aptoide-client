@@ -5,11 +5,14 @@ import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,17 +57,22 @@ public class GetApkInfoRequestFromPackageName extends GoogleHttpClientSpiceReque
             sb.append(";");
         }
         sb.append(")");
-        String baseUrl;
-        if(repoName!=null){
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/package:"+packageName+"/options="+sb.toString()+"/json";
-        }else{
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/package:"+packageName+"/options="+sb.toString()+"/json";
-        }
+
+        String baseUrl  = "http://webservices.aptoide.com/webservices/2/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
-        Log.e("Aptoide-Request", baseUrl);
-        HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        if(repoName != null) {
+            parameters.put("repo", repoName);
+        }
+        parameters.put("identif", "package:" + packageName);
+        parameters.put("options", sb.toString());
+        parameters.put("mode", "json");
+
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

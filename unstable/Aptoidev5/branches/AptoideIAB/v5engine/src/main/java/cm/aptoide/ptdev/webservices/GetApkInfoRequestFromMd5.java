@@ -5,12 +5,15 @@ import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,17 +62,22 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
             sb.append(";");
         }
         sb.append(")");
-        String baseUrl;
-        if(repoName!=null){
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }else{
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }
+
+        String baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
-        Log.e("Aptoide-Request", baseUrl);
-        HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        if(repoName != null) {
+            parameters.put("repo", repoName);
+        }
+        parameters.put("identif", "md5sum:" + md5Sum);
+        parameters.put("options", sb.toString());
+        parameters.put("mode", "json");
+
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

@@ -4,10 +4,13 @@ import android.util.Log;
 import cm.aptoide.ptdev.webservices.json.RepositoryCommentsJson;
 import cm.aptoide.ptdev.webservices.json.RepositoryLikesJson;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -20,8 +23,6 @@ import java.util.Locale;
 public class ListRepositoryCommentsRequest extends GoogleHttpClientSpiceRequest<RepositoryCommentsJson> {
 
     private final String storeName;
-    String baseUrl = "http://webservices.aptoide.com/webservices/listRepositoryComments/%s/json";
-
 
     public ListRepositoryCommentsRequest(String storeName) {
         super(RepositoryCommentsJson.class);
@@ -30,11 +31,17 @@ public class ListRepositoryCommentsRequest extends GoogleHttpClientSpiceRequest<
 
     @Override
     public RepositoryCommentsJson loadDataFromNetwork() throws Exception {
-        baseUrl = String.format(Locale.ENGLISH, baseUrl, storeName);
+        String baseUrl = "http://webservices.aptoide.com/webservices/listRepositoryComments";
 
         GenericUrl url = new GenericUrl(baseUrl);
-        Log.d("Aptoide-Request", url.toString());
-        HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
+
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        parameters.put("repo", storeName);
+        parameters.put("mode", "json");
+
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
         request.setConnectTimeout(10000);
         request.setReadTimeout(10000);
