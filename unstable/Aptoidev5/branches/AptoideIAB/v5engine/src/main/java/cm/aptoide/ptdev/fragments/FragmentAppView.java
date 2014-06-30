@@ -209,7 +209,7 @@ public abstract class FragmentAppView extends Fragment {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 spinner.setOnItemSelectedListener(null);
                                 MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
-                                BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode()));
+                                BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
                             }
 
                             @Override

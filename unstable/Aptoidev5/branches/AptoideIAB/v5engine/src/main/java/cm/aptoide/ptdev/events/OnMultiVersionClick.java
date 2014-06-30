@@ -9,12 +9,14 @@ public class OnMultiVersionClick {
     private String package_name;
     private String versionName;
     private int versionCode;
+    private int downloads;
 
-    public OnMultiVersionClick(String repoName, String package_name, String versionName, int versionCode) {
+    public OnMultiVersionClick(String repoName, String package_name, String versionName, int versionCode, int downloads) {
         this.repoName = repoName;
         this.package_name = package_name;
         this.versionName = versionName;
         this.versionCode = versionCode;
+        this.downloads = downloads;
     }
 
     public String getRepoName() {
@@ -31,5 +33,9 @@ public class OnMultiVersionClick {
 
     public int getVersionCode() {
         return versionCode;
+    }
+
+    public int getDownloads() {
+        return downloads;
     }
 }

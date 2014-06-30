@@ -1289,7 +1289,7 @@ public class Database {
 
     public MultiStoreItem[] getOtherReposVersions(long id, String packageName, String version, String repoName, int versionCode){
 
-        Cursor c = database.rawQuery("select * from (select apk.version_code as version_code, apk.version_name as version, id_apk as id, repo.name as name from apk join repo on apk.id_repo = repo.id_repo where package_name = ? and repo.is_user = 1 and is_compatible = 1 order by apk.sdk) group by version, name", new String[]{packageName});
+        Cursor c = database.rawQuery("select * from (select apk.downloads as downloads, apk.version_code as version_code, apk.version_name as version, id_apk as id, repo.name as name from apk join repo on apk.id_repo = repo.id_repo where package_name = ? and repo.is_user = 1 and is_compatible = 1 order by apk.sdk) group by version, name", new String[]{packageName});
         ArrayList<MultiStoreItem> items = new ArrayList<MultiStoreItem>();
         items.add(new MultiStoreItem(version, repoName, versionCode, packageName));
         ArrayList<MultiStoreItem> itemsTemp = new ArrayList<MultiStoreItem>();
@@ -1300,7 +1300,10 @@ public class Database {
             String apkRepoName = c.getString(c.getColumnIndex("name"));
             long apkId = c.getLong(c.getColumnIndex("id"));
             int apkVersionCode = c.getInt(c.getColumnIndex("version_code"));
-            if(!repoName.equals(apkRepoName) || versionCode!=apkVersionCode) itemsTemp.add(new MultiStoreItem(apkVersion, apkRepoName, apkVersionCode, packageName));
+            int downloads = c.getInt(c.getColumnIndex("downloads"));
+            if(!repoName.equals(apkRepoName) || versionCode!=apkVersionCode) {
+                itemsTemp.add(new MultiStoreItem(apkVersion, apkRepoName, apkVersionCode, packageName, downloads));
+            }
         }
 
         Collections.sort(itemsTemp, new Comparator<MultiStoreItem>() {

@@ -803,7 +803,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Produce
     public RatingEvent publishRating() {
-        Log.d("apkflag", "publishRating() ratingEvent");
         RatingEvent event = new RatingEvent();
         if (json != null && !json.getStatus().equals("FAIL")) {
 
@@ -1284,7 +1283,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Subscribe
     public void onRefresh(AppViewRefresh event) {
-        Log.d("apkflag", "onRefresh() appviewrefresh");
         GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
 
         request.setRepoName(repoName);
@@ -1308,9 +1306,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setVercode(event.getVersionCode());
         if (token != null) request.setToken(token);
         cacheKey = event.getPackage_name() + event.getRepoName() + event.getVersionCode();
+        Log.d("OnMultiVersionClick-downloads", "downloads: " + event.getDownloads());
+        downloads = event.getDownloads();
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-
 
     }
 
@@ -1385,7 +1384,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public void setToken(String token) {
-        Log.d("apkflag", "setToken()");
         this.token = token;
     }
 
