@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cm.aptoide.pt"
-          android:versionCode="435"
-          android:versionName="5.1.2" android:installLocation="auto">
+          android:versionCode="436"
+          android:versionName="5.1.3" android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
@@ -75,6 +75,9 @@
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 
+        <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity"/>
+
+
         <activity android:name="cm.aptoide.ptdev.AppViewActivity" />
 
         <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
@@ -97,6 +100,10 @@
         <activity android:name="cm.aptoide.ptdev.Settings"
                   android:label="@string/settings_title_bar"
                   android:theme="@style/Settings"/>
+
+        <activity android:name="cm.aptoide.ptdev.SettingsV11"
+                  android:label="@string/settings_title_bar"
+                  />
 
         <activity android:name="cm.aptoide.ptdev.SearchManager"
                   android:exported="false">
@@ -337,6 +344,8 @@
 
         <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog" />
         <activity android:name="com.aptoide.openiab.Buy" />
+        <activity android:name="cm.aptoide.ptdev.TestActivity" />
+
         <activity android:name="com.aptoide.openiab.CreditCard" />
         <activity android:name="com.paypal.android.MEP.PayPalActivity" android:configChanges="keyboardHidden|orientation" />
         <meta-data android:name="com.crashlytics.ApiKey" android:value="df90b10add729d8e34d67f6d4f0bb3dddce5b7eb"/>

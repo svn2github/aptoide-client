@@ -26,11 +26,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 /**
  * Created by rmateus on 27-06-2014.
  */
-public class FeaturedGraphicActivity extends ActionBarActivity {
+public class MoreFeaturedGraphicActivity extends ActionBarActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Aptoide.getThemePicker().setAptoideTheme(this);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
 
@@ -85,6 +89,12 @@ public class FeaturedGraphicActivity extends ActionBarActivity {
                     return new Database(Aptoide.getDb()).getAllFeaturedGraphics();
                 }
             };
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            getListView().setItemsCanFocus(true);
         }
 
         @Override
