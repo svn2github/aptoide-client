@@ -83,5 +83,6 @@ public class Comment {
         return isShowingSubcomments;
     }
     public void setShowingSubcomments(boolean isShowingSubcomments) { this.isShowingSubcomments = isShowingSubcomments; }
+    public void clearSubcomments() { subComments.clear(); }
     public Number getVotes() {  return votes; }
 }

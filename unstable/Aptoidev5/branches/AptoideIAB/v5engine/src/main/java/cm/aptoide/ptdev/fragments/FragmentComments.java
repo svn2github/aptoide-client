@@ -54,6 +54,9 @@ public class FragmentComments extends ListFragment {
             if (comment.getAnswerTo() == null) {
                 lastComment = comment;
                 principalComments.add(comment);
+                if(comment.hasSubComments()) {
+                    comment.clearSubcomments();
+                }
             } else {
                 lastComment.addSubComment(comment);
             }

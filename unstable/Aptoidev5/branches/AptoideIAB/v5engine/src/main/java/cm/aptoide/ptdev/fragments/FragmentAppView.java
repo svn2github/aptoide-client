@@ -1134,12 +1134,10 @@ public abstract class FragmentAppView extends Fragment {
             public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
                 final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 View view;
+
                 commentsContainer.removeAllViews();
-                Log.d("subcomments", "total comments: " + comments.size());
-                for(Comment comment : FragmentComments.getCompoundedComments(comments)) {
-
+                for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
                     view = FragmentComments.createCommentView(context, commentsContainer, comment, dateFormater);
-
                     commentsContainer.addView(view);
                 }
             }
