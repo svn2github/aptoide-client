@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.FeaturedGraphicActivity;
-import cm.aptoide.ptdev.MoreTopAppsActivity;
+import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -112,7 +111,7 @@ public  class HomeFeaturedAdapter extends BaseAdapter {
                 moreTopTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        context.startActivity(new Intent(context, FeaturedGraphicActivity.class));
+                        context.startActivity(new Intent(context, MoreFeaturedGraphicActivity.class));
                     }
                 });
                 break;
