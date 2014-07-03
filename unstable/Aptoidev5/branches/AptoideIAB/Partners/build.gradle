@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "20.0"
 
     defaultConfig {
         minSdkVersion 7
@@ -29,7 +29,7 @@ buildTypes {
 }
 
 dependencies {
-	compile 'com.android.support:appcompat-v7:+'
+	compile 'com.android.support:appcompat-v7:19.1.0'
     compile project (':v5engine')
     compile fileTree(dir: 'libs', include: '*.jar')
 
