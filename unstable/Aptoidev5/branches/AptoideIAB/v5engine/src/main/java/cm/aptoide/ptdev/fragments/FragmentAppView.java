@@ -788,6 +788,7 @@ public abstract class FragmentAppView extends Fragment {
         private TextView fakeVotes;
         private TextView freezeVotes;
         private TextView virusVotes;
+        private TextView review;
         private Button flagThisApp;
         private LinearLayout flags_container;
         private ProgressBar loading_flags;
@@ -846,7 +847,35 @@ public abstract class FragmentAppView extends Fragment {
 
             }
 
-            if(event.getFlagVotes()!=null){
+            if(event.getVeredict()!=null){
+
+                loading_flags.setVisibility(View.GONE);
+                flagThisApp.setVisibility(View.GONE);
+                flags_container.setVisibility(View.VISIBLE);
+                goodVotes.setVisibility(View.GONE);
+                licenseVotes.setVisibility(View.GONE);
+                fakeVotes.setVisibility(View.GONE);
+                freezeVotes.setVisibility(View.GONE);
+                virusVotes.setVisibility(View.GONE);
+
+                review.setVisibility(View.VISIBLE);
+                review.setText("" + event.getVeredict().getReview());
+                if(event.getVeredict().getFlag().equals("good")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_good), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("license")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_license), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("fake")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_fake), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("freeze")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_freeze), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("virus")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_virus), null, null, null);
+                }
+            }else if(event.getFlagVotes()!=null){
                 loading_flags.setVisibility(View.GONE);
                 flags_container.setVisibility(View.VISIBLE);
                 goodVotes.setText(getString(R.string.flag_good) +": "+event.getFlagVotes().getGood());
@@ -918,6 +947,7 @@ public abstract class FragmentAppView extends Fragment {
             fakeVotes = (TextView) v.findViewById(R.id.flag_fake);
             freezeVotes = (TextView) v.findViewById(R.id.flag_freeze);
             virusVotes = (TextView) v.findViewById(R.id.flag_virus);
+            review = (TextView) v.findViewById(R.id.flag_review);
 
             flagThisApp = (Button) v.findViewById(R.id.button_flag);
             flags_container = (LinearLayout) v.findViewById(R.id.flags_container);

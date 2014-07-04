@@ -1,50 +1,36 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.*;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.MoreTopAppsActivity;
+import cm.aptoide.ptdev.MoreUserBasedActivity;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.adapters.HomeTopAdapter;
+import cm.aptoide.ptdev.adapters.SectionAdapter;
+import cm.aptoide.ptdev.adapters.Sectionizer;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.model.Collection;
-import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
-import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
-import java.io.IOException;
-import java.util.AbstractCollection;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

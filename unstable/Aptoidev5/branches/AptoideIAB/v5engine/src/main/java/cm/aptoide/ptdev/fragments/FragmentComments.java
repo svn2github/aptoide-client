@@ -77,7 +77,11 @@ public class FragmentComments extends ListFragment {
             e.printStackTrace();
         }
         if(comment.getVotes() != null && comment.getVotes().intValue() != 0){
-            votesString = " | " + context.getString(R.string.votes, comment.getVotes());
+            if(comment.getVotes().intValue()==1) {
+                votesString = " | " + context.getString(R.string.vote, comment.getVotes());
+            }else{
+                votesString = " | " + context.getString(R.string.votes, comment.getVotes());
+            }
         }else{
             votesString = "";
         }
@@ -97,6 +101,7 @@ public class FragmentComments extends ListFragment {
     private static void fillViewSubcommentsFields(Context context, View view, final Comment comment, SimpleDateFormat dateFormater) {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
         final TextView viewComments = (TextView) view.findViewById(R.id.hasComments);
+        String subCommentText;
 
         for (Comment subComment : comment.getSubComments()) {
             View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, subcommentsContainer, false);
@@ -104,7 +109,12 @@ public class FragmentComments extends ListFragment {
             subcommentsContainer.addView(subview);
         }
 
-        viewComments.setText(context.getString(R.string.view_more_comments, comment.getSubComments().size()));
+        if(comment.getSubComments().size()==1){
+            subCommentText = context.getString(R.string.view_one_more_comment, comment.getSubComments().size());
+        }else{
+            subCommentText = context.getString(R.string.view_more_comments, comment.getSubComments().size());
+        }
+        viewComments.setText(subCommentText);
         viewComments.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
         view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
 

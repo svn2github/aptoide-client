@@ -3,7 +3,6 @@
 
     <item android:id="@+id/menu_rollback"
           app:showAsAction="ifRoom"
-          android:title="@string/rollback"
-          android:icon="@drawable/ic_rollback"/>
+          android:title="@string/rollback"/>
 
 </menu>

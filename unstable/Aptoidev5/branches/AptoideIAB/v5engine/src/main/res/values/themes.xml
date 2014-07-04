@@ -62,6 +62,7 @@
 
         <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
         <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
     </style>
 
 
@@ -123,6 +124,7 @@
 
         <item name="icViewMoreComments">@drawable/ic_action_comments_dark</item>
         <item name="icDialogDrawable">@drawable/dialog_background_dark</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
     </style>
 
 

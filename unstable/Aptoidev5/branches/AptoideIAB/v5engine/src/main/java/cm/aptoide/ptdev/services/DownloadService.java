@@ -305,7 +305,7 @@ public class DownloadService extends Service {
     public void stopDownload(long id) {
 
         DownloadInfo info = getDownload(id);
-        info.remove();
+        info.remove(true);
 
     }
 
@@ -328,16 +328,17 @@ public class DownloadService extends Service {
 
     }
 
-    public void removeNonActiveDownloads() {
+    public void removeNonActiveDownloads(boolean isChecked) {
         ArrayList<DownloadInfo> allDownloads = new ArrayList<DownloadInfo>();
         allDownloads.addAll(manager.getmErrorList());
         allDownloads.addAll(manager.getmCompletedList());
 
         for(DownloadInfo downloadInfo : allDownloads){
-            downloadInfo.remove();
+            downloadInfo.remove(isChecked);
         }
 
     }
+
 
     public class DownloadRequest implements RequestListener<GetApkInfoJson> {
 

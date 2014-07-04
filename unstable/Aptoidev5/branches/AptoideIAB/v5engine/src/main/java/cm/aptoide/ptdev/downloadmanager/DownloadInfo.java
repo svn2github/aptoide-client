@@ -334,10 +334,9 @@ public class DownloadInfo implements Runnable, Serializable {
 
     }
 
-    public void remove() {
+    public void remove(boolean isRemove) {
 
-
-        boolean isRemove = !getStatusState().getEnumState().equals(EnumState.COMPLETE);
+//        boolean isRemove = !getStatusState().getEnumState().equals(EnumState.COMPLETE);
 
         changeStatusState(new CompletedState(this));
 

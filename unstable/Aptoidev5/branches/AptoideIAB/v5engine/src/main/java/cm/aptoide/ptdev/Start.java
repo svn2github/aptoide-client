@@ -1134,6 +1134,8 @@ public class Start extends ActionBarActivity implements
                 startActivity(sharingIntent);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+            } catch (ActivityNotFoundException notFound){
+                Toast.makeText(mContext, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
             }
         } else {
             Intent intent = new Intent(mContext, WebViewFacebook.class);

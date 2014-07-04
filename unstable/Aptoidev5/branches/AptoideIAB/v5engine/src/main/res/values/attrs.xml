@@ -106,4 +106,5 @@
     <attr name="icViewMoreComments" format="reference"/>
     <attr name="icDialogDrawable" format="reference"/>
 
+    <attr name="icNextItemDrawable" format="reference"/>
 </resources>

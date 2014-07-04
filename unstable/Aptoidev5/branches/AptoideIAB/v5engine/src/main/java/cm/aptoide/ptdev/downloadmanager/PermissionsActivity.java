@@ -210,7 +210,7 @@ public class PermissionsActivity extends Activity {
             }
         });
 
-
+        dialog.setCancelable(false);
 
 
         dialog.show();

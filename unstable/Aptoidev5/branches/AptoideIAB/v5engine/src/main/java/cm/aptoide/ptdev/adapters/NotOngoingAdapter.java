@@ -52,7 +52,7 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                download.getParent().remove();
+                download.getParent().remove(false);
             }
         });
         ImageLoader.getInstance().displayImage(download.getIcon(), (ImageView) v.findViewById(R.id.app_icon));
