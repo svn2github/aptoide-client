@@ -421,7 +421,6 @@ public class Database {
 
     public Cursor getInstalled() {
         Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
-        c.getCount();
         return c;
     }
 
@@ -429,11 +428,13 @@ public class Database {
 
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
+        boolean filterUpdates = AptoideUtils.getSharedPreferences().getBoolean("showAllUpdates", true);
         final long startTime = System.currentTimeMillis();
 
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
         Cursor c = database.rawQuery("select * from (select " +
                 " (installed.version_code < apk.version_code) as is_update, " +
+                " (installed.signature = apk.signature or apk.signature='')  as signature_valid, " +
                 " apk.id_apk as _id, " +
                 " apk.name as name, " +
                 " apk.version_code as version_code, " +
@@ -448,14 +449,11 @@ public class Database {
                 " join repo on apk.id_repo = repo.id_repo where not exists (select 1 from excluded as d where apk.package_name = d.package_name ) "+
                     (filterCompatible ? " and apk.is_compatible='1' " :" "   ) +
                     (filterMature ?  " and apk.mature='0' " : " "  )   +
-                " and (installed.signature = apk.signature or apk.signature='') " +
+                    (filterUpdates? " and (installed.signature = apk.signature or apk.signature='') " : " ") +
                 " order by apk.version_code asc) as firstQuery " +
                 " group by package_name, is_update order by is_update desc, name collate nocase ", null);
 
-        c.getCount();
         final long endTime = System.currentTimeMillis();
-
-
 
 
 
@@ -925,7 +923,6 @@ public class Database {
     }
 
     public Cursor getApkInfo(long id) {
-
         Cursor c = database.rawQuery("select repo.apk_path as apk_path, apk.path as path, apk.md5, apk.version_code as version_code, apk.package_name as package_name, apk.name as name, apk.version_name as version_name, apk.rating as rating, apk.downloads as downloads, apk.sdk as sdk, apk.screen as screen, apk.icon as icon, repo.icons_path as iconpath, repo.name as reponame from apk join repo on apk.id_repo = repo.id_repo where apk.id_apk = ?", new String[]{String.valueOf(id)});
         c.moveToFirst();
 
@@ -1029,9 +1026,7 @@ public class Database {
         values.put(Schema.Category.COLUMN_ORDER, order);
 
         database.insert(Schema.Category.getName(), null, values);
-
-
-}
+    }
 
     public void insertRollbackAction(RollBackItem rollBackItem) {
         ContentValues values = new ContentValues();

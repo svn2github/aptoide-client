@@ -513,8 +513,8 @@ public class GetApkInfoJson {
         @Key private String cN;
         @Key private String l;
         @Key private String o;
-        @Key private String sHA1;
         @Key private String sT;
+        @Key private String SHA1;
 
         public String getC(){
             return this.c;
@@ -541,10 +541,10 @@ public class GetApkInfoJson {
             this.o = o;
         }
         public String getSHA1(){
-            return this.sHA1;
+            return this.SHA1;
         }
         public void setSHA1(String sHA1){
-            this.sHA1 = sHA1;
+            this.SHA1 = sHA1;
         }
         public String getST(){
             return this.sT;

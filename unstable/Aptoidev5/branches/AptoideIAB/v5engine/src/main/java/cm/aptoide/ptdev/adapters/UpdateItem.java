@@ -6,6 +6,7 @@ package cm.aptoide.ptdev.adapters;
 public class UpdateItem {
 
     private boolean update;
+    private boolean isSignature_valid;
     private long id;
     private String versionName;
     private String name;
@@ -13,6 +14,9 @@ public class UpdateItem {
 
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+    public void setIsSignatureValid(boolean isSignature_valid) {
+        this.isSignature_valid = isSignature_valid;
     }
 
     public void setId(long id) {
@@ -33,6 +37,10 @@ public class UpdateItem {
 
     public boolean isUpdate() {
         return update;
+    }
+
+    public boolean isSignature_valid() {
+        return isSignature_valid;
     }
 
     public long getId() {

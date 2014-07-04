@@ -48,6 +48,7 @@ import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.devspark.appmsg.AppMsg;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -63,8 +64,11 @@ import roboguice.util.temp.Ln;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -86,6 +90,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     private GetApkInfoJson json;
 
+    private String installedSignature;
+    private String signature;
     private String name;
     private boolean isFromActivityResult;
     private String wUrl;
@@ -116,6 +122,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (getApkInfoJson != null) {
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
+                    GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
+                    signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
 
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
@@ -140,6 +148,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
+                    if(!signature.equals(installedSignature))
+                        AppMsg.makeText(AppViewActivity.this, getString(R.string.row_app_update_not_safe), AppMsg.STYLE_CONFIRM).show();
 
                     downloadId = json.getApk().getMd5sum().hashCode();
 
@@ -330,6 +340,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         try {
             PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
             isInstalled = true;
+
+            installedSignature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(info.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
             if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
                 isUpdate = true;
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
@@ -372,6 +384,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } catch (PackageManager.NameNotFoundException e) {
             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.install));
             findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
@@ -778,15 +794,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Produce
-    public RelatedAppsEvent publishRelatedApps() {
-
-        Related relatedApps = new Related();
-
-        return new RelatedAppsEvent(relatedApps);
-
-    }
-
-    @Produce
     public SpecsEvent publishSpecs() {
 
         SpecsEvent specs = new SpecsEvent();
@@ -833,7 +840,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private void publishEvents() {
         Log.d("Aptoide-AppViewActivity", "Publishing revents");
         BusProvider.getInstance().post(publishDetails());
-        BusProvider.getInstance().post(publishRelatedApps());
         BusProvider.getInstance().post(publishSpecs());
         BusProvider.getInstance().post(publishRating());
     }
@@ -1146,7 +1152,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public void onLoadFinished(Loader<Cursor> objectLoader, Cursor apkCursor) {
 
         if (apkCursor.getCount() > 0) {
-
             repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
             name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
             package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
@@ -1195,6 +1200,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             try {
                 PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
                 isInstalled = true;
+
                 if (versionCode > info.versionCode) {
                     isUpdate = true;
                     ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
@@ -1639,13 +1645,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             this.minScreen = minScreen;
         }
     }
-
+/*
     public static class RelatedAppsEvent {
         private RelatedAppsEvent(Related related) {
 
         }
     }
-
+*/
     private static class Screenshots {
         private List<String> screenshots;
 

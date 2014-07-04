@@ -67,13 +67,14 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
 
         AppViewHolder holder = (AppViewHolder) v.getTag();
 
-
         if(holder==null){
             holder = new AppViewHolder();
             holder.appIcon = (ImageView) v.findViewById(R.id.app_icon);
             holder.manageIcon = (ImageView) v.findViewById(R.id.manage_icon);
             holder.appName = (TextView) v.findViewById(R.id.app_name);
             holder.versionName = (TextView) v.findViewById(R.id.app_version);
+            if(type==1) holder.notsafe = (TextView) v.findViewById(R.id.update_not_safe);
+
             v.setTag(holder);
         }
 
@@ -86,7 +87,6 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
             String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
             icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
-
 
         ImageLoader.getInstance().displayImage(icon1,holder.appIcon);
 
@@ -102,8 +102,17 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
+
+                if(!getItem(position).isSignature_valid()){
+                    holder.notsafe.setVisibility(View.VISIBLE);
+                }else{
+                    holder.notsafe.setVisibility(View.GONE);
+                }
+
                 break;
 
+            case 0:
+                break;
         }
 
         return v;
@@ -157,7 +166,8 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
         ImageView manageIcon;
         TextView appName;
         TextView versionName;
-        TextView downloads;
-        TextView rating;
+        TextView notsafe;
+        //TextView downloads;
+        //TextView rating;
     }
 }

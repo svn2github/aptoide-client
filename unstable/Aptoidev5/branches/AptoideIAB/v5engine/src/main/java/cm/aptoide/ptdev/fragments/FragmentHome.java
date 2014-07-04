@@ -39,8 +39,7 @@ import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.imbryk.viewPager.LoopPagerAdapterWrapper;
-import com.imbryk.viewPager.LoopViewPager;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -51,7 +50,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
 import java.lang.reflect.Array;

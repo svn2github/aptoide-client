@@ -483,5 +483,9 @@
     <string name="vote_up">Vote Up</string>
     <string name="view_more_comments">View more %s comment(s)</string>
     <string name="votes">%s vote(s)</string>
+    <string name="show_all_updates">Don\'t show updates for applications with different signatures</string>
+    <string name="setting_allUpdates_filtering">Filter Updates</string>
+    <string name="row_app_update_not_safe">Not safe! Update has a different signature.</string>
+
 
 </resources>

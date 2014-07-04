@@ -107,6 +107,8 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
                                 item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
                             }
 
+                            item.setIsSignatureValid(data.getInt(data.getColumnIndex("signature_valid"))==1);
+
                             String iconPath = data.getString(data.getColumnIndex("iconpath"));
                             String icon = data.getString(data.getColumnIndex("icon"));
                             item.setName(data.getString(data.getColumnIndex("name")));

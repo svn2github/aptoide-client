@@ -65,7 +65,6 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  */
 public abstract class FragmentAppView extends Fragment {
 
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -84,9 +83,7 @@ public abstract class FragmentAppView extends Fragment {
         BusProvider.getInstance().unregister(this);
     }
 
-
     public static class FragmentAppViewDetails extends FragmentAppView{
-
 
         private TextView description;
         private TextView showAllDescription;
@@ -101,7 +98,6 @@ public abstract class FragmentAppView extends Fragment {
         private TextView dontLikes;
         private TextView size;
         private TextView publisher;
-
 
 
         private ProgressBar loadingPb;
@@ -404,7 +400,6 @@ public abstract class FragmentAppView extends Fragment {
             }
         }
 
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
@@ -697,8 +692,6 @@ public abstract class FragmentAppView extends Fragment {
                 task.cancel(true);
             }
         }
-
-
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.SpecsEvent event) {

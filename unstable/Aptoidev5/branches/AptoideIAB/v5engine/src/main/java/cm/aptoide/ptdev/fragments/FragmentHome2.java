@@ -40,7 +40,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
 import java.util.AbstractCollection;

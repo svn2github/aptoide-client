@@ -39,6 +39,8 @@ public class IconSizes {
         }else if (densityMultiplier <= 3f) {
             densityMultiplier = 3f;
         }
+
+
 //        switch (density){
 //            case 213:
 //                densityMultiplier = 1.5f;

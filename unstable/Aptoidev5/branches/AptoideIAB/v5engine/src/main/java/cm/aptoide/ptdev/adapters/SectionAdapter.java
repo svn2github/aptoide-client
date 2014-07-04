@@ -27,7 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import cm.aptoide.ptdev.TestActivity;
+
 import cm.aptoide.ptdev.fragments.HomeItem;
 
 import java.util.LinkedHashMap;
