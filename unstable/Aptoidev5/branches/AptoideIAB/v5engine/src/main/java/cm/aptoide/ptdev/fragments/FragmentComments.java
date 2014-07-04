@@ -1,7 +1,12 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.accounts.*;
+import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.util.Log;
@@ -10,20 +15,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import cm.aptoide.ptdev.AllCommentsActivity;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.*;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.dialogs.ReplyCommentDialog;
+import cm.aptoide.ptdev.events.AppViewRefresh;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
+import cm.aptoide.ptdev.webservices.AddCommentRequest;
 import cm.aptoide.ptdev.webservices.AllCommentsRequest;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,15 +51,15 @@ import java.util.List;
 public class FragmentComments extends ListFragment {
 
 
-    public static View createCommentView(Context context, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
+    public static View createCommentView(Activity activity, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
         View view;
         if(comment.hasSubComments()) {
-            view = LayoutInflater.from(context).inflate(R.layout.row_expandable_comment, commentsContainer, false);
-            fillViewCommentFields(context, view, comment, dateFormater);
-            fillViewSubcommentsFields(context, view, comment, dateFormater);
+            view = LayoutInflater.from(activity).inflate(R.layout.row_expandable_comment, commentsContainer, false);
+            fillViewCommentFields(activity, view, comment, dateFormater, true);
+            fillViewSubcommentsFields(activity, view, comment, dateFormater);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
-            fillViewCommentFields(context, view, comment, dateFormater);
+            view = LayoutInflater.from(activity).inflate(R.layout.row_comment, commentsContainer, false);
+            fillViewCommentFields(activity, view, comment, dateFormater, true);
         }
         return view;
     }
@@ -64,24 +83,19 @@ public class FragmentComments extends ListFragment {
         return principalComments;
     }
 
-    private static void fillViewCommentFields(Context context, View view, Comment comment, SimpleDateFormat dateFormater) {
+    private static void fillViewCommentFields(final Activity activity, View view, final Comment comment, SimpleDateFormat dateFormater, final boolean showReply) {
         TextView content = (TextView) view.findViewById(R.id.content);
         TextView author = (TextView) view.findViewById(R.id.author);
         String dateString = "";
         String votesString = "";
 
         try {
-            dateString = AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime());
-//            date.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
+            dateString = AptoideUtils.DateTimeUtils.getInstance(activity).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         if(comment.getVotes() != null && comment.getVotes().intValue() != 0){
-            if(comment.getVotes().intValue()==1) {
-                votesString = " | " + context.getString(R.string.vote, comment.getVotes());
-            }else{
-                votesString = " | " + context.getString(R.string.votes, comment.getVotes());
-            }
+            votesString = " | " + activity.getString(R.string.votes, comment.getVotes());
         }else{
             votesString = "";
         }
@@ -93,37 +107,24 @@ public class FragmentComments extends ListFragment {
         ((ImageView) view.findViewById(R.id.ic_action)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(v, (long) 0);
+                showPopup(activity, v, comment.getId().intValue(), comment.getUsername(), showReply);
             }
         });
     }
 
-    private static void fillViewSubcommentsFields(Context context, View view, final Comment comment, SimpleDateFormat dateFormater) {
+    private static void fillViewSubcommentsFields(Activity activity, View view, final Comment comment, SimpleDateFormat dateFormater) {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
         final TextView viewComments = (TextView) view.findViewById(R.id.hasComments);
-        String subCommentText;
 
         for (Comment subComment : comment.getSubComments()) {
-            View subview = LayoutInflater.from(context).inflate(R.layout.row_subcomment, subcommentsContainer, false);
-            fillViewCommentFields(context, subview, subComment, dateFormater);
+            View subview = LayoutInflater.from(activity).inflate(R.layout.row_subcomment, subcommentsContainer, false);
+            fillViewCommentFields(activity, subview, subComment, dateFormater, false);
             subcommentsContainer.addView(subview);
         }
 
-        if(comment.getSubComments().size()==1){
-            subCommentText = context.getString(R.string.view_one_more_comment, comment.getSubComments().size());
-        }else{
-            subCommentText = context.getString(R.string.view_more_comments, comment.getSubComments().size());
-        }
-        viewComments.setText(subCommentText);
+        viewComments.setText(activity.getString(R.string.view_more_comments, comment.getSubComments().size()));
         viewComments.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
         view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
-
-        ((ImageView) view.findViewById(R.id.ic_action)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v, (long) 0);
-            }
-        });
     }
 
     private static View.OnClickListener getMoreCommentsListener(final Comment comment, final LinearLayout subcommentsContainer, final TextView viewComments) {
@@ -175,6 +176,7 @@ public class FragmentComments extends ListFragment {
         spiceManager.execute(request, requestListener);
     }
 
+
     public class AllCommentsAdapter extends ArrayAdapter<Comment> {
         final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -196,13 +198,13 @@ public class FragmentComments extends ListFragment {
             Comment comment = getItem(position);
 
             if (view == null) {
-                view = createCommentView(getContext(), parent, comment, dateFormater);
+                view = createCommentView(getActivity(), parent, comment, dateFormater);
             } else {
-                fillViewCommentFields(getContext(), view, comment, dateFormater);
+                fillViewCommentFields(getActivity(), view, comment, dateFormater, true);
                 if(comment.hasSubComments()) {
                     LinearLayout ll = ((LinearLayout)view.findViewById(R.id.subcomments));
                     ll.removeAllViews();
-                    fillViewSubcommentsFields(getContext(), view, comment, dateFormater);
+                    fillViewSubcommentsFields(getActivity(), view, comment, dateFormater);
                     if(comment.isShowingSubcomments()) {
                         ll.setVisibility(View.VISIBLE);
                     } else {
@@ -234,41 +236,91 @@ public class FragmentComments extends ListFragment {
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
     }
 
-    public static void showPopup(View v, long id) {
+    public static void showPopup(Activity activity, View v, int commmentId, String author, boolean showReply) {
         android.support.v7.widget.PopupMenu popup = new android.support.v7.widget.PopupMenu(v.getContext(), v);
-        popup.setOnMenuItemClickListener(new MenuListener(v.getContext(), id));
+        popup.setOnMenuItemClickListener(new MenuListener(activity, commmentId, author));
         popup.inflate(R.menu.menu_comments);
         popup.show();
+        if(!showReply) {
+            popup.getMenu().findItem(R.id.menu_reply).setVisible(false);
+        }
     }
 
     static class MenuListener implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener{
 
-        Context context;
-        long id;
+        Activity activity;
+        int commentId;
+        String author;
+        AddCommentVoteCallback voteCallback;
 
-        MenuListener(Context context, long id) {
-            this.context = context;
-            this.id = id;
-
-
+        MenuListener(Activity activity, int commentId, String author) {
+            this.activity = activity;
+            this.commentId = commentId;
+            this.author = author;
+            voteCallback = (AddCommentVoteCallback) activity;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
+            final AccountManager manager = AccountManager.get(activity);
+
+            if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
+
+                manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity, new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        if (LoginActivity.isLoggedIn(activity)) {
+
+                            final Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, activity, new AccountManagerCallback<Bundle>() {
+                                @Override
+                                public void run(AccountManagerFuture<Bundle> future) {
+                                    try {
+
+                                        ((AppViewActivity) activity).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                    } catch (OperationCanceledException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (AuthenticatorException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, null);
+                        }
+                    }
+                }, null);
+
+                return false;
+            }
+
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_reply) {
-                Toast.makeText(context, context.getString(R.string.reply), Toast.LENGTH_LONG).show();
+
+                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
+
+                    ReplyCommentDialog replyDialog = AptoideDialog.replyCommentDialog(commentId, author);
+                    replyDialog.show(((ActionBarActivity) activity).getSupportFragmentManager(), "replyCommentDialog");
+
+                } else {
+
+                    AptoideDialog.updateUsernameDialog().show(((ActionBarActivity) activity).getSupportFragmentManager(), "updateNameDialog");
+                }
+
                 return true;
             } else if (i == R.id.menu_vote_up) {
-                Toast.makeText(context, context.getString(R.string.vote_up), Toast.LENGTH_LONG).show();
+
+                voteCallback.voteComment(commentId, AddApkCommentVoteRequest.CommentVote.up);
                 return true;
+
             } else if (i == R.id.menu_vote_down) {
-                Toast.makeText(context, context.getString(R.string.vote_down), Toast.LENGTH_LONG).show();
+
+                voteCallback.voteComment(commentId, AddApkCommentVoteRequest.CommentVote.down);
                 return true;
-            } else{
-                return false;
             }
+            return false;
         }
+
     }
 }

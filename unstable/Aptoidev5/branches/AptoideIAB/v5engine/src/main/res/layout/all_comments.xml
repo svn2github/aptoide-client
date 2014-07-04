@@ -10,10 +10,9 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <fragment android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_marginLeft="5dp"
-              android:layout_marginRight="5dp"
-              android:name="cm.aptoide.ptdev.fragments.FragmentComments"/>
+    <FrameLayout android:layout_width="match_parent"       android:layout_marginLeft="5dp"
+                 android:layout_marginRight="5dp"        android:id="@+id/fragContainer"
+                  android:layout_height="match_parent"></FrameLayout>
+
 
 </FrameLayout>

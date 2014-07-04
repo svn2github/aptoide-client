@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
+import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -15,12 +16,14 @@ import java.util.HashMap;
  */
 public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkCommentVote";
+    public enum CommentVote {
+        up, down;
+    }
 
     private String token;
     private String repo;
     private int cmtid;
-    private String vote;
+    private CommentVote vote;
 
     public AddApkCommentVoteRequest() {
         super(GenericResponseV2.class);
@@ -28,14 +31,15 @@ public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<Gener
 
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
+        String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkCommentVote";
+
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
-
         parameters.put("token", token);
         parameters.put("repo", repo);
         parameters.put("cmtid", String.valueOf(cmtid));
-        parameters.put("vote", vote);
+        parameters.put("vote", vote.name());
         parameters.put("mode", "json");
 
         HttpContent content = new UrlEncodedContent(parameters);
@@ -59,7 +63,7 @@ public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<Gener
         this.cmtid = cmtid;
     }
 
-    public void setVote(String vote) {
+    public void setVote(CommentVote vote) {
         this.vote = vote;
     }
 }

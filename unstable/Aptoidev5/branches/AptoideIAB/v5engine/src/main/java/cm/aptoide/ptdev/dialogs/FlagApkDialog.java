@@ -53,8 +53,6 @@ public class FlagApkDialog extends DialogFragment {
                 .setTitle(getString(R.string.flag_this_app))
                 .create();
 
-
-
         if(getArguments() != null && getArguments().containsKey(FlagApkDialog.USERVOTE_ARGUMENT_KEY)) {
             Log.d("apkflag", "uservote: " + getArguments().getString(FlagApkDialog.USERVOTE_ARGUMENT_KEY));
             Uservote uservote = Uservote.valueOf(getArguments().getString(FlagApkDialog.USERVOTE_ARGUMENT_KEY));

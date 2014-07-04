@@ -37,9 +37,7 @@ public class AptoideDialog {
         return new ProgressDialogFragment();
     }
 
-    public static DialogFragment passwordDialog(){
-        return new PasswordDialog();
-    }
+    public static DialogFragment passwordDialog(){ return new PasswordDialog(); }
 
     public static DialogFragment wrongVersionXmlDialog(){
         return new WrongXmlVersionDialog();
@@ -49,7 +47,16 @@ public class AptoideDialog {
         return new ErrorDialog();
     }
 
+    public static ReplyCommentDialog replyCommentDialog(int commentId, String replyingTo) {
+        ReplyCommentDialog fragment = new ReplyCommentDialog();
 
+        Bundle bundle = new Bundle();
+        bundle.putInt("commentId", commentId);
+        bundle.putString("replyingTo", replyingTo);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
 
     public static DialogFragment myappInstall(String appName) {
 

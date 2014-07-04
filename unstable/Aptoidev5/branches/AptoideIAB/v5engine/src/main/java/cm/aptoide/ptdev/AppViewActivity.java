@@ -28,13 +28,18 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
 import cm.aptoide.ptdev.fragments.FragmentAppView;
+import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
 import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
+import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.services.DownloadService;
@@ -67,6 +72,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.locks.Condition;
@@ -79,7 +85,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Time: 15:04
  * To change this template use File | Settings | File Templates.
  */
-public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyAppsAddStoreInterface, ApkFlagCallback {
+public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyAppsAddStoreInterface, ApkFlagCallback, AddCommentCallback, AddCommentVoteCallback {
 
 
     private static final int LOGIN_REQUEST_CODE = 123;
@@ -532,8 +538,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
         return found;
     }
-
-
 
     public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
@@ -1840,84 +1844,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
-
-    /*private void show(boolean shown, boolean animate) {
-
-        View mListContainer = findViewById(R.id.pager_host);
-        View mProgressContainer = findViewById(R.id.progressBar);
-        if (shown) {
-            isShown = true;
-
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_out));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_in));
-            } else {
-                mProgressContainer.clearAnimation();
-                mListContainer.clearAnimation();
-            }
-            mProgressContainer.setVisibility(View.GONE);
-            mListContainer.setVisibility(View.VISIBLE);
-        } else {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_in));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_out));
-            } else {
-                mProgressContainer.clearAnimation();
-                mListContainer.clearAnimation();
-            }
-            mProgressContainer.setVisibility(View.VISIBLE);
-            mListContainer.setVisibility(View.GONE);
-        }
-    }
-
-    private void showError(boolean shown, boolean animate) {
-
-        View mButtonContainer = findViewById(R.id.repeat_request);
-        mButtonContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isShown = false;
-                showError(false, true);
-                continueLoading(null);
-
-            }
-        });
-        View mProgressContainer = findViewById(R.id.progressBar);
-        if (shown) {
-            isShown = true;
-
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_out));
-                mButtonContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_in));
-            } else {
-                mProgressContainer.clearAnimation();
-                mButtonContainer.clearAnimation();
-            }
-            mProgressContainer.setVisibility(View.GONE);
-            mButtonContainer.setVisibility(View.VISIBLE);
-        } else {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_in));
-                mButtonContainer.startAnimation(AnimationUtils.loadAnimation(
-                        this, android.R.anim.fade_out));
-            } else {
-                mProgressContainer.clearAnimation();
-                mButtonContainer.clearAnimation();
-            }
-            mProgressContainer.setVisibility(View.VISIBLE);
-            mButtonContainer.setVisibility(View.GONE);
-        }
-    }*/
-
-
-
     @Override
     public void addApkFlagClick(String flag) {
 
@@ -1932,27 +1858,145 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         spiceManager.execute(flagRequest, new RequestListener<GenericResponseV2>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                Log.d("TAG", "AddApkFlagRequest failed: " + e.getMessage());
+                Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
                 DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (fragment != null) fragment.dismiss();
             }
 
             @Override
             public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
-                Log.d("TAG", "AddApkFlagRequest status: " + genericResponseV2.getStatus());
-
-                if("FAIL".equals(genericResponseV2.getStatus())) {
-                    Log.d("TAG", "AddApkFlagRequest error: " + getApplicationContext().getString(Errors.getErrorsMap().get(genericResponseV2.getErrors().get(0).getCode())));
-                } else {
-                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-                    BusProvider.getInstance().post(new AppViewRefresh());
-                }
-
                 DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (fragment != null) fragment.dismiss();
+
+                if("OK".equals(genericResponseV2.getStatus())) {
+
+                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                    BusProvider.getInstance().post(new AppViewRefresh());
+                } else {
+
+                    HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                    for(Error error :  genericResponseV2.getErrors()){
+                        Toast.makeText(AppViewActivity.this, getString(errorsMap.get(error.getCode())), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
             }
         });
     }
+
+    private SuccessfullyPostCallback postCallback;
+
+    public void setSuccessfullyPostCallback(SuccessfullyPostCallback postCallback) {
+        this.postCallback = postCallback;
+    }
+
+    @Override
+    public void addComment(String comment, String answerTo) {
+        if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
+
+            AddCommentRequest request = new AddCommentRequest(this);
+            request.setApkversion(getVersionName());
+            request.setPackageName(getPackage_name());
+            request.setRepo(getRepoName());
+            request.setToken(getToken());
+            request.setText(comment);
+
+            if(answerTo != null) {
+                request.setAnswearTo(answerTo);
+            }
+
+            spiceManager.execute(request, addCommentRequestListener);
+            AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        } else {
+
+            AptoideDialog.updateUsernameDialog().show(getSupportFragmentManager(), "updateNameDialog");
+
+        }
+    }
+
+    RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+            if(pd!=null){
+                pd.dismissAllowingStateLoss();
+            }
+
+        }
+
+        @Override
+        public void onRequestSuccess(GenericResponseV2 genericResponse) {
+
+            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+            if(pd!=null){
+                pd.dismissAllowingStateLoss();
+            }
+
+            if(genericResponse.getStatus().equals("OK")){
+                Toast.makeText(AppViewActivity.this, getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
+                if(postCallback != null) {
+                    postCallback.clearState();
+                }
+
+                spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
+                BusProvider.getInstance().post(new AppViewRefresh());
+            }else{
+                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                for(Error error :  genericResponse.getErrors()){
+                    Toast.makeText(AppViewActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        }
+    };
+
+    @Override
+    public void voteComment(int commentId, AddApkCommentVoteRequest.CommentVote vote) {
+        AddApkCommentVoteRequest commentVoteRequest = new AddApkCommentVoteRequest();
+
+        commentVoteRequest.setRepo(repoName);
+        commentVoteRequest.setToken(token);
+        commentVoteRequest.setCmtid(commentId);
+        commentVoteRequest.setVote(vote);
+
+        spiceManager.execute(commentVoteRequest, commentRequestListener);
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+
+    }
+
+    RequestListener<GenericResponseV2> commentRequestListener = new RequestListener<GenericResponseV2>() {
+        @Override
+        public void onRequestFailure(SpiceException e) {
+            Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+            if(pd!=null){
+                pd.dismissAllowingStateLoss();
+            }
+        }
+
+        @Override
+        public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
+            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+            if(pd!=null){
+                pd.dismissAllowingStateLoss();
+            }
+
+            if("OK".equals(genericResponseV2.getStatus())) {
+                Toast.makeText(AppViewActivity.this, getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
+
+                spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
+                BusProvider.getInstance().post(new AppViewRefresh());
+            } else {
+                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
+                    Toast.makeText(AppViewActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        }
+    };
 
 }
 

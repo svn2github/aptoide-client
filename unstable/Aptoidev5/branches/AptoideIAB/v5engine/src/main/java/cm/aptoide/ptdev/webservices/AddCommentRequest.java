@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import android.content.Context;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -16,9 +17,9 @@ import java.util.HashMap;
 /**
  * Created by rmateus on 27-12-2013.
  */
-public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericResponse>{
+public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2>{
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/addApkComment";
+    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkComment";
     private Context context;
     private String token;
     private String repo;
@@ -51,12 +52,12 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
     public void setAnswearTo(String answearTo) { this.answearTo = answearTo; }
 
     public AddCommentRequest(Context context) {
-        super(GenericResponse.class);
+        super(GenericResponseV2.class);
         this.context = context;
     }
 
     @Override
-    public GenericResponse loadDataFromNetwork() throws Exception {
+    public GenericResponseV2 loadDataFromNetwork() throws Exception {
 
         GenericUrl url = new GenericUrl(baseUrl);
 

@@ -15,9 +15,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:orientation="vertical">
 
 
-
-
-
     <TextView
             android:id="@+id/author"
             android:layout_width="match_parent"
@@ -55,8 +52,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_below="@+id/author"
             android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
             android:paddingBottom="12dp"
-            android:paddingRight="10dp"
-            android:layout_toLeftOf="@+id/ic_action"/>
+            android:paddingRight="10dp" />
 
 
 </RelativeLayout>

@@ -44,6 +44,8 @@
     <string name="more">+ more</string>
     <string name="more_from_publisher">More from the Publisher</string>
     <string name="preparing_to_load">Preparing to load, please wait&#8230;</string>
+    <string name="vote_submitted">Your vote was successfuly submitted</string>
+
 
     <string name="sort">Sort</string>
     <string name="order_popup_lst1">Most recent first </string>

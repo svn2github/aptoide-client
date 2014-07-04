@@ -27,10 +27,11 @@ import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.AddCommentRequest;
 import cm.aptoide.ptdev.webservices.AddLikeRequest;
 import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
@@ -47,8 +48,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +112,6 @@ public abstract class FragmentAppView extends Fragment {
         private View row2;
         private View row3;
         private Spinner spinner;
-
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
@@ -771,7 +769,7 @@ public abstract class FragmentAppView extends Fragment {
         }
     }
 
-    public static class FragmentAppViewRating extends FragmentAppView {
+    public static class FragmentAppViewRating extends FragmentAppView implements SuccessfullyPostCallback {
 
         private TextView commentsTitle;
         private LinearLayout commentsLayout;
@@ -792,6 +790,22 @@ public abstract class FragmentAppView extends Fragment {
         private Button flagThisApp;
         private LinearLayout flags_container;
         private ProgressBar loading_flags;
+        private AddCommentCallback addCommentCallback;
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            addCommentCallback = (AddCommentCallback) activity;
+            ((AppViewActivity) activity).setSuccessfullyPostCallback(this);
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            addCommentCallback = null;
+            ((AppViewActivity) getActivity()).setSuccessfullyPostCallback(null);
+
+        }
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
@@ -799,6 +813,7 @@ public abstract class FragmentAppView extends Fragment {
 
             if(event.getComments() != null) {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
+
 
                 if (event.getComments().size() == 0) {
                     commentsLayout.setVisibility(View.GONE);
@@ -817,6 +832,7 @@ public abstract class FragmentAppView extends Fragment {
                             intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
                             intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
+                            intent.putExtra("token", ((AppViewActivity) getActivity()).getToken());
                             startActivity(intent);
                         }
                     });
@@ -955,6 +971,14 @@ public abstract class FragmentAppView extends Fragment {
             return v;
 
         }
+
+        @Override
+        public void clearState() {
+            editText.setText("");
+            //editText.setEnabled(false);
+            editText.setEnabled(true);
+        }
+
         public class AddLikeListener implements View.OnClickListener {
 
             private final boolean isLike;
@@ -1051,51 +1075,15 @@ public abstract class FragmentAppView extends Fragment {
 
         public class AddCommentListener implements View.OnClickListener {
 
-            RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null){
-                        pd.dismissAllowingStateLoss();
-                    }
-
-                }
-
-                @Override
-                public void onRequestSuccess(GenericResponse genericResponse) {
-
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null){
-                        pd.dismissAllowingStateLoss();
-                    }
-
-                    if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
-                        editText.setText("");
-                        editText.setEnabled(false);
-                        editText.setEnabled(true);
-                        manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
-                        BusProvider.getInstance().post(new AppViewRefresh());
-                    }else{
-                        for(String error :  genericResponse.getErrors()){
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                }
-            };
-            private SpiceManager manager;
-
-
             @Override
             public void onClick(View v) {
-
 
                 final AccountManager manager = AccountManager.get(getActivity());
 
                 if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                    addComment();
+                    if(addCommentCallback != null) {
+                        addCommentCallback.addComment(editText.getText().toString(), null);
+                    }
                 } else {
 
                     manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
@@ -1127,40 +1115,19 @@ public abstract class FragmentAppView extends Fragment {
 
             }
 
-            private void addComment() {
-
-
-                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
-                    manager = ((AppViewActivity) getActivity()).getSpice();
-
-                    AddCommentRequest request = new AddCommentRequest(getActivity());
-                    request.setApkversion(((AppViewActivity) getActivity()).getVersionName());
-                    request.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
-                    request.setRepo(((AppViewActivity) getActivity()).getRepoName());
-                    request.setToken(((AppViewActivity) getActivity()).getToken());
-
-                    request.setText(editText.getText().toString());
-
-                    manager.execute(request, requestListener);
-                    AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
-                } else {
-
-                    AptoideDialog.updateUsernameDialog().show(getFragmentManager(), "updateNameDialog");
-
-                }
-            }
 
         }
 
+
         public static class FillComments{
 
-            public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
+            public static void fillComments(Activity activity, LinearLayout commentsContainer, ArrayList<Comment> comments) {
                 final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 View view;
 
                 commentsContainer.removeAllViews();
                 for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
-                    view = FragmentComments.createCommentView(context, commentsContainer, comment, dateFormater);
+                    view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
                     commentsContainer.addView(view);
                 }
             }
