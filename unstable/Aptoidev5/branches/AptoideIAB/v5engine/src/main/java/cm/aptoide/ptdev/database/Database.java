@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
@@ -47,6 +48,7 @@ public class Database {
 
     public Database(SQLiteDatabase database) {
         this.database = database;
+
     }
 
 
@@ -453,12 +455,7 @@ public class Database {
         c.getCount();
         final long endTime = System.currentTimeMillis();
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(Aptoide.getContext(), "Took: " + (endTime-startTime), Toast.LENGTH_LONG).show();
-            }
-        });
+
 
 
 
@@ -637,7 +634,7 @@ public class Database {
         if(!items.isEmpty()){
             Collections.shuffle(items, new Random(System.currentTimeMillis()/1000000));
 
-            for(int j = 0; j<bucketSize;j++){
+            for(int j = 0; j < bucketSize && j < items.size();j++){
                 ret_items.add(items.get(j));
             }
         }
@@ -678,11 +675,18 @@ public class Database {
             String collection = c.getString(c.getColumnIndex("catname"));
 
             if(tempList.get(collection).size() < editorsChoiceBucketSize){
+
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatnameid")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), c.getString(c.getColumnIndex("mycatname"))));
+                tempList.get(collection).add(
+                        new HomeItem(c.getString(c.getColumnIndex("name")),
+                                c.getString(c.getColumnIndex("mycatnameid")),
+                                iconPath + icon ,
+                                id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), c.getString(c.getColumnIndex("mycatname"))));
+
             }
+
 
         }
 
