@@ -359,6 +359,11 @@
     <string name="error_MARG_4">Missing login</string>
     <string name="error_MARG_5">Missing app</string>
     <string name="error_MARG_6">Missing MD5 data</string>
+    <string name="error_MARG_7">Missing package parameter</string>
+    <string name="error_MARG_8">Missing hmac parameter</string>
+    <string name="error_MARG_9">Missing limit parameter</string>
+    <string name="error_MARG_10">Missing offset parameter</string>
+    <string name="error_MARG_11">Missing lang parameter</string>
     <string name="error_MARG_100">Missing app name</string>
     <string name="error_MARG_101">Missing description</string>
     <string name="error_MARG_102">Missing category</string>
@@ -367,6 +372,12 @@
     <string name="error_MARG_105">Missing comment</string>
     <string name="error_MARG_106">Missing vote</string>
     <string name="error_MARG_107">Missing text</string>
+    <string name="error_MARG_108">Missing like parameter</string>
+    <string name="error_MARG_109">Missing email parameter</string>
+    <string name="error_MARG_110">Missing passhash parameter</string>
+    <string name="error_MARG_111">Missing name parameter</string>
+    <string name="error_MARG_112">Missing user-agent parameter</string>
+    <string name="error_MARG_113">Missing hash parameter</string>
     <string name="error_MARG_200">Authentication error</string>
     <string name="error_MARG_201">Invalid username/password combination</string>
     <string name="error_MARG_202">MInvalid token or user/pass</string>
@@ -375,6 +386,8 @@
     <string name="error_IARG_2">Invalid login</string>
     <string name="error_IARG_3">Invalid identifier</string>
     <string name="error_IARG_4">Invalid MD5 data</string>
+    <string name="error_IARG_5">Invalid hmac format</string>
+    <string name="error_IARG_6">Invalid lang</string>
     <string name="error_IARG_100">The minimum number of characters allowed in a comment is 10</string>
     <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10</string>
     <string name="error_IARG_102">Invalid argument</string>
@@ -409,6 +422,11 @@
     <string name="error_WOP_5">You need to give a name for your store.</string>
     <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
     <string name="error_WOP_7">Comment error</string>
+    <string name="error_WOP_8">Comment vote error</string>
+    <string name="error_WOP_9">The email provided already exists in the system</string>
+    <string name="error_WOP_10">The email provided does not exist in the system yet</string>
+    <string name="error_WOP_11">The store could not be created. Please try again.</string>
+
 
     <string name="error_REPO_1">The store does not exist.</string>
     <string name="error_REPO_2">The store was cancelled.</string>
