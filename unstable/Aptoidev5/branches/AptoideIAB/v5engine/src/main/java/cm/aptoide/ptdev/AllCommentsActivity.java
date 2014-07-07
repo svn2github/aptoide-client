@@ -143,7 +143,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
 
             }else{
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                //HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
                 for(cm.aptoide.ptdev.model.Error error :  genericResponse.getErrors()){
                     Toast.makeText(AllCommentsActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
                 }

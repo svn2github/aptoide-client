@@ -1989,7 +1989,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
                 BusProvider.getInstance().post(new AppViewRefresh());
             } else {
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                //HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
                 for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
                     Toast.makeText(AppViewActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
                 }
