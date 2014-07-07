@@ -22,8 +22,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Base64;
+
 import android.util.Log;
+import cm.aptoide.ptdev.utils.Base64;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
