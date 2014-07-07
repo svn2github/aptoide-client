@@ -380,7 +380,7 @@
     <string name="error_MARG_113">Missing hash parameter</string>
     <string name="error_MARG_200">Authentication error</string>
     <string name="error_MARG_201">Invalid username/password combination</string>
-    <string name="error_MARG_202">MInvalid token or user/pass</string>
+    <string name="error_MARG_202">Invalid token or user/pass</string>
 
     <string name="error_IARG_1">Invalid store</string>
     <string name="error_IARG_2">Invalid login</string>
