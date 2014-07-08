@@ -102,6 +102,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
 
 
+
+
 		hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {

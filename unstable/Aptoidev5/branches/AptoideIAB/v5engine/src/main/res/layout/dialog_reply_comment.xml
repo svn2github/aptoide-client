@@ -6,41 +6,12 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="5dp" >
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/edit_reply"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/write_your_comment"
+          android:inputType="textMultiLine"
+          android:minLines="3"
+          android:lines="3"/>
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="2dp" >
-
-        <TextView
-                android:id="@+id/user"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-                android:id="@+id/reply"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:text="Text"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-                android:id="@+id/edit_reply"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="Text" />
-
-    </LinearLayout>
-
-</ScrollView>

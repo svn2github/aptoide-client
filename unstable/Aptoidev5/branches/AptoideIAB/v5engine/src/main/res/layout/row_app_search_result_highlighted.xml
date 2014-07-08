@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             style="?attr/customRowForeground" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/icDialogDrawable"
+            android:padding="20dp" >
+
+
+        <FrameLayout android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_centerVertical="true"
+                     android:id="@+id/icon_layout">
+
+            <ImageView
+                    android:id="@+id/app_icon"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center_vertical"/>
+
+            <ImageView android:id="@+id/app_badge"
+                       android:layout_height="wrap_content"
+                       android:layout_width="wrap_content"
+                       android:src="@drawable/ic_trusted"
+                       android:layout_gravity="right|bottom"/>
+
+        </FrameLayout>
+
+
+        <TextView
+                android:id="@+id/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/icon_layout"
+                android:singleLine="true"
+                android:drawablePadding="5dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_toLeftOf="@+id/ic_action"/>
+
+        <TextView
+                android:id="@+id/app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/icon_layout"
+                android:layout_below="@+id/app_name"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignRight="@+id/app_name"/>
+
+        <RatingBar
+                android:id="@+id/app_rating"
+                android:layout_below="@+id/app_version"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/icon_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5" />
+
+        <ImageView android:id="@+id/ic_action"
+                     style="@style/overflowMenuButton"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

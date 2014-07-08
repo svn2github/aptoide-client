@@ -11,13 +11,15 @@
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <TextView
+    Medium<TextView
             android:id="@+id/clear_downloaded_apks"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_margin="5dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/are_you_sure_clear_downloads" />
+
 
     <CheckBox android:id="@+id/checkbox_clear"
               android:layout_width="wrap_content"

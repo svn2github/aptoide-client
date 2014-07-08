@@ -42,7 +42,7 @@ public class ReplyCommentDialog extends DialogFragment {
 
         AlertDialog builder = new AlertDialog.Builder(getActivity())
                 .setView(v)
-                .setTitle("Reply " + replyingTo + " comment")
+                .setTitle(getString(R.string.reply_to, replyingTo))
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

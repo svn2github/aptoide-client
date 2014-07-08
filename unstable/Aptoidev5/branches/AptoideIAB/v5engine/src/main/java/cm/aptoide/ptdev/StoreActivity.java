@@ -19,6 +19,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
@@ -70,6 +72,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         }
     };
     private EnumStoreTheme storeTheme;
+    private FragmentBreadCrumbs breadCrumbs;
 
     public EnumStoreTheme getStoreTheme() {
         return storeTheme;
@@ -120,7 +123,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
         storeTheme = EnumStoreTheme.values()[getIntent().getIntExtra("theme", 0)];
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
-        FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
+        breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
 
         breadCrumbs.setActivity(this);
         breadCrumbs.setTitle(getString(R.string.categories), null);
@@ -213,8 +216,11 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
                 break;
         }
 
-        if(!categories){
+        if(categories && storeid != -1){
+            breadCrumbs.setTitle(getString(R.string.categories), null);
+        }else{
             menu.findItem(R.id.show_all).setChecked(true);
+            breadCrumbs.setTitle(getString(R.string.order_popup_catg2), null);
         }
 
         menu.findItem(R.id.show_all).setVisible(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false));

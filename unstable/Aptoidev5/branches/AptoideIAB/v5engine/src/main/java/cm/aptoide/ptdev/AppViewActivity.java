@@ -65,6 +65,7 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
+import org.w3c.dom.Text;
 import roboguice.util.temp.Ln;
 
 import java.io.File;
@@ -154,8 +155,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
-                    if(!signature.equals(installedSignature))
-                        AppMsg.makeText(AppViewActivity.this, getString(R.string.row_app_update_not_safe), AppMsg.STYLE_CONFIRM).show();
+                    if(!signature.equals(installedSignature)){
+                        message.setVisibility(View.VISIBLE);
+                    }else{
+                        message.setVisibility(View.GONE);
+                    }
+//                        AppMsg.makeText(AppViewActivity.this, getString(R.string.row_app_update_not_safe), new AppMsg.Style(5000, android.R.color.darker_gray)).show();
 
                     downloadId = json.getApk().getMd5sum().hashCode();
 
@@ -439,6 +444,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private TextView appName;
     private TextView appVersionName;
     private TextView latestVersion;
+    private TextView message;
 
     private long id;
     private int downloads;
@@ -948,6 +954,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     private void continueLoading(Bundle savedInstanceState) {
+        message = (TextView) findViewById(R.id.message);
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);
         appVersionName = (TextView) findViewById(R.id.app_version);

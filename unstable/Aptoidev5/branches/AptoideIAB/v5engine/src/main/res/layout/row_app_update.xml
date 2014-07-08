@@ -64,7 +64,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="@string/row_app_update_not_safe"
+            android:text="@string/not_compatible"
             android:gravity="center|left"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_alignLeft="@+id/app_name"
