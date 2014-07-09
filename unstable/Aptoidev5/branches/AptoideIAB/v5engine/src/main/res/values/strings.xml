@@ -512,6 +512,11 @@
     <string name="row_app_update_not_safe">Not compatible! Update has a different signature.</string>
     <string name="not_compatible">Not compatible</string>
     <string name="reply_to">Reply to %s</string>
+    <string name="setpin">Set Pin</string>
+    <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
+    <string name="dontaskagain">Don\'t ask again</string>
+    <string name="requestAdultpin">Insert the pin to unlock</string>
+    <string name="adultpinwrong">Wrong pin, try again.</string>
 
 
 </resources>

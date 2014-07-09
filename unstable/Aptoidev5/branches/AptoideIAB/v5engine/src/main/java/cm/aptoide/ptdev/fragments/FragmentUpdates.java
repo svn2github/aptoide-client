@@ -1,31 +1,27 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.animation.Animator;
-import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.*;
+import cm.aptoide.ptdev.adapters.SimpleSectionAdapter;
+import cm.aptoide.ptdev.adapters.UpdateItem;
+import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
@@ -41,10 +37,11 @@ import java.util.ArrayList;
  */
 public class FragmentUpdates extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private InstalledAdapter installedAdapter;
+    //private InstalledAdapter installedAdapter;
+    //private RecentlyUpdated recentUpdates;
     private UpdatesAdapter updatesAdapter;
     private Database db;
-    private RecentlyUpdated recentUpdates;
+
 
     //private UpdatesSectionListAdapter adapter;
     private int counter;
@@ -161,10 +158,6 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         this.db = new Database(Aptoide.getDb());
 
         updatesAdapter = new UpdatesAdapter(getActivity(), items);
-
-
-
-
 
         adapter = new SimpleSectionAdapter<UpdateItem>(getActivity(),updatesAdapter);
 

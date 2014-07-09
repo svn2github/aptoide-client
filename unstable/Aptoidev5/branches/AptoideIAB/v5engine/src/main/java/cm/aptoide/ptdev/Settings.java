@@ -17,9 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.text.InputType;
-import android.view.MenuItem;
 import android.widget.Toast;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
@@ -27,6 +26,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
 	String aptoide_path = Aptoide.getConfiguration().getPathCache();
 	String icon_path = aptoide_path + "icons/";
 	ManagerPreferences preferences;
@@ -53,7 +53,30 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //						((CheckBoxPreference)findPreference("3g")).isChecked()));
 //			}
 //		});
+        findPreference("matureChkBox").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final CheckBoxPreference cb = (CheckBoxPreference) preference;
+                if (!cb.isChecked()) {
+                    cb.setChecked(true);
+                    AdultDialog.BuildAreYouAdultDialog(Settings.this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            cb.setChecked(false);
+                        }
+                    }).show();
+                }
+                return true;
+            }
+        });
 
+        findPreference("showAllUpdates").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SettingsResult();
+                return true;
+            }
+        });
 
         findPreference("clearcache").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -202,12 +225,10 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //        getActionBar().setTitle("");
 //        getActionBar().setHomeButtonEnabled(true);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-
-
-
-
-
+    private final void SettingsResult(){
+        setResult(RESULT_OK);
     }
 
     @Override
@@ -317,6 +338,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 	    return true ;
 	  }
 
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -330,5 +352,5 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
         return super.onOptionsItemSelected(item);
     }
-
+    */
 }

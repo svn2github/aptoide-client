@@ -1,10 +1,8 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.LauncherActivity;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -13,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.*;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
@@ -32,15 +29,11 @@ import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
@@ -60,7 +53,6 @@ import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.BadgeView;
-import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
@@ -93,10 +85,11 @@ public class Start extends ActionBarActivity implements
         ProgressDialogFragment.OnCancelListener,
         AdultDialog.Callback {
 
-    private static final String TAG = Start.class.getName();
+    private static final String TAG = "Start";
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
     private Class settingsClass = Aptoide.getConfiguration().getSettingsActivityClass();
 
+    private static final int Settings_REQ_CODE = 21;
     private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
@@ -264,8 +257,6 @@ public class Start extends ActionBarActivity implements
         }
 
     }
-
-
 
     @Subscribe
     public void onRepoComplete(RepoCompleteEvent event) {
@@ -794,6 +785,9 @@ public class Start extends ActionBarActivity implements
             case 20:
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
                 break;
+            case Settings_REQ_CODE:
+                BusProvider.getInstance().post(new RepoCompleteEvent(0));
+                break;
             case 50:
                 spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
                 spiceManager.getFromCache(RepositoryChangeJson.class, checkServerCacheString, DurationInMillis.ONE_DAY, requestListener);
@@ -808,8 +802,7 @@ public class Start extends ActionBarActivity implements
                 break;
         }
         matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-        ActivityCompat.invalidateOptionsMenu(this);
-
+        InvalidateAptoideMenu();
     }
 
 
@@ -873,6 +866,7 @@ public class Start extends ActionBarActivity implements
             Runnable runnable = new Runnable() {
                 public void run() {
                     final Database db = new Database(Aptoide.getDb());
+
                     final Store store = new Store();
                     Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
                     Cursor c = db.getStore(storeid);
@@ -950,9 +944,14 @@ public class Start extends ActionBarActivity implements
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        ActivityCompat.invalidateOptionsMenu(this);
+        InvalidateAptoideMenu();
     }
 
+    private void InvalidateAptoideMenu() {
+        if(!ActivityCompat.invalidateOptionsMenu(this)) {
+            supportInvalidateOptionsMenu();
+        }
+    }
 
     public PagerAdapter getViewPagerAdapter() {
         return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
@@ -1000,7 +999,7 @@ public class Start extends ActionBarActivity implements
                     break;
                 case 7:
                     Intent settingsIntent = new Intent(mContext, settingsClass);
-                    startActivityForResult(settingsIntent, 0);
+                    startActivityForResult(settingsIntent, Settings_REQ_CODE);
                     break;
                 default:
                     break;
