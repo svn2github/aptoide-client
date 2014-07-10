@@ -1,16 +1,31 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
-import android.content.*;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.*;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.*;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,37 +38,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.database.schema.Schema;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
-import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
-import cm.aptoide.ptdev.events.AppViewRefresh;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.events.OnMultiVersionClick;
-import cm.aptoide.ptdev.fragments.FragmentAppView;
-import cm.aptoide.ptdev.fragments.GenericResponse;
-import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
-import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
-import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
-import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
-import cm.aptoide.ptdev.model.*;
-import cm.aptoide.ptdev.model.Error;
-import cm.aptoide.ptdev.services.DownloadService;
-import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.Filters;
-import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import cm.aptoide.ptdev.webservices.*;
-import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
-import com.devspark.appmsg.AppMsg;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -63,10 +53,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
-import org.w3c.dom.Text;
-import roboguice.util.temp.Ln;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +67,48 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
+import cm.aptoide.ptdev.events.AppViewRefresh;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.OnMultiVersionClick;
+import cm.aptoide.ptdev.fragments.FragmentAppView;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
+import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
+import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
+import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.model.MediaObject;
+import cm.aptoide.ptdev.model.MultiStoreItem;
+import cm.aptoide.ptdev.model.Screenshot;
+import cm.aptoide.ptdev.model.Video;
+import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Filters;
+import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
+import cm.aptoide.ptdev.webservices.AddApkFlagRequest;
+import cm.aptoide.ptdev.webservices.AddCommentRequest;
+import cm.aptoide.ptdev.webservices.Errors;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
+import cm.aptoide.ptdev.webservices.UpdateUserRequest;
+import cm.aptoide.ptdev.webservices.json.CreateUserJson;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import roboguice.util.temp.Ln;
 
 /**
  * Created with IntelliJ IDEA.
@@ -232,6 +263,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
                     md5 = json.getApk().getMd5sum();
                     publishEvents();
+                    BusProvider.getInstance().post(new RelatedEvent());
                     supportInvalidateOptionsMenu();
                     //if (!isShown) show(true, true);
 
@@ -795,6 +827,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     }
 
+
+
+
     @Override
     protected void onDestroy() {
         if (service != null) unbindService(downloadConnection);
@@ -1075,6 +1110,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
         publicityView = (MoPubView) findViewById(R.id.adview);
 
@@ -1680,6 +1716,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
+    public static class RelatedEvent{
+
+    }
+
     private static class Details {
 
         private GetApkInfoJson.Meta.Developer developer;
@@ -2011,5 +2051,3 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     };
 
 }
-
-

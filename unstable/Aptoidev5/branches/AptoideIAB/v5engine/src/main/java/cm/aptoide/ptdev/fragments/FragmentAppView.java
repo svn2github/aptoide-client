@@ -1,9 +1,15 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,28 +20,27 @@ import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
-import cm.aptoide.ptdev.adapters.StoreSpinnerAdapter;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
-import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
-import cm.aptoide.ptdev.events.AppViewRefresh;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.events.OnMultiVersionClick;
-import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
-import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
-import cm.aptoide.ptdev.model.*;
-import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.AddLikeRequest;
-import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -52,6 +57,37 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cm.aptoide.ptdev.AllCommentsActivity;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.MoreRelatedActivity;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.ScreenshotsViewer;
+import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
+import cm.aptoide.ptdev.adapters.StoreSpinnerAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
+import cm.aptoide.ptdev.events.AppViewRefresh;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.OnMultiVersionClick;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
+import cm.aptoide.ptdev.model.ApkPermission;
+import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.MediaObject;
+import cm.aptoide.ptdev.model.MultiStoreItem;
+import cm.aptoide.ptdev.model.Screenshot;
+import cm.aptoide.ptdev.model.Video;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.AddLikeRequest;
+import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -442,7 +478,6 @@ public abstract class FragmentAppView extends Fragment {
 
     public static class FragmentAppViewRelated extends ListFragment {
 
-
         private RelatedBucketAdapter multiVersionAdapter;
         private RelatedBucketAdapter develBasedAdapter;
         private RelatedBucketAdapter itemBasedAdapter;
@@ -484,12 +519,8 @@ public abstract class FragmentAppView extends Fragment {
 
                     }
                 });
-
-
-
                 setEmptyText(getString(R.string.connection_error));
                 setListAdapter(new ArrayAdapter<String>(getActivity(), 0));
-
             }
 
             @Override
@@ -506,38 +537,41 @@ public abstract class FragmentAppView extends Fragment {
                 //Toast.makeText(getActivity(), "DevelBased size " + relatedApkJson.getDevelbased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "MultiVersion size " + relatedApkJson.getMultiversion().size(), Toast.LENGTH_SHORT).show();
 
+                List<RelatedApkJson.Item> relaatedlist= relatedApkJson.getItembased();
+                if(relaatedlist != null){
 
-                if(relatedApkJson.getItembased() != null && relatedApkJson.getItembased().size()>0){
-                    Log.d("FragmentRelated", "itembased: "+ Arrays.toString(relatedApkJson.getItembased().toArray()));
-
-                    itemBasedElements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox",true)){
+                    Log.d("FragmentRelated", "items " +  " " + relatedApkJson.getItembased().toString());
 
 
-                        for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
-                            if(!item.getAge().equals("Mature")){
-                                itemBasedElements.add(item);
+                    if(relaatedlist.size()>0) {
+                        Log.d("FragmentRelated", "itembased: " + Arrays.toString(relatedApkJson.getItembased().toArray()));
+
+                        itemBasedElements.clear();
+                        if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)) {
+                            for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
+                                if (!item.getAge().equals("Mature")) {
+                                    itemBasedElements.add(item);
+                                }
                             }
+                        } else {
+                            itemBasedElements.addAll(relatedApkJson.getItembased());
                         }
-
-                    }else{
-                        itemBasedElements.addAll(relatedApkJson.getItembased());
+                        View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
+                        ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
+                        v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
+                                i.putExtra("item", true);
+                                i.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
+                                i.putExtra("versionCode", ((AppViewActivity) getActivity()).getVersionCode());
+                                i.putExtra("appName", ((AppViewActivity) getActivity()).getName());
+                                startActivity(i);
+                            }
+                        });
+                        adapter.addView(v);
+                        adapter.addAdapter(itemBasedAdapter);
                     }
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
-                    ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
-                    v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
-                            i.putExtra("item", true);
-                            i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
-                            i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
-                            i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
-                            startActivity(i);
-                        }
-                    });
-                    adapter.addView(v);
-                    adapter.addAdapter(itemBasedAdapter);
                 }
 
                 if(relatedApkJson.getDevelbased() != null && relatedApkJson.getDevelbased().size()>0){
@@ -611,20 +645,51 @@ public abstract class FragmentAppView extends Fragment {
                 multiVersionAdapter.notifyDataSetChanged();
 
                 setListAdapter(adapter);
+                if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setListViewHeightBasedOnChildren(getListView());
+                }
             }
-        };
 
+        };
+        private final void setListViewHeightBasedOnChildren(ListView listView) {
+            Log.d("setheight", "setListViewHeightBasedOnChildren called");
+            ListAdapter listAdapter = listView.getAdapter();
+            if (listAdapter == null){
+                return;
+            }
+            Log.d("setheight", "listAdapter not null");
+            if (listAdapter.getCount()<1){
+            return;
+            }
+            Log.d("setheight", "Setting ListAdapter with " + listAdapter.getCount()+  " elements");
+            int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+            for (int i = 0; i < listAdapter.getCount(); i++) {
+                View listItem = listAdapter.getView(i, null, listView);
+                if (listItem instanceof ViewGroup)
+                    listItem.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT));
+                listItem.measure(0, 0);
+                totalHeight += listItem.getMeasuredHeight();
+            }
+            Log.d("setheight", "Setting ListAdapter with " + totalHeight+  " height");
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+            listView.setLayoutParams(params);
+
+            Log.d("setheight", "list has" + listView.getLayoutParams().height+  " height");
+        }
 
 
         @Override
         public void onStart() {
             super.onStart();
+            BusProvider.getInstance().register(this);
             spiceManager.start(getActivity());
         }
 
         @Override
         public void onStop() {
             super.onStop();
+            BusProvider.getInstance().unregister(this);
             if(spiceManager.isStarted()){
                 spiceManager.shouldStop();
             }
@@ -633,21 +698,33 @@ public abstract class FragmentAppView extends Fragment {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View v = super.onCreateView(inflater, container, savedInstanceState);
+            if(!(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                doPreStuff();
+                Log.d("setheight", "Doprestuff on Port");
+            }
+            return v;
+        }
+
+        @Subscribe
+        public void refresh(AppViewActivity.RelatedEvent e){
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                doPreStuff();
+                Log.d("setheight", "Doprestuff on Land");
+            }
+        }
+        private final void doPreStuff(){
             ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
-            Log.d("FragmentRelated", "onCreateView");
 
             if(!((AppViewActivity)getActivity()).isMultipleStores()){
                 listRelatedApkRequest.setRepos(((AppViewActivity)getActivity()).getRepoName());
             }
-
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
-            spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
-            return v;
+            spiceManager.execute(listRelatedApkRequest, request);
         }
+
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
