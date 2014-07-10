@@ -7,6 +7,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
@@ -18,17 +20,18 @@ import android.util.SparseArray;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.*;
+import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -37,18 +40,19 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.Collection;
 
 /**
  * Created by rmateus on 11-12-2013.
  */
-public class DownloadService extends Service {
+public class DownloadService extends Service implements CompleteDownloadCallback{
 
     private DownloadManager manager = new DownloadManager();
     private Timer timer;
     private boolean isStopped = true;
-    private NotificationCompat.Builder mBuilder;
+    //private NotificationCompat.Builder mBuilder;
     private LongSparseArray<DownloadInfo> downloads = new LongSparseArray<DownloadInfo>();
 
 
@@ -58,37 +62,37 @@ public class DownloadService extends Service {
         String file = getCacheDir().getAbsolutePath();
         File fileToCheck = new File(file+"/downloadManager");
 
-            try{
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileToCheck));
-                manager = (DownloadManager) in.readObject();
-                in.close();
+        try{
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileToCheck));
+            manager = (DownloadManager) in.readObject();
+            in.close();
 
-                for(DownloadInfo info: manager.getmErrorList()){
-                    downloads.put(info.getId(), info);
-                }
-
-                for(DownloadInfo info: manager.getmActiveList()){
-                    downloads.put(info.getId(), info);
-                }
-
-                for(DownloadInfo info: manager.getmCompletedList()){
-                    downloads.put(info.getId(), info);
-                }
-
-                for(DownloadInfo info: manager.getmInactiveList()){
-                    downloads.put(info.getId(), info);
-                }
-
-                for(DownloadInfo info: manager.getmPendingList()){
-                    downloads.put(info.getId(), info);
-                }
-
-
-            }catch (IOException e){
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            for(DownloadInfo info: manager.getmErrorList()){
+                downloads.put(info.getId(), info);
             }
+
+            for(DownloadInfo info: manager.getmActiveList()){
+                downloads.put(info.getId(), info);
+            }
+
+            for(DownloadInfo info: manager.getmCompletedList()){
+                downloads.put(info.getId(), info);
+            }
+
+            for(DownloadInfo info: manager.getmInactiveList()){
+                downloads.put(info.getId(), info);
+            }
+
+            for(DownloadInfo info: manager.getmPendingList()){
+                downloads.put(info.getId(), info);
+            }
+
+
+        }catch (IOException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -116,7 +120,8 @@ public class DownloadService extends Service {
     public void updateDownload() {
         ArrayList<DownloadInfo> ongoingDownloads = getOngoingDownloads();
         if (!ongoingDownloads.isEmpty()) {
-            updateProgress(mBuilder, ongoingDownloads);
+            // updateProgress(mBuilder, ongoingDownloads);
+            updateProgress();
         } else {
             timer.cancel();
             timer.purge();
@@ -144,9 +149,17 @@ public class DownloadService extends Service {
     public void startExistingDownload(long id){
 
 
-        startService(new Intent(getApplicationContext(), DownloadService.class));
-        mBuilder = setNotification();
+        //startService(new Intent(getApplicationContext(), DownloadService.class));
+
+        NotificationCompat.Builder builder = setNotification(id);
+        DownloadInfo inf = getDownload(id);
+        Log.d("download-trace", "setmbuilder: startExistingDownload");
+        inf.setmBuilder(builder);
+        inf.setCompleteCallback(this);
+        /*
+        mBuilder = setNotification(id);
         startForeground(-3, mBuilder.build());
+        */
 
         if(isStopped){
             isStopped = false;
@@ -155,9 +168,25 @@ public class DownloadService extends Service {
         }
 
         Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
-        for(DownloadInfo info: manager.getmCompletedList()){
+        for(final DownloadInfo info: manager.getmCompletedList()){
             if(info.getId()==id){
-                info.download();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(DownloadModel model : info.getmFilesToDownload()) {
+                            String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
+                            if(!calculatedMd5.equals(info.getDownload().getMd5())){
+                                Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
+                                info.download();
+                                break;
+                            } else {
+                                info.autoExecute();
+                                Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
+                                break;
+                            }
+                        }
+                    }
+                }).start();
                 return;
             }
         }
@@ -195,8 +224,15 @@ public class DownloadService extends Service {
         info.download();
 
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        mBuilder = setNotification();
+
+        /*
+        mBuilder = setNotification(id);
         startForeground(-3, mBuilder.build());
+        */
+        Log.d("donload-trace", "setmBuilder: startDownloadFromUrl");
+        NotificationCompat.Builder builder = setNotification(id);
+        info.setmBuilder(builder);
+        info.setCompleteCallback(this);
 
         if(isStopped){
             isStopped = false;
@@ -209,7 +245,6 @@ public class DownloadService extends Service {
 
 
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
-
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         if(json.getObb()!=null){
@@ -240,9 +275,16 @@ public class DownloadService extends Service {
         downloads.put(info.getId(), info);
         info.download();
 
+        Log.d("download-trace", "setmBuilder: startDownloadFromJson");
+        NotificationCompat.Builder builder = setNotification(info.getId());
+        info.setmBuilder(builder);
+        info.setCompleteCallback(this);
+        //startForeground(-3, mBuilder.build());
+
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        mBuilder = setNotification();
-        startForeground(-3, mBuilder.build());
+        //mBuilder = setNotification(id);
+        //startForeground(-3, mBuilder.build());
+
 
         if(isStopped){
             isStopped = false;
@@ -313,10 +355,15 @@ public class DownloadService extends Service {
 
     public void resumeDownload(int downloadId) {
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        mBuilder = setNotification();
-        startForeground(-3, mBuilder.build());
 
+       /* mBuilder = setNotification(downloadId);
+        startForeground(-3, mBuilder.build());
+*/
+        Log.d("donwload-trace", "setmBuilder: resumeDownload");
         DownloadInfo info = getDownload(downloadId);
+        NotificationCompat.Builder builder = setNotification(downloadId);
+        info.setmBuilder(builder);
+        info.setCompleteCallback(this);
         info.download();
 
         if(isStopped){
@@ -337,6 +384,15 @@ public class DownloadService extends Service {
             downloadInfo.remove(isChecked);
         }
 
+    }
+
+    @Override
+    public void onCompleteDownload(long id) {
+        DownloadInfo info = getDownload(id);
+        if (Context.NOTIFICATION_SERVICE != null) {
+            Log.d("download-trace", "completecallback called for " + info.getDownload().getName());
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(-3);
+        }
     }
 
 
@@ -376,11 +432,16 @@ public class DownloadService extends Service {
 
 
     public void startDownloadFromAppId(final long id){
-
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        mBuilder = setNotification();
-        startForeground(-3, mBuilder.build());
 
+        /*mBuilder = setNotification(id);
+        startForeground(-3, mBuilder.build());*/
+        /*DownloadInfo info = getDownload(id);
+        Log.d("donwload-trace", "setMbuilder: startDownloadFromAppId");
+        NotificationCompat.Builder builder = setNotification(id);
+        info.setmBuilder(builder);
+        info.setCompleteCallback(this);
+*/
         final SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         if(!manager.isStarted()) manager.start(getApplicationContext());
         final String sizeString = IconSizes.generateSizeString(getApplicationContext());
@@ -418,6 +479,7 @@ public class DownloadService extends Service {
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
+                    download.setMd5(md5sum);
 
 
                     if (icon.contains("_icon")) {
@@ -429,6 +491,7 @@ public class DownloadService extends Service {
 
                     manager.getFromCacheAndLoadFromNetworkIfExpired(request, repoName + md5sum, DurationInMillis.ONE_HOUR, new DownloadRequest(download.getId(), download));
                     apkCursor.close();
+
                 }
 
 
@@ -448,9 +511,11 @@ public class DownloadService extends Service {
 
     }
 
-    private NotificationCompat.Builder setNotification() {
+    private NotificationCompat.Builder setNotification(final long id) {
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        DownloadInfo info = getDownload(id);
+
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
         Intent onClick = new Intent();
         onClick.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
@@ -461,40 +526,38 @@ public class DownloadService extends Service {
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent onClickAction = PendingIntent.getActivity(getApplicationContext(), 0, onClick, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        int size = DownloadExecutorImpl.dpToPixels(getApplicationContext(), 36);
 
         mBuilder.setOngoing(true);
         mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()))
+                .setContentText(info.getDownload().getName())
+                .setLargeIcon(DownloadExecutorImpl.decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(info.getDownload().getIcon()).getAbsolutePath(), size, size))
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
                 .setContentIntent(onClickAction);
-        updateProgress(mBuilder, getOngoingDownloads());
+
+        if(info.getEta() >= 0) {
+            String remaining = Utils.formatEta(info.getEta(), "");
+            mBuilder.setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
+        }
 
         return mBuilder;
     }
 
-    private void updateProgress(NotificationCompat.Builder mBuilder, ArrayList<DownloadInfo> ongoingDownloads) {
-        int percentage = getOngoingDownloadsPercentage();
-        mBuilder.setProgress(100, percentage, percentage == 0);
-        mBuilder.setContentText(getString(R.string.x_app, ongoingDownloads.size()));
-
-        // Displays the progress bar for the first time
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, mBuilder.build());
-    }
-
-    private int getOngoingDownloadsPercentage() {
-
+    private void updateProgress() {
         Collection<DownloadInfo> list = getOngoingDownloads();
         list.addAll(manager.getmCompletedList());
 
-        int progressPercentage = 0;
-        for(DownloadInfo info : list){
-            progressPercentage = progressPercentage + info.getPercentDownloaded();
+        for(DownloadInfo info : list) {
+            if(info.getStatusState() instanceof ActiveState) {
+                info.getmBuilder().setProgress(100, info.getPercentDownloaded(), info.getPercentDownloaded() == 0);
+                if(info.getEta() >= 0) {
+                    String remaining = Utils.formatEta(info.getEta(), "");
+                    info.getmBuilder().setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
+                }
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, info.getmBuilder().build());
+                return;
+            }
         }
-
-        if(!list.isEmpty()){
-            return progressPercentage / list.size();
-        }
-
-        return 0;
     }
 }

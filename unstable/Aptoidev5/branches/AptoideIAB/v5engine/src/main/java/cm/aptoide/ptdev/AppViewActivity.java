@@ -261,6 +261,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setVersion(versionName);
                         download.setIcon(icon);
                         download.setPackageName(package_name);
+                        download.setMd5(md5);
 
                         try {
                             waitForServiceToBeBound();
@@ -356,7 +357,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
                 isUpdate = true;
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
-                findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+                findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
                 ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
             } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
@@ -394,7 +395,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         } catch (PackageManager.NameNotFoundException e) {
             ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.install));
-            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name));
+            findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -436,7 +437,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public DialogInterface.OnClickListener getMyAppListener() {
-        return new InstallListener(icon, name, versionName, package_name);
+        return new InstallListener(icon, name, versionName, package_name, md5);
     }
 
 
@@ -551,13 +552,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private String name;
         private String versionName;
         private String package_name;
+        private String md5;
 
 
-        public InstallListener(String icon, String name, String versionName, String package_name) {
+        public InstallListener(String icon, String name, String versionName, String package_name, String md5) {
             this.icon = icon;
             this.name = name;
             this.versionName = versionName;
             this.package_name = package_name;
+            this.md5 = md5;
         }
 
         @Override
@@ -586,6 +589,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setVersion(this.versionName);
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
+            download.setMd5(this.md5);
 
             if (service != null && json!=null) {
                 service.startDownloadFromJson(json, downloadId, download);
@@ -647,6 +651,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setVersion(this.versionName);
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
+            download.setMd5(this.md5);
 
             service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();

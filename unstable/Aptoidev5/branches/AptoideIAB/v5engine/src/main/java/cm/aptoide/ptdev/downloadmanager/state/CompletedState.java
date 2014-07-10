@@ -19,6 +19,7 @@ public class CompletedState extends StatusState {
 
 	@Override
 	public void download() {
+
         mDownloadInfo.changeStatusState(new ActiveState(mDownloadInfo));
 	}
 

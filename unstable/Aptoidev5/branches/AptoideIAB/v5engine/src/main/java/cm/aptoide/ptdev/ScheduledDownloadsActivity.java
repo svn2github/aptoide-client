@@ -200,6 +200,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                                     download.setVersion(schDown.getVername());
                                     download.setIcon(schDown.getIconPath());
                                     download.setPackageName(schDown.getApkid());
+                                    download.setMd5(schDown.getMd5());
                                     downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
                                     i++;
                                     if(i==scheduledDownloadsHashMap.size()){
@@ -317,6 +318,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                                     download.setVersion(schDown.getVername());
                                     download.setIcon(schDown.getIconPath());
                                     download.setPackageName(schDown.getApkid());
+                                    download.setMd5(schDown.getMd5());
                                     downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
                                     Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                                 }

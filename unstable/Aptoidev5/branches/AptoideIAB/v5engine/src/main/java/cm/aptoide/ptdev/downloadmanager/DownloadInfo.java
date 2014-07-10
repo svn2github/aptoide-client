@@ -1,8 +1,12 @@
 package cm.aptoide.ptdev.downloadmanager;
 
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import android.widget.ListView;
@@ -13,6 +17,7 @@ import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.downloadmanager.state.*;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.squareup.otto.Produce;
 
 import java.io.File;
@@ -36,6 +41,16 @@ public class DownloadInfo implements Runnable, Serializable {
         this.id = id;
         this.downloadManager = manager;
         mStatusState = new NoState(this);
+    }
+
+    private NotificationCompat.Builder mBuilder;
+
+    public NotificationCompat.Builder getmBuilder() {
+        return mBuilder;
+    }
+
+    public void setmBuilder(NotificationCompat.Builder mBuilder) {
+        this.mBuilder = mBuilder;
     }
 
     public Download getDownload() {
@@ -71,6 +86,11 @@ public class DownloadInfo implements Runnable, Serializable {
 
     private DownloadManager downloadManager;
 
+    private CompleteDownloadCallback completeCallback;
+
+    public void setCompleteCallback(CompleteDownloadCallback completeCallback) {
+        this.completeCallback = completeCallback;
+    }
 
     public void setFilesToDownload(List<DownloadModel> mFilesToDownload) {
         this.mFilesToDownload = mFilesToDownload;
@@ -94,6 +114,9 @@ public class DownloadInfo implements Runnable, Serializable {
         return (int) ((mProgress) * 100 / mSize);
     }
 
+    public List<DownloadModel> getmFilesToDownload() {
+        return mFilesToDownload;
+    }
 
     @Override
     public void run() {
@@ -196,6 +219,8 @@ public class DownloadInfo implements Runnable, Serializable {
 
         BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));
 
+        completeCallback.onCompleteDownload(download.getId());
+
         downloadManager.updatePendingList();
 
         threads.clear();
@@ -203,6 +228,7 @@ public class DownloadInfo implements Runnable, Serializable {
         mSpeed = 0;
         mETA = 0;
 
+        Log.d("download-trace", "Download Finish??" + download.getName());
     }
 
     @Produce
@@ -336,6 +362,7 @@ public class DownloadInfo implements Runnable, Serializable {
 
     public void remove(boolean isRemove) {
 
+        Log.d("download-trace", "Download remove: " + download.getName());
 //        boolean isRemove = !getStatusState().getEnumState().equals(EnumState.COMPLETE);
 
         changeStatusState(new CompletedState(this));
@@ -357,7 +384,21 @@ public class DownloadInfo implements Runnable, Serializable {
 
 
     public void download() {
-        mProgress = 0;
+        Log.d("download-trace", "download-state: " + download.getDownloadState());
+        /*if (EnumState.COMPLETE == download.getDownloadState()) {
+            Log.d("download-trace", "files to download: " + mFilesToDownload.size());
+            try {
+                mFilesToDownload.get(0).
+                mFilesToDownload.get(0).getFile().checkMd5();
+                Log.d("download-trace", "Download already Completed");
+                return;
+
+            } catch (Md5FailedException e) {
+                e.printStackTrace();
+            }
+        }*/
+        Log.d("download-trace", "Download started at " + download.getProgress());
+        mProgress = download.getProgress();
         BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));
         this.mStatusState.download();
     }

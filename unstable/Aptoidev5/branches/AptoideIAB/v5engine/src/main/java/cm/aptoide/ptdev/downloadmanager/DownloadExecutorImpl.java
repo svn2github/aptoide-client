@@ -186,7 +186,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         return retval;
     }
 
-    protected static int dpToPixels(Context context, int dpi) {
+    public static int dpToPixels(Context context, int dpi) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         return (int) (dpi * dm.density);
     }

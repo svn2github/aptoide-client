@@ -198,6 +198,7 @@ public class DownloadManager implements Serializable {
      * @return <tt>true</tt> if the download could be added, <tt>false</tt> otherwise.
      */
     public boolean addToPendingList(DownloadInfo downloadInfo) {
+        Log.d("download-trace", "added to pendingList: " + downloadInfo.getDownload().getName());
         return mPendingList.add(downloadInfo);
     }
 
