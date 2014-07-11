@@ -385,18 +385,6 @@ public class DownloadInfo implements Runnable, Serializable {
 
     public void download() {
         Log.d("download-trace", "download-state: " + download.getDownloadState());
-        /*if (EnumState.COMPLETE == download.getDownloadState()) {
-            Log.d("download-trace", "files to download: " + mFilesToDownload.size());
-            try {
-                mFilesToDownload.get(0).
-                mFilesToDownload.get(0).getFile().checkMd5();
-                Log.d("download-trace", "Download already Completed");
-                return;
-
-            } catch (Md5FailedException e) {
-                e.printStackTrace();
-            }
-        }*/
         Log.d("download-trace", "Download started at " + download.getProgress());
         mProgress = download.getProgress();
         BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));

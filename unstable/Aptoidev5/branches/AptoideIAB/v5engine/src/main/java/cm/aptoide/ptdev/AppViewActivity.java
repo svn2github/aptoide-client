@@ -73,6 +73,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.downloadmanager.Md5FailedException;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
@@ -137,6 +138,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String versionInstalled;
     private boolean isInstalled;
     private boolean autoDownload;
+    private boolean isDownloadCompleted;
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
 
@@ -319,6 +321,28 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         }
 
                     }
+
+                    // Check if Download is already completed to disable schedule
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(md5 != null) {
+                                String destination = Aptoide.getConfiguration().getPathCacheApks() + md5 + ".apk";
+                                File apk = new File(destination);
+
+                                if(apk.exists()) {
+
+                                    String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(destination));
+                                    if (calculatedMd5.equals(md5)) {
+
+                                        isDownloadCompleted = true;
+                                        invalidateOptionsMenu();
+                                    }
+                                }
+                            }
+                        }
+                    }).start();
+
 
                 } else {
                     for (Error error : json.getErrors()) {
@@ -1124,11 +1148,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_app_view, menu);
 
         if (isInstalled) {
             menu.findItem(R.id.menu_uninstall).setVisible(true);
+            menu.findItem(R.id.menu_schedule).setVisible(false);
+
+        } else if(isDownloadCompleted) {
+            menu.findItem(R.id.menu_schedule).setVisible(false);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -1697,13 +1725,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             this.minScreen = minScreen;
         }
     }
-/*
-    public static class RelatedAppsEvent {
-        private RelatedAppsEvent(Related related) {
+    /*
+        public static class RelatedAppsEvent {
+            private RelatedAppsEvent(Related related) {
 
+            }
         }
-    }
-*/
+    */
     private static class Screenshots {
         private List<String> screenshots;
 
