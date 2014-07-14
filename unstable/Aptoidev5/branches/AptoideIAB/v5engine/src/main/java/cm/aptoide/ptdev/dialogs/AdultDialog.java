@@ -31,7 +31,7 @@ public class AdultDialog extends DialogFragment {
         AlertDialog.Builder builder= new AlertDialog.Builder(c)
                 .setMessage(R.string.requestAdultpin)
                 .setView(v)
-                .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int pininput = new Integer(((EditText) v.findViewById(R.id.pininput)).getText().toString());
@@ -89,7 +89,12 @@ public class AdultDialog extends DialogFragment {
                         BuildSetAdultpin(c).show();
                     }
                 })
-                .setNegativeButton(android.R.string.no, positiveButtonlistener);
+                .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DialogAsk21(c,positiveButtonlistener).show();
+                    }
+                });
         CheckBox dontShowAgain = (CheckBox)v.findViewById(R.id.dontshowagain);
         dontShowAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,21 +105,24 @@ public class AdultDialog extends DialogFragment {
         });
         return builder.create();
     }
+    private static Dialog DialogAsk21(Context c, final DialogInterface.OnClickListener positiveButtonlistener){
+        return new AlertDialog.Builder(c)
+                .setMessage(c.getString(R.string.are_you_adult))
+                .setPositiveButton(android.R.string.ok, positiveButtonlistener)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .create();
+    }
     public static Dialog BuildAreYouAdultDialog(Context c, final DialogInterface.OnClickListener positiveButtonlistener){
         int pin= new SecurePreferences(c).getInt(MATUREPIN,-1);
         if(pin==-1) {
             boolean dontask= PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(DONTSHOWAGAIN,false);
             if(dontask)
-                return new AlertDialog.Builder(c)
-                    .setMessage(c.getString(R.string.are_you_adult))
-                    .setPositiveButton(android.R.string.ok, positiveButtonlistener)
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .create();
+                return DialogAsk21(c,positiveButtonlistener);
             else
                 return BuildAskSetAdultpin(c,positiveButtonlistener);
 

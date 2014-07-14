@@ -517,6 +517,7 @@
     <string name="dontaskagain">Don\'t ask again</string>
     <string name="requestAdultpin">Insert the pin to unlock</string>
     <string name="adultpinwrong">Wrong pin, try again.</string>
+    <string name="setting_hide_mature">Hide Adult Content</string>
 
 
 </resources>
