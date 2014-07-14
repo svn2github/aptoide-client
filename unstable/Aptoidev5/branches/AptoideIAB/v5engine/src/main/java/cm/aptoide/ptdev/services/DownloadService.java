@@ -569,7 +569,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
         for(DownloadInfo info : list) {
             if(info.getStatusState() instanceof ActiveState) {
                 info.getmBuilder().setProgress(100, info.getPercentDownloaded(), info.getPercentDownloaded() == 0);
-                if(info.getEta() >= 0) {
+                if(info.getEta() > 0) {
                     String remaining = Utils.formatEta(info.getEta(), "");
                     info.getmBuilder().setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
                 }
