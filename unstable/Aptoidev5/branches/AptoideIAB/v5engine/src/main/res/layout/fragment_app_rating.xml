@@ -103,15 +103,18 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                     android:orientation="vertical">
             </LinearLayout>
 
-            <Button android:id="@+id/more_comments"
-                    style="@style/WidgetButtonCustomGray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/comment_see_all"
-                    android:layout_gravity="right"
-                    android:drawableRight="?attr/icNextItemDrawable"
-                    android:layout_marginRight="5dp"
-                    android:visibility="gone"/>
+            <Button
+                android:id="@+id/more_comments"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableRight="@drawable/ic_more_arrow_right"
+                android:gravity="fill_vertical|right"
+                android:paddingLeft="5.0sp"
+                android:paddingRight="5.0sp"
+                android:text="@string/comment_see_all"
+                android:visibility="gone"
+                android:textColor="@android:color/darker_gray"/>
 
         </LinearLayout>
 

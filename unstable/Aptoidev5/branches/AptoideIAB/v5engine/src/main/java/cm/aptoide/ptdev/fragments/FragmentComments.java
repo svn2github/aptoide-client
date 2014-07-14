@@ -4,7 +4,6 @@ import android.accounts.*;
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
@@ -18,22 +17,14 @@ import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
-import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.dialogs.ReplyCommentDialog;
-import cm.aptoide.ptdev.events.AppViewRefresh;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
 import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
 import cm.aptoide.ptdev.model.*;
-import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
-import cm.aptoide.ptdev.webservices.AddCommentRequest;
 import cm.aptoide.ptdev.webservices.AllCommentsRequest;
-import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
-import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -42,7 +33,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -104,10 +94,30 @@ public class FragmentComments extends ListFragment {
 
         author.setText(comment.getUsername());
 
+        if(showReply) {
+            TextView reply = (TextView) view.findViewById(R.id.reply_comment);
+            reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if(isLoggedIn(activity)) {
+                        if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
+
+                            ReplyCommentDialog replyDialog = AptoideDialog.replyCommentDialog(comment.getId().intValue(), comment.getUsername());
+                            replyDialog.show(((ActionBarActivity) activity).getSupportFragmentManager(), "replyCommentDialog");
+
+                        } else {
+
+                            AptoideDialog.updateUsernameDialog().show(((ActionBarActivity) activity).getSupportFragmentManager(), "updateNameDialog");
+                        }
+                    }
+                }
+            });
+        }
         ((ImageView) view.findViewById(R.id.ic_action)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(activity, v, comment.getId().intValue(), comment.getUsername(), showReply);
+                showPopup(activity, v, comment.getId().intValue(), comment.getUsername(), false);
             }
         });
     }
@@ -262,51 +272,13 @@ public class FragmentComments extends ListFragment {
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
-            final AccountManager manager = AccountManager.get(activity);
-
-            if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
-
-                manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity, new AccountManagerCallback<Bundle>() {
-                    @Override
-                    public void run(AccountManagerFuture<Bundle> future) {
-                        if (LoginActivity.isLoggedIn(activity)) {
-
-                            final Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                            manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, activity, new AccountManagerCallback<Bundle>() {
-                                @Override
-                                public void run(AccountManagerFuture<Bundle> future) {
-                                    try {
-
-                                        ((AppViewActivity) activity).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                    } catch (OperationCanceledException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (AuthenticatorException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, null);
-                        }
-                    }
-                }, null);
-
-                return false;
-            }
+            if (!isLoggedIn(activity)) return false;
 
             int i = menuItem.getItemId();
 
             if (i == R.id.menu_reply) {
 
-                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
-
-                    ReplyCommentDialog replyDialog = AptoideDialog.replyCommentDialog(commentId, author);
-                    replyDialog.show(((ActionBarActivity) activity).getSupportFragmentManager(), "replyCommentDialog");
-
-                } else {
-
-                    AptoideDialog.updateUsernameDialog().show(((ActionBarActivity) activity).getSupportFragmentManager(), "updateNameDialog");
-                }
+//                getReplyListener();
 
                 return true;
             } else if (i == R.id.menu_vote_up) {
@@ -322,5 +294,43 @@ public class FragmentComments extends ListFragment {
             return false;
         }
 
+
+
     }
+
+    public static boolean isLoggedIn(final Activity activity) {
+        final AccountManager manager = AccountManager.get(activity);
+
+        if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
+
+            manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    if (LoginActivity.isLoggedIn(activity)) {
+
+                        final Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                        manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, activity, new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+
+                                    ((AppViewActivity) activity).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                } catch (OperationCanceledException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (AuthenticatorException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, null);
+                    }
+                }
+            }, null);
+
+            return false;
+        }
+        return true;
+    }
+
 }

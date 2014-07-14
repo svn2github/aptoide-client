@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (c) 2013 tdeus.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Public License v2.0
@@ -7,15 +6,15 @@ which accompanies this distribution, and is available at
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:animateLayoutChanges="true"
-              android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="?attr/backgroundCard">
+        style="?attr/backgroundCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
 
         <!--<View android:id="@+id/view"-->
@@ -25,98 +24,77 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 
         <TextView
-                android:id="@+id/author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_below="@+id/view"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="10dp" android:layout_toLeftOf="@+id/ic_action"/>
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
+            android:layout_gravity="left"
+            android:layout_toLeftOf="@+id/ic_action"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ImageView android:id="@+id/ic_action"
-                   style="@style/overflowMenuButton"
-                   android:layout_alignParentRight="true"/>
-
-        <TextView
-                android:id="@+id/content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_below="@+id/ic_action"/>
+        <ImageView
+            android:id="@+id/ic_action"
+            style="@style/overflowMenuButton"
+            android:layout_alignParentRight="true" />
 
         <TextView
-                android:id="@+id/hasComments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:layout_below="@+id/content"
-                android:drawablePadding="2dp"
-                android:drawableLeft="?attr/icViewMoreComments"
-                android:textColor="@android:color/darker_gray"
-                android:layout_margin="2dp"
-                android:layout_centerHorizontal="true"/>
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ic_action"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
 
-        <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                <!--android:background="?attr/selectableItemBackground"-->
-                <!--android:text="@string/reply"-->
-                <!--android:gravity="center"-->
-                <!--android:drawablePadding="2dp"-->
-                <!--android:layout_margin="2dp"-->
-                <!--android:textColor="@android:color/darker_gray"-->
-                <!--android:drawableLeft="?attr/icReplyComment"-->
-                <!--android:id="@+id/reply_comment"-->
-                <!--android:layout_below="@+id/content"-->
-                <!--android:layout_toLeftOf="@+id/hasComments"/>-->
+        <TextView
+            android:id="@+id/hasComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:paddingLeft="10dp"
+            android:layout_toLeftOf="@+id/reply_comment"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="?attr/icViewMoreComments"
+            android:drawablePadding="2dp"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                <!--android:background="?attr/selectableItemBackground"-->
-                <!--android:text="@string/vote_down"-->
-                <!--android:gravity="center"-->
-                <!--android:drawablePadding="2dp"-->
-                <!--android:layout_margin="2dp"-->
-                <!--android:textColor="@android:color/darker_gray"-->
-                <!--android:drawableLeft="?attr/icVoteDownComment"-->
-                <!--android:layout_toLeftOf="@+id/reply_comment"-->
-                <!--android:id="@+id/vote_down"-->
-                <!--android:layout_below="@+id/content"/>-->
-
-        <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                <!--android:background="?attr/selectableItemBackground"-->
-                <!--android:id="@+id/vote_up"-->
-                <!--android:text="@string/vote_up"-->
-                <!--android:gravity="center"-->
-                <!--android:drawablePadding="2dp"-->
-                <!--android:layout_margin="2dp"-->
-                <!--android:textColor="@android:color/darker_gray"-->
-                <!--android:drawableLeft="?attr/icVoteUpComment"-->
-                <!--android:layout_below="@+id/content"-->
-                <!--android:layout_toLeftOf="@+id/vote_down"/>-->
-
+        <TextView
+            android:id="@+id/reply_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/reply"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray" />
 
     </RelativeLayout>
 
-    <LinearLayout android:id="@+id/subcomments"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_below="@+id/hasComments"
-                  android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/subcomments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hasComments"
+        android:orientation="vertical"
+        android:visibility="gone" />
 
 </LinearLayout>

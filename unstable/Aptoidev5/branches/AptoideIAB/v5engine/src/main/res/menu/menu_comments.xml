@@ -6,10 +6,10 @@
           android:title="@string/reply"/>
 
     <item android:id="@+id/menu_vote_up"
-          android:showAsAction="collapseActionView"
+          app:showAsAction="collapseActionView"
           android:title="@string/vote_up"/>
 
     <item android:id="@+id/menu_vote_down"
-          android:showAsAction="collapseActionView"
+          app:showAsAction="collapseActionView"
           android:title="@string/vote_down"/>
 </menu>

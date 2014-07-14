@@ -14,7 +14,7 @@
             android:id="@id/ptr_content"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="?android:attr/colorBackground">
+            android:background="@android:color/transparent">
 
         <TextView
                 android:id="@id/ptr_text"

@@ -24,7 +24,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Daniel Batalha" android:layout_toLeftOf="@+id/ic_action"/>
+        android:layout_toLeftOf="@+id/ic_action"/>
 
     <ImageView android:id="@+id/ic_action"
                style="@style/overflowMenuButton"
@@ -50,8 +50,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/author"
-            android:text="awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome awesome "
-            android:paddingBottom="12dp"
+        android:paddingBottom="12dp"
             android:paddingRight="10dp" />
 
 
