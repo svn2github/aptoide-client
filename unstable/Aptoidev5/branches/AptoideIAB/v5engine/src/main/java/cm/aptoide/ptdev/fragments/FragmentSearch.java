@@ -77,10 +77,14 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
 
         int id = item.getItemId();
 
-        if(id == R.id.name){
+        if(id == R.id.nameAZ){
             setListShown(false);
 
-            sort = StoreActivity.Sort.NAME;
+            sort = StoreActivity.Sort.NAMEAZ;
+        }else if(id == R.id.nameZA){
+            setListShown(false);
+
+            sort = StoreActivity.Sort.NAMEZA;
         }else if(id == R.id.date){
             setListShown(false);
 

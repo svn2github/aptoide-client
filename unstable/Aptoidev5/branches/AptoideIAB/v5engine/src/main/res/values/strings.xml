@@ -50,6 +50,8 @@
     <string name="sort">Sort</string>
     <string name="order_popup_lst1">Most recent first </string>
     <string name="order_popup_lst2">Alphabetically </string>
+    <string name="order_popup_lst2AZ">Alphabetically A-Z</string>
+    <string name="order_popup_lst2ZA">Alphabetically Z-A</string>
     <string name="order_popup_lst3">Rating </string>
     <string name="order_popup_lst4">Download number </string>
     <string name="order_popup_lst5">Price</string>

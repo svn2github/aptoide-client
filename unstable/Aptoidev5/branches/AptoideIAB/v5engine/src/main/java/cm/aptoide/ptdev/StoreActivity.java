@@ -3,12 +3,7 @@ package cm.aptoide.ptdev;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -16,11 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentBreadCrumbs;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
@@ -29,17 +21,13 @@ import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.SpiceService;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -78,7 +66,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         return storeTheme;
     }
 
-    public enum Sort{ 	NAME, DOWNLOADS, DATE, PRICE, RATING}
+    public enum Sort{ 	NAMEAZ,NAMEZA, DOWNLOADS, DATE, PRICE, RATING}
     public boolean categories;
     public Sort sort;
 
@@ -155,7 +143,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         Fragment fragmentHeader = new FragmentStoreHeader();
 
-        Log.d("Aptoide-", "StoreActivity id" + storeid);
+        //Log.d("Aptoide-", "StoreActivity id" + storeid);
 
 
         Bundle args = new Bundle();
@@ -199,8 +187,11 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         getMenuInflater().inflate(R.menu.menu_categories, menu);
 
         switch(sort){
-            case NAME:
-                menu.findItem(R.id.name).setChecked(true);
+            case NAMEAZ:
+                menu.findItem(R.id.nameAZ).setChecked(true);
+                break;
+            case NAMEZA:
+                menu.findItem(R.id.nameZA).setChecked(true);
                 break;
             case DOWNLOADS:
                 menu.findItem(R.id.download).setChecked(true);
@@ -232,42 +223,43 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
 
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if( i == R.id.refresh_store){
             refreshList();
         }
-        else if( i == R.id.name){
-            sort = Sort.NAME;
-            setSort(item);
-        } else if( i == R.id.date){
-            sort = Sort.DATE;
-            setSort(item);
-        }else if( i == R.id.download){
-            sort = Sort.DOWNLOADS;
-            setSort(item);
-        }else if( i == R.id.rating){
-            sort = Sort.RATING;
-            setSort(item);
-        }else if( i == R.id.price){
-            sort = Sort.PRICE;
-            setSort(item);
-
-        }else if( i == R.id.show_all){
-
-            categories = !categories;
-            getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            setSort(item);
-
+        else {
+            if (i == R.id.nameAZ) {
+                sort = Sort.NAMEAZ;
+                setSort(item);
+            } else if (i == R.id.nameZA) {
+                sort = Sort.NAMEZA;
+                setSort(item);
+            } else if (i == R.id.date) {
+                sort = Sort.DATE;
+                setSort(item);
+            } else if (i == R.id.download) {
+                sort = Sort.DOWNLOADS;
+                setSort(item);
+            } else if (i == R.id.rating) {
+                sort = Sort.RATING;
+                setSort(item);
+            } else if (i == R.id.price) {
+                sort = Sort.PRICE;
+                setSort(item);
+            } else if (i == R.id.show_all) {
+                categories = !categories;
+                getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                setSort(item);
+            }
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("orderByCategory", categories).putInt("order_list", sort.ordinal()).commit();
-
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putBoolean("orderByCategory", categories)
+                .putInt("order_list", sort.ordinal()).commit();
         return true;
     }
 

@@ -42,7 +42,7 @@ public class Database {
     public SQLiteDatabase getDatabaseInstance() {
         return database;
     }
-
+    private static final String SELECT_START = "select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk";
     private final SQLiteDatabase database;
 
 
@@ -57,7 +57,7 @@ public class Database {
         ArrayList<SQLiteStatement> SQLiteStatements = new ArrayList<SQLiteStatement>(statements.size());
 
         for (String string : statements) {
-            Log.d("TAG1", "Compiling statement: " + string);
+            //Log.d("TAG1", "Compiling statement: " + string);
             SQLiteStatements.add(database.compileStatement(string));
         }
 
@@ -142,7 +142,7 @@ public class Database {
             values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
         }
 
-        Log.d("Aptoide-Inserting store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
+        //Log.d("Aptoide-Inserting store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
 
         values.put(Schema.Repo.COLUMN_IS_USER, true);
 
@@ -165,7 +165,7 @@ public class Database {
             values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
         }
 
-        Log.d("Aptoide-Updating store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
+        //Log.d("Aptoide-Updating store", String.valueOf(store.getBaseUrl() + " " + store.getLogin()!=null));
 
         values.put(Schema.Repo.COLUMN_IS_USER, true);
 
@@ -189,7 +189,7 @@ public class Database {
                     if (items != null) {
                         itemsList = items.split(",");
                     } else {
-                        Log.d("Aptoide-Exception", "Items is null");
+                        //Log.d("Aptoide-Exception", "Items is null");
                     }
                 }
 
@@ -225,14 +225,22 @@ public class Database {
     }
 
     public Cursor getApks(long storeid, long parentid, StoreActivity.SortObject sortObject) {
-
-
         String sort = "name";
 
         switch (sortObject.getSort()){
+            case NAMEAZ:
+                //this sort does the same as the one in use
+                //sort = "case when name like '[A-Z]%' then 1 else 0 end asc,name collate nocase";
 
-            case NAME:
+
                 sort = "name collate nocase";
+                break;
+            case NAMEZA:
+                //This sort puts numbers first then Asian then Z-A
+                //sort = "name+0<>0 DESC,name collate nocase desc";
+
+                // this sort puts Asian first then Z-A and numbers last
+                sort = "name collate nocase desc";
                 break;
             case DATE:
                 sort = "date desc";
@@ -248,11 +256,9 @@ public class Database {
                 break;
         }
 
-
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
-        Cursor c;
-
+        /*Cursor c;
 
         if(storeid != -1){
 
@@ -264,7 +270,7 @@ public class Database {
                     order = "date desc";
                 }
 
-                c = database.rawQuery("select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date ,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + order , new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
+                c = database.rawQuery("select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + order , new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
             }else{
                 c = database.rawQuery("select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(parentid),String.valueOf(storeid)  });
             }
@@ -272,21 +278,41 @@ public class Database {
         }else{
             c = database.rawQuery("select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk, repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk) group by package_name order by " + sort, null);
         }
+        */
+        String[] selectionArgs =null;
+
+        StringBuilder query = new StringBuilder(SELECT_START);
+        if(storeid != -1){
+            query.append(" join category_apk on apk.id_apk = category_apk.id_apk join repo on apk.id_repo = repo.id_repo where category_apk.id_real_category = ? and category_apk.id_repo = ? "+
+                    (filterCompatible ? "and apk.is_compatible='1'": "") + " " +
+                    (filterMature ? "and apk.mature='0'": "") +
+                    " order by apk.sdk asc ) group by package_name order by ");
+            if(parentid==500){
+                query.append("downloads desc");
+            }else if (parentid == 501){
+                query.append("date desc");
+            }else{
+                query.append(sort);
+            }
+            selectionArgs=new String[]{String.valueOf(parentid),String.valueOf(storeid)};
+        }else{
+            query.append(", repo where apk.id_repo = repo.id_repo " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk) group by package_name order by " + sort);
+        }
+        Cursor c = database.rawQuery(query.toString(),selectionArgs);
         c.getCount();
 
         return c;
-
     }
 
     public Cursor getAllStoreApks(long storeid, StoreActivity.SortObject sortObject) {
-
-
         String sort = "name";
 
         switch (sortObject.getSort()){
-
-            case NAME:
+            case NAMEAZ:
                 sort = "name collate nocase";
+                break;
+            case NAMEZA:
+                sort = "name collate nocase desc";
                 break;
             case DATE:
                 sort = "date desc";
@@ -304,11 +330,10 @@ public class Database {
 
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
-        Cursor c = database.rawQuery("select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(storeid)  });
+        Cursor c = database.rawQuery(SELECT_START+" join repo on apk.id_repo = repo.id_repo where apk.id_repo = ? " +(filterCompatible ? "and apk.is_compatible='1'": "") + " " +(filterMature ? "and apk.mature='0'": "") + " order by apk.sdk asc ) group by package_name order by " + sort, new String[]{String.valueOf(storeid)  });
         c.getCount();
 
         return c;
-
     }
 
 
@@ -320,19 +345,14 @@ public class Database {
     }
 
     public void updateAppsCount(long repoId) {
-
         Cursor c = database.rawQuery("select id_real_category from category where id_category_parent = 0 and id_repo = ?", new String[]{String.valueOf(repoId)});
-
         while (c.moveToNext()) {
             getAppsCount(c.getLong(0), repoId);
         }
-
         c.close();
-
     }
 
     private long getAppsCount(long id_real_category, long id_repo) {
-
         long apps = 0;
         Cursor c = database.rawQuery("select id_real_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id_repo)});
         if(c.getCount()>0){
@@ -356,8 +376,7 @@ public class Database {
 
 
     public Boolean clearStore(long id_store) {
-
-        Log.d("Aptoide-", "Clearing " + id_store);
+        //Log.d("Aptoide-", "Clearing " + id_store);
 
         database.beginTransaction();
 
@@ -368,14 +387,11 @@ public class Database {
 
                 if((c.getString(1).equals("Top Apps") && c.getString(1).equals("Latest Apps"))){
                     database.delete("category_apk", "id_real_category=? and id_repo = ?", new String[]{String.valueOf(c.getLong(0)),String.valueOf(id_store)});
-                    Log.d("Aptoide-", "Deleting " + c.getLong(0));
+                    //Log.d("Aptoide-", "Deleting " + c.getLong(0));
                 }
 
             }
             c.close();
-
-
-
 
         database.setTransactionSuccessful();
         database.endTransaction();
@@ -383,8 +399,7 @@ public class Database {
     }
 
     public Boolean clearCategories(long id_store) {
-
-        Log.d("Aptoide-", "Deleting categories " + id_store);
+        //Log.d("Aptoide-", "Deleting categories " + id_store);
 
         database.beginTransaction();
 
@@ -397,8 +412,7 @@ public class Database {
     }
 
     public Boolean removeStores(Set<Long> checkedItems) {
-
-        Log.d("Aptoide-", "Deleting " + checkedItems);
+        //Log.d("Aptoide-", "Deleting " + checkedItems);
 
         database.beginTransaction();
         for(Long id_store : checkedItems){
@@ -406,7 +420,7 @@ public class Database {
 
             for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
                 database.delete("category_apk","id_real_category=? and id_repo = ?", new String[]{String.valueOf(c.getLong(0)),String.valueOf(id_store)});
-                Log.d("Aptoide-", "Deleting " + c.getLong(0));
+                //Log.d("Aptoide-", "Deleting " + c.getLong(0));
             }
             c.close();
             database.delete("category"," id_repo = ? ", new String[]{String.valueOf(id_store)});
@@ -535,7 +549,7 @@ public class Database {
 
     public void deleteFeatured(int type){
 
-        Log.d("Aptoide-Featured", "Deleting featured " + type);
+        //Log.d("Aptoide-Featured", "Deleting featured " + type);
 
         database.beginTransaction();
 
@@ -810,7 +824,7 @@ public class Database {
 
         c.close();
 
-        Log.d("Aptoide-EditorsChoice", tempList.toString());
+        //Log.d("Aptoide-EditorsChoice", tempList.toString());
 
         ArrayList<Collection> items = new ArrayList<Collection>();
         for(String collection : tempList.keySet()){
@@ -898,9 +912,11 @@ public class Database {
         String sort = "apk.name";
 
         switch (sortEnum){
-
-            case NAME:
+            case NAMEAZ:
                 sort = "apk.name collate nocase";
+                break;
+            case NAMEZA:
+                sort = "apk.name desc collate nocase";
                 break;
             case DATE:
                 sort = "apk.date desc";
@@ -1058,7 +1074,7 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 1);
 
         int result = database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
-        Log.d("InstalledBroadcastReceiver", "Trying to update " + packageName + " with action completed " + newAction + " RESULT: " + ((result == 1) ? "Success" : "Fail"));
+        //Log.d("InstalledBroadcastReceiver", "Trying to update " + packageName + " with action completed " + newAction + " RESULT: " + ((result == 1) ? "Success" : "Fail"));
 
     }
 
