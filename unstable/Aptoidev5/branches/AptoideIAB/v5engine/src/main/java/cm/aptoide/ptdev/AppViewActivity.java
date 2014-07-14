@@ -19,7 +19,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
@@ -336,7 +338,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                     if (calculatedMd5.equals(md5)) {
 
                                         isDownloadCompleted = true;
-                                        invalidateOptionsMenu();
+                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                invalidateOptionsMenu();
+                                            }
+                                        });
+
                                     }
                                 }
                             }

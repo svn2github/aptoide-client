@@ -6,12 +6,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
@@ -170,19 +173,34 @@ public class DownloadService extends Service implements CompleteDownloadCallback
         Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
         for(final DownloadInfo info: manager.getmCompletedList()){
             if(info.getId()==id){
+                final PackageManager packageManager = getPackageManager();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(DownloadModel model : info.getmFilesToDownload()) {
-                            String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
-                            if(!calculatedMd5.equals(info.getDownload().getMd5())){
-                                Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
-                                info.download();
-                                break;
-                            } else {
-                                info.autoExecute();
-                                Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
-                                break;
+                            try {
+                                packageManager.getPackageInfo(info.getDownload().getPackageName(), PackageManager.SIGNATURE_MATCH);
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent LaunchIntent = packageManager.getLaunchIntentForPackage(info.getDownload().getPackageName());
+                                        startActivity(LaunchIntent);
+                                    }
+                                });
+
+                            } catch (PackageManager.NameNotFoundException e) {
+
+                                String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
+                                if(!calculatedMd5.equals(info.getDownload().getMd5())){
+                                    Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
+                                    info.download();
+                                    break;
+                                } else {
+                                    info.autoExecute();
+                                    Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
+                                    break;
+                                }
                             }
                         }
                     }
@@ -535,8 +553,8 @@ public class DownloadService extends Service implements CompleteDownloadCallback
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
                 .setContentIntent(onClickAction);
-
-        if(info.getEta() >= 0) {
+        Log.d("download-trace", "ETA: " + info.getEta());
+        if(info.getEta() > 0) {
             String remaining = Utils.formatEta(info.getEta(), "");
             mBuilder.setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
         }
