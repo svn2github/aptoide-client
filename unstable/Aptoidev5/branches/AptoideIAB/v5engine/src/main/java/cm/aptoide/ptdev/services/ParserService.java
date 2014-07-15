@@ -17,7 +17,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
-import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
@@ -39,8 +38,6 @@ import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -65,24 +62,24 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     public void onCreate() {
         super.onCreate();
         BusProvider.getInstance().register(this);
-        //Log.d("Aptoide-ParserService", "onStart");
+        Log.d("Aptoide-ParserService", "onStart");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
-        //Log.d("Aptoide-ParserService", "onDestroy");
+        Log.d("Aptoide-ParserService", "onDestroy");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        //Log.d("Aptoide-Parser","onBind");
+        Log.d("Aptoide-ParserService","onBind");
         parser = new Parser(spiceManager);
         parser.setPoolEndCallback(new PoolEndedCallback() {
             @Override
             public synchronized void onEnd() {
-                //Log.d("Aptoide-Parser", "onEnd");
+                Log.d("Aptoide-ParserService", "onEnd");
                 try {
                     if (showNotification) {
                         showNotification = false;
@@ -94,10 +91,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
                     }
                 } catch (InterruptedException e) {
-                    //Log.d("Aptoide-Parser","InterruptedException");
+                    Log.d("Aptoide-ParserService","InterruptedException");
                     e.printStackTrace();
                 }finally {
-                    //Log.d("Aptoide-Parser","Stop order");
+                    Log.d("Aptoide-ParserService","Stop order");
                     stopForeground(true);
                     stopSelf();
                 }
@@ -219,7 +216,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
 
         if (!spiceManager.isStarted()) {
-            //Log.d("Aptoide-Parser", "Starting spice");
+            Log.d("Aptoide-ParserService", "Starting spice");
             spiceManager.start(getApplicationContext());
         }
 
@@ -233,13 +230,8 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             e.printStackTrace();
         }
 
-        String message = null;
-
-
         if (repositoryInfoJson != null) {
-            if ("FAIL".equals(repositoryInfoJson.getStatus())) {
-                message = "Store doesn't exist.";
-            } else {
+            if (!"FAIL".equals(repositoryInfoJson.getStatus())) {
                 store.setName(repositoryInfoJson.getListing().getName());
                 store.setDownloads(repositoryInfoJson.getListing().getDownloads());
 
@@ -249,7 +241,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                     String avatar = repositoryInfoJson.getListing().getAvatar_hd();
                     String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
                     avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-
                     store.setAvatar(avatar);
 
                 }else{
@@ -267,13 +258,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         beginParse(db, store, id);
                     }
                 }).start();
-
             }
         }
     }
 
     private void beginParse(Database db, Store store, long id) {
-        //Log.d("Aptoide-Parser", "Creating Objects");
+        Log.d("Aptoide-ParserService", "Creating Objects");
         if(handlerBundleSparseArray.get((int) store.getId())!=null){
             return;
         }
@@ -287,24 +277,19 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
         handlerBundleSparseArray.append((int) id, bundle);
         BusProvider.getInstance().post(new RepoCompleteEvent(id));
-        //Log.d("Aptoide-Parser", "Checking timestamps");
+        Log.d("Aptoide-ParserService", "Checking timestamps");
 
         long currentLatestTimestamp = 0;
-        try {
-            currentLatestTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         long currentTopTimestamp = 0;
         try {
+            currentLatestTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
             currentTopTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getTopXmlUrl()));
         } catch (IOException e) {
+            onError(e,store.getId());
             e.printStackTrace();
         }
 
-
-        //Log.d("Aptoide-Parser", "Delete");
+        Log.d("Aptoide-ParserService", "Delete");
         if (currentLatestTimestamp>store.getLatestTimestamp()) {
             parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new LatestPreParseRunnable(handlerLatestXml, currentLatestTimestamp, db, id) );
         }
@@ -313,14 +298,8 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new TopPreParseRunnable(handlerTopXml, currentTopTimestamp, db, id));
         }
 
-        //Log.d("Aptoide-Parser", "Parse");
-
-        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
+        Log.d("Aptoide-ParserService", "Parse");
+        parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, null);
     }
 
     public class TopPreParseRunnable implements Runnable{
@@ -403,7 +382,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = Notification.PRIORITY_MIN;
         }*/
-        //Log.d("Aptoide-Parser", "Notification for "+string);
+        Log.d("Aptoide-ParserService", "Notification for "+string);
         Notification notification =new NotificationCompat.Builder(this)
                 .setSmallIcon(getApplicationInfo().icon)
                 .setContentTitle("Aptoide is working")
@@ -425,14 +404,14 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     @Override
     public void onComplete(long repoId) {
-        //Log.d("Aptoide", "Removing" + repoId);
+        Log.d("Aptoide", "Removing" + repoId);
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
     }
 
     @Override
     public void onError(Exception e, long repoId) {
-        //Log.d("Aptoide-ParserService", "onError");
+        Log.d("Aptoide-ParserService", "onError");
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
 
@@ -473,7 +452,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         if (currentTimestamp > cachedTimestamp) {
             preferences.edit().putLong("editorschoiceTimestamp", currentTimestamp).commit();
             if (!spiceManager.isStarted()) {
-                //Log.d("Aptoide-Parser", "Starting spice");
+                Log.d("Aptoide-ParserService", "Starting spice");
                 spiceManager.start(getApplicationContext());
             }
 
@@ -500,7 +479,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             preferences.edit().putLong("topappsTimestamp", currentTimestamp).commit();
 
             if (!spiceManager.isStarted()) {
-                //Log.d("Aptoide-Parser", "Starting spice");
+                Log.d("Aptoide-ParserService", "Starting spice");
                 spiceManager.start(getApplicationContext());
             }
             startService(new Intent(getApplicationContext(), ParserService.class));
