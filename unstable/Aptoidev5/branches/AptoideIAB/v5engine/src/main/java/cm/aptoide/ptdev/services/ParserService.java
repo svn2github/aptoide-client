@@ -65,45 +65,42 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     public void onCreate() {
         super.onCreate();
         BusProvider.getInstance().register(this);
-        Log.d("Aptoide-ParserService", "onStart");
+        //Log.d("Aptoide-ParserService", "onStart");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
-        Log.d("Aptoide-ParserService", "onDestroy");
+        //Log.d("Aptoide-ParserService", "onDestroy");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-
+        //Log.d("Aptoide-Parser","onBind");
         parser = new Parser(spiceManager);
         parser.setPoolEndCallback(new PoolEndedCallback() {
             @Override
             public synchronized void onEnd() {
-                Log.d("Aptoide-", "onEnd");
+                //Log.d("Aptoide-Parser", "onEnd");
                 try {
-
                     if (showNotification) {
-
                         showNotification = false;
                         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true)){
                             showUpdatesNotification();
                         }
-
                     }
-
                     if (spiceManager.isStarted()) {
                         spiceManager.shouldStopAndJoin(DurationInMillis.ONE_MINUTE);
                     }
-
-
                 } catch (InterruptedException e) {
+                    //Log.d("Aptoide-Parser","InterruptedException");
                     e.printStackTrace();
+                }finally {
+                    //Log.d("Aptoide-Parser","Stop order");
+                    stopForeground(true);
+                    stopSelf();
                 }
-                stopForeground(true);
-                stopSelf();
             }
         });
 
@@ -187,9 +184,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
     public boolean repoIsParsing(long id){
-
-
-
         return handlerBundleSparseArray.get((int) id)!=null;
     }
 
@@ -210,7 +204,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         if(newStore){
             if(db.existsServer(store.getBaseUrl())){
                 return;
-            };
+            }
             id = insertStoreDatabase(db, store);
             store.setId(id);
             BusProvider.getInstance().post(produceRepoAddedEvent());
@@ -225,7 +219,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
 
         if (!spiceManager.isStarted()) {
-            Log.d("Aptoide-Parser", "Starting spice");
+            //Log.d("Aptoide-Parser", "Starting spice");
             spiceManager.start(getApplicationContext());
         }
 
@@ -243,19 +237,11 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
 
         if (repositoryInfoJson != null) {
-
-            Log.i("Aptoide-", "success");
             if ("FAIL".equals(repositoryInfoJson.getStatus())) {
-
                 message = "Store doesn't exist.";
-
-
             } else {
-
-
                 store.setName(repositoryInfoJson.getListing().getName());
                 store.setDownloads(repositoryInfoJson.getListing().getDownloads());
-
 
                 if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
 
@@ -284,11 +270,10 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
             }
         }
-
     }
 
     private void beginParse(Database db, Store store, long id) {
-        Log.d("Aptoide-Parser", "Creating Objects");
+        //Log.d("Aptoide-Parser", "Creating Objects");
         if(handlerBundleSparseArray.get((int) store.getId())!=null){
             return;
         }
@@ -302,7 +287,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         HandlerBundle bundle = new HandlerBundle(handlerInfoXml, handlerTopXml, handlerLatestXml );
         handlerBundleSparseArray.append((int) id, bundle);
         BusProvider.getInstance().post(new RepoCompleteEvent(id));
-        Log.d("Aptoide-Parser", "Checking timestamps");
+        //Log.d("Aptoide-Parser", "Checking timestamps");
 
         long currentLatestTimestamp = 0;
         try {
@@ -319,7 +304,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
 
 
-        Log.d("Aptoide-Parser", "Delete");
+        //Log.d("Aptoide-Parser", "Delete");
         if (currentLatestTimestamp>store.getLatestTimestamp()) {
             parser.parse(store.getLatestXmlUrl(), store.getLogin(), 4, handlerLatestXml, new LatestPreParseRunnable(handlerLatestXml, currentLatestTimestamp, db, id) );
         }
@@ -328,8 +313,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             parser.parse(store.getTopXmlUrl(), store.getLogin(), 4, handlerTopXml, new TopPreParseRunnable(handlerTopXml, currentTopTimestamp, db, id));
         }
 
-
-        Log.d("Aptoide-Parser", "Parse");
+        //Log.d("Aptoide-Parser", "Parse");
 
         parser.parse(store.getInfoXmlUrl(), store.getLogin(), 10, handlerInfoXml, this, this, new Runnable() {
             @Override
@@ -361,7 +345,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
     public class LatestPreParseRunnable implements Runnable{
-
 
         private HandlerLatestXml handlerLatestXml;
         private long currentLatestTimestamp;
@@ -404,7 +387,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public Notification createDefaultNotification(String string) {
-        Notification notification = null;
+        /*Notification notification = null;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification = new NotificationCompat.Builder(this).setSmallIcon(getApplicationInfo().icon).setContentTitle("Aptoide is working").setContentText(string).build();
         } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -419,26 +402,45 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = Notification.PRIORITY_MIN;
+        }*/
+        //Log.d("Aptoide-Parser", "Notification for "+string);
+        Notification notification =new NotificationCompat.Builder(this)
+                .setSmallIcon(getApplicationInfo().icon)
+                .setContentTitle("Aptoide is working")
+                .setAutoCancel(true)
+                .setContentText(string).build();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notification.priority = Notification.PRIORITY_MIN;
+        }else{
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
+            notification.setLatestEventInfo(this, "", "", pendingIntent);
+            notification.when = System.currentTimeMillis();
         }
-
-
-
-
-
+        //notification.defaults |= Notification.DEFAULT_LIGHTS;
+        // Cancel the notification after its selected
+        //notification.flags |= Notification.FLAG_AUTO_CANCEL | Notification.FLAG_SHOW_LIGHTS;
+        //notification.flags |= Notification.FLAG_AUTO_CANCEL;
         return notification;
     }
 
     @Override
     public void onComplete(long repoId) {
-        Log.d("Aptoide", "Removing" + repoId);
+        //Log.d("Aptoide", "Removing" + repoId);
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoCompleteEvent(repoId));
     }
 
     @Override
     public void onError(Exception e, long repoId) {
+        //Log.d("Aptoide-ParserService", "onError");
         handlerBundleSparseArray.remove((int) repoId);
         BusProvider.getInstance().post(new RepoErrorEvent(e, repoId));
+
+        if(handlerBundleSparseArray.size()==0){
+            stopForeground(true);
+            stopSelf();
+        }
+
     }
 
     ErrorCallback editorsErrorCallback = new ErrorCallback() {
@@ -471,7 +473,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         if (currentTimestamp > cachedTimestamp) {
             preferences.edit().putLong("editorschoiceTimestamp", currentTimestamp).commit();
             if (!spiceManager.isStarted()) {
-                Log.d("Aptoide-Parser", "Starting spice");
+                //Log.d("Aptoide-Parser", "Starting spice");
                 spiceManager.start(getApplicationContext());
             }
 
@@ -486,12 +488,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }
-
     }
-
-
-
-
 
     public void parseTopApps(final Database database, String url) throws IOException {
 
@@ -503,7 +500,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             preferences.edit().putLong("topappsTimestamp", currentTimestamp).commit();
 
             if (!spiceManager.isStarted()) {
-                Log.d("Aptoide-Parser", "Starting spice");
+                //Log.d("Aptoide-Parser", "Starting spice");
                 spiceManager.start(getApplicationContext());
             }
             startService(new Intent(getApplicationContext(), ParserService.class));
@@ -528,18 +525,14 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
     static private class HandlerBundle {
 
-
         private final HandlerLatestXml handlerLatestXml;
         private final HandlerTopXml handlerTopXml;
         private final HandlerInfoXml handlerInfoXml;
 
         public HandlerBundle(HandlerInfoXml handlerInfoXml, HandlerTopXml handlerTopXml, HandlerLatestXml handlerLatestXml) {
-
             this.handlerInfoXml = handlerInfoXml;
             this.handlerTopXml = handlerTopXml;
             this.handlerLatestXml = handlerLatestXml;
-
-
         }
 
         public void cancel(){
