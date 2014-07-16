@@ -209,7 +209,6 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         boolean value = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch();
         menu.findItem(cm.aptoide.ptdev.R.id.menu_filter_mature_content).setVisible(value);
 
-        menu.findItem(cm.aptoide.ptdev.R.id.menu_about).setVisible(false);
         return true;
     }
 

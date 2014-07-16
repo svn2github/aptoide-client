@@ -46,11 +46,11 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     }
 
 
-    @Produce
-    @Override
-    public RelatedAppsEvent publishRelatedApps() {
-        return super.publishRelatedApps();
-    }
+//    @Produce
+//    @Override
+//    public RelatedAppsEvent publishRelatedApps() {
+//        return super.publishRelatedApps();
+//    }
 
     @Produce
     @Override

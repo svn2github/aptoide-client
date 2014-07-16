@@ -27,8 +27,11 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
         inflater.inflate(cm.aptoide.ptdev.R.menu.menu_categories, menu);
         StoreActivity.SortObject sort = ((CategoryCallback) getActivity()).getSort();
         switch(sort.getSort()){
-            case NAME:
-                menu.findItem(cm.aptoide.ptdev.R.id.name).setChecked(true);
+            case NAMEAZ:
+                menu.findItem(cm.aptoide.ptdev.R.id.nameAZ).setChecked(true);
+                break;
+            case NAMEZA:
+                menu.findItem(cm.aptoide.ptdev.R.id.nameZA).setChecked(true);
                 break;
             case DOWNLOADS:
                 menu.findItem(cm.aptoide.ptdev.R.id.download).setChecked(true);
@@ -61,9 +64,12 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
         } else if( i == cm.aptoide.ptdev.R.id.refresh_store){
             ((StartPartner)getActivity()).refreshList();
         }
-        else if( i == cm.aptoide.ptdev.R.id.name){
-            ((StartPartner)getActivity()).setSort(StoreActivity.Sort.NAME);
+        else if( i == cm.aptoide.ptdev.R.id.nameAZ) {
+            ((StartPartner) getActivity()).setSort(StoreActivity.Sort.NAMEAZ);
             setSort(item);
+        }else if( i == cm.aptoide.ptdev.R.id.nameZA){
+                ((StartPartner)getActivity()).setSort(StoreActivity.Sort.NAMEZA);
+                setSort(item);
         } else if( i == cm.aptoide.ptdev.R.id.date){
             ((StartPartner)getActivity()).setSort(StoreActivity.Sort.DATE);
             setSort(item);

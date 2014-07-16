@@ -58,6 +58,6 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
 
         PreferenceScreen screen = (PreferenceScreen) findPreference("root");
         screen.removePreference(findPreference("changetheme"));
-
+        screen.removePreference(findPreference("about"));
     }
 }
