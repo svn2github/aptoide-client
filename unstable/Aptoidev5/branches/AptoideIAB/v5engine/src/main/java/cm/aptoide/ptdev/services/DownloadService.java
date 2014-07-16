@@ -185,7 +185,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
                                     @Override
                                     public void run() {
                                         Intent LaunchIntent = packageManager.getLaunchIntentForPackage(info.getDownload().getPackageName());
-                                        startActivity(LaunchIntent);
+                                        if(LaunchIntent != null) startActivity(LaunchIntent);
                                     }
                                 });
 

@@ -219,8 +219,8 @@ public class Start extends ActionBarActivity implements
 //        } else if (i == R.id.menu_settings) {
 //            Intent settingsIntent = new Intent(this, settingsClass);
 //            startActivityForResult(settingsIntent, 0);
-        } else if (i == R.id.menu_about) {
-            showAbout();
+//        } else if (i == R.id.menu_about) {
+//            showAbout();
         } else if (i == R.id.menu_search) {
             onSearchRequested();
             Log.d("Aptoide-OnClick", "OnSearchRequested");

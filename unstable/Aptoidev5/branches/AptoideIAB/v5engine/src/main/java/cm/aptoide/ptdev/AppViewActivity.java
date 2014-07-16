@@ -1182,7 +1182,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.menu_schedule) {
             if (md5 != null) {
                 new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
-                Toast.makeText(this, R.string.addSchDown, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.added_to_scheduled , Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, R.string.please_wait, Toast.LENGTH_SHORT).show();
             }
