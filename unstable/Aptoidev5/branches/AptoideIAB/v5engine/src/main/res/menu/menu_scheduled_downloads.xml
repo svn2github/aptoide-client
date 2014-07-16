@@ -6,10 +6,10 @@
           android:title="@string/schDown_installselected" />
 
     <item android:id="@+id/menu_remove"
-          app:showAsAction="ifRoom"
+          app:showAsAction="collapseActionView"
           android:title="@string/schDown_removeselected" />
 
     <item android:id="@+id/menu_invert"
-          app:showAsAction="ifRoom"
+          app:showAsAction="collapseActionView"
           android:title="@string/schDown_invertselection"/>
 </menu>

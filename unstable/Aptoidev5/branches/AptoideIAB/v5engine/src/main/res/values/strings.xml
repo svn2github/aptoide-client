@@ -244,7 +244,8 @@
     <string name="application_signature_blacklisted">Application signature is not a Trusted signature at Aptoide Anti-Malware platform because have been used to sign anothers applications that not match to the signature related to the legit developer.</string>
     <string name="scanned_verified_by_tester">The application was reviewed manually by a tester from Aptoide Team which ensures the safety of the application.</string>
     <string name="schDown_nodownloadselect">No Downloads Selected</string>
-    <string name="addSchDown">Added to Scheduled Downloads. Check at Menu->Scheduled Downloads.</string>
+    <string name="addSchDown">Added to Scheduled Downloads</string>
+    <string name="added_to_scheduled">Added to Menu > Scheduled Downloads</string>
     <string name="error_no_market">You don\'t have Google Market installed!</string>
     <string name="schDown_invertselection">Invert Selection</string>
     <string name="schDown_removeselected">Remove Selected</string>
