@@ -8,6 +8,7 @@
 package cm.aptoide.ptdev;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
@@ -175,31 +178,26 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 		});
 
 
-//		Preference about = findPreference("aboutDialog");
-//		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//			@Override
-//			public boolean onPreferenceClick(Preference preference) {
-//                ContextThemeWrapper wrapper = new ContextThemeWrapper(Settings.this, Settings.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
-//
-//                View view = LayoutInflater.from(wrapper).inflate(R.layout.dialog_about, null);
-//				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(wrapper).setView(view);
-//
-//				final AlertDialog aboutDialog = alertDialogBuilder.create();
-//
-//
-//				aboutDialog.setTitle(getString(R.string.about_us));
-//				aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
-//				aboutDialog.setCancelable(false);
-//				aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, "Ok", new Dialog.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.cancel();
-//					}
-//				});
-//				aboutDialog.show();
-//
-//				return true;
-//			}
-//		});
+		Preference about = findPreference("aboutDialog");
+		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+                View view = LayoutInflater.from(mctx).inflate(R.layout.dialog_about, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mctx).setView(view);
+                final AlertDialog aboutDialog = alertDialogBuilder.create();
+                aboutDialog.setTitle(getString(R.string.about_us));
+                aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
+                aboutDialog.setCancelable(false);
+                aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                aboutDialog.show();
+
+				return true;
+			}
+		});
 
 //		if(ApplicationAptoide.PARTNERID!=null){
 //			PreferenceScreen preferenceScreen = getPreferenceScreen();
