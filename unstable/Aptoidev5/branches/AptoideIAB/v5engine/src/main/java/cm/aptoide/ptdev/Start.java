@@ -37,6 +37,7 @@ import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
+import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
@@ -83,7 +84,8 @@ public class Start extends ActionBarActivity implements
         DownloadInterface,
         MyAppsAddStoreInterface,
         ProgressDialogFragment.OnCancelListener,
-        AdultDialog.Callback {
+        AdultDialog.Callback,
+        PullToRefreshCallback {
 
     private static final String TAG = "Start";
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
@@ -484,26 +486,7 @@ public class Start extends ActionBarActivity implements
             }
 
 
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        waitForServiceToBeBound();
-                        String countryCode = Geolocation.getCountryCode(Start.this);
-                        String url = Aptoide.getConfiguration().getEditorsUrl();
-
-                        loadEditorsChoice(url, countryCode);
-                        loadTopApps(Aptoide.getConfiguration().getTopAppsUrl());
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            loadEditorsAndTopApps();
 
             executorService.execute(new Runnable() {
                 @Override
@@ -586,6 +569,31 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    }
+
+    private void loadEditorsAndTopApps() {
+        if(executorService != null && !executorService.isShutdown()) {
+            executorService.execute( new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        waitForServiceToBeBound();
+                        String countryCode = Geolocation.getCountryCode( Start.this );
+                        String url = Aptoide.getConfiguration().getEditorsUrl();
+
+                        loadEditorsChoice( url, countryCode );
+                        loadTopApps( Aptoide.getConfiguration().getTopAppsUrl() );
+                        Log.d( "pullToRefresh", "execute(=)" );
+                    } catch ( InterruptedException e ) {
+                        e.printStackTrace();
+                    } catch ( MalformedURLException e ) {
+                        e.printStackTrace();
+                    } catch ( IOException e ) {
+                        e.printStackTrace();
+                    }
+                }
+            } );
+        }
     }
 
     public List<Object> getDrawerList() {
@@ -955,6 +963,12 @@ public class Start extends ActionBarActivity implements
 
     public PagerAdapter getViewPagerAdapter() {
         return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
+    }
+
+    @Override
+    public void reload() {
+        Log.d( "pullToRefresh", "reload()" );
+        loadEditorsAndTopApps();
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

@@ -442,6 +442,13 @@
     <string name="error_SYS_2">No data found, please try again later</string>
     <string name="error_SYS_3">System is now in maintenance, please try again later</string>
     <string name="error_SYS_4">This call is not supported by the current API version</string>
+
+    <string name="flag_review_good">This application was manually reviewed by Aptoide as Good</string>
+    <string name="flag_review_license">This application was manually reviewed by Aptoide as Need License</string>
+    <string name="flag_review_fake">This application was manually reviewed by Aptoide as Fake</string>
+    <string name="flag_review_freeze">This application was manually reviewed by Aptoide as Freeze</string>
+    <string name="flag_review_virus">This application was manually reviewed by Aptoide as Virus</string>
+
     <string name="X_download_number">%s down.</string>
     <string name="search_more">Search More</string>
     <string name="more_editors_choice">More Editors\' Choice</string>

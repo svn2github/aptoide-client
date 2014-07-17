@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,11 +34,20 @@ import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+
 import com.commonsware.cwac.merge.MergeAdapter;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -66,7 +76,7 @@ import java.util.TimerTask;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<Collection>> {
+public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<Collection>>, OnRefreshListener {
 
 
     private MergeAdapter adapter;
@@ -82,6 +92,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private TextView moreReTv;
     private ArrayList<HomeItem> featuredGraphics = new ArrayList<HomeItem>();
 
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private PullToRefreshCallback pullToRefreshCallback;
 
     @Override
     public void onResume() {
@@ -113,6 +125,18 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     public void onStop() {
         super.onStop();
         BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
+    public void onAttach( Activity activity ) {
+        super.onAttach( activity );
+        pullToRefreshCallback = (PullToRefreshCallback) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        pullToRefreshCallback = null;
     }
 
     @Subscribe
@@ -170,9 +194,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setEmptyText( "" );
         featurededchoice = new HomeFeaturedAdapter(getActivity(), featuredGraphics, 2);
-
-
 
         adapter = new MergeAdapter();
 
@@ -283,7 +306,25 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
             }
         });
+
+
+        ViewGroup viewGroup = (ViewGroup) view;
+
+        if ( getActivity() != null ) {
+            mPullToRefreshLayout = new PullToRefreshLayout( viewGroup.getContext() );
+
+            ActionBarPullToRefresh.from( getActivity() )
+                    .insertLayoutInto( viewGroup )
+                    .useViewDelegate( ListView.class, new AbsListViewDelegate())
+                    .theseChildrenArePullable( getListView().getId(), getListView().getEmptyView().getId() )
+                    .listener( FragmentHome.this )
+                    .options( Options.create().headerTransformer( new AbcDefaultHeaderTransformer() ).scrollDistance( 0.5f ).build() )
+                    .setup( mPullToRefreshLayout );
+        }
+
+
     }
+
 
     private void loadRecommended(final View v2) {
         final AccountManager accountManager = AccountManager.get(getActivity());
@@ -316,52 +357,52 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                         @Override
                         public void run() {
                             if(finalToken !=null){
-                            manager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
-                                @Override
-                                public void onRequestFailure(SpiceException e) {
+                                manager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
+                                    @Override
+                                    public void onRequestFailure(SpiceException e) {
 
-                                }
+                                    }
 
-                                @Override
-                                public void onRequestSuccess(ListRecomended listRecomended) {
-                                    if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
-                                        v2.setVisibility(View.VISIBLE);
-                                        moreReTv.setVisibility(View.VISIBLE);
-                                        recommended.clear();
-                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-                                        for (ListRecomended.Repository repository : listRecomended.getRepository()) {
+                                    @Override
+                                    public void onRequestSuccess(ListRecomended listRecomended) {
+                                        if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
+                                            v2.setVisibility(View.VISIBLE);
+                                            moreReTv.setVisibility(View.VISIBLE);
+                                            recommended.clear();
+                                            final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+                                            for (ListRecomended.Repository repository : listRecomended.getRepository()) {
 
-                                            String repoName = repository.getName();
-                                            String iconPath = repository.getIconspath();
-                                            for (ListRecomended.Repository.Package aPackage : repository.getPackage()) {
+                                                String repoName = repository.getName();
+                                                String iconPath = repository.getIconspath();
+                                                for (ListRecomended.Repository.Package aPackage : repository.getPackage()) {
 
-                                                String icon;
+                                                    String icon;
 
-                                                if (aPackage.getIcon_hd() != null) {
-                                                    icon = aPackage.getIcon_hd();
-                                                } else {
-                                                    icon = aPackage.getIcon();
-                                                }
-                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
-                                                item.setRecommended(true);
-                                                item.setRepoName(repoName);
-                                                item.setMd5(aPackage.getMd5h());
+                                                    if (aPackage.getIcon_hd() != null) {
+                                                        icon = aPackage.getIcon_hd();
+                                                    } else {
+                                                        icon = aPackage.getIcon();
+                                                    }
+                                                    HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
+                                                    item.setRecommended(true);
+                                                    item.setRepoName(repoName);
+                                                    item.setMd5(aPackage.getMd5h());
 
-                                                if (matureCheck) {
-                                                    if (!aPackage.getAge().equals("Mature")) {
+                                                    if (matureCheck) {
+                                                        if (!aPackage.getAge().equals("Mature")) {
+                                                            recommended.add(item);
+                                                        }
+                                                    } else {
                                                         recommended.add(item);
                                                     }
-                                                } else {
-                                                    recommended.add(item);
+
                                                 }
 
                                             }
-
                                         }
+                                        recomendedAdapter.notifyDataSetChanged();
                                     }
-                                    recomendedAdapter.notifyDataSetChanged();
-                                }
-                            });
+                                });
                             }
                         }
                     });
@@ -451,7 +492,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         return asyncTaskLoader;
     }
-//
+    //
     @Override
     public void onLoadFinished(Loader<ArrayList<Collection>> loader, ArrayList<Collection> data) {
         editorsChoice.clear();
@@ -511,5 +552,16 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             if(top!=null) top.clear();
             if(adapter!=null) adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onRefreshStarted( View view ) {
+        Log.d( "pullToRefresh", "onRefreshStarted" );
+
+        if(pullToRefreshCallback != null) {
+            pullToRefreshCallback.reload();
+        }
+
+        mPullToRefreshLayout.setRefreshComplete();
     }
 }
