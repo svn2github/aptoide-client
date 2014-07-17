@@ -65,6 +65,7 @@ import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.MoreRelatedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.ScreenshotsViewer;
+import cm.aptoide.ptdev.VeredictReview;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
 import cm.aptoide.ptdev.adapters.StoreSpinnerAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -910,7 +911,7 @@ public abstract class FragmentAppView extends Fragment {
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
                             intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
                             intent.putExtra("token", ((AppViewActivity) getActivity()).getToken());
-                            startActivity(intent);
+                            startActivityForResult(intent, 359);
                         }
                     });
                 }else{
@@ -951,8 +952,34 @@ public abstract class FragmentAppView extends Fragment {
                 freezeVotes.setVisibility(View.GONE);
                 virusVotes.setVisibility(View.GONE);
 
-                review.setVisibility(View.VISIBLE);
-                review.setText("" + event.getVeredict().getReview());
+                int stringResource;
+                switch ( VeredictReview.reverseLookup( event.getVeredict().getFlag() )) {
+                    case GOOD:
+                        stringResource = VeredictReview.GOOD.getString();
+                        break;
+                    case FAKE:
+                        stringResource = VeredictReview.FAKE.getString();
+                        break;
+                    case LICENSE:
+                        stringResource = VeredictReview.LICENSE.getString();
+                        break;
+                    case FREEZE:
+                        stringResource = VeredictReview.FREEZE.getString();
+                        break;
+                    case VIRUS:
+                        stringResource = VeredictReview.VIRUS.getString();
+                        break;
+                    default:
+                        stringResource = VeredictReview.UNKNOWN.getString();
+                        break;
+                }
+
+                if(stringResource != -1) {
+                    review.setVisibility(View.VISIBLE);
+                    review.setText( "" + getString( stringResource ) );
+                    Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+                }
+
                 if(event.getVeredict().getFlag().equals("good")) {
                     review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_good), null, null, null);
                 }
