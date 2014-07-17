@@ -51,10 +51,6 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         adapter.addAdapter(cursorAdapter);
         query = getArguments().getString("query");
         setHasOptionsMenu(true);
-
-
-
-
     }
 
 

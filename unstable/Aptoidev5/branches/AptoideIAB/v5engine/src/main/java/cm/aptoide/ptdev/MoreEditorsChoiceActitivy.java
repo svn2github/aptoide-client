@@ -89,10 +89,6 @@ public class MoreEditorsChoiceActitivy extends ActionBarActivity implements Down
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
 
-
-
-
-
             //page_collection.setExpanded(!page_collection.isExpanded());
 
         }

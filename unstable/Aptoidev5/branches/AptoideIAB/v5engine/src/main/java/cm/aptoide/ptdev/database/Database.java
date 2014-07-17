@@ -17,6 +17,10 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.fragments.Home;
+import cm.aptoide.ptdev.fragments.HomeBucket;
+import cm.aptoide.ptdev.fragments.HomeCategory;
+import cm.aptoide.ptdev.fragments.HomeFooter;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Collection;
@@ -433,10 +437,7 @@ public class Database {
         return true;
     }
 
-    public Cursor getInstalled() {
-        Cursor c = database.rawQuery("select 0 as _id , 'Installed' as name, null as count, null as version_name, null as icon, null as iconpath, null as package_name union select  apk.id_apk as _id,apk.name, apk.downloads as count, installed.version_name , apk.icon as icon, repo.icons_path as iconpath, apk.package_name as package_name from apk inner join installed on apk.package_name = installed.package_name join repo on apk.id_repo = repo.id_repo group by apk.package_name", null);
-        return c;
-    }
+
 
     public Cursor getUpdates() {
 
@@ -468,8 +469,7 @@ public class Database {
                 " group by package_name, is_update order by is_update desc, name collate nocase ", null);
 
         final long endTime = System.currentTimeMillis();
-
-
+        c.getCount();
 
         return c;
     }
@@ -615,7 +615,17 @@ public class Database {
     }
 
 
-    public Cursor getAllFeaturedGraphics(){
+    public ArrayList<Home> getAllTopFeatured(int bucketSize) {
+
+        ArrayList<Home> items = new ArrayList<Home>();
+        fillElements(bucketSize, "Top Apps", items, getTopFeatured(Integer.MAX_VALUE), 0);
+
+        return items;
+    }
+
+
+
+        public Cursor getAllFeaturedGraphics(){
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
@@ -626,7 +636,7 @@ public class Database {
         return c;
     }
 
-    public ArrayList<HomeItem> getFeaturedGraphics(int bucketSize){
+    public ArrayList<Home> getFeaturedGraphics(int bucketSize){
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
@@ -634,33 +644,147 @@ public class Database {
         Cursor c = database.rawQuery("select * from (select featedchoice.featured_graphic as featgraph, apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo left natural join featurededitorschoice as featedchoice where featedchoice.id_apk not null and cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
 
         int i;
-        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+        ArrayList<Home> items = new ArrayList<Home>();
         for(c.moveToFirst(), i= 0 ; !c.isAfterLast() ;c.moveToNext(), i++){
             long id = c.getLong(c.getColumnIndex("id"));
             HomeItem item = new HomeItem(c.getString(c.getColumnIndex("name")), "", c.getString(c.getColumnIndex("featgraph")), id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), "");
             items.add(item);
         }
         c.close();
-        ArrayList<HomeItem> ret_items = new ArrayList<HomeItem>();
+        ArrayList<Home> ret_items = new ArrayList<Home>();
 
         if(!items.isEmpty()){
-            Collections.shuffle(items, new Random(System.currentTimeMillis()/1000000));
+            Collections.shuffle(items, new Random(System.currentTimeMillis()/900000));
 
             for(int j = 0; j < bucketSize && j < items.size();j++){
                 ret_items.add(items.get(j));
             }
         }
 
+        Collections.sort(items, new Comparator<Home>() {
+            @Override
+            public int compare(Home lhs, Home rhs) {
+                return lhs.getSortPriority() - rhs.getSortPriority();
+            }
+        });
+
+
+
 
 
         return ret_items;
     }
 
-    public synchronized ArrayList<Collection> getFeatured(int editorsChoiceBucketSize) {
+    public HashMap<String, ArrayList<Home>> getFeatured2(int editorsChoiceBucketSize) {
+
+        ArrayList<Home> items = new ArrayList<Home>();
+
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
 
+        Cursor c = database.rawQuery("select * from (select apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo left natural join featurededitorschoice as featedchoice where featedchoice.id_apk is null and cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
+        c.getCount();
+
+
+        HashMap<String, Integer> collectionIdList = new HashMap<String, Integer>();
+
+        LinkedHashMap<String, ArrayList<HomeItem>> collections = new LinkedHashMap<String, ArrayList<HomeItem>>();
+
+        collections.put("New Editors' Choice", new ArrayList<HomeItem>());
+        collectionIdList.put("New Editors' Choice", -1);
+
+        int i = 0;
+        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize*2 ;c.moveToNext()){
+
+            String collection = "New Editors' Choice";
+            i++;
+            if(collections.get(collection).size() < editorsChoiceBucketSize*2){
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long id = c.getLong(c.getColumnIndex("id"));
+                collections.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatnameid")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")),c.getString(c.getColumnIndex("mycatname"))));
+            }
+
+        }
+
+        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast();c.moveToNext()){
+            String collection = c.getString(c.getColumnIndex("catname"));
+            if(!collections.containsKey(collection)){
+                ArrayList<HomeItem> itemsList = new ArrayList<HomeItem>();
+                collections.put(collection, itemsList);
+                collectionIdList.put(collection, c.getInt(c.getColumnIndex("parentid")));
+            }
+        }
+
+
+        c.moveToFirst();
+        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast();c.moveToNext()){
+
+            String collection = c.getString(c.getColumnIndex("catname"));
+
+            if(collections.get(collection).size() < editorsChoiceBucketSize*2){
+
+                String iconPath = c.getString(c.getColumnIndex("iconpath"));
+                String icon = c.getString(c.getColumnIndex("icon"));
+                long id = c.getLong(c.getColumnIndex("id"));
+                collections.get(collection).add(
+                        new HomeItem(c.getString(c.getColumnIndex("name")),
+                                c.getString(c.getColumnIndex("mycatnameid")),
+                                iconPath + icon ,
+                                id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), c.getString(c.getColumnIndex("mycatname"))));
+
+            }
+        }
+
+        collections.put("Top Apps", getTopFeatured(editorsChoiceBucketSize * 2));
+        collectionIdList.put("Top Apps", -2);
+
+
+        for(String collection : collections.keySet()){
+            fillElements(editorsChoiceBucketSize, collection, items, collections.get(collection), collectionIdList.get(collection));
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, ArrayList<Home>> returnVal = new HashMap<String, ArrayList<Home>>();
+
+        returnVal.put("editorsChoice", items);
+        returnVal.put("featuredGraphic", getFeaturedGraphics(5));
+
+        return returnVal;
+    }
+
+
+
+
+
+
+    private void fillElements(int editorsChoiceBucketSize, String categoryName, ArrayList<Home> items, ArrayList<HomeItem> inElements, Integer integer) {
+
+        if(!inElements.isEmpty()) {
+
+            items.add(new HomeCategory(categoryName));
+
+            while (!inElements.isEmpty()) {
+                HomeBucket bucket = new HomeBucket();
+                for (int j = 0; j < editorsChoiceBucketSize && !inElements.isEmpty(); j++) {
+                    bucket.addItem(inElements.remove(0));
+                }
+                items.add(bucket);
+            }
+            items.add(new HomeFooter(integer));
+        }
+
+    }
+
+    public synchronized ArrayList<Collection> getFeatured(int editorsChoiceBucketSize) {
+        final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
+        final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
 
         Cursor c = database.rawQuery("select * from (select apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo left natural join featurededitorschoice as featedchoice where featedchoice.id_apk is null and cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
@@ -698,8 +822,6 @@ public class Database {
                                 id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), c.getString(c.getColumnIndex("mycatname"))));
 
             }
-
-
         }
 
 

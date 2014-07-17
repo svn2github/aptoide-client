@@ -2,9 +2,12 @@ package cm.aptoide.ptdev;
 
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,14 +28,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
+import cm.aptoide.ptdev.adapters.SearchAdapter2;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.commonsware.cwac.merge.MergeAdapter;
+import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
+import cm.aptoide.ptdev.webservices.json.SearchJson;
 
+import com.commonsware.cwac.merge.MergeAdapter;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import org.acra.ACRA;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,15 +61,18 @@ import com.commonsware.cwac.merge.MergeAdapter;
  */
 public class SearchManager extends ActionBarActivity {
 
-    private CursorAdapter adapter;
+
     private DownloadService downloadService;
+
     String query;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-        adapter = new SearchAdapter(this);
+
         setContentView(R.layout.page_search);
 
         Bundle args = new Bundle();
@@ -103,12 +123,27 @@ public class SearchManager extends ActionBarActivity {
 
 
 
-    public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>   {
+    public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+        SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+        private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
 
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            manager.start(getActivity());
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            if(manager.isStarted()) manager.shouldStop();
+        }
 
         private MergeAdapter adapter;
         private String query;
-        private CursorAdapter cursorAdapter;
+        private SearchAdapter2 searchAdapter;
+        private SearchAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
         TextView more;
@@ -121,11 +156,10 @@ public class SearchManager extends ActionBarActivity {
             adapter = new MergeAdapter();
             v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
             adapter.addView(v);
-
-            cursorAdapter = new SearchAdapter(getActivity());
-            adapter.addAdapter(cursorAdapter);
+            searchAdapter = new SearchAdapter2(getActivity(), items);
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
+
 
         }
 
@@ -176,7 +210,7 @@ public class SearchManager extends ActionBarActivity {
             }
 
 
-            getLoaderManager().restartLoader(60, getArguments(), this);
+            //getLoaderManager().restartLoader(60, getArguments(), this);
             item.setChecked(true);
             return super.onOptionsItemSelected(item);
         }
@@ -184,13 +218,23 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
-            Intent i = new Intent(getActivity(), appViewClass);
-            i.putExtra("id", id);
-            startActivity(i);
+            Intent intent = new Intent(getActivity(), appViewClass);
+
+            if(adapter.getItem(position) instanceof Cursor){
+                intent.putExtra("id", id);
+            }else{
+                intent.putExtra("fromRelated", true);
+                intent.putExtra("repoName", ((SearchJson.Results.Apks) adapter.getItem(position)).getRepo());
+                intent.putExtra("md5sum", ((SearchJson.Results.Apks) adapter.getItem(position)).getMd5sum());
+            }
+
+
+            startActivity(intent);
         }
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
+            cursorAdapter = new SearchAdapter(getActivity());
 
             return new SimpleCursorLoader(getActivity()) {
                 @Override
@@ -203,6 +247,7 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
             cursorAdapter.swapCursor(data);
+            adapter.addAdapter(cursorAdapter);
 
 
             if(isAdded()){
@@ -251,13 +296,101 @@ public class SearchManager extends ActionBarActivity {
             cursorAdapter.swapCursor(null);
         }
 
+
+        private boolean isNetworkAvailable(Context context) {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
+
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             ((SearchManager)getActivity()).setFooterView(getListView(), R.layout.footer_search);
-            getLoaderManager().restartLoader(60, getArguments(), this);
+            ListSearchApkRequest request = new ListSearchApkRequest();
+
+            ArrayList<String> stores = new ArrayList<String>();
+
+            Cursor c = new Database(Aptoide.getDb()).getServers();
+            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+                stores.add(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_NAME)));
+            }
+            c.close();
+
+
+
+            request.setStores(stores);
+            request.setSearchString(query);
+
+            setEmptyText(getString(R.string.no_search_result, query));
+
+            if(!isNetworkAvailable(getActivity())){
+                Bundle bundle = new Bundle();
+                bundle.putString("query", query);
+                getLoaderManager().initLoader(60,bundle, SearchFragment.this );
+                return;
+            }
+
+            manager.execute(request, query + stores.toString().hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("query", query);
+                    getLoaderManager().initLoader(60,bundle, SearchFragment.this );
+                }
+
+                @Override
+                public void onRequestSuccess(SearchJson searchJson) {
+                    items.clear();
+                    items.addAll(searchJson.getResults().getApks());
+                    adapter.addAdapter(searchAdapter);
+
+                    adapter.notifyDataSetChanged();
+
+                    setListAdapter(adapter);
+                    if (isAdded()) {
+
+                        TextView foundResults = (TextView) v.findViewById(R.id.results);
+                        more = (TextView) v.findViewById(R.id.more);
+                        if (searchAdapter.getCount() > 0) {
+                            foundResults.setText(getString(R.string.found_results, searchAdapter.getCount()));
+                        } else {
+                            foundResults.setText(getString(R.string.no_search_result, query));
+                        }
+                        setListAdapter(adapter);
+                        setListShown(true);
+                        setEmptyText(getString(R.string.no_search_result, query));
+
+
+                        Handler handler = new Handler();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+                                    if (((SearchManager) getActivity()).isSearchMoreVisible() && visibleItems < adapter.getCount()) {
+                                        more.setVisibility(View.VISIBLE);
+                                        more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
+                                    } else {
+                                        more.setVisibility(View.GONE);
+                                    }
+                                } catch (IllegalStateException e) {
+
+                                }
+
+//                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
+
+
+                            }
+                        });
+                    }
+                }
+            });
+            //getLoaderManager().restartLoader(60, getArguments(), this);
 
         }
 
@@ -276,7 +409,6 @@ public class SearchManager extends ActionBarActivity {
         public void onDetach() {
             super.onDetach();
         }
-
 
     }
 

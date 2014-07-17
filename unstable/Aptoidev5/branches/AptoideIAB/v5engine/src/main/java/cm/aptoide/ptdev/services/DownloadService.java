@@ -229,6 +229,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
         String path = Aptoide.getConfiguration().getPathCacheApks();
 
         DownloadModel downloadModel = new DownloadModel(remotePath, path + md5 + ".apk", md5, 0);
+
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
@@ -282,6 +283,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
 
         DownloadModel downloadModel = new DownloadModel(json.getApk().getPath(), path + json.getApk().getMd5sum() + ".apk", json.getApk().getMd5sum(), json.getApk().getSize().longValue());
         downloadModel.setAutoExecute(true);
+        downloadModel.setFallbackUrl(json.getApk().getAltPath());
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(id);
         FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));

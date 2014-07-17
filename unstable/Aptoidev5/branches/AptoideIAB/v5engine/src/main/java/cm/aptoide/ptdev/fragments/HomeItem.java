@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -7,13 +9,20 @@ package cm.aptoide.ptdev.fragments;
  * Time: 15:39
  * To change this template use File | Settings | File Templates.
  */
-public class HomeItem {
+public class HomeItem implements Home{
 
 
     private final String categoryString;
     private boolean recommended;
     private String md5;
     private String repoName;
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    private int priority = 0;
+
 
     public long getId() {
         return id;
@@ -30,6 +39,17 @@ public class HomeItem {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getItemsSize() {
+        return 0;
+    }
+
+    @Override
+    public int getSortPriority() {
+        return priority;
+    }
+
 
     public String getDownloads() { return downloads; }
 

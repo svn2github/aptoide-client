@@ -81,6 +81,7 @@ import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
+
 import cm.aptoide.ptdev.fragments.FragmentAppView;
 import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
 import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
@@ -144,10 +145,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
     private boolean refreshOnResume;
+    private String altPath;
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
     }
+    boolean showBadgeLayout = false;
 
     private static GetApkInfoJson.Malware.Reason reason;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
@@ -166,7 +169,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
                     GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
-                    signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
+                    if(getApkInfoJson.getSignature()!=null){
+                        signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
+                    }
+                    altPath = getApkInfoJson.getApk().getAltPath();
 
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
@@ -191,7 +197,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
-                    if(!signature.equals(installedSignature)){
+                    if(!signature.equals(installedSignature) && installedSignature!=null && installedSignature.length()>0){
                         message.setVisibility(View.VISIBLE);
                     }else{
                         message.setVisibility(View.GONE);
@@ -223,7 +229,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         }
                     });
-                    boolean showBadgeLayout = false;
 
                     if (getApkInfoJson.getMalware() != null) {
 
@@ -354,9 +359,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                 } else {
-                    for (Error error : json.getErrors()) {
-                        Toast.makeText(AppViewActivity.this, error.getMsg(), Toast.LENGTH_LONG).show();
-                    }
+                    AptoideUtils.toastError(json.getErrors());
                     finish();
                 }
             }
@@ -581,11 +584,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     Toast.makeText(Aptoide.getContext(), R.string.username_success, Toast.LENGTH_LONG).show();
                     PreferenceManager.getDefaultSharedPreferences(AppViewActivity.this).edit().putString("username", username).commit();
                 } else {
-                    for (String error : createUserJson.getErrors()) {
-                        Toast.makeText(AppViewActivity.this, error, Toast.LENGTH_LONG).show();
-                    }
+                    AptoideUtils.toastError(createUserJson.getErrors());
                 }
-
 
             }
         });
@@ -677,6 +677,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         private final String md5;
         private final String url;
         private String repoName;
+        private String urlFallback;
 
 
         public InstallFromUrlListener(String icon, String name, String versionName, String package_name, String md5, String url, String repoName) {
@@ -717,6 +718,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
             download.setMd5(this.md5);
+
 
             service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
@@ -1333,7 +1335,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 supportInvalidateOptionsMenu();
 
             } catch (PackageManager.NameNotFoundException e) {
-                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.install));
+                        ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.install));
                 findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
             }
 
@@ -1354,6 +1356,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
 
     }
+
+
 
     @Subscribe
     public void onDownloadStatusUpdate(Download download) {
@@ -1387,6 +1391,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setRepoName(repoName);
         request.setPackageName(package_name);
         request.setVersionName(versionName);
+        request.setVercode(versionCode);
         if (token != null) request.setToken(token);
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
@@ -1438,7 +1443,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     findViewById(R.id.download_progress).setVisibility(View.GONE);
                     findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
-                    findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+
+                    if(showBadgeLayout){
+                        findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
+                    }
+
                     pb.setProgress(download.getProgress());
                     progressText.setText(download.getDownloadState().name());
                     break;
@@ -1977,6 +1986,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
             }
+
         });
     }
 

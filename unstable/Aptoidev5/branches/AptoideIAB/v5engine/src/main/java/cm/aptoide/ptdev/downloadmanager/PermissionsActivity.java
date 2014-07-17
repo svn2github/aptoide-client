@@ -147,6 +147,8 @@ public class PermissionsActivity extends Activity {
         return false;
     }
 
+
+
     private void permissionsDialog(final FinishedApk viewApk, ArrayList<ApkPermission> permissions) {
 
 

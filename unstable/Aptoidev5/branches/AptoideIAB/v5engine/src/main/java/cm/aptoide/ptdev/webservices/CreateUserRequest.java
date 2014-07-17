@@ -24,9 +24,11 @@ import java.util.HashMap;
 public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
 
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/createUser";
 
-    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/createUser";
+    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/3/createUser";
+
+
 
     private String email;
     private String pass;
@@ -46,6 +48,7 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
     @Override
     public CreateUserJson loadDataFromNetwork() throws Exception {
+
         GenericUrl url;
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1){
@@ -53,9 +56,6 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
         }else{
             url = new GenericUrl(baseUrlNonSsl);
         }
-
-
-
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         String passhash = AptoideUtils.Algorithms.computeSHA1sum(pass);

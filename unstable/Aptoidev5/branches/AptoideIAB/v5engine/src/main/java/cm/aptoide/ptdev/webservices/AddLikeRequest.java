@@ -52,9 +52,11 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         this.apkversion = apkversion;
     }
 
+    String baseUrl = "http://webservices.aptoide.com/webservices/3/addApkLike";
     @Override
     public GenericResponse loadDataFromNetwork() throws Exception {
-        String baseUrl = "http://webservices.aptoide.com/webservices/addApkLike";
+
+
 
         GenericUrl url = new GenericUrl(baseUrl);
 
@@ -70,7 +72,10 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs( getResultType() );

@@ -5,6 +5,10 @@
 
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+
+
+
+
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
 
@@ -67,6 +71,8 @@
 
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
+
+
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
 

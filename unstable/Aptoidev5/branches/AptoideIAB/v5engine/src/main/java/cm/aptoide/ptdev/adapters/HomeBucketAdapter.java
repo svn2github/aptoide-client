@@ -61,11 +61,11 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             holder = new ViewHolder();
             v = LayoutInflater.from(ctx).inflate(R.layout.row_app_home, parent, false);
 
-            holder.category= (TextView) v.findViewById(R.id.app_category);
+            //holder.category= (TextView) v.findViewById(R.id.app_category);
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
-            holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
-            holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
+            //holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
+            //holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
 
             v.setTag(holder);
         } else {
@@ -76,7 +76,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         final HomeItem item = currentElement;
 
         holder.name.setText(item.getName());
-        holder.category.setText(item.getCategory());
+        //holder.category.setText(item.getCategory());
         String icon = item.getIcon();
 
         if(icon.contains("_icon")){
@@ -86,24 +86,24 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
         ImageLoader.getInstance().displayImage(icon, holder.icon);
 
-        holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+        //holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
         if(item.getName().length()>10){
-            holder.downloads.setMaxLines(1);
+        //    holder.downloads.setMaxLines(1);
         }else{
-            holder.downloads.setMaxLines(2);
+        //    holder.downloads.setMaxLines(2);
         }
-        holder.downloads.setVisibility(View.VISIBLE);
+        //holder.downloads.setVisibility(View.VISIBLE);
 
-        holder.rating.setRating(item.getRating());
-        holder.rating.setOnRatingBarChangeListener(null);
+        //holder.rating.setRating(item.getRating());
+        //holder.rating.setOnRatingBarChangeListener(null);
 
-        ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
-        overflow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v, item.getId());
-            }
-        });
+        //ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
+//        overflow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPopup(v, item.getId());
+//            }
+//        });
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,12 +123,6 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             }
         });
 
-
-
-
-
-
-
         return v;
     }
 
@@ -141,10 +135,10 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
     static class ViewHolder{
         TextView name;
-        TextView category;
+        //TextView category;
         ImageView icon;
-        TextView downloads;
-        RatingBar rating;
+        //TextView downloads;
+        //RatingBar rating;
     }
 
     static class MenuListener implements PopupMenu.OnMenuItemClickListener{

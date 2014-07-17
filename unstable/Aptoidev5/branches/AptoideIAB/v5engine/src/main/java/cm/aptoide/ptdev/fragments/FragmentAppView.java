@@ -915,6 +915,7 @@ public abstract class FragmentAppView extends Fragment {
                         }
                     });
                 }else{
+                    noComments.setVisibility(View.GONE);
                     commentsLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     commentsLayout.setVisibility(View.VISIBLE);
                 }

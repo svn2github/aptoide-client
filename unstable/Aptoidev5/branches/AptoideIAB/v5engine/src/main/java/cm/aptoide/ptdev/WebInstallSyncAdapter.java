@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
@@ -93,9 +94,10 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                     e1.printStackTrace();
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 try {
+
                     if (connection != null && channel != null) {
                         connection.disconnectChannel(channel);
                     }
@@ -118,12 +120,12 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
 
     void handleMessage(String body) {
         try {
-            Account account = AccountManager.get(getContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
             JSONObject object = new JSONObject(body);
 
             Intent i = new Intent(getContext(), appViewClass);
-            String authToken = AccountManager.get(getContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
+            SecurePreferences securePreferences = new SecurePreferences(getContext());
+            String authToken = securePreferences.getString("devtoken", "");
 
             String repo = object.getString("repo");
             long id = object.getLong("id");
@@ -142,15 +144,10 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (AuthenticatorException e) {
-            e.printStackTrace();
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (OperationCanceledException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();

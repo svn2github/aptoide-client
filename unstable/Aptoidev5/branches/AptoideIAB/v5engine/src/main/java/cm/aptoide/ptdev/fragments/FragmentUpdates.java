@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -76,6 +77,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
             @Override
             public Cursor loadInBackground() {
                 counter++;
+
                 return db.getUpdates();
             }
         };
@@ -160,22 +162,6 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         updatesAdapter = new UpdatesAdapter(getActivity(), items);
 
         adapter = new SimpleSectionAdapter<UpdateItem>(getActivity(),updatesAdapter);
-
-        Field[] fields = adapter.getClass().getDeclaredFields();
-
-        for(Field field: fields){
-            if(field.getName().equals("DEBUG")){
-                field.setAccessible(true);
-
-                try {
-                    field.setBoolean(adapter, true);
-                    Toast.makeText(Aptoide.getContext(), String.valueOf(field.get(adapter)),Toast.LENGTH_LONG).show();
-
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         setHasOptionsMenu(true);
 

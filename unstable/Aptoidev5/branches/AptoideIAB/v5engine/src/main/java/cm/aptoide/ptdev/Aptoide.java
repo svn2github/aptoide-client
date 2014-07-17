@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.http.AndroidHttpClient;
@@ -61,9 +62,6 @@ import static org.acra.ReportField.*;
 )
 public class Aptoide extends Application {
 
-
-
-
     public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
@@ -74,7 +72,6 @@ public class Aptoide extends Application {
     }
 
     private static AptoideThemePicker themePicker;
-
 
     public static AptoideConfiguration getConfiguration() {
         return configuration;
@@ -101,9 +98,11 @@ public class Aptoide extends Application {
 
     public static boolean IS_SYSTEM;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
+
 
         context = getApplicationContext();
 
@@ -112,6 +111,7 @@ public class Aptoide extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
 
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems
@@ -123,7 +123,7 @@ public class Aptoide extends Application {
 //                .build());
 
 
-        ACRA.init(this);
+        //ACRA.init(this);
 
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
@@ -137,11 +137,12 @@ public class Aptoide extends Application {
 
         ACRA.setConfig(acraConfiguration);
 
+        setConfiguration(getAptoideConfiguration());
+
 
         db = DatabaseHelper.getInstance(getApplicationContext());
         initDatabase(db);
 
-        setConfiguration(getAptoideConfiguration());
 
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
@@ -186,7 +187,8 @@ public class Aptoide extends Application {
     }
 
     public void bootImpl(ManagerPreferences managerPreferences) {
-        Crashlytics.start(this);
+        //Crashlytics.start(this);
+
         if (managerPreferences.getAptoideClientUUID() == null) {
             managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
         }
@@ -214,6 +216,7 @@ public class Aptoide extends Application {
         public ImageDownloaderWithPermissions(Context context, ManagerPreferences managerPreferences) {
             this(context, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
             this.managerPreferences = managerPreferences;
+
         }
 
         public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {

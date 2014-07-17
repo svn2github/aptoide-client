@@ -38,14 +38,8 @@ public class ListRecomended{
 
         @Key
         private String apkpath;
-
-
         private Number appscount;
-
-
         private String basepath;
-
-
         private String featuregraphicpath;
         private String hash;
 

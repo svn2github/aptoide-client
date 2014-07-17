@@ -7,8 +7,6 @@ import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,17 +17,13 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.adapters.HomeFeaturedAdapter;
-import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.adapters.PrincipalLayoutAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
@@ -39,7 +33,6 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -50,11 +43,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -63,11 +52,8 @@ import com.squareup.otto.Subscribe;
 
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created with IntelliJ IDEA.
@@ -100,7 +86,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         super.onResume();
         getLoaderManager().initLoader(50, null, this);
         getLoaderManager().initLoader(51, null, loader);
-        getLoaderManager().initLoader(52, null, featuredGraphicLoader);
         refreshRecommendedList();
         if(!isNetworkAvailable(Aptoide.getContext())){
             setListShown(true);
@@ -157,7 +142,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         featuredGraphics.clear();
         if(adapter != null) adapter.notifyDataSetChanged();
         getLoaderManager().restartLoader(50, null, this);
-        getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
     }
 
     private void refreshTopList() {
@@ -167,12 +151,10 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     }
 
     private void refreshRecommendedList() {
-
         loadRecommended(v2);
     }
 
     TopFeaturedLoader loader = new TopFeaturedLoader();
-    FeaturedGraphicLoader featuredGraphicLoader = new FeaturedGraphicLoader();
 
     BaseAdapter featurededchoice;
 
@@ -340,9 +322,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                     String token = null;
                     try {
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
-
                         request.setLimit(recomendedAdapter.getBucketSize()*2);
-                        request.setPackageName(token);
+                        request.setToken(token);
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -408,10 +389,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                     });
                 }
             }).start();
-
-
-
-
 
 
         }else{
@@ -512,47 +489,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
-    public class FeaturedGraphicLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
 
-        @Override
-        public Loader<ArrayList<HomeItem>> onCreateLoader(final int id, final Bundle args) {
-
-
-
-            AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
-                @Override
-                public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getFeaturedGraphics(topAdapter.getBucketSize()*2);
-                }
-            };
-
-
-            asyncTaskLoader.forceLoad();
-
-            return asyncTaskLoader;
-        }
-        //
-        @Override
-        public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
-            featuredGraphics.clear();
-            featuredGraphics.addAll(data);
-
-            if(getListView().getAdapter()==null){
-                if(!data.isEmpty()){
-                    setListAdapter(adapter);
-                }
-            }else{
-                adapter.notifyDataSetChanged();
-            }
-
-        }
-
-        @Override
-        public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
-            if(top!=null) top.clear();
-            if(adapter!=null) adapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     public void onRefreshStarted( View view ) {

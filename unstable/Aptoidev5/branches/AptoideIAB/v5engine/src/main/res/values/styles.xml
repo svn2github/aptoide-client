@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" >
 
     <style name="separatorLabel">
         <item name="android:padding">2dp</item>
@@ -56,7 +56,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:src">@drawable/overflow_menu</item>
-        <item name="android:background">@android:color/transparent</item>
+        <!--<item name="android:background">@android:color/transparent</item>-->
     </style>
 
     <style name="headerSeparatorButtonStyle">
@@ -221,6 +221,13 @@
         <item name="android:background">@drawable/paypal_btn_default_holo_light</item>
     </style>
 
+    <style name="WidgetButtonCarrierBillingUnitel" parent="WidgetButtonCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableLeft">@drawable/ic_action_unitel2</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/unitel_btn_default_holo_light</item>
+    </style>
+
 
     <style name="Animations"/>
     <!--  PopDownMenu  -->
@@ -345,7 +352,8 @@
     </style>
     <style name="PurchaseDialog" parent="@style/FinskyLightDialogTheme">
         <item name="android:windowNoTitle">true</item>
-
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">false</item>
     </style>
 
 

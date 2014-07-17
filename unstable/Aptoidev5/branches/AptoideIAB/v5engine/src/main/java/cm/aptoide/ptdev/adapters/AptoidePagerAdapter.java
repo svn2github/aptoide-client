@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
  * Time: 11:30
  * To change this template use File | Settings | File Templates.
  */
-public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
+public class AptoidePagerAdapter extends FragmentPagerAdapter {
 
 
     private String[] TITLES;
@@ -25,7 +25,6 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
     public AptoidePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
-
     }
 
     @Override
@@ -60,7 +59,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new FragmentHome();
+                return new FragmentHome2();
             case 1:
                 return new FragmentStores();
             case 2:

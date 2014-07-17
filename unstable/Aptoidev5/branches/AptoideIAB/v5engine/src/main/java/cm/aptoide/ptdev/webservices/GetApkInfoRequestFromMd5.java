@@ -48,7 +48,6 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
 
 
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        if(token!=null)options.add(new WebserviceOptions("token", token));
         options.add(new WebserviceOptions("cmtlimit", "5"));
         options.add(new WebserviceOptions("payinfo", "true"));
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
@@ -63,7 +62,7 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
         }
         sb.append(")");
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo";
+        String baseUrl = "http://webservices.aptoide.com/webservices/3/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
@@ -78,7 +77,10 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs(getResultType());

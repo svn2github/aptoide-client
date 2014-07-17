@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkFlag";
+    String baseUrl = "http://webservices.aptoide.com/webservices/3/addApkFlag";
 
     private String token;
     private String repo;
@@ -34,7 +34,7 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
-        parameters.put("token", token);
+
         parameters.put("repo", repo);
         parameters.put("md5sum", md5sum);
         parameters.put("flag", flag);
@@ -43,6 +43,11 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

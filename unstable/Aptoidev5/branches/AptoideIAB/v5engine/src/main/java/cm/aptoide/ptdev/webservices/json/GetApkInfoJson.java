@@ -574,6 +574,8 @@ public class GetApkInfoJson {
         @Key
         private String path;
         @Key
+        private String altpath;
+        @Key
         private List<String> permissions;
         @Key
         private String repo;
@@ -659,6 +661,10 @@ public class GetApkInfoJson {
 
         public String getMinScreen() {
             return minScreen;
+        }
+
+        public String getAltPath() {
+            return altpath;
         }
     }
 

@@ -339,6 +339,8 @@ public class Start extends ActionBarActivity implements
         }
 
 
+
+
         mContext = this;
         setContentView(R.layout.activity_main);
 
@@ -478,6 +480,8 @@ public class Start extends ActionBarActivity implements
             } catch (IOException e) {
                 Log.e("MYTAG", "");
                 e.printStackTrace();
+            } catch (NullPointerException e){
+                e.printStackTrace();
             }
 
 
@@ -502,8 +506,8 @@ public class Start extends ActionBarActivity implements
             c.close();
 
 
-            StringBuffer repos = new StringBuffer();
-            StringBuffer hashes = new StringBuffer();
+            StringBuilder repos = new StringBuilder();
+            StringBuilder hashes = new StringBuilder();
             Iterator<?> it = storesToCheck.iterator();
             while (it.hasNext()) {
                 BasicNameValuePair next = (BasicNameValuePair) it.next();

@@ -527,7 +527,18 @@
     <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
     <string name="requestAdultpin">Insert the pin to unlock</string>
     <string name="adultpinwrong">Wrong pin, try again.</string>
+    <string name="cancel">Cancel</string>
     <string name="setting_hide_mature">Hide Adult Content</string>
+    <string name="error_occured_paying">An error occurred. The payment wasn\'t completed.</string>
+    <string name="failed_auth_code">Failed to authorize account. Please try again.</string>
+    <string name="error_occured_retry_later">An error occurred. Aptoide will retry later automatically.</string>
+    <string name="account">Account</string>
+    <string name="no_payments_available">No payments available.</string>
+    <string name="change_payment">Back</string>
+    <string name="confirm_carrier_payment">Do you want to purchase \'{title}\' for {value}? You will be charged from
+        your carrier.
+    </string>
+    <string name="featured_editors_choice">Featured Editors\' Choice</string>
     <string name="SetMaturePinTitle">Set Adult Content pin</string>
     <string name="SetMaturePinSummary">Set a Pin that will be required to unlock adult Content</string>
     <string name="RemoveMaturePinTitle">Remove Adult Content pin</string>

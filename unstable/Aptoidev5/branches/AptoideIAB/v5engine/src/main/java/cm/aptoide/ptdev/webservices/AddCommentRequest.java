@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2>{
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkComment";
+    String baseUrl = "http://webservices.aptoide.com/webservices/3/addApkComment";
     private Context context;
     private String token;
     private String repo;
@@ -64,12 +64,12 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         HashMap<String, String > parameters = new HashMap<String, String>();
 
         parameters.put("mode", "json");
-        parameters.put("token", token);
+
         parameters.put("repo", repo);
         parameters.put("apkid", packageName);
         parameters.put("apkversion", apkversion);
         parameters.put("text", text);
-        parameters.put("lang", AptoideUtils.getMyCountry(context)+"_"+AptoideUtils.getMyCountryCode(context));
+        parameters.put("lang",AptoideUtils.getMyCountryCode(context));
         if(answearTo != null) {
             parameters.put("answerto", answearTo);
         }
@@ -77,7 +77,10 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setConnectTimeout(30000);
         request.setReadTimeout(30000);
 

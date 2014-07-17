@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.google.api.client.util.Data;
 
@@ -85,7 +86,8 @@ public class StubProvider extends ContentProvider {
 
                     switch (uriMatcher.match(uri)) {
                         case TOKEN:
-                            String token = accountManager.blockingGetAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                            SecurePreferences preferences = new SecurePreferences(getContext());
+                            String token = preferences.getString("devtoken", "");
                             mx = new MatrixCursor(new String[]{"userToken"}, 1);
                             mx.addRow(new Object[]{token});
 
@@ -146,10 +148,6 @@ public class StubProvider extends ContentProvider {
                 }
 
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (AuthenticatorException e) {
-                e.printStackTrace();
-            } catch (OperationCanceledException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();

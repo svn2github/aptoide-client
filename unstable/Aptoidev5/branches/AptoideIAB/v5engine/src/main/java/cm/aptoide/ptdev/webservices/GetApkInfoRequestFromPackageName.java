@@ -58,7 +58,7 @@ public class GetApkInfoRequestFromPackageName extends GoogleHttpClientSpiceReque
         }
         sb.append(")");
 
-        String baseUrl  = "http://webservices.aptoide.com/webservices/2/getApkInfo";
+        String baseUrl  = "http://webservices.aptoide.com/webservices/3/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
@@ -73,7 +73,10 @@ public class GetApkInfoRequestFromPackageName extends GoogleHttpClientSpiceReque
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs(getResultType());

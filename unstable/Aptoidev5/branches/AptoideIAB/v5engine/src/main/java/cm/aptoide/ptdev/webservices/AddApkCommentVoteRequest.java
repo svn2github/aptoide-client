@@ -16,6 +16,7 @@ import java.util.HashMap;
  */
 public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
+    String baseUrl = "http://webservices.aptoide.com/webservices/3/addApkCommentVote";
     public enum CommentVote {
         up, down;
     }
@@ -31,12 +32,10 @@ public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<Gener
 
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
-        String baseUrl = "http://webservices.aptoide.com/webservices/2/addApkCommentVote";
-
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
-        parameters.put("token", token);
+
         parameters.put("repo", repo);
         parameters.put("cmtid", String.valueOf(cmtid));
         parameters.put("vote", vote.name());
@@ -45,6 +44,11 @@ public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<Gener
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

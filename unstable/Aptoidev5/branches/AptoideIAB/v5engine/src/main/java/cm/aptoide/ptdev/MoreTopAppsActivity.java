@@ -16,9 +16,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.DownloadManager;
+import cm.aptoide.ptdev.fragments.Home;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -67,11 +70,11 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
     }
 
 
-    public static class MoreTopAppsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>> {
+    public static class MoreTopAppsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<Home>> {
 
-        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+        ArrayList<Home> items = new ArrayList<Home>();
 
-        HomeBucketAdapter adapter;
+        Adapter adapter;
 
 
         @Override
@@ -83,28 +86,29 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            adapter = new HomeBucketAdapter(getActivity(), items);
+            adapter = new Adapter(getActivity());
+            getLoaderManager().restartLoader(0, null, this);
+
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            getLoaderManager().initLoader(0, null, this);
-
             getListView().setPadding(0, AptoideUtils.getPixels(getActivity(), 10), 0, 0);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
+
         }
 
 
         @Override
-        public Loader<ArrayList<HomeItem>> onCreateLoader(int i, Bundle bundle) {
+        public Loader<ArrayList<Home>> onCreateLoader(int i, Bundle bundle) {
 
-            AsyncTaskLoader<ArrayList<HomeItem>> taskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
+            AsyncTaskLoader<ArrayList<Home>> taskLoader = new AsyncTaskLoader<ArrayList<Home>>(getActivity()) {
                 @Override
-                public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getTopFeatured(Integer.MAX_VALUE);
+                public ArrayList<Home> loadInBackground() {
+                    return new Database(Aptoide.getDb()).getAllTopFeatured(adapter.getBucketSize());
                 }
             };
 
@@ -115,13 +119,14 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         }
 
         @Override
-        public void onLoadFinished(Loader<ArrayList<HomeItem>> arrayListLoader, ArrayList<HomeItem> homeItems) {
-            items.addAll(homeItems);
+        public void onLoadFinished(Loader<ArrayList<Home>> arrayListLoader, ArrayList<Home> homeItems) {
+            adapter.setItems(homeItems);
+            adapter.notifyDataSetChanged();
             setListAdapter(adapter);
         }
 
         @Override
-        public void onLoaderReset(Loader<ArrayList<HomeItem>> arrayListLoader) {
+        public void onLoaderReset(Loader<ArrayList<Home>> arrayListLoader) {
             setListAdapter(null);
         }
     }

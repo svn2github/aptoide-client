@@ -24,8 +24,8 @@ import java.util.HashMap;
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/2/checkUserCredentials";
-    String baseUrlWithoutSsl = "http://webservices.aptoide.com/webservices/2/checkUserCredentials";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/getUserInfo";
+    String baseUrlWithoutSsl = "http://webservices.dev.aptoide.com/webservices/3/getUserInfo";
 
     //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
@@ -45,6 +45,7 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     private String openGl;
     private String nameForGoogle;
     private LoginActivity.Mode mode;
+    private String token;
 
     public CheckUserCredentialsRequest() {
         super(CheckUserCredentialsJson.class);
@@ -66,29 +67,8 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
-        parameters.put("user", user);
+        parameters.put("access_token", token);
 
-        switch (mode){
-
-            case APTOIDE:
-                parameters.put("passhash", AptoideUtils.Algorithms.computeSHA1sum(password));
-
-                break;
-            case GOOGLE:
-                parameters.put("authMode", "google");
-                parameters.put("oauthUserName", nameForGoogle);
-                parameters.put("oauthToken", password);
-                break;
-            case FACEBOOK:
-                parameters.put("authMode", "facebook");
-                parameters.put("oauthToken", password);
-                break;
-        }
-
-
-        if(repo != null) {
-            parameters.put("repo", repo);
-        }
 
         if(registerDevice) {
             parameters.put("device_id", deviceId);
@@ -193,4 +173,8 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     }
 
     public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

@@ -16,16 +16,12 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -139,7 +135,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
 
 
-                        request.setPackageName(token);
+                        request.setToken(token);
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -204,11 +200,6 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                     });
                 }
             }).start();
-
-
-
-
-
 
         }
 

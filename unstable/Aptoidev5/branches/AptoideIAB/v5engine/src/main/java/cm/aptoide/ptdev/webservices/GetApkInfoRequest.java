@@ -50,7 +50,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
 
         versionName = URLEncoder.encode(versionName, "UTF-8");
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        if(token!=null)options.add(new WebserviceOptions("token", token));
+
         options.add(new WebserviceOptions("cmtlimit", "5"));
         options.add(new WebserviceOptions("payinfo", "true"));
         options.add(new WebserviceOptions("vercode", Long.toString(vercode)));
@@ -66,7 +66,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
         }
         sb.append(")");
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo";
+        String baseUrl = "http://webservices.aptoide.com/webservices/3/getApkInfo";
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
@@ -75,10 +75,16 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
         parameters.put("apkversion", versionName);
         parameters.put("options", sb.toString());
         parameters.put("mode", "json");
-
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
+
+
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

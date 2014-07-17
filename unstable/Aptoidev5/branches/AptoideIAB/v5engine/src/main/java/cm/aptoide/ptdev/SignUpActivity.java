@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.CreateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import com.octo.android.robospice.SpiceManager;
@@ -142,9 +143,7 @@ public class SignUpActivity extends ActionBarActivity{
                     setResult(RESULT_OK, data);
                     finish();
                 }else{
-                    for(String error : createUserJson.getErrors()){
-                        Toast.makeText(SignUpActivity.this, error, Toast.LENGTH_SHORT).show();
-                    }
+                    AptoideUtils.toastError(createUserJson.getErrors());
                 }
             }
         });
