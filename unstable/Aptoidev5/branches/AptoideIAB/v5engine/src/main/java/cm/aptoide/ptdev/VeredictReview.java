@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -8,7 +7,12 @@ import java.util.Locale;
  */
 
 public enum VeredictReview {
-    GOOD(R.string.flag_review_good), LICENSE(R.string.flag_license), FAKE(R.string.flag_review_fake), FREEZE(R.string.flag_review_freeze), VIRUS(R.string.flag_review_virus), UNKNOWN(-1);
+    GOOD(R.string.flag_review_good),
+    LICENSE(R.string.flag_license),
+    FAKE(R.string.flag_review_fake),
+    FREEZE(R.string.flag_review_freeze),
+    VIRUS(R.string.flag_review_virus),
+    UNKNOWN(-1);
 
     private int string;
 
