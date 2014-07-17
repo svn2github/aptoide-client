@@ -47,11 +47,18 @@
                 android:summary="@string/setting_dont_show_mature_content"
                 android:title="@string/setting_mature_filtering"/>
 
+        <Preference
+            android:key="Maturepin"
+            android:summary="@string/SetMaturePinSummary"
+            android:inputType="number"
+            android:title="@string/SetMaturePinTitle"/>
+
         <CheckBoxPreference
                 android:key="showAllUpdates"
                 android:defaultValue="true"
                 android:summary="@string/show_all_updates"
                 android:title="@string/setting_allUpdates_filtering"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/setting_updates">

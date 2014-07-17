@@ -6,15 +6,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import cm.aptoide.ptdev.Aptoide;
+
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 
@@ -23,23 +21,24 @@ import cm.aptoide.ptdev.preferences.SecurePreferences;
  */
 public class AdultDialog extends DialogFragment {
 
-    private static final String MATUREPIN = "Maturepin";
-    private static final String DONTSHOWAGAIN = "dontshowagainpin";
+    public static final String MATUREPIN = "Maturepin";
+    //private static final String DONTSHOWAGAIN = "dontshowagainpin";
 
-    private static Dialog BuildRequestAdultpin(final Context c, final DialogInterface.OnClickListener positiveButtonlistener,final int pin){
-        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_setpin, null);
+    public static Dialog DialogRequestMaturepin(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
+        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_requestpin, null);
         AlertDialog.Builder builder= new AlertDialog.Builder(c)
                 .setMessage(R.string.requestAdultpin)
                 .setView(v)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int pininput = new Integer(((EditText) v.findViewById(R.id.pininput)).getText().toString());
-                        if (pininput == pin)
+                        int pin = new SecurePreferences(c).getInt(AdultDialog.MATUREPIN,-1);
+                        String pintext=((EditText) v.findViewById(R.id.pininput)).getText().toString();
+                        if(pintext.length()>0 && new Integer(pintext) == pin)
                             positiveButtonlistener.onClick(dialog, which);
                         else {
                             Toast.makeText(c, c.getString(R.string.adultpinwrong), Toast.LENGTH_SHORT).show();
-                            BuildRequestAdultpin(c,positiveButtonlistener,pin).show();
+                            DialogRequestMaturepin(c, positiveButtonlistener).show();
                         }
                     }
                 })
@@ -51,34 +50,8 @@ public class AdultDialog extends DialogFragment {
                 });
         return builder.create();
     }
-    private static Dialog BuildSetAdultpin(final Context c){
-        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_setpin, null);
-        AlertDialog.Builder builder= new AlertDialog.Builder(c)
-                .setMessage(R.string.asksetadultpinmessage)
-                .setView(v)
-                .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String input = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
-                        if (!TextUtils.isEmpty(input)) {
-                            new SecurePreferences(c)
-                                    .edit()
-                                    .putInt(MATUREPIN, new Integer(input))
-                                    .commit();
-                            PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit()
-                                    .putBoolean(DONTSHOWAGAIN, true).commit();
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-        return builder.create();
-    }
-    private static Dialog BuildAskSetAdultpin(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
+    /*private static Dialog BuildAskSetAdultpin(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
         final View v = LayoutInflater.from(c).inflate(R.layout.dialog_asksetpin, null);
         AlertDialog.Builder builder= new AlertDialog.Builder(c)
                 .setMessage(R.string.asksetadultpinmessage)
@@ -86,7 +59,7 @@ public class AdultDialog extends DialogFragment {
                 .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BuildSetAdultpin(c).show();
+                        DialogSetAdultpin(c).show();
                     }
                 })
                 .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
@@ -104,11 +77,16 @@ public class AdultDialog extends DialogFragment {
             }
         });
         return builder.create();
-    }
-    private static Dialog DialogAsk21(Context c, final DialogInterface.OnClickListener positiveButtonlistener){
+    }*/
+    private static Dialog DialogAsk21(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
         return new AlertDialog.Builder(c)
                 .setMessage(c.getString(R.string.are_you_adult))
-                .setPositiveButton(android.R.string.ok, positiveButtonlistener)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        positiveButtonlistener.onClick(dialog,which);
+                    }
+                })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -117,19 +95,13 @@ public class AdultDialog extends DialogFragment {
                 })
                 .create();
     }
-    public static Dialog BuildAreYouAdultDialog(Context c, final DialogInterface.OnClickListener positiveButtonlistener){
+    public static Dialog BuildAreYouAdultDialog(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
         int pin= new SecurePreferences(c).getInt(MATUREPIN,-1);
         if(pin==-1) {
-            boolean dontask= PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(DONTSHOWAGAIN,false);
-            if(dontask)
-                return DialogAsk21(c,positiveButtonlistener);
-            else
-                return BuildAskSetAdultpin(c,positiveButtonlistener);
-
+            return DialogAsk21(c,positiveButtonlistener);
         }
         else
-            return BuildRequestAdultpin(c,positiveButtonlistener,pin);
-
+            return DialogRequestMaturepin(c, positiveButtonlistener);
     }
 
     @Override
@@ -141,7 +113,6 @@ public class AdultDialog extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        this.callback = null;
     }
 
     Callback callback;
@@ -151,14 +122,16 @@ public class AdultDialog extends DialogFragment {
         return BuildAreYouAdultDialog(getActivity(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (callback != null) callback.onOk();
+                if (callback != null) {
+                    callback.matureUnlock();
+                    callback = null;
+                }
             }
         });
     }
 
     public interface Callback{
-        public void onOk();
-
+        public void matureUnlock();
     }
 
 }

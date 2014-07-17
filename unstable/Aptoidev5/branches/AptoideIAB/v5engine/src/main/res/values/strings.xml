@@ -522,12 +522,22 @@
     <string name="row_app_update_not_safe">Not compatible! Update has a different signature.</string>
     <string name="not_compatible">Not compatible</string>
     <string name="reply_to">Reply to %s</string>
+
     <string name="setpin">Set Pin</string>
     <string name="asksetadultpinmessage">Would you like to set a pin to unlock Adult content?</string>
-    <string name="dontaskagain">Don\'t ask again</string>
     <string name="requestAdultpin">Insert the pin to unlock</string>
     <string name="adultpinwrong">Wrong pin, try again.</string>
     <string name="setting_hide_mature">Hide Adult Content</string>
+    <string name="SetMaturePinTitle">Set Adult Content pin</string>
+    <string name="SetMaturePinSummary">Set a Pin that will be required to unlock adult Content</string>
+    <string name="RemoveMaturePinTitle">Remove Adult Content pin</string>
+    <string name="RemoveMaturePinSummary">Remove the Pin required to unlock adult Content</string>
+
+    <string name="FeedBackSendButton">Send FeedBack</string>
+    <string name="FeedBackSubject">Subject</string>
+    <string name="FeedBackToWrite">Write here to send us your feedback</string>
+    <string name="FeedBackCheckBoxText">Include ScreenShot and Logs</string>
+    <string name="FeedBacknotvalid">Please enter some valid Subject!</string>
 
 
 </resources>

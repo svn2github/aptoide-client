@@ -20,9 +20,13 @@ import android.preference.*;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.io.File;
@@ -35,7 +39,59 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 	ManagerPreferences preferences;
 	Context mctx;
 	private boolean unlocked = false;
+    private static boolean isSetingPIN = false;
 
+    private Dialog DialogSetAdultpin(final Preference mp){
+        isSetingPIN=true;
+        final View v = LayoutInflater.from(this).inflate(R.layout.dialog_requestpin, null);
+        AlertDialog.Builder builder= new AlertDialog.Builder(this)
+                .setMessage(R.string.asksetadultpinmessage)
+                .setView(v)
+                .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
+                        if (!TextUtils.isEmpty(input)) {
+                            new SecurePreferences(Settings.this)
+                                    .edit()
+                                    .putInt(AdultDialog.MATUREPIN, new Integer(input))
+                                    .commit();
+                            mp.setTitle(R.string.RemoveMaturePinTitle);
+                            mp.setSummary(R.string.RemoveMaturePinSummary);
+                            //mp.setOnPreferenceClickListener(removeclick);
+                        }
+                        isSetingPIN=false;
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isSetingPIN=false;
+                    }
+                });
+        return builder.create();
+    }
+
+    private void maturePinSetRemoveClick(){
+        int pin = new SecurePreferences(this).getInt(AdultDialog.MATUREPIN,-1);
+        final Preference mp= findPreference("Maturepin");
+        if(pin!=-1) {
+            // With Pin
+            AdultDialog.DialogRequestMaturepin(Settings.this,new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new SecurePreferences(Aptoide.getContext()).edit().putInt(AdultDialog.MATUREPIN,-1).commit();
+                    final Preference mp= findPreference("Maturepin");
+                    mp.setTitle(R.string.SetMaturePinTitle);
+                    mp.setSummary(R.string.SetMaturePinSummary);
+                }
+            }).show();
+        }
+        else{
+            DialogSetAdultpin(mp).show();// Without Pin
+
+        }
+    }
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,6 +112,21 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //						((CheckBoxPreference)findPreference("3g")).isChecked()));
 //			}
 //		});
+
+        int pin = new SecurePreferences(this).getInt(AdultDialog.MATUREPIN,-1);
+        final Preference mp= findPreference("Maturepin");
+        if(pin!=-1) {
+            Log.d("PINTEST","PinBuild");
+            mp.setTitle(R.string.RemoveMaturePinTitle);
+            mp.setSummary(R.string.RemoveMaturePinSummary);
+        }
+        mp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                maturePinSetRemoveClick();
+                return true;
+            }
+        });
         findPreference("matureChkBox").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -223,6 +294,12 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //        getActionBar().setTitle("");
 //        getActionBar().setHomeButtonEnabled(true);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if(isSetingPIN) {
+            Log.d("PINTEST","is Setting adult pin");
+            DialogSetAdultpin(mp).show();
+        }
+
     }
 
     private final void SettingsResult(){

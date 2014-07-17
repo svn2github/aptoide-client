@@ -232,11 +232,7 @@ public class Start extends ActionBarActivity implements
             if (item.isChecked()) {
                 new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
             } else {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
-                item.setChecked(true);
-                matureCheck = false;
-                BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-                BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+                maturelock();
             }
 
         }
@@ -269,7 +265,6 @@ public class Start extends ActionBarActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
 
         return super.onCreateOptionsMenu(menu);
@@ -794,6 +789,10 @@ public class Start extends ActionBarActivity implements
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
                 break;
             case Settings_REQ_CODE:
+                if(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true))
+                    matureUnlock();
+                else
+                    maturelock();
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));
                 break;
             case 50:
@@ -809,8 +808,7 @@ public class Start extends ActionBarActivity implements
                 }
                 break;
         }
-        matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-        InvalidateAptoideMenu();
+        //InvalidateAptoideMenu();
     }
 
 
@@ -947,9 +945,19 @@ public class Start extends ActionBarActivity implements
     }
 
     @Override
-    public void onOk() {
+    public void matureUnlock() {
+        Log.d("Mature","Unlocked");
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
+        BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+        InvalidateAptoideMenu();
+    }
+
+    public void maturelock() {
+        Log.d("Mature","locked");
+        matureCheck = false;
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
         InvalidateAptoideMenu();
