@@ -911,7 +911,7 @@ public abstract class FragmentAppView extends Fragment {
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
                             intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
                             intent.putExtra("token", ((AppViewActivity) getActivity()).getToken());
-                            startActivityForResult(intent, 359);
+                            getActivity().startActivityForResult(intent, 359);
                         }
                     });
                 }else{

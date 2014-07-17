@@ -143,6 +143,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isDownloadCompleted;
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
+    private boolean refreshOnResume;
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -958,6 +959,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
         }
 
+        if(refreshOnResume) {
+            spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+            onRefresh( null );
+            refreshOnResume = false;
+        }
 
     }
 
@@ -1056,7 +1062,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.applications);
-
 
 
         if(savedInstanceState==null) {
@@ -1385,7 +1390,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if (token != null) request.setToken(token);
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-
 
     }
 
@@ -1929,6 +1933,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 isFromActivityResult = true;
                 spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
             }
+        } else if (requestCode == 359) {
+            Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
+            refreshOnResume = true;
         }
     }
 

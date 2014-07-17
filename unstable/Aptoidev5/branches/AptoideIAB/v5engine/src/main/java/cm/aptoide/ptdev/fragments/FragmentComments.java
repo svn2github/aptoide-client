@@ -166,16 +166,23 @@ public class FragmentComments extends ListFragment {
         @Override
         public void onRequestSuccess(AllCommentsJson allCommentsJson) {
             Log.d("subcomments", "total comments: " + allCommentsJson.getListing().size());
-            setListAdapter(new AllCommentsAdapter(getActivity(), R.layout.all_comments, getCompoundedComments(allCommentsJson.getListing())));
+            setListAdapter(new AllCommentsAdapter(getActivity(), getCompoundedComments(allCommentsJson.getListing())));
         }
     };
     private SpiceManager spiceManager;
 
 
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        spiceManager = ((AllCommentsActivity)getActivity()).getSpice();
+    public void onAttach( Activity activity ) {
+        super.onAttach( activity );
+        spiceManager = ((AllCommentsActivity)activity).getSpice();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         AllCommentsRequest request = new AllCommentsRequest();
 
@@ -186,13 +193,12 @@ public class FragmentComments extends ListFragment {
         spiceManager.execute(request, requestListener);
     }
 
-
     public class AllCommentsAdapter extends ArrayAdapter<Comment> {
         final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 
-        public AllCommentsAdapter(Context context, int resourceId, List<Comment> objects) {
-            super(context, resourceId, objects);
+        public AllCommentsAdapter(Context context, List<Comment> objects) {
+            super(context, 0, objects);
         }
 
 

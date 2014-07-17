@@ -141,7 +141,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
 
                 FragmentComments fragmentComments = new FragmentComments();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
-
+                setResult( RESULT_OK );
             }else{
                 //HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
                 for(cm.aptoide.ptdev.model.Error error :  genericResponse.getErrors()){
@@ -188,7 +188,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
 
                 FragmentComments fragmentComments = new FragmentComments();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
-
+                setResult( RESULT_OK );
             } else {
                 HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
                 for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
