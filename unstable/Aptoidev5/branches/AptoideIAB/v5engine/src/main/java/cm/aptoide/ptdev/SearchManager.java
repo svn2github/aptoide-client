@@ -34,9 +34,11 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
 
@@ -66,8 +68,6 @@ public class SearchManager extends ActionBarActivity {
 
     String query;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
@@ -80,8 +80,6 @@ public class SearchManager extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-
 
         if(getIntent().hasExtra("search")){
             query = getIntent().getExtras().getString("search");
@@ -169,9 +167,9 @@ public class SearchManager extends ActionBarActivity {
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             super.onCreateOptionsMenu(menu, inflater);
 
-            inflater.inflate(R.menu.menu_categories, menu);
-            menu.findItem(R.id.show_all).setVisible(false);
-            menu.findItem(R.id.download).setChecked(true);
+//            inflater.inflate(R.menu.menu_categories, menu);
+//            menu.findItem(R.id.show_all).setVisible(false);
+//            menu.findItem(R.id.download).setChecked(true);
 
         }
 
@@ -180,38 +178,38 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
 
-
-            int id = item.getItemId();
-
-            if(id == R.id.nameAZ){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.NAMEAZ;
-            }else if(id == R.id.nameZA){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.NAMEZA;
-            }else if(id == R.id.date){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.DATE;
-            }else if(id == R.id.download){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.DOWNLOADS;
-            }else if(id == R.id.rating){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.RATING;
-            }else if(id == R.id.price){
-                setListShown(false);
-
-                sort = StoreActivity.Sort.PRICE;
-            }
-
-
-            //getLoaderManager().restartLoader(60, getArguments(), this);
-            item.setChecked(true);
+//
+//            int id = item.getItemId();
+//
+//            if(id == R.id.nameAZ){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.NAMEAZ;
+//            }else if(id == R.id.nameZA){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.NAMEZA;
+//            }else if(id == R.id.date){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.DATE;
+//            }else if(id == R.id.download){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.DOWNLOADS;
+//            }else if(id == R.id.rating){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.RATING;
+//            }else if(id == R.id.price){
+//                setListShown(false);
+//
+//                sort = StoreActivity.Sort.PRICE;
+//            }
+//
+//
+//            //getLoaderManager().restartLoader(60, getArguments(), this);
+//            item.setChecked(true);
             return super.onOptionsItemSelected(item);
         }
 
@@ -344,6 +342,32 @@ public class SearchManager extends ActionBarActivity {
 
                 @Override
                 public void onRequestSuccess(SearchJson searchJson) {
+
+                    if(searchJson == null){
+                        return;
+                    }
+
+                    if("FAIL".equals(searchJson.getStatus())){
+                        for(cm.aptoide.ptdev.model.Error error: searchJson.getErrors()){
+
+                            Integer errorCode = Errors.getErrorsMap().get(error.getCode());
+                            String errorMsg;
+                            if(errorCode!=null){
+                                errorMsg = getString(errorCode);
+                            }else{
+                                errorMsg = error.getMsg();
+                            }
+                            if(getActivity()!=null){
+                                getActivity().finish();
+                            }
+                            Toast.makeText(Aptoide.getContext(), errorMsg,  Toast.LENGTH_LONG).show();
+
+                        }
+                        return;
+                    }
+
+
+
                     items.clear();
                     items.addAll(searchJson.getResults().getApks());
                     adapter.addAdapter(searchAdapter);
