@@ -27,38 +27,30 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory
-            android:key="filters"
-            android:title="@string/setting_filters_title">
+    <PreferenceCategory android:title="@string/setting_hwspecstitle">
         <Preference
                 android:key="hwspecs"
                 android:summary="@string/setting_hwspecssum"
                 android:title="@string/setting_hwspecstitle">
         </Preference>
-
         <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="hwspecsChkBox"
                 android:summary="@string/setting_appfiltersum"
                 android:title="@string/setting_appfiltertitle"/>
-        <CheckBoxPreference
-                android:key="matureChkBox"
-                android:defaultValue="true"
-                android:summary="@string/setting_dont_show_mature_content"
-                android:title="@string/setting_mature_filtering"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/setting_adultcontent">
+        <CheckBoxPreference
+            android:key="matureChkBox"
+            android:defaultValue="true"
+            android:summary="@string/setting_dont_show_mature_content"
+            android:title="@string/setting_mature_filtering"/>
         <Preference
             android:key="Maturepin"
             android:summary="@string/SetMaturePinSummary"
             android:inputType="number"
             android:title="@string/SetMaturePinTitle"/>
-
-        <CheckBoxPreference
-                android:key="showAllUpdates"
-                android:defaultValue="true"
-                android:summary="@string/show_all_updates"
-                android:title="@string/setting_allUpdates_filtering"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/setting_updates">
@@ -72,6 +64,11 @@
 
                 android:summary="@string/setting_auto_update_sum"
                 android:title="@string/setting_auto_update_title"/>
+        <CheckBoxPreference
+            android:key="showAllUpdates"
+            android:defaultValue="true"
+            android:summary="@string/show_all_updates"
+            android:title="@string/setting_allUpdates_filtering"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/setting_schdwntitle" >
