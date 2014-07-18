@@ -551,6 +551,7 @@
     <string name="FeedBackCheckBoxText">Include ScreenShot and Logs</string>
     <string name="FeedBacknotvalid">Please enter some valid Subject!</string>
     <string name="FeedBackNoEmail">"No email client installed!"</string>
+    <string name="Uresultssearchformore">Are you looking for?</string>
 
 
 </resources>

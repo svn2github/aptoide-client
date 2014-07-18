@@ -17,38 +17,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.*;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.adapters.SearchAdapter2;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.adapters.SearchAdapterU;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.acra.ACRA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +104,6 @@ public class SearchManager extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
 
         if(i == android.R.id.home){
@@ -114,7 +111,6 @@ public class SearchManager extends ActionBarActivity {
         }else if(i == android.R.id.home){
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -124,6 +120,7 @@ public class SearchManager extends ActionBarActivity {
     public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
+        private List<SearchJson.Results.Apks> u_items = new ArrayList<SearchJson.Results.Apks>();
 
 
         @Override
@@ -140,7 +137,8 @@ public class SearchManager extends ActionBarActivity {
 
         private MergeAdapter adapter;
         private String query;
-        private SearchAdapter2 searchAdapter;
+        private SearchAdapter2 searchAdapterapks;
+        //private SearchAdapterU searchAdapteruapks;
         private SearchAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
@@ -154,11 +152,10 @@ public class SearchManager extends ActionBarActivity {
             adapter = new MergeAdapter();
             v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
             adapter.addView(v);
-            searchAdapter = new SearchAdapter2(getActivity(), items);
+            searchAdapterapks = new SearchAdapter2(getActivity(), items);
+       //     searchAdapteruapks = new SearchAdapterU(getActivity(), u_items);
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
-
-
         }
 
 
@@ -366,24 +363,62 @@ public class SearchManager extends ActionBarActivity {
                         return;
                     }
 
+                    /*u_items.clear();
+                    u_items.addAll(searchJson.getResults().getU_Apks());
+                    if(u_items.size()>0) {
+                        adapter.addAdapter(searchAdapteruapks);
+                        TextView foundUResults = (TextView) v.findViewById(R.id.resultsU);
+                        foundUResults.setVisibility(View.VISIBLE);
+                    }*/
+
+                    View searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.u_search_layout, null);
+
+                    LinearLayout usearchContainer = (LinearLayout) searchLayout.findViewById(R.id.container);
+
+                    final String sizeString = IconSizes.generateSizeString(getActivity());
+                    for(SearchJson.Results.Apks apk: searchJson.getResults().getU_Apks()){
+                        View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
+
+                        ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
+
+                        String iconUrl = apk.getIcon();
+
+                        if(iconUrl.contains("_icon")){
+                            String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
+                            iconUrl = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                        }
+                        ImageLoader.getInstance().displayImage(iconUrl, app_icon);
+
+                        TextView app_name = (TextView) element.findViewById(R.id.app_name);
+                        app_name.setText(apk.getName() + " - " + apk.getVername());
+
+                        usearchContainer.addView(element);
+                    }
+
 
 
                     items.clear();
                     items.addAll(searchJson.getResults().getApks());
-                    adapter.addAdapter(searchAdapter);
+                    adapter.addAdapter(searchAdapterapks);
+
 
                     adapter.notifyDataSetChanged();
+
+                    if(searchJson.getResults().getU_Apks().size() > 0){
+                        getListView().addHeaderView(searchLayout, null, false);
+                    }
 
                     setListAdapter(adapter);
                     if (isAdded()) {
 
                         TextView foundResults = (TextView) v.findViewById(R.id.results);
                         more = (TextView) v.findViewById(R.id.more);
-                        if (searchAdapter.getCount() > 0) {
-                            foundResults.setText(getString(R.string.found_results, searchAdapter.getCount()));
+                        if (searchAdapterapks.getCount() > 0) {
+                            foundResults.setText(getString(R.string.found_results, searchAdapterapks.getCount()));
                         } else {
                             foundResults.setText(getString(R.string.no_search_result, query));
                         }
+
                         setListAdapter(adapter);
                         setListShown(true);
                         setEmptyText(getString(R.string.no_search_result, query));
@@ -404,11 +439,6 @@ public class SearchManager extends ActionBarActivity {
                                 } catch (IllegalStateException e) {
 
                                 }
-
-//                    Toast.makeText(getActivity(), "Last visible pos : " + getListView().getLastVisiblePosition() + " first visible :" + getListView().getFirstVisiblePosition(), Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getActivity(), String.valueOf(visibleItems < data.getCount()), Toast.LENGTH_LONG).show();
-
-
                             }
                         });
                     }

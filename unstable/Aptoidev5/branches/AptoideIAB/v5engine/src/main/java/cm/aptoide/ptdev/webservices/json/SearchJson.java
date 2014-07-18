@@ -36,6 +36,7 @@ public class SearchJson{
 
     public static class Results{
         @Key private List<Apks> apks;
+        @Key private List<Apks> u_apks;
         @Key private List<String> didyoumean;
 
         public List<Apks> getApks(){
@@ -43,6 +44,12 @@ public class SearchJson{
         }
         public void setApks(List<Apks> apks){
             this.apks = apks;
+        }
+        public List<Apks> getU_Apks(){
+            return this.u_apks;
+        }
+        public void setU_Apks(List<Apks> apks){
+            this.u_apks = u_apks;
         }
         public List<String> getDidyoumean(){
             return this.didyoumean;
@@ -138,7 +145,6 @@ public class SearchJson{
                 return iconhd;
             }
         }
-
     }
 
 }

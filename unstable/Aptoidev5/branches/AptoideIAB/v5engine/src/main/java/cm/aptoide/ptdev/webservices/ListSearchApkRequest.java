@@ -57,6 +57,7 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
         options.add(new WebserviceOptions("q", AptoideUtils.filters(Aptoide.getContext())));
         if(!TextUtils.isEmpty(repos))options.add(new WebserviceOptions("repo", repos.toString()));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext())));
+        options.add(new WebserviceOptions("u_limit", "4"));
 
 
 

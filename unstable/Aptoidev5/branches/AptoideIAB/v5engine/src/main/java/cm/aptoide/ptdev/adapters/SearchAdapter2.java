@@ -110,7 +110,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
 //            holder = new AppViewHolder();
 //            holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
 //            holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
-//            holder.appName = (TextView) view.findViewById(R.id.app_name);
+//            holder.appNameplusversion = (TextView) view.findViewById(R.id.app_name);
 //            holder.versionName = (TextView) view.findViewById(R.id.app_version);
 //            holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
 //            view.setTag(holder);
@@ -124,7 +124,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
 //                showPopup(v, id);
 //            }
 //        });
-//        holder.appName.setText(Html.fromHtml(name).toString());
+//        holder.appNameplusversion.setText(Html.fromHtml(name).toString());
 //        String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
 //        String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));
 //        if(icon1.contains("_icon")){
