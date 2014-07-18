@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.tutorial;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.R;
@@ -97,23 +101,39 @@ public class Tutorial extends ActionBarActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+
+    }
+
+    @Override
     public void finish() {
 
         if(addDefaultRepo){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Added_Apps_As_Default_Store");
             Intent data = new Intent();
             data.putExtra("addDefaultRepo", true);
             setResult(RESULT_OK, data);
             Log.d("Tutorial-addDefaultRepo","true");
+        }else{
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Did_Not_Add_Apps_As_Default_Store");
         }
 
-
         super.finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     private View.OnClickListener getBackListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Clicked_On_Back_Button");
                 if (currentFragment != 0) {
                     changeFragment(--currentFragment);
                 }
@@ -125,6 +145,7 @@ public class Tutorial extends ActionBarActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Clicked_On_Next_Button");
                 if (currentFragment != lastFragment) {
                     changeFragment(++currentFragment);
                 }else{
@@ -208,6 +229,8 @@ public class Tutorial extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.menu_skip) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Skipped_Initial_Wizard");
+
             if (currentFragment == lastFragment) {
                 getFragmentsActions();
                 runFragmentsActions();

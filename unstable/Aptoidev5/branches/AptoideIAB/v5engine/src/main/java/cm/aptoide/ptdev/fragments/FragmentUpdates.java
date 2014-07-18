@@ -195,6 +195,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         if (id > 0) {
             Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "updates");
             startActivity(i);
         }
 

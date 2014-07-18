@@ -24,6 +24,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
@@ -58,6 +61,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                                     .commit();
                             mp.setTitle(R.string.RemoveMaturePinTitle);
                             mp.setSummary(R.string.RemoveMaturePinSummary);
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Added_Pin_To_Lock_Adult_Content");
                             //mp.setOnPreferenceClickListener(removeclick);
                         }
                         isSetingPIN=false;
@@ -84,6 +88,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     final Preference mp= findPreference("Maturepin");
                     mp.setTitle(R.string.SetMaturePinTitle);
                     mp.setSummary(R.string.SetMaturePinSummary);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
                 }
             }).show();
         }
@@ -137,6 +142,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cb.setChecked(false);
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Confirmed_More_Than_21_Years_Old");
                         }
                     }).show();
                 }
@@ -148,6 +154,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SettingsResult();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
                 return true;
             }
         });
@@ -159,7 +166,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
 					new DeleteDir().execute(new File(icon_path));
-				}
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Cleared_Cache");
+                }
 
 				return false;
 			}
@@ -169,8 +177,9 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
-					new DeleteDir().execute(new File(aptoide_path));
-				}
+                    new DeleteDir().execute(new File(aptoide_path));
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Removed_Data_And_Configurations");
+                }
 
 				return false;
 			}
@@ -190,7 +199,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         findPreference("theme").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Changed_Application_Theme");
                 Toast.makeText(Settings.this, getString(R.string.restart_aptoide), Toast.LENGTH_LONG).show();
                 return true;
             }
@@ -218,6 +227,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_Dialog_Hardware_Filters");
                         }
                     });
 				AlertDialog alertDialog = alertDialogBuilder.create();
@@ -244,7 +254,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				((EditTextPreference) preference).getEditText().setText(PreferenceManager.getDefaultSharedPreferences(mctx).getString("maxFileCache","200"));
-				return false;
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Added_Max_File_Cache");
+                return false;
 			}
 		});
 
@@ -265,6 +276,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     }
                 });
                 aboutDialog.show();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
 
 				return true;
 			}
@@ -428,4 +440,16 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         return super.onOptionsItemSelected(item);
     }
     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+    }
 }

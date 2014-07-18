@@ -110,6 +110,7 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(getActivity(), appViewClass);
         i.putExtra("id", id);
+        i.putExtra("download_from", "search_results");
         startActivity(i);
     }
 

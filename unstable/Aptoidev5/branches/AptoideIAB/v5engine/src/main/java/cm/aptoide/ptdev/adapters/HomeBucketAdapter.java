@@ -12,6 +12,8 @@ import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -64,6 +66,8 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             //holder.category= (TextView) v.findViewById(R.id.app_category);
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
+            holder.category = (TextView) v.findViewById(R.id.app_category);
+            holder.overflow = (ImageView) v.findViewById(R.id.ic_action);
             //holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
             //holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
 
@@ -76,7 +80,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         final HomeItem item = currentElement;
 
         holder.name.setText(item.getName());
-        //holder.category.setText(item.getCategory());
+        holder.category.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
         String icon = item.getIcon();
 
         if(icon.contains("_icon")){
@@ -98,12 +102,12 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         //holder.rating.setOnRatingBarChangeListener(null);
 
         //ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
-//        overflow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showPopup(v, item.getId());
-//            }
-//        });
+        holder.overflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v, item.getId());
+            }
+        });
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +118,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
                     i.putExtra("fromRelated", true);
                     i.putExtra("md5sum", item.getMd5());
                     i.putExtra("repoName", item.getRepoName());
+                    i.putExtra("download_from", "recommended_apps");
                 }else{
                     long id = item.getId();
                     i.putExtra("id", id);
@@ -135,8 +140,9 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
     static class ViewHolder{
         TextView name;
-        //TextView category;
+        TextView category;
         ImageView icon;
+        ImageView overflow;
         //TextView downloads;
         //RatingBar rating;
     }
@@ -160,6 +166,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             if (i == R.id.menu_install) {
                 ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

@@ -234,6 +234,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         Intent i = new Intent(this, appViewClass);
         i.putExtra("fromMyapp", true);
         i.putExtra("id", id);
+        i.putExtra("download_from", "my_app");
 
         startActivity(i);
     }
@@ -351,6 +352,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         if(id > 0){
             i = new Intent(this, appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "market_intent");
         }else{
             i = new Intent(this,Aptoide.getConfiguration().getSearchActivityClass());
             i.putExtra("search", param);

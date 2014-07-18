@@ -17,16 +17,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import cm.aptoide.ptdev.adapters.Adapter;
-import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.downloadmanager.DownloadManager;
 import cm.aptoide.ptdev.fragments.Home;
-import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by rmateus on 06-02-2014.
@@ -74,7 +71,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
 
         ArrayList<Home> items = new ArrayList<Home>();
 
-        Adapter adapter;
+        Adapter adapterHome;
 
 
         @Override
@@ -86,7 +83,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            adapter = new Adapter(getActivity());
+            adapterHome = new Adapter(getActivity());
             getLoaderManager().restartLoader(0, null, this);
 
         }
@@ -108,7 +105,7 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
             AsyncTaskLoader<ArrayList<Home>> taskLoader = new AsyncTaskLoader<ArrayList<Home>>(getActivity()) {
                 @Override
                 public ArrayList<Home> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getAllTopFeatured(adapter.getBucketSize());
+                    return new Database(Aptoide.getDb()).getAllTopFeatured(adapterHome.getBucketSize());
                 }
             };
 
@@ -120,9 +117,9 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
 
         @Override
         public void onLoadFinished(Loader<ArrayList<Home>> arrayListLoader, ArrayList<Home> homeItems) {
-            adapter.setItems(homeItems);
-            adapter.notifyDataSetChanged();
-            setListAdapter(adapter);
+            adapterHome.setItems(homeItems);
+            adapterHome.notifyDataSetChanged();
+            setListAdapter(adapterHome);
         }
 
         @Override

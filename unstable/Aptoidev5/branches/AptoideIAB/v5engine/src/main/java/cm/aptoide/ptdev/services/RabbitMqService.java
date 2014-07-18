@@ -110,6 +110,7 @@ public class RabbitMqService extends Service {
                                         i.putExtra("fromMyapp", true);
                                         i.putExtra("repoName", repo);
                                         i.putExtra("id", id);
+                                        i.putExtra("download_from", "webinstall");
                                         i.putExtra("md5sum", md5sum);
 
                                         String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);

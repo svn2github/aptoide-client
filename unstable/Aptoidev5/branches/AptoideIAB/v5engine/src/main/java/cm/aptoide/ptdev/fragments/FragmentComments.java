@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.fragments;
 
 import android.accounts.*;
 import android.app.Activity;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
 import cm.aptoide.ptdev.webservices.AllCommentsRequest;
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
 
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -106,6 +108,7 @@ public class FragmentComments extends ListFragment {
                             ReplyCommentDialog replyDialog = AptoideDialog.replyCommentDialog(comment.getId().intValue(), comment.getUsername());
                             replyDialog.show(((ActionBarActivity) activity).getSupportFragmentManager(), "replyCommentDialog");
 
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Reply_Comment");
                         } else {
 
                             AptoideDialog.updateUsernameDialog().show(((ActionBarActivity) activity).getSupportFragmentManager(), "updateNameDialog");
@@ -118,6 +121,7 @@ public class FragmentComments extends ListFragment {
             @Override
             public void onClick(View v) {
                 showPopup(activity, v, comment.getId().intValue(), comment.getUsername(), false);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_Popup");
             }
         });
     }
@@ -146,10 +150,12 @@ public class FragmentComments extends ListFragment {
                     visibility = View.VISIBLE;
                     viewComments.setVisibility(View.GONE);
                     comment.setShowingSubcomments(true);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Replies");
                 } else {
                     visibility = View.GONE;
                     viewComments.setVisibility(View.VISIBLE);
                     comment.setShowingSubcomments(false);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Replies");
                 }
                 subcommentsContainer.setVisibility(visibility);
             }
@@ -170,8 +176,6 @@ public class FragmentComments extends ListFragment {
         }
     };
     private SpiceManager spiceManager;
-
-
 
     @Override
     public void onAttach( Activity activity ) {
@@ -290,11 +294,13 @@ public class FragmentComments extends ListFragment {
             } else if (i == R.id.menu_vote_up) {
 
                 voteCallback.voteComment(commentId, AddApkCommentVoteRequest.CommentVote.up);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Voted_Up");
                 return true;
 
             } else if (i == R.id.menu_vote_down) {
 
                 voteCallback.voteComment(commentId, AddApkCommentVoteRequest.CommentVote.down);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Voted_Down");
                 return true;
             }
             return false;

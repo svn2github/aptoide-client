@@ -46,6 +46,7 @@ import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import com.facebook.*;
 import com.facebook.model.GraphUser;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -106,6 +107,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             //Toast.makeText(LoginActivity.this, token, Toast.LENGTH_SHORT).show();
                         }
                     });
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Logged_In_With_Google_Plus");
 
                 } catch (IOException e) {
                     if (mPlusClient != null && mPlusClient.isConnected()) {
@@ -490,7 +492,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onStart() {
         super.onStart();
         spiceManager.start(getBaseContext());
-
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
     }
 
@@ -518,6 +520,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mPlusClient.disconnect();
         }
         spiceManager.shouldStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     @Override

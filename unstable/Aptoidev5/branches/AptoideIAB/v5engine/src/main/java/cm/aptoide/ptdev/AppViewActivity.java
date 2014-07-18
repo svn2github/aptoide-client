@@ -46,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.flurry.android.FlurryAgent;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -388,6 +390,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             latestVersion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Get_Latest");
                     String url = json.getLatest();
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     url = url.replaceAll(" ", "%20");
@@ -658,6 +661,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             if (service != null && json!=null) {
                 service.startDownloadFromJson(json, downloadId, download);
+                Map<String, String> installParams = new HashMap<String, String>();
+                installParams.put("Package_Name", package_name);
+                installParams.put("Name", name);
+                installParams.put("Version_Name", versionName);
+                FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
             }
         }
@@ -721,6 +729,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
             service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
+            Map<String, String> installParams = new HashMap<String, String>();
+            installParams.put("Package_Name", package_name);
+            installParams.put("Name", name);
+            installParams.put("Version_Name", versionName);
+            FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
 
@@ -752,6 +765,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onClick(View v) {
             Fragment downgrade = new UninstallRetainFragment(name, package_name, versionName, downgradeVersion, icon);
             getSupportFragmentManager().beginTransaction().add(downgrade, "downgrade").commit();
+            Map<String, String> installParams = new HashMap<String, String>();
+            installParams.put("Package_Name", package_name);
+            installParams.put("Name", name);
+            installParams.put("Version_Name", versionName);
+            FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
         }
     }
 
@@ -940,6 +958,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onStart() {
         super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+
     }
 
     @Override
@@ -973,6 +993,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onStop() {
         super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -1001,6 +1022,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     Hours.hoursBetween(time, time);
                 }
             }).start();
+
+
+            String downloadFrom = getIntent().getStringExtra("download_from");
+            if(downloadFrom!=null){
+                Map<String, String> downloadParams = new HashMap<String, String>();
+                downloadParams.put("App_Opened_From", downloadFrom);
+                FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
+            }
+
         }
 
 

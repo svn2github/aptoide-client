@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -56,7 +58,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.ptdev.AllCommentsActivity;
 import cm.aptoide.ptdev.AppViewActivity;
@@ -177,6 +181,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
+                            FlurryAgent.logEvent("App_View_Expanded_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -185,6 +190,7 @@ public abstract class FragmentAppView extends Fragment {
                             description.setMaxLines(10);
 //                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
+                            FlurryAgent.logEvent("App_View_Colapsed_Description");
                         }
                     }
                 });
@@ -201,6 +207,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
+                            FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -208,6 +215,7 @@ public abstract class FragmentAppView extends Fragment {
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
                             showAllDescription.setText(getString(R.string.show_more));
+                            FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
                         }
                     }
                 });
@@ -241,6 +249,7 @@ public abstract class FragmentAppView extends Fragment {
                                 spinner.setOnItemSelectedListener(null);
                                 MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
                                 BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
+                                FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
                             }
 
                             @Override
@@ -415,6 +424,7 @@ public abstract class FragmentAppView extends Fragment {
                 intent.putStringArrayListExtra("url", urls);
                 intent.putExtra("position", position);
                 context.startActivity(intent);
+                FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
             }
         }
 
@@ -432,6 +442,7 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                 context.startActivity(intent);
+                FlurryAgent.logEvent("App_View_Clicked_On_Video");
             }
         }
 
@@ -562,11 +573,13 @@ public abstract class FragmentAppView extends Fragment {
                         v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
                                 Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                                 i.putExtra("item", true);
                                 i.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
                                 i.putExtra("versionCode", ((AppViewActivity) getActivity()).getVersionCode());
                                 i.putExtra("appName", ((AppViewActivity) getActivity()).getName());
+                                i.putExtra("download_from", "app_view_related_apps");
                                 startActivity(i);
                             }
                         });
@@ -595,11 +608,13 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("developer", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
                             i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
+                            i.putExtra("download_from", "app_view_more_from_publisher");
                             startActivity(i);
                         }
                     });
@@ -629,11 +644,13 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("version", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
                             i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
+                            i.putExtra("download_from","app_view_more_multiversion");
                             startActivity(i);
                         }
                     });
@@ -696,13 +713,12 @@ public abstract class FragmentAppView extends Fragment {
             }
         }
 
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = super.onCreateView(inflater, container, savedInstanceState);
             if(!(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
                 doPreStuff();
-                Log.d("setheight", "Doprestuff on Port");
+//                Log.d("setheight", "Doprestuff on Port");
             }
             return v;
         }
@@ -711,7 +727,7 @@ public abstract class FragmentAppView extends Fragment {
         public void refresh(AppViewActivity.RelatedEvent e){
             if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 doPreStuff();
-                Log.d("setheight", "Doprestuff on Land");
+//                Log.d("setheight", "Doprestuff on Land");
             }
         }
         private final void doPreStuff(){
@@ -1120,6 +1136,12 @@ public abstract class FragmentAppView extends Fragment {
 
             public AddLikeListener(boolean isLike) {
                 this.isLike = isLike;
+
+                if(isLike){
+                    FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
+                }else{
+                    FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
+                }
             }
 
 
@@ -1186,6 +1208,7 @@ public abstract class FragmentAppView extends Fragment {
                 final AccountManager manager = AccountManager.get(getActivity());
 
                 if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Added_A_Comment");
                     if(addCommentCallback != null) {
                         addCommentCallback.addComment(editText.getText().toString(), null);
                     }

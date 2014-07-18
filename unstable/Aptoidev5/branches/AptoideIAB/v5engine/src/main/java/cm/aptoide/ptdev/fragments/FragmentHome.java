@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -43,6 +44,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -211,6 +213,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         moreTopTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_More_Top_Apps");
                 Intent i = new Intent(getActivity(), MoreTopAppsActivity.class);
                 startActivity(i);
             }
@@ -219,6 +222,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adapter.addView(v);
         adapter.addAdapter(topAdapter);
         adapter.addView(moreTop);
+
 
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
@@ -229,6 +233,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         moreReTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_More_Recommended_Apps");
                 Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
                 startActivity(i);
             }

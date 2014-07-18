@@ -223,6 +223,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
             default:
                 Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
+                i.putExtra("download_from", "store_navigation");
                 startActivity(i);
                 break;
         }

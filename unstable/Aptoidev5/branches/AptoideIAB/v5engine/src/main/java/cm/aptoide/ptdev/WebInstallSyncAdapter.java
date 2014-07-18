@@ -133,6 +133,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             i.putExtra("fromMyapp", true);
             i.putExtra("repoName", repo);
             i.putExtra("id", id);
+            i.putExtra("download_from", "webinstall");
             i.putExtra("md5sum", md5sum);
             String deviceId = android.provider.Settings.Secure.getString(getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 

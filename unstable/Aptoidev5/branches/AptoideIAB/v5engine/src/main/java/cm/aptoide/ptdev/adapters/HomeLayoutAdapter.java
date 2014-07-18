@@ -214,6 +214,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     Intent i = new Intent(context, appViewClass);
                     long id = item.getId();
                     i.putExtra("id", id);
+                    i.putExtra("download_from", "home_page");
                     context.startActivity(i);
                 }
             });

@@ -8,11 +8,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -33,28 +31,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
-import cm.aptoide.ptdev.MoreTopAppsActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 
 import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
-import cm.aptoide.ptdev.adapters.HomeFeaturedAdapter;
-import cm.aptoide.ptdev.adapters.HomeLayoutAdapter;
 import cm.aptoide.ptdev.adapters.HomeTopAdapter;
 import cm.aptoide.ptdev.adapters.SectionAdapter;
-import cm.aptoide.ptdev.adapters.Sectionizer;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.google.api.client.util.Lists;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -66,7 +58,6 @@ import com.squareup.otto.Subscribe;
 
 
 import java.io.IOException;
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -90,7 +81,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
 
 
-    private Adapter homeBucketAdapter;
+    private Adapter homeBucketAdapterHome;
     private HomeTopAdapter topAdapter;
     private HomeBucketAdapter recomendedAdapter;
     private View v2;
@@ -152,8 +143,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private void refreshEditorsList() {
         editorsChoice.clear();
 
-        homeBucketAdapter.setItems(editorsChoice);
-        homeBucketAdapter.notifyDataSetChanged();
+        homeBucketAdapterHome.setItems(editorsChoice);
+        homeBucketAdapterHome.notifyDataSetChanged();
        //featuredGraphicItems.clear();
         //homeBucketAdapter = new TestActivity.Adapter(getActivity(), editorsChoice, 3);
         getLoaderManager().restartLoader(50, null, this);
@@ -354,7 +345,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         float screenWidth = getScreenWidthInDip(activity);
 
         bucketSize = (int) (screenWidth / 120);
-        homeBucketAdapter = new Adapter(getActivity());
+        homeBucketAdapterHome = new Adapter(getActivity());
         recomendedAdapter = new HomeBucketAdapter(activity, recommended);
 
     }
@@ -498,8 +489,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
 
 
-        homeBucketAdapter.setItems(data.get("editorsChoice"));
-        homeBucketAdapter.notifyDataSetChanged();
+        homeBucketAdapterHome.setItems(data.get("editorsChoice"));
+        homeBucketAdapterHome.notifyDataSetChanged();
 
         mergeAdapter = new MergeAdapter();
 
@@ -553,7 +544,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             mergeAdapter.addView(featGraphFooter);
         }
 
-        mergeAdapter.addAdapter(homeBucketAdapter);
+        mergeAdapter.addAdapter(homeBucketAdapterHome);
 
 
 
@@ -577,6 +568,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public void onLoaderReset(Loader<HashMap<String, ArrayList<Home>>> loader) {
         if(editorsChoice != null) editorsChoice.clear();
-        if(adapter != null) homeBucketAdapter.notifyDataSetChanged();
+        if(adapter != null) homeBucketAdapterHome.notifyDataSetChanged();
     }
 }

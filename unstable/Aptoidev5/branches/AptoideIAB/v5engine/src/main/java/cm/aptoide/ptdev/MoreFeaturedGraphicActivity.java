@@ -88,6 +88,7 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
 
             Intent i = new Intent(getActivity(), Aptoide.getConfiguration().getAppViewActivityClass());
             i.putExtra("id", id);
+            i.putExtra("download_from", "more_featured_editors_choice");
             startActivity(i);
 
         }
