@@ -4,6 +4,9 @@ import com.google.api.client.util.Key;
 
 import java.util.List;
 
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
+
 /**
  * Created by rmateus on 08-07-2014.
  */
@@ -11,6 +14,7 @@ public class SearchJson{
 
     @Key private Results results;
     @Key private String status;
+    @Key private List<Error> errors ;
 
     public Results getResults(){
         return this.results;
@@ -23,6 +27,10 @@ public class SearchJson{
     }
     public void setStatus(String status){
         this.status = status;
+    }
+
+    public List<Error> getErrors() {
+        return errors;
     }
 
 
