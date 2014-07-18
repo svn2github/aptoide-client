@@ -1223,6 +1223,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (wUrl != null) {
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
             }
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

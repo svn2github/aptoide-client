@@ -152,7 +152,7 @@ public class Start extends ActionBarActivity implements
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
-            Log.d("Aptoide-Start", "onServiceConnected");
+            //Log.d("Aptoide-Start", "onServiceConnected");
             parserServiceIsBound = true;
 
             lock.lock();
@@ -209,7 +209,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("Aptoide-OnClick", "OnClick");
+        //Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
         if (i == R.id.home || i == android.R.id.home) {
@@ -225,7 +225,7 @@ public class Start extends ActionBarActivity implements
 //            showAbout();
         } else if (i == R.id.menu_search) {
             onSearchRequested();
-            Log.d("Aptoide-OnClick", "OnSearchRequested");
+            //Log.d("Aptoide-OnClick", "OnSearchRequested");
 
         } else if ( i == R.id.menu_filter_mature_content){
 
@@ -235,8 +235,10 @@ public class Start extends ActionBarActivity implements
                 maturelock();
             }
 
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -312,7 +314,7 @@ public class Start extends ActionBarActivity implements
 
                                 c.close();
 
-                                Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
+                                //Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
                                 service.setShowNotification(!isLoggedin);
                                 service.startParse(database, store, false);
                             }
@@ -398,13 +400,13 @@ public class Start extends ActionBarActivity implements
 
                 long total = (blockSize * totalBlocks) / 1024 / 1024;
                 long avail = (blockSize * availableBlocks) / 1024 / 1024;
-                Log.d("Aptoide", "* * * * * * * * * *");
-                Log.d("Aptoide", "Total: " + total + " Mb");
-                Log.d("Aptoide", "Available: " + avail + " Mb");
+                //Log.d("Aptoide", "* * * * * * * * * *");
+                //Log.d("Aptoide", "Total: " + total + " Mb");
+                //Log.d("Aptoide", "Available: " + avail + " Mb");
 
                 if (avail < 10) {
-                    Log.d("Aptoide", "No space left on SDCARD...");
-                    Log.d("Aptoide", "* * * * * * * * * *");
+                    //Log.d("Aptoide", "No space left on SDCARD...");
+                    //Log.d("Aptoide", "* * * * * * * * * *");
 
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
@@ -582,7 +584,7 @@ public class Start extends ActionBarActivity implements
 
                         loadEditorsChoice( url, countryCode );
                         loadTopApps( Aptoide.getConfiguration().getTopAppsUrl() );
-                        Log.d( "pullToRefresh", "execute(=)" );
+                        //Log.d( "pullToRefresh", "execute(=)" );
                     } catch ( InterruptedException e ) {
                         e.printStackTrace();
                     } catch ( MalformedURLException e ) {
@@ -637,7 +639,7 @@ public class Start extends ActionBarActivity implements
 
     public void loadTopApps(String url) throws IOException {
 
-        Log.d("Aptoide-Featured", "Loading " + url);
+        //Log.d("Aptoide-Featured", "Loading " + url);
 
         service.parseTopApps(database, url);
     }
@@ -648,7 +650,7 @@ public class Start extends ActionBarActivity implements
             url = url + "?country=" + countryCode;
         }
 
-        Log.d("Aptoide-Featured", "Loading " + url);
+        //Log.d("Aptoide-Featured", "Loading " + url);
 
         service.parseEditorsChoice(database, url);
     }
@@ -808,7 +810,7 @@ public class Start extends ActionBarActivity implements
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-                    Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
+                    //Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
                 }
                 break;
         }
@@ -878,7 +880,7 @@ public class Start extends ActionBarActivity implements
                     final Database db = new Database(Aptoide.getDb());
 
                     final Store store = new Store();
-                    Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
+                    //Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
                     Cursor c = db.getStore(storeid);
 
                     if (c.moveToFirst()) {
@@ -950,7 +952,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public void matureUnlock() {
-        Log.d("Mature","Unlocked");
+        //Log.d("Mature","Unlocked");
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
@@ -959,7 +961,7 @@ public class Start extends ActionBarActivity implements
     }
 
     public void maturelock() {
-        Log.d("Mature","locked");
+        //Log.d("Mature","locked");
         matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
@@ -979,7 +981,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public void reload() {
-        Log.d( "pullToRefresh", "reload()" );
+        //Log.d( "pullToRefresh", "reload()" );
         loadEditorsAndTopApps();
     }
 
@@ -992,32 +994,32 @@ public class Start extends ActionBarActivity implements
 
             switch (switchId) {
                 case 0:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                     startActivity(loginIntent);
 
                     break;
                 case 1:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                     startActivity(rollbackIntent);
                     break;
                 case 2:
-                    Log.d("MenuDrawer-position", "pos: "+position);
+                    //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
                     startActivity(scheduledIntent);
                     break;
                 case 3:
-                    Log.d("MenuDrawer-position", "pos: "+position);
+                    //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
                     startActivity(excludedIntent);
                     break;
                 case 4:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     showFacebook();
                     break;
                 case 5:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     showTwitter();
                     break;
                 case 6:
@@ -1088,7 +1090,7 @@ public class Start extends ActionBarActivity implements
         ImageView user_avatar;
         accountManager = AccountManager.get(this);
 
-        Log.d("Aptoide-DrawerHeader", String.valueOf(mDrawerList.getHeaderViewsCount()));
+        //Log.d("Aptoide-DrawerHeader", String.valueOf(mDrawerList.getHeaderViewsCount()));
 
         if(mDrawerList.getHeaderViewsCount()>0){
             View v = (mDrawerList.getAdapter()).getView(0, null, null);
@@ -1193,7 +1195,4 @@ public class Start extends ActionBarActivity implements
         });
         aboutDialog.show();
     }
-
-
-
 }

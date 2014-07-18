@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -51,10 +52,10 @@ public class FeedBackActivity extends Activity {
             fout.flush();
             fout.close();
         } catch (FileNotFoundException e) {
-            Log.e("what","FileNotFoundException: "+e.getMessage());
+            Log.e("FeedBackActivity-screenshot","FileNotFoundException: "+e.getMessage());
             return null;
         } catch (IOException e) {
-            Log.e("what","IOException: "+e.getMessage());
+            Log.e("FeedBackActivity-screenshot","IOException: "+e.getMessage());
             return null;
         }
         return imageFile;
@@ -65,26 +66,36 @@ public class FeedBackActivity extends Activity {
         try {
             process = Runtime.getRuntime().exec("logcat");
         } catch (IOException e) {
+            Log.e("FeedBackActivity-readLogs","IOException: "+e.getMessage());
             return null;
         }
         FileOutputStream outputStream;
         File logsFile = new File(mPath,FeddBackLogs);
+        StringBuilder log=new StringBuilder();
+        log.append("Android Build Version: "+ Build.VERSION.SDK_INT+"\n");
+        log.append("Build Model: "+ Build.MODEL+"\n");
+        log.append("Device: "+ Build.DEVICE+"\n");
+        log.append("Brand: "+ Build.BRAND+"\n");
+        log.append("CPU: "+ Build.CPU_ABI+"\n");
+        log.append("\nLogs:\n");
         try {
             outputStream = new FileOutputStream(logsFile);
-
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
-            StringBuilder log=new StringBuilder();
+
             String line = null;
             int linecount =0;
             while (linecount<100 && (line = bufferedReader.readLine()) != null) {
-                log.append(line);
+
+                log.append(line+"\n");
                 linecount++;
             }
             outputStream.write(log.toString().getBytes());
+
         } catch (IOException e) {
-            return null;
+            return logsFile;
         }
+
         return logsFile;
     }
     public void FeedBackSendMail(View view){
@@ -99,8 +110,9 @@ public class FeedBackActivity extends Activity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         emailIntent.setType("message/rfc822");
 
-        emailIntent.putExtra(Intent.EXTRA_EMAIL ,new String[]{ "andre.santos@aptoide.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "FeedBack: "+subject );
+        //emailIntent.putExtra(Intent.EXTRA_EMAIL ,new String[]{ "andre.santos@aptoide.com"});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL ,new String[]{ "support@aptoide.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[FeedBack]: "+subject );
         emailIntent.putExtra(Intent.EXTRA_TEXT, text );
         //screenshot();
         if(check) {
@@ -123,8 +135,7 @@ public class FeedBackActivity extends Activity {
             startActivity(emailIntent);
             finish();
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "No email client installed.",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.FeedBackNoEmail,Toast.LENGTH_LONG).show();
         }
     }
-
 }

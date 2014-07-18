@@ -29,4 +29,8 @@
         </menu>
     </item>
 
+    <item android:id="@+id/menu_SendFeedBack"
+        app:showAsAction="never"
+        android:title="@string/FeedBackSendButton"/>
+
 </menu>

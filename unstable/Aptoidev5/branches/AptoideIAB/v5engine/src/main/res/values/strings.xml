@@ -549,6 +549,7 @@
     <string name="FeedBackToWrite">Write here to send us your feedback</string>
     <string name="FeedBackCheckBoxText">Include ScreenShot and Logs</string>
     <string name="FeedBacknotvalid">Please enter some valid Subject!</string>
+    <string name="FeedBackNoEmail">"No email client installed!"</string>
 
 
 </resources>

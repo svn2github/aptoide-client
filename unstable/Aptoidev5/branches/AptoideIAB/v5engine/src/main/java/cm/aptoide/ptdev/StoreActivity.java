@@ -229,6 +229,9 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             finish();
         } else if( i == R.id.refresh_store){
             refreshList();
+        }else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
         else {
             if (i == R.id.nameAZ) {

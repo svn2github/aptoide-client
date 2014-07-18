@@ -79,7 +79,7 @@ public class Adapter extends BaseAdapter {
                     set.add(count);
                 }
 
-                Log.d("yuuup", set + " maxcount is: " + maxCount);
+                //Log.d("yuuup", set + " maxcount is: " + maxCount);
 
             }
         });
@@ -120,7 +120,7 @@ public class Adapter extends BaseAdapter {
             result= getItem(position).getItemsSize() + 1 ;
         }
 
-        Log.d("yuuuup", "itemType" + result);
+        //Log.d("yuuuup", "itemType" + result);
 
         return result;
 
@@ -155,7 +155,7 @@ public class Adapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         View item = null;
-        Log.d("yuuup", "cenas");
+        //Log.d("yuuup", "cenas");
         switch (getItemViewType(position)){
 
             case 1:
@@ -210,7 +210,7 @@ public class Adapter extends BaseAdapter {
 
         View view;
         if(convertView==null){
-            Log.d("Sup", "Init view " );
+            //Log.d("Sup", "Init view " );
             view = new LinearLayout(context);
             LinearLayout layout = (LinearLayout) view;
             layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -227,7 +227,7 @@ public class Adapter extends BaseAdapter {
 
 
         }else{
-            Log.d("Sup", "Reusing view ");
+            //Log.d("Sup", "Reusing view ");
             view = convertView;
         }
 
