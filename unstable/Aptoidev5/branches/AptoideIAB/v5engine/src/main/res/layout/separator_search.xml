@@ -12,7 +12,30 @@
               android:orientation="horizontal"
               android:padding="5dp"
               android:background="?attr/selectableItemBackground">
-
+    <TextView
+        android:id="@+id/did_you_mean_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingRight="10dp"
+        android:text="@string/search_result_did_you_mean"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/did_you_mean_Link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingRight="10dp"
+        android:text="@string/search_result_did_you_mean"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
 
 
     <TextView
@@ -25,7 +48,8 @@
             android:text="@string/search_result_looking_for"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/more"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/did_you_mean_Link"/>
 
     <Button
             android:id="@+id/more"

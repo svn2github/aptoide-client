@@ -790,8 +790,6 @@ public class Start extends ActionBarActivity implements
 
                         }
                     }, 10000);
-
-
                 }
             });
 

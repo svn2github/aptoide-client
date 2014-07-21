@@ -4,6 +4,25 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/didyoumeanresults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/search_result_did_you_mean"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/didyoumeancontainer"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?attr/backgroundCard"
+        android:visibility="gone"/>
+    <TextView
         android:id="@+id/results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,7 +31,8 @@
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/search_result_looking_for" />
+        android:text="@string/search_result_looking_for"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,6 +40,7 @@
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?attr/backgroundCard"/>
+        style="?attr/backgroundCard"
+        android:visibility="gone"/>
 
 </LinearLayout>

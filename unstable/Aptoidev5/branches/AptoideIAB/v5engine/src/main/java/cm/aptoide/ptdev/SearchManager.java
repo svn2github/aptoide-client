@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -115,12 +116,9 @@ public class SearchManager extends ActionBarActivity {
 
 
 
-
     public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
-        private List<SearchJson.Results.Apks> u_items = new ArrayList<SearchJson.Results.Apks>();
-
 
         @Override
         public void onStart() {
@@ -136,8 +134,8 @@ public class SearchManager extends ActionBarActivity {
 
         private MergeAdapter adapter;
         private String query;
+        int positionsub = 0;
         private SearchAdapter2 searchAdapterapks;
-        //private SearchAdapterU searchAdapteruapks;
         private SearchAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
@@ -152,68 +150,13 @@ public class SearchManager extends ActionBarActivity {
             v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
             adapter.addView(v);
             searchAdapterapks = new SearchAdapter2(getActivity(), items);
-       //     searchAdapteruapks = new SearchAdapterU(getActivity(), u_items);
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
         }
 
-
-/*
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            super.onCreateOptionsMenu(menu, inflater);
-
-//            inflater.inflate(R.menu.menu_categories, menu);
-//            menu.findItem(R.id.show_all).setVisible(false);
-//            menu.findItem(R.id.download).setChecked(true);
-
-        }
-
-
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-
-//
-//            int id = item.getItemId();
-//
-//            if(id == R.id.nameAZ){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.NAMEAZ;
-//            }else if(id == R.id.nameZA){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.NAMEZA;
-//            }else if(id == R.id.date){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.DATE;
-//            }else if(id == R.id.download){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.DOWNLOADS;
-//            }else if(id == R.id.rating){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.RATING;
-//            }else if(id == R.id.price){
-//                setListShown(false);
-//
-//                sort = StoreActivity.Sort.PRICE;
-//            }
-//
-//
-//            //getLoaderManager().restartLoader(60, getArguments(), this);
-//            item.setChecked(true);
-            return super.onOptionsItemSelected(item);
-        }
-*/
-
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
-            super.onListItemClick(l, v, position, id);
+            position+=positionsub;
             Intent intent = new Intent(getActivity(), appViewClass);
 
             if(adapter.getItem(position) instanceof Cursor){
@@ -223,8 +166,6 @@ public class SearchManager extends ActionBarActivity {
                 intent.putExtra("repoName", ((SearchJson.Results.Apks) adapter.getItem(position)).getRepo());
                 intent.putExtra("md5sum", ((SearchJson.Results.Apks) adapter.getItem(position)).getMd5sum());
             }
-
-
             startActivity(intent);
         }
 
@@ -245,6 +186,7 @@ public class SearchManager extends ActionBarActivity {
             cursorAdapter.swapCursor(data);
             adapter.addAdapter(cursorAdapter);
 
+            Toast.makeText(Aptoide.getContext(), "Loading from database", Toast.LENGTH_LONG).show();
 
             if(isAdded()){
 
@@ -300,65 +242,70 @@ public class SearchManager extends ActionBarActivity {
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
 
+
+
+
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-            ((SearchManager)getActivity()).setFooterView(getListView(), R.layout.footer_search);
+            ((SearchManager) getActivity()).setFooterView(getListView(), R.layout.footer_search);
             ListSearchApkRequest request = new ListSearchApkRequest();
 
             ArrayList<String> stores = new ArrayList<String>();
 
             Cursor c = new Database(Aptoide.getDb()).getServers();
-            for(c.moveToFirst();!c.isAfterLast();c.moveToNext()){
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 stores.add(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_NAME)));
             }
             c.close();
 
 
-
             request.setStores(stores);
             request.setSearchString(query);
 
-            setEmptyText(getString(R.string.no_search_result, query));
 
-            if(!isNetworkAvailable(getActivity())){
+
+            if (!isNetworkAvailable(getActivity())) {
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
-                getLoaderManager().initLoader(60,bundle, SearchFragment.this );
+                getLoaderManager().initLoader(60, bundle, SearchFragment.this);
                 return;
             }
+
 
             manager.execute(request, query + stores.toString().hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     Bundle bundle = new Bundle();
                     bundle.putString("query", query);
-                    getLoaderManager().initLoader(60,bundle, SearchFragment.this );
+                    getLoaderManager().initLoader(60, bundle, SearchFragment.this);
                 }
 
                 @Override
                 public void onRequestSuccess(SearchJson searchJson) {
 
-                    if(searchJson == null){
+
+                    if (searchJson == null) {
                         return;
                     }
 
-                    if("FAIL".equals(searchJson.getStatus())){
-                        for(cm.aptoide.ptdev.model.Error error: searchJson.getErrors()){
+                    if ("FAIL".equals(searchJson.getStatus())) {
+                        for (cm.aptoide.ptdev.model.Error error : searchJson.getErrors()) {
 
                             Integer errorCode = Errors.getErrorsMap().get(error.getCode());
                             String errorMsg;
-                            if(errorCode!=null){
+                            if (errorCode != null) {
                                 errorMsg = getString(errorCode);
-                            }else{
+                            } else {
                                 errorMsg = error.getMsg();
                             }
-                            if(getActivity()!=null){
+                            if (getActivity() != null) {
                                 getActivity().finish();
                             }
-                            Toast.makeText(Aptoide.getContext(), errorMsg,  Toast.LENGTH_LONG).show();
+                            Toast.makeText(Aptoide.getContext(), errorMsg, Toast.LENGTH_LONG).show();
 
                         }
                         return;
@@ -374,19 +321,49 @@ public class SearchManager extends ActionBarActivity {
 
                     View searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.u_search_layout, null);
 
+                    LinearLayout didyoumeanContainer = (LinearLayout) searchLayout.findViewById(R.id.didyoumeancontainer);
                     LinearLayout usearchContainer = (LinearLayout) searchLayout.findViewById(R.id.container);
-
                     final String sizeString = IconSizes.generateSizeString(getActivity());
-                    for(SearchJson.Results.Apks apk: searchJson.getResults().getU_Apks()){
-                        View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
 
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    for (final String s : searchJson.getResults().getDidyoumean()) {
+                        //Log.d("didyou", s);
+                        TextView tv = new TextView(getActivity());
+                        tv.setText(s);
+                        tv.setLayoutParams(params);
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Bundle args = new Bundle();
+
+                                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(), Aptoide.getConfiguration().getSearchAuthority(), 1);
+                                suggestions.saveRecentQuery(s, null);
+
+                                args.putString("query", s);
+
+                                ((SearchManager) getActivity()).getSupportActionBar().setTitle("'" + s + "'");
+
+                                Fragment fragment = new SearchFragment();
+                                fragment.setArguments(args);
+                                getFragmentManager()
+                                        .beginTransaction()
+                                        .addToBackStack(null)
+                                        .replace(R.id.fragContainer, fragment)
+                                        .commit();
+                            }
+                        });
+                        didyoumeanContainer.addView(tv);
+                    }
+
+                    for (SearchJson.Results.Apks apk : searchJson.getResults().getU_Apks()) {
+                        View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
                         ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
 
                         String iconUrl = apk.getIcon();
 
-                        if(iconUrl.contains("_icon")){
+                        if (iconUrl.contains("_icon")) {
                             String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
-                            iconUrl = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+                            iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
                         }
                         ImageLoader.getInstance().displayImage(iconUrl, app_icon);
 
@@ -396,18 +373,29 @@ public class SearchManager extends ActionBarActivity {
                         usearchContainer.addView(element);
                     }
 
-
-
                     items.clear();
                     items.addAll(searchJson.getResults().getApks());
                     adapter.addAdapter(searchAdapterapks);
 
-
                     adapter.notifyDataSetChanged();
-
-                    if(searchJson.getResults().getU_Apks().size() > 0){
+                    int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
+                    int uapksSize = searchJson.getResults().getU_Apks().size();
+                    if (getDidyoumeanSize > 0 || uapksSize > 0) {
+                        if (getDidyoumeanSize > 0) {
+                            searchLayout.findViewById(R.id.didyoumeanresults).setVisibility(View.VISIBLE);
+                            searchLayout.findViewById(R.id.didyoumeancontainer).setVisibility(View.VISIBLE);
+                        }
+                        if (uapksSize > 0) {
+                            searchLayout.findViewById(R.id.results).setVisibility(View.VISIBLE);
+                            searchLayout.findViewById(R.id.container).setVisibility(View.VISIBLE);
+                        }
+                        positionsub = -1;
+                        //Log.d("SearchManager", "Adding Header View");
+                        
                         getListView().addHeaderView(searchLayout, null, false);
                     }
+
+
 
                     setListAdapter(adapter);
                     if (isAdded()) {
@@ -420,7 +408,6 @@ public class SearchManager extends ActionBarActivity {
                             foundResults.setText(getString(R.string.no_search_result, query));
                         }
 
-                        setListAdapter(adapter);
                         setListShown(true);
                         setEmptyText(getString(R.string.no_search_result, query));
 
@@ -443,8 +430,11 @@ public class SearchManager extends ActionBarActivity {
                             }
                         });
                     }
+                    setEmptyText(getString(R.string.no_search_result, query));
                 }
+
             });
+
             //getLoaderManager().restartLoader(60, getArguments(), this);
 
         }
@@ -452,6 +442,8 @@ public class SearchManager extends ActionBarActivity {
         @Override
         public void onDestroyView() {
             super.onDestroyView();
+            //Log.d("Searchmanager", "OnDestroyView");
+            setListAdapter(null);
             getLoaderManager().destroyLoader(60);
         }
 
@@ -477,7 +469,7 @@ public class SearchManager extends ActionBarActivity {
             public void onClick(View v) {
                 try{
                     String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(SearchManager.this);
-                    Log.d("TAG", "Searching for:" + url);
+                    //Log.d("TAG", "Searching for:" + url);
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     url = url.replaceAll(" ", "%20");
                     i.setData(Uri.parse(url));
