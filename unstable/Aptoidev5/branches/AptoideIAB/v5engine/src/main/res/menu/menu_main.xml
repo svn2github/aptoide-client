@@ -14,7 +14,7 @@
 
     <item android:id="@+id/menu_SendFeedBack"
         app:showAsAction="never"
-        android:title="@string/FeedBackSendButton"/>
+        android:title="@string/feedback_send_button"/>
 
     <!--<item android:id="@+id/menu_settings"-->
           <!--android:showAsAction="never"-->

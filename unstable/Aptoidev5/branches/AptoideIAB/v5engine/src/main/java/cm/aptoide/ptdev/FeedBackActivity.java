@@ -101,7 +101,7 @@ public class FeedBackActivity extends Activity {
     public void FeedBackSendMail(View view){
         String subject = ((EditText)findViewById(R.id.FeedBackSubject)).getText().toString();
         if(TextUtils.isEmpty(subject)){
-            Toast.makeText(this,R.string.FeedBacknotvalid, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.feedback_not_valid, Toast.LENGTH_SHORT).show();
             return;
         }
         String text = ((EditText)findViewById(R.id.FeedBacktext)).getText().toString();
@@ -135,7 +135,7 @@ public class FeedBackActivity extends Activity {
             startActivity(emailIntent);
             finish();
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, R.string.FeedBackNoEmail,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.feedback_no_email,Toast.LENGTH_LONG).show();
         }
     }
 }

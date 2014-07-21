@@ -11,7 +11,7 @@
 
     <EditText
         android:id="@+id/FeedBackSubject"
-        android:hint="@string/FeedBackSubject"
+        android:hint="@string/feedback_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -20,14 +20,14 @@
     <EditText
         android:id="@+id/FeedBacktext"
         android:layout_below="@+id/FeedBackSubject"
-        android:hint="@string/FeedBackToWrite"
+        android:hint="@string/feedback_to_write"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"/>
 
     <CheckBox
         android:id="@+id/FeedBackCheckBox"
-        android:text="@string/FeedBackCheckBoxText"
+        android:text="@string/feedback_include_logs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
@@ -35,7 +35,7 @@
         />
 
     <Button
-        android:text="@string/FeedBackSendButton"
+        android:text="@string/feedback_send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/FeedBackSendButton"

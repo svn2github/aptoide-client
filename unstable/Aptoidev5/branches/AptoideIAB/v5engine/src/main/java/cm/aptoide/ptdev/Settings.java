@@ -59,8 +59,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                                     .edit()
                                     .putInt(AdultDialog.MATUREPIN, new Integer(input))
                                     .commit();
-                            mp.setTitle(R.string.RemoveMaturePinTitle);
-                            mp.setSummary(R.string.RemoveMaturePinSummary);
+                            mp.setTitle(R.string.remove_mature_pin_title);
+                            mp.setSummary(R.string.remove_mature_pin_summary);
                             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Added_Pin_To_Lock_Adult_Content");
                             //mp.setOnPreferenceClickListener(removeclick);
                         }
@@ -86,8 +86,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 public void onClick(DialogInterface dialog, int which) {
                     new SecurePreferences(Aptoide.getContext()).edit().putInt(AdultDialog.MATUREPIN,-1).commit();
                     final Preference mp= findPreference("Maturepin");
-                    mp.setTitle(R.string.SetMaturePinTitle);
-                    mp.setSummary(R.string.SetMaturePinSummary);
+                    mp.setTitle(R.string.set_mature_pin_title);
+                    mp.setSummary(R.string.set_mature_pin_summary);
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
                 }
             }).show();
@@ -122,8 +122,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         final Preference mp= findPreference("Maturepin");
         if(pin!=-1) {
             Log.d("PINTEST","PinBuild");
-            mp.setTitle(R.string.RemoveMaturePinTitle);
-            mp.setSummary(R.string.RemoveMaturePinSummary);
+            mp.setTitle(R.string.remove_mature_pin_title);
+            mp.setSummary(R.string.remove_mature_pin_summary);
         }
         mp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
