@@ -763,7 +763,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onClick(View v) {
-            Fragment downgrade = new UninstallRetainFragment(name, package_name, versionName, downgradeVersion, icon);
+            Fragment downgrade = new UninstallRetainFragment();
+            Bundle args = new Bundle(  );
+            args.putString( "name", name );
+            args.putString( "package", package_name );
+            args.putString( "version", versionName );
+            args.putString( "downgradeVersion", downgradeVersion );
+            args.putString( "icon", icon );
+            downgrade.setArguments( args );
+
             getSupportFragmentManager().beginTransaction().add(downgrade, "downgrade").commit();
             Map<String, String> installParams = new HashMap<String, String>();
             installParams.put("Package_Name", package_name);
@@ -980,6 +988,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
             findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
         }
+
 
         if(refreshOnResume) {
             spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
@@ -1229,7 +1238,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         } else if (i == R.id.menu_uninstall) {
 
-            Fragment uninstallFragment = new UninstallRetainFragment(name, package_name, versionName, icon);
+            Fragment uninstallFragment = new UninstallRetainFragment();
+            Bundle args = new Bundle(  );
+            args.putString( "name", name );
+            args.putString( "package", package_name );
+            args.putString( "version", versionName );
+            args.putString( "icon", icon );
+            uninstallFragment.setArguments( args );
 
             getSupportFragmentManager().beginTransaction().add(uninstallFragment, "uninstallFrag").commit();
 
@@ -1418,6 +1433,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+
     }
 
     @Subscribe
@@ -1976,7 +1992,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             } catch (PackageManager.NameNotFoundException e) {
                 isFromActivityResult = true;
-                spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
+                spiceManager.getFromCache( GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener );
+
             }
         } else if (requestCode == 359) {
             Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );

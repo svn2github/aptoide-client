@@ -283,7 +283,10 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
             refreshStoresEvent(null);
             return true;
         } else if (i == R.id.menu_discard) {
-            UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(info.id);
+            UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment();
+            Bundle arg = new Bundle(  );
+            arg.putLong( "id", info.id );
+            uninstallRetainFragment.setArguments( arg );
             getFragmentManager().beginTransaction().add(uninstallRetainFragment, "UnistallTask").commit();
             return true;
         } else {

@@ -35,34 +35,33 @@ public class UninstallRetainFragment extends Fragment {
 
     private long id;
 
-    public UninstallRetainFragment(String appName, String packageName, String versionName, String iconPath) {
-        this.appName = appName;
-        this.packageName = packageName;
-        this.versionName = versionName;
-        this.iconPath = iconPath;
-        this.rollBackAction = RollBackItem.Action.UNINSTALLING;
-    }
-
-    public UninstallRetainFragment(long id) {
-        this.id = id;
-        this.rollBackAction = RollBackItem.Action.UNINSTALLING;
-    }
-
-    public UninstallRetainFragment(String appName, String packageName, String versionName, String versionToDowngrade, String iconPath) {
-        this.appName = appName;
-        this.packageName = packageName;
-        this.versionName = versionName;
-        this.versionToDowngrade = versionToDowngrade;
-        this.iconPath = iconPath;
-        this.rollBackAction = RollBackItem.Action.DOWNGRADING;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
         Log.d("Aptoide-Uninstaller", "Uninstalling");
+
+        Bundle args = getArguments();
+
+        if(args.containsKey( "id" )) {
+            id = args.getLong( "id" );
+            rollBackAction = RollBackItem.Action.UNINSTALLING;
+        } else if(args.containsKey( "downgradeVersion" ) ){
+            appName = args.getString( "name" );
+            packageName = args.getString( "package" );
+            versionName = args.getString( "version" );
+            iconPath = args.getString( "icon" );
+            versionToDowngrade = args.getString( "downgradeVersion" );
+            rollBackAction = RollBackItem.Action.DOWNGRADING;
+        } else {
+            appName = args.getString( "name" );
+            packageName = args.getString( "package" );
+            versionName = args.getString( "version" );
+            iconPath = args.getString( "icon" );
+            rollBackAction = RollBackItem.Action.UNINSTALLING;
+        }
+
 
         new UninstallTask().execute();
     }
@@ -154,9 +153,9 @@ public class UninstallRetainFragment extends Fragment {
         }
 
         private String calcApkMd5(String packageName) throws PackageManager.NameNotFoundException {
-                String sourceDir = activity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
-                File apkFile = new File(sourceDir);
-                return AptoideUtils.Algorithms.md5Calc(apkFile);
+            String sourceDir = activity.getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
+            File apkFile = new File(sourceDir);
+            return AptoideUtils.Algorithms.md5Calc(apkFile);
         }
 
     }

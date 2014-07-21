@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
@@ -106,7 +107,13 @@ public class RollBackAdapter extends CursorAdapter {
 
                 switch (action){
                     case INSTALLED:
-                        Fragment fragment = new UninstallRetainFragment(name, packageName, versionName, icon);
+                        Fragment fragment = new UninstallRetainFragment();
+                        Bundle args = new Bundle();
+                        args.putString( "name", name );
+                        args.putString( "package", packageName );
+                        args.putString( "version", versionName );
+                        args.putString( "icon", icon );
+                        fragment.setArguments( args );
                         activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
                         break;
 
