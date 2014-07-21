@@ -870,7 +870,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setOtherVersions(items);
             } else {
 
-                //for(String error : json.getErrors()){
+                //for(String error : json.getError_description()){
                 //  Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
                 //}
             }
@@ -1009,6 +1009,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
+
+
+
 
         if (savedInstanceState != null) {
             package_name = savedInstanceState.getString("packageName");

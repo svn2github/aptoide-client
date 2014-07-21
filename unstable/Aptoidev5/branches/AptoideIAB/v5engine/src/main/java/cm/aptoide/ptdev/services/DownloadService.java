@@ -50,13 +50,14 @@ import java.util.Collection;
 /**
  * Created by rmateus on 11-12-2013.
  */
-public class DownloadService extends Service implements CompleteDownloadCallback{
+public class DownloadService extends Service{
 
     private DownloadManager manager = new DownloadManager();
     private Timer timer;
     private boolean isStopped = true;
     //private NotificationCompat.Builder mBuilder;
     private LongSparseArray<DownloadInfo> downloads = new LongSparseArray<DownloadInfo>();
+    private NotificationCompat.Builder mBuilder;
 
 
     @Override
@@ -129,6 +130,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
             timer.cancel();
             timer.purge();
             stopSelf();
+            mBuilder = null;
             stopForeground(true);
             isStopped = true;
         }
@@ -152,17 +154,15 @@ public class DownloadService extends Service implements CompleteDownloadCallback
     public void startExistingDownload(long id){
 
 
-        //startService(new Intent(getApplicationContext(), DownloadService.class));
+        startService(new Intent(getApplicationContext(), DownloadService.class));
 
         NotificationCompat.Builder builder = setNotification(id);
         DownloadInfo inf = getDownload(id);
         Log.d("download-trace", "setmbuilder: startExistingDownload");
-        inf.setmBuilder(builder);
-        inf.setCompleteCallback(this);
-        /*
-        mBuilder = setNotification(id);
+
+        if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
-        */
+
 
         if(isStopped){
             isStopped = false;
@@ -244,14 +244,14 @@ public class DownloadService extends Service implements CompleteDownloadCallback
 
         startService(new Intent(getApplicationContext(), DownloadService.class));
 
-        /*
-        mBuilder = setNotification(id);
+
+        if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
-        */
+
         Log.d("donload-trace", "setmBuilder: startDownloadFromUrl");
         NotificationCompat.Builder builder = setNotification(id);
         info.setmBuilder(builder);
-        info.setCompleteCallback(this);
+
 
         if(isStopped){
             isStopped = false;
@@ -298,12 +298,12 @@ public class DownloadService extends Service implements CompleteDownloadCallback
         Log.d("download-trace", "setmBuilder: startDownloadFromJson");
         NotificationCompat.Builder builder = setNotification(info.getId());
         info.setmBuilder(builder);
-        info.setCompleteCallback(this);
-        //startForeground(-3, mBuilder.build());
 
+        if(mBuilder==null) mBuilder = createDefaultNotification();
+
+        startForeground(-3, mBuilder.build());
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        //mBuilder = setNotification(id);
-        //startForeground(-3, mBuilder.build());
+
 
 
         if(isStopped){
@@ -376,14 +376,14 @@ public class DownloadService extends Service implements CompleteDownloadCallback
     public void resumeDownload(int downloadId) {
         startService(new Intent(getApplicationContext(), DownloadService.class));
 
-       /* mBuilder = setNotification(downloadId);
+        if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
-*/
+
         Log.d("donwload-trace", "setmBuilder: resumeDownload");
         DownloadInfo info = getDownload(downloadId);
         NotificationCompat.Builder builder = setNotification(downloadId);
         info.setmBuilder(builder);
-        info.setCompleteCallback(this);
+
         info.download();
 
         if(isStopped){
@@ -406,14 +406,7 @@ public class DownloadService extends Service implements CompleteDownloadCallback
 
     }
 
-    @Override
-    public void onCompleteDownload(long id) {
-        DownloadInfo info = getDownload(id);
-        if (Context.NOTIFICATION_SERVICE != null) {
-            Log.d("download-trace", "completecallback called for " + info.getDownload().getName());
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(-3);
-        }
-    }
+
 
 
     public class DownloadRequest implements RequestListener<GetApkInfoJson> {
@@ -446,7 +439,6 @@ public class DownloadService extends Service implements CompleteDownloadCallback
                     }
                 }
             }
-
         }
     }
 
@@ -454,8 +446,8 @@ public class DownloadService extends Service implements CompleteDownloadCallback
     public void startDownloadFromAppId(final long id){
         startService(new Intent(getApplicationContext(), DownloadService.class));
 
-        /*mBuilder = setNotification(id);
-        startForeground(-3, mBuilder.build());*/
+        if(mBuilder==null) mBuilder = createDefaultNotification();
+        startForeground(-3, mBuilder.build());
         /*DownloadInfo info = getDownload(id);
         Log.d("donwload-trace", "setMbuilder: startDownloadFromAppId");
         NotificationCompat.Builder builder = setNotification(id);
@@ -531,6 +523,35 @@ public class DownloadService extends Service implements CompleteDownloadCallback
 
     }
 
+    private NotificationCompat.Builder createDefaultNotification() {
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+
+        Intent onClick = new Intent();
+        onClick.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+        onClick.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        onClick.setAction(Intent.ACTION_VIEW);
+        onClick.putExtra("fromDownloadNotification", true);
+
+        // The PendingIntent to launch our activity if the user selects this notification
+        PendingIntent onClickAction = PendingIntent.getActivity(getApplicationContext(), 0, onClick, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        mBuilder.setOngoing(true);
+        mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()))
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setProgress(0, 0, true)
+                .setContentIntent(onClickAction);
+        mBuilder.setProgress(100, 0, true);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, mBuilder.build());
+
+        return mBuilder;
+    }
+
+
+
+
+
     private NotificationCompat.Builder setNotification(final long id) {
 
         DownloadInfo info = getDownload(id);
@@ -575,7 +596,9 @@ public class DownloadService extends Service implements CompleteDownloadCallback
                     String remaining = Utils.formatEta(info.getEta(), "");
                     info.getmBuilder().setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
                 }
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, info.getmBuilder().build());
+
+                mBuilder = info.getmBuilder();
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, mBuilder.build());
                 return;
             }
         }

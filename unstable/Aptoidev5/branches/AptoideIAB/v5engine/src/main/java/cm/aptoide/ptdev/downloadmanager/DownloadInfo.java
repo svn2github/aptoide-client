@@ -219,7 +219,7 @@ public class DownloadInfo implements Runnable, Serializable {
 
         BusProvider.getInstance().post(new DownloadEvent(getId(), mStatusState));
 
-        completeCallback.onCompleteDownload(download.getId());
+
 
         downloadManager.updatePendingList();
 

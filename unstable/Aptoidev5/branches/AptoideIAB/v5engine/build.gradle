@@ -35,7 +35,7 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:19.1.0'
 
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
-    compile ('com.octo.android.robospice:robospice-google-http-client:1.4.11'){
+    compile ('com.octo.android.robospice:robospice-google-http-client:1.4.12'){
         exclude (group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
     }
     compile ('com.google.http-client:google-http-client-jackson2:1.18.0-rc'){

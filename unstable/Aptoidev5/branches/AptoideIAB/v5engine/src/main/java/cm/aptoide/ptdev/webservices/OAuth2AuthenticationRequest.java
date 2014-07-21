@@ -1,13 +1,19 @@
 package cm.aptoide.ptdev.webservices;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+
 
 import java.util.HashMap;
 
@@ -51,12 +57,29 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
                 break;
         }
 
+        if(Aptoide.getConfiguration().getExtraId().length()>0){
+            parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
+        }
+
         HttpContent content = new UrlEncodedContent(parameters);
         GenericUrl url = new GenericUrl("https://webservices.aptoide.com/webservices/3/oauth2Authentication");
         HttpRequest oauth2RefresRequest = getHttpRequestFactory().buildPostRequest(url, content);
         oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return oauth2RefresRequest.execute().parseAs(OAuth.class);
+
+        oauth2RefresRequest.setUnsuccessfulResponseHandler(new OAuthAccessTokenHandler());
+
+        HttpResponse response;
+
+        try{
+            response = oauth2RefresRequest.execute();
+        }catch (InvalidGrantException e){
+                cancel();
+                throw new InvalidGrantSpiceException(e.getError_description());
+        }
+
+
+        return response.parseAs(OAuth.class);
     }
 
     public void setUsername(String username) {

@@ -4,6 +4,8 @@ import android.os.Build;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
+import cm.aptoide.ptdev.webservices.json.OAuth;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -21,7 +23,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
+public class CreateUserRequest extends GoogleHttpClientSpiceRequest<OAuth> {
 
 
     String baseUrl = "https://webservices.aptoide.com/webservices/3/createUser";
@@ -35,7 +37,7 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
     private String name = "";
 
     public CreateUserRequest() {
-        super(CreateUserJson.class);
+        super(OAuth.class);
     }
 
     public void setEmail(String email){
@@ -47,7 +49,7 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
     }
 
     @Override
-    public CreateUserJson loadDataFromNetwork() throws Exception {
+    public OAuth loadDataFromNetwork() throws Exception {
 
         GenericUrl url;
 

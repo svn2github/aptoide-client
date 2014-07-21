@@ -42,6 +42,8 @@ import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import com.facebook.*;
@@ -474,15 +476,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-
-            ((EditText) findViewById(R.id.username)).setText(data.getStringExtra("username"));
-            ((EditText) findViewById(R.id.password)).setText(data.getStringExtra("password"));
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    submit(Mode.APTOIDE, data.getStringExtra("username"), data.getStringExtra("password"), null);
-                }
-            });
+            hasQueue = true;
+            finishLogin(data);
         }
 
     }
@@ -547,135 +542,172 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         oAuth2AuthenticationRequest.setNameForGoogle(nameForGoogle);
 
 
+
         spiceManager.execute(oAuth2AuthenticationRequest, new RequestListener<OAuth>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+
+                String error;
+
+                if(spiceException instanceof InvalidGrantSpiceException && ((InvalidGrantSpiceException) spiceException).getError_description().equals("Invalid username and password combination")){
+
+                    error = getString(R.string.error_AUTH_1);
+
+                }else{
+
+                    error = getString(R.string.error_occured);
+
+                }
+
+                Session session = Session.getActiveSession();
+
+                if (session != null && session.isOpened()) {
+                    session.closeAndClearTokenInformation();
+                }
+
+                if (mPlusClient != null && mPlusClient.isConnected()) {
+                    mPlusClient.clearDefaultAccount();
+                    mPlusClient.disconnect();
+                }
+
+                Toast.makeText(getBaseContext(), error, Toast.LENGTH_SHORT).show();
+
+                android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if (pd != null) {
+                    pd.dismissAllowingStateLoss();
+                }
+
+
 
             }
 
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
 
-                request = new CheckUserCredentialsRequest();
-
-
-                String deviceId = Settings.Secure.getString(LoginActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-                request.setRegisterDevice(registerDevice.isChecked());
-
-                request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
-                request.setDeviceId(deviceId);
-                request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
-                request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(LoginActivity.this)));
-                request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(LoginActivity.this)));
-                request.setModel(Build.MODEL);
-                request.setScreenSize(Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(LoginActivity.this)].name().toLowerCase(Locale.ENGLISH));
-
-                request.setToken(oAuth.getAccess_token());
-
-                spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
-
-                    @Override
-                    public void onRequestFailure(SpiceException e) {
-
-                        Session session = Session.getActiveSession();
-
-                        if (session != null && session.isOpened()) {
-                            session.closeAndClearTokenInformation();
-                        }
-
-                        if (mPlusClient != null && mPlusClient.isConnected()) {
-                            mPlusClient.clearDefaultAccount();
-                            mPlusClient.disconnect();
-                        }
-
-                        Toast.makeText(getBaseContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-
-                        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                        if (pd != null) {
-                            pd.dismissAllowingStateLoss();
-                        }
-                    }
-
-                    @Override
-                    public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
-
-                        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-
-                        if (pd != null) {
-                            pd.dismissAllowingStateLoss();
-                        }
-
-
-                        if ("OK".equals(checkUserCredentialsJson.getStatus())) {
-
-                            if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
-                                hasQueue = true;
-
-                                PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                        .edit()
-                                        .putString("queueName", checkUserCredentialsJson.getQueue())
-                                        .commit();
-                            }
-                            if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
-                                PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                        .edit()
-                                        .putString("useravatar", checkUserCredentialsJson.getAvatar())
-                                        .commit();
-                            }
-
-                            if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
-                                PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                        .edit()
-                                        .putString("userRepo", checkUserCredentialsJson.getRepo())
-                                        .commit();
-                            }
-
-                            if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
-                                PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                        .edit()
-                                        .putString("username", checkUserCredentialsJson.getUsername())
-                                        .commit();
-                            }
-
-                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                    .edit()
-                                    .putString(Configs.LOGIN_USER_LOGIN, username)
-                                    .commit();
-
-                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                    .edit()
-                                    .putString("loginType", mode.name())
-                                    .commit();
-
-                            SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
-                            preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
-                            preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
-
-
-                            Bundle data = new Bundle();
-                            data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
-                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                            data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getAccess_token());
-                            data.putString(PARAM_USER_PASS, passwordOrToken);
-
-
-                            final Intent res = new Intent();
-                            res.putExtras(data);
-                            finishLogin(res);
-                        } else {
-                            final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
-                            for (cm.aptoide.ptdev.model.Error error : checkUserCredentialsJson.getErrors()) {
-                                Toast.makeText(getBaseContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-                });
+                getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
 
             }
         });
 
+    }
+
+    private void getUserInfo(final OAuth oAuth, final String username, final Mode mode, final String accountType, final String passwordOrToken) {
+        request = new CheckUserCredentialsRequest();
+
+
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        request.setRegisterDevice(registerDevice.isChecked());
+
+        request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
+        request.setDeviceId(deviceId);
+        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
+        request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(this)));
+        request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(this)));
+        request.setModel(Build.MODEL);
+        request.setScreenSize(Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(this)].name().toLowerCase(Locale.ENGLISH));
+
+        request.setToken(oAuth.getAccess_token());
+
+        spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
+
+            @Override
+            public void onRequestFailure(SpiceException e) {
+
+                Session session = Session.getActiveSession();
+
+                if (session != null && session.isOpened()) {
+                    session.closeAndClearTokenInformation();
+                }
+
+                if (mPlusClient != null && mPlusClient.isConnected()) {
+                    mPlusClient.clearDefaultAccount();
+                    mPlusClient.disconnect();
+                }
+
+                Toast.makeText(getBaseContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+
+                android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if (pd != null) {
+                    pd.dismissAllowingStateLoss();
+                }
+            }
+
+            @Override
+            public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
+
+                android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+
+                if (pd != null) {
+                    pd.dismissAllowingStateLoss();
+                }
+
+
+                if ("OK".equals(checkUserCredentialsJson.getStatus())) {
+
+                    if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
+                        hasQueue = true;
+
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("queueName", checkUserCredentialsJson.getQueue())
+                                .commit();
+                    }
+                    if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("useravatar", checkUserCredentialsJson.getAvatar())
+                                .commit();
+                    }
+
+                    if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("userRepo", checkUserCredentialsJson.getRepo())
+                                .commit();
+                    }
+
+                    if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
+                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                                .edit()
+                                .putString("username", checkUserCredentialsJson.getUsername())
+                                .commit();
+                    }
+
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                            .edit()
+                            .putString(Configs.LOGIN_USER_LOGIN, username)
+                            .commit();
+
+                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
+                            .edit()
+                            .putString("loginType", mode.name())
+                            .commit();
+
+                    SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
+                    preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
+                    preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
+
+
+                    Bundle data = new Bundle();
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
+                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getAccess_token());
+                    data.putString(PARAM_USER_PASS, passwordOrToken);
+
+
+                    final Intent res = new Intent();
+                    res.putExtras(data);
+                    finishLogin(res);
+                } else {
+                    final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
+                    for (cm.aptoide.ptdev.model.Error error : checkUserCredentialsJson.getErrors()) {
+                        Toast.makeText(getBaseContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
     }
 
     private void finishLogin(Intent intent) {

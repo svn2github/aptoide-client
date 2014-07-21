@@ -19,9 +19,10 @@
 
         <FrameLayout
             android:id="@+id/fl_central"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="1dp"
+
             android:layout_weight="1" android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
 
@@ -32,25 +33,23 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
-
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/fl_row1_left"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:padding="1dp"
+
             style="?attr/customRowForegroundHomeLayout">
 
         <ImageView
             android:id="@+id/app_icon_row1_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:adjustViewBounds="true"
-
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
         </FrameLayout>
@@ -68,6 +67,8 @@
         <FrameLayout
             android:id="@+id/fl_row1_right"
             android:layout_width="wrap_content"
+            android:padding="1dp"
+
             android:layout_height="wrap_content"
             android:layout_weight="1" android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
@@ -86,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fl_row2_left"
+            android:padding="1dp"
 
             android:layout_weight="1" android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
@@ -103,6 +105,8 @@
         <FrameLayout
             android:id="@+id/fl_row2_right"
             android:layout_width="wrap_content"
+            android:padding="1dp"
+
             android:layout_height="wrap_content"
             android:layout_weight="1" android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
