@@ -26,9 +26,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * Created by rmateus on 30-12-2013.
  */
 public class SignUpActivity extends ActionBarActivity{
-
-    private String TAG = "SignUp";
-    private String mAccountType;
+/*  private String TAG = "SignUp";
+    private String mAccountType;*/
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
     private boolean showPassword = true;
     private EditText passBox;
@@ -238,18 +237,19 @@ public class SignUpActivity extends ActionBarActivity{
         boolean hasLetter = false;
         boolean hasNumber = false;
 
-        if (pass.contains("!") || pass.contains("@") || pass.contains("#") || pass.contains("$") || pass.contains("#") || pass.contains("*")) {
-
-            hasNumber = true;
-
-        }
-
         for(char c : pass.toCharArray()){
-            if(Character.isLetter(c) && !hasLetter){
+            if(!hasLetter && Character.isLetter(c)){
+                if(hasNumber)
+                    return true;
                 hasLetter = true;
-            }else if(Character.isDigit(c)&& !hasNumber){
+            }else if(!hasNumber && Character.isDigit(c)){
+                if(hasLetter)
+                    return true;
                 hasNumber = true;
             }
+        }
+        if (pass.contains("!") || pass.contains("@") || pass.contains("#") || pass.contains("$") || pass.contains("#") || pass.contains("*")) {
+            hasNumber = true;
         }
 
         return hasNumber&&hasLetter;
@@ -258,17 +258,12 @@ public class SignUpActivity extends ActionBarActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
 
-        if (i == android.R.id.home) {
-            setResult(RESULT_CANCELED);
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             setResult(RESULT_CANCELED);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 

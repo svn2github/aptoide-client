@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.adapters.SearchAdapter2;
-import cm.aptoide.ptdev.adapters.SearchAdapterU;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
@@ -159,6 +158,7 @@ public class SearchManager extends ActionBarActivity {
         }
 
 
+/*
 
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -209,6 +209,7 @@ public class SearchManager extends ActionBarActivity {
 //            item.setChecked(true);
             return super.onOptionsItemSelected(item);
         }
+*/
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {

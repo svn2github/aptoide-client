@@ -69,7 +69,6 @@ import java.util.Locale;
  */
 public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener, ProgressDialogFragment.OnCancelListener {
 
-
     private ProgressDialog mConnectionProgressDialog;
     private PlusClient mPlusClient;
     private ConnectionResult mConnectionResult;
