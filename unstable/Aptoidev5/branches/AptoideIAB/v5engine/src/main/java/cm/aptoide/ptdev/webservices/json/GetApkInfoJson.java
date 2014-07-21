@@ -587,8 +587,16 @@ public class GetApkInfoJson {
         private String vername;
         @Key
         private String icon_hd;
+        @Key
+        private int downloads;
 
 
+        public int getDownloads(){
+            return this.downloads;
+        }
+        public void setDownloads(int downloads){
+            this.downloads = downloads;
+        }
         public String getIcon(){
             return this.icon;
         }

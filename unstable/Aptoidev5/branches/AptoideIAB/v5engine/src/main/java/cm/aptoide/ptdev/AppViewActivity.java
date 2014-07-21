@@ -178,6 +178,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
+                    downloads = getApkInfoJson.getApk().getDownloads();
                     package_name = getApkInfoJson.getApk().getPackage();
                     repoName = getApkInfoJson.getApk().getRepo();
                     wUrl = getApkInfoJson.getMeta().getWUrl();
@@ -961,6 +962,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         outState.putString("cacheKey", cacheKey);
         outState.putString("packageName", package_name);
         outState.putInt("downloadId", downloadId);
+        outState.putInt("downloads", downloads);
+
     }
 
     @Override
@@ -1026,6 +1029,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             package_name = savedInstanceState.getString("packageName");
             downloadId = savedInstanceState.getInt("downloadId");
             cacheKey = savedInstanceState.getString("cacheKey");
+            downloads = savedInstanceState.getInt("downloads");
         }else{
             new Thread(new Runnable() {
                 @Override
