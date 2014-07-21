@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -59,7 +60,11 @@ import java.util.List;
  * Time: 15:54
  * To change this template use File | Settings | File Templates.
  */
-public class SearchManager extends ActionBarActivity {
+
+
+
+public class SearchManager extends ActionBarActivity implements SearchQueryCallback{
+
 
 
     private DownloadService downloadService;
@@ -75,16 +80,26 @@ public class SearchManager extends ActionBarActivity {
 
         Bundle args = new Bundle();
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        if(getIntent().hasExtra("search")){
-            query = getIntent().getExtras().getString("search");
-        } else {
-            query = getIntent().getExtras().getString(android.app.SearchManager.QUERY).replaceAll("\\s{2,}|\\W", " ").trim();
-            query = query.replaceAll("\\s{2,}", " ");
+        if(savedInstanceState!=null) {
+            query = savedInstanceState.getString("query");
+            getSupportActionBar().setTitle("'"+query+"'");
+
+            Log.d("SearchManager", "Read From savedInstanceState");
+            return;
         }
+        if(query==null) {
+            Log.d("SearchManager", "Query has null");
+            if (getIntent().hasExtra("search")) {
+                query = getIntent().getExtras().getString("search");
+            } else {
+                query = getIntent().getExtras().getString(android.app.SearchManager.QUERY).replaceAll("\\s{2,}|\\W", " ").trim();
+                query = query.replaceAll("\\s{2,}", " ");
+            }
+        }
+        Log.d("SearchManager","Query:"+ query);
 
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,Aptoide.getConfiguration().getSearchAuthority(), 1);
         suggestions.saveRecentQuery(query, null);
@@ -103,6 +118,13 @@ public class SearchManager extends ActionBarActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("query", query);
+        Log.d("SearchManager","onSaveInstanceState:"+ query);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
 
@@ -114,11 +136,18 @@ public class SearchManager extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
 
     public static class SearchFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+
+
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
+        private SearchQueryCallback callback;
 
         @Override
         public void onStart() {
@@ -167,6 +196,12 @@ public class SearchManager extends ActionBarActivity {
                 intent.putExtra("md5sum", ((SearchJson.Results.Apks) adapter.getItem(position)).getMd5sum());
             }
             startActivity(intent);
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            this.callback = (SearchQueryCallback) activity;
         }
 
         @Override
@@ -342,7 +377,7 @@ public class SearchManager extends ActionBarActivity {
                                 args.putString("query", s);
 
                                 ((SearchManager) getActivity()).getSupportActionBar().setTitle("'" + s + "'");
-
+                                callback.setQuery(s);
                                 Fragment fragment = new SearchFragment();
                                 fragment.setArguments(args);
                                 getFragmentManager()
