@@ -434,8 +434,16 @@ public class DownloadService extends Service{
                     startDownloadFromJson(getApkInfoJson, id, download);
                 } else {
                     final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
+                    Integer stringId;
+                    String message;
                     for (Error error : getApkInfoJson.getErrors()) {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_LONG).show();
+                        stringId = errorsMapConversion.get( error.getCode() );
+                        if(stringId != null) {
+                            message = getString( stringId );
+                        } else {
+                            message = error.getMsg();
+                        }
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
                 }
             }

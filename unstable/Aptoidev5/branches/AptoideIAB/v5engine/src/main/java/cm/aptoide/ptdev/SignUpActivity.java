@@ -253,8 +253,16 @@ public class SignUpActivity extends ActionBarActivity{
                             finish();
                         } else {
                             final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
+                            Integer stringId;
+                            String message;
                             for (cm.aptoide.ptdev.model.Error error : checkUserCredentialsJson.getErrors()) {
-                                Toast.makeText(getBaseContext(), getApplicationContext().getString(errorsMapConversion.get(error.getCode())), Toast.LENGTH_SHORT).show();
+                                stringId = errorsMapConversion.get( error.getCode() );
+                                if(stringId != null) {
+                                    message = getString( stringId );
+                                } else {
+                                    message = error.getMsg();
+                                }
+                                Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                             }
                         }
 

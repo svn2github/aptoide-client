@@ -143,9 +143,17 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
                 setResult( RESULT_OK );
             }else{
-                //HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                Integer stringId;
+                String message;
                 for(cm.aptoide.ptdev.model.Error error :  genericResponse.getErrors()){
-                    Toast.makeText(AllCommentsActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
+                    stringId = errorsMap.get( error.getCode() );
+                    if(stringId != null) {
+                        message = getString( stringId );
+                    } else {
+                        message = error.getMsg();
+                    }
+                    Toast.makeText(AllCommentsActivity.this, message, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -191,8 +199,16 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                 setResult( RESULT_OK );
             } else {
                 HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                Integer stringId;
+                String message;
                 for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
-                    Toast.makeText(AllCommentsActivity.this, error.getMsg(), Toast.LENGTH_SHORT).show();//getString(errorsMap.get(error.getCode())), Toast.LENGTH_LONG).show();
+                    stringId = errorsMap.get( error.getCode() );
+                    if(stringId != null) {
+                        message = getString( stringId );
+                    } else {
+                        message = error.getMsg();
+                    }
+                    Toast.makeText(AllCommentsActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
 

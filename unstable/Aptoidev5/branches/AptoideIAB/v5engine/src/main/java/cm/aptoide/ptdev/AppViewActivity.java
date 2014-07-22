@@ -2109,8 +2109,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 BusProvider.getInstance().post(new AppViewRefresh());
             }else{
                 HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                Integer stringId;
+                String message;
                 for(Error error :  genericResponse.getErrors()){
-                    Toast.makeText(AppViewActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
+                    stringId = errorsMap.get( error.getCode() );
+                    if(stringId != null) {
+                        message = getString( stringId );
+                    } else {
+                        message = error.getMsg();
+                    }
+                    Toast.makeText(AppViewActivity.this, message, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -2154,9 +2162,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
                 BusProvider.getInstance().post(new AppViewRefresh());
             } else {
-                //HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
+                Integer stringId;
+                String message;
                 for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
-                    Toast.makeText(AppViewActivity.this, error.getMsg()/*getString(errorsMap.get(error.getCode()))*/, Toast.LENGTH_LONG).show();
+                    stringId = errorsMap.get( error.getCode() );
+                    if(stringId != null) {
+                        message = getString( stringId );
+                    } else {
+                        message = error.getMsg();
+                    }
+                    Toast.makeText(AppViewActivity.this, message, Toast.LENGTH_LONG).show();
                 }
             }
 
