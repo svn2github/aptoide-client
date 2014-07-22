@@ -69,6 +69,7 @@ import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
@@ -613,12 +614,9 @@ public class Start extends ActionBarActivity implements
                         loadEditorsChoice( url, countryCode );
                         loadTopApps( Aptoide.getConfiguration().getTopAppsUrl() );
                         //Log.d( "pullToRefresh", "execute(=)" );
-                    } catch ( InterruptedException e ) {
+                    } catch ( Exception e ) {
                         e.printStackTrace();
-                    } catch ( MalformedURLException e ) {
-                        e.printStackTrace();
-                    } catch ( IOException e ) {
-                        e.printStackTrace();
+                        BusProvider.getInstance().post( new DismissRefreshEvent());
                     }
                 }
             } );
