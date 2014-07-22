@@ -163,6 +163,10 @@ public class AddStoreDialog extends DialogFragment {
                             dismiss();
                         }
                         break;
+                    case 404:
+                        Toast.makeText(Aptoide.getContext(), R.string.error_REPO_1, Toast.LENGTH_LONG).show();
+                        dismissDialog();
+                        break;
                     default:
                         Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                         dismissDialog();
