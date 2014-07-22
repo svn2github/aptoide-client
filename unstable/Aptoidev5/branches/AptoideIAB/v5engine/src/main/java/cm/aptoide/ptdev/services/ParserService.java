@@ -21,6 +21,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
@@ -441,9 +442,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
     };
 
+    int callCount = 0;
+
     public void parseEditorsChoice(final Database db, String url) throws IOException {
 
 
+        callCount++;
         long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -466,6 +470,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                     BusProvider.getInstance().post(new RepoCompleteEvent(-2));
                 }
             });
+        }else{
+            callCount--;
+            if(callCount == 0 ) BusProvider.getInstance().post(new DismissRefreshEvent());
         }
     }
 
@@ -473,6 +480,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        callCount++;
 
         long cachedTimestamp = preferences.getLong("topappsTimestamp", 0);
         if (currentTimestamp > cachedTimestamp) {
@@ -491,6 +499,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                     BusProvider.getInstance().post(new RepoCompleteEvent(-1));
                 }
             });
+        }else{
+            callCount--;
+            if( callCount == 0 ) BusProvider.getInstance().post(new DismissRefreshEvent());
         }
 
     }

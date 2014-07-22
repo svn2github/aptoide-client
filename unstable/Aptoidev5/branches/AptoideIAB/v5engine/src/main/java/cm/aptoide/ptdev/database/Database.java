@@ -618,7 +618,7 @@ public class Database {
     public ArrayList<Home> getAllTopFeatured(int bucketSize) {
 
         ArrayList<Home> items = new ArrayList<Home>();
-        fillElements(bucketSize, "Top Apps", items, getTopFeatured(Integer.MAX_VALUE), 0);
+        fillElementsWithoutFooter(bucketSize, "Top Apps", items, getTopFeatured(Integer.MAX_VALUE));
 
         return items;
     }
@@ -761,6 +761,22 @@ public class Database {
 
 
 
+    private void fillElementsWithoutFooter(int editorsChoiceBucketSize, String categoryName, ArrayList<Home> items, ArrayList<HomeItem> inElements) {
+
+        if(!inElements.isEmpty()) {
+
+            items.add(new HomeCategory(categoryName));
+
+            while (!inElements.isEmpty()) {
+                HomeBucket bucket = new HomeBucket();
+                for (int j = 0; j < editorsChoiceBucketSize && !inElements.isEmpty(); j++) {
+                    bucket.addItem(inElements.remove(0));
+                }
+                items.add(bucket);
+            }
+        }
+
+    }
 
 
 

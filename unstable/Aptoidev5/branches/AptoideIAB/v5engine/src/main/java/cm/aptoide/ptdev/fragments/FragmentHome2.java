@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
@@ -42,9 +43,17 @@ import cm.aptoide.ptdev.adapters.SectionAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.DismissRefreshEvent;
+import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -70,7 +79,7 @@ import java.util.concurrent.Executors;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>> {
+public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, OnRefreshListener {
 
 
     private SectionAdapter<HomeItem> adapter;
@@ -90,7 +99,18 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private MergeAdapter mergeAdapter;
     private int bucketSize;
     private View moreRecommended;
+    private PullToRefreshCallback pullToRefreshCallback;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
+    @Override
+    public void onRefreshStarted( View view ) {
+        Log.d( "pullToRefresh", "onRefreshStarted" );
+
+        if(pullToRefreshCallback != null) {
+            pullToRefreshCallback.reload();
+        }
+
+    }
 
     @Override
     public void onResume() {
@@ -190,6 +210,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
 
 
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -240,6 +262,22 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
             }
         });
+
+
+        ViewGroup viewGroup = (ViewGroup) view;
+
+        if ( getActivity() != null ) {
+            mPullToRefreshLayout = new PullToRefreshLayout( viewGroup.getContext() );
+
+            ActionBarPullToRefresh.from(getActivity())
+                    .insertLayoutInto( viewGroup )
+                    .useViewDelegate( ListView.class, new AbsListViewDelegate())
+                    .theseChildrenArePullable( getListView().getId())
+                    .listener( FragmentHome2.this )
+                    .options( Options.create().headerTransformer( new AbcDefaultHeaderTransformer() ).scrollDistance( 0.5f ).build() )
+                    .setup( mPullToRefreshLayout );
+        }
+
     }
 
     private void loadRecommended(final View v2) {
@@ -340,6 +378,13 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        pullToRefreshCallback = null;
+
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         float screenWidth = getScreenWidthInDip(activity);
@@ -347,6 +392,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         bucketSize = (int) (screenWidth / 120);
         homeBucketAdapterHome = new Adapter(getActivity());
         recomendedAdapter = new HomeBucketAdapter(activity, recommended);
+        pullToRefreshCallback = (PullToRefreshCallback) activity;
 
     }
 
@@ -548,8 +594,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
 
 
-
-
         mergeAdapter.addView(v2);
         mergeAdapter.addAdapter(recomendedAdapter);
         mergeAdapter.addView(moreRecommended);
@@ -563,6 +607,14 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 //            homeBucketAdapter.notifyDataSetChanged();
 //        }
 
+        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
+
+
+    }
+
+    @Subscribe
+    public void onDismissEvent(DismissRefreshEvent event){
+        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
     }
 
     @Override
