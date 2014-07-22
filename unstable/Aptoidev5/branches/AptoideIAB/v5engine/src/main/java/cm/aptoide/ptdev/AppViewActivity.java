@@ -1214,7 +1214,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         if (isInstalled) {
             menu.findItem(R.id.menu_uninstall).setVisible(true);
-            menu.findItem(R.id.menu_schedule).setVisible(false);
+
+            if(!isUpdate) {
+                menu.findItem( R.id.menu_schedule ).setVisible( false );
+            }
 
         } else if(isDownloadCompleted) {
             menu.findItem(R.id.menu_schedule).setVisible(false);
