@@ -6,13 +6,20 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:padding="5dp"
               android:background="?attr/selectableItemBackground">
-
+    <Button
+        android:id="@+id/more"
+        style="?attr/customButtonColor"
+        android:text="@string/search_more"
+        android:textStyle="italic"
+        android:visibility="gone"
+        android:drawableLeft="@drawable/ic_action_web_site_dark"
+        android:layout_gravity="right"/>
     <TextView
             android:id="@+id/results"
             android:layout_width="wrap_content"
@@ -20,18 +27,6 @@
             android:gravity="left|center_horizontal"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/more"
-            android:layout_alignParentLeft="true"/>
-
-    <Button
-            android:id="@+id/more"
-            style="?attr/customButtonColor"
-            android:text="@string/search_more"
-            android:textStyle="italic"
-            android:visibility="gone"
-            android:drawableLeft="@drawable/ic_action_web_site_dark"
-            android:layout_alignParentRight="true"/>
-
-</RelativeLayout>
+            android:layout_gravity="left"/>
+</LinearLayout>
 

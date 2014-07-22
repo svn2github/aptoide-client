@@ -161,7 +161,11 @@ public class GetApkInfoJson {
         @Key private String title;
         @Key private String wurl;
         @Key private Flags flags;
+        @Key private int downloads;
 
+
+        public int getDownloads(){return this.downloads;}
+        public void setDownloads(int downloads){this.downloads = downloads; }
         public List<Comment> getComments(){
             return this.comments;
         }
@@ -587,16 +591,7 @@ public class GetApkInfoJson {
         private String vername;
         @Key
         private String icon_hd;
-        @Key
-        private int downloads;
 
-
-        public int getDownloads(){
-            return this.downloads;
-        }
-        public void setDownloads(int downloads){
-            this.downloads = downloads;
-        }
         public String getIcon(){
             return this.icon;
         }

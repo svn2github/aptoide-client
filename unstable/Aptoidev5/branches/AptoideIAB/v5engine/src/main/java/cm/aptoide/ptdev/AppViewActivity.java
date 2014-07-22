@@ -178,7 +178,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
-                    downloads = getApkInfoJson.getApk().getDownloads();
+                    downloads = getApkInfoJson.getMeta().getDownloads();
                     package_name = getApkInfoJson.getApk().getPackage();
                     repoName = getApkInfoJson.getApk().getRepo();
                     wUrl = getApkInfoJson.getMeta().getWUrl();

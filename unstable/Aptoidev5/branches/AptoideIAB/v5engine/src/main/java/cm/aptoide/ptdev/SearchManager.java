@@ -22,7 +22,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -176,8 +175,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             adapter = new MergeAdapter();
-            v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
-            adapter.addView(v);
+
             searchAdapterapks = new SearchAdapter2(getActivity(), items);
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
@@ -219,6 +217,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         @Override
         public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
             cursorAdapter.swapCursor(data);
+            v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_search, null);
+            adapter.addView(v);
             adapter.addAdapter(cursorAdapter);
 
             Toast.makeText(Aptoide.getContext(), "Loading from database", Toast.LENGTH_LONG).show();
@@ -301,8 +301,6 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             request.setStores(stores);
             request.setSearchString(query);
 
-
-
             if (!isNetworkAvailable(getActivity())) {
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
@@ -321,15 +319,12 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                 @Override
                 public void onRequestSuccess(SearchJson searchJson) {
-
-
                     if (searchJson == null) {
                         return;
                     }
 
                     if ("FAIL".equals(searchJson.getStatus())) {
                         for (cm.aptoide.ptdev.model.Error error : searchJson.getErrors()) {
-
                             Integer errorCode = Errors.getErrorsMap().get(error.getCode());
                             String errorMsg;
                             if (errorCode != null) {
@@ -341,7 +336,6 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                 getActivity().finish();
                             }
                             Toast.makeText(Aptoide.getContext(), errorMsg, Toast.LENGTH_LONG).show();
-
                         }
                         return;
                     }
@@ -354,7 +348,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         foundUResults.setVisibility(View.VISIBLE);
                     }*/
 
-                    View searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.u_search_layout, null);
+
+
+                    View searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.didyoumean_and_uapks_search_layout, null);
 
                     LinearLayout didyoumeanContainer = (LinearLayout) searchLayout.findViewById(R.id.didyoumeancontainer);
                     LinearLayout usearchContainer = (LinearLayout) searchLayout.findViewById(R.id.container);
@@ -410,11 +406,20 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                     items.clear();
                     items.addAll(searchJson.getResults().getApks());
+                    int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
+                    int uapksSize = searchJson.getResults().getU_Apks().size();
+
+                    v = LayoutInflater.from(getActivity()).inflate(
+                            (uapksSize > 0)?R.layout.separator_searchu
+                                            :R.layout.separator_search,
+                            null);
+
+                    adapter.addView(v);
+
                     adapter.addAdapter(searchAdapterapks);
 
                     adapter.notifyDataSetChanged();
-                    int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
-                    int uapksSize = searchJson.getResults().getU_Apks().size();
+
                     if (getDidyoumeanSize > 0 || uapksSize > 0) {
                         if (getDidyoumeanSize > 0) {
                             searchLayout.findViewById(R.id.didyoumeanresults).setVisibility(View.VISIBLE);
