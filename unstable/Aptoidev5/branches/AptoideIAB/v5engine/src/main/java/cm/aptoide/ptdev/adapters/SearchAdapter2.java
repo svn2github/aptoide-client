@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
@@ -15,6 +16,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -64,7 +66,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
         if(holder==null){
             holder = new AppViewHolder();
             holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-            holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
+//            holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
             holder.appName = (TextView) view.findViewById(R.id.app_name);
             holder.versionName = (TextView) view.findViewById(R.id.app_version);
             holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
@@ -73,12 +75,13 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
 
 
         //holder.rating.setRating();
-        holder.overFlow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //showPopup(v, id);
-            }
-        });
+//        holder.overFlow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Result_Clicked_On_Popup_Install");
+//                showPopup(v, id);
+//            }
+//        });
         holder.appName.setText(Html.fromHtml(name).toString());
         String icon1 = item.getIconhd();
 
@@ -139,7 +142,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
 
     public static class AppViewHolder{
         ImageView appIcon;
-        ImageView overFlow;
+//        ImageView overFlow;
         TextView appName;
         TextView versionName;
         TextView downloads;
@@ -172,6 +175,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
             if (i == R.id.menu_install) {
                 ((SearchManager)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Result_Installed_From_Popup");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

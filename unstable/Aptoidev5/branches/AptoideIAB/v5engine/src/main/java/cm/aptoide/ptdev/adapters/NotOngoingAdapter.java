@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
@@ -13,6 +14,8 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.EnumDownloadFailReason;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.model.Download;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -52,6 +55,7 @@ public class NotOngoingAdapter extends ArrayAdapter<Download>{
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Clicked_On_Remove_Button");
                 download.getParent().remove(false);
             }
         });

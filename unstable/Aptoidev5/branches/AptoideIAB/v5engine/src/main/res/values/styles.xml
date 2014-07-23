@@ -51,6 +51,12 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="focusableRowBackground">
+        <item name="android:background">@drawable/highlight_overlay</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="overflowMenuButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

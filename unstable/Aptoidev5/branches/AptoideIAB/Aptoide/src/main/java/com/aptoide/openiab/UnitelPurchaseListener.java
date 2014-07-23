@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
 
 import cm.aptoide.pt.R;
 
@@ -109,6 +112,7 @@ public class UnitelPurchaseListener implements View.OnClickListener {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             callback.onClick(payType, imsi, priceWithoutSign, currency);
+
                         }
                     })
                     .setNegativeButton(R.string.change_payment, new DialogInterface.OnClickListener() {

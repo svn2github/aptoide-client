@@ -6,10 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,6 +21,8 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
@@ -42,6 +46,7 @@ import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
 
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -152,12 +157,14 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         public void onStart() {
             super.onStart();
             manager.start(getActivity());
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(getActivity(), "X89WPPSKWQB2FT6B8F3X");
         }
 
         @Override
         public void onStop() {
             super.onStop();
             if(manager.isStarted()) manager.shouldStop();
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(getActivity());
         }
 
         private MergeAdapter adapter;
@@ -192,6 +199,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 intent.putExtra("fromRelated", true);
                 intent.putExtra("repoName", ((SearchJson.Results.Apks) adapter.getItem(position)).getRepo());
                 intent.putExtra("md5sum", ((SearchJson.Results.Apks) adapter.getItem(position)).getMd5sum());
+                intent.putExtra("download_from", "search_result");
             }
             startActivity(intent);
         }
@@ -356,15 +364,18 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     LinearLayout usearchContainer = (LinearLayout) searchLayout.findViewById(R.id.container);
                     final String sizeString = IconSizes.generateSizeString(getActivity());
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     for (final String s : searchJson.getResults().getDidyoumean()) {
                         //Log.d("didyou", s);
-                        TextView tv = new TextView(getActivity());
-                        tv.setText(s);
-                        tv.setLayoutParams(params);
+                        TextView tv = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_did_you_mean, null);
+
+                        SpannableString content = new SpannableString(s);
+                        content.setSpan(new UnderlineSpan(), 0, s.length(), 0);
+                        tv.setText(content);
                         tv.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Did_You_Mean_Recommendation");
+
                                 Bundle args = new Bundle();
 
                                 SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(), Aptoide.getConfiguration().getSearchAuthority(), 1);
@@ -508,6 +519,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             @Override
             public void onClick(View v) {
                 try{
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Search_More_Button");
                     String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(SearchManager.this);
                     //Log.d("TAG", "Searching for:" + url);
                     Intent i = new Intent(Intent.ACTION_VIEW);

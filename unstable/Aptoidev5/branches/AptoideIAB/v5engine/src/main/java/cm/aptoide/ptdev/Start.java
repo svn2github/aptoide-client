@@ -225,6 +225,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         //Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
@@ -255,6 +256,8 @@ public class Start extends ActionBarActivity implements
             }
 
         } else if( i == R.id.menu_SendFeedBack){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Feedback_Button");
+
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));
         }
@@ -287,7 +290,6 @@ public class Start extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Menu_Options");
         return super.onCreateOptionsMenu(menu);
     }
 

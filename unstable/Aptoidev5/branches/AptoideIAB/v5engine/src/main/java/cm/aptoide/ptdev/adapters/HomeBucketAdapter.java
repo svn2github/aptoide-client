@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.Build;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.*;
@@ -105,6 +106,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Opened_Popup_Install");
                 showPopup(v, item.getId());
             }
         });
@@ -166,7 +168,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             if (i == R.id.menu_install) {
                 ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

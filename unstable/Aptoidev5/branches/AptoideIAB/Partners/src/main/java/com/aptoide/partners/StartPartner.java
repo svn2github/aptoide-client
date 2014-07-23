@@ -140,7 +140,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     protected void onResume() {
         super.onResume();
         if (!startPartner) {
-            Toast toast = Toast.makeText(this, getString(R.string.device_not_allowed), Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.device_not_allowed), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             finish();

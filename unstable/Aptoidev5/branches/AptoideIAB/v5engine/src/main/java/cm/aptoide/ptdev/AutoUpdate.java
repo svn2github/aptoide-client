@@ -9,8 +9,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import org.apache.http.HttpResponse;
@@ -106,11 +110,13 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 new DownloadSelfUpdate().execute(autoUpdateInfo);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button");
             }
         });
         updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, activity.getString(android.R.string.no), new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int arg1) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Auto_Update_Clicked_On_No_Button");
                 dialog.dismiss();
             }
         });
@@ -262,4 +268,6 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
         intent.setDataAndType(Uri.parse("file://" + TMP_UPDATE_FILE), "application/vnd.android.package-archive");
         activity.startActivityForResult(intent, 99);
     }
+
+
 }

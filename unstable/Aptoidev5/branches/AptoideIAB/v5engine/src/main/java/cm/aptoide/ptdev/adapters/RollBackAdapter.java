@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.RollBackItem;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.DateFormat;
@@ -115,12 +118,14 @@ public class RollBackAdapter extends CursorAdapter {
                         args.putString( "icon", icon );
                         fragment.setArguments( args );
                         activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Clicked_On_Uninstall_Button");
                         break;
 
                     default:
                         Intent intent = new Intent(context, appViewClass);
                         intent.putExtra("fromRollback", true);
                         intent.putExtra("md5sum", md5sum);
+                        intent.putExtra("download_from", "rollback");
                         context.startActivity(intent);
                         break;
                 }

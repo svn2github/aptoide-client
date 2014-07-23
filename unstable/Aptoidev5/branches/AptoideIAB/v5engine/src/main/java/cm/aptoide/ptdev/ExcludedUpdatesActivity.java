@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,8 @@ import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -152,6 +155,7 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
                 for (ExcludedUpdate excludedUpdate : excludedUpdates) {
                     if (excludedUpdate.checked) {
                         db.deleteFromExcludeUpdate(excludedUpdate.apkid, excludedUpdate.vercode);
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Excluded_Updates_Removed_Update_From_List");
                     }
                 }
                 redraw();
@@ -248,5 +252,17 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
             this.tv_apkid = tv_apkid;
             this.tv_vercode = tv_vercode;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 }

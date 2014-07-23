@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.support.v7.widget.PopupMenu;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -37,6 +38,8 @@ import cm.aptoide.ptdev.fragments.HomeCategory;
 import cm.aptoide.ptdev.fragments.HomeFooter;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created by rmateus on 17-07-2014.
@@ -183,7 +186,9 @@ public class Adapter extends BaseAdapter {
                         if(item.getParentId() > -2){
                             i = new Intent(Aptoide.getContext(), MoreEditorsChoiceActitivy.class);
                             i.putExtra("parentId", item.getParentId());
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Editors_Choice_Button");
                         }else{
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Top_Apps_Button");
                             i = new Intent(Aptoide.getContext(), MoreTopAppsActivity.class);
                         }
 
@@ -275,7 +280,14 @@ public class Adapter extends BaseAdapter {
             String category;
             try {
                 int cat = Integer.parseInt(item.getCategory());
-                category = context.getString(EnumCategories.getCategoryName(cat));
+
+                if(cat > 0){
+                    category = context.getString(EnumCategories.getCategoryName(cat));
+                }else{
+                    category = context.getString(R.string.X_download_number, withSuffix(item.getDownloads()));
+                }
+
+
             }catch (Exception e){
                 category = item.getCategoryString();
             }

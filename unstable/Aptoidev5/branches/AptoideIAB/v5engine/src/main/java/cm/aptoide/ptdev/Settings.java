@@ -142,7 +142,6 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cb.setChecked(false);
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Confirmed_More_Than_21_Years_Old");
                         }
                     }).show();
                 }
@@ -154,7 +153,9 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SettingsResult();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
+                if(!((CheckBoxPreference)preference).isChecked()){
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
+                }
                 return true;
             }
         });
@@ -272,11 +273,11 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 aboutDialog.setCancelable(false);
                 aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
                         dialog.cancel();
                     }
                 });
                 aboutDialog.show();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
 
 				return true;
 			}

@@ -19,10 +19,9 @@
         android:layout_gravity="center_horizontal" />
     <EditText
         android:id="@+id/FeedBacktext"
-        android:layout_below="@+id/FeedBackSubject"
         android:hint="@string/feedback_to_write"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <CheckBox
@@ -31,15 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:layout_above="@+id/FeedBackSendButton"
         />
 
     <Button
         android:text="@string/feedback_send_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="?attr/customButtonColor"
         android:id="@+id/FeedBackSendButton"
-        android:layout_alignParentBottom="true"
-        android:onClick="FeedBackSendMail"/>
+        android:onClick="FeedBackSendMail"
+        android:layout_width="match_parent" />
 
 </LinearLayout>

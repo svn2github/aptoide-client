@@ -40,7 +40,9 @@
                 android:title="@string/setting_appfiltertitle"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/order_popup_title3">
+    <PreferenceCategory
+        android:key="adultContent"
+        android:title="@string/order_popup_title3">
         <CheckBoxPreference
             android:key="matureChkBox"
             android:defaultValue="true"

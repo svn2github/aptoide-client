@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -119,6 +122,7 @@ public class CategoryAdapter extends CursorAdapter {
                 holder.overFlow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_Category_List_View_Opened_Popup_Install");
                         showPopup(v, id);
                     }
                 });
@@ -244,6 +248,7 @@ public class CategoryAdapter extends CursorAdapter {
             if (i == R.id.menu_install) {
                 ((CategoryCallback)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_Category_List_View_Installed_App");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

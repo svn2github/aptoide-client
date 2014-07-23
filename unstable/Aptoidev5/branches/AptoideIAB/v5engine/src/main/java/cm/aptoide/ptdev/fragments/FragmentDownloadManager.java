@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.ListFragment;
@@ -31,6 +32,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -188,6 +190,7 @@ public class FragmentDownloadManager extends ListFragment {
                 public void onClick(DialogInterface dialog, int which) {
                     boolean clearApks = ((CheckBox)view.findViewById(R.id.checkbox_clear)).isChecked();
                     service.removeNonActiveDownloads(clearApks);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Cleared_Apks");
                 }
             });
 

@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.dialogs;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +27,7 @@ import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -338,6 +340,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_Add_Store");
                 String url = ((EditText)view.findViewById(R.id.edit_store_uri)).getText().toString();
                 if(url!=null&&url.length()>0){
                     get(url, null);
@@ -349,6 +352,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_top_stores).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_See_Top_Stores");
                 Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos/q=" + Utils.filters(getActivity()));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 if(isAdded())dismiss();

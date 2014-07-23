@@ -3,7 +3,7 @@
     <color name="background_window">#FFE8E8E8</color>
     <color name="transparent_black">#99000000</color>
     <color name="transparent_white">#CCFFFFFF</color>
-
+    <color name="link">#2070DE</color>
     <color name="custom_color">#ea7117</color>
     <color name="overlay_black">#77000000</color>
 

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
 
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
@@ -32,11 +35,13 @@ public class AdultDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int pin = new SecurePreferences(c).getInt(AdultDialog.MATUREPIN,-1);
-                        String pintext=((EditText) v.findViewById(R.id.pininput)).getText().toString();
-                        if(pintext.length()>0 && new Integer(pintext) == pin)
+                        int pin = new SecurePreferences(c).getInt(AdultDialog.MATUREPIN, -1);
+                        String pintext = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
+                        if (pintext.length() > 0 && new Integer(pintext) == pin) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Pin");
                             positiveButtonlistener.onClick(dialog, which);
-                        else {
+                        } else {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Wrong_Pin");
                             Toast.makeText(c, c.getString(R.string.adultpinwrong), Toast.LENGTH_SHORT).show();
                             DialogRequestMaturepin(c, positiveButtonlistener).show();
                         }
@@ -84,6 +89,7 @@ public class AdultDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
                         positiveButtonlistener.onClick(dialog,which);
                     }
                 })
@@ -100,8 +106,11 @@ public class AdultDialog extends DialogFragment {
         if(pin==-1) {
             return DialogAsk21(c,positiveButtonlistener);
         }
-        else
+        else{
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Requested_Mature_Content_Pin");
             return DialogRequestMaturepin(c, positiveButtonlistener);
+        }
+
     }
 
     @Override

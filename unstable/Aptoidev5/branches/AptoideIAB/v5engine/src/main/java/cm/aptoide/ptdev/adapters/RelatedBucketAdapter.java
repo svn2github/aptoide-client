@@ -114,6 +114,7 @@ public class RelatedBucketAdapter extends BucketListAdapter<RelatedApkJson.Item>
 
                 i.putExtra("repoName", item.getRepo());
                 i.putExtra("md5sum", item.getMd5sum());
+                i.putExtra("download_from", "related_apps");
                 getContext().startActivity(i);
             }
         });

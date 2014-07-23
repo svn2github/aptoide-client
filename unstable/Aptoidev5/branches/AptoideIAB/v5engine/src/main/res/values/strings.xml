@@ -553,4 +553,6 @@
     <string name="search_result_looking_for">Are you looking for?</string>
     <string name="search_result_did_you_mean">Did you mean: </string>
 
+    <string name="device_not_allowed">This app is not allowed to run on this device model!</string>
+
 </resources>

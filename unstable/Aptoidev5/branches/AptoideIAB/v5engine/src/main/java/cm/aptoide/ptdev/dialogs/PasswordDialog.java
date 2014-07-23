@@ -5,12 +5,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.R;
 
 /**
@@ -41,6 +45,8 @@ public class PasswordDialog extends DialogFragment {
                         i.putExtra("password", password);
 
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Added_Private_Store");
+
                     }
                 }).create();
 

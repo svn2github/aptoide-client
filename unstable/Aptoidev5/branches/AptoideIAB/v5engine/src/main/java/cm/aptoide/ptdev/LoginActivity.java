@@ -377,10 +377,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     }
                     if (event.getX() > password_box.getWidth() - password_box.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
                         if(showPassword){
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Show_Password");
                             showPassword=false;
                             password_box.setTransformationMethod(null);
                             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
                         }else{
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Hide_Password");
                             showPassword=true;
                             password_box.setTransformationMethod(new PasswordTransformationMethod());
                             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
@@ -395,6 +397,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Login_Button");
+
                     String username = ((EditText) findViewById(R.id.username)).getText().toString();
                     String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
@@ -414,12 +418,16 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             new_to_aptoide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_New_To_Aptoide_Button");
                     Intent signup = new Intent(LoginActivity.this, signupClass);
                     startActivityForResult(signup, REQ_SIGNUP);
                 }
             });
 
             registerDevice = (CheckBox) findViewById(R.id.link_my_device);
+
+
+
             TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
             SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
             forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
@@ -428,6 +436,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Forgot_Password");
                     Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
                     startActivity(passwordRecovery);
                 }
@@ -756,6 +765,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
         */
         finish();
+        if(registerDevice.isChecked()){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Linked_Account_With_WebInstall");
+        }else{
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Did_Not_Link_Account_With_WebInstall");
+        }
         if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
         if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);

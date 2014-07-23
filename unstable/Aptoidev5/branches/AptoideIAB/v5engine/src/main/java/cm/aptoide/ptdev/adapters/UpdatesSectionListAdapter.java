@@ -3,12 +3,16 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
@@ -172,6 +176,7 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
                 sectionView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All_Button");
                         ((Start)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }

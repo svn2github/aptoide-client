@@ -10,6 +10,21 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="focusableBackground">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+
+    <style name="focusableRowBackground">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
     <style name="Settings" parent="AppBaseTheme">
         <!--<item name="actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>-->
         <!--<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.Aptoide</item>-->

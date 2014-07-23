@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.HomeItem;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -111,6 +114,7 @@ public  class HomeFeaturedAdapter extends BaseAdapter {
                 moreTopTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Featured_Editors_Choice_Button");
                         context.startActivity(new Intent(context, MoreFeaturedGraphicActivity.class));
                     }
                 });

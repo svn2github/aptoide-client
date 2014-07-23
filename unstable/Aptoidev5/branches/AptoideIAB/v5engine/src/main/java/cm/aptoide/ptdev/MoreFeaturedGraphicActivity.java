@@ -42,7 +42,11 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
         setContentView(R.layout.page_store);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.featured_editors_choice);
+
+
         FeaturedGraphicFragment featuredGraphicFragment = new FeaturedGraphicFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, featuredGraphicFragment).commit();

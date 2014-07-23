@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -16,6 +17,8 @@ import cm.aptoide.ptdev.adapters.RollbackSectionListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
 
@@ -69,6 +72,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         } else if (i == R.id.home) {
             finish();
         } else if(i == R.id.menu_clear_rollback){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Cleared_Rollback_List");
             new Database(Aptoide.getDb()).deleteRollbackItems();
             getSupportLoaderManager().restartLoader(17, null, this);
         }
@@ -125,5 +129,17 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         super.onPause();
         BusProvider.getInstance().unregister(this);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 }

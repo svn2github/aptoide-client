@@ -153,6 +153,7 @@ public abstract class FragmentAppView extends Fragment {
         private View row2;
         private View row3;
         private Spinner spinner;
+        private boolean initializedView;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
@@ -181,7 +182,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
-                            FlurryAgent.logEvent("App_View_Expanded_Description");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Expanded_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -190,7 +191,7 @@ public abstract class FragmentAppView extends Fragment {
                             description.setMaxLines(10);
 //                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
-                            FlurryAgent.logEvent("App_View_Colapsed_Description");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Colapsed_Description");
                         }
                     }
                 });
@@ -207,7 +208,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
-                            FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -215,7 +216,7 @@ public abstract class FragmentAppView extends Fragment {
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
                             showAllDescription.setText(getString(R.string.show_more));
-                            FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
                         }
                     }
                 });
@@ -239,6 +240,8 @@ public abstract class FragmentAppView extends Fragment {
             if(items != null) {
                 StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
 
+                initializedView = false;
+
                 spinner.setAdapter(adapter);
                 spinner.post(new Runnable() {
                     @Override
@@ -246,10 +249,17 @@ public abstract class FragmentAppView extends Fragment {
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                spinner.setOnItemSelectedListener(null);
-                                MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
-                                BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
-                                FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
+                                if(!initializedView){
+                                    initializedView = true;
+                                }else {
+
+
+                                    spinner.setOnItemSelectedListener(null);
+                                    MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
+                                    BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
+                                    if (Build.VERSION.SDK_INT >= 10)
+                                        FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
+                                }
                             }
 
                             @Override
@@ -424,7 +434,7 @@ public abstract class FragmentAppView extends Fragment {
                 intent.putStringArrayListExtra("url", urls);
                 intent.putExtra("position", position);
                 context.startActivity(intent);
-                FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
             }
         }
 
@@ -442,7 +452,7 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                 context.startActivity(intent);
-                FlurryAgent.logEvent("App_View_Clicked_On_Video");
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Video");
             }
         }
 
@@ -573,7 +583,7 @@ public abstract class FragmentAppView extends Fragment {
                         v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
                                 Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                                 i.putExtra("item", true);
                                 i.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
@@ -608,7 +618,7 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("developer", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
@@ -644,7 +654,7 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("version", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
@@ -922,6 +932,7 @@ public abstract class FragmentAppView extends Fragment {
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_See_All_Comments_Button");
                             Intent intent = new Intent(getActivity(), AllCommentsActivity.class);
                             intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
@@ -1027,6 +1038,7 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                             AptoideDialog.flagAppDialog(event.getFlagUservote()).show(getFragmentManager(), "flagAppDialog");
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_Flag_App_Dialog");
                         } else {
                             ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                 @Override
@@ -1136,18 +1148,11 @@ public abstract class FragmentAppView extends Fragment {
 
             public AddLikeListener(boolean isLike) {
                 this.isLike = isLike;
-
-                if(isLike){
-                    FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
-                }else{
-                    FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
-                }
             }
 
 
             @Override
             public void onClick(View v) {
-
 
                 final AccountManager manager = AccountManager.get(getActivity());
 
@@ -1194,6 +1199,12 @@ public abstract class FragmentAppView extends Fragment {
                 request.setToken(((AppViewActivity) getActivity()).getToken());
                 request.setLike(isLike);
 
+
+                if(isLike){
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
+                }else{
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
+                }
 
                 manager.execute(request, requestListener);
                 AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");

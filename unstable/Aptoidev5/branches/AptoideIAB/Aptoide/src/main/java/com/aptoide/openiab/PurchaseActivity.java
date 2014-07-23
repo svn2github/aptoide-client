@@ -32,6 +32,7 @@ import com.aptoide.openiab.webservices.json.IabSimpleResponseJson;
 import com.aptoide.openiab.webservices.json.IabSkuDetailsJson;
 import com.aptoide.openiab.webservices.json.PaymentServices;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -89,12 +90,14 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     private double price;
@@ -535,6 +538,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
 
             startActivityForResult(intent, REQUEST_CODE_PAYMENT);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Purchase_Page_Clicked_On_Paypal_Button");
         }
 
         public void setTax(double tax) {

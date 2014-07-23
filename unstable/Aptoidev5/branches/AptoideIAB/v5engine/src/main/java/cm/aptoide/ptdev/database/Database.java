@@ -605,7 +605,7 @@ public class Database {
             String iconPath = c.getString(c.getColumnIndex("iconpath"));
             String icon = c.getString(c.getColumnIndex("icon"));
             long id = c.getLong(c.getColumnIndex("id"));
-            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "", iconPath + icon, id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), ""));
+            items.add(new HomeItem(c.getString(c.getColumnIndex("name")), "0", iconPath + icon, id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")), ""));
 
         }
 

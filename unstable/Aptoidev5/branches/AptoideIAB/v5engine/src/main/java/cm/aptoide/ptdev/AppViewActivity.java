@@ -215,6 +215,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         public void onClick(View v) {
 
                             if (service != null) {
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Canceled_Download");
                                 service.stopDownload(downloadId);
                             }
 
@@ -259,6 +260,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             findViewById(R.id.badge_layout).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Badge_Dialog");
                                     AptoideDialog.badgeDialog(name, getApkInfoJson.getMalware().getStatus()).show(getSupportFragmentManager(), "badgeDialog");
 
                                 }
@@ -509,6 +511,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public DialogInterface.OnClickListener getMyAppListener() {
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_From_My_App");
         return new InstallListener(icon, name, versionName, package_name, md5);
     }
 
@@ -666,7 +669,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 installParams.put("Package_Name", package_name);
                 installParams.put("Name", name);
                 installParams.put("Version_Name", versionName);
-                FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
+                FlurryAgent.logEvent("App_View_Clicked_On_Install_Button", installParams);
+
+
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
             }
         }
@@ -1236,6 +1241,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.home) {
             finish();
         } else if (i == R.id.menu_schedule) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Schedule_Download_Button");
+
             if (md5 != null) {
                 new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
                 Toast.makeText(this, R.string.added_to_scheduled , Toast.LENGTH_SHORT).show();
@@ -1244,6 +1251,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
         } else if (i == R.id.menu_uninstall) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Uninstall_Button");
 
             Fragment uninstallFragment = new UninstallRetainFragment();
             Bundle args = new Bundle(  );
@@ -1256,7 +1264,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             getSupportFragmentManager().beginTransaction().add(uninstallFragment, "uninstallFrag").commit();
 
         } else if (i == R.id.menu_search_other) {
-
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Search_Other_Market_Button");
             Intent intent = new Intent();
             intent.setAction(android.content.Intent.ACTION_VIEW);
             intent.setData(Uri.parse("market://details?id=" + package_name));
@@ -1270,6 +1278,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
         } else if (i == R.id.menu_share) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Share_Button");
+
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" + name + "\"");
@@ -1279,6 +1289,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
             }
         } else if( i == R.id.menu_SendFeedBack){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Send_Feedback_Button");
+
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));
         }

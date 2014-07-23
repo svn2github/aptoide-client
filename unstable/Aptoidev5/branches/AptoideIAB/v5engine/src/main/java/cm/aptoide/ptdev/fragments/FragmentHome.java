@@ -233,7 +233,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         moreReTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_More_Recommended_Apps");
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended_Button");
                 Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
                 startActivity(i);
             }

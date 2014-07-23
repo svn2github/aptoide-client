@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+
+import com.flurry.android.FlurryAgent;
 import com.mopub.mobileads.HtmlBanner;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -81,6 +84,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Clicked_On_Stop_Button");
                 download.getParent().remove(false);
             }
         });
