@@ -43,10 +43,6 @@ package cm.aptoide.ptdev.adapters;
  */
 public class SimpleSectionAdapter<T> extends BaseAdapter {
 
-    // Debug
-    static final boolean DEBUG = false;
-    static final String TAG = SimpleSectionAdapter.class.getSimpleName();
-
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
 
@@ -111,12 +107,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-
-        if(DEBUG) {
-            Log.d(TAG, "DEBUG TRUE");
-        }
-
-        Log.d(TAG, "DEBUG is " + DEBUG);
 
         SectionHolder sectionHolder = null;
 
@@ -255,9 +245,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
 
         }
 
-        if(DEBUG) {
-            Log.d(TAG, String.format("Found %d sections.", mSections.size()));
-        }
     }
 
     private int getSectionCount() {

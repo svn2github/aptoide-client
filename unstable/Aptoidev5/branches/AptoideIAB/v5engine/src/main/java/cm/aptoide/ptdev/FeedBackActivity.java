@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Created by asantos on 17-07-2014.
  */
 public class FeedBackActivity extends ActionBarActivity {
-    private static final String PATH = "/";
+    private static final String PATH = "/.aptoide/";
     private static final String mPath = Environment.getExternalStorageDirectory().toString() + PATH;
     private static final String FeddBackSS = "FeedBackSS.jpg";
     private static final String FeddBackLogs = "logs.txt";

@@ -121,7 +121,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         //getLoaderManager().restartLoader(51, null, loader);
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
-        if(!getListView().isShown()) getLoaderManager().restartLoader(50, null, this);
+        if(!getListView().isShown() && getListAdapter()==null) getLoaderManager().restartLoader(50, null, this);
 
 
         v2.setVisibility(View.GONE);
