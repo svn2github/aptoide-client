@@ -15,6 +15,8 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+
 /**
  * Created by j-pac on 21-02-2014.
  */
@@ -82,6 +84,7 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
         request.setParser(new JacksonFactory().createJsonObjectParser());
+        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
 
         HttpResponse response;
         try{

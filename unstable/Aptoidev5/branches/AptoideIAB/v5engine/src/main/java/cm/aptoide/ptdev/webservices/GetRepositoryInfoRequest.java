@@ -4,11 +4,14 @@ import android.util.Log;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.io.EOFException;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -46,8 +49,17 @@ public class GetRepositoryInfoRequest extends GoogleHttpClientSpiceRequest<Repos
         request.setConnectTimeout(10000);
         request.setReadTimeout(10000);
         request.setParser(new JacksonFactory().createJsonObjectParser());
+        HttpResponse response;
+        try{
+            response = request.execute();
+        } catch (EOFException e){
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put("Connection", "close");
+            request.setHeaders(httpHeaders);
+            response = request.execute();
+        }
 
-        return request.execute().parseAs(getResultType());
+        return response.parseAs(getResultType());
     }
 
 }

@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
  * Time: 11:30
  * To change this template use File | Settings | File Templates.
  */
-public class AptoidePagerAdapter extends FragmentPagerAdapter {
+public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
 
     private String[] TITLES;

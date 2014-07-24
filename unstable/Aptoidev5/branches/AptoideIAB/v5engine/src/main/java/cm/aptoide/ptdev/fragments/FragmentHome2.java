@@ -163,6 +163,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             refreshTopList();
         }
 
+        if (mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
+
     }
 
 
@@ -419,7 +421,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                 startActivity(i);
             }
         });
-
+        v2.setVisibility(View.GONE);
+        moreReTv.setVisibility(View.GONE);
 
     }
 

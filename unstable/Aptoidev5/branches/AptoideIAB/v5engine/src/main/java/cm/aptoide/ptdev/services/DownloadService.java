@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -41,6 +42,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
+
+import org.w3c.dom.NamedNodeMap;
 
 import java.io.*;
 import java.net.URL;
@@ -179,15 +182,18 @@ public class DownloadService extends Service{
                     public void run() {
                         for(DownloadModel model : info.getmFilesToDownload()) {
                             try {
-                                packageManager.getPackageInfo(info.getDownload().getPackageName(), PackageManager.SIGNATURE_MATCH);
-
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent LaunchIntent = packageManager.getLaunchIntentForPackage(info.getDownload().getPackageName());
-                                        if(LaunchIntent != null) startActivity(LaunchIntent);
-                                    }
-                                });
+                                PackageInfo packageInfo = packageManager.getPackageInfo(info.getDownload().getPackageName(), PackageManager.SIGNATURE_MATCH);
+                                if(packageInfo.versionName.equals(info.getDownload().getVersion())){
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Intent LaunchIntent = packageManager.getLaunchIntentForPackage(info.getDownload().getPackageName());
+                                            if(LaunchIntent != null) startActivity(LaunchIntent);
+                                        }
+                                    });
+                                }else{
+                                    throw new PackageManager.NameNotFoundException();
+                                }
 
                             } catch (PackageManager.NameNotFoundException e) {
 

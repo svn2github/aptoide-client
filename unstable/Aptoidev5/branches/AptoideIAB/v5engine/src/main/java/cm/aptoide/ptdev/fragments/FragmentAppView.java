@@ -243,17 +243,13 @@ public abstract class FragmentAppView extends Fragment {
                 initializedView = false;
 
                 spinner.setAdapter(adapter);
-                spinner.post(new Runnable() {
-                    @Override
-                    public void run() {
+
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 if(!initializedView){
                                     initializedView = true;
                                 }else {
-
-
                                     spinner.setOnItemSelectedListener(null);
                                     MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
                                     BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
@@ -267,8 +263,8 @@ public abstract class FragmentAppView extends Fragment {
 
                             }
                         });
-                    }
-                });
+
+
 
             }
 

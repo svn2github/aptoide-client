@@ -43,7 +43,7 @@ public class DownloadInfo implements Runnable, Serializable {
         mStatusState = new NoState(this);
     }
 
-    private NotificationCompat.Builder mBuilder;
+    private transient NotificationCompat.Builder mBuilder;
 
     public NotificationCompat.Builder getmBuilder() {
         return mBuilder;

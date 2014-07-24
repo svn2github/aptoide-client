@@ -442,12 +442,12 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
     };
 
-    int callCount = 0;
+
 
     public void parseEditorsChoice(final Database db, String url) throws IOException {
 
 
-        callCount++;
+
         long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -471,8 +471,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }else{
-            callCount--;
-            if(callCount == 0 ) BusProvider.getInstance().post(new DismissRefreshEvent());
+            BusProvider.getInstance().post(new DismissRefreshEvent());
         }
     }
 
@@ -480,7 +479,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
         long currentTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(url));
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        callCount++;
+
 
         long cachedTimestamp = preferences.getLong("topappsTimestamp", 0);
         if (currentTimestamp > cachedTimestamp) {
@@ -500,8 +499,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 }
             });
         }else{
-            callCount--;
-            if( callCount == 0 ) BusProvider.getInstance().post(new DismissRefreshEvent());
+            BusProvider.getInstance().post(new DismissRefreshEvent());
         }
 
     }
