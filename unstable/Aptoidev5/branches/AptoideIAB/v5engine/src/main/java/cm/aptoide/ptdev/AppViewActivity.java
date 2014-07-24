@@ -352,7 +352,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                invalidateOptionsMenu();
+                                                supportInvalidateOptionsMenu();
                                             }
                                         });
 
