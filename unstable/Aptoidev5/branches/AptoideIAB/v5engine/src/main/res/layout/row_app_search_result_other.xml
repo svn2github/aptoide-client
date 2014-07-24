@@ -31,7 +31,6 @@
             android:paddingLeft="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@android:color/black"
             android:singleLine="true"
             android:layout_centerVertical="true"
             android:textAppearance="?android:attr/textAppearanceSmall" />

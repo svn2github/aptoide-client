@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class AllCommentsRequest extends GoogleHttpClientSpiceRequest<AllCommentsJson>{
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/listApkComments";
+    String baseUrl = "https://webservices.aptoide.com/webservices/listApkComments";
     private String repoName;
     private String packageName;
     private String versionName;

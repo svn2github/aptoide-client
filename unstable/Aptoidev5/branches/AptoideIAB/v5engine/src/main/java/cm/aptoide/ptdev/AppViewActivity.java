@@ -53,6 +53,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -80,6 +81,8 @@ import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.Md5FailedException;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
+import cm.aptoide.ptdev.downloadmanager.state.CompletedState;
+import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
@@ -154,13 +157,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
     boolean showBadgeLayout = false;
 
+
+
+
     private static GetApkInfoJson.Malware.Reason reason;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
 
         @Override
         public void onRequestFailure(SpiceException e) {
-            AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
+            if(AppViewActivity.this.json==null){
+                AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
+            };
         }
+
+
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
@@ -168,6 +178,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             Log.d("Aptoide-AppView", "Json is null? " + String.valueOf(getApkInfoJson == null));
             if (getApkInfoJson != null) {
+
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
                     GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
@@ -278,7 +289,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
                     md5 = json.getApk().getMd5sum();
                     publishEvents();
-                    BusProvider.getInstance().post(new RelatedEvent());
+                    //BusProvider.getInstance().post(new RelatedEvent());
                     supportInvalidateOptionsMenu();
                     //if (!isShown) show(true, true);
 
@@ -324,6 +335,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (service != null && service.getDownload(downloadId).getDownload() != null) {
                         onDownloadUpdate(service.getDownload(downloadId).getDownload());
+                        if(service.getDownload(downloadId).getDownload().getDownloadState() == EnumState.COMPLETE){
+                            isDownloadCompleted = true;
+                        }
                     } else {
                         findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                         findViewById(R.id.download_progress).setVisibility(View.GONE);
@@ -336,31 +350,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
 
                     // Check if Download is already completed to disable schedule
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(md5 != null) {
-                                String destination = Aptoide.getConfiguration().getPathCacheApks() + md5 + ".apk";
-                                File apk = new File(destination);
 
-                                if(apk.exists()) {
-
-                                    String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(destination));
-                                    if (calculatedMd5.equals(md5)) {
-
-                                        isDownloadCompleted = true;
-                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                supportInvalidateOptionsMenu();
-                                            }
-                                        });
-
-                                    }
-                                }
-                            }
-                        }
-                    }).start();
 
 
                 } else {
@@ -476,6 +466,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             e.printStackTrace();
         }
     }
+
+
 
     DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
         @Override

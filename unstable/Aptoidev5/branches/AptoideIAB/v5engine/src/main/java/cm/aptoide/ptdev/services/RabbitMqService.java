@@ -312,8 +312,7 @@ public class RabbitMqService extends Service {
                     connection.close();
                 }
 
-            }catch (IOException e) {
-                e.printStackTrace();
+
             } catch (Exception e){
                 e.printStackTrace();
             }

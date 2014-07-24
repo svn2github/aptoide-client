@@ -6,11 +6,14 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.io.EOFException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +65,7 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
         }
         sb.append(")");
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/getApkInfo";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
@@ -83,7 +86,18 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
         }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return request.execute().parseAs(getResultType());
+        HttpResponse response;
+        try{
+            response = request.execute();
+        } catch (EOFException e){
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put("Connection", "close");
+            request.setHeaders(httpHeaders);
+            response = request.execute();
+        }
+
+        return response.parseAs(getResultType());
     }
 
     public void setRepoName(String repoName) {

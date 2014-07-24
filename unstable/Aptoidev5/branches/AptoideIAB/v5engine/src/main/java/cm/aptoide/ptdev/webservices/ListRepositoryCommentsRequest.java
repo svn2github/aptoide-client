@@ -31,7 +31,7 @@ public class ListRepositoryCommentsRequest extends GoogleHttpClientSpiceRequest<
 
     @Override
     public RepositoryCommentsJson loadDataFromNetwork() throws Exception {
-        String baseUrl = "http://webservices.aptoide.com/webservices/listRepositoryComments";
+        String baseUrl = "https://webservices.aptoide.com/webservices/listRepositoryComments";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

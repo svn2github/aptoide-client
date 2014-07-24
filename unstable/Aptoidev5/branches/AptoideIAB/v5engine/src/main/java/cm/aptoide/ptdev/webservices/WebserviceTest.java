@@ -11,6 +11,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 import com.octo.android.robospice.retry.RetryPolicy;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -40,16 +41,25 @@ public class WebserviceTest extends GoogleHttpClientSpiceRequest<GetApkInfoJson>
         parameters.put("apkversion", "4.3.3.67");
 
         final HttpContent content = new UrlEncodedContent(parameters);
-        final GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo");
+        final GenericUrl url = new GenericUrl("https://webservices.aptoide.com/webservices/3/getApkInfo");
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
         request.setNumberOfRetries(2);
         request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
-        HttpResponse response = request.execute();
 
-        return response.parseAs( getResultType() );
+        HttpResponse response;
+        try{
+            response = request.execute();
+        } catch (EOFException e){
 
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put("Connection", "close");
+            request.setHeaders(httpHeaders);
+            response = request.execute();
+        }
+
+        return response.parseAs(getResultType());
     }
 }

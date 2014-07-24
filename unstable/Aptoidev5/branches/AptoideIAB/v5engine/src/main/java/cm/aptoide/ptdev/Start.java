@@ -140,6 +140,7 @@ public class Start extends ActionBarActivity implements
         }
     };
     private String queueName;
+    private boolean refresh;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -825,7 +826,13 @@ public class Start extends ActionBarActivity implements
                     matureUnlock();
                 else
                     maturelock();
+
+
+                refresh = true;
+
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));
+                BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+                BusProvider.getInstance().post(new RepoCompleteEvent(-2));
                 break;
             case 50:
                 spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
@@ -1164,6 +1171,14 @@ public class Start extends ActionBarActivity implements
             isLoggedin = false;
         }
         mDrawerList.setAdapter(mMenuAdapter);
+
+
+        if(refresh){
+            BusProvider.getInstance().post(new RepoCompleteEvent(0));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        }
+
 
     }
 

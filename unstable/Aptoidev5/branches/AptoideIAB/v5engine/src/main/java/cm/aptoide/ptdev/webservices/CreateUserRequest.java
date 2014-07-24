@@ -28,7 +28,7 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<OAuth> {
 
     String baseUrl = "https://webservices.aptoide.com/webservices/3/createUser";
 
-    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/3/createUser";
+    String baseUrlNonSsl = "https://webservices.aptoide.com/webservices/3/createUser";
 
 
 

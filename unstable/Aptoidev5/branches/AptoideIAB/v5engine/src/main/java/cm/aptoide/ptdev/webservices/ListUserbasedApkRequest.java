@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRecomended> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/3/listUserBasedApks";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/listUserBasedApks";
 
     private Context context;
     private String token;

@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -32,6 +33,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
@@ -118,14 +121,10 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public void onResume() {
         super.onResume();
-        //getLoaderManager().restartLoader(51, null, loader);
+        getLoaderManager().initLoader(50, null, this);
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
-        if(!getListView().isShown() && getListAdapter()==null) getLoaderManager().restartLoader(50, null, this);
 
-
-        v2.setVisibility(View.GONE);
-        moreReTv.setVisibility(View.GONE);
         refreshRecommendedList();
         if(!isNetworkAvailable(Aptoide.getContext())){
             setListShown(true);
@@ -172,8 +171,12 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private void refreshEditorsList() {
         editorsChoice.clear();
 
-        homeBucketAdapterHome.setItems(editorsChoice);
-        homeBucketAdapterHome.notifyDataSetChanged();
+        setListAdapter(null);
+
+        if(getLoaderManager().getLoader(50)!=null){
+            getLoaderManager().destroyLoader(50);
+        }
+
        //featuredGraphicItems.clear();
         //homeBucketAdapter = new TestActivity.Adapter(getActivity(), editorsChoice, 3);
         getLoaderManager().restartLoader(50, null, this);
@@ -407,6 +410,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
 //        v2.setClickable(true);
@@ -513,8 +517,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public Loader<HashMap<String, ArrayList<Home>>> onCreateLoader(final int id, final Bundle args) {
 
-        setListShown(false);
-
         AsyncTaskLoader<HashMap<String, ArrayList<Home>>> asyncTaskLoader = new AsyncTaskLoader<HashMap<String, ArrayList<Home>>>(getActivity()) {
             @Override
             public HashMap<String, ArrayList<Home>> loadInBackground() {
@@ -544,6 +546,10 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     public void onLoadFinished(Loader<HashMap<String, ArrayList<Home>>> loader, HashMap<String, ArrayList<Home>> data) {
 
 
+
+        setListShown(true);
+
+        Toast.makeText(getActivity(), "onLoadFinished", Toast.LENGTH_LONG).show();
 
         homeBucketAdapterHome.setItems(data.get("editorsChoice"));
         homeBucketAdapterHome.notifyDataSetChanged();
@@ -608,7 +614,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         mergeAdapter.addAdapter(recomendedAdapter);
         mergeAdapter.addView(moreRecommended);
         if(!data.isEmpty()){
-            setListShownNoAnimation(true);
+            setListShown(true);
             setListAdapter(mergeAdapter);
         }
 //        if(getListView().getAdapter()==null){
@@ -629,7 +635,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(Loader<HashMap<String, ArrayList<Home>>> loader) {
-        if(editorsChoice != null) editorsChoice.clear();
-        if(adapter != null) homeBucketAdapterHome.notifyDataSetChanged();
+       //if(editorsChoice != null) editorsChoice.clear();
+       // if(adapter != null) homeBucketAdapterHome.notifyDataSetChanged();
     }
 }

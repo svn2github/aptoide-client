@@ -34,7 +34,7 @@ public class GetRepositoryInfoRequest extends GoogleHttpClientSpiceRequest<Repos
     @Override
     public RepositoryInfoJson loadDataFromNetwork() throws Exception {
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/2/getRepositoryInfo";
+        String baseUrl = "https://webservices.aptoide.com/webservices/2/getRepositoryInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

@@ -9,11 +9,14 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.io.EOFException;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -28,7 +31,7 @@ import java.util.Locale;
 public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
 
     private String name = "";
     private Context context;
@@ -63,8 +66,18 @@ public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return request.execute().parseAs( getResultType() );
-    }
+        HttpResponse response;
+        try{
+            response = request.execute();
+        } catch (EOFException e){
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put("Connection", "close");
+            request.setHeaders(httpHeaders);
+            response = request.execute();
+        }
+
+        return response.parseAs(getResultType());    }
 
     public void setName(String name) {
         this.name = name;
