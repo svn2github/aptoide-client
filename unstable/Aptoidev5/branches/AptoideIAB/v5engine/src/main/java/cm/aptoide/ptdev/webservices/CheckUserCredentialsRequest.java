@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
     String baseUrl = "http://webservices.aptoide.com/webservices/3/getUserInfo";
-    String baseUrlWithoutSsl = "http://webservices.dev.aptoide.com/webservices/3/getUserInfo";
+    String baseUrlWithoutSsl = "http://webservices.aptoide.com/webservices/3/getUserInfo";
 
     //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
@@ -55,19 +55,14 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
 
 
-        GenericUrl url;
-
-        if (Build.VERSION.SDK_INT >= 10) {
-            url = new GenericUrl(baseUrl);
-        } else {
-            url = new GenericUrl(baseUrlWithoutSsl);
-        }
-
-
+        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
         parameters.put("access_token", token);
+
+
+        Log.d("AccessToken", token);
 
 
         if(registerDevice) {

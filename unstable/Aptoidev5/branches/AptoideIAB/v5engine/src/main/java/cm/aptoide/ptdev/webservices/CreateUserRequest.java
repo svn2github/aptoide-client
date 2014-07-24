@@ -51,13 +51,8 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<OAuth> {
     @Override
     public OAuth loadDataFromNetwork() throws Exception {
 
-        GenericUrl url;
+        GenericUrl url = new GenericUrl(baseUrl);
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1){
-            url = new GenericUrl(baseUrl);
-        }else{
-            url = new GenericUrl(baseUrlNonSsl);
-        }
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         String passhash = AptoideUtils.Algorithms.computeSHA1sum(pass);
