@@ -26,6 +26,7 @@ public class ApkEditorsChoice extends Apk {
 
 
     private String featuredGraphic;
+    private int order = -1;
 
 
     public ApkEditorsChoice(){
@@ -80,6 +81,7 @@ public class ApkEditorsChoice extends Apk {
 
         values.add(Schema.FeaturedEditorsChoice.COLUMN_FEATURED_GRAPHIC_PATH);
         values.add(Schema.FeaturedEditorsChoice.COLUMN_ID);
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_ORDER);
 
         statements.add(3, StatementHelper.getInsertStatment(Schema.FeaturedEditorsChoice.getName(), values));
 
@@ -149,7 +151,8 @@ public class ApkEditorsChoice extends Apk {
         if(featuredGraphic != null){
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{
                     String.valueOf(featuredGraphic),
-                    String.valueOf(apkid)
+                    String.valueOf(apkid),
+                    String.valueOf(order)
             });
             sqLiteStatements.get(3).executeInsert();
         }
@@ -168,4 +171,7 @@ public class ApkEditorsChoice extends Apk {
     }
 
 
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

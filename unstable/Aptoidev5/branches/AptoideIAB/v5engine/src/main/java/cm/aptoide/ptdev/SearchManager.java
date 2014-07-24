@@ -25,10 +25,12 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.*;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
@@ -113,9 +115,11 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
         getSupportActionBar().setTitle("'"+query+"'");
 
+
         Fragment fragment = new SearchFragment();
         fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragment).commit();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragment, "search").commit();
 
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
@@ -152,6 +156,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
         private SearchQueryCallback callback;
+        private boolean loading;
 
         @Override
         public void onStart() {
@@ -182,7 +187,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             adapter = new MergeAdapter();
-
+            setRetainInstance(true);
             searchAdapterapks = new SearchAdapter2(getActivity(), items);
             query = getArguments().getString("query");
             setHasOptionsMenu(true);
@@ -285,29 +290,25 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
 
-
-
+        ProgressBar pb;
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+            pb = new ProgressBar(getActivity());
 
+            AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT);
+            pb.setLayoutParams(params);
+
+
+            getListView().addFooterView(pb);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-            ((SearchManager) getActivity()).setFooterView(getListView(), R.layout.footer_search);
-            ListSearchApkRequest request = new ListSearchApkRequest();
-
-            ArrayList<String> stores = new ArrayList<String>();
-
-            Cursor c = new Database(Aptoide.getDb()).getServers();
-            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                stores.add(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_NAME)));
-            }
-            c.close();
+            final ListSearchApkRequest request = new ListSearchApkRequest();
 
 
-            request.setStores(stores);
             request.setSearchString(query);
+
 
             if (!isNetworkAvailable(getActivity())) {
                 Bundle bundle = new Bundle();
@@ -317,7 +318,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             }
 
 
-            manager.execute(request, query + stores.toString().hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+            manager.execute(request, query, DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     Bundle bundle = new Bundle();
@@ -343,6 +344,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                             if (getActivity() != null) {
                                 getActivity().finish();
                             }
+
                             Toast.makeText(Aptoide.getContext(), errorMsg, Toast.LENGTH_LONG).show();
                         }
                         return;
@@ -415,21 +417,21 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         usearchContainer.addView(element);
                     }
 
-                    items.clear();
-                    items.addAll(searchJson.getResults().getApks());
+                    if(items.isEmpty()){
+                        items.clear();
+                        items.addAll(searchJson.getResults().getApks());
+                    }
+
                     int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
                     int uapksSize = searchJson.getResults().getU_Apks().size();
 
-                    v = LayoutInflater.from(getActivity()).inflate(
-                            (uapksSize > 0)?R.layout.separator_searchu
-                                            :R.layout.separator_search,
-                            null);
+                    v = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
 
                     adapter.addView(v);
 
                     adapter.addAdapter(searchAdapterapks);
 
-                    adapter.notifyDataSetChanged();
+                    //adapter.notifyDataSetChanged();
 
                     if (getDidyoumeanSize > 0 || uapksSize > 0) {
                         if (getDidyoumeanSize > 0) {
@@ -442,7 +444,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         }
                         positionsub = -1;
                         //Log.d("SearchManager", "Adding Header View");
-                        
+                        searchLayout.setClickable(true);
+                        searchLayout.setOnClickListener(((SearchManager)getActivity()).getSearchListener());
                         getListView().addHeaderView(searchLayout, null, false);
                     }
 
@@ -451,42 +454,93 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     setListAdapter(adapter);
                     if (isAdded()) {
 
-                        TextView foundResults = (TextView) v.findViewById(R.id.results);
+//                        TextView foundResults = (TextView) v.findViewById(R.id.results);
                         more = (TextView) v.findViewById(R.id.more);
                         if (searchAdapterapks.getCount() > 0) {
-                            foundResults.setText(getString(R.string.found_results, searchAdapterapks.getCount()));
+                            //foundResults.setText(getString(R.string.found_results, searchAdapterapks.getCount()));
                         } else {
-                            foundResults.setText(getString(R.string.no_search_result, query));
+//                            foundResults.setText(getString(R.string.no_search_result, query));
                         }
 
                         setListShown(true);
                         setEmptyText(getString(R.string.no_search_result, query));
 
 
-                        Handler handler = new Handler();
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
-                                    if (((SearchManager) getActivity()).isSearchMoreVisible() && visibleItems < adapter.getCount()) {
-                                        more.setVisibility(View.VISIBLE);
-                                        more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
-                                    } else {
-                                        more.setVisibility(View.GONE);
-                                    }
-                                } catch (IllegalStateException e) {
-
-                                }
-                            }
-                        });
+//                        Handler handler = new Handler();
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
+//                                    if (((SearchManager) getActivity()).isSearchMoreVisible() && visibleItems < adapter.getCount()) {
+//                                        more.setVisibility(View.VISIBLE);
+//                                        more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
+//                                    } else {
+//                                        more.setVisibility(View.GONE);
+//                                    }
+//                                } catch (IllegalStateException e) {
+//
+//                                }
+//                            }
+//                        });
                     }
-                    setEmptyText(getString(R.string.no_search_result, query));
+                    //setEmptyText(getString(R.string.no_search_result, query));
+
+                    getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                        }
+
+                        @Override
+                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                            int lastInScreen = firstVisibleItem + visibleItemCount;
+                            if((lastInScreen + 5 >= totalItemCount && !loading)){
+
+                                loading = true;
+                                ListSearchApkRequest request1 = new ListSearchApkRequest();
+                                request1.setSearchString(query);
+                                request1.setOffset(items.size());
+
+                                pb.setVisibility(View.VISIBLE);
+
+                                manager.execute(request1, query + items.size(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+                                    @Override
+                                    public void onRequestFailure(SpiceException spiceException) {
+                                        loading = false;
+                                    }
+
+                                    @Override
+                                    public void onRequestSuccess(SearchJson searchJson) {
+                                        items.addAll(searchJson.getResults().getApks());
+                                        if(!searchJson.getResults().getApks().isEmpty()){
+                                            adapter.notifyDataSetChanged();
+                                            loading = false;
+                                        }
+
+                                        pb.setVisibility(View.GONE);
+
+                                    }
+                                });
+                            }
+
+                        }
+                    });
                 }
+
+
 
             });
 
             //getLoaderManager().restartLoader(60, getArguments(), this);
+
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putInt("offset", items.size());
 
         }
 
@@ -534,12 +588,11 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         };
     }
 
-    public void setFooterView(ListView lv, int res){
+    public View getFooterView(int res){
         View footer = LayoutInflater.from(this).inflate(res, null);
         Button search = (Button) footer.findViewById(R.id.search);
         search.setOnClickListener(getSearchListener());
-
-        lv.addFooterView(footer);
+        return footer;
     }
 
     public void installApp(long id) {

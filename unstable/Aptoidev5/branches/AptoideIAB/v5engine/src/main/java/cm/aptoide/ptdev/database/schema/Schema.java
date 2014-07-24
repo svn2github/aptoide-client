@@ -270,6 +270,8 @@ public class Schema {
             })
     public static class FeaturedEditorsChoice {
 
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_ORDER = "highlightorder";
 
         @ColumnDefinition(type = SQLType.INTEGER)
         public final static String COLUMN_ID = Apk.COLUMN_ID;

@@ -58,93 +58,141 @@ public class SearchJson{
             this.didyoumean = didyoumean;
         }
 
-        public static class Apks{
-            @Key private String age;
-            @Key private String icon;
-            @Key("icon_hd") private String iconhd;
-            @Key private Number malrank;
-            @Key private String md5sum;
-            @Key private String name;
+        public static class Apks {
+            @Key
+            private String age;
+            @Key
+            private String icon;
+            @Key("icon_hd")
+            private String iconhd;
+            @Key
+            private Number malrank;
+            @Key
+            private String md5sum;
+            @Key
+            private String name;
 
             @Key("package")
             private String thePackage;
-            @Key private String repo;
-            @Key private String signature;
-            @Key private String timestamp;
-            @Key private Number vercode;
-            @Key private String vername;
+            @Key
+            private String repo;
+            @Key
+            private String signature;
+            @Key
+            private Number stars;
 
-            public String getAge(){
+            @Key
+            private String timestamp;
+            @Key
+            private Number vercode;
+            @Key
+            private String vername;
+
+
+            public String getAge() {
                 return this.age;
             }
-            public void setAge(String age){
+
+            public void setAge(String age) {
                 this.age = age;
             }
-            public String getIcon(){
+
+            public String getIcon() {
                 return this.icon;
             }
-            public void setIcon(String icon){
+
+            public void setIcon(String icon) {
                 this.icon = icon;
             }
-            public Number getMalrank(){
+
+            public Number getMalrank() {
                 return this.malrank;
             }
-            public void setMalrank(Number malrank){
+
+            public void setMalrank(Number malrank) {
                 this.malrank = malrank;
             }
-            public String getMd5sum(){
+
+            public String getMd5sum() {
                 return this.md5sum;
             }
-            public void setMd5sum(String md5sum){
+
+            public void setMd5sum(String md5sum) {
                 this.md5sum = md5sum;
             }
-            public String getName(){
+
+            public String getName() {
                 return this.name;
             }
-            public void setName(String name){
+
+            public void setName(String name) {
                 this.name = name;
             }
-            public String getPackage(){
+
+            public String getPackage() {
                 return this.thePackage;
             }
-            public void setPackage(String thePackage){
+
+            public void setPackage(String thePackage) {
                 this.thePackage = thePackage;
             }
-            public String getRepo(){
+
+            public String getRepo() {
                 return this.repo;
             }
-            public void setRepo(String repo){
+
+            public void setRepo(String repo) {
                 this.repo = repo;
             }
-            public String getSignature(){
+
+            public String getSignature() {
                 return this.signature;
             }
-            public void setSignature(String signature){
+
+            public void setSignature(String signature) {
                 this.signature = signature;
             }
-            public String getTimestamp(){
+
+            public String getTimestamp() {
                 return this.timestamp;
             }
-            public void setTimestamp(String timestamp){
+
+            public void setTimestamp(String timestamp) {
                 this.timestamp = timestamp;
             }
-            public Number getVercode(){
+
+            public Number getVercode() {
                 return this.vercode;
             }
-            public void setVercode(Number vercode){
+
+            public void setVercode(Number vercode) {
                 this.vercode = vercode;
             }
-            public String getVername(){
+
+            public String getVername() {
                 return this.vername;
             }
-            public void setVername(String vername){
+
+            public void setVername(String vername) {
                 this.vername = vername;
             }
 
             public String getIconhd() {
                 return iconhd;
             }
+
+
+            public float getStars() {
+
+                if(stars!=null){
+                    return stars.floatValue();
+                }else{
+                    return 0.0f;
+                }
+
+            }
         }
+
     }
 
 }

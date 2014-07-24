@@ -52,6 +52,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
             Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
 
             try {
+
                 String currentToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
                 accountManager.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE, currentToken);
                 accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, responseJson.getAccess_token());

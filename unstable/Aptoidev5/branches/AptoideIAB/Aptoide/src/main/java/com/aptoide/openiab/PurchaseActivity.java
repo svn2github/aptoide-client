@@ -23,6 +23,7 @@ import android.widget.*;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -163,6 +164,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
     }
 
     private String simcc;
+    private String repo;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, final IBinder service) {
@@ -172,6 +174,14 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+
+
+                    try{
+                        repo = new Database(Aptoide.getDb()).getRollbackRepo(packageName);
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     AccountManager accountManager = AccountManager.get(PurchaseActivity.this);
 
                     try {
@@ -287,6 +297,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
                                                             onPaypalClick.setCurrency(service.getCurrency());
                                                             onPaypalClick.setPrice(service.getPrice());
                                                             onPaypalClick.setTax(service.getTaxRate());
+                                                            onPaypalClick.setRepo(repo);
 
 
                                                             try {
@@ -420,6 +431,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             requestUnitel.setApiVersion(String.valueOf(apiVersion));
             requestUnitel.setPrice(price);
             requestUnitel.setCurrency(currency);
+            requestUnitel.setRepo(repo);
 
 
 
@@ -496,6 +508,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
         public double tax;
         public double price;
         public String currency;
+        public String repo;
 
     }
 
@@ -509,6 +522,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
         private double price;
         private String currency;
         private double tax;
+        private String repo;
 
         public void setPrice(double price) {
             this.price = price;
@@ -530,6 +544,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             valuesToVerify.currency = this.currency;
             valuesToVerify.price = this.price;
             valuesToVerify.tax = this.tax;
+            valuesToVerify.repo = this.repo;
             PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(price), currency, description,
                     PayPalPayment.PAYMENT_INTENT_SALE);
 
@@ -547,6 +562,10 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
         public double getTax() {
             return tax;
+        }
+
+        public void setRepo(String repo) {
+            this.repo = repo;
         }
     }
 
@@ -572,11 +591,13 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             valuesToVerify.currency = this.currency;
             valuesToVerify.price = this.price;
             valuesToVerify.tax = this.tax;
+            valuesToVerify.repo = repo;
             final Intent intent = getIntent();
             if (alreadyRegistered) {
                 final String correlationId = PayPalConfiguration.getApplicationCorrelationId(PurchaseActivity.this);
                 PayProductRequestPayPal request = new PayProductRequestPayPal();
                 request.setToken(token);
+                request.setRepo(repo);
                 request.setProductId(productId);
                 request.setDeveloperPayload(developerPayload);
                 request.setApiVersion(String.valueOf(apiVersion));
@@ -1017,11 +1038,13 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
         purchaseStatus.setProductId(aptoideProductId);
         purchaseStatus.setPayType(1);
+
         purchaseStatus.setPayKey(confirmation.getPaymentId());
         purchaseStatus.setTaxRate(valuesToVerify.tax);
         purchaseStatus.setPrice(valuesToVerify.price);
         purchaseStatus.setDeveloperPayload(developerPayload);
         purchaseStatus.setCurrency(valuesToVerify.currency);
+        purchaseStatus.setRepo(valuesToVerify.repo);
 
         if(simcc!=null)purchaseStatus.setSimcc(simcc);
         final Intent intent = getIntent();

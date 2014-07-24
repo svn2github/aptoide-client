@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 /**
@@ -43,6 +45,11 @@ public class PayProductRequestPayPal extends GoogleHttpClientSpiceRequest<IabPur
 
     @Override
     public IabPurchaseStatusJson loadDataFromNetwork() throws Exception {
+
+
+        Database database = new Database(Aptoide.getDb());
+
+
 
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
 
@@ -71,10 +78,12 @@ public class PayProductRequestPayPal extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("reqType","future");
         parameters.put("payType","1");
         parameters.put("price",price);
+        parameters.put("repo", repo);
         parameters.put("currency",currency);
 
         if(simCountryCode!=null)parameters.put("simcc",simCountryCode);
         parameters.put("access_token",token);
+
 
         HttpContent content = new UrlEncodedContent(parameters);
 

@@ -85,6 +85,22 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             }
         });
 
+        elements.put("highlight", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                try{
+                    ((ApkEditorsChoice)apk).setOrder(Integer.valueOf(sb.toString()));
+                }catch (Exception e) {
+                    ((ApkEditorsChoice)apk).setOrder(-1);
+                }
+
+            }
+        });
+
 
 
         elements.put("package", new ElementHandler() {

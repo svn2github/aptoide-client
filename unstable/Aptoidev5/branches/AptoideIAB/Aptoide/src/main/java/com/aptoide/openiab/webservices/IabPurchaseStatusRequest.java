@@ -38,6 +38,7 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
     private String payKey;
     private String developerPayload;
     private String simcc;
+    private String repo;
 
     public IabPurchaseStatusRequest() {
         super(IabPurchaseStatusJson.class);
@@ -90,11 +91,14 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
         parameters.put("payreqtype", "rest");
         parameters.put("paytype", String.valueOf(payType));
 
+        parameters.put("repo", repo);
         parameters.put("taxrate", String.valueOf(taxRate));
         parameters.put("productid", String.valueOf(productId));
         parameters.put("price", String.valueOf(price));
         parameters.put("access_token",token);
         parameters.put("currency",currency);
+        parameters.put("simcc",simcc);
+
         if(developerPayload!=null && !TextUtils.isEmpty(developerPayload)) parameters.put("developerpayload", developerPayload);
 
 
@@ -205,6 +209,10 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
 
     public void setSimcc(String simcc) {
         this.simcc = simcc;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
     }
 
 

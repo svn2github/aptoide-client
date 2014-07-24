@@ -1,5 +1,8 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.database.Cursor;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
@@ -18,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
@@ -33,15 +38,29 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
     private String searchString;
 
     private List<String> stores;
+    private int offset;
+
     public ListSearchApkRequest() {
         super(SearchJson.class);
     }
+
+
+
 
     @Override
     public SearchJson loadDataFromNetwork() throws Exception {
 
         StringBuilder repos = new StringBuilder();
         GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/2/listSearchApks");
+
+        final ArrayList<String> stores = new ArrayList<String>();
+
+        Cursor c = new Database(Aptoide.getDb()).getServers();
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            stores.add(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_NAME)));
+        }
+        c.close();
+
         Iterator<String> it = stores.iterator();
 
         while (it.hasNext()) {
@@ -58,6 +77,13 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
         if(!TextUtils.isEmpty(repos))options.add(new WebserviceOptions("repo", repos.toString()));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext())));
         options.add(new WebserviceOptions("u_limit", "4"));
+        options.add(new WebserviceOptions("limit", "10"));
+
+        if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)){
+            options.add(new WebserviceOptions("mature", "0"));
+        }
+
+        if(offset>0) options.add(new WebserviceOptions("offset", String.valueOf(offset)));
 
 
 
@@ -86,7 +112,8 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
         this.searchString = searchString;
     }
 
-    public void setStores(List<String> stores) {
-        this.stores = stores;
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

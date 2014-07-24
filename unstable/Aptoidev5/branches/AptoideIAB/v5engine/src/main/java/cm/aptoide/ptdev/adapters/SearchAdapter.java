@@ -62,13 +62,14 @@ public class SearchAdapter extends CursorAdapter {
         }
 
         final long id = cursor.getLong(cursor.getColumnIndex("_id"));
-        holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
-        holder.overFlow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v, id);
-            }
-        });
+        //holder.rating.setRating(cursor.getFloat(cursor.getColumnIndex("rating")));
+//        holder.overFlow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPopup(v, id);
+//            }
+//        });
+
         holder.appName.setText(Html.fromHtml(name).toString());
         String icon1 = cursor.getString(cursor.getColumnIndex("icon"));
         String iconpath = cursor.getString(cursor.getColumnIndex("iconpath"));

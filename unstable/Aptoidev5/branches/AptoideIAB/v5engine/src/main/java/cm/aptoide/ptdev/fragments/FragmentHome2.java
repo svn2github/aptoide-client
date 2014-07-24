@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -119,6 +120,10 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         super.onResume();
         //getLoaderManager().restartLoader(51, null, loader);
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
+
+        if(!getListView().isShown()) getLoaderManager().restartLoader(50, null, this);
+
+
         v2.setVisibility(View.GONE);
         moreReTv.setVisibility(View.GONE);
         refreshRecommendedList();
@@ -224,7 +229,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
 
 
-        getLoaderManager().restartLoader(50, null, this);
 
 //        HomeBucketAdapter homeBucketAdapter2 = new HomeBucketAdapter(getActivity(), top);
 //        View v = View.inflate(getActivity(), R.layout.separator_home_header, null);

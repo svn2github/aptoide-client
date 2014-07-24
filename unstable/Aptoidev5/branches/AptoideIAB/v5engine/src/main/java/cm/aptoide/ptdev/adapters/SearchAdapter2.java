@@ -74,7 +74,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
         }
 
 
-        //holder.rating.setRating();
+        holder.rating.setRating(item.getStars());
 //        holder.overFlow.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

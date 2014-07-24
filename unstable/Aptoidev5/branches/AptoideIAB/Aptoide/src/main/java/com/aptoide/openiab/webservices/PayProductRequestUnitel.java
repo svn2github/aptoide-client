@@ -71,6 +71,7 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("apiversion",apiVersion);
         parameters.put("reqType","billing");
         parameters.put("payType",payType);
+        parameters.put("repo",repo);
 
         parameters.put("price",price);
         parameters.put("currency",currency);

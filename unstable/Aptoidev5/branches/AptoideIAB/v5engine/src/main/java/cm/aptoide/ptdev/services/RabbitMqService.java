@@ -20,6 +20,7 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ConsumerCancelledException;
@@ -102,8 +103,8 @@ public class RabbitMqService extends Service {
                                         JSONObject object = new JSONObject(body);
 
                                         Intent i = new Intent(getApplicationContext(), appViewClass);
-                                        String authToken = AccountManager.get(getApplicationContext()).getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, null, null).getResult().getString(AccountManager.KEY_AUTHTOKEN);
-
+                                        SecurePreferences securePreferences = new SecurePreferences(getApplicationContext());
+                                        String authToken = securePreferences.getString("devtoken", "");
                                         String repo = object.getString("repo");
                                         long id = object.getLong("id");
                                         String md5sum = object.getString("md5sum");
@@ -123,19 +124,8 @@ public class RabbitMqService extends Service {
                                         } else {
                                             Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
                                         }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (AuthenticatorException e) {
-                                        e.printStackTrace();
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (NoSuchAlgorithmException e) {
-                                        e.printStackTrace();
-                                    } catch (OperationCanceledException e) {
-                                        e.printStackTrace();
-                                    } catch (InvalidKeyException e) {
+
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
