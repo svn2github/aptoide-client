@@ -295,7 +295,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if (oldVersion >= 21 && Aptoide.getConfiguration().isSaveOldRepos()){
+        }else if (oldVersion >= 21 && oldVersion < 22 && Aptoide.getConfiguration().isSaveOldRepos()){
             try {
                 Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -368,7 +368,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private void dropIndexes(SQLiteDatabase db, int newVersion) {
+    private void dropIndexes(SQLiteDatabase db, int oldVersion) {
+
+        if(oldVersion == 22) return;
         Class[] db_tables = Schema.class.getDeclaredClasses();
 
         String drop_stmt = "";
@@ -384,13 +386,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void dropTables(SQLiteDatabase db, int oldVersion) {
+        if( oldVersion == 22) return;
+
         Class[] db_tables = Schema.class.getDeclaredClasses();
 
 
         String drop_stmt;
 
-        boolean dropRollback = oldVersion < 21 ;
-
+        boolean dropRollback = oldVersion < 21;
 
         for (Class table : db_tables) {
             String tableName = table.getSimpleName().toLowerCase(Locale.ENGLISH);
