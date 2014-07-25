@@ -360,6 +360,9 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                         !scheduledDownloadsHashMap.get(scheduledDownload).checked;
             }
             adapter.notifyDataSetChanged();
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

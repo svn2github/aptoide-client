@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -164,6 +165,9 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
                         R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
                 toast.show();
             }
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

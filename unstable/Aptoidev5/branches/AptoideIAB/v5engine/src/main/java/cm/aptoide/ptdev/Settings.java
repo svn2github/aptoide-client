@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +20,8 @@ import android.os.Bundle;
 import android.preference.*;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.text.TextUtils;
 import android.util.Log;
@@ -426,7 +429,11 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 	    return true ;
 	  }
 
-    /*
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -436,11 +443,14 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             finish();
         } else if (i == R.id.home) {
             finish();
+        }else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
-    */
+
 
     @Override
     protected void onStart() {

@@ -11,6 +11,7 @@ import android.provider.*;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -385,6 +386,11 @@ public class SignUpActivity extends ActionBarActivity{
         return hasNumber&&hasLetter;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -393,7 +399,11 @@ public class SignUpActivity extends ActionBarActivity{
         if (i == android.R.id.home || i == R.id.home) {
             setResult(RESULT_CANCELED);
             finish();
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -75,7 +76,11 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Cleared_Rollback_List");
             new Database(Aptoide.getDb()).deleteRollbackItems();
             getSupportLoaderManager().restartLoader(17, null, this);
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
+
 
         return super.onOptionsItemSelected(item);
     }
