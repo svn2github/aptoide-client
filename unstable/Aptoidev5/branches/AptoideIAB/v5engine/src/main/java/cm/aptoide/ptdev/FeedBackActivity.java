@@ -124,7 +124,7 @@ public class FeedBackActivity extends ActionBarActivity {
         emailIntent.setType("message/rfc822");
 
         //emailIntent.putExtra(Intent.EXTRA_EMAIL ,new String[]{ "andre.santos@aptoide.com"});
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"aptoide@aptoide.com"});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@aptoide.com"});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[FeedBack]: " + subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, text);
         //screenshot();
