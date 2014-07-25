@@ -1496,4 +1496,8 @@ public class Database {
 
         return items.toArray(new MultiStoreItem[items.size()]);
     };
+
+    public void deleteFeaturedGraphics() {
+        database.delete(Schema.FeaturedEditorsChoice.getName(), null,null);
+    }
 }
