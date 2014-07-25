@@ -734,7 +734,7 @@ public class Database {
 
 
         c.moveToFirst();
-        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast()  ;c.moveToNext()){
+        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast() && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id"))) ;c.moveToNext()){
 
             String collection = c.getString(c.getColumnIndex("catname"));
             //ArrayList<HomeItem> totest1= collections.get(collection);

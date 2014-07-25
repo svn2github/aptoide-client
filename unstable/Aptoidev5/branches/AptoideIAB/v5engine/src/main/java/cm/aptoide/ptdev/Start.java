@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -63,6 +64,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
@@ -746,6 +748,12 @@ public class Start extends ActionBarActivity implements
                     }
 
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+
+                    AccountManager manager = AccountManager.get(this);
+                    Account[] accountsByType = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+                    if(accountsByType.length > 0){
+                        AccountManager.get(this).removeAccount(accountsByType[0], null, null);
+                    }
 
                 }
             } catch (PackageManager.NameNotFoundException e) {
