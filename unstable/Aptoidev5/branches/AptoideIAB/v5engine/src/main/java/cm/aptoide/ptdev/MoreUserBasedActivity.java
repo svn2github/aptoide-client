@@ -135,7 +135,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                     try {
 
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
-                        request.setLimit(50);
+                        request.setLimit(10);
                         request.setToken(token);
 
                     } catch (OperationCanceledException e) {
