@@ -467,6 +467,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 @Override
                 public void run() {
                     db.deleteFeatured(510);
+                    db.deleteFeaturedGraphics();
                     BusProvider.getInstance().post(new RepoCompleteEvent(-2));
                 }
             });

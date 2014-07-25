@@ -35,6 +35,8 @@ public class ApkEditorsChoice extends Apk {
 
     public ApkEditorsChoice(ApkEditorsChoice apkEditorsChoice) {
         super(apkEditorsChoice);
+        this.featuredGraphic = apkEditorsChoice.featuredGraphic;
+        this.order = apkEditorsChoice.order;
     }
 
     @Override
