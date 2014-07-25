@@ -686,13 +686,18 @@ public class Database {
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
+        ArrayList<Home> featuredGraphics = getFeaturedGraphics(5);
 
-        Cursor c = database.rawQuery("select * from (select apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo left natural join featurededitorschoice as featedchoice where featedchoice.id_apk is null and cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
+        Cursor c = database.rawQuery("select * from (select apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo where cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
         c.getCount();
 
+        long[] ids = new long[5];
 
         Log.d("Aptoide-Database", "GetFeatured count " + c.getCount());
 
+        for(int i = 0; i!=ids.length;i++){
+            ids[i] = ((HomeItem)featuredGraphics.get(i)).getId();
+        }
 
 
         HashMap<String, Integer> collectionIdList = new HashMap<String, Integer>();
@@ -703,7 +708,7 @@ public class Database {
         collectionIdList.put("New Editors' Choice", -1);
 
         int i = 0;
-        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize*2 ;c.moveToNext()){
+        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize*2  && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id")) ) ;c.moveToNext()){
 
             String collection = "New Editors' Choice";
             i++;
@@ -729,7 +734,7 @@ public class Database {
 
 
         c.moveToFirst();
-        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast();c.moveToNext()){
+        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast()  ;c.moveToNext()){
 
             String collection = c.getString(c.getColumnIndex("catname"));
             //ArrayList<HomeItem> totest1= collections.get(collection);
