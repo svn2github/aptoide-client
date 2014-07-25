@@ -337,6 +337,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         onDownloadUpdate(service.getDownload(downloadId).getDownload());
                         if(service.getDownload(downloadId).getDownload().getDownloadState() == EnumState.COMPLETE){
                             isDownloadCompleted = true;
+                            supportInvalidateOptionsMenu();
                         }
                     } else {
                         findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
