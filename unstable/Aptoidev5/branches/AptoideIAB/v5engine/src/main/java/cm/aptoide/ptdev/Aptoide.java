@@ -123,7 +123,7 @@ public class Aptoide extends Application {
 //                .build());
 
 
-        //ACRA.init(this);
+        ACRA.init(this);
 
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
@@ -133,7 +133,9 @@ public class Aptoide extends Application {
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
-        //acraConfiguration.setResDialogText(R.string.crash_text);
+        acraConfiguration.setResDialogText(R.string.crash_text);
+
+        ACRA.getErrorReporter().setEnabled(false);
 
         ACRA.setConfig(acraConfiguration);
 
@@ -187,7 +189,7 @@ public class Aptoide extends Application {
     }
 
     public void bootImpl(ManagerPreferences managerPreferences) {
-        //Crashlytics.start(this);
+        Crashlytics.start(this);
 
         if (managerPreferences.getAptoideClientUUID() == null) {
             managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);

@@ -208,7 +208,17 @@ public class Adapter extends BaseAdapter {
                 }else{
                     item = convertView;
                 }
-                ((TextView)item.findViewById(R.id.separator_label)).setText(getItem(position).getName());
+
+                String categoryName;
+                try {
+                    categoryName = context.getString(EnumCategories.getCategoryName(getItem(position).getParentId()));
+//                Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
+                } catch (Exception e) {
+                    categoryName = getItem(position).getName();
+//                Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
+                }
+
+                ((TextView)item.findViewById(R.id.separator_label)).setText(categoryName);
                 break;
         }
 

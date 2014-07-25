@@ -10,4 +10,6 @@ public interface Home {
     int getItemsSize();
 
     int getSortPriority();
+
+    int getParentId();
 }

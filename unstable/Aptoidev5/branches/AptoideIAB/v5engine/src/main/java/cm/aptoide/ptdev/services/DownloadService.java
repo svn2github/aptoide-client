@@ -145,8 +145,7 @@ public class DownloadService extends Service{
         if(downloads.get(id)!=null){
             return downloads.get(id);
         }else{
-            DownloadInfo downloadInfo = new DownloadInfo(manager, id);
-            return downloadInfo;
+            return new DownloadInfo(manager, id);
         }
     }
 
@@ -158,10 +157,11 @@ public class DownloadService extends Service{
 
 
         startService(new Intent(getApplicationContext(), DownloadService.class));
+        Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
+        Log.d("download-trace", "setmbuilder: startExistingDownload " + id);
 
-        NotificationCompat.Builder builder = setNotification(id);
+        final NotificationCompat.Builder builder = setNotification(id);
         DownloadInfo inf = getDownload(id);
-        Log.d("download-trace", "setmbuilder: startExistingDownload");
 
         if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
@@ -200,6 +200,8 @@ public class DownloadService extends Service{
                                 String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
                                 if(!calculatedMd5.equals(info.getDownload().getMd5())){
                                     Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
+                                    info.setmBuilder(builder);
+
                                     info.download();
                                     break;
                                 } else {
@@ -217,6 +219,7 @@ public class DownloadService extends Service{
 
         for(DownloadInfo info: manager.getmErrorList()){
             if(info.getId()==id){
+                info.setmBuilder(builder);
                 info.download();
                 return;
             }
@@ -291,7 +294,7 @@ public class DownloadService extends Service{
         downloadModel.setAutoExecute(true);
         downloadModel.setFallbackUrl(json.getApk().getAltPath());
         filesToDownload.add(downloadModel);
-        DownloadInfo info = getDownload(id);
+        DownloadInfo info = getDownload(download.getId());
         FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));
         apk.setRepoName(json.getApk().getRepo());
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
@@ -301,7 +304,7 @@ public class DownloadService extends Service{
         downloads.put(info.getId(), info);
         info.download();
 
-        Log.d("download-trace", "setmBuilder: startDownloadFromJson");
+        Log.d("download-trace", "setmBuilder: startDownloadFromJson " + info.getId());
         NotificationCompat.Builder builder = setNotification(info.getId());
         info.setmBuilder(builder);
 
@@ -584,12 +587,14 @@ public class DownloadService extends Service{
         int size = DownloadExecutorImpl.dpToPixels(getApplicationContext(), 36);
 
         mBuilder.setOngoing(true);
-        mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()))
-                .setContentText(info.getDownload().getName())
-                .setLargeIcon(DownloadExecutorImpl.decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(info.getDownload().getIcon()).getAbsolutePath(), size, size))
-                .setSmallIcon(android.R.drawable.stat_sys_download)
-                .setProgress(0, 0, true)
-                .setContentIntent(onClickAction);
+        mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()));
+        mBuilder.setContentText(info.getDownload().getName());
+        mBuilder.setLargeIcon(
+                        DownloadExecutorImpl.decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(info.getDownload().getIcon()).getAbsolutePath(), size, size)
+                );
+        mBuilder    .setSmallIcon(android.R.drawable.stat_sys_download);
+        mBuilder     .setProgress(0, 0, true);
+        mBuilder    .setContentIntent(onClickAction);
         Log.d("download-trace", "ETA: " + info.getEta());
         if(info.getEta() > 0) {
             String remaining = Utils.formatEta(info.getEta(), "");

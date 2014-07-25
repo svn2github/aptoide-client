@@ -186,7 +186,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
                     }
                     altPath = getApkInfoJson.getApk().getAltPath();
-
+                    isInstalled = true;
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
                     downloads = getApkInfoJson.getMeta().getDownloads();
@@ -211,7 +211,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     checkInstallation(getApkInfoJson);
 
-                    if(!signature.equals(installedSignature) && installedSignature!=null && installedSignature.length()>0){
+                    if(signature!=null && !signature.equals(installedSignature) && installedSignature!=null && installedSignature.length()>0){
                         message.setVisibility(View.VISIBLE);
                     }else{
                         message.setVisibility(View.GONE);
@@ -1575,6 +1575,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             super(fm);
             TITLES = new String[]{context.getString(R.string.info), context.getString(R.string.review), context.getString(R.string.related), context.getString(R.string.advanced)};
         }
+
+
 
         @Override
         public Fragment getItem(int i) {

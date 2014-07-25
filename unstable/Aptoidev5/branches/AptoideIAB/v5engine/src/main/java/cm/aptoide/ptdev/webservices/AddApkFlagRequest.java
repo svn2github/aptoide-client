@@ -44,7 +44,7 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        if (token!=null) {
+        if ( token != null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
         }

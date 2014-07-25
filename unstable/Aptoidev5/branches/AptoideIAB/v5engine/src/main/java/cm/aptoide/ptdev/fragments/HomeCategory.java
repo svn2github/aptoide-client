@@ -5,10 +5,12 @@ package cm.aptoide.ptdev.fragments;
  */
 public class HomeCategory implements Home {
     private String categoryName;
+    private final int parentId;
 
-    public HomeCategory(String categoryName) {
+    public HomeCategory(String categoryName, int parentId) {
 
         this.categoryName = categoryName;
+        this.parentId = parentId;
     }
 
     @Override
@@ -24,5 +26,10 @@ public class HomeCategory implements Home {
     @Override
     public int getSortPriority() {
         return 0;
+    }
+
+    @Override
+    public int getParentId() {
+        return parentId;
     }
 }

@@ -56,12 +56,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
             if(responseCode == 404){
                 throw new NotFoundException();
             }else if(responseCode == 403){
-                InetAddress address = InetAddress.getByName(mURL.getHost());
-                String ip = "";
-                if (address != null) {
-                    ip = address.getHostAddress();
-                }
-                ACRA.getErrorReporter().handleException(new Exception("403 on "+ ip+"/"+mURL.toString()));
+
                 throw new IPBlackListedException();
             }
             // response not ok

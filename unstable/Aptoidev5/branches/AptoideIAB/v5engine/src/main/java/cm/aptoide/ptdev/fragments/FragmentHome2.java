@@ -107,6 +107,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private View moreRecommended;
     private PullToRefreshCallback pullToRefreshCallback;
     private PullToRefreshLayout mPullToRefreshLayout;
+    private View featGraphFooter;
 
     @Override
     public void onRefreshStarted( View view ) {
@@ -170,8 +171,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     private void refreshEditorsList() {
         editorsChoice.clear();
-
-        setListAdapter(null);
 
         if(getLoaderManager().getLoader(50)!=null){
             getLoaderManager().destroyLoader(50);
@@ -305,7 +304,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                     String token = null;
                     try {
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
-
                         request.setLimit(recomendedAdapter.getBucketSize()*2);
                         request.setToken(token);
                     } catch (OperationCanceledException e) {
@@ -333,6 +331,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                                     if (listRecomended != null && listRecomended.getRepository() != null && listRecomended.getRepository().size() > 0) {
                                         v2.setVisibility(View.VISIBLE);
                                         moreReTv.setVisibility(View.VISIBLE);
+                                        mergeAdapter.setActive(v2, true);
+                                        mergeAdapter.setActive(moreRecommended, true);
                                         recommended.clear();
                                         final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
                                         for (ListRecomended.Repository repository : listRecomended.getRepository()) {
@@ -407,20 +407,28 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     }
 
+    View v;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        v = getLayoutInflater(null).inflate(R.layout.row_app_home_featured, null);
 
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
 //        v2.setClickable(true);
+
+
+        mergeAdapter = new MergeAdapter();
+
 
         moreRecommended = View.inflate(getActivity(), R.layout.separator_home_footer, null);
         moreReTv = (TextView) moreRecommended.findViewById(R.id.more);
         moreReTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended_Button");
+                if (Build.VERSION.SDK_INT >= 10)
+                    FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended_Button");
                 Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
                 startActivity(i);
             }
@@ -428,95 +436,40 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         v2.setVisibility(View.GONE);
         moreReTv.setVisibility(View.GONE);
 
-    }
 
-    public class TopFeaturedLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
-
-        @Override
-        public Loader<ArrayList<HomeItem>> onCreateLoader(final int id, final Bundle args) {
-
-
-
-            AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
-                @Override
-                public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getTopFeatured(3*2);
-                }
-            };
-
-
-            asyncTaskLoader.forceLoad();
-
-            return asyncTaskLoader;
-        }
-        //
-        @Override
-        public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
-            top.clear();
-            top.addAll(data);
-
-            if(getListView().getAdapter()==null){
-                if(!data.isEmpty()){
-                    setListAdapter(adapter);
-                }
-            }else{
-                adapter.notifyDataSetChanged();
+        mergeAdapter.addView(v, false);
+        v.setVisibility(View.GONE);
+        featGraphFooter = getActivity().getLayoutInflater().inflate(R.layout.separator_home_footer, null);
+        featGraphFooter.setVisibility(View.GONE);
+        featGraphFooter.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), MoreFeaturedGraphicActivity.class);
+                startActivity(i);
             }
+        });
+        mergeAdapter.addView(featGraphFooter, false);
 
-        }
+        mergeAdapter.addAdapter(homeBucketAdapterHome);
 
-        @Override
-        public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
-            if(top!=null) top.clear();
-            if(adapter!=null) adapter.notifyDataSetChanged();
-        }
+        mergeAdapter.addView(v2);
+        mergeAdapter.addAdapter(recomendedAdapter);
+        mergeAdapter.addView(moreRecommended);
+
+
+
+        mergeAdapter.setActive(moreRecommended, false);
+        mergeAdapter.setActive(v, false);
+        mergeAdapter.setActive(v2, false);
+        mergeAdapter.setActive(featGraphFooter, false);
+
     }
 
-    public class FeaturedGraphicLoader implements LoaderManager.LoaderCallbacks<ArrayList<HomeItem>>{
-
-        @Override
-        public Loader<ArrayList<HomeItem>> onCreateLoader(final int id, final Bundle args) {
-
-
-
-            AsyncTaskLoader<ArrayList<HomeItem>> asyncTaskLoader = new AsyncTaskLoader<ArrayList<HomeItem>>(getActivity()) {
-                @Override
-                public ArrayList<HomeItem> loadInBackground() {
-                    return new Database(Aptoide.getDb()).getTopFeatured(3*2);
-                }
-            };
-
-
-            asyncTaskLoader.forceLoad();
-
-            return asyncTaskLoader;
-        }
-        //
-        @Override
-        public void onLoadFinished(Loader<ArrayList<HomeItem>> loader, ArrayList<HomeItem> data) {
-            featuredGraphicItems.clear();
-            featuredGraphicItems.addAll(data);
-
-            if(getListView().getAdapter()==null){
-                if(!data.isEmpty()){
-                    setListAdapter(adapter);
-                }
-            }else{
-                adapter.notifyDataSetChanged();
-            }
-
-        }
-
-        @Override
-        public void onLoaderReset(Loader<ArrayList<HomeItem>> loader) {
-            if(top!=null) top.clear();
-            if(adapter!=null) adapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     public Loader<HashMap<String, ArrayList<Home>>> onCreateLoader(final int id, final Bundle args) {
 
+        setListShown(false);
         AsyncTaskLoader<HashMap<String, ArrayList<Home>>> asyncTaskLoader = new AsyncTaskLoader<HashMap<String, ArrayList<Home>>>(getActivity()) {
             @Override
             public HashMap<String, ArrayList<Home>> loadInBackground() {
@@ -528,9 +481,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         return asyncTaskLoader;
     }
-
-    ExecutorService executor = Executors.newSingleThreadExecutor();
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -545,18 +495,14 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<HashMap<String, ArrayList<Home>>> loader, HashMap<String, ArrayList<Home>> data) {
 
-
+        loader.reset();
 
         setListShown(true);
-
-        Toast.makeText(getActivity(), "onLoadFinished", Toast.LENGTH_LONG).show();
 
         homeBucketAdapterHome.setItems(data.get("editorsChoice"));
         homeBucketAdapterHome.notifyDataSetChanged();
 
-        mergeAdapter = new MergeAdapter();
 
-        View v = getLayoutInflater(null).inflate(R.layout.row_app_home_featured, null);
 
         ImageView ivCentral = (ImageView) v.findViewById(R.id.app_icon_central);
         ImageView ivRow1Left = (ImageView) v.findViewById(R.id.app_icon_row1_left);
@@ -592,36 +538,21 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         }
 
 
-
         if(!items.isEmpty()){
-            mergeAdapter.addView(v);
-            View featGraphFooter = getActivity().getLayoutInflater().inflate(R.layout.separator_home_footer, null);
-            featGraphFooter.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), MoreFeaturedGraphicActivity.class);
-                    startActivity(i);
-                }
-            });
-            mergeAdapter.addView(featGraphFooter);
+            v.setVisibility(View.VISIBLE);
+            featGraphFooter.setVisibility(View.VISIBLE);
+            mergeAdapter.setActive(v, true);
+            mergeAdapter.setActive(featGraphFooter, true);
         }
 
-        mergeAdapter.addAdapter(homeBucketAdapterHome);
 
 
 
-        mergeAdapter.addView(v2);
-        mergeAdapter.addAdapter(recomendedAdapter);
-        mergeAdapter.addView(moreRecommended);
-        if(!data.isEmpty()){
-            setListShown(true);
-            setListAdapter(mergeAdapter);
+        if(getListView().getAdapter()==null){
+            if(data.size()>1) setListAdapter(mergeAdapter);
+        }else{
+            homeBucketAdapterHome.notifyDataSetChanged();
         }
-//        if(getListView().getAdapter()==null){
-//            if(data.size()>1) setListAdapter(homeBucketAdapter);
-//        }else{
-//            homeBucketAdapter.notifyDataSetChanged();
-//        }
 
         if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
 

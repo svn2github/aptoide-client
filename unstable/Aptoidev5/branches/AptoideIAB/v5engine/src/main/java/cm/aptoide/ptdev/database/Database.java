@@ -618,14 +618,14 @@ public class Database {
     public ArrayList<Home> getAllTopFeatured(int bucketSize) {
 
         ArrayList<Home> items = new ArrayList<Home>();
-        fillElementsWithoutFooter(bucketSize, "Top Apps", items, getTopFeatured(Integer.MAX_VALUE));
+        fillElementsWithoutFooter(bucketSize, "Top Apps", items, getTopFeatured(Integer.MAX_VALUE), -2);
 
         return items;
     }
 
 
 
-        public Cursor getAllFeaturedGraphics(){
+    public Cursor getAllFeaturedGraphics(){
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         final boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
 
@@ -679,7 +679,7 @@ public class Database {
         return ret_items;
     }
 
-    public HashMap<String, ArrayList<Home>> getFeatured2(int editorsChoiceBucketSize) {
+    public synchronized HashMap<String, ArrayList<Home>> getFeatured2(int editorsChoiceBucketSize) {
 
         ArrayList<Home> items = new ArrayList<Home>();
 
@@ -689,6 +689,7 @@ public class Database {
 
         Cursor c = database.rawQuery("select * from (select apk.date as date, apk.package_name as package_name, catname.id_real_category as mycatnameid, catname.name as mycatname, apk.id_apk as id, catparentname.id_real_category as parentid, catparentname.name as catname, apk.name as name, repo.icons_path as iconpath, apk.icon as icon, apk.rating as rating, apk.downloads as downloads from category_apk as cat1 join category_apk as cat2 on cat1.id_apk = cat2.id_apk join category as catname on cat2.id_real_category = catname.id_real_category and catname.id_repo  = 0 join category as catparentname on catname.id_category_parent = catparentname.id_real_category and catparentname.id_repo = 0 join apk on cat1.id_apk = apk.id_apk join repo on apk.id_repo = repo.id_repo left natural join featurededitorschoice as featedchoice where featedchoice.id_apk is null and cat1.id_real_category = 510 and cat2.id_real_category != 510  " + (filterCompatible ? " and apk.is_compatible='1' " : "") + " " + (filterMature ? " and apk.mature='0' " : "") + " order by apk.sdk asc) group by package_name order by  date desc", null);
         c.getCount();
+
 
 
         HashMap<String, Integer> collectionIdList = new HashMap<String, Integer>();
@@ -703,7 +704,7 @@ public class Database {
 
             String collection = "New Editors' Choice";
             i++;
-            if(collections.get(collection).size() < editorsChoiceBucketSize*2){
+            if( collections.get(collection).size() < editorsChoiceBucketSize*2) {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
@@ -765,11 +766,11 @@ public class Database {
 
 
 
-    private void fillElementsWithoutFooter(int editorsChoiceBucketSize, String categoryName, ArrayList<Home> items, ArrayList<HomeItem> inElements) {
+    private void fillElementsWithoutFooter(int editorsChoiceBucketSize, String categoryName, ArrayList<Home> items, ArrayList<HomeItem> inElements, int parentId) {
 
         if(!inElements.isEmpty()) {
 
-            items.add(new HomeCategory(categoryName));
+            items.add(new HomeCategory(categoryName, parentId));
 
             while (!inElements.isEmpty()) {
                 HomeBucket bucket = new HomeBucket();
@@ -788,7 +789,7 @@ public class Database {
 
         if(!inElements.isEmpty()) {
 
-            items.add(new HomeCategory(categoryName));
+            items.add(new HomeCategory(categoryName, integer));
 
             while (!inElements.isEmpty()) {
                 HomeBucket bucket = new HomeBucket();

@@ -75,7 +75,7 @@ public class GetApkInfoRequestFromId extends GoogleHttpClientSpiceRequest<GetApk
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-        if (token!=null) {
+        if (token != null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
         }

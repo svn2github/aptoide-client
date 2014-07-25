@@ -318,7 +318,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
                                 if (getApkInfoJson != null) {
                                     Download download = new Download();
-                                    download.setId(schDown.getId());
+                                    download.setId(schDown.getMd5().hashCode());
                                     download.setName(schDown.getName());
                                     download.setVersion(schDown.getVername());
                                     download.setIcon(schDown.getIconPath());

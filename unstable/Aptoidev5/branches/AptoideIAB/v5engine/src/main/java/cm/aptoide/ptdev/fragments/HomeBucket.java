@@ -36,4 +36,9 @@ public class HomeBucket implements Home {
     public int getSortPriority() {
         return 0;
     }
+
+    @Override
+    public int getParentId() {
+        return 0;
+    }
 }

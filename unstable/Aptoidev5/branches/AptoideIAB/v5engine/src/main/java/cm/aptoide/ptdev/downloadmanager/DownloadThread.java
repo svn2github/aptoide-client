@@ -2,12 +2,16 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.os.StatFs;
 import android.util.Log;
+
+import org.acra.ACRA;
+
 import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 
 
 import java.io.*;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
@@ -116,7 +120,22 @@ public class DownloadThread implements Runnable, Serializable {
             } catch (ContentTypeNotApkException e1) {
                 parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
             } catch (IPBlackListedException e1) {
-                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
+
+                InetAddress address = null;
+                try {
+                    address = InetAddress.getByName(mConnection.getURL().getHost());
+                } catch (UnknownHostException e2) {
+                    e2.printStackTrace();
+                }
+                String ip = "";
+                if (address != null) {
+                    ip = address.getHostAddress();
+                }
+                ACRA.getErrorReporter().setEnabled(true);
+                ACRA.getErrorReporter().handleException(new Exception("403 on "+ ip+"/"+mConnection.getURL().toString()));
+                ACRA.getErrorReporter().setEnabled(false);
+
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.IP_BLACKLISTED));
             } catch (Md5FailedException e1) {
                 e1.printStackTrace();
                 mDownloadFile.delete();

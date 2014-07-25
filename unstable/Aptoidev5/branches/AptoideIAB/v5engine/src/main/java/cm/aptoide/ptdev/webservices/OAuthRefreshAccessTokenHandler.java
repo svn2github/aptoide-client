@@ -4,6 +4,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.text.TextUtils;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
@@ -38,6 +40,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
     @Override
     public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
         if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED && retries > 0) {
+
             retries--;
             HashMap<String, String> parameters = new HashMap<String, String>();
             parameters.put("grant_type", "refresh_token");

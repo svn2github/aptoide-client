@@ -190,6 +190,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             setRetainInstance(true);
             searchAdapterapks = new SearchAdapter2(getActivity(), items);
             query = getArguments().getString("query");
+
             setHasOptionsMenu(true);
         }
 
@@ -556,6 +557,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         @Override
         public void onResume() {
             super.onResume();
+            ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("'"+query+"'");
         }
 
         @Override
