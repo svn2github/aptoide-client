@@ -692,10 +692,10 @@ public class Database {
         c.getCount();
 
         long[] ids = new long[5];
-
+        int to = ids.length>featuredGraphics.size()?featuredGraphics.size():ids.length;
         Log.d("Aptoide-Database", "GetFeatured count " + c.getCount());
 
-        for(int i = 0; i!=ids.length;i++){
+        for(int i = 0; i!=to;i++){
             ids[i] = ((HomeItem)featuredGraphics.get(i)).getId();
         }
 
