@@ -692,10 +692,10 @@ public class Database {
         c.getCount();
 
         long[] ids = new long[5];
-        int to = ids.length>featuredGraphics.size()?featuredGraphics.size():ids.length;
+
         Log.d("Aptoide-Database", "GetFeatured count " + c.getCount());
 
-        for(int i = 0; i!=to;i++){
+        for(int i = 0; i!=ids.length && i < featuredGraphics.size() ;i++){
             ids[i] = ((HomeItem)featuredGraphics.get(i)).getId();
         }
 
@@ -708,15 +708,16 @@ public class Database {
         collectionIdList.put("New Editors' Choice", -1);
 
         int i = 0;
-        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize*2  && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id")) ) ;c.moveToNext()){
+        for(c.moveToFirst();!c.isAfterLast() && i < editorsChoiceBucketSize*2   ;c.moveToNext()){
 
             String collection = "New Editors' Choice";
-            i++;
-            if( collections.get(collection).size() < editorsChoiceBucketSize*2) {
+
+            if( collections.get(collection).size() < editorsChoiceBucketSize*2 && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id")) )) {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long id = c.getLong(c.getColumnIndex("id"));
                 collections.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatnameid")), iconPath + icon , id, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")),c.getString(c.getColumnIndex("mycatname"))));
+                i++;
             }
 
         }
