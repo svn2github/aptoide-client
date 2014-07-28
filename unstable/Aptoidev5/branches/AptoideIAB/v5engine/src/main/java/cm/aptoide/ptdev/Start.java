@@ -1199,8 +1199,6 @@ public class Start extends ActionBarActivity implements
         super.onPause();
         //Toast.makeText(this, "OnPause", Toast.LENGTH_LONG).show();
 
-
-
         if(rabbitMqConnBound){
             rabbitMqService.stopAmqpService();
             unbindService(rabbitMqConn);
@@ -1248,7 +1246,7 @@ public class Start extends ActionBarActivity implements
         }
     }
 
-
+/*
     private void showAbout() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_about, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext).setView(view);
@@ -1262,5 +1260,5 @@ public class Start extends ActionBarActivity implements
             }
         });
         aboutDialog.show();
-    }
+    }*/
 }
