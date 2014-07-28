@@ -119,7 +119,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
     RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            Toast.makeText(AllCommentsActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
             if(pd!=null){
                 pd.dismissAllowingStateLoss();
@@ -136,7 +136,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
             }
 
             if(genericResponse.getStatus().equals("OK")){
-                Toast.makeText(AllCommentsActivity.this, getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
+                Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
 
 
                 FragmentComments fragmentComments = new FragmentComments();
@@ -153,7 +153,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                     } else {
                         message = error.getMsg();
                     }
-                    Toast.makeText(AllCommentsActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -177,7 +177,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
     RequestListener<GenericResponseV2> requestListener = new RequestListener<GenericResponseV2>() {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(AllCommentsActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
             if(pd!=null){
                 pd.dismissAllowingStateLoss();
@@ -192,7 +192,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
             }
 
             if("OK".equals(genericResponseV2.getStatus())) {
-                Toast.makeText(AllCommentsActivity.this, getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
+                Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
 
                 FragmentComments fragmentComments = new FragmentComments();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
@@ -208,7 +208,7 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                     } else {
                         message = error.getMsg();
                     }
-                    Toast.makeText(AllCommentsActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
 

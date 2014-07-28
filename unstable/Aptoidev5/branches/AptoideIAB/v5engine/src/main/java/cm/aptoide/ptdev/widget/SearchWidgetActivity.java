@@ -83,7 +83,7 @@ public class SearchWidgetActivity extends ActionBarActivity {
                     finish();
 
                 } else {
-                    Toast toast = Toast.makeText(SearchWidgetActivity.this, "Empty search, write an application name", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(Aptoide.getContext(), "Empty search, write an application name", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
 

@@ -2090,7 +2090,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
             if(pd!=null){
                 pd.dismissAllowingStateLoss();
@@ -2107,7 +2107,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
             if(genericResponse.getStatus().equals("OK")){
-                Toast.makeText(AppViewActivity.this, getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
+                Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
                 if(postCallback != null) {
                     postCallback.clearState();
                 }
@@ -2125,7 +2125,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     } else {
                         message = error.getMsg();
                     }
-                    Toast.makeText(AppViewActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -2149,7 +2149,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     RequestListener<GenericResponseV2> commentRequestListener = new RequestListener<GenericResponseV2>() {
         @Override
         public void onRequestFailure(SpiceException e) {
-            Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
+            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
             if(pd!=null){
                 pd.dismissAllowingStateLoss();
@@ -2164,7 +2164,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
             if("OK".equals(genericResponseV2.getStatus())) {
-                Toast.makeText(AppViewActivity.this, getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
+                Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
 
                 spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
                 BusProvider.getInstance().post(new AppViewRefresh());
@@ -2179,7 +2179,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     } else {
                         message = error.getMsg();
                     }
-                    Toast.makeText(AppViewActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
                 }
             }
 

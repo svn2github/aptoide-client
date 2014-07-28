@@ -95,7 +95,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             public void run() {
                 try {
 
-                    final String token = GoogleAuthUtil.getToken(LoginActivity.this, mPlusClient.getAccountName(), "oauth2:server:client_id:" + serverId + ":api_scope:" + Scopes.PLUS_LOGIN);
+                    final String token = GoogleAuthUtil.getToken(Aptoide.getContext(), mPlusClient.getAccountName(), "oauth2:server:client_id:" + serverId + ":api_scope:" + Scopes.PLUS_LOGIN);
 
 
                     final String username = mPlusClient.getAccountName();
@@ -105,7 +105,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         @Override
                         public void run() {
                             submit(Mode.GOOGLE, username, token, name);
-                            //Toast.makeText(LoginActivity.this, token, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_SHORT).show();
                         }
                     });
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Logged_In_With_Google_Plus");
@@ -119,7 +119,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 
                             android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                             if (pd != null) {
@@ -141,7 +141,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 
                             android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                             if (pd != null) {
@@ -158,7 +158,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 
                             android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                             if (pd != null) {
@@ -276,7 +276,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 
                                         android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                                         if (pd != null) {

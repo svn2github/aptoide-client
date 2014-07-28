@@ -174,7 +174,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScheduledDownloadsActivity.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Aptoide.getContext());
                 final AlertDialog scheduleDownloadDialog = dialogBuilder.create();
                 scheduleDownloadDialog.setTitle(getText(R.string.schDwnBtn));
                 scheduleDownloadDialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -186,7 +186,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                         for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
 
                             final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
+                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
                             requestFromMd5.setRepoName(schDown.getRepoName());
                             requestFromMd5.setMd5Sum(schDown.getMd5());
 
@@ -303,7 +303,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                         final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
 
 
-                        GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
+                        GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
                         requestFromMd5.setRepoName(schDown.getRepoName());
                         requestFromMd5.setMd5Sum(schDown.getMd5());
 
@@ -336,7 +336,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 }
 
             } else {
-                Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Aptoide.getContext(), R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
                 toast.show();
             }
         } else if (i == R.id.menu_remove) {
@@ -350,7 +350,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 }
                 getSupportLoaderManager().restartLoader(0, null, this);
             }else{
-                Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Aptoide.getContext(), R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
                 toast.show();
             }
         } else if (i == R.id.menu_invert) {

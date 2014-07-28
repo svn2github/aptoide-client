@@ -127,7 +127,7 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
 //                    }
 //                    redraw();
 //                } else {
-//                    Toast toast = Toast.makeText(ExcludedUpdatesActivity.this,
+//                    Toast toast = Toast.makeText(Aptoide.getContext(),
 //                            R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
 //                    toast.show();
 //                }
@@ -161,7 +161,7 @@ public class ExcludedUpdatesActivity extends ActionBarActivity {
                 }
                 redraw();
             } else {
-                Toast toast = Toast.makeText(ExcludedUpdatesActivity.this,
+                Toast toast = Toast.makeText(Aptoide.getContext(),
                         R.string.no_excluded_updates_selected, Toast.LENGTH_SHORT);
                 toast.show();
             }

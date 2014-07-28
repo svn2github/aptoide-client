@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -154,7 +155,7 @@ public class SignUpActivity extends ActionBarActivity{
         spiceManager.execute(createUserRequest, new RequestListener<OAuth>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                Toast.makeText(SignUpActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                 DialogFragment pd = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if(pd!=null) pd.dismiss();
             }
@@ -202,45 +203,28 @@ public class SignUpActivity extends ActionBarActivity{
 
 
                         if ("OK".equals(checkUserCredentialsJson.getStatus())) {
-
+                            SharedPreferences.Editor editor =PreferenceManager
+                                    .getDefaultSharedPreferences(SignUpActivity.this)
+                                    .edit();
                             if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
                                 //hasQueue = true;
-
-                                PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                        .edit()
-                                        .putString("queueName", checkUserCredentialsJson.getQueue())
-                                        .commit();
+                                editor.putString("queueName", checkUserCredentialsJson.getQueue());
                             }
                             if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
-                                PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                        .edit()
-                                        .putString("useravatar", checkUserCredentialsJson.getAvatar())
-                                        .commit();
+                                editor.putString("useravatar", checkUserCredentialsJson.getAvatar());
                             }
 
                             if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
-                                PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                        .edit()
-                                        .putString("userRepo", checkUserCredentialsJson.getRepo())
-                                        .commit();
+                                editor.putString("userRepo", checkUserCredentialsJson.getRepo());
                             }
 
                             if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
-                                PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                        .edit()
-                                        .putString("username", checkUserCredentialsJson.getUsername())
-                                        .commit();
+                                editor.putString("username", checkUserCredentialsJson.getUsername());
                             }
 
-                            PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                    .edit()
-                                    .putString(Configs.LOGIN_USER_LOGIN, emailBox.getText().toString())
-                                    .commit();
-
-                            PreferenceManager.getDefaultSharedPreferences(SignUpActivity.this)
-                                    .edit()
-                                    .putString("loginType", LoginActivity.Mode.APTOIDE.name())
-                                    .commit();
+                            editor.putString(Configs.LOGIN_USER_LOGIN, emailBox.getText().toString());
+                            editor.putString("loginType", LoginActivity.Mode.APTOIDE.name());
+                            editor.commit();
 
                             SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
                             preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
