@@ -3,6 +3,8 @@ package cm.aptoide.ptdev.webservices;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -72,6 +74,10 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
+
         if (token!=null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));

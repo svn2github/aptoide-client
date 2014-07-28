@@ -328,7 +328,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                     try {
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
                         request.setLimit(recomendedAdapter.getBucketSize()*2);
-                        request.setToken(token);
+                        //request.setToken(token);
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
                     } catch (IOException e) {

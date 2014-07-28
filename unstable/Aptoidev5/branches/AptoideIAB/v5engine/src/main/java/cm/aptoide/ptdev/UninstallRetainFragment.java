@@ -144,12 +144,17 @@ public class UninstallRetainFragment extends Fragment {
                 }
             }
 
-            DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
+            if(getFragmentManager()!=null){
+                DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
+                if(pd!=null){
+                    pd.dismissAllowingStateLoss();
+                }
+
+                getFragmentManager().beginTransaction().remove(UninstallRetainFragment.this).commitAllowingStateLoss();
+
             }
 
-            getFragmentManager().beginTransaction().remove(UninstallRetainFragment.this).commit();
+
         }
 
         private String calcApkMd5(String packageName) throws PackageManager.NameNotFoundException {

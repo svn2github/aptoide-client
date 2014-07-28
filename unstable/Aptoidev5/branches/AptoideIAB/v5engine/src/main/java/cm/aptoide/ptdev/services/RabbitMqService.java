@@ -2,8 +2,6 @@ package cm.aptoide.ptdev.services;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -15,10 +13,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
-import cm.aptoide.ptdev.AppViewActivity;
+
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -28,16 +24,10 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
-import org.json.JSONException;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -103,7 +93,7 @@ public class RabbitMqService extends Service {
                                         JSONObject object = new JSONObject(body);
 
                                         Intent i = new Intent(getApplicationContext(), appViewClass);
-                                        SecurePreferences securePreferences = SecurePreferences.GetSecurePreferences();
+                                        SecurePreferences securePreferences = SecurePreferences.getInstance();
                                         String authToken = securePreferences.getString("devtoken", "");
                                         String repo = object.getString("repo");
                                         long id = object.getLong("id");

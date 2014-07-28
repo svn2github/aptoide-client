@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
 import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
@@ -77,6 +78,10 @@ public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
+
         if (token!=null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));

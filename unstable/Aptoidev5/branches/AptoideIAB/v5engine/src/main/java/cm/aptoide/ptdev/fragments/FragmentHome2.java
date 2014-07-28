@@ -108,6 +108,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private PullToRefreshCallback pullToRefreshCallback;
     private PullToRefreshLayout mPullToRefreshLayout;
     private View featGraphFooter;
+    private boolean onConfigChange;
 
     @Override
     public void onRefreshStarted( View view ) {
@@ -122,7 +123,10 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(50, null, this);
+        getLoaderManager().restartLoader(50, null, this);
+
+
+
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
 
@@ -305,7 +309,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                     try {
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
                         request.setLimit(recomendedAdapter.getBucketSize()*2);
-                        request.setToken(token);
+                        //request.setToken(token);
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -409,6 +413,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     View v;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -463,6 +469,9 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         mergeAdapter.setActive(v2, false);
         mergeAdapter.setActive(featGraphFooter, false);
 
+
+
+
     }
 
 
@@ -480,11 +489,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         asyncTaskLoader.forceLoad();
 
         return asyncTaskLoader;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
     final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(1000)).build();

@@ -704,6 +704,9 @@ public class Database {
 
         LinkedHashMap<String, ArrayList<HomeItem>> collections = new LinkedHashMap<String, ArrayList<HomeItem>>();
 
+        collections.put("Top Apps", getTopFeatured(editorsChoiceBucketSize * 2));
+        collectionIdList.put("Top Apps", -2);
+
         collections.put("New Editors' Choice", new ArrayList<HomeItem>());
         collectionIdList.put("New Editors' Choice", -1);
 
@@ -735,11 +738,11 @@ public class Database {
 
 
         c.moveToFirst();
-        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast() && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id"))) ;c.moveToNext()){
+        for(c.move(editorsChoiceBucketSize*2);!c.isAfterLast()  ;c.moveToNext()){
 
             String collection = c.getString(c.getColumnIndex("catname"));
             //ArrayList<HomeItem> totest1= collections.get(collection);
-            if(collections.get(collection).size() < editorsChoiceBucketSize*2){
+            if(collections.get(collection).size() < editorsChoiceBucketSize*2 && !ArrayUtils.contains(ids,c.getLong(c.getColumnIndex("id")))){
 
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
@@ -753,8 +756,7 @@ public class Database {
             }
         }
 
-        collections.put("Top Apps", getTopFeatured(editorsChoiceBucketSize * 2));
-        collectionIdList.put("Top Apps", -2);
+
 
 
         for(String collection : collections.keySet()){

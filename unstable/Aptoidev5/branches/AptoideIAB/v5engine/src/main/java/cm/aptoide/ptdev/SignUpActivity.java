@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.*;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.PasswordTransformationMethod;
@@ -31,10 +30,8 @@ import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.CreateUserRequest;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
-import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 
-import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
@@ -226,7 +223,7 @@ public class SignUpActivity extends ActionBarActivity{
                             editor.putString("loginType", LoginActivity.Mode.APTOIDE.name());
                             editor.commit();
 
-                            SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
+                            SecurePreferences preferences = SecurePreferences.getInstance();
                             preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
                             preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 

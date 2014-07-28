@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -35,7 +34,7 @@ public class AdultDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int pin = SecurePreferences.GetSecurePreferences().getInt(AdultDialog.MATUREPIN, -1);
+                        int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN, -1);
                         String pintext = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
                         if (pintext.length() > 0 && new Integer(pintext) == pin) {
                             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Pin");
@@ -102,7 +101,7 @@ public class AdultDialog extends DialogFragment {
                 .create();
     }
     public static Dialog BuildAreYouAdultDialog(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
-        int pin= SecurePreferences.GetSecurePreferences().getInt(MATUREPIN,-1);
+        int pin= SecurePreferences.getInstance().getInt(MATUREPIN,-1);
         if(pin==-1) {
             return DialogAsk21(c,positiveButtonlistener);
         }

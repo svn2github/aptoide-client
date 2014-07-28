@@ -1,24 +1,15 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.*;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.*;
-import android.provider.Settings;
 import android.util.Log;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
+
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.Filters;
-import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
-import com.octo.android.robospice.SpiceManager;
+
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.AMQConnection;
 import com.rabbitmq.client.impl.ChannelN;
@@ -29,7 +20,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
 
 /**
  * Created by j-pac on 27-01-2014.
@@ -124,7 +114,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             JSONObject object = new JSONObject(body);
 
             Intent i = new Intent(getContext(), appViewClass);
-            SecurePreferences securePreferences = SecurePreferences.GetSecurePreferences();
+            SecurePreferences securePreferences = SecurePreferences.getInstance();
             String authToken = securePreferences.getString("devtoken", "");
 
             String repo = object.getString("repo");

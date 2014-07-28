@@ -87,8 +87,9 @@ public class SecurePreferences implements SharedPreferences {
      *            the caller's context
      */
 
-    private static SecurePreferences singleton=null;
-    public static synchronized SecurePreferences GetSecurePreferences(){
+    private static SecurePreferences singleton = null;
+
+    public static synchronized SecurePreferences getInstance(){
         if(singleton==null)
             singleton= new SecurePreferences(Aptoide.getContext());
         return singleton;

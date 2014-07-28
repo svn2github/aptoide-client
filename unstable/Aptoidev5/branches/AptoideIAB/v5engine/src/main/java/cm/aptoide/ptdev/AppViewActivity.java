@@ -47,6 +47,7 @@ import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.flurry.android.impl.analytics.FlurryAnalyticsModule;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -2151,9 +2152,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onRequestFailure(SpiceException e) {
             Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
             ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+
             if(pd!=null){
                 pd.dismissAllowingStateLoss();
             }
+
         }
 
         @Override

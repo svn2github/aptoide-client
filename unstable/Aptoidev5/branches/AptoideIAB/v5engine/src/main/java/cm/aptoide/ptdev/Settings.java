@@ -58,7 +58,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     public void onClick(DialogInterface dialog, int which) {
                         String input = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
                         if (!TextUtils.isEmpty(input)) {
-                            SecurePreferences.GetSecurePreferences()
+                            SecurePreferences.getInstance()
                                     .edit()
                                     .putInt(AdultDialog.MATUREPIN, new Integer(input))
                                     .commit();
@@ -80,14 +80,14 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     }
 
     private void maturePinSetRemoveClick(){
-        int pin = SecurePreferences.GetSecurePreferences().getInt(AdultDialog.MATUREPIN,-1);
+        int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN,-1);
         final Preference mp= findPreference("Maturepin");
         if(pin!=-1) {
             // With Pin
             AdultDialog.DialogRequestMaturepin(Settings.this,new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    SecurePreferences.GetSecurePreferences().edit().putInt(AdultDialog.MATUREPIN,-1).commit();
+                    SecurePreferences.getInstance().edit().putInt(AdultDialog.MATUREPIN,-1).commit();
                     final Preference mp= findPreference("Maturepin");
                     mp.setTitle(R.string.set_mature_pin_title);
                     mp.setSummary(R.string.set_mature_pin_summary);
@@ -121,7 +121,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //			}
 //		});
 
-        int pin = SecurePreferences.GetSecurePreferences().getInt(AdultDialog.MATUREPIN,-1);
+        int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN,-1);
         final Preference mp= findPreference("Maturepin");
         if(pin!=-1) {
             Log.d("PINTEST","PinBuild");

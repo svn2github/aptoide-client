@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import android.os.Build;
 import android.util.Log;
 import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import com.google.api.client.http.GenericUrl;
@@ -66,6 +67,7 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
 
 
         HashMap<String, String > parameters = new HashMap<String, String>();
+        //token = SecurePreferences.getInstance().getString("access_token", null);
 
         parameters.put("access_token", token);
 

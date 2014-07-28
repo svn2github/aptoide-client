@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
 import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -44,6 +45,9 @@ public class AddApkCommentVoteRequest extends GoogleHttpClientSpiceRequest<Gener
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
 
         if (token!=null) {
             parameters.put("access_token", token);

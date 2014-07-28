@@ -1,38 +1,28 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.*;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
 
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
@@ -42,7 +32,6 @@ import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
-import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
@@ -57,9 +46,7 @@ import com.google.android.gms.plus.PlusClient;
 import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.octo.android.robospice.retry.RetryPolicy;
 
 
 import java.io.IOException;
@@ -593,6 +580,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
 
+
+
                 getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
 
             }
@@ -693,15 +682,16 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             .putString("loginType", mode.name())
                             .commit();
 
-                    SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
-                    preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
+                    SecurePreferences preferences = SecurePreferences.getInstance();
+
+                    preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
                     preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getAccess_token());
+                    data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
 
 

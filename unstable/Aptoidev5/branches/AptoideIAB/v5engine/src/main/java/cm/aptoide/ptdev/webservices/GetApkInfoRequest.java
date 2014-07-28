@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
@@ -81,6 +82,7 @@ public class GetApkInfoRequest extends GoogleHttpClientSpiceRequest<GetApkInfoJs
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        token = SecurePreferences.getInstance().getString("access_token", null);
 
         if (token!=null) {
             parameters.put("access_token", token);

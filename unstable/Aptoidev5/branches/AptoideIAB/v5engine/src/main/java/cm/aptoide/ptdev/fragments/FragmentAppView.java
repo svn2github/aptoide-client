@@ -954,7 +954,7 @@ public abstract class FragmentAppView extends Fragment {
                     }else if(event.getUservote().equals("dislike")){
                         dontLikeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_bad_pressed, 0,0,0);
                         TypedValue outValue = new TypedValue();
-                        getActivity().getTheme().resolveAttribute( R.attr.icRatingBadDrawable, outValue, true );
+                        getActivity().getTheme().resolveAttribute( R.attr.icRatingGoodDrawable, outValue, true );
                         likeBtn.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0,0,0);
                     }
 
@@ -1202,7 +1202,10 @@ public abstract class FragmentAppView extends Fragment {
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
                 }
 
-                manager.execute(request, requestListener);
+                manager.execute(request, "1234" , DurationInMillis.ONE_SECOND, requestListener);
+
+
+
                 AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
             }
         }

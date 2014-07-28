@@ -2,6 +2,8 @@ package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
 import android.util.Log;
+
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import com.google.api.client.http.GenericUrl;
@@ -68,6 +70,8 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
         if (token!=null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
@@ -79,9 +83,7 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
         return request.execute().parseAs( getResultType() );
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+
 
     public void setLimit(int limit) {
         this.limit = limit;

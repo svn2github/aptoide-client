@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.text.TextUtils;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -24,7 +23,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
 
     private final HashMap<String, String> currentParameters;
     private final HttpRequestFactory httpRequestFactory;
-    private final String refreshToken;
+    private String refreshToken;
     AccountManager accountManager;
     int retries = 1;
 
@@ -33,8 +32,17 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
         this.currentParameters = currentParameters;
         this.httpRequestFactory = httpRequestFactory;
         accountManager = AccountManager.get(Aptoide.getContext());
-        SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
-        this.refreshToken = preferences.getString("refreshToken", "");
+
+        Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        try {
+            this.refreshToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+        } catch (OperationCanceledException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (AuthenticatorException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -52,22 +60,12 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
             oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
             OAuth responseJson = oauth2RefresRequest.execute().parseAs(OAuth.class);
 
-            Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
 
-            try {
+            SecurePreferences preferences = SecurePreferences.getInstance();
 
-                String currentToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
-                accountManager.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE, currentToken);
-                accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, responseJson.getAccess_token());
+            preferences.edit().putString("access_token", responseJson.getAccess_token()).commit();
 
-                currentParameters.put("access_token", responseJson.getAccess_token());
-
-            } catch (OperationCanceledException e) {
-                e.printStackTrace();
-            } catch (AuthenticatorException e) {
-                e.printStackTrace();
-            }
-
+            currentParameters.put("access_token", responseJson.getAccess_token());
 
             return true;
         } else {
