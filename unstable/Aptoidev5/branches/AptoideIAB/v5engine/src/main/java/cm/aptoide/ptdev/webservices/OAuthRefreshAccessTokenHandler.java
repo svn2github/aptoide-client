@@ -33,7 +33,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
         this.currentParameters = currentParameters;
         this.httpRequestFactory = httpRequestFactory;
         accountManager = AccountManager.get(Aptoide.getContext());
-        SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
+        SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
         this.refreshToken = preferences.getString("refreshToken", "");
     }
 

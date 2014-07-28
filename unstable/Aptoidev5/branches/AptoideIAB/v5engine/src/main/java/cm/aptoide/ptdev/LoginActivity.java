@@ -693,7 +693,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             .putString("loginType", mode.name())
                             .commit();
 
-                    SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
+                    SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
                     preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
                     preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 

@@ -226,7 +226,7 @@ public class SignUpActivity extends ActionBarActivity{
                             editor.putString("loginType", LoginActivity.Mode.APTOIDE.name());
                             editor.commit();
 
-                            SecurePreferences preferences = new SecurePreferences(Aptoide.getContext());
+                            SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
                             preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
                             preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 

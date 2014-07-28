@@ -86,7 +86,7 @@ public class StubProvider extends ContentProvider {
 
                     switch (uriMatcher.match(uri)) {
                         case TOKEN:
-                            SecurePreferences preferences = new SecurePreferences(getContext());
+                            SecurePreferences preferences = SecurePreferences.GetSecurePreferences();
                             String token = preferences.getString("devtoken", "");
                             mx = new MatrixCursor(new String[]{"userToken"}, 1);
                             mx.addRow(new Object[]{token});

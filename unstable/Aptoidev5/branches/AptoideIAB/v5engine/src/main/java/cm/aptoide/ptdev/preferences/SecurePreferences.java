@@ -43,6 +43,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.Base64;
 
 
@@ -85,7 +86,14 @@ public class SecurePreferences implements SharedPreferences {
      * @param context
      *            the caller's context
      */
-    public SecurePreferences(Context context) {
+
+    private static SecurePreferences singleton=null;
+    public static synchronized SecurePreferences GetSecurePreferences(){
+        if(singleton==null)
+            singleton= new SecurePreferences(Aptoide.getContext());
+        return singleton;
+    }
+    private SecurePreferences(Context context) {
         // Proxy design pattern
         if (SecurePreferences.sFile == null) {
             SecurePreferences.sFile = PreferenceManager
@@ -107,6 +115,7 @@ public class SecurePreferences implements SharedPreferences {
             throw new IllegalStateException(e);
         }
     }
+
 
     private static String encode(byte[] input) {
         return Base64.encodeToString( input, Base64.NO_PADDING | Base64.NO_WRAP );
