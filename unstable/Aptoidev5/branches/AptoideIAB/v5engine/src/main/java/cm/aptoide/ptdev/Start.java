@@ -740,12 +740,14 @@ public class Start extends ActionBarActivity implements
 
             try {
                 if (Aptoide.isUpdate()) {
-
-                    if(PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0) < 431){
+                    int previousVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0);
+                    if( previousVersion > 431 && previousVersion < 438){
                         Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                         whatsNewTutorial.putExtra("isUpdate", true);
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
                     }
+
+
 
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
 
