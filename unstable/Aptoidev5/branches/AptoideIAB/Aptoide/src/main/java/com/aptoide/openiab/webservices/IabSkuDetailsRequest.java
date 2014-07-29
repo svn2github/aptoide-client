@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 
@@ -81,6 +82,8 @@ public class IabSkuDetailsRequest extends GoogleHttpClientSpiceRequest<IabSkuDet
         parameters.put("package",packageName);
         parameters.put("apiversion",apiVersion);
         parameters.put("reqtype","iabskudetails");
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
 
         parameters.put("access_token",token);
 

@@ -15,6 +15,7 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 /**
@@ -45,6 +46,7 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
 
         options.add(new WebserviceOptions("imsi", imsi));
+
         options.add(new WebserviceOptions("oemid", oemId));
         options.add(new WebserviceOptions("developerPayload", developerPayload));
 
@@ -78,7 +80,13 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("price",price);
         parameters.put("currency",currency);
 
-        parameters.put("access_token",token);
+        parameters.put("imsi",imsi);
+        parameters.put("oemid",oemId);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
+
+        parameters.put("access_token", token);
 
         HttpContent content = new UrlEncodedContent(parameters);
 

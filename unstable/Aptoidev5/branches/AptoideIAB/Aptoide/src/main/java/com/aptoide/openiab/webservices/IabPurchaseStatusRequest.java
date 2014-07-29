@@ -17,6 +17,7 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 
@@ -95,6 +96,9 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
         parameters.put("taxrate", String.valueOf(taxRate));
         parameters.put("productid", String.valueOf(productId));
         parameters.put("price", String.valueOf(price));
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
         parameters.put("access_token",token);
         parameters.put("currency",currency);
         parameters.put("simcc",simcc);

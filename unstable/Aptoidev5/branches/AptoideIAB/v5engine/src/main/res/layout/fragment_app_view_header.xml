@@ -76,6 +76,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                   android:singleLine="true"
                   android:layout_weight="1"
                   android:visibility="gone"
+                  android:focusable="true"
                   style="@style/focusableRowBackground"
                   android:textColor="?attr/customColor"/>
 

@@ -27,7 +27,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:id="@+id/author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view"
             android:layout_gravity="left"
             android:layout_toLeftOf="@+id/ic_action"
             android:ellipsize="end"

@@ -30,6 +30,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -45,6 +46,7 @@ import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -109,6 +111,7 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
+import cm.aptoide.ptdev.webservices.RegisterAdRequest;
 import cm.aptoide.ptdev.webservices.UpdateUserRequest;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
@@ -1016,9 +1019,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
 
-
-
-
+        SearchManager manager;
         if (savedInstanceState != null) {
             package_name = savedInstanceState.getString("packageName");
             downloadId = savedInstanceState.getInt("downloadId");
@@ -1043,33 +1044,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         }
 
-
-        AccountManager accountManager = AccountManager.get(AppViewActivity.this);
-
-
-        if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-
-            Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-            accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, AppViewActivity.this, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-                    try {
-                        token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
-                    }
-                    continueLoading(savedInstanceState);
-                }
-            }, null);
-
-        } else {
-            continueLoading(savedInstanceState);
-
-        }
+        continueLoading(savedInstanceState);
 
     }
 
@@ -1082,10 +1057,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         id = getIntent().getExtras().getLong("id");
 
+
         if (getIntent().getExtras().containsKey("appName")) {
             name = getIntent().getExtras().getString("appName");
             appName.setText(name);
         }
+
 
         if (getIntent().getExtras().containsKey("versionName")) {
             versionName = getIntent().getExtras().getString("versionName");
@@ -1108,7 +1085,39 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         if(savedInstanceState==null) {
 
-            if (getIntent().getBooleanExtra("getBackupApps", false)) {
+
+            if(getIntent().getBooleanExtra("fromSponsored", false)){
+                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+
+                long id = getIntent().getLongExtra("id", 0);
+                request.setAppId(String.valueOf(id));
+
+                if (token != null) {
+                    request.setToken(token);
+                }
+                cacheKey = String.valueOf(id);
+
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
+
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RegisterAdRequest registerAdRequest = new RegisterAdRequest(AppViewActivity.this);
+                        registerAdRequest.setUrl(getIntent().getStringExtra("cpc"));
+                        registerAdRequest.setLocation(getIntent().getStringExtra("location"));
+                        registerAdRequest.setKeyword(getIntent().getStringExtra("keyword"));
+                        try {
+                            registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                            registerAdRequest.loadDataFromNetwork();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).run();
+
+
+            }else if (getIntent().getBooleanExtra("getBackupApps", false)) {
 
                 GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
 
@@ -1200,10 +1209,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         publicityView.setVisibility(View.VISIBLE);
         ((MoPubView) publicityView).setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
         ((MoPubView) publicityView).loadAd();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_app_view, menu);
 
         if (isInstalled) {
@@ -1222,8 +1233,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         return super.onCreateOptionsMenu(menu);
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
 
         int i = item.getItemId();
 

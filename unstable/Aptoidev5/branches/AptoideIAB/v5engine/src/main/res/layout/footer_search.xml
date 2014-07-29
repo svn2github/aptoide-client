@@ -5,7 +5,12 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="?attr/backgroundCard"
@@ -26,14 +31,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/container"
-            style="?attr/backgroundCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:visibility="gone" />
+        <FrameLayout
+            style="?attr/customRowForeground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                />
+
+        </FrameLayout>
 
 
         <View
@@ -54,3 +64,4 @@
 
     </LinearLayout>
 </LinearLayout>
+    </FrameLayout>

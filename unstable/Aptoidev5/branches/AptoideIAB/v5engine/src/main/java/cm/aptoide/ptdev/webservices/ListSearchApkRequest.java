@@ -51,7 +51,7 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
     public SearchJson loadDataFromNetwork() throws Exception {
 
         StringBuilder repos = new StringBuilder();
-        GenericUrl url = new GenericUrl("https://webservices.aptoide.com/webservices/2/listSearchApks");
+        GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/2/listSearchApks");
 
         final ArrayList<String> stores = new ArrayList<String>();
 

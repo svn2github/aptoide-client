@@ -15,6 +15,7 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 import java.io.EOFException;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 /**
@@ -46,6 +47,9 @@ public class IabPurchasesRequest extends GoogleHttpClientSpiceRequest<IabPurchas
 
         parameters.put("package",packageName);
         parameters.put("purchasetype",type);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
         parameters.put("access_token",token);
         parameters.put("mode","json");
         HttpContent content = new UrlEncodedContent(parameters);

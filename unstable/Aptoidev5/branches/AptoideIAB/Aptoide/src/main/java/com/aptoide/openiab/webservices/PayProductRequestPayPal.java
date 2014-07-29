@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 /**
@@ -82,6 +83,9 @@ public class PayProductRequestPayPal extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("currency",currency);
 
         if(simCountryCode!=null)parameters.put("simcc",simCountryCode);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
         parameters.put("access_token",token);
 
 

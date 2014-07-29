@@ -16,6 +16,7 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
 
@@ -70,6 +71,9 @@ public class IabPurchaseAuthorizationRequest extends GoogleHttpClientSpiceReques
         parameters.put("reqType","rest");
         parameters.put("payType","1");
         parameters.put("authToken",authToken);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
         parameters.put("access_token",token);
 
         HttpContent content = new UrlEncodedContent(parameters);

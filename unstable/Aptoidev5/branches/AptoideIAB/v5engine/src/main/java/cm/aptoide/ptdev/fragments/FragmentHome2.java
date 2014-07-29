@@ -7,7 +7,7 @@ import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.hardware.display.DisplayManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -18,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -28,12 +27,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
@@ -51,7 +49,9 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -75,8 +75,6 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -109,6 +107,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private PullToRefreshLayout mPullToRefreshLayout;
     private View featGraphFooter;
     private boolean onConfigChange;
+    private LinearLayout sponsoredLinearLayout;
+    private View sponsoredHeader;
 
     @Override
     public void onRefreshStarted( View view ) {
@@ -129,12 +129,83 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
-
+        refreshSponseredList();
         refreshRecommendedList();
         if(!isNetworkAvailable(Aptoide.getContext())){
             setListShown(true);
             setEmptyText(getString(R.string.connection_error));
         }
+
+    }
+
+    private void refreshSponseredList() {
+
+        SpiceManager manager = ((Start)getActivity()).getSpiceManager();
+
+        GetAdsRequest request = new GetAdsRequest(getActivity());
+
+
+        request.setLocation("homepage");
+        request.setKeyword("__NULL__");
+
+        manager.execute(request, new RequestListener<ApkSuggestionJson>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+
+            @Override
+            public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+
+                if(apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested().size()>0) {
+
+                    try {
+                        sponsoredLinearLayout.removeAllViews();
+                        for (final ApkSuggestionJson.AppSuggested apkSuggestion : apkSuggestionJson.getApp_suggested()) {
+                            View v = View.inflate(getActivity(), R.layout.row_app_home, null);
+                            v.findViewById(R.id.ic_action).setVisibility(View.GONE);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                            v.setLayoutParams(params);
+                            ImageView icon = (ImageView) v.findViewById(R.id.app_icon);
+                            TextView name = (TextView) v.findViewById(R.id.app_name);
+
+                            TextView category = (TextView) v.findViewById(R.id.app_category);
+                            ImageLoader.getInstance().displayImage(apkSuggestion.getIcon(), icon);
+                            category.setText(R.string.sponsored);
+                            name.setText(apkSuggestion.getName());
+
+                            v.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(getActivity(), appViewClass);
+                                    long id = apkSuggestion.getId().longValue();
+                                    i.putExtra("id", id);
+                                    i.putExtra("fromSponsored", true);
+                                    i.putExtra("location", "homepage");
+                                    i.putExtra("keyword", "__NULL__");
+                                    i.putExtra("cpc", apkSuggestion.getCpc_url());
+                                    i.putExtra("cpi", apkSuggestion.getCpi_url());
+                                    i.putExtra("whereFrom", "sponsored");
+                                    startActivity(i);
+                                }
+                            });
+
+                            sponsoredLinearLayout.addView(v);
+                        }
+
+                        mergeAdapter.setActive(sponsoredHeader, true);
+                        mergeAdapter.setActive(sponsoredLinearLayout, true);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        });
+
 
     }
 
@@ -455,6 +526,19 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             }
         });
         mergeAdapter.addView(featGraphFooter, false);
+
+        sponsoredLinearLayout = new LinearLayout(getActivity());
+
+        sponsoredLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        sponsoredHeader = View.inflate(getActivity(), R.layout.separator_home_header, null);
+        ((TextView)sponsoredHeader.findViewById(R.id.separator_label)).setText(R.string.suggested_apps);
+
+        mergeAdapter.addView(sponsoredHeader);
+        mergeAdapter.setActive(sponsoredHeader, false);
+
+        mergeAdapter.addView(sponsoredLinearLayout);
+        mergeAdapter.setActive(sponsoredLinearLayout, false);
 
         mergeAdapter.addAdapter(homeBucketAdapterHome);
 

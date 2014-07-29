@@ -181,7 +181,6 @@ public class FragmentComments extends ListFragment {
     public void onAttach( Activity activity ) {
         super.onAttach( activity );
         spiceManager = ((AllCommentsActivity)activity).getSpice();
-
     }
 
     @Override
@@ -318,26 +317,11 @@ public class FragmentComments extends ListFragment {
             manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
-                    if (LoginActivity.isLoggedIn(activity)) {
 
-                        final Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                        manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, activity, new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-                                try {
 
-                                    ((AppViewActivity) activity).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                } catch (OperationCanceledException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (AuthenticatorException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, null);
+
                     }
-                }
+
             }, null);
 
             return false;

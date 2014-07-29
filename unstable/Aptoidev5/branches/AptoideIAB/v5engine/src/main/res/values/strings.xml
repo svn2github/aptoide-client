@@ -556,7 +556,8 @@
     <string name="device_not_allowed">This app is not allowed to run on this device model!</string>
     <string name="maybe_in_other_stores">Maybe in other stores?</string>
     <string name="suggested_app">Suggested App</string>
-    <string name="advertising">Sponsored</string>
+    <string name="suggested_apps">Suggested Apps</string>
+    <string name="sponsored">Sponsored</string>
     <string name="btn_search_other_stores">Search Other Stores</string>
 
 
