@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:padding="2dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_below="@+id/advertising"
@@ -75,13 +75,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/suggested_app"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?attr/customColor"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignLeft="@+id/app_name"
+            android:layout_alignStart="@+id/app_name" />
 
         <TextView
             android:layout_width="wrap_content"

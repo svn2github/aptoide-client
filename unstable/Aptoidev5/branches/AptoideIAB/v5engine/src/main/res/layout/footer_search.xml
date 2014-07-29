@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
-            android:text="@string/search_more" />
+            android:text="@string/btn_search_other_stores" />
 
     </LinearLayout>
 </LinearLayout>
