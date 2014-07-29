@@ -554,5 +554,8 @@
     <string name="search_result_did_you_mean">Did you mean: </string>
 
     <string name="device_not_allowed">This app is not allowed to run on this device model!</string>
+    <string name="maybe_in_other_stores">Maybe in other stores?</string>
+    <string name="suggested_app">Suggested App</string>
+    <string name="advertising">Advertising</string>
 
 </resources>
