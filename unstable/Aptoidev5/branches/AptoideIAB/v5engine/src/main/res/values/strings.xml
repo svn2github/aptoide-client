@@ -331,15 +331,16 @@
     <string name="wizard_search">3 - Search thousands of apps</string>
     <string name="wizard_search_local">Apps available in Local Stores</string>
     <string name="wizard_search_online">Search in other stores at Aptoide website</string>
-    <string name="wizard_new_layout">1- New Layout</string>
-    <string name="wizard_rollback">2- Rollback</string>
-    <string name="wizard_widget">3- Widget</string>
+    <string name="wizard_new_layout">New Layout</string>
     <string name="wizard_new_account">4- Account Manager</string>
     <string name="wizard_add_more_stores">You can add new Android stores</string>
-    <string name="wizard_rollback_description">You can reinstall or revert apps</string>
-    <string name="wizard_widget_description">Fast search of applications</string>
-    <string name="wizard_account_description">Aptoide apps can use the same login</string>
     <string name="wizard_secure_fast_reliable">Secure. Fast. Reliable.</string>
+    <string name="wizard_new_webinstall">1 - WebInstall</string>
+    <string name="wizard_new_webinstall_description">New on this version! Install from your desktop computer</string>
+    <string name="wizard_new_flags_description">More information about potential Malware</string>
+    <string name="wizard_new_flags">2 - Flag System</string>
+    <string name="wizard_new_pin">3 - Adult Content Pin</string>
+    <string name="wizard_new_pin_description">Set a pin to unlock Adult Content</string>
     <string name="wizard_next">Next</string>
     <string name="wizard_prev">Previous</string>
 

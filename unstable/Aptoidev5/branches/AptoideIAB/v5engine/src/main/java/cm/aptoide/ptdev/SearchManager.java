@@ -61,6 +61,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -375,41 +377,44 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 @Override
                 public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
+                    if (apkSuggestionJson.getApp_suggested().size() > 0) {
+                        adapter.setActive(sponsoredApp, true);
+                        final ApkSuggestionJson.AppSuggested appSuggested = apkSuggestionJson.getApp_suggested().get(0);
 
-                    adapter.setActive(sponsoredApp, true);
-                    final ApkSuggestionJson.AppSuggested appSuggested = apkSuggestionJson.getApp_suggested().get(0);
+                        ImageView icon = (ImageView) sponsoredApp.findViewById(R.id.app_icon);
+                        TextView name = (TextView) sponsoredApp.findViewById(R.id.app_name);
+                        TextView description = (TextView) sponsoredApp.findViewById(R.id.app_description);
+                        RatingBar rating = (RatingBar) sponsoredApp.findViewById(R.id.app_rating);
+                        TextView downloads = (TextView) sponsoredApp.findViewById(R.id.app_downloads);
 
-                    ImageView icon = (ImageView) sponsoredApp.findViewById(R.id.app_icon);
-                    TextView name = (TextView) sponsoredApp.findViewById(R.id.app_name);
-                    TextView description = (TextView) sponsoredApp.findViewById(R.id.app_description);
-                    RatingBar rating = (RatingBar) sponsoredApp.findViewById(R.id.app_rating);
-                    TextView downloads = (TextView) sponsoredApp.findViewById(R.id.app_downloads);
+                        ImageLoader.getInstance().displayImage(appSuggested.getIcon(), icon);
 
-                    ImageLoader.getInstance().displayImage(appSuggested.getIcon(), icon);
-
-                    name.setText(appSuggested.getName());
-                    description.setText(appSuggested.getDescription());
-                    rating.setRating(appSuggested.getStars().floatValue());
-                    downloads.setText(String.valueOf(appSuggested.getDownloads().intValue()));
-                    sponsoredApp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(getActivity(), appViewClass);
-                            long id = appSuggested.getId().longValue();
-                            i.putExtra("id", id);
-                            i.putExtra("fromSponsored", true);
-                            i.putExtra("location", "search");
-                            i.putExtra("keyword", query);
-                            i.putExtra("cpc", appSuggested.getCpc_url());
-                            i.putExtra("cpi", appSuggested.getCpi_url());
-                            i.putExtra("whereFrom", "sponsored");
-                            startActivity(i);
-                        }
-                    });
+                        name.setText(appSuggested.getName());
+                        description.setText(appSuggested.getDescription());
+                        rating.setRating(appSuggested.getStars().floatValue());
+                        String down = String.valueOf(appSuggested.getDownloads().intValue());
+                        downloads.setText(getString(R.string.X_download_number, withSuffix(down)));
+                        sponsoredApp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(getActivity(), appViewClass);
+                                long id = appSuggested.getId().longValue();
+                                i.putExtra("id", id);
+                                i.putExtra("fromSponsored", true);
+                                i.putExtra("location", "search");
+                                i.putExtra("keyword", query);
+                                i.putExtra("cpc", appSuggested.getCpc_url());
+                                i.putExtra("cpi", appSuggested.getCpi_url());
+                                i.putExtra("whereFrom", "sponsored");
+                                startActivity(i);
+                            }
+                        });
 
 
+                    }
                 }
             });
+
 
 
             manager.execute(request, query, DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {

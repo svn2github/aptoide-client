@@ -36,7 +36,7 @@ public class Wizard {
         wizard.add(NewFeature1.newInstace());
         wizard.add(NewFeature2.newInstace());
         wizard.add(NewFeature3.newInstace());
-        wizard.add(NewFeature4.newInstace());
+//        wizard.add(NewFeature4.newInstace());
         return wizard;
     }
 
@@ -207,9 +207,11 @@ public class Wizard {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_layout));
+            title.setText(getString(R.string.wizard_new_webinstall));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_new_layout);
+            image.setImageResource(R.drawable.wizard_webinstall);
+            TextView description = (TextView) view.findViewById(R.id.description);
+            description.setText(getString(R.string.wizard_new_webinstall_description));
 
         }
 
@@ -240,11 +242,11 @@ public class Wizard {
             super.onViewCreated(view, savedInstanceState);
 
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_rollback));
+            title.setText(getString(R.string.wizard_new_flags));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_rollback);
+            image.setImageResource(R.drawable.wizard_flags);
             TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_rollback_description));
+            description.setText(getString(R.string.wizard_new_flags_description));
         }
 
         @Override
@@ -274,11 +276,11 @@ public class Wizard {
             super.onViewCreated(view, savedInstanceState);
 
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_widget));
+            title.setText(getString(R.string.wizard_new_pin));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_widget);
+            image.setImageResource(R.drawable.wizard_pin);
             TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_widget_description));
+            description.setText(getString(R.string.wizard_new_pin_description));
 //            ImageView arrow = (ImageView) view.findViewById(R.id.arrow);
 //            arrow.setVisibility(View.VISIBLE);
         }
@@ -289,36 +291,4 @@ public class Wizard {
         }
     }
 
-    public static class NewFeature4 extends Fragment implements WizardCallback {
-
-        public static NewFeature4 newInstace() {
-            NewFeature4 fragment = new NewFeature4();
-            Bundle args = new Bundle();
-            args.putString("name", "NewFeature4");
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
-            return view;
-        }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_account));
-            ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_new_account);
-            TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_account_description));
-        }
-
-        @Override
-        public void getActions(ArrayList<Action> actions) {
-
-        }
-    }
 }

@@ -46,9 +46,13 @@ public class Tutorial extends ActionBarActivity {
         setContentView(R.layout.page_tutorial);
 
         if(getIntent().hasExtra("isUpdate")){
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle(R.string.whats_new);
             wizard_fragments = Wizard.getWizardUpdate();
             addDefaultRepo = false;
         }else{
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle(R.string.app_name);
             wizard_fragments = Wizard.getWizardNewToAptoide();
         }
 
@@ -96,8 +100,7 @@ public class Tutorial extends ActionBarActivity {
 
         }
 
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(R.string.app_name);
+
     }
 
     @Override
