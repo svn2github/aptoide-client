@@ -155,11 +155,13 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
             }
         }
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sPref.edit().remove("queueName").commit();
-        sPref.edit().remove(Configs.LOGIN_USER_LOGIN).commit();
-        sPref.edit().remove("username").commit();
-        sPref.edit().remove("useravatar").commit();
-        sPref.edit().remove("userRepo").commit();
+        sPref.edit().remove("queueName").remove(Configs.LOGIN_USER_LOGIN)
+        .remove(Configs.LOGIN_USER_LOGIN)
+        .remove("username")
+        .remove("useravatar")
+        .remove("userRepo")
+                .remove("access_token")
+         .commit();
         mContext.stopService(new Intent(mContext, RabbitMqService.class));
 
         return result;
