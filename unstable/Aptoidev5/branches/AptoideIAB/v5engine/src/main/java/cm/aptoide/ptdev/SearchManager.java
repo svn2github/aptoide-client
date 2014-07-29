@@ -155,8 +155,14 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
         private List<SearchJson.Results.Apks> items = new ArrayList<SearchJson.Results.Apks>();
+        private List<SearchJson.Results.Apks> items2 = new ArrayList<SearchJson.Results.Apks>();
+
         private SearchQueryCallback callback;
         private boolean loading;
+        private View v2;
+        private View searchLayout;
+        private boolean hasUapks;
+        //private View v2;
 
         @Override
         public void onStart() {
@@ -176,6 +182,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         private String query;
         int positionsub = 0;
         private SearchAdapter2 searchAdapterapks;
+        private SearchAdapter2 searchAdapterapks2;
+
         private SearchAdapter cursorAdapter;
         private StoreActivity.Sort sort = StoreActivity.Sort.DOWNLOADS;
         private View v;
@@ -189,7 +197,36 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             adapter = new MergeAdapter();
             setRetainInstance(true);
             searchAdapterapks = new SearchAdapter2(getActivity(), items);
+            searchAdapterapks2 = new SearchAdapter2(getActivity(), items2);
+
             query = getArguments().getString("query");
+
+            searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.didyoumean_and_uapks_search_layout, null);
+            v = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
+            v2 = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
+
+            pb = new ProgressBar(getActivity());
+            AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+            pb.setLayoutParams(params);
+
+            adapter.addView(searchLayout);
+
+            adapter.addAdapter(searchAdapterapks);
+
+            adapter.addView(v);
+
+            adapter.setActive(v, false);
+
+
+            adapter.addAdapter(searchAdapterapks2);
+
+            adapter.addView(pb);
+            adapter.setActive(pb, false);
+
+            adapter.addView(v2);
+            adapter.setActive(v2, false);
+
+
 
             setHasOptionsMenu(true);
         }
@@ -218,8 +255,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
+            setListAdapter(null);
             cursorAdapter = new SearchAdapter(getActivity());
-
+            adapter = new MergeAdapter();
             return new SimpleCursorLoader(getActivity()) {
                 @Override
                 public Cursor loadInBackground() {
@@ -296,14 +334,15 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            pb = new ProgressBar(getActivity());
-
-            AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT);
-            pb.setLayoutParams(params);
 
 
-            getListView().addFooterView(pb);
-            pb.setVisibility(View.GONE);
+
+
+
+
+
+            //getListView().addFooterView(pb);
+
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             final ListSearchApkRequest request = new ListSearchApkRequest();
@@ -362,10 +401,20 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
 
 
-                    View searchLayout = LayoutInflater.from(getActivity()).inflate(R.layout.didyoumean_and_uapks_search_layout, null);
+
+
+
+
+
 
                     LinearLayout didyoumeanContainer = (LinearLayout) searchLayout.findViewById(R.id.didyoumeancontainer);
-                    LinearLayout usearchContainer = (LinearLayout) searchLayout.findViewById(R.id.container);
+                    LinearLayout usearchContainer = (LinearLayout) v.findViewById(R.id.container);
+                    LinearLayout usearchContainer2 = (LinearLayout) v2.findViewById(R.id.container);
+
+
+
+                    didyoumeanContainer.removeAllViews();
+
                     final String sizeString = IconSizes.generateSizeString(getActivity());
 
                     for (final String s : searchJson.getResults().getDidyoumean()) {
@@ -401,23 +450,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         didyoumeanContainer.addView(tv);
                     }
 
-                    for (SearchJson.Results.Apks apk : searchJson.getResults().getU_Apks()) {
-                        View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
-                        ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
+                    fillUApks(searchJson, usearchContainer, sizeString);
+                    fillUApks(searchJson, usearchContainer2, sizeString);
 
-                        String iconUrl = apk.getIcon();
-
-                        if (iconUrl.contains("_icon")) {
-                            String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
-                            iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
-                        }
-                        ImageLoader.getInstance().displayImage(iconUrl, app_icon);
-
-                        TextView app_name = (TextView) element.findViewById(R.id.app_name);
-                        app_name.setText(apk.getName() + " - " + apk.getVername());
-
-                        usearchContainer.addView(element);
-                    }
 
                     if(items.isEmpty()){
                         items.clear();
@@ -427,33 +462,33 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
                     int uapksSize = searchJson.getResults().getU_Apks().size();
 
-                    v = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
 
-                    adapter.addView(v);
-
-                    adapter.addAdapter(searchAdapterapks);
-
-                    //adapter.notifyDataSetChanged();
-
-                    if (getDidyoumeanSize > 0 || uapksSize > 0) {
-                        if (getDidyoumeanSize > 0) {
-                            searchLayout.findViewById(R.id.didyoumeanresults).setVisibility(View.VISIBLE);
-                            searchLayout.findViewById(R.id.didyoumeancontainer).setVisibility(View.VISIBLE);
-                        }
-                        if (uapksSize > 0) {
-                            searchLayout.findViewById(R.id.results).setVisibility(View.VISIBLE);
-                            searchLayout.findViewById(R.id.container).setVisibility(View.VISIBLE);
-                        }
-                        positionsub = -1;
-                        //Log.d("SearchManager", "Adding Header View");
-                        searchLayout.setClickable(true);
-                        searchLayout.setOnClickListener(((SearchManager)getActivity()).getSearchListener());
-                        getListView().addHeaderView(searchLayout, null, false);
+                    if(uapksSize > 0){
+                        hasUapks = true;
+                        adapter.setActive(v, true);
                     }
 
 
 
-                    setListAdapter(adapter);
+                    //adapter.notifyDataSetChanged();
+
+
+                        if (getDidyoumeanSize > 0) {
+                            adapter.setActive(searchLayout, true);
+                        }else{
+                            adapter.setActive(searchLayout, false);
+                        }
+
+                        //positionsub = -1;
+                        //Log.d("SearchManager", "Adding Header View");
+
+
+                        //getListView().addHeaderView(searchLayout, null, false);
+
+
+
+
+
                     if (isAdded()) {
 
 //                        TextView foundResults = (TextView) v.findViewById(R.id.results);
@@ -503,25 +538,29 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                 loading = true;
                                 ListSearchApkRequest request1 = new ListSearchApkRequest();
                                 request1.setSearchString(query);
-                                request1.setOffset(items.size());
+                                request1.setOffset(items.size() + items2.size());
 
-                                pb.setVisibility(View.VISIBLE);
+                                adapter.setActive(pb, true);
 
-                                manager.execute(request1, query + items.size(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+                                manager.execute(request1, query + items.size() + items2.size(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+
                                     @Override
                                     public void onRequestFailure(SpiceException spiceException) {
                                         loading = false;
+                                        adapter.setActive(pb, false);
                                     }
 
                                     @Override
                                     public void onRequestSuccess(SearchJson searchJson) {
-                                        items.addAll(searchJson.getResults().getApks());
+                                        items2.addAll(searchJson.getResults().getApks());
                                         if(!searchJson.getResults().getApks().isEmpty()){
                                             adapter.notifyDataSetChanged();
                                             loading = false;
+                                        }else if(items2.size()> 9 && hasUapks){
+                                            adapter.setActive(v2, true);
                                         }
 
-                                        pb.setVisibility(View.GONE);
+                                        adapter.setActive(pb, false);
 
                                     }
                                 });
@@ -529,6 +568,13 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                         }
                     });
+
+
+                    if(getListView().getAdapter() == null){
+                        setListAdapter(adapter);
+                    }
+
+
                 }
 
 
@@ -537,6 +583,28 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             //getLoaderManager().restartLoader(60, getArguments(), this);
 
+        }
+
+        private void fillUApks(SearchJson searchJson, LinearLayout usearchContainer, String sizeString) {
+            usearchContainer.removeAllViews();
+            for (SearchJson.Results.Apks apk : searchJson.getResults().getU_Apks()) {
+                View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
+                ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
+
+                String iconUrl = apk.getIcon();
+
+                if (iconUrl.contains("_icon")) {
+                    String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
+                    iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                }
+                ImageLoader.getInstance().displayImage(iconUrl, app_icon);
+
+                TextView app_name = (TextView) element.findViewById(R.id.app_name);
+                app_name.setText(apk.getName() + " - " + apk.getVername());
+
+                usearchContainer.addView(element);
+
+            }
         }
 
         @Override
@@ -550,7 +618,6 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         public void onDestroyView() {
             super.onDestroyView();
             //Log.d("Searchmanager", "OnDestroyView");
-            setListAdapter(null);
             getLoaderManager().destroyLoader(60);
         }
 
