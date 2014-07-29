@@ -161,6 +161,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onRequestFailure(SpiceException e) {
+            Log.d( "networkerror", e.getLocalizedMessage() );
             if(AppViewActivity.this.json==null){
                 AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
             };
@@ -182,7 +183,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
                     }
                     altPath = getApkInfoJson.getApk().getAltPath();
-                    isInstalled = true;
                     name = getApkInfoJson.getMeta().getTitle();
                     versionName = getApkInfoJson.getApk().getVername();
                     downloads = getApkInfoJson.getMeta().getDownloads();
@@ -1210,10 +1210,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             menu.findItem(R.id.menu_uninstall).setVisible(true);
 
             if(!isUpdate) {
+                Log.d( "schedule_download", "isInstalled && !isUpdate" );
                 menu.findItem( R.id.menu_schedule ).setVisible( false );
             }
 
         } else if(isDownloadCompleted) {
+            Log.d( "schedule_download", "isDownloadCompleted" );
             menu.findItem(R.id.menu_schedule).setVisible(false);
         }
 
