@@ -157,14 +157,14 @@ public abstract class FragmentAppView extends Fragment {
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
-            Log.d("Aptoide-AppView", "getting event");
-            Log.d("Aptoide-AppView", "Setting description");
+            //Log.d("Aptoide-AppView", "getting event");
+            //Log.d("Aptoide-AppView", "Setting description");
             if(event == null) return;
 
             if (event.getDescription()!=null)
                 description.setText(event.getDescription());
 
-//            Log.d("Aptoide-description", "lines "+ description.getLineCount() );
+//            //Log.d("Aptoide-description", "lines "+ description.getLineCount() );
             if (event.getDescription()!=null && event.getDescription().length() > 250) {
 
                 description.setMaxLines(10);
@@ -196,7 +196,6 @@ public abstract class FragmentAppView extends Fragment {
                     }
                 });
                 descriptionContainer.setOnClickListener(new View.OnClickListener() {
-
 
                     @Override
                     public void onClick(View v) {
@@ -344,7 +343,7 @@ public abstract class FragmentAppView extends Fragment {
 
             if (event.getScreenshotsAndThumbVideo() != null){
                 mediaObjects = event.getScreenshotsAndThumbVideo();
-                Log.d("FragmentAppView","media objects "+ Arrays.toString(mediaObjects.toArray()));
+                //Log.d("FragmentAppView","media objects "+ Arrays.toString(mediaObjects.toArray()));
                 String imagePath = "";
                 DisplayImageOptions options = new DisplayImageOptions.Builder()
                         .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
@@ -361,11 +360,11 @@ public abstract class FragmentAppView extends Fragment {
                     if(mediaObjects.get(i) instanceof Video){
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
-                        Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
+                        //Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         play.setVisibility(View.VISIBLE);
                         imageView.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
-                        Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
+                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
                         options = new DisplayImageOptions.Builder()
                                 .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
                                 .cacheOnDisc(false)
@@ -377,7 +376,7 @@ public abstract class FragmentAppView extends Fragment {
                                 .cacheOnDisc(true)
                                 .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-                        Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
+                        //Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
                     }
 
@@ -393,7 +392,7 @@ public abstract class FragmentAppView extends Fragment {
                         public void onLoadingFailed(String uri, View v, FailReason failReason) {
                             imageView.setImageResource(android.R.drawable.ic_delete);
                             progress.setVisibility(View.GONE);
-                            Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
+                            //Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
                         }
 
                         @Override
@@ -468,7 +467,6 @@ public abstract class FragmentAppView extends Fragment {
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
             publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
 
-
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
@@ -507,7 +505,7 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Log.d("FragmentRelated", "onCreate");
+            //Log.d("FragmentRelated", "onCreate");
             adapter = new MergeAdapter();
             itemBasedAdapter = new RelatedBucketAdapter(getActivity(), itemBasedElements);
             develBasedAdapter = new RelatedBucketAdapter(getActivity(), develBasedElements);
@@ -546,10 +544,10 @@ public abstract class FragmentAppView extends Fragment {
                 setEmptyText(getString(R.string.no_related));
 
                 if(relatedApkJson == null){
-                    Log.d("FragmentRelated", "Related was null");
+                    //Log.d("FragmentRelated", "Related was null");
                     return;
                 }
-                Log.d("FragmentRelated", "onRequestSuccess");
+                //Log.d("FragmentRelated", "onRequestSuccess");
 
                 //Toast.makeText(getActivity(), "ItemBased size " + relatedApkJson.getItembased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "DevelBased size " + relatedApkJson.getDevelbased().size(), Toast.LENGTH_SHORT).show();
@@ -558,11 +556,11 @@ public abstract class FragmentAppView extends Fragment {
                 List<RelatedApkJson.Item> relaatedlist= relatedApkJson.getItembased();
                 if(relaatedlist != null){
 
-                    Log.d("FragmentRelated", "items " +  " " + relatedApkJson.getItembased().toString());
+                    //Log.d("FragmentRelated", "items " +  " " + relatedApkJson.getItembased().toString());
 
 
                     if(relaatedlist.size()>0) {
-                        Log.d("FragmentRelated", "itembased: " + Arrays.toString(relatedApkJson.getItembased().toArray()));
+                        //Log.d("FragmentRelated", "itembased: " + Arrays.toString(relatedApkJson.getItembased().toArray()));
 
                         itemBasedElements.clear();
                         if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)) {
@@ -676,16 +674,16 @@ public abstract class FragmentAppView extends Fragment {
 
         };
         private final void setListViewHeightBasedOnChildren(ListView listView) {
-            Log.d("setheight", "setListViewHeightBasedOnChildren called");
+            ////Log.d("setheight", "setListViewHeightBasedOnChildren called");
             ListAdapter listAdapter = listView.getAdapter();
             if (listAdapter == null){
                 return;
             }
-            Log.d("setheight", "listAdapter not null");
+            ////Log.d("setheight", "listAdapter not null");
             if (listAdapter.getCount()<1){
             return;
             }
-            Log.d("setheight", "Setting ListAdapter with " + listAdapter.getCount()+  " elements");
+            ////Log.d("setheight", "Setting ListAdapter with " + listAdapter.getCount()+  " elements");
             int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
             for (int i = 0; i < listAdapter.getCount(); i++) {
                 View listItem = listAdapter.getView(i, null, listView);
@@ -694,12 +692,12 @@ public abstract class FragmentAppView extends Fragment {
                 listItem.measure(0, 0);
                 totalHeight += listItem.getMeasuredHeight();
             }
-            Log.d("setheight", "Setting ListAdapter with " + totalHeight+  " height");
+            ////Log.d("setheight", "Setting ListAdapter with " + totalHeight+  " height");
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
 
-            Log.d("setheight", "list has" + listView.getLayoutParams().height+  " height");
+            ////Log.d("setheight", "list has" + listView.getLayoutParams().height+  " height");
         }
 
 
@@ -724,7 +722,6 @@ public abstract class FragmentAppView extends Fragment {
             View v = super.onCreateView(inflater, container, savedInstanceState);
             if(!(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
                 doPreStuff();
-//                Log.d("setheight", "Doprestuff on Port");
             }
             return v;
         }
@@ -733,7 +730,6 @@ public abstract class FragmentAppView extends Fragment {
         public void refresh(AppViewActivity.RelatedEvent e){
             if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 doPreStuff();
-//                Log.d("setheight", "Doprestuff on Land");
             }
         }
         private final void doPreStuff(){
@@ -756,9 +752,7 @@ public abstract class FragmentAppView extends Fragment {
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
 
-            Log.d("FragmentRelated", "onViewCreated");
-
-
+            ////Log.d("FragmentRelated", "onViewCreated");
         }
     }
 
@@ -784,17 +778,15 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onStop() {
             super.onStop();
-            Log.d("Aptoide-AppView-Permissions", "On Stop");
+            ////Log.d("Aptoide-AppView-Permissions", "On Stop");
             if (task != null) {
-                Log.d("Aptoide-AppView-Permissions", "Canceling task " + System.identityHashCode(task));
+                ////Log.d("Aptoide-AppView-Permissions", "Canceling task " + System.identityHashCode(task));
                 task.cancel(true);
             }
         }
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.SpecsEvent event) {
-
-
             if (event.getPermissions() != null) {
 
                 min_sdk.setText(getString(R.string.min_sdk) + ": " + event.getMinSdk());
@@ -805,9 +797,6 @@ public abstract class FragmentAppView extends Fragment {
                 task = new PermissionGetter().execute(event.getPermissions());
 
             }
-
-
-
         }
 
         public class PermissionGetter extends AsyncTask<ArrayList<String>, Void, ArrayList<ApkPermission>>{
@@ -826,7 +815,7 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             protected void onPostExecute(ArrayList<ApkPermission> apkPermissions) {
                 super.onPostExecute(apkPermissions);
-                Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
+                //Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
                 if(apkPermissions.size()==0){
                     TextView noPermissions = new TextView(getActivity());
                     noPermissions.setText(getString(R.string.no_permissions_required));
@@ -895,6 +884,7 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
+            ////Log.d("likes","onAttach");
             addCommentCallback = (AddCommentCallback) activity;
             ((AppViewActivity) activity).setSuccessfullyPostCallback(this);
         }
@@ -903,13 +893,14 @@ public abstract class FragmentAppView extends Fragment {
         public void onDetach() {
             super.onDetach();
             addCommentCallback = null;
+            //Log.d("likes","onDetach");
             ((AppViewActivity) getActivity()).setSuccessfullyPostCallback(null);
 
         }
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
-            Log.d("Aptoide-AppView", "getting event");
+            //Log.d("Aptoide-AppView", "getting event");
 
             if(event.getComments() != null) {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
@@ -966,16 +957,55 @@ public abstract class FragmentAppView extends Fragment {
             }
 
             if(event.getVeredict()!=null){
-
                 loading_flags.setVisibility(View.GONE);
                 flagThisApp.setVisibility(View.GONE);
-                flags_container.setVisibility(View.VISIBLE);
                 goodVotes.setVisibility(View.GONE);
                 licenseVotes.setVisibility(View.GONE);
                 fakeVotes.setVisibility(View.GONE);
                 freezeVotes.setVisibility(View.GONE);
                 virusVotes.setVisibility(View.GONE);
 
+                flags_container.setVisibility(View.VISIBLE);
+
+                int stringResource;
+                int drawable=0;
+                switch ( VeredictReview.reverseLookup( event.getVeredict().getFlag() )) {
+                    case GOOD:
+                        stringResource = VeredictReview.GOOD.getString();
+                        drawable=R.drawable.ic_action_flag_good;
+                        break;
+                    case FAKE:
+                        stringResource = VeredictReview.FAKE.getString();
+                        drawable=R.drawable.ic_action_flag_fake;
+                        break;
+                    case LICENSE:
+                        stringResource = VeredictReview.LICENSE.getString();
+                        drawable=R.drawable.ic_action_flag_license;
+                        break;
+                    case FREEZE:
+                        stringResource = VeredictReview.FREEZE.getString();
+                        drawable=R.drawable.ic_action_flag_freeze;
+                        break;
+                    case VIRUS:
+                        stringResource = VeredictReview.VIRUS.getString();
+                        drawable=R.drawable.ic_action_flag_virus;
+                        break;
+                    default:
+                        stringResource = VeredictReview.UNKNOWN.getString();
+                        break;
+                }
+                //Log.d( "veredictReview", VeredictReview.reverseLookup(event.getVeredict().getFlag()).getString()+ " VS" +stringResource );
+                //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+
+
+                if(stringResource != -1) {
+                    review.setVisibility(View.VISIBLE);
+                    review.setText( "" + getString( stringResource ) );
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(drawable), null, null, null);
+                    //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+                }
+
+/*
                 int stringResource;
                 switch ( VeredictReview.reverseLookup( event.getVeredict().getFlag() )) {
                     case GOOD:
@@ -998,10 +1028,11 @@ public abstract class FragmentAppView extends Fragment {
                         break;
                 }
 
+
                 if(stringResource != -1) {
                     review.setVisibility(View.VISIBLE);
                     review.setText( "" + getString( stringResource ) );
-                    Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+                    //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
                 }
 
                 if(event.getVeredict().getFlag().equals("good")) {
@@ -1018,7 +1049,7 @@ public abstract class FragmentAppView extends Fragment {
                 }
                 if(event.getVeredict().getFlag().equals("virus")) {
                     review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_virus), null, null, null);
-                }
+                }*/
             }else if(event.getFlagVotes()!=null){
                 loading_flags.setVisibility(View.GONE);
                 flags_container.setVisibility(View.VISIBLE);
@@ -1034,31 +1065,32 @@ public abstract class FragmentAppView extends Fragment {
 
                         if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                             AptoideDialog.flagAppDialog(event.getFlagUservote()).show(getFragmentManager(), "flagAppDialog");
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_Flag_App_Dialog");
+                            if(Build.VERSION.SDK_INT >= 10)
+                                FlurryAgent.logEvent("App_View_Opened_Flag_App_Dialog");
                         } else {
                             ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                 @Override
                                 public void run(AccountManagerFuture<Bundle> future) {
 
-                                    if (LoginActivity.isLoggedIn(getActivity())) {
-                                        Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                        ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                            @Override
-                                            public void run(AccountManagerFuture<Bundle> future) {
-                                                try {
-                                                    ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                                    ((AppViewActivity) getActivity()).getSpice().removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
-                                                    BusProvider.getInstance().post(new AppViewRefresh());
-                                                } catch (OperationCanceledException e) {
-                                                    e.printStackTrace();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } catch (AuthenticatorException e) {
-                                                    e.printStackTrace();
-                                                }
+                                if (LoginActivity.isLoggedIn(getActivity())) {
+                                    Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                    ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                        @Override
+                                        public void run(AccountManagerFuture<Bundle> future) {
+                                            try {
+                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
+                                                ((AppViewActivity) getActivity()).getSpice().removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
+                                                BusProvider.getInstance().post(new AppViewRefresh());
+                                            } catch (OperationCanceledException e) {
+                                                e.printStackTrace();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            } catch (AuthenticatorException e) {
+                                                e.printStackTrace();
                                             }
-                                        }, null);
-                                    }
+                                        }
+                                    }, null);
+                                }
                                 }
                             }, null);
                         }
@@ -1070,7 +1102,7 @@ public abstract class FragmentAppView extends Fragment {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+            //Log.d("likes","onCreateView");
             View v = inflater.inflate(R.layout.fragment_app_rating, container, false);
 
             commentsTitle = (TextView) v.findViewById(R.id.title_comments);
@@ -1098,7 +1130,6 @@ public abstract class FragmentAppView extends Fragment {
             flags_container = (LinearLayout) v.findViewById(R.id.flags_container);
             loading_flags = (ProgressBar) v.findViewById(R.id.loading_flags);
             return v;
-
         }
 
         @Override
@@ -1112,22 +1143,22 @@ public abstract class FragmentAppView extends Fragment {
 
             private final boolean isLike;
             RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
+                private final void dismiss(){
+                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager()
+                                                    .findFragmentByTag("pleaseWaitDialog");
+                    if(pd!=null)
+                        pd.dismissAllowingStateLoss();
+                }
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null && pd.isAdded()) pd.dismiss();
+                    //Log.d("likes","onRequestFailure");
+                    dismiss();
                 }
 
                 @Override
                 public void onRequestSuccess(GenericResponse genericResponse) {
-
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null && pd.isAdded()){
-                        pd.dismiss();
-                    }
-
-
+                    //Log.d("likes","onRequestSuccess");
+                    dismiss();
                     if(genericResponse.getStatus().equals("OK")){
                         Toast.makeText(Aptoide.getContext(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
@@ -1150,18 +1181,18 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
-                final AccountManager manager = AccountManager.get(getActivity());
+                final AccountManager accountManager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                     addLike();
                 } else {
-                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
 
                             if (LoginActivity.isLoggedIn(getActivity())) {
-                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                     @Override
                                     public void run(AccountManagerFuture<Bundle> future) {
                                         try {
@@ -1177,8 +1208,6 @@ public abstract class FragmentAppView extends Fragment {
                                     }
                                 }, null);
                             }
-
-
                         }
                     }, null);
                 }
@@ -1195,14 +1224,15 @@ public abstract class FragmentAppView extends Fragment {
                 request.setToken(((AppViewActivity) getActivity()).getToken());
                 request.setLike(isLike);
 
-
-                if(isLike){
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
-                }else{
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
+                if(Build.VERSION.SDK_INT >= 10) {
+                    if (isLike) {
+                        FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
+                    } else {
+                        FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
+                    }
                 }
-
                 manager.execute(request, "1234" , DurationInMillis.ONE_SECOND, requestListener);
+
 
 
 
@@ -1215,22 +1245,22 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
-                final AccountManager manager = AccountManager.get(getActivity());
+                final AccountManager accountManager = AccountManager.get(getActivity());
 
-                if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Added_A_Comment");
                     if(addCommentCallback != null) {
                         addCommentCallback.addComment(editText.getText().toString(), null);
                     }
                 } else {
 
-                    manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> future) {
                             if (LoginActivity.isLoggedIn(getActivity())) {
 
-                                Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
+                                Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                                accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
                                     @Override
                                     public void run(AccountManagerFuture<Bundle> future) {
                                         try {
@@ -1252,8 +1282,6 @@ public abstract class FragmentAppView extends Fragment {
                 }
 
             }
-
-
         }
 
 

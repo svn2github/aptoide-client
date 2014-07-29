@@ -19,9 +19,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
@@ -47,14 +45,12 @@ import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
-import com.flurry.android.impl.analytics.FlurryAnalyticsModule;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -74,15 +70,14 @@ import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.downloadmanager.Md5FailedException;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
-import cm.aptoide.ptdev.downloadmanager.state.CompletedState;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -177,7 +172,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
 
-            Log.d("Aptoide-AppView", "Json is null? " + String.valueOf(getApkInfoJson == null));
+            //Log.d("Aptoide-AppView", "Json is null? " + String.valueOf(getApkInfoJson == null));
             if (getApkInfoJson != null) {
 
                 AppViewActivity.this.json = getApkInfoJson;
@@ -196,7 +191,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     wUrl = getApkInfoJson.getMeta().getWUrl();
                     screen = getApkInfoJson.getApk().getMinScreen();
                     minSdk = getApkInfoJson.getApk().getMinSdk().intValue();
-                    Log.d("AppView", "wUrl " + wUrl);
+                    //Log.d("AppView", "wUrl " + wUrl);
                     boolean showLatestString = false;
                     if (getApkInfoJson.getApk().getIconHd() != null) {
                         icon = getApkInfoJson.getApk().getIconHd();
@@ -248,7 +243,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (getApkInfoJson.getMalware() != null) {
 
-                        Log.d("AppViewActivity-malwareStatus", "status: " + (getApkInfoJson.getMalware().getStatus()));
+                        //Log.d("AppViewActivity-malwareStatus", "status: " + (getApkInfoJson.getMalware().getStatus()));
                         if (getApkInfoJson.getMalware().getStatus().equals("scanned")) {
                             ((ImageView) findViewById(R.id.app_badge)).setImageResource(R.drawable.ic_trusted);
                             ((TextView) findViewById(R.id.app_badge_text)).setText(getString(R.string.trusted));
@@ -296,7 +291,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (isFromActivityResult || autoDownload) {
 
-                        Log.d("Downgrade", "iffromactivityresult");
+                        //Log.d("Downgrade", "iffromactivityresult");
                         Download download = new Download();
 
                         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
@@ -834,7 +829,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public DetailsEvent publishDetails() {
 
         Details details = new Details();
-        Log.d("Aptoide-AppView", "PublishingDetails");
+        //Log.d("Aptoide-AppView", "PublishingDetails");
         details.setDownloads(downloads);
         details.setStore(repoName);
 
@@ -843,7 +838,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (!json.getStatus().equals("FAIL")) {
                 if (json.getMeta().getDeveloper() != null) details.setDeveloper(json.getMeta().getDeveloper());
                 if (json.getMeta().getNews() != null) details.setNews(json.getMeta().getNews());
-                Log.d("Aptoide-AppView", "Description: " + json.getMeta().getDescription());
+                //Log.d("Aptoide-AppView", "Description: " + json.getMeta().getDescription());
                 details.setDescription(json.getMeta().getDescription());
 
                 long size = json.getApk().getSize().longValue();
@@ -872,7 +867,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 details.setLikes("" + json.getMeta().getLikevotes().getLikes());
                 details.setDontLikes("" + json.getMeta().getLikevotes().getDislikes());
 
-                Log.d("AptoideTAG", package_name + " " + versionName + " " + repoName);
+                //Log.d("AptoideTAG", package_name + " " + versionName + " " + repoName);
 
                 MultiStoreItem[] items = new Database(Aptoide.getDb()).getOtherReposVersions(id, package_name, versionName, repoName, versionCode);
                 details.setOtherVersions(items);
@@ -949,7 +944,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
     private void publishEvents() {
-        Log.d("Aptoide-AppViewActivity", "Publishing revents");
+        //Log.d("Aptoide-AppViewActivity", "Publishing revents");
         BusProvider.getInstance().post(publishDetails());
         BusProvider.getInstance().post(publishSpecs());
         BusProvider.getInstance().post(publishRating());
@@ -1298,7 +1293,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             @Override
             public Cursor loadInBackground() {
                 long id = bundle.getLong("id");
-                Log.d("Aptoide-AppView", "getapk id: " + id);
+                //Log.d("Aptoide-AppView", "getapk id: " + id);
 
                 return new Database(Aptoide.getDb()).getApkInfo(id);
             }
@@ -1474,7 +1469,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         request.setVercode(event.getVersionCode());
         if (token != null) request.setToken(token);
         cacheKey = event.getPackage_name() + event.getRepoName() + event.getVersionCode();
-        Log.d("OnMultiVersionClick-downloads", "downloads: " + event.getDownloads());
+        //Log.d("OnMultiVersionClick-downloads", "downloads: " + event.getDownloads());
         downloads = event.getDownloads();
 
         spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
@@ -1678,8 +1673,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (details.getVideos() != null) {
                 for (GetApkInfoJson.Media.Videos video : details.getVideos()) {
                     imagesPath.add(new Video(video.getThumb(), video.getUrl()));
-                    Log.d("AppView", "media objects [thumb]: " + video.getThumb());
-                    Log.d("AppView", "media objects [url]: " + video.getUrl());
+                    //Log.d("AppView", "media objects [thumb]: " + video.getThumb());
+                    //Log.d("AppView", "media objects [url]: " + video.getUrl());
                 }
             }
 
@@ -1999,7 +1994,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         } else if (requestCode == DOWGRADE_REQUEST_CODE) {
 
-            Log.d("Downgrade", "OnactivityResult");
+            //Log.d("Downgrade", "OnactivityResult");
             try {
                 getPackageManager().getPackageInfo(package_name, 0);
 
@@ -2011,7 +2006,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             }
         } else if (requestCode == 359) {
-            Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
+            //Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
             refreshOnResume = true;
         }
     }
@@ -2027,34 +2022,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         flagRequest.setMd5sum(md5);
         flagRequest.setFlag(flag);
 
-        spiceManager.execute(flagRequest, new RequestListener<GenericResponseV2>() {
+        spiceManager.execute(flagRequest, new AlmostGenericResponseV2RequestListener(this) {
             @Override
-            public void onRequestFailure(SpiceException e) {
-                Toast.makeText(AppViewActivity.this, getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                if (fragment != null) fragment.dismiss();
+            public void CaseOK() {
+                spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
+                BusProvider.getInstance().post(new AppViewRefresh());
             }
-
-            @Override
-            public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
-                DialogFragment fragment = (DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                if (fragment != null) fragment.dismiss();
-
-                if("OK".equals(genericResponseV2.getStatus())) {
-
-                    spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-                    BusProvider.getInstance().post(new AppViewRefresh());
-                } else {
-
-                    HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
-                    for(Error error :  genericResponseV2.getErrors()){
-                        Toast.makeText(AppViewActivity.this, getString(errorsMap.get(error.getCode())), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-
-            }
-
         });
     }
 
@@ -2088,48 +2061,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
-    RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
+    RequestListener<GenericResponseV2> addCommentRequestListener =
+            new AlmostGenericResponseV2RequestListener(this)  {
         @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
+        public void CaseOK() {
+            Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
+            if(postCallback != null) {
+                postCallback.clearState();
             }
-
-        }
-
-        @Override
-        public void onRequestSuccess(GenericResponseV2 genericResponse) {
-
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-
-            if(genericResponse.getStatus().equals("OK")){
-                Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
-                if(postCallback != null) {
-                    postCallback.clearState();
-                }
-
-                spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
-                BusProvider.getInstance().post(new AppViewRefresh());
-            }else{
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
-                Integer stringId;
-                String message;
-                for(Error error :  genericResponse.getErrors()){
-                    stringId = errorsMap.get( error.getCode() );
-                    if(stringId != null) {
-                        message = getString( stringId );
-                    } else {
-                        message = error.getMsg();
-                    }
-                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
-                }
-            }
-
+            //Log.d("likes","addCommentRequestListener");
+            spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
+            BusProvider.getInstance().post(new AppViewRefresh());
         }
     };
 
@@ -2147,46 +2089,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     }
 
-    RequestListener<GenericResponseV2> commentRequestListener = new RequestListener<GenericResponseV2>() {
+    RequestListener<GenericResponseV2> commentRequestListener =
+            new AlmostGenericResponseV2RequestListener(this) {
         @Override
-        public void onRequestFailure(SpiceException e) {
-            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-
-        }
-
-        @Override
-        public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-
-            if("OK".equals(genericResponseV2.getStatus())) {
-                Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
-
-                spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
-                BusProvider.getInstance().post(new AppViewRefresh());
-            } else {
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
-                Integer stringId;
-                String message;
-                for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
-                    stringId = errorsMap.get( error.getCode() );
-                    if(stringId != null) {
-                        message = getString( stringId );
-                    } else {
-                        message = error.getMsg();
-                    }
-                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
-                }
-            }
-
+        public void CaseOK() {
+            Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
+            //Log.d("likes","commentRequestListener");
+            spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
+            BusProvider.getInstance().post(new AppViewRefresh());
         }
     };
-
 }

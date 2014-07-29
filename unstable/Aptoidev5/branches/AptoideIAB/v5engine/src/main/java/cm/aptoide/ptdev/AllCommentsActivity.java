@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
@@ -80,15 +82,10 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
-
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,47 +113,15 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
         }
     }
 
-    RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
+    RequestListener<GenericResponseV2> addCommentRequestListener =
+            new AlmostGenericResponseV2RequestListener(this){
         @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
+        public void CaseOK() {
+            Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
 
-        }
-
-        @Override
-        public void onRequestSuccess(GenericResponseV2 genericResponse) {
-
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-
-            if(genericResponse.getStatus().equals("OK")){
-                Toast.makeText(Aptoide.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
-
-
-                FragmentComments fragmentComments = new FragmentComments();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
-                setResult( RESULT_OK );
-            }else{
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
-                Integer stringId;
-                String message;
-                for(cm.aptoide.ptdev.model.Error error :  genericResponse.getErrors()){
-                    stringId = errorsMap.get( error.getCode() );
-                    if(stringId != null) {
-                        message = getString( stringId );
-                    } else {
-                        message = error.getMsg();
-                    }
-                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_LONG).show();
-                }
-            }
-
+            FragmentComments fragmentComments = new FragmentComments();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
+            setResult( RESULT_OK );
         }
     };
 
@@ -174,44 +139,15 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
 
     }
 
-    RequestListener<GenericResponseV2> requestListener = new RequestListener<GenericResponseV2>() {
+    RequestListener<GenericResponseV2> requestListener =
+            new AlmostGenericResponseV2RequestListener(this){
         @Override
-        public void onRequestFailure(SpiceException e) {
-            Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-        }
+        public void CaseOK() {
+            Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
 
-        @Override
-        public void onRequestSuccess(GenericResponseV2 genericResponseV2) {
-            ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-            if(pd!=null){
-                pd.dismissAllowingStateLoss();
-            }
-
-            if("OK".equals(genericResponseV2.getStatus())) {
-                Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
-
-                FragmentComments fragmentComments = new FragmentComments();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
-                setResult( RESULT_OK );
-            } else {
-                HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
-                Integer stringId;
-                String message;
-                for(cm.aptoide.ptdev.model.Error error :  genericResponseV2.getErrors()){
-                    stringId = errorsMap.get( error.getCode() );
-                    if(stringId != null) {
-                        message = getString( stringId );
-                    } else {
-                        message = error.getMsg();
-                    }
-                    Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_SHORT).show();
-                }
-            }
-
+            FragmentComments fragmentComments = new FragmentComments();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragContainer, fragmentComments).commit();
+            setResult( RESULT_OK );
         }
     };
 }
