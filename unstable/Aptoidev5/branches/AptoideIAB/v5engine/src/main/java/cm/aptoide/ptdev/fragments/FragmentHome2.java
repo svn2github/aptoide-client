@@ -163,7 +163,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                         sponsoredLinearLayout.removeAllViews();
                         for (final ApkSuggestionJson.AppSuggested apkSuggestion : apkSuggestionJson.getApp_suggested()) {
                             View v = View.inflate(getActivity(), R.layout.row_app_home, null);
-                            v.findViewById(R.id.ic_action).setVisibility(View.GONE);
+                            v.findViewById(R.id.ic_action).setVisibility(View.INVISIBLE);
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
                             v.setLayoutParams(params);
                             ImageView icon = (ImageView) v.findViewById(R.id.app_icon);
@@ -177,6 +177,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                             v.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                     Intent i = new Intent(getActivity(), appViewClass);
                                     long id = apkSuggestion.getId().longValue();
                                     i.putExtra("id", id);
@@ -186,6 +187,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                                     i.putExtra("cpc", apkSuggestion.getCpc_url());
                                     i.putExtra("cpi", apkSuggestion.getCpi_url());
                                     i.putExtra("whereFrom", "sponsored");
+                                    i.putExtra("download_from", "sponsored");
                                     startActivity(i);
                                 }
                             });
@@ -618,9 +620,11 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             fls[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
                     Intent i = new Intent(getActivity(), appViewClass);
                     long id = ((HomeItem)item).getId();
                     i.putExtra("id", id);
+                    i.putExtra("download_from", "feature_graphic");
                     startActivity(i);
                 }
             });
