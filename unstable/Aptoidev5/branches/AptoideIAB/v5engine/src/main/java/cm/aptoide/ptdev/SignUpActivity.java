@@ -230,7 +230,7 @@ public class SignUpActivity extends ActionBarActivity{
 
                             Bundle data = new Bundle();
                             data.putString(AccountManager.KEY_ACCOUNT_NAME, emailBox.getText().toString());
-                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
+                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, Aptoide.getConfiguration().getAccountType());
                             data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                             data.putString(PARAM_USER_PASS, passBox.getText().toString());
 
