@@ -224,14 +224,14 @@ public class SignUpActivity extends ActionBarActivity{
                             editor.commit();
 
                             SecurePreferences preferences = SecurePreferences.getInstance();
-                            preferences.edit().putString("refreshToken", oAuth.getRefreshToken()).commit();
+                            preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
                             preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 
 
                             Bundle data = new Bundle();
                             data.putString(AccountManager.KEY_ACCOUNT_NAME, emailBox.getText().toString());
                             data.putString(AccountManager.KEY_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
-                            data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getAccess_token());
+                            data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                             data.putString(PARAM_USER_PASS, passBox.getText().toString());
 
 

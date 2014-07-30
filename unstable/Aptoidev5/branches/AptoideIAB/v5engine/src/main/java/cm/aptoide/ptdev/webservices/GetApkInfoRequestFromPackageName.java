@@ -86,7 +86,7 @@ public class GetApkInfoRequestFromPackageName extends GoogleHttpClientSpiceReque
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
         }
         request.setParser(new JacksonFactory().createJsonObjectParser());
-
+        request.setReadTimeout(5000);
         HttpResponse response;
         try{
             response = request.execute();

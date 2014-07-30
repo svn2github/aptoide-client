@@ -109,6 +109,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     private boolean onConfigChange;
     private LinearLayout sponsoredLinearLayout;
     private View sponsoredHeader;
+    private boolean fromRefresh;
 
     @Override
     public void onRefreshStarted( View view ) {
@@ -248,7 +249,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     private void refreshEditorsList() {
         editorsChoice.clear();
-
+        fromRefresh = true;
         if(getLoaderManager().getLoader(50)!=null){
             getLoaderManager().destroyLoader(50);
         }
@@ -566,6 +567,11 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     public Loader<HashMap<String, ArrayList<Home>>> onCreateLoader(final int id, final Bundle args) {
 
 
+        if(fromRefresh){
+            setListShown(false);
+            fromRefresh = false;
+        }
+
 
         AsyncTaskLoader<HashMap<String, ArrayList<Home>>> asyncTaskLoader = new AsyncTaskLoader<HashMap<String, ArrayList<Home>>>(getActivity()) {
             @Override
@@ -650,7 +656,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
 
-
     }
 
     @Subscribe
@@ -660,7 +665,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(Loader<HashMap<String, ArrayList<Home>>> loader) {
-        setListAdapter(null);
 
        //if(editorsChoice != null) editorsChoice.clear();
        // if(adapter != null) homeBucketAdapterHome.notifyDataSetChanged();

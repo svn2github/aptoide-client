@@ -33,21 +33,22 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
         this.httpRequestFactory = httpRequestFactory;
         accountManager = AccountManager.get(Aptoide.getContext());
 
-        Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-        try {
-            this.refreshToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
-        } catch (OperationCanceledException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (AuthenticatorException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
         if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED && retries > 0) {
+
+            Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+            try {
+                this.refreshToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+            }
 
             retries--;
             HashMap<String, String> parameters = new HashMap<String, String>();

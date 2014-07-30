@@ -22,6 +22,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+
 
 
     <application android:icon="@drawable/icon_brand_aptoide"

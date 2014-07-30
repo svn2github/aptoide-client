@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -65,6 +66,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
@@ -82,6 +84,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
@@ -91,7 +94,9 @@ import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.BadgeView;
+import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
+import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import roboguice.util.temp.Ln;
 
@@ -749,18 +754,68 @@ public class Start extends ActionBarActivity implements
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
                     }
 
+                    if(previousVersion > 431){
+                       updateAccount();
+                    }
+
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
 
-                    AccountManager manager = AccountManager.get(this);
-                    Account[] accountsByType = manager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-                    if(accountsByType.length > 0){
-                        AccountManager.get(this).removeAccount(accountsByType[0], null, null);
-                    }
+
 
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
+        }
+    }
+
+    private void updateAccount() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final AccountManager manager = AccountManager.get(this);
+        final Account[] accountsByType = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
+        if(accountsByType.length > 0){
+
+            if("APTOIDE".equals(sharedPreferences.getString("loginType", null))){
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
+                        oAuth2AuthenticationRequest.setMode(LoginActivity.Mode.APTOIDE);
+                        oAuth2AuthenticationRequest.setUsername(accountsByType[0].name);
+                        oAuth2AuthenticationRequest.setPassword(manager.getPassword(accountsByType[0]));
+
+                        try {
+                            oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+
+                            OAuth oAuth = oAuth2AuthenticationRequest.loadDataFromNetwork();
+
+                            String refreshToken = oAuth.getRefreshToken();
+
+                            String actualToken = manager.blockingGetAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                            manager.invalidateAuthToken(Aptoide.getConfiguration().getAccountType(), actualToken);
+                            manager.setAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, refreshToken);
+                            SecurePreferences.getInstance().edit().putString("access_token", oAuth.getAccess_token()).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            AccountManager.get(Start.this).removeAccount(accountsByType[0], null, null);
+                        }
+
+                    }
+                }).start();
+
+
+
+
+            }else{
+
+                AccountManager.get(this).removeAccount(accountsByType[0], null, null);
+
+            }
+
+
 
         }
     }

@@ -121,7 +121,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
         try {
             AccountManager accountManager = AccountManager.get(context);
-            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt")[0], "Full access", true);
+            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], "Full access", true);
             //String token =  "27286b943179065fcef3b6adcafe8680d8515e4652010602c45f6";
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -206,7 +206,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
             result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
         } else {
             AccountManager accountManager = AccountManager.get(context);
-            Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt");
+            Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
             if(accounts.length == 0) {
                 Log.d("AptoideBillingService", "BillingUnavailable: user not logged in");
@@ -257,7 +257,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
         }
 
         AccountManager accountManager = AccountManager.get(context);
-        Account[] accounts = accountManager.getAccountsByType("cm.aptoide.pt");
+        Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
         if(accounts.length == 0) {
 
@@ -337,7 +337,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
         try {
             AccountManager accountManager = AccountManager.get(context);
-            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType("cm.aptoide.pt")[0], "Full access", true);
+            String token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], "Full access", true);
 
             final int[] result = {RESULT_OK};
             if(token != null) {

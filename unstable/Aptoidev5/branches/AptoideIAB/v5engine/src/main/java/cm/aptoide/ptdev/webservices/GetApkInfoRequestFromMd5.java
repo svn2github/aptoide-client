@@ -85,7 +85,7 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
 
         token = SecurePreferences.getInstance().getString("access_token", null);
 
-
+        request.setReadTimeout(5000);
         if (token!=null) {
             parameters.put("access_token", token);
             request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));

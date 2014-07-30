@@ -1068,31 +1068,7 @@ public abstract class FragmentAppView extends Fragment {
                             if(Build.VERSION.SDK_INT >= 10)
                                 FlurryAgent.logEvent("App_View_Opened_Flag_App_Dialog");
                         } else {
-                            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                @Override
-                                public void run(AccountManagerFuture<Bundle> future) {
-
-                                if (LoginActivity.isLoggedIn(getActivity())) {
-                                    Account account = ac.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                    ac.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                        @Override
-                                        public void run(AccountManagerFuture<Bundle> future) {
-                                            try {
-                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                                ((AppViewActivity) getActivity()).getSpice().removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
-                                                BusProvider.getInstance().post(new AppViewRefresh());
-                                            } catch (OperationCanceledException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }, null);
-                                }
-                                }
-                            }, null);
+                            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
                         }
                     }
                 });
@@ -1186,30 +1162,7 @@ public abstract class FragmentAppView extends Fragment {
                 if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                     addLike();
                 } else {
-                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> future) {
-
-                            if (LoginActivity.isLoggedIn(getActivity())) {
-                                Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                    @Override
-                                    public void run(AccountManagerFuture<Bundle> future) {
-                                        try {
-                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                        } catch (OperationCanceledException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (AuthenticatorException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }, null);
-                            }
-                        }
-                    }, null);
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
                 }
 
             }
@@ -1254,31 +1207,8 @@ public abstract class FragmentAppView extends Fragment {
                     }
                 } else {
 
-                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                        @Override
-                        public void run(AccountManagerFuture<Bundle> future) {
-                            if (LoginActivity.isLoggedIn(getActivity())) {
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
 
-                                Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                accountManager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                    @Override
-                                    public void run(AccountManagerFuture<Bundle> future) {
-                                        try {
-
-                                            ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                            //addComment();
-                                        } catch (OperationCanceledException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (AuthenticatorException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, null);
-                            }
-                        }
-                    }, null);
                 }
 
             }

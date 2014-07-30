@@ -580,8 +580,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
 
-
-
                 getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
 
             }

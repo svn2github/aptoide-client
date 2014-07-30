@@ -87,6 +87,7 @@ public class GetApkInfoRequestFromId extends GoogleHttpClientSpiceRequest<GetApk
         }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
+        request.setReadTimeout(5000);
         HttpResponse response;
         try{
             response = request.execute();
