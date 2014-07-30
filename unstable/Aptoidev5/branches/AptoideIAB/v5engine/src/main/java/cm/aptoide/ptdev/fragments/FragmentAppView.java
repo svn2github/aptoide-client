@@ -364,6 +364,7 @@ public abstract class FragmentAppView extends Fragment {
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         play.setVisibility(View.VISIBLE);
                         imageView.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        mediaLayout.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
                         //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
                         options = new DisplayImageOptions.Builder()
                                 .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
@@ -378,6 +379,7 @@ public abstract class FragmentAppView extends Fragment {
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         //Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
                     }
 
                     mainLayout.addView(cell);
