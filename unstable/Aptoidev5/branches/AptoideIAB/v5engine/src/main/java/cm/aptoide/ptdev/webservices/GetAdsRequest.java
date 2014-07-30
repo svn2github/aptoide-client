@@ -35,7 +35,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         this.context = context;
     }
 
-    String url = "http://dev.aptoide.com/aptwords/api/1/getAds";
+    String url = "http://webservices.aptwords.net/api/1/getAds";
 
     @Override
     public ApkSuggestionJson loadDataFromNetwork() throws Exception {

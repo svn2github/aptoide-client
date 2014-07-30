@@ -837,6 +837,8 @@ public class Start extends ActionBarActivity implements
     @Override
     public boolean onSearchRequested() {
 
+
+
         if (Build.VERSION.SDK_INT > 7) {
             WebSocketSingleton.getInstance().connect();
             isDisconnect = false;

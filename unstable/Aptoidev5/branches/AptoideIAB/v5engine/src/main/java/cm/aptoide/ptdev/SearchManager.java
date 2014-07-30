@@ -344,7 +344,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         }
 
         ProgressBar pb;
-
+        StringBuilder sb = new StringBuilder();
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
@@ -359,6 +359,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             request.setSearchString(query);
 
 
+
             if (!isNetworkAvailable(getActivity())) {
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
@@ -370,6 +371,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             getAdsRequest.setLocation("search");
             getAdsRequest.setKeyword(query);
+
+            getAdsRequest.setLimit(1);
 
             manager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
                 @Override
@@ -421,8 +424,15 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             });
 
 
+            sb.setLength(0);
+            Cursor c = new Database(Aptoide.getDb()).getServers();
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+               sb.append(c.getString(c.getColumnIndex("name")));
+            }
+            c.close();
 
-            manager.execute(request, query, DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+
+            manager.execute(request, query + sb.toString().hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     Bundle bundle = new Bundle();
@@ -602,10 +612,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                 ListSearchApkRequest request1 = new ListSearchApkRequest();
                                 request1.setSearchString(query);
                                 request1.setOffset(items.size() + items2.size());
-
                                 adapter.setActive(pb, true);
 
-                                manager.execute(request1, query + items.size() + items2.size(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+                                manager.execute(request1, query + sb.toString().hashCode() +  items.size() + items2.size(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
 
                                     @Override
                                     public void onRequestFailure(SpiceException spiceException) {
