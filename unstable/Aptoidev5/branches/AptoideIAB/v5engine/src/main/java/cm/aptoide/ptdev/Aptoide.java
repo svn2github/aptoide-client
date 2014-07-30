@@ -66,6 +66,7 @@ public class Aptoide extends Application {
     private static Context context;
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
+    private static String sponsoredCache;
 
     public static AptoideThemePicker getThemePicker() {
         return themePicker;
@@ -86,6 +87,14 @@ public class Aptoide extends Application {
 
     public static Context getContext() {
         return context;
+    }
+
+    public static String getSponsoredCache() {
+        return sponsoredCache;
+    }
+
+    public static void setSponsoredCache(String sponsoredCache) {
+        Aptoide.sponsoredCache = sponsoredCache;
     }
 
     public void setThemePicker(AptoideThemePicker themePicker) {
@@ -112,6 +121,7 @@ public class Aptoide extends Application {
             e.printStackTrace();
         }
 
+        sponsoredCache = UUID.randomUUID().toString();
 
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems

@@ -28,6 +28,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
     private final Context context;
     private String location;
     private String keyword;
+    private int limit;
 
     public GetAdsRequest(Context context) {
         super(ApkSuggestionJson.class);
@@ -56,7 +57,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         parameters.put("location","native-aptoide:" + location);
         parameters.put("type","app:suggested");
         parameters.put("keywords", keyword);
-        parameters.put("limit","3");
+        parameters.put("limit", String.valueOf(limit));
 
         parameters.put("get_mature", mature);
 
@@ -79,5 +80,9 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 }

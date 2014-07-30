@@ -296,6 +296,11 @@ public class DownloadService extends Service{
         filesToDownload.add(downloadModel);
         DownloadInfo info = getDownload(download.getId());
         FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));
+
+        if(download.getCpiUrl()!=null){
+            apk.setCpiUrl(download.getCpiUrl());
+        }
+
         apk.setRepoName(json.getApk().getRepo());
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);

@@ -26,6 +26,9 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.RegisterAdRequest;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.*;
@@ -88,6 +91,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
     }
 
 
+
     @Override
     public void execute() {
 
@@ -117,6 +121,31 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+
+
+        if(apk.getCpiUrl()!=null) {
+
+
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    RegisterAdRequest registerAdRequest = new RegisterAdRequest(context);
+                    registerAdRequest.setUrl(apk.getCpiUrl());
+                    registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    try {
+                        registerAdRequest.loadDataFromNetwork();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    apk.setCpiUrl(null);
+                }
+            }).start();
+
+        }
+
+
+
 
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {

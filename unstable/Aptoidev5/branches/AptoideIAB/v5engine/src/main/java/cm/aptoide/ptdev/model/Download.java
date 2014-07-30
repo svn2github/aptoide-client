@@ -20,6 +20,12 @@ public class Download implements Serializable{
     private String icon;
     private String md5;
 
+    public String getCpiUrl() {
+        return cpiUrl;
+    }
+
+    private String cpiUrl;
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
@@ -130,5 +136,8 @@ public class Download implements Serializable{
     }
 
 
+    public void setCpiUrl(String cpiUrl) {
+        this.cpiUrl = cpiUrl;
+    }
 }
 

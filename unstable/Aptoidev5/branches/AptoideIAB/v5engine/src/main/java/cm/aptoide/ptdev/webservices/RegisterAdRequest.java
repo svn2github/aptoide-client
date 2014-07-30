@@ -23,13 +23,11 @@ import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 public class RegisterAdRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
 
 
-    private final Context context;
-    private String location;
-    private String keyword;
+
 
     public RegisterAdRequest(Context context) {
         super(GenericResponseV2.class);
-        this.context = context;
+        //this.context = context;
     }
 
 
@@ -42,28 +40,7 @@ public class RegisterAdRequest extends GoogleHttpClientSpiceRequest<GenericRespo
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
 
-
         HashMap<String, String> parameters = new HashMap<String, String>();
-        String mature = "1";
-
-        if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
-            mature = "0";
-        }
-
-
-        parameters.put("q", AptoideUtils.filters(context));
-        parameters.put("lang", AptoideUtils.getMyCountryCode(context));
-
-        String myid = PreferenceManager.getDefaultSharedPreferences(context).getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
-        parameters.put("cpuid", myid);
-
-        parameters.put("location","native-aptoide:" + location);
-        parameters.put("type","app:suggested");
-        parameters.put("limit","3");
-        parameters.put("keywords", keyword);
-        parameters.put("get_mature", mature);
-
-
 
         GenericUrl url = new GenericUrl(this.url);
 
@@ -72,17 +49,7 @@ public class RegisterAdRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-
-
         return request.execute().parseAs( getResultType() );
-
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
 }

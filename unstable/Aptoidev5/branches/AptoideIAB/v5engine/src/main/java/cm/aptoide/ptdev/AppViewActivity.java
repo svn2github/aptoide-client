@@ -654,6 +654,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
             download.setMd5(this.md5);
+            download.setCpiUrl(getIntent().getStringExtra("cpi"));
 
             if (service != null && json!=null) {
                 service.startDownloadFromJson(json, downloadId, download);
@@ -1105,8 +1106,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     public void run() {
                         RegisterAdRequest registerAdRequest = new RegisterAdRequest(AppViewActivity.this);
                         registerAdRequest.setUrl(getIntent().getStringExtra("cpc"));
-                        registerAdRequest.setLocation(getIntent().getStringExtra("location"));
-                        registerAdRequest.setKeyword(getIntent().getStringExtra("keyword"));
+                        //registerAdRequest.setLocation(getIntent().getStringExtra("location"));
+                        //registerAdRequest.setKeyword(getIntent().getStringExtra("keyword"));
                         try {
                             registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
                             registerAdRequest.loadDataFromNetwork();
@@ -1114,7 +1115,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             e.printStackTrace();
                         }
                     }
-                }).run();
+                }).start();
 
 
             }else if (getIntent().getBooleanExtra("getBackupApps", false)) {

@@ -144,11 +144,11 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         GetAdsRequest request = new GetAdsRequest(getActivity());
 
-
+        request.setLimit(recomendedAdapter.getBucketSize());
         request.setLocation("homepage");
         request.setKeyword("__NULL__");
 
-        manager.execute(request, new RequestListener<ApkSuggestionJson>() {
+        manager.execute(request, Aptoide.getSponsoredCache(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -346,6 +346,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
             }
+
         });
 
 
@@ -562,7 +563,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
     @Override
     public Loader<HashMap<String, ArrayList<Home>>> onCreateLoader(final int id, final Bundle args) {
 
-        setListShown(false);
+
+
         AsyncTaskLoader<HashMap<String, ArrayList<Home>>> asyncTaskLoader = new AsyncTaskLoader<HashMap<String, ArrayList<Home>>>(getActivity()) {
             @Override
             public HashMap<String, ArrayList<Home>> loadInBackground() {
@@ -654,6 +656,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(Loader<HashMap<String, ArrayList<Home>>> loader) {
+        setListAdapter(null);
+
        //if(editorsChoice != null) editorsChoice.clear();
        // if(adapter != null) homeBucketAdapterHome.notifyDataSetChanged();
     }

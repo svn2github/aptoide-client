@@ -25,6 +25,7 @@ public class FinishedApk implements Parcelable, Serializable{
     private String path;
     private ArrayList<String> permissionsList;
     private String repoName;
+    private String cpiUrl;
 
 
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
@@ -139,5 +140,13 @@ public class FinishedApk implements Parcelable, Serializable{
 
     public void setRepoName(String repoName) {
         this.repoName = repoName;
+    }
+
+    public void setCpiUrl(String cpiUrl) {
+        this.cpiUrl = cpiUrl;
+    }
+
+    public String getCpiUrl() {
+        return cpiUrl;
     }
 }
