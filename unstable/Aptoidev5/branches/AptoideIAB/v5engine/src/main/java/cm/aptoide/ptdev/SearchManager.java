@@ -211,7 +211,10 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             v = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
             v2 = ((SearchManager)getActivity()).getFooterView(R.layout.footer_search);
 
-            pb = new ProgressBar(getActivity());
+//            pb = new ProgressBar(getActivity());
+            View inflater = View.inflate(getActivity(), R.layout.progress_bar, null);
+            pb = (ProgressBar) inflater.findViewById(R.id.progressBar);
+
             AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
             pb.setLayoutParams(params);
 

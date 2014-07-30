@@ -306,7 +306,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         super.onViewCreated(view, savedInstanceState);
         //mergeAdapter = new MergeAdapter();
 
-        //getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
         getListView().setItemsCanFocus(true);
 
 
