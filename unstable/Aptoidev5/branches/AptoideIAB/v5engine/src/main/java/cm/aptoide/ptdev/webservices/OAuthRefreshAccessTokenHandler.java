@@ -33,7 +33,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
         this.httpRequestFactory = httpRequestFactory;
         accountManager = AccountManager.get(Aptoide.getContext());
 
-        Account account = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0];
+        Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
         try {
             this.refreshToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
         } catch (OperationCanceledException e) {

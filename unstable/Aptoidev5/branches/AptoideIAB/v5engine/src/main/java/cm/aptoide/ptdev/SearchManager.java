@@ -397,6 +397,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         sponsoredApp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App");
                                 Intent i = new Intent(getActivity(), appViewClass);
                                 long id = appSuggested.getId().longValue();
                                 i.putExtra("id", id);
@@ -406,6 +407,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                 i.putExtra("cpc", appSuggested.getCpc_url());
                                 i.putExtra("cpi", appSuggested.getCpi_url());
                                 i.putExtra("whereFrom", "sponsored");
+                                i.putExtra("download_from", "sponsored");
                                 startActivity(i);
                             }
                         });

@@ -53,7 +53,7 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.AVATAR = sPref.getString("STOREAVATAR", "https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
             AptoideConfigurationPartners.VIEW = sPref.getString("STOREVIEW", "list");
 
-            AptoideConfigurationPartners.RESTRICTIONLIST = new SecurePreferences(getContext()).getString("RESTRICTIONLIST", null);
+            AptoideConfigurationPartners.RESTRICTIONLIST = SecurePreferences.getInstance().getString("RESTRICTIONLIST", null);
             Log.d("Restriction List", "Retrived from secure preferences: " + AptoideConfigurationPartners.RESTRICTIONLIST);
             if (AptoideConfigurationPartners.PARTNERID != null && !new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem").exists()) {
                 AptoideConfigurationPartners.createSdCardBinary();

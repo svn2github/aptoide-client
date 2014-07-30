@@ -281,6 +281,7 @@ public class Adapter extends BaseAdapter {
                     long id = item.getId();
                     i.putExtra("id", id);
                     i.putExtra("whereFrom", "editorsChoice");
+                    i.putExtra("download_from", "editors_choice");
                     context.startActivity(i);
                 }
             });
