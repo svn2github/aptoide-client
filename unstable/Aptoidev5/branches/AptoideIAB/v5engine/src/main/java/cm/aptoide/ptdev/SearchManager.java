@@ -350,7 +350,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             super.onViewCreated(view, savedInstanceState);
 
             //getListView().addFooterView(pb);
-
+            getListView().setItemsCanFocus(true);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             final ListSearchApkRequest request = new ListSearchApkRequest();
