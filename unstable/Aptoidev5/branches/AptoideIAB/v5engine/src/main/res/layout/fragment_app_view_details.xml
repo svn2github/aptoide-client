@@ -56,6 +56,7 @@
                         android:id="@+id/descript"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:autoLink="all"
                         android:gravity="left"
                         android:paddingLeft="5.0sp"
                         android:paddingRight="5.0sp"

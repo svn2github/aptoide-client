@@ -137,6 +137,7 @@
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:padding="10dp"
+                    android:textColor="@color/link"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/forgot_passwd"/>
         </LinearLayout>
