@@ -20,6 +20,7 @@
             android:id="@+id/app_icon"
             android:layout_width="72dp"
             android:layout_height="72dp"
+            android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"
             android:layout_alignTop="@+id/app_name"
             android:layout_alignParentLeft="true" />
