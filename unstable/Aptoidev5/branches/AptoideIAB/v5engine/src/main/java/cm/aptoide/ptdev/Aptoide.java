@@ -112,7 +112,6 @@ public class Aptoide extends Application {
     public void onCreate() {
         super.onCreate();
 
-
         context = getApplicationContext();
 
         try {

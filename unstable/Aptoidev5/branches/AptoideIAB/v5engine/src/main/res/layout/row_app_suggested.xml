@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/app_icon"
-            android:drawablePadding="5dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
@@ -79,8 +78,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?attr/customColor"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/app_name"
-            android:layout_alignStart="@+id/app_name" />
+            android:layout_alignLeft="@+id/app_icon"
+            android:layout_alignStart="@+id/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"

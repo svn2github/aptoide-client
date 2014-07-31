@@ -160,8 +160,8 @@ public class DownloadService extends Service{
         Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
         Log.d("download-trace", "setmbuilder: startExistingDownload " + id);
 
-        final NotificationCompat.Builder builder = setNotification(id);
         DownloadInfo inf = getDownload(id);
+        final NotificationCompat.Builder builder = setNotification(id);
 
         if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
@@ -248,7 +248,10 @@ public class DownloadService extends Service{
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 
+
         downloads.put(info.getId(), info);
+        NotificationCompat.Builder builder = setNotification(id);
+        info.setmBuilder(builder);
         info.download();
 
         startService(new Intent(getApplicationContext(), DownloadService.class));
@@ -258,8 +261,7 @@ public class DownloadService extends Service{
         startForeground(-3, mBuilder.build());
 
         Log.d("donload-trace", "setmBuilder: startDownloadFromUrl");
-        NotificationCompat.Builder builder = setNotification(id);
-        info.setmBuilder(builder);
+
 
 
         if(isStopped){
@@ -305,13 +307,14 @@ public class DownloadService extends Service{
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
-
-        downloads.put(info.getId(), info);
-        info.download();
-
         Log.d("download-trace", "setmBuilder: startDownloadFromJson " + info.getId());
+        downloads.put(info.getId(), info);
+
         NotificationCompat.Builder builder = setNotification(info.getId());
         info.setmBuilder(builder);
+        info.download();
+
+
 
         if(mBuilder==null) mBuilder = createDefaultNotification();
 
@@ -615,6 +618,9 @@ public class DownloadService extends Service{
 
         for(DownloadInfo info : list) {
             if(info.getStatusState() instanceof ActiveState) {
+
+
+
                 info.getmBuilder().setProgress(100, info.getPercentDownloaded(), info.getPercentDownloaded() == 0);
                 if(info.getEta() > 0) {
                     String remaining = Utils.formatEta(info.getEta(), "");

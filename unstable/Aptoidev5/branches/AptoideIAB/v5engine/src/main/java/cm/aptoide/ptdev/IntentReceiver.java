@@ -69,7 +69,12 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //                onDownloadUpdate(service.getDownload(id).getDownload());
             }
 
-            continueLoading();
+            try {
+                continueLoading();
+            }catch (Exception e){
+                e.printStackTrace();
+                finish();
+            }
         }
 
         @Override
@@ -134,6 +139,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
 
     private void continueLoading(){
+
+
+
         TMP_MYAPP_FILE = getCacheDir()+"/myapp.myapp";
         String uri = getIntent().getDataString();
         System.out.println(uri);
@@ -225,6 +233,24 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             startFromMyApp(id);
             finish();
+        } else if (uri.startsWith("aptwords://")) {
+
+            String parsedString = uri.substring("aptwords://".length());
+
+            String[] splittedString = parsedString.split("//");
+
+            long id = Long.parseLong(splittedString[0]);
+            String cpi = splittedString[1];
+
+            Intent i = new Intent(this, Aptoide.getConfiguration().getAppViewActivityClass());
+
+            i.putExtra("fromMyapp", true);
+            i.putExtra("id", id);
+            i.putExtra("cpi", cpi);
+            i.putExtra("download_from", "my_app_with_cpi");
+
+
+            startActivity(i);
         } else {
             finish();
         }

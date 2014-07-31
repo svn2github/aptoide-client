@@ -7,6 +7,7 @@
  ******************************************************************************/
 package cm.aptoide.ptdev;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
@@ -39,7 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.HashMap;
 
-public class ScheduledDownloadsActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
+public class ScheduledDownloadsActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, ScheduledDownloadsDialog.DialogCallback {
 
     private ListView lv;
     private Database db;
@@ -59,6 +60,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         }
     };
     private int i;
+    private boolean showDownloadAll;
 
     @Override
     protected void onStart() {
@@ -157,6 +159,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
 
         getSupportLoaderManager().initLoader(0, null, this);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -169,71 +172,10 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         });
 
-
-        DialogFragment pd = new DialogFragment() {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Aptoide.getContext());
-                final AlertDialog scheduleDownloadDialog = dialogBuilder.create();
-                scheduleDownloadDialog.setTitle(getText(R.string.schDwnBtn));
-                scheduleDownloadDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                scheduleDownloadDialog.setCancelable(false);
-                scheduleDownloadDialog.setMessage(getText(R.string.schDown_install));
-                scheduleDownloadDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
-                        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-
-                            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
-                            requestFromMd5.setRepoName(schDown.getRepoName());
-                            requestFromMd5.setMd5Sum(schDown.getMd5());
-
-                            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
-                                @Override
-                                public void onRequestFailure(SpiceException spiceException) {
-
-                                }
-
-                                @Override
-                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-                                    if(getApkInfoJson == null) return;
-                                    Download download = new Download();
-                                    download.setId(schDown.getId());
-                                    download.setName(schDown.getName());
-                                    download.setVersion(schDown.getVername());
-                                    download.setIcon(schDown.getIconPath());
-                                    download.setPackageName(schDown.getApkid());
-                                    download.setMd5(schDown.getMd5());
-                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
-                                    i++;
-                                    if(i==scheduledDownloadsHashMap.size()){
-                                        finish();
-                                    }
-                                }
-                            });
-                        }
-
-                    }
-                });
-                scheduleDownloadDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finish();
-                    }
-                });
-
-
-                return scheduleDownloadDialog;
-            }
-        };
-
-        if(getIntent().hasExtra("downloadAll")){
+        if(getIntent().hasExtra("downloadAll")) {
+            ScheduledDownloadsDialog pd = new ScheduledDownloadsDialog();
             pd.show(getSupportFragmentManager(), "installAllScheduled");
         }
-
-
 
 
         lv.setAdapter(adapter);
@@ -250,6 +192,9 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         };
     }
+
+
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
@@ -368,6 +313,14 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+    }
+
     public boolean isAllChecked() {
         if (scheduledDownloadsHashMap.isEmpty()) {
             return false;
@@ -378,6 +331,50 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             }
         }
         return false;
+    }
+
+
+
+    @Override
+    public void onOkClick() {
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+
+            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
+            requestFromMd5.setRepoName(schDown.getRepoName());
+            requestFromMd5.setMd5Sum(schDown.getMd5());
+
+            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+
+                }
+
+                @Override
+                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+                    if(getApkInfoJson == null) return;
+                    Download download = new Download();
+                    download.setId(schDown.getId());
+                    download.setName(schDown.getName());
+                    download.setVersion(schDown.getVername());
+                    download.setIcon(schDown.getIconPath());
+                    download.setPackageName(schDown.getApkid());
+                    download.setMd5(schDown.getMd5());
+                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                    i++;
+                    if(i==scheduledDownloadsHashMap.size()){
+                        finish();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onCancelClick() {
+       finish();
+
     }
 
     private static class ScheduledDownload {

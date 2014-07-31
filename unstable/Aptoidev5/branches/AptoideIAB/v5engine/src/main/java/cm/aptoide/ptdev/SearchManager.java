@@ -168,6 +168,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         private View searchLayout;
         private boolean hasUapks;
         private View sponsoredApp;
+        private View searchResultsLabel;
         //private View v2;
 
         @Override
@@ -225,10 +226,13 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             adapter.addView(sponsoredApp);
             adapter.setActive(sponsoredApp, false);
 
+            searchResultsLabel = LayoutInflater.from(getActivity()).inflate(R.layout.separator_searchu, null);
+            adapter.addView(searchResultsLabel);
             adapter.addAdapter(searchAdapterapks);
+            adapter.setActive(searchResultsLabel, false);
+
 
             adapter.addView(v);
-
             adapter.setActive(v, false);
 
 
@@ -485,6 +489,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     LinearLayout usearchContainer2 = (LinearLayout) v2.findViewById(R.id.container);
 
 
+                    if (searchResultsLabel != null) adapter.setActive(searchResultsLabel, true);
+
 
                     didyoumeanContainer.removeAllViews();
 
@@ -658,24 +664,30 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         }
 
         private void fillUApks(SearchJson searchJson, LinearLayout usearchContainer, String sizeString) {
-            usearchContainer.removeAllViews();
-            for (SearchJson.Results.Apks apk : searchJson.getResults().getU_Apks()) {
-                View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
-                ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
 
-                String iconUrl = apk.getIcon();
+            if(usearchContainer!=null && searchJson!=null){
 
-                if (iconUrl.contains("_icon")) {
-                    String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
-                    iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+
+
+                usearchContainer.removeAllViews();
+                for (SearchJson.Results.Apks apk : searchJson.getResults().getU_Apks()) {
+                    View element = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_search_result_other, usearchContainer, false);
+                    ImageView app_icon = (ImageView) element.findViewById(R.id.app_icon);
+
+                    String iconUrl = apk.getIcon();
+
+                    if (iconUrl.contains("_icon")) {
+                        String[] splittedUrl = iconUrl.split("\\.(?=[^\\.]+$)");
+                        iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                    }
+                    ImageLoader.getInstance().displayImage(iconUrl, app_icon);
+
+                    TextView app_name = (TextView) element.findViewById(R.id.app_name);
+                    app_name.setText(apk.getName() + " - " + apk.getVername());
+
+                    usearchContainer.addView(element);
+
                 }
-                ImageLoader.getInstance().displayImage(iconUrl, app_icon);
-
-                TextView app_name = (TextView) element.findViewById(R.id.app_name);
-                app_name.setText(apk.getName() + " - " + apk.getVername());
-
-                usearchContainer.addView(element);
-
             }
         }
 

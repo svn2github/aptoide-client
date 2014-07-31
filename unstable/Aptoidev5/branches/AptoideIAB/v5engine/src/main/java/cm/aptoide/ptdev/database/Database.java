@@ -774,6 +774,7 @@ public class Database {
         returnVal.put("editorsChoice", items);
         returnVal.put("featuredGraphic", getFeaturedGraphics(5));
 
+        c.close();
         return returnVal;
     }
 

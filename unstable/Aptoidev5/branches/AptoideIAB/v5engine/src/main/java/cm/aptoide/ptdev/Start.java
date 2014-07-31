@@ -1200,7 +1200,7 @@ public class Start extends ActionBarActivity implements
         isResumed = true;
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
+        mDrawerList.setItemsCanFocus(true);
         TextView login_email;
         ImageView user_avatar;
         accountManager = AccountManager.get(this);

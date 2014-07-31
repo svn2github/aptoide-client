@@ -104,6 +104,12 @@ public class AllCommentsActivity extends ActionBarActivity implements AddComment
                 request.setAnswearTo(answerTo);
             }
 
+            if(comment.length()<10){
+                Toast.makeText(getApplicationContext(), R.string.error_IARG_100, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
             spiceManager.execute(request, addCommentRequestListener);
             AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
         } else {

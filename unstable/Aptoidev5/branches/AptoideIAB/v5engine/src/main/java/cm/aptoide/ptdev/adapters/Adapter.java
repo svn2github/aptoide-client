@@ -75,6 +75,15 @@ public class Adapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
 
         registerDataSetObserver(new DataSetObserver() {
+
+
+
+
+            @Override
+            public void onInvalidated() {
+                onChanged();
+            }
+
             @Override
             public void onChanged() {
                 maxCount = 0;
@@ -129,6 +138,7 @@ public class Adapter extends BaseAdapter {
         }else {
             result= getItem(position).getItemsSize() + 1 ;
         }
+
 
 //        Log.d("yuuuup", "itemType" + result);
 

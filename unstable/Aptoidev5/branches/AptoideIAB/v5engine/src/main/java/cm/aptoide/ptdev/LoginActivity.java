@@ -74,7 +74,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         Log.d("Aptoide-", "On Connected");
 
 
-        final String serverId = "928466497334-4v3gf09v0f48h5mlbchhjptccj58lkh6.apps.googleusercontent.com";
+        final String serverId = "928466497334-7aqsaffv18r3k1ebthkchfi3nibft5vq.apps.googleusercontent.com";
+
+
+
 
 
         new Thread(new Runnable() {

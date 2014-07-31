@@ -149,10 +149,12 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         request.setLocation("homepage");
         request.setKeyword("__NULL__");
 
-        manager.execute(request, Aptoide.getSponsoredCache(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
+        manager.execute(request, Aptoide.getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-
+                sponsoredLinearLayout.removeAllViews();
+                mergeAdapter.setActive(sponsoredHeader, false);
+                mergeAdapter.setActive(sponsoredLinearLayout, false);
             }
 
             @Override
@@ -456,6 +458,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         }else{
             recommended.clear();
             recomendedAdapter.notifyDataSetChanged();
+            mergeAdapter.setActive(v2, false);
+            mergeAdapter.setActive(moreRecommended, false);
 
         }
     }
