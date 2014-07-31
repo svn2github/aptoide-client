@@ -252,6 +252,7 @@ public class FragmentComments extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
+        getListView().setItemsCanFocus(true);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
     }
 
