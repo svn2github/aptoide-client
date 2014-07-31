@@ -36,73 +36,98 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d("Aptoide-WebInstall", "onPerformSync()");
+        AMQConnection connection = null;
+        ChannelN channel = null;
+        try {
 
-        if(!Aptoide.isWebInstallServiceRunning()) {
+            if (!Aptoide.isWebInstallServiceRunning()) {
 
-            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String queueName = sPref.getString("queueName", "");
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(Constants.WEBINSTALL_HOST);
-            factory.setConnectionTimeout(20000);
-            factory.setVirtualHost("webinstall");
-            factory.setUsername("public");
-            factory.setPassword("public");
-            AMQConnection connection = null;
-            ChannelN channel = null;
-            try {
-
-                connection = (AMQConnection) factory.newConnection();
-                channel = (ChannelN) connection.createChannel();
-                channel.basicQos(0);
-
-                GetResponse response;
-                while ((response = channel.basicGet(queueName, false)) != null) {
-                    String message = new String(response.getBody(), "UTF-8");
-                    Log.d("syncAdapter", "MESSAGE: " + message);
-
-                    handleMessage(message);
-                    channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
-                }
-                channel.close();
-                connection.disconnectChannel(channel);
-                connection.close();
-                //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
-            } catch (ShutdownSignalException e) {
-                e.printStackTrace();
+                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                String queueName = sPref.getString("queueName", "");
+                ConnectionFactory factory = new ConnectionFactory();
+                factory.setHost(Constants.WEBINSTALL_HOST);
+                factory.setConnectionTimeout(20000);
+                factory.setVirtualHost("webinstall");
+                factory.setUsername("public");
+                factory.setPassword("public");
 
                 try {
-                    if (connection != null && channel != null) {
-                        connection.disconnectChannel(channel);
+
+                    connection = (AMQConnection) factory.newConnection();
+                    channel = (ChannelN) connection.createChannel();
+                    channel.basicQos(0);
+
+                    GetResponse response;
+                    while ((response = channel.basicGet(queueName, false)) != null) {
+                        String message = new String(response.getBody(), "UTF-8");
+                        Log.d("syncAdapter", "MESSAGE: " + message);
+
+                        handleMessage(message);
+                        channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
+                    }
+                    channel.close();
+                    connection.disconnectChannel(channel);
+                    connection.close();
+                    //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+                } catch (ShutdownSignalException e) {
+                    e.printStackTrace();
+
+                    try {
+                        if (connection != null && channel != null) {
+                            connection.disconnectChannel(channel);
+                        }
+
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (ShutdownSignalException e1) {
+                        e1.printStackTrace();
                     }
 
-                    if (connection != null) {
-                        connection.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+
+                        if (connection != null && channel != null) {
+                            connection.disconnectChannel(channel);
+                        }
+
+                        if (connection != null && connection.isOpen()) {
+                            connection.close();
+                        }
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (ShutdownSignalException e1) {
+                        e1.printStackTrace();
                     }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (ShutdownSignalException e1){
-                    e1.printStackTrace();
+                    //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                try {
-
-                    if (connection != null && channel != null) {
-                        connection.disconnectChannel(channel);
-                    }
-
-                    if (connection != null && connection.isOpen()) {
-                        connection.close();
-                    }
-
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (ShutdownSignalException e1){
-                    e1.printStackTrace();
-                }
-                //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
             }
+        } catch (Exception e){
+            e.printStackTrace();
+
+
+            if(channel!=null){
+                try {
+                    channel.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            if(connection!=null){
+                try {
+                    connection.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+
+
         }
 
 

@@ -375,7 +375,6 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             getAdsRequest.setLocation("search");
             getAdsRequest.setKeyword(query);
-
             getAdsRequest.setLimit(1);
 
             manager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
@@ -489,7 +488,11 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     LinearLayout usearchContainer2 = (LinearLayout) v2.findViewById(R.id.container);
 
 
-                    if (searchResultsLabel != null) adapter.setActive(searchResultsLabel, true);
+                    adapter.setActive(searchResultsLabel, true);
+
+                    if (searchResultsLabel != null && searchJson.getResults().getApks().isEmpty()){
+                        ((TextView)searchResultsLabel.findViewById(R.id.results)).setText(getString(R.string.no_search_result, query));
+                    }
 
 
                     didyoumeanContainer.removeAllViews();

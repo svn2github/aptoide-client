@@ -198,6 +198,8 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                             sponsoredLinearLayout.addView(v);
                         }
 
+
+
                         mergeAdapter.setActive(sponsoredHeader, true);
                         mergeAdapter.setActive(sponsoredLinearLayout, true);
 
@@ -457,10 +459,9 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         }else{
             recommended.clear();
-            recomendedAdapter.notifyDataSetChanged();
             mergeAdapter.setActive(v2, false);
             mergeAdapter.setActive(moreRecommended, false);
-
+            mergeAdapter.notifyDataSetChanged();
         }
     }
 

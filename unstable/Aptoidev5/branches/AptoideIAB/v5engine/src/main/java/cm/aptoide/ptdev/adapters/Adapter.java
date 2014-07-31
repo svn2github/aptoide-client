@@ -76,9 +76,6 @@ public class Adapter extends BaseAdapter {
 
         registerDataSetObserver(new DataSetObserver() {
 
-
-
-
             @Override
             public void onInvalidated() {
                 onChanged();
@@ -121,7 +118,8 @@ public class Adapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return maxCount + 1;
+        return bucketSize + 2;
+        //return maxCount + 1;
     }
 
 

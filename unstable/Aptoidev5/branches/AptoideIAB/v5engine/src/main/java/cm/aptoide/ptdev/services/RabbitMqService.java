@@ -59,88 +59,94 @@ public class RabbitMqService extends Service {
                 @Override
                 public void run() {
 
-                    AccountManager manager = AccountManager.get(getApplicationContext());
 
-                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    try {
 
-                        final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                        AccountManager manager = AccountManager.get(getApplicationContext());
 
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        String queueName = sharedPreferences.getString("queueName", null);
-                        ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
-                        ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
+                        if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
 
-                        if (Build.VERSION.SDK_INT >= 8) {
-                            ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
-                        }
+                            final Account account = AccountManager.get(getApplicationContext()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
-                        String host = Constants.WEBINSTALL_HOST;
-                        isRunning = true;
-                        try {
-                            ConnectionFactory factory = new ConnectionFactory();
-                            factory.setHost(host);
-                            factory.setUsername("public");
-                            factory.setPassword("public");
-                            factory.setConnectionTimeout(20000);
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            String queueName = sharedPreferences.getString("queueName", null);
+                            ContentResolver.setIsSyncable(account, Constants.WEBINSTALL_SYNC_AUTHORITY, 1);
+                            ContentResolver.setSyncAutomatically(account, Constants.WEBINSTALL_SYNC_AUTHORITY, true);
 
-                            factory.setVirtualHost("webinstall");
-                            connection = (AMQConnection) factory.newConnection();
-                            newChannel(queueName, new AMQHandler() {
-                                @Override
-                                void handleMessage(String body) {
+                            if (Build.VERSION.SDK_INT >= 8) {
+                                ContentResolver.addPeriodicSync(account, Constants.WEBINSTALL_SYNC_AUTHORITY, new Bundle(), Constants.WEBINSTALL_SYNC_POLL_FREQUENCY);
+                            }
 
-                                    try {
-                                        JSONObject object = new JSONObject(body);
+                            String host = Constants.WEBINSTALL_HOST;
+                            isRunning = true;
+                            try {
+                                ConnectionFactory factory = new ConnectionFactory();
+                                factory.setHost(host);
+                                factory.setUsername("public");
+                                factory.setPassword("public");
+                                factory.setConnectionTimeout(20000);
 
-                                        Intent i = new Intent(getApplicationContext(), appViewClass);
-                                        SecurePreferences securePreferences = SecurePreferences.getInstance();
-                                        String authToken = securePreferences.getString("devtoken", "");
-                                        String repo = object.getString("repo");
-                                        long id = object.getLong("id");
-                                        String md5sum = object.getString("md5sum");
-                                        i.putExtra("fromMyapp", true);
-                                        i.putExtra("repoName", repo);
-                                        i.putExtra("id", id);
-                                        i.putExtra("download_from", "webinstall");
-                                        i.putExtra("md5sum", md5sum);
+                                factory.setVirtualHost("webinstall");
+                                connection = (AMQConnection) factory.newConnection();
+                                newChannel(queueName, new AMQHandler() {
+                                    @Override
+                                    void handleMessage(String body) {
 
-                                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                                        try {
+                                            JSONObject object = new JSONObject(body);
 
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        String hmac = object.getString("hmac");
-                                        String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo + id + md5sum, authToken + deviceId);
-                                        if (hmac.equals(calculatedHmac)) {
-                                            getApplicationContext().startActivity(i);
-                                        } else {
-                                            Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
+                                            Intent i = new Intent(getApplicationContext(), appViewClass);
+                                            SecurePreferences securePreferences = SecurePreferences.getInstance();
+                                            String authToken = securePreferences.getString("devtoken", "");
+                                            String repo = object.getString("repo");
+                                            long id = object.getLong("id");
+                                            String md5sum = object.getString("md5sum");
+                                            i.putExtra("fromMyapp", true);
+                                            i.putExtra("repoName", repo);
+                                            i.putExtra("id", id);
+                                            i.putExtra("download_from", "webinstall");
+                                            i.putExtra("md5sum", md5sum);
+
+                                            String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+                                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            String hmac = object.getString("hmac");
+                                            String calculatedHmac = AptoideUtils.Algorithms.computeHmacSha1(repo + id + md5sum, authToken + deviceId);
+                                            if (hmac.equals(calculatedHmac)) {
+                                                getApplicationContext().startActivity(i);
+                                            } else {
+                                                Log.d("Aptoide-WebInstall", "Error validating message: received: " + hmac + " calculated:" + calculatedHmac);
+                                            }
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+
+                                    }
+                                });
+                            } catch (IOException e) {
+                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
+                                e.printStackTrace();
+                                try {
+                                    if (channel != null && channel.isOpen()) {
+                                        channel.close();
                                     }
 
+                                    if (connection != null && connection.isOpen()) {
+                                        connection.close();
+                                    }
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                } catch (ShutdownSignalException e1) {
+                                    e1.printStackTrace();
+                                }
+                                isRunning = false;
 
-                                }
-                            });
-                        } catch (IOException e) {
-                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
-                            e.printStackTrace();
-                            try {
-                                if (channel != null && channel.isOpen()) {
-                                    channel.close();
-                                }
-
-                                if (connection != null && connection.isOpen()) {
-                                    connection.close();
-                                }
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }catch (ShutdownSignalException e1){
-                                e1.printStackTrace();
                             }
-                            isRunning = false;
-
                         }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             }).start();
