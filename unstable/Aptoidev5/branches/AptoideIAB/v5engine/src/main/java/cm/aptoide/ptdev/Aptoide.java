@@ -136,7 +136,7 @@ public class Aptoide extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                Toast.makeText(getApplicationContext(), "Aptoide has crashed", Toast.LENGTH_LONG).show();
+
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(10);
 
