@@ -75,7 +75,7 @@
         <ImageButton
                 android:onClick="showPopup"
                 android:id="@+id/ic_action"
-                style="@style/overflowMenuButton"/>
+                style="@style/overflowHomeButton"/>
 
     </RelativeLayout>
 

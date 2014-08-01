@@ -36,7 +36,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
         <ImageView
             android:id="@+id/ic_action"
-            style="@style/overflowMenuButton"
+            style="@style/overflowHomeButton"
             android:layout_alignParentRight="true" />
 
         <TextView

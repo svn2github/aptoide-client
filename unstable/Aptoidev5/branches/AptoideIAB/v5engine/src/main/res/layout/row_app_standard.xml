@@ -68,7 +68,7 @@
                 android:numStars="5" />
 
         <ImageView android:id="@+id/ic_action"
-                   style="@style/overflowMenuButton" />
+                   style="@style/overflowStoreButton" />
 
     </RelativeLayout>
 
