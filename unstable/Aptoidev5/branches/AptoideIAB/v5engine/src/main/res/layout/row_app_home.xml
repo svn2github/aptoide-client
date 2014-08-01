@@ -12,6 +12,7 @@
     android:layout_height="180dp"
     android:layout_gravity="center_horizontal"
     android:layout_weight="1"
+    android:nextFocusRight="@+id/ic_action"
     android:clickable="true">
 
     <RelativeLayout

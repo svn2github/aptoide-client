@@ -14,7 +14,6 @@
         android:id="@+id/fl_central"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:padding="1dp"
         style="?attr/customRowForegroundHomeLayout">
 
@@ -39,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
 
         <ImageView
@@ -57,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
 
             <ImageView
@@ -86,7 +83,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/fl_row2_left"
             android:padding="1dp"
-            android:layout_weight="1" android:clickable="true"
+            android:layout_weight="1"
             style="?attr/customRowForegroundHomeLayout">
         <ImageView
             android:id="@+id/app_icon_row2_left"
@@ -104,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="1dp"
-            android:layout_weight="1" android:clickable="true"
+            android:layout_weight="1"
             style="?attr/customRowForegroundHomeLayout">
 
         <ImageView

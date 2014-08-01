@@ -375,6 +375,9 @@ public class Start extends ActionBarActivity implements
         mContext = this;
         setContentView(R.layout.activity_main);
 
+
+
+
         matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
 
@@ -602,7 +605,7 @@ public class Start extends ActionBarActivity implements
             }
 
             public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
+                mDrawerLayout.findViewById(R.id.left_drawer).requestFocus();
             }
         };
 
