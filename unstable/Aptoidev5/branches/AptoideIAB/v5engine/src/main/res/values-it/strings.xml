@@ -317,15 +317,16 @@
   <string name="wizard_search">3 - Cerca tra migliaia di app</string>
   <string name="wizard_search_local">App disponibili negli Store Locali</string>
   <string name="wizard_search_online">Cerca in altri store sul sito web di Aptoide</string>
-  <string name="wizard_new_layout">1- Nuovo Layout</string>
-  <string name="wizard_rollback">2- Ripristino</string>
-  <string name="wizard_widget">3- Widget</string>
+  <string name="wizard_new_layout">Nuovo Layout</string>
   <string name="wizard_new_account">4- Gestore Account</string>
   <string name="wizard_add_more_stores">Puoi aggiungere nuovi store Android</string>
-  <string name="wizard_rollback_description">Puoi reinstallare o ripristinare app</string>
-  <string name="wizard_widget_description">Ricerca veloce delle applicazioni</string>
-  <string name="wizard_account_description">Le app Aptoide possono usare lo stesso login</string>
   <string name="wizard_secure_fast_reliable">Sicuro. Veloce. Affidabile.</string>
+  <string name="wizard_new_webinstall">1 - Installazione web</string>
+  <string name="wizard_new_webinstall_description">Novità di questa versione! Installa dal tuo computer</string>
+  <string name="wizard_new_flags_description">Maggiori informazioni su potenziali Malware</string>
+  <string name="wizard_new_flags">2 - Sistema di flag</string>
+  <string name="wizard_new_pin">3 - Pin Contenuti per Adulti</string>
+  <string name="wizard_new_pin_description">Imposta un pin per sbloccare i Contenuti per Adulti</string>
   <string name="wizard_next">Avanti</string>
   <string name="wizard_prev">Indietro</string>
   <string name="create_username">Nome utente</string>
@@ -522,4 +523,9 @@
   <string name="search_result_looking_for">Stai cercando?</string>
   <string name="search_result_did_you_mean">Forse volevi dire:</string>
   <string name="device_not_allowed">Questa applicazione non può essere eseguita su questo dispositivo!</string>
+  <string name="maybe_in_other_stores">Forse in altri store?</string>
+  <string name="suggested_app">App Consigliata</string>
+  <string name="suggested_apps">App Consigliate</string>
+  <string name="sponsored">Sponsorizzata</string>
+  <string name="btn_search_other_stores">Cerca in Altri Store</string>
 </resources>

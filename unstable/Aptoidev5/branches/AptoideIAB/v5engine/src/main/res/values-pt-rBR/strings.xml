@@ -317,15 +317,16 @@
   <string name="wizard_search">3 - Procurar milhares de aplicativos</string>
   <string name="wizard_search_local">Aplicativos disponíveis nas lojas locais</string>
   <string name="wizard_search_online">Procurar em outras lojas no site do Aptoide</string>
-  <string name="wizard_new_layout">1- Novo Layout</string>
-  <string name="wizard_rollback">2- Reverter</string>
-  <string name="wizard_widget">3- Widget</string>
+  <string name="wizard_new_layout">Novo Layout</string>
   <string name="wizard_new_account">4- Gerenciador de Conta</string>
   <string name="wizard_add_more_stores">Adicionar novas lojas Android</string>
-  <string name="wizard_rollback_description">Reinstalar ou reverter os aplicativos</string>
-  <string name="wizard_widget_description">Procura rápida de aplicativos</string>
-  <string name="wizard_account_description">Os aplicativos Aptoide podem usar o mesmo login</string>
   <string name="wizard_secure_fast_reliable">Seguro. Rápido. Confiável.</string>
+  <string name="wizard_new_webinstall">1 - Instalador via Web</string>
+  <string name="wizard_new_webinstall_description">Novo nesta versão! Instalar a partir de seu computador desktop</string>
+  <string name="wizard_new_flags_description">Mais informações sobre Malware potencial</string>
+  <string name="wizard_new_flags">2 - Sistema de sinalização</string>
+  <string name="wizard_new_pin">3 - Senha para o Conteúdo Adulto</string>
+  <string name="wizard_new_pin_description">Defina uma senha para desbloquear o Conteúdo Adulto</string>
   <string name="wizard_next">Próximo</string>
   <string name="wizard_prev">Anterior</string>
   <string name="create_username">Nome de usuário</string>
@@ -404,7 +405,7 @@
   <string name="error_WOP_3">Já existe uma loja com este mesmo nome. Por favor, atribua outro nome para sua loja</string>
   <string name="error_WOP_4">A loja não pôde ser criada. Por favor, tente novamente.</string>
   <string name="error_WOP_5">Você precisa dar um nome à sua loja.</string>
-  <string name="error_WOP_6">Para adicionar um comentário, você precisa inserir seu nome (ele vai ser visível</string>
+  <string name="error_WOP_6">Para adicionar um comentário, você precisa inserir seu nome (ele vai ser visível)</string>
   <string name="error_WOP_7">Comentar erro</string>
   <string name="error_WOP_8">Comentar erro no voto</string>
   <string name="error_WOP_9">O e-mail fornecido já existe no sistema</string>
@@ -469,7 +470,7 @@
   <string name="fields_cannot_empty">Por favor verifique seu e-mail e senha.</string>
   <string name="password_validation_text">A senha deve ter pelo menos 8 caracteres e deve ter pelo menos uma letra e um número ou caractere especial (!\@#$%*)</string>
   <string name="jolla_not_supported">Este recurso ainda não é suportado pela plataforma Jolla.</string>
-  <string name="carrier_billing">Portador(a) de faturamento</string>
+  <string name="carrier_billing">Tarifa de Operadora</string>
   <string name="visa">Visa</string>
   <string name="paypal_future_payments">Pagamentos futuros do Paypal</string>
   <string name="paypal_single_payment">Pagamento único do Paypal</string>
@@ -522,4 +523,9 @@
   <string name="search_result_looking_for">Você está procurando?</string>
   <string name="search_result_did_you_mean">Você quis dizer:</string>
   <string name="device_not_allowed">Esta app não tem permissão para execução neste modelo de dispositivo!</string>
+  <string name="maybe_in_other_stores">Talvez em outras lojas?</string>
+  <string name="suggested_app">Aplicativo sugerido</string>
+  <string name="suggested_apps">Aplicativos sugeridos</string>
+  <string name="sponsored">Patrocinado</string>
+  <string name="btn_search_other_stores">Procurar outras lojas</string>
 </resources>

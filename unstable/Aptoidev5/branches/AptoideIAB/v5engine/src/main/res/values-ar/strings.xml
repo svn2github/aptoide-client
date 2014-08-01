@@ -5,7 +5,7 @@
   <string name="WidgetProvider_timestamp_hour_ago">%s منذ ساعة</string>
   <string name="WidgetProvider_timestamp_hours_ago">%s منذ ساعات</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s منذ دقائق</string>
-  <string name="WidgetProvider_timestamp_just_now">الآن</string>
+  <string name="WidgetProvider_timestamp_just_now">الان</string>
   <string name="WidgetProvider_timestamp_weeks_ago">%s منذ اسابيع</string>
   <string name="WidgetProvider_timestamp_week_ago">%s منذ اسبوع</string>
   <string name="WidgetProvider_timestamp_this_week">هذا الإسبوع</string>
@@ -38,7 +38,7 @@
   <string name="multiversion">نسخة متعددة</string>
   <string name="more">+ المزيد</string>
   <string name="more_from_publisher">المزيد من هذا الناشر</string>
-  <string name="preparing_to_load">جاري التحظير, يرجى الانتظار...</string>
+  <string name="preparing_to_load">جاري التحظير, يرجى الانتظار.</string>
   <string name="vote_submitted">تم تقديم صوتك بنجاح</string>
   <string name="sort">فرز</string>
   <string name="order_popup_lst1">الاحدث اولا</string>
@@ -57,7 +57,7 @@
   <string name="follow_twitter">تابعنا على تويتر</string>
   <string name="loading_facebook">جار تحميل فيسبوك...</string>
   <string name="loading_twitter">جار تحميل تويتر...</string>
-  <string name="new_to_aptoide">"هل أنت جديد في  %s؟ أنشئ حساب مجاني"</string>
+  <string name="new_to_aptoide">هل انت جديد في%؟ انشاء حساب مجاني</string>
   <string name="forgot_passwd">نسيت كلمة المرور؟</string>
   <string name="check_your_credentials">أعد تدقيق معلومات حسابك</string>
   <string name="settings_title_bar">الإعدادات</string>
@@ -86,9 +86,9 @@
   <string name="clearcontent_title">حذف البيانات والتخصيصات</string>
   <string name="clearcache_title">محو الملفات المؤقتة</string>
   <string name="clear_cache_sucess">تم حذف المحتوى بنجاح</string>
-  <string name="clearcache_sum">مسح الملفات المؤقتة (أيقونات, لقطات) من بطاقة الذاكرة</string>
+  <string name="clearcache_sum">مسح الملفات المؤقتة (أيقونات, لقطات) من بطاقة الذاكرة.</string>
   <string name="clearcache_sum_jolla">حذف الذاكرة المؤقتة ( الايقونات , لقطات الشاشة )</string>
-  <string name="clearcontent_sum">يمسح البيانات من الذاكرة</string>
+  <string name="clearcontent_sum">يمسح البيانات من الذاكرة.</string>
   <string name="clearcontent_sum_jolla">حذف البيانات</string>
   <string name="about_site">الموقع الأليكتروني:</string>
   <string name="about_mail">الإتصال:</string>
@@ -138,7 +138,7 @@
   <string name="stores">المتاجر</string>
   <string name="insert_store_name">أدخل إسم المتجر:</string>
   <string name="store_name">اسم المتجر</string>
-  <string name="search_other_stores">او ابحث عن اخرين</string>
+  <string name="search_other_stores">او ابحث عن اخرين.</string>
   <string name="see_top_stores">مشاهدة أفضل المتاجر</string>
   <string name="setcredentials">تسجيل الدخول</string>
   <string name="rollback">استرجاع</string>
@@ -232,7 +232,7 @@
   <string name="app_trusted">%s موثوق بها</string>
   <string name="app_warning">%s ضار</string>
   <string name="application_signature_matched">توقيع التطبيق مطابقة مع توقيع المتصلة بمطور التطبيق</string>
-  <string name="application_signature_not_matched">توقيع التطبيق لا يتوافق مع التوقيع الخاص بمطور التطبيق. التطبيق ينمكن ان يكون مغشوش</string>
+  <string name="application_signature_not_matched">توقيع التطبيق لا يتطابق مع توقيع مطور التطبيق. قد يكون التطبيق مزور.</string>
   <string name="application_signature_blacklisted">توقيع التطبيق غير موثوق بها في توقيع أبتويد لمكافحة البرامج الضارة. لانه استخدمت في توقيع تطبيقات اخرى غير مطابقة لتوقيع المطور الشرعي.</string>
   <string name="scanned_verified_by_tester">تم استعراض التطبيق يدويا من قبل فريق اختبار من فريق أبتويد الذي يضمن سلامة التطبيق.</string>
   <string name="schDown_nodownloadselect">لم يتم اختيار التحميلات</string>
@@ -317,15 +317,16 @@
   <string name="wizard_search">3 - البحث عن آلاف التطبيقات</string>
   <string name="wizard_search_local">التطبيقات المتاحة في المتاجر المحلية</string>
   <string name="wizard_search_online">بحث في المتاجر الأخرى في موقع أبتويد</string>
-  <string name="wizard_new_layout">1 - شكل جديد</string>
-  <string name="wizard_rollback">2- العودة</string>
-  <string name="wizard_widget">3- تطبيقات مصغرة</string>
+  <string name="wizard_new_layout">شكل جديد</string>
   <string name="wizard_new_account">4- مدير الحساب</string>
-  <string name="wizard_add_more_stores">يمكنك إضافة متاجرأندرويد</string>
-  <string name="wizard_rollback_description">يمكنك إعادة تثبيت التطبيقات أو العودة</string>
-  <string name="wizard_widget_description">بحث سريع عن التطبيقات</string>
-  <string name="wizard_account_description">تطبيقات أبتويد يمكن ان تستخدم نفس معلومات تسجيل الدخول</string>
+  <string name="wizard_add_more_stores">يمكنك إضافة متاجر أندرويد جديدة</string>
   <string name="wizard_secure_fast_reliable">مؤمن. سريع. موثوق به.</string>
+  <string name="wizard_new_webinstall">1- تثبيت من خلال الشبكة</string>
+  <string name="wizard_new_webinstall_description">الجديد في هذا الإصدار ! تثبيت من كمبيوتر سطح المكتب</string>
+  <string name="wizard_new_flags_description">مزيد من المعلومات حول البرامج الضارة المحتملة</string>
+  <string name="wizard_new_flags">2 - نظام الاشارة</string>
+  <string name="wizard_new_pin">3 - تعيين مشبك لمحتوى البالغين (اللخوة النظيفة كانت هنا)</string>
+  <string name="wizard_new_pin_description">وضع مشبك لفتح محتوى البالغين</string>
   <string name="wizard_next">التالي</string>
   <string name="wizard_prev">السابق</string>
   <string name="create_username">اسم المستخدم</string>
@@ -385,7 +386,7 @@
   <string name="error_IARG_108">تعليق غير صالح</string>
   <string name="error_IARG_109">تصويت غير صالح</string>
   <string name="error_IARG_110">"الرد على التعليق غير صالح "</string>
-  <string name="error_IARG_200">"شهادة تسجيل  الدخول غير صالحة"</string>
+  <string name="error_IARG_200">شهادة تسجيل الدخول غير صالحة</string>
   <string name="error_IARG_201">نموذج تسجيل الدخول غير صالح</string>
   <string name="error_IARG_202">الرفع غير صالح</string>
   <string name="error_IARG_300">فئة مخصصة غير صالحة</string>
@@ -521,5 +522,10 @@
   <string name="feedback_no_email">لايوجد بريد الالتكتروني</string>
   <string name="search_result_looking_for">هل هذا ماتبحث عنه ؟</string>
   <string name="search_result_did_you_mean">هل تقصد ؟</string>
-  <string name="device_not_allowed">لايمكن تشغيل التطبيق على اصدار هذا الجهاز</string>
+  <string name="device_not_allowed">لايمكن تشغيل التطبيق على اصدار هذا الجهاز!</string>
+  <string name="maybe_in_other_stores">ربما في المتاجر الأخرى؟</string>
+  <string name="suggested_app">تطبيق مقترح</string>
+  <string name="suggested_apps">تطبيقات مقترحة</string>
+  <string name="sponsored">ممول</string>
+  <string name="btn_search_other_stores">بحث في متاجر اخرى</string>
 </resources>

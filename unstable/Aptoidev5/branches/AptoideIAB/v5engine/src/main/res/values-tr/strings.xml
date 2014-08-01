@@ -35,7 +35,7 @@
   <string name="no_comments">Henüz yorum yok. İlk siz olun!</string>
   <string name="comment_see_all">Tümünü gör</string>
   <string name="related_apps">İlgili uygulamalar</string>
-  <string name="multiversion">Çoklu sürüm</string>
+  <string name="multiversion">Dığer sürümler</string>
   <string name="more">+ dahası</string>
   <string name="more_from_publisher">Yayıncıdan dahası</string>
   <string name="preparing_to_load">Yükleme hazırlanıyor, bekleyiniz…</string>
@@ -72,7 +72,7 @@
   <string name="setting_appfiltersum">Bu cihazla uyumlu olmayan uygulamaları gösterme</string>
   <string name="setting_appfiltertitle">Uygulamaları Filtrele</string>
   <string name="setting_dont_show_mature_content">Yetişkin içeriği gösterme</string>
-  <string name="setting_mature_filtering">Yetişkin içeriğin filtrele</string>
+  <string name="setting_mature_filtering">Yetişkin içeriği filtrele</string>
   <string name="excluded_updates_sum">Dışlanan güncellemeleri geri al</string>
   <string name="setting_schdwntitle">Programlanmış İndirmeler</string>
   <string name="setting_schdwninstallsum">Planlanan indirmeleri bir WiFi bağlantısı bulunduğunda otomatik olarak kur</string>
@@ -94,7 +94,7 @@
   <string name="about_mail">İrtibat:</string>
   <string name="about_us">Hakkımızda</string>
   <string name="settings_maxFileCache_sum">Apk dosyalarınızı saklamak için maksimum boyut belirtin</string>
-  <string name="settings_maxFileCache_title">İndirilen dosyaların önbelleği (MB)</string>
+  <string name="settings_maxFileCache_title">İndirilen Dosya Önbelleği (MB)</string>
   <string name="cache_using_X_mb">%s MB kullanılıyor</string>
   <string name="crash_reports">Çökme raporları</string>
   <string name="pref_enable_acra">Raporları gönder</string>
@@ -111,7 +111,7 @@
   <string name="clearsearch_title">Arama tarihini sil</string>
   <string name="updating">Tüm uygulamalar güncelleniyor</string>
   <string name="setting_auto_update_sum">Uygulamaların otomatik güncellenmelerini etkinleştir</string>
-  <string name="setting_auto_update_title">Otomatik güncellemeyi etkinleştir</string>
+  <string name="setting_auto_update_title">Oto güncellemeyi etkinleştir</string>
   <string name="setting_updates">Güncellemeler</string>
   <string name="setting_updates_notification_title">Güncelleme bildirimi</string>
   <string name="setting_updates_notification_sum">Yeni güncelleme bildirimlerini göster</string>
@@ -223,7 +223,7 @@
   <string name="trusted">Güvenli</string>
   <string name="warning">Uyarı</string>
   <string name="downgrade">Eski sürüme dönüş</string>
-  <string name="open">Açık</string>
+  <string name="open">Aç</string>
   <string name="scanned_with_av">Şu antivirüs ile taranmıştır:</string>
   <string name="compared_with_another_marketplace">Başka bir Android mağazası ile karşılaştırma:</string>
   <string name="application_signature_analysis">Geliştirici imzası ile karşılaştırılan uygulama imzası:</string>
@@ -317,15 +317,15 @@
   <string name="wizard_search">3 - Binlerce uygulamadan arayın</string>
   <string name="wizard_search_local">Yerel mağazalarda mevcut uygulamalar</string>
   <string name="wizard_search_online">Başka mağazalarda Aptoide sitesinden arama yapın</string>
-  <string name="wizard_new_layout">1- Yeni düzen</string>
-  <string name="wizard_rollback">2- Geri alma</string>
-  <string name="wizard_widget">3- Widget</string>
+  <string name="wizard_new_layout">Yeni Düzen</string>
   <string name="wizard_new_account">4- Hesap yöneticisi</string>
   <string name="wizard_add_more_stores">Yeni Android mağazaları ilâve edebilirsiniz</string>
-  <string name="wizard_rollback_description">Uygulamaları tekrar kurabilir ya da geri alabilirsiniz</string>
-  <string name="wizard_widget_description">Hızlı uygulama araması</string>
-  <string name="wizard_account_description">Aptoide uygulamaları aynı giriş verilerini kullanabilir</string>
   <string name="wizard_secure_fast_reliable">Güvenilir. Hızlı. Kararlı.</string>
+  <string name="wizard_new_webinstall_description">Bu sürümde yeni! Uygulamaları bilgisayarınızdan kurun</string>
+  <string name="wizard_new_flags_description">Potansiyel kötücül uygulamalar hakkında daha fazla bilgi</string>
+  <string name="wizard_new_flags">2 - Bayrak Sistemi</string>
+  <string name="wizard_new_pin">Yetişkin İçerik Kişisel Kimlik Numarası</string>
+  <string name="wizard_new_pin_description">Yetişkin İçeriğin kilidini kaldırmak için bir kişisel kimlik numarası ayarla</string>
   <string name="wizard_next">Sonraki</string>
   <string name="wizard_prev">Önceki</string>
   <string name="create_username">Kullanıcı ismi</string>
@@ -464,7 +464,7 @@
   <string name="payment_methods">Birlikte öde:</string>
   <string name="buy_now">Ödemeyi Onayla</string>
   <string name="root">Kök İzni (Root)</string>
-  <string name="allow_root">Kök izinli yüklemeye izin ver</string>
+  <string name="allow_root">Root yüklemeye izin ver</string>
   <string name="other">Diğer</string>
   <string name="fields_cannot_empty">Lütfen e-postanızı ve parolanızı kontrol ediniz.</string>
   <string name="password_validation_text">Parolanın en az 8 karakter uzunluğunda olması ve asgari bir harf ve bir sayı ya da özel karakter (!\@#$%*) içermesi gerekir</string>
@@ -509,7 +509,7 @@
   <string name="change_payment">Geri</string>
   <string name="confirm_carrier_payment">\'{title}\' uygulamasını {value} ücretiyle almak istiyor musunuz? Telefon faturanızla ödeme yapacaksınız.</string>
   <string name="featured_editors_choice">Öne Çıkan Editörün Seçimi</string>
-  <string name="set_mature_pin_title">Yetişkin kişisel kimlik numarası ayarla</string>
+  <string name="set_mature_pin_title">Yetişkin PIN numarası ayarla</string>
   <string name="set_mature_pin_summary">Yetişkin içeriğinin kilidini kaldırmak için istenecek kişisel kimlik numarası ayarla</string>
   <string name="remove_mature_pin_title">Yetişkin içeriği kişisel kimlik numarasını kaldır</string>
   <string name="remove_mature_pin_summary">Yetişkin içeriğinin kilidini açacak kişisel kimlik numarasını kaldır</string>
@@ -522,4 +522,9 @@
   <string name="search_result_looking_for">Bunu mu arıyorsunuz?</string>
   <string name="search_result_did_you_mean">Şunu mu demek istediniz:</string>
   <string name="device_not_allowed">Bu uygulamanın bu cihaz modelinde çalışmasına müsaade edilmez!</string>
+  <string name="maybe_in_other_stores">Belki başka mağazalarda?</string>
+  <string name="suggested_app">Önerilen Uygulama</string>
+  <string name="suggested_apps">Önerilen Uygulalamalar</string>
+  <string name="sponsored">Sponsorlu</string>
+  <string name="btn_search_other_stores">Diğer Mağazalarda Ara</string>
 </resources>

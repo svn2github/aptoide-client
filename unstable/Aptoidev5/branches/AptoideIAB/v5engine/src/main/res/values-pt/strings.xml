@@ -317,15 +317,16 @@
   <string name="wizard_search">3 - Procurar milhares de aplicações</string>
   <string name="wizard_search_local">Aplicações disponíveis nas lojas locais</string>
   <string name="wizard_search_online">Procurar noutras lojas na página Aptoide</string>
-  <string name="wizard_new_layout">1- Nova apresentação</string>
-  <string name="wizard_rollback">2- Rollback</string>
-  <string name="wizard_widget">3- Widget</string>
+  <string name="wizard_new_layout">1 - Nova apresentação</string>
   <string name="wizard_new_account">4- Gestão de Conta</string>
   <string name="wizard_add_more_stores">Adicionar novas lojas Android</string>
-  <string name="wizard_rollback_description">Reinstalar ou reverter as aplicações</string>
-  <string name="wizard_widget_description">Procura rápida de aplicações</string>
-  <string name="wizard_account_description">As aplicações Aptoide podem usar o mesmo login</string>
   <string name="wizard_secure_fast_reliable">Seguro. Rápido. Fidedigno.</string>
+  <string name="wizard_new_webinstall">1 - Instalação Web</string>
+  <string name="wizard_new_webinstall_description">Novo nesta versão! Instale a partir do computador</string>
+  <string name="wizard_new_flags_description">Mais informação acerca de potencial Malware</string>
+  <string name="wizard_new_flags">2 - Sistema de Classificação</string>
+  <string name="wizard_new_pin">3 - Pin para Conteúdo Adulto</string>
+  <string name="wizard_new_pin_description">Defina um pin para desbloquear o Conteúdo Adulto</string>
   <string name="wizard_next">Seguinte</string>
   <string name="wizard_prev">Anterior</string>
   <string name="create_username">Nome de utilizador</string>
@@ -522,4 +523,9 @@
   <string name="search_result_looking_for">Está a procura de?</string>
   <string name="search_result_did_you_mean">Será que quis dizer:</string>
   <string name="device_not_allowed">Esta aplicação não tem acesso para correr neste modelo de dispositivo!</string>
+  <string name="maybe_in_other_stores">Talvez noutras lojas?</string>
+  <string name="suggested_app">App sugerida</string>
+  <string name="suggested_apps">Apps sugeridas</string>
+  <string name="sponsored">Patrocinado</string>
+  <string name="btn_search_other_stores">Procurar em outras Lojas</string>
 </resources>

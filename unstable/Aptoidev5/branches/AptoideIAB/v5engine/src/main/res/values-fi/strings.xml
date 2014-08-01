@@ -140,7 +140,7 @@
   <string name="store_name">Kaupan nimi</string>
   <string name="search_other_stores">Tai hae toisia...</string>
   <string name="see_top_stores">Näytä huippukaupat</string>
-  <string name="setcredentials">Kirjautuminen</string>
+  <string name="setcredentials">Kirjaudu</string>
   <string name="rollback">Palautus</string>
   <string name="rollback_empty">Ei palautettavia sovelluksia</string>
   <string name="rollback_installed">Asennettu</string>
@@ -317,15 +317,16 @@
   <string name="wizard_search">3 - Hae tuhansien sovellusten joukosta</string>
   <string name="wizard_search_local">Sovellukset saatavissa paikallisista kaupoista</string>
   <string name="wizard_search_online">Hae muista kaupoista Aptoiden kotisivujen kautta</string>
-  <string name="wizard_new_layout">1 - Uusi ulkoasu</string>
-  <string name="wizard_rollback">2 - Palautus</string>
-  <string name="wizard_widget">3 - Pienoisohjelma</string>
+  <string name="wizard_new_layout">Uusi ulkoasu</string>
   <string name="wizard_new_account">4 - Tilin hallinta</string>
   <string name="wizard_add_more_stores">Voit lisätä uusia Android-kauppoja</string>
-  <string name="wizard_rollback_description">Voit uudelleenasentaa tai palauttaa sovelluksia</string>
-  <string name="wizard_widget_description">Nopea sovellushaku</string>
-  <string name="wizard_account_description">Aptoide-sovellukset käyttävät samaa sisäänkirjautumista</string>
   <string name="wizard_secure_fast_reliable">Turvallinen. Nopea. Luotettava.</string>
+  <string name="wizard_new_webinstall">1 - Webinstall</string>
+  <string name="wizard_new_webinstall_description">Uutta tässä versiossa! Asenna tietokoneeltasi</string>
+  <string name="wizard_new_flags_description">Lisätietoa mahdollisista haittaohjelmista</string>
+  <string name="wizard_new_flags">2 - Lippujärjestelmä</string>
+  <string name="wizard_new_pin">3 - Aikuisviihdesisällön pin-koodi</string>
+  <string name="wizard_new_pin_description">Aseta pin-koodi aikuisviihdesisällön lukitsemiseksi</string>
   <string name="wizard_next">Seuraava</string>
   <string name="wizard_prev">Edellinen</string>
   <string name="create_username">Käyttäjänimi</string>
@@ -522,4 +523,9 @@
   <string name="search_result_looking_for">Etsitkö?</string>
   <string name="search_result_did_you_mean">Tarkoititko:</string>
   <string name="device_not_allowed">Tätä sovellusta ei voi suorittaa tällä laitemallilla!</string>
+  <string name="maybe_in_other_stores">Ehkä toisissa kaupoissa?</string>
+  <string name="suggested_app">Suositeltu sovellus</string>
+  <string name="suggested_apps">Suositellut sovellukset</string>
+  <string name="sponsored">Sponsoroitu</string>
+  <string name="btn_search_other_stores">Etsi toisista kaupoista</string>
 </resources>
