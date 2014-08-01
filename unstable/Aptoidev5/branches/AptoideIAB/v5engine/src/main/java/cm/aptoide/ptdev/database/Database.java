@@ -1037,7 +1037,7 @@ public class Database {
                 String iconPath = c.getString(c.getColumnIndex("iconpath"));
                 String icon = c.getString(c.getColumnIndex("icon"));
                 long apkid = c.getLong(c.getColumnIndex("id"));
-                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatnameid")), iconPath + icon , apkid, c.getString(c.getColumnIndex("downloads")), c.getColumnIndex("rating"),c.getString(c.getColumnIndex("mycatname"))));
+                tempList.get(collection).add(new HomeItem(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("mycatnameid")), iconPath + icon , apkid, c.getString(c.getColumnIndex("downloads")), c.getFloat(c.getColumnIndex("rating")),c.getString(c.getColumnIndex("mycatname"))));
             }else{
                 tempList3.add(collection);
             }

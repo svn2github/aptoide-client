@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -49,7 +50,9 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -399,7 +402,6 @@ public class Start extends ActionBarActivity implements
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
-
         if (savedInstanceState == null) {
 
             File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
@@ -447,7 +449,7 @@ public class Start extends ActionBarActivity implements
                     noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
                     String message;
                     if(!Build.DEVICE.equals("alien_jolla_bionic")){
-                        message=""+getText(R.string.remote_in_noSD);
+                        message=""+getText(R.string.remote_in_noSDspace);
                     }else{
                         message=""+getText(R.string.remote_in_noSD_jolla);
                     }
@@ -506,19 +508,37 @@ public class Start extends ActionBarActivity implements
                 Properties properties = new Properties();
                 properties.load(is);
 
-                String id = properties.getProperty("downloadId");
-                long savedId = sharedPreferences.getLong("downloadId", 0);
 
-                if (Long.valueOf(id) != savedId) {
-                    sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
-                    Intent intent = new Intent(this, appViewClass);
+                if(properties.containsKey("downloadId")) {
 
-                    intent.putExtra("fromApkInstaller", true);
-                    intent.putExtra("id", Long.valueOf(id));
+                    String id = properties.getProperty("downloadId");
+                    long savedId = sharedPreferences.getLong("downloadId", 0);
 
-                    startActivityForResult(intent, 50);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Started_From_Apkfy");
+                    if (Long.valueOf(id) != savedId) {
+                        sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
+                        Intent intent = new Intent(this, appViewClass);
 
+                        intent.putExtra("fromApkInstaller", true);
+                        intent.putExtra("id", Long.valueOf(id));
+
+
+                        if(properties.containsKey("cpi_url")){
+
+                            String cpi = properties.getProperty("cpi_url");
+
+                            try {
+                                cpi = URLDecoder.decode(cpi, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            intent.putExtra("cpi",  cpi);
+                        }
+
+                        startActivityForResult(intent, 50);
+                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Started_From_Apkfy");
+
+                    }
                 }
 
             } catch (IOException e) {

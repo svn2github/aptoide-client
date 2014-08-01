@@ -53,12 +53,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         AlertDialog.Builder builder= new AlertDialog.Builder(this)
                 .setMessage(R.string.asksetadultpinmessage)
                 .setView(v)
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        isSetingPIN = false;
-                    }
-                })
+
                 .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -83,7 +78,17 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                         isSetingPIN=false;
                     }
                 });
-        return builder.create();
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                isSetingPIN = false;
+            }
+        });
+
+        return alertDialog;
     }
 
     private void maturePinSetRemoveClick(){

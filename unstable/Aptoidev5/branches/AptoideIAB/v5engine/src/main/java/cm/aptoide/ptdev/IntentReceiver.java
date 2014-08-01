@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -237,10 +238,21 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             String parsedString = uri.substring("aptwords://".length());
 
-            String[] splittedString = parsedString.split("//");
+            String[] splittedString = parsedString.split("/");
 
             long id = Long.parseLong(splittedString[0]);
             String cpi = splittedString[1];
+
+
+            try {
+                cpi = URLDecoder.decode(cpi, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
+
+
 
             Intent i = new Intent(this, Aptoide.getConfiguration().getAppViewActivityClass());
 
@@ -249,8 +261,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             i.putExtra("cpi", cpi);
             i.putExtra("download_from", "my_app_with_cpi");
 
-
             startActivity(i);
+            finish();
+
         } else {
             finish();
         }

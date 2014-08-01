@@ -319,6 +319,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setIcon(icon);
                         download.setPackageName(package_name);
                         download.setMd5(md5);
+                        download.setCpiUrl(getIntent().getStringExtra("cpi"));
 
                         try {
                             waitForServiceToBeBound();
@@ -430,8 +431,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
             } else {
-
-
                 final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
 
                 ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.open));
@@ -445,14 +444,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             } catch (ActivityNotFoundException e) {
 
                             }
-
                         }
                     });
 
                 } else {
                     findViewById(R.id.btinstall).setEnabled(false);
                 }
-
 
             }
             supportInvalidateOptionsMenu();

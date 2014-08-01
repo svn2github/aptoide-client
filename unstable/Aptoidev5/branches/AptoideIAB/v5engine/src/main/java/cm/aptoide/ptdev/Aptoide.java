@@ -13,6 +13,8 @@ import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
@@ -131,6 +133,15 @@ public class Aptoide extends Application {
 //                .penaltyLog()
 //                .build());
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                Toast.makeText(getApplicationContext(), "Aptoide has crashed", Toast.LENGTH_LONG).show();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(10);
+
+            }
+        });
 
         ACRA.init(this);
 
@@ -148,6 +159,9 @@ public class Aptoide extends Application {
 
         ACRA.setConfig(acraConfiguration);
 
+
+
+
         setConfiguration(getAptoideConfiguration());
 
 
@@ -158,6 +172,7 @@ public class Aptoide extends Application {
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
+
         managerPreferences.init();
         setThemePicker(getNewThemePicker());
 

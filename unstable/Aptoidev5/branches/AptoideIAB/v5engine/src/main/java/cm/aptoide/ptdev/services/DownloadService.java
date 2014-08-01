@@ -197,18 +197,23 @@ public class DownloadService extends Service{
 
                             } catch (PackageManager.NameNotFoundException e) {
 
-                                String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
-                                if(!calculatedMd5.equals(info.getDownload().getMd5())){
-                                    Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
-                                    info.setmBuilder(builder);
+                                try{
+                                    String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
+                                    if(!calculatedMd5.equals(info.getDownload().getMd5())){
+                                        Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
+                                        info.setmBuilder(builder);
 
-                                    info.download();
-                                    break;
-                                } else {
-                                    info.autoExecute();
-                                    Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
-                                    break;
+                                        info.download();
+                                        break;
+                                    } else {
+                                        info.autoExecute();
+                                        Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
+                                        break;
+                                    }
+                                } catch (Exception e1){
+                                    e1.printStackTrace();
                                 }
+
                             }
                         }
                     }
@@ -594,12 +599,18 @@ public class DownloadService extends Service{
 
         int size = DownloadExecutorImpl.dpToPixels(getApplicationContext(), 36);
 
+        Bitmap icon = null;
+
+        try {
+            icon = DownloadExecutorImpl.decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(info.getDownload().getIcon()).getAbsolutePath(), size, size);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         mBuilder.setOngoing(true);
         mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()));
         mBuilder.setContentText(info.getDownload().getName());
-        mBuilder.setLargeIcon(
-                        DownloadExecutorImpl.decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(info.getDownload().getIcon()).getAbsolutePath(), size, size)
-                );
+        if(icon != null) mBuilder.setLargeIcon(icon);
         mBuilder    .setSmallIcon(android.R.drawable.stat_sys_download);
         mBuilder     .setProgress(0, 0, true);
         mBuilder    .setContentIntent(onClickAction);
@@ -618,17 +629,18 @@ public class DownloadService extends Service{
 
         for(DownloadInfo info : list) {
             if(info.getStatusState() instanceof ActiveState) {
+                try {
+                    info.getmBuilder().setProgress(100, info.getPercentDownloaded(), info.getPercentDownloaded() == 0);
+                    if (info.getEta() > 0) {
+                        String remaining = Utils.formatEta(info.getEta(), "");
+                        info.getmBuilder().setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
+                    }
 
-
-
-                info.getmBuilder().setProgress(100, info.getPercentDownloaded(), info.getPercentDownloaded() == 0);
-                if(info.getEta() > 0) {
-                    String remaining = Utils.formatEta(info.getEta(), "");
-                    info.getmBuilder().setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));
+                    mBuilder = info.getmBuilder();
+                    ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, mBuilder.build());
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-
-                mBuilder = info.getmBuilder();
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(-3, mBuilder.build());
                 return;
             }
         }
