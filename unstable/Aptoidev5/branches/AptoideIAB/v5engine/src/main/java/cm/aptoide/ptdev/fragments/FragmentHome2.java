@@ -160,7 +160,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
             @Override
             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-                if(apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested().size()>0) {
+                if(apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested()!=null && apkSuggestionJson.getApp_suggested().size()>0) {
 
                     try {
                         sponsoredLinearLayout.removeAllViews();

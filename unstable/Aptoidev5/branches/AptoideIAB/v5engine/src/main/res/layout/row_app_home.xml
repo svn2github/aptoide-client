@@ -54,13 +54,13 @@
             android:id="@+id/app_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/app_name"
-            android:layout_below="@+id/app_name"
-            android:layout_marginRight="12dp"
             android:ellipsize="end"
             android:gravity="center|left"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray"
+            android:layout_below="@+id/ic_action"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

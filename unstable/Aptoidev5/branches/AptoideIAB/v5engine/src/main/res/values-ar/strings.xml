@@ -508,7 +508,7 @@
   <string name="account">الحساب</string>
   <string name="no_payments_available">لاتوجد مدفوعات متاحة</string>
   <string name="change_payment">رجوع</string>
-  <string name="confirm_carrier_payment">هل ترغب في شراء \'{ عنوان }\' ل { قيمة } ؟ وستحمل لكم من الناقل الخاص بك .</string>
+  <string name="confirm_carrier_payment">هل ترغب في شراء \'{ value }\' ل { title } ؟ وستحمل لكم من الناقل الخاص بك .</string>
   <string name="featured_editors_choice">اختيار مميزات المحررين</string>
   <string name="set_mature_pin_title">تعيين مشبك لمحتوى البالغين</string>
   <string name="set_mature_pin_summary">وضع مشبك من شأنه أن يكون هناك حاجة لفتح محتوى الكبار</string>

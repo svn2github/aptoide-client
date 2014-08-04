@@ -291,7 +291,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             adapter.addView(v);
             adapter.addAdapter(cursorAdapter);
 
-            Toast.makeText(Aptoide.getContext(), "Loading from database", Toast.LENGTH_LONG).show();
+//            Toast.makeText(Aptoide.getContext(), "Loading from database", Toast.LENGTH_LONG).show();
 
             if(isAdded()){
 
@@ -575,35 +575,17 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
 //                        TextView foundResults = (TextView) v.findViewById(R.id.results);
                         more = (TextView) v.findViewById(R.id.more);
-                        if (searchAdapterapks.getCount() > 0) {
+//                        if (searchAdapterapks.getCount() > 0) {
                             //foundResults.setText(getString(R.string.found_results, searchAdapterapks.getCount()));
-                        } else {
+//                        } else {
 //                            foundResults.setText(getString(R.string.no_search_result, query));
-                        }
+//                        }
 
                         setListShown(true);
                         setEmptyText(getString(R.string.no_search_result, query));
+                        adapter.setActive(v, true);
 
-
-//                        Handler handler = new Handler();
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
-//                                    int visibleItems = getListView().getLastVisiblePosition() - getListView().getFirstVisiblePosition();
-//                                    if (((SearchManager) getActivity()).isSearchMoreVisible() && visibleItems < adapter.getCount()) {
-//                                        more.setVisibility(View.VISIBLE);
-//                                        more.setOnClickListener(((SearchManager) getActivity()).getSearchListener());
-//                                    } else {
-//                                        more.setVisibility(View.GONE);
-//                                    }
-//                                } catch (IllegalStateException e) {
-//
-//                                }
-//                            }
-//                        });
                     }
-                    //setEmptyText(getString(R.string.no_search_result, query));
 
                     getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
                         @Override

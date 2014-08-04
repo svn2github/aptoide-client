@@ -508,7 +508,7 @@
   <string name="account">Konto</string>
   <string name="no_payments_available">Keine Zahlungen verfügbar.</string>
   <string name="change_payment">Zurück</string>
-  <string name="confirm_carrier_payment">Wollen Sie \'{title}\' für {Wert} kaufen? Sie werden von Ihrem Mobilfunkanbieter berechnet.</string>
+  <string name="confirm_carrier_payment">Wollen Sie \'{title}\' für {value} kaufen? Sie werden von Ihrem Mobilfunkanbieter berechnet.</string>
   <string name="featured_editors_choice">Mehr Redaktionstipps</string>
   <string name="set_mature_pin_title">Setze einen Pin für Erwachsenen Inhalte</string>
   <string name="set_mature_pin_summary">Legen Sie eine PIN fest, der erforderlich ist, um Erwachsenen-Inhalt freizuschalten</string>

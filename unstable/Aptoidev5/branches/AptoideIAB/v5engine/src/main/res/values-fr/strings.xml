@@ -57,7 +57,7 @@
   <string name="follow_twitter">Suivez-nous sur Twitter</string>
   <string name="loading_facebook">Chargement de Facebook…</string>
   <string name="loading_twitter">Chargement de Twitter…</string>
-  <string name="new_to_aptoide">Nouveau sur %s ? Créez un compte gratuit</string>
+  <string name="new_to_aptoide">Nouveau sur %s? Créez un compte gratuit</string>
   <string name="forgot_passwd">Mot de passe oublié ?</string>
   <string name="check_your_credentials">Vérifiez vos identifiants</string>
   <string name="settings_title_bar">Paramètres</string>
@@ -444,10 +444,10 @@
   <string name="update_username">Mettre à jour le nom d\'utilisateur</string>
   <string name="username_success">Le nom d\'utilisateur a été mis à jour avec succès.</string>
   <string name="please_update_username">Pour insérer un commentaire veuillez mettre à jour votre nom d\'utilisateur</string>
-  <string name="no_downloads">Pas de téléchargement. Commencez à télécharger !</string>
-  <string name="new_updates">Il y a %s nouvelles mises à jour !</string>
-  <string name="one_new_update">Il y a %s nouvelle mise à jour !</string>
-  <string name="has_updates">Il y a une ou plusieurs mises à jour pour %s !</string>
+  <string name="no_downloads">Pas de téléchargement. Commencez à télécharger!</string>
+  <string name="new_updates">Il y a %s nouvelles mises à jour!</string>
+  <string name="one_new_update">Il y a %s nouvelle mise à jour!</string>
+  <string name="has_updates">Il y a une ou plusieurs mises à jour pour %s!</string>
   <string name="remaining_time">restant</string>
   <string name="sd_error">Échec de l\'écriture sur la carte SD.</string>
   <string name="sd_error_jolla">Le téléchargement a échoué</string>

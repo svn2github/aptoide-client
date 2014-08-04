@@ -423,7 +423,7 @@
   <string name="flag_review_good">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Hyvä</string>
   <string name="flag_review_license">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Tarvitsee lisenssin</string>
   <string name="flag_review_fake">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Väärennös</string>
-  <string name="flag_review_freeze">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Jäädytys</string>
+  <string name="flag_review_freeze">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Jumittaa</string>
   <string name="flag_review_virus">Tämä sovellus arvioitiin automaattisesti Aptoiden toimesta: Virus</string>
   <string name="X_download_number">%s latausta</string>
   <string name="search_more">Hae lisää</string>
@@ -478,7 +478,7 @@
   <string name="flag_good">Hyvä</string>
   <string name="flag_license">Tarvitsee lisenssin</string>
   <string name="flag_fake">Väärennös</string>
-  <string name="flag_freeze">Jäädytys</string>
+  <string name="flag_freeze">Jumittaa</string>
   <string name="flag_virus">Virus</string>
   <string name="categories">Kategoriat</string>
   <string name="view_replies">Näytä vastaukset</string>
