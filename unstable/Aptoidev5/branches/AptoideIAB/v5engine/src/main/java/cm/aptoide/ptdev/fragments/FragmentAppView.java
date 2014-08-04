@@ -824,7 +824,7 @@ public abstract class FragmentAppView extends Fragment {
                     noPermissions.setPadding(5,5,5,5);
                     permissionsContainer.addView(noPermissions);
                 }
-                if(getActivity()!=null){
+                if(getActivity()!=null && permissionsContainer.getHeight()==0){
                     FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
                     permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     permissionsContainer.setVisibility(View.VISIBLE);

@@ -2090,7 +2090,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(postCallback != null) {
                 postCallback.clearState();
             }
-            //Log.d("likes","addCommentRequestListener");
+            Log.d("likes","addCommentRequestListener");
             spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
             BusProvider.getInstance().post(new AppViewRefresh());
         }
@@ -2115,7 +2115,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void CaseOK() {
             Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
-            //Log.d("likes","commentRequestListener");
+            Log.d("likes","commentRequestListener");
             spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
             BusProvider.getInstance().post(new AppViewRefresh());
         }
