@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev.fragments;
 
-
 import android.support.v7.view.ActionMode;
 import android.view.MenuItem;
 

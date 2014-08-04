@@ -199,12 +199,9 @@ public class FragmentComments extends ListFragment {
     public class AllCommentsAdapter extends ArrayAdapter<Comment> {
         final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-
         public AllCommentsAdapter(Context context, List<Comment> objects) {
             super(context, 0, objects);
         }
-
-
 
         @Override
         public int getPosition(Comment item) {

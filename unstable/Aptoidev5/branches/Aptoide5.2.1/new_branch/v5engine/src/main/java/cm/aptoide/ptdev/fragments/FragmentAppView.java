@@ -103,6 +103,7 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  * Time: 14:34
  * To change this template use File | Settings | File Templates.
  */
+
 public abstract class FragmentAppView extends Fragment {
 
     @Override
