@@ -1,0 +1,60 @@
+
+apply plugin: 'android'
+apply plugin: 'crashlytics'
+//apply from: 'signing.gradle'
+
+
+
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+    }
+
+    
+
+
+    buildTypes {
+
+        debug {
+            zipAlign  true
+
+        }
+
+
+        
+release {
+            //                                                signingConfig signingConfigs.release
+        }
+
+
+
+    }
+
+
+
+
+
+}
+
+
+
+dependencies {
+    compile project (':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+}
+
+
+
+

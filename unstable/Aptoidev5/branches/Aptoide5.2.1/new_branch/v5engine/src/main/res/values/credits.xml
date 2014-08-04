@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="aptoide_version">Version 5.2.0</string>
+    <string name="aptoide_brand">APTOiDE</string>
+
+    <string name="credits">
+    \tAptoide Android Native Team:\n\n
+    \t\t Rui Mateus\n
+    \t\t rui.mateus [at] aptoide.com\n\n
+    \t\t Teresa Deus\n
+    \t\t teresa.deus [at] aptoide.com\n\n
+    \t\t André Santos\n
+    \t\t andre.santos [at] aptoide.com\n\n
+    \t\t Jose Costa\n
+    \t\t jose.costa [at] aptoide.com\n\n
+    \t\t Roberto Jacinto\n
+    \t\t roberto.jacinto [at] aptoide.com\n\n
+
+    \tThank you to our Translators Team:\n\n
+    \t\t
+
+    Albanian: Eni Çuçka |
+    Arabic: Zuheir Sharafeldin, ذوالفقار الزاملي, Ahmed Sami, Manaa Alshihe, Mohamed Gorrab, omarioamriky |
+    Bosnian/Serbian: Rijad Spahic, Toni Grubisic  |
+    Catalan: Francisco Villalba Segarra, Marc Bres Gil |
+    Croatian: Rijad Spahic, Toni Grubisic, Roko Jurjevic |
+    Chinese: Theodore Wte |
+    Czech: Jan Krumpholc |
+    Dutch: Shane Kloosterman, Jehan Bont, Ismail Gürol Celiktas, Stefan de Jong |
+    Finnish: Sami Kuusisto, Allu Saarinen |
+    French: Ultrapeer, Damien Mallard, Alexis Bonvin, Guillaume NV |
+    Georgian: Sandro Kakabadze |
+    German: Manuel Stroh, Marlon Bruske, Benny La, Simon Grabert, Robert Reep, Martin Nehrdich, Michael Mayer, Lionel Wyser |
+    Greek: Basileios Pitas |
+    Hebrew: שלו מויאל , David Liron, shiranbfree |
+    Indonesian: Adi Juarsa |
+    Italian: Rapper Skull, Arshdeep Singh, Pavo Baxter, Gabry Carne, Simili Giuseppe, Damiano Chiacchiaretta |
+    Lithuanian: Saulius Pranckevicius, Titus Virbickas |
+    Persian:  Mehrdad Allahkarami |
+    Polish: Trurl, Artur Stempkowski, Stanislaw, Tomasz Gregorczyk |
+    Portuguese (Brazil): Paulo Henrique, Juanito Silva, Marchus Santos, Caio Fonseca, Maurilio Filho, Edu Salgado |
+ 	Portuguese (Portugal): Joao Redondo |
+ 	Romanian: Munteanu Ovidiu, Heim Bogdan, Tudor Bobei |
+    Russian: Anton Tkachenko, Leonid Bogolubov, Kanat Yesseyev |
+    Spanish: Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Ronnie Simon, jvnski, Denis Arroyabe |
+    Turkish: Ultrapeer, Zeynal Zeynalov, Emre Tosunkaya
+ 	</string>
+
+</resources>
+
+<!--
+ * Copyright (C) 2009  Roberto Jacinto
+ * roberto.jacinto@caixamagica.pt
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->

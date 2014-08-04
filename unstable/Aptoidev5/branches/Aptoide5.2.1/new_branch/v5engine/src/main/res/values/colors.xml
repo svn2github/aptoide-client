@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_window">#FFE8E8E8</color>
+    <color name="transparent_black">#99000000</color>
+    <color name="transparent_white">#CCFFFFFF</color>
+    <color name="link">#2070DE</color>
+    <color name="custom_color">#ea7117</color>
+    <color name="overlay_black">#77000000</color>
+
+    <color name="transparent_green">#99547c00</color>
+    <color name="transparent_midnight">#99547c90</color>
+    <color name="transparent_magalhaes">#9900aeef</color>
+    <color name="transparent_maroon">#998b0100</color>
+    <color name="transparent_gold">#99ac8506</color>
+    <color name="transparent_orange">#99ff8c01</color>
+    <color name="transparent_springgreen">#9973be73</color>
+    <color name="transparent_lightsky">#9900a3b8</color>
+    <color name="transparent_pink">#99ff8fa2</color>
+    <color name="transparent_blue">#990000ff</color>
+    <color name="transparent_red">#99ea1000</color>
+    <color name="transparent_magenta">#99ef82ef</color>
+    <color name="transparent_slategray">#99008081</color>
+    <color name="transparent_seagreen">#992e8b57</color>
+    <color name="transparent_silver">#99a9a9a9</color>
+    <color name="transparent_dimgray">#99808080</color>
+    <color name="transparent_timwe">#99f89b1d</color>
+    <color name="transparent_eocean">#99ff6a00</color>
+    <color name="transparent_digitallydifferent">#9952742d</color>
+
+
+    <color name="green">#547c00</color>
+    <color name="midnight">#547c90</color>
+    <color name="happyblue">#00aeef</color>
+    <color name="maroon">#8b0100</color>
+    <color name="gold">#ac8506</color>
+    <color name="orange">#ff8c01</color>
+    <color name="springgreen">#73be73</color>
+    <color name="lightsky">#00a3b8</color>
+    <color name="pink">#ff8fa2</color>
+    <color name="blue">#0000ff</color>
+    <color name="red">#ea1000</color>
+    <color name="magenta">#ef82ef</color>
+    <color name="slategray">#008081</color>
+    <color name="seagreen">#2e8b57</color>
+    <color name="silver">#a9a9a9</color>
+    <color name="dimgray">#808080</color>
+    <color name="yellow">#e9be40</color>
+    <color name="crimson">#EF3E42</color>
+    <color name="greenapple">#86bd4a</color>
+    <color name="black">#000000</color>
+    <color name="light_custom_gray">#efefef</color>
+    <color name="lighter_custom_gray">#cccccc</color>
+    <color name="dark_custom_gray">#4c4c4c</color>
+    <color name="medium_custom_gray">#c6c7c6</color>
+
+</resources>

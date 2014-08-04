@@ -1,0 +1,15 @@
+include 'Aptoide',
+        'pagerslidertabstrip',
+        'v5engine',
+
+        'hanselandgretel',
+        //'Partners',
+        //'AptoideHelper',
+
+        'android-websockets',
+        'facebook',
+        'google-play-services',
+        'mopub-sdk'
+
+
+
