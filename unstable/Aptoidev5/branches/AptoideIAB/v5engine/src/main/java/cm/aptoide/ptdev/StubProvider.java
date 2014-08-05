@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -81,7 +82,7 @@ public class StubProvider extends ContentProvider {
 
                     switch (uriMatcher.match(uri)) {
                         case TOKEN:
-                            SecurePreferences preferences = SecurePreferences.getInstance();
+                            SharedPreferences preferences = SecurePreferences.getInstance();
                             String token = preferences.getString("devtoken", "");
                             mx = new MatrixCursor(new String[]{"userToken"}, 1);
                             mx.addRow(new Object[]{token});

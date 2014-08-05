@@ -659,7 +659,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 installParams.put("Package_Name", package_name);
                 installParams.put("Name", name);
                 installParams.put("Version_Name", versionName);
-                FlurryAgent.logEvent("App_View_Clicked_On_Install_Button", installParams);
+                if(Build.VERSION.SDK_INT >= 10)  FlurryAgent.logEvent("App_View_Clicked_On_Install_Button", installParams);
 
 
                 Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
@@ -729,7 +729,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             installParams.put("Package_Name", package_name);
             installParams.put("Name", name);
             installParams.put("Version_Name", versionName);
-            FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
             Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
 
@@ -773,7 +773,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             installParams.put("Package_Name", package_name);
             installParams.put("Name", name);
             installParams.put("Version_Name", versionName);
-            FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
         }
     }
 
@@ -1037,7 +1037,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(downloadFrom!=null){
                 Map<String, String> downloadParams = new HashMap<String, String>();
                 downloadParams.put("App_Opened_From", downloadFrom);
-                FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
             }
 
         }

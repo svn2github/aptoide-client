@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (c) 2012 tdeus.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the GNU Public License v2.0
@@ -7,139 +6,152 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:facebook="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/scroller"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroller"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:orientation="vertical">
-
-
-        <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="5dp">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <com.facebook.widget.LoginButton
-                    android:id="@+id/fb_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    facebook:confirm_logout="false"
-                    facebook:fetch_user_info="true"
-                    android:layout_margin="4dp"/>
+                android:id="@+id/fb_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                facebook:confirm_logout="false"
+                facebook:fetch_user_info="true" />
 
             <com.google.android.gms.common.SignInButton
-                    android:id="@+id/g_sign_in_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/g_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-            <View android:layout_width="fill_parent"
-                  android:layout_height="1dip"
-                  android:background="@android:color/darker_gray" android:layout_weight="1"
-                  android:layout_gravity="center"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray" />
 
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/or"
-                    android:gravity="center"
-                    android:id="@+id/textView" android:layout_gravity="center" android:layout_weight="1"/>
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/or" />
 
-            <View android:layout_width="fill_parent"
-                  android:layout_height="1dip"
-                  android:background="@android:color/darker_gray" android:layout_weight="1"
-                  android:layout_gravity="center"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray" />
 
         </LinearLayout>
+
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="5dp">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <EditText
-                    android:id="@+id/username"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/username"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true" />
+                android:id="@+id/username"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
 
 
-            <EditText android:id="@+id/password"
-                      android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/password"
-                      android:inputType="textPassword|textNoSuggestions"
-                      android:singleLine="true"/>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword|textNoSuggestions"
+                android:singleLine="true">
+                <requestFocus />
+            </EditText>
 
-            <CheckBox android:id="@+id/link_my_device"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/link_device_webinstall"
-                      android:checked="true"/>
+            <CheckBox
+                android:id="@+id/link_my_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/link_device_webinstall" />
 
 
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/login_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:id="@+id/login_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <Button
-                    android:id="@+id/button_login"
+                android:id="@+id/button_login"
 
-                    android:layout_height="wrap_content"
-                    style="?attr/customButtonColor"
-                    android:layout_gravity="right"
-                    android:text="@string/setcredentials"
-                    android:layout_margin="10dp"
-                    android:layout_width="match_parent"/>
+                style="?attr/customButtonColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="10dp"
+                android:text="@string/setcredentials" />
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/user_layout"
-                android:layout_width="fill_parent"
+            android:id="@+id/user_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/new_to_aptoide"
+                style="@style/focusableRowBackground"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:onClick="createUser"
+                android:padding="10dp"
+                android:text="@string/dont_have_an_account"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                    android:id="@+id/new_to_aptoide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:onClick="createUser"
-                    android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/dont_have_an_account"/>
-
-            <TextView
-                    android:id="@+id/forgot_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColor="@color/link"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/forgot_passwd"/>
+                android:id="@+id/forgot_password"
+                style="@style/focusableRowBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/forgot_passwd"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/link" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

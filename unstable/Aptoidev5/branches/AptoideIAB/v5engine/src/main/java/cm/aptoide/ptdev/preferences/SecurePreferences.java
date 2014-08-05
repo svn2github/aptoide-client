@@ -87,13 +87,19 @@ public class SecurePreferences implements SharedPreferences {
      *            the caller's context
      */
 
-    private static SecurePreferences singleton = null;
+    private static SharedPreferences singleton = null;
 
-    public static synchronized SecurePreferences getInstance(){
-        if(singleton==null)
-            singleton= new SecurePreferences(Aptoide.getContext());
+    public static synchronized SharedPreferences getInstance(){
+        if(singleton==null) {
+            if (Build.VERSION.SDK_INT < 8) {
+                singleton = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+            } else {
+                singleton = new SecurePreferences(Aptoide.getContext());
+            }
+        }
         return singleton;
     }
+
     private SecurePreferences(Context context) {
         // Proxy design pattern
         if (SecurePreferences.sFile == null) {

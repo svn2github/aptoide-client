@@ -406,25 +406,7 @@ public class Start extends ActionBarActivity implements
 
             File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
             if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                final AlertDialog noSDDialog = dialogBuilder.create();
-                noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
-                noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                String message;
-                if(!Build.DEVICE.equals("alien_jolla_bionic")){
-                    message=""+getText(R.string.remote_in_noSD);
-                }else{
-                    message=""+getText(R.string.remote_in_noSD_jolla);
-                }
-                noSDDialog.setMessage(message);
-                noSDDialog.setCancelable(false);
-                noSDDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
-                });
-                noSDDialog.show();
+                getNoSpaceDialog();
 
             } else {
                 StatFs stat = new StatFs(sdcard_file.getPath());
@@ -442,25 +424,7 @@ public class Start extends ActionBarActivity implements
                     //Log.d("Aptoide", "No space left on SDCARD...");
                     //Log.d("Aptoide", "* * * * * * * * * *");
 
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-
-                    final AlertDialog noSpaceDialog = dialogBuilder.create();
-                    noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                    noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
-                    String message;
-                    if(!Build.DEVICE.equals("alien_jolla_bionic")){
-                        message=""+getText(R.string.remote_in_noSDspace);
-                    }else{
-                        message=""+getText(R.string.remote_in_noSD_jolla);
-                    }
-                    noSpaceDialog.setMessage(message);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
-                    noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                        }
-                    });
-                    noSpaceDialog.show();
+                    getNoSpaceDialog();
                 }
             }
 
@@ -632,6 +596,28 @@ public class Start extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    }
+
+    private void getNoSpaceDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        final AlertDialog noSpaceDialog = dialogBuilder.create();
+        noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
+        noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
+        String message;
+        if(!Build.DEVICE.equals("alien_jolla_bionic")){
+            message=""+getText(R.string.remote_in_noSDspace);
+        }else{
+            message=""+getText(R.string.remote_in_noSD_jolla);
+        }
+        noSpaceDialog.setMessage(message);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
+        noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        noSpaceDialog.show();
     }
 
     private void loadEditorsAndTopApps() {
