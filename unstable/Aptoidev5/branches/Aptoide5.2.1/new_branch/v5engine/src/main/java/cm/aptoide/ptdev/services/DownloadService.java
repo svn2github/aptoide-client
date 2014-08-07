@@ -486,7 +486,6 @@ public class DownloadService extends Service{
                     String icon = apkCursor.getString(apkCursor.getColumnIndex("icon"));
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
-
                     GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
 
                     request.setRepoName(repoName);
@@ -494,14 +493,12 @@ public class DownloadService extends Service{
                     request.setVersionName(versionName);
                     request.setVercode(versionCode);
 
-
                     Download download = new Download();
                     download.setId(md5sum.hashCode());
                     download.setName(name);
                     download.setPackageName(package_name);
                     download.setVersion(versionName);
                     download.setMd5(md5sum);
-
 
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
@@ -514,14 +511,8 @@ public class DownloadService extends Service{
                     apkCursor.close();
 
                 }
-
-
             }
         }).start();
-
-
-
-
     }
 
     public class LocalBinder extends Binder {
