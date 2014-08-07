@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <string name="WidgetProvider_timestamp_today">Today</string>
     <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
     <string name="WidgetProvider_timestamp_hour_ago">%s hour ago</string>
@@ -46,7 +45,6 @@
     <string name="preparing_to_load">Preparing to load, please wait&#8230;</string>
     <string name="vote_submitted">Your vote was successfuly submitted</string>
 
-
     <string name="sort">Sort</string>
     <string name="order_popup_lst1">Most recent first </string>
     <string name="order_popup_lst2">Alphabetically </string>
@@ -69,6 +67,7 @@
     <string name="check_your_credentials">Check your credentials</string>
     <string name="settings_title_bar">Settings</string>
     <string name="setting_icon_download_rules">Icon Download Rules</string>
+    <string name="setting_general_download_rules">General network Rules</string>
     <string name="setting_wifi">WiFi</string>
     <string name="setting_3g">3G</string>
     <string name="setting_4g">4G</string>
@@ -561,6 +560,7 @@
     <string name="sponsored">Sponsored</string>
     <string name="btn_search_other_stores">Search Other Stores</string>
     <string name="results">Search results:</string>
+    <string name="downloadAnyWay">DownLoad anyway</string>
 
 
 </resources>

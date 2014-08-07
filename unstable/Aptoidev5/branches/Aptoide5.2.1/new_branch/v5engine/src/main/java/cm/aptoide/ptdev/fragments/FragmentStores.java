@@ -209,8 +209,6 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-
         stores.clear();
 
         for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
@@ -228,14 +226,13 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                     "grid".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
                     data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
             );
-            Log.d("Aptoide-", "Added store");
+            //Log.d("Aptoide-", "Added store");
         }
 
         storeAdapter.setAdapterView(gridViewMyStores);
         storeAdapter.notifyDataSetChanged();
         getActivity().supportInvalidateOptionsMenu();
-        Log.d("Aptoide-", "OnLoadFinish");
-
+        //Log.d("Aptoide-", "OnLoadFinish");
     }
 
     @Override

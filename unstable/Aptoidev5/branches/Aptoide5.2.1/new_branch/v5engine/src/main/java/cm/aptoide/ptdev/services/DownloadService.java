@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev.services;
 
-import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,9 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
-import android.util.SparseArray;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
@@ -32,21 +28,15 @@ import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Errors;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Subscribe;
-
-import org.w3c.dom.NamedNodeMap;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 import java.util.Collection;
 
@@ -154,11 +144,9 @@ public class DownloadService extends Service{
 
 
     public void startExistingDownload(long id){
-
-
         startService(new Intent(getApplicationContext(), DownloadService.class));
-        Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
-        Log.d("download-trace", "setmbuilder: startExistingDownload " + id);
+        //Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
+        //Log.d("download-trace", "setmbuilder: startExistingDownload " + id);
 
         DownloadInfo inf = getDownload(id);
         final NotificationCompat.Builder builder = setNotification(id);
@@ -166,14 +154,13 @@ public class DownloadService extends Service{
         if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
 
-
         if(isStopped){
             isStopped = false;
             timer = new Timer();
             timer.schedule(getTask(), 0, 1000);
         }
 
-        Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
+        //Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
         for(final DownloadInfo info: manager.getmCompletedList()){
             if(info.getId()==id){
                 final PackageManager packageManager = getPackageManager();
@@ -200,14 +187,14 @@ public class DownloadService extends Service{
                                 try{
                                     String calculatedMd5 = AptoideUtils.Algorithms.md5Calc(new File(model.getDestination()));
                                     if(!calculatedMd5.equals(info.getDownload().getMd5())){
-                                        Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
+                                        //Log.d("download-trace", "Failed Md5 for " + info.getDownload().getName() + " : " + info.getDestination() + "   calculated " + calculatedMd5 + " vs " + info.getDownload().getMd5());
                                         info.setmBuilder(builder);
 
                                         info.download();
                                         break;
                                     } else {
                                         info.autoExecute();
-                                        Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
+                                        //Log.d("download-trace", "Checked Md5 for " + info.getDownload().getName() + ", application download it's already completed!");
                                         break;
                                     }
                                 } catch (Exception e1){
@@ -236,50 +223,39 @@ public class DownloadService extends Service{
 
     private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 
-
+    private boolean CanDownload(){
+        Toast.makeText(Aptoide.getContext(),"Nope",Toast.LENGTH_LONG).show();
+        return false;
+    }
     public void startDownloadFromUrl(String remotePath, String md5, long id, Download download, String repoName){
+
+        if(!CanDownload()){
+            return;
+        }
+
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
 
         DownloadModel downloadModel = new DownloadModel(remotePath, path + md5 + ".apk", md5, 0);
-
         downloadModel.setAutoExecute(true);
         filesToDownload.add(downloadModel);
-        DownloadInfo info = getDownload(id);
-        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + md5 + ".apk", new ArrayList<String>());
+
+        FinishedApk apk = new FinishedApk(download.getName(),
+                download.getPackageName(),
+                download.getVersion(), id,
+                download.getIcon(),
+                path + md5 + ".apk",
+                new ArrayList<String>());
         apk.setRepoName(repoName);
-        info.setDownloadExecutor(new DownloadExecutorImpl(apk));
-        info.setDownload(download);
-        info.setFilesToDownload(filesToDownload);
 
-
-        downloads.put(info.getId(), info);
-        NotificationCompat.Builder builder = setNotification(id);
-        info.setmBuilder(builder);
-        info.download();
-
-        startService(new Intent(getApplicationContext(), DownloadService.class));
-
-
-        if(mBuilder==null) mBuilder = createDefaultNotification();
-        startForeground(-3, mBuilder.build());
-
-        Log.d("donload-trace", "setmBuilder: startDownloadFromUrl");
-
-
-
-        if(isStopped){
-            isStopped = false;
-            timer = new Timer();
-            timer.schedule(getTask(), 0, 1000);
-        }
-
+        Download(id, download, apk, filesToDownload);
     }
 
-
-
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
+        if(!CanDownload()){
+            return;
+        }
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         if(json.getObb()!=null){
@@ -301,39 +277,42 @@ public class DownloadService extends Service{
         downloadModel.setAutoExecute(true);
         downloadModel.setFallbackUrl(json.getApk().getAltPath());
         filesToDownload.add(downloadModel);
-        DownloadInfo info = getDownload(download.getId());
-        FinishedApk apk = new FinishedApk(download.getName(), download.getPackageName(), download.getVersion(), id, download.getIcon(), path + json.getApk().getMd5sum() + ".apk", new ArrayList<String>(json.getApk().getPermissions()));
 
+        FinishedApk apk = new FinishedApk(download.getName(),
+                download.getPackageName(),
+                download.getVersion(), id,
+                download.getIcon(),
+                path + json.getApk().getMd5sum() + ".apk",
+                new ArrayList<String>(json.getApk().getPermissions()));
+
+        Download(download.getId(),download,apk,filesToDownload);
+    }
+
+    private void Download(long id, Download download, FinishedApk apk, ArrayList<DownloadModel> filesToDownload){
+        DownloadInfo info = getDownload(id);
         if(download.getCpiUrl()!=null){
             apk.setCpiUrl(download.getCpiUrl());
         }
 
-        apk.setRepoName(json.getApk().getRepo());
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
-        Log.d("download-trace", "setmBuilder: startDownloadFromJson " + info.getId());
         downloads.put(info.getId(), info);
-
         NotificationCompat.Builder builder = setNotification(info.getId());
         info.setmBuilder(builder);
         info.download();
-
-
 
         if(mBuilder==null) mBuilder = createDefaultNotification();
 
         startForeground(-3, mBuilder.build());
         startService(new Intent(getApplicationContext(), DownloadService.class));
 
-
-
         if(isStopped){
             isStopped = false;
             timer = new Timer();
             timer.schedule(getTask(), 0, 1000);
         }
-
+        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
     }
 
     private TimerTask getTask() {
@@ -342,7 +321,7 @@ public class DownloadService extends Service{
             @Override
             public void run() {
                 updateDownload();
-                Log.d("Aptoide-DownloadService", "Updating progress bar");
+                //Log.d("Aptoide-DownloadService", "Updating progress bar");
             }
 
         };
@@ -401,7 +380,7 @@ public class DownloadService extends Service{
         if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
 
-        Log.d("donwload-trace", "setmBuilder: resumeDownload");
+        //Log.d("donwload-trace", "setmBuilder: resumeDownload");
         DownloadInfo info = getDownload(downloadId);
         NotificationCompat.Builder builder = setNotification(downloadId);
         info.setmBuilder(builder);
@@ -479,7 +458,7 @@ public class DownloadService extends Service{
         if(mBuilder==null) mBuilder = createDefaultNotification();
         startForeground(-3, mBuilder.build());
         /*DownloadInfo info = getDownload(id);
-        Log.d("donwload-trace", "setMbuilder: startDownloadFromAppId");
+        //Log.d("donwload-trace", "setMbuilder: startDownloadFromAppId");
         NotificationCompat.Builder builder = setNotification(id);
         info.setmBuilder(builder);
         info.setCompleteCallback(this);
@@ -508,7 +487,7 @@ public class DownloadService extends Service{
                     final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
 
 
-                    GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+                    GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
 
                     request.setRepoName(repoName);
                     request.setPackageName(package_name);
@@ -614,7 +593,7 @@ public class DownloadService extends Service{
         mBuilder    .setSmallIcon(android.R.drawable.stat_sys_download);
         mBuilder     .setProgress(0, 0, true);
         mBuilder    .setContentIntent(onClickAction);
-        Log.d("download-trace", "ETA: " + info.getEta());
+        //Log.d("download-trace", "ETA: " + info.getEta());
         if(info.getEta() > 0) {
             String remaining = Utils.formatEta(info.getEta(), "");
             mBuilder.setContentInfo("ETA: " + (!remaining.equals("") ? remaining : "0s"));

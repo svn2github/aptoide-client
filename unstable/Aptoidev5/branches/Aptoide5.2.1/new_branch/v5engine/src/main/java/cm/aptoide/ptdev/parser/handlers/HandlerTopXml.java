@@ -70,7 +70,7 @@ public class HandlerTopXml extends AbstractHandler {
                 if (isRunning()) {
                     if (apk.getChildren() != null) {
                         for (Apk theApk : apk.getChildren()) {
-                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
+                            //Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk");
                             theApk.databaseInsert(statements, categoriesIds);
                         }
                         apk.setChildren(null);

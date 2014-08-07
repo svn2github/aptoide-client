@@ -49,7 +49,7 @@ public class IconSizes {
 
         int size = (int) (baseLine * densityMultiplier);
 
-        Log.d("Aptoide-IconSize", "Size is " + size);
+        //Log.d("Aptoide-IconSize", "Size is " + size);
 
         return size+"x"+size;
     }
@@ -81,7 +81,7 @@ public class IconSizes {
 
         int size = Math.round(baseLineAvatar * densityMultiplier);
 
-        Log.d("Aptoide-IconSize", "Size is " + size);
+        //Log.d("Aptoide-IconSize", "Size is " + size);
 
         return size+"x"+size;
     }
@@ -90,7 +90,7 @@ public class IconSizes {
         int density = context.getResources().getDisplayMetrics().densityDpi;
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
-        Log.d("Aptoide-IconSize", "Original mult is" + densityMultiplier);
+        //Log.d("Aptoide-IconSize", "Original mult is" + densityMultiplier);
 
         if (densityMultiplier <= 0.75f) {
             densityMultiplier = 0.75f;
@@ -109,14 +109,11 @@ public class IconSizes {
         int size;
         if(orient.equals("portrait")){
             size = (int) (baseLineScreenshotPort * densityMultiplier);
-
         }else{
-
             size = (int) (baseLineScreenshotLand * densityMultiplier);
-
         }
 
-        Log.d("Aptoide-IconSize", "Size is " + size + " baseline is " + baseLineScreenshotPort + " with multiplier " +densityMultiplier );
+        //Log.d("Aptoide-IconSize", "Size is " + size + " baseline is " + baseLineScreenshotPort + " with multiplier " +densityMultiplier );
 
         return size+"x"+AptoideUtils.HWSpecifications.getDensityDpi(context);
     }

@@ -27,145 +27,28 @@ import java.util.HashMap;
  * Time: 10:48
  * To change this template use File | Settings | File Templates.
  */
-public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetApkInfoJson> {
+public class GetApkInfoRequestFromMd5 extends GetApkInfoRequest {
 
-
-    private String repoName;
-    private String packageName;
-    private String versionName;
-    private String token;
-    private Context context;
+    public GetApkInfoRequestFromMd5(Context context) {
+        super(context);
+    }
 
     public void setMd5Sum(String md5Sum) {
         this.md5Sum = md5Sum;
     }
 
     private String md5Sum;
-
-
-    public GetApkInfoRequestFromMd5(Context context) {
-        super(GetApkInfoJson.class);
-        this.context = context;
+    protected ArrayList<WebserviceOptions> fillWithExtraOptions(ArrayList<WebserviceOptions> options){
+        return options;
     }
 
-    @Override
-    public GetApkInfoJson loadDataFromNetwork() throws Exception {
-
-
-        ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        options.add(new WebserviceOptions("cmtlimit", "5"));
-        options.add(new WebserviceOptions("payinfo", "true"));
-        options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
-        options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
-
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        for(WebserviceOptions option: options){
-            sb.append(option);
-            sb.append(";");
-        }
-        sb.append(")");
-
-        String baseUrl = "https://webservices.aptoide.com/webservices/3/getApkInfo";
-
-        GenericUrl url = new GenericUrl(baseUrl);
-
+    protected HashMap<String, String > getParameters(){
+        Log.d("Refactortest","GetApkInfoRequestFromMd5");
         HashMap<String, String > parameters = new HashMap<String, String>();
         if(repoName != null) {
             parameters.put("repo", repoName);
         }
         parameters.put("identif", "md5sum:" + md5Sum);
-        parameters.put("options", sb.toString());
-        parameters.put("mode", "json");
-
-        HttpContent content = new UrlEncodedContent(parameters);
-
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
-        token = SecurePreferences.getInstance().getString("access_token", null);
-
-        request.setReadTimeout(5000);
-        if (token!=null) {
-            parameters.put("access_token", token);
-            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-        }
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        HttpResponse response;
-        try{
-            response = request.execute();
-        } catch (EOFException e){
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put("Connection", "close");
-            request.setHeaders(httpHeaders);
-            response = request.execute();
-        }
-
-        return response.parseAs(getResultType());
+        return parameters;
     }
-
-    public void setRepoName(String repoName) {
-        this.repoName = repoName;
-    }
-
-    public String getRepoName() {
-        return repoName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public class WebserviceOptions {
-        String key;
-        String value;
-
-
-        private WebserviceOptions(String key,String value) {
-            this.value = value;
-            this.key = key;
-        }
-
-        /**
-         * Returns a string containing a concise, human-readable description of this
-         * object. Subclasses are encouraged to override this method and provide an
-         * implementation that takes into account the object's type and data. The
-         * default implementation is equivalent to the following expression:
-         * <pre>
-         *   getClass().getName() + '@' + Integer.toHexString(hashCode())</pre>
-         * <p>See <a href="{@docRoot}reference/java/lang/Object.html#writing_toString">Writing a useful
-         * {@code toString} method</a>
-         * if you intend implementing your own {@code toString} method.
-         *
-         * @return a printable representation of this object.
-         */
-        @Override
-        public String toString() {
-            return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.
-        }
-
-    }
-
 }

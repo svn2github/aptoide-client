@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.database.Cursor;
+
 import java.util.ArrayList;
 
 /**
@@ -74,6 +76,17 @@ public class HomeItem implements Home{
         this.downloads = downloads;
         this.rating = rating;
         this.categoryString = categoryString;
+    }
+    public HomeItem(Cursor c) {
+        String iconPath = c.getString(c.getColumnIndex("iconpath"));
+        String icon = c.getString(c.getColumnIndex("icon"));
+        this.category = c.getString(c.getColumnIndex("mycatnameid"));
+        this.icon = iconPath + icon;
+        this.name = c.getString(c.getColumnIndex("name"));
+        this.id = c.getLong(c.getColumnIndex("id"));
+        this.downloads = c.getString(c.getColumnIndex("downloads"));
+        this.rating = c.getFloat(c.getColumnIndex("rating"));
+        this.categoryString = c.getString(c.getColumnIndex("mycatname"));
     }
 
     public boolean isRecommended() {

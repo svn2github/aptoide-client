@@ -7,15 +7,11 @@
  ******************************************************************************/
 package cm.aptoide.ptdev;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.*;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
@@ -25,6 +21,7 @@ import android.view.*;
 import android.widget.*;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ScheduledDownloadsDialog;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -102,7 +99,6 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
             @Override
             public void bindView(View convertView, Context arg1, Cursor c) {
-                // Planet to display
                 ScheduledDownload scheduledDownload = scheduledDownloadsHashMap.get(c.getLong(c.getColumnIndex("_id")));
 
                 // The child views in each row.
@@ -111,19 +107,13 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 TextView textViewVersion;
                 ImageView imageViewIcon;
 
-                // Create a new row view
                 if (convertView.getTag() == null) {
-
-                    // Find the child views.
                     textViewName = (TextView) convertView.findViewById(R.id.name);
                     textViewVersion = (TextView) convertView.findViewById(R.id.appversion);
                     checkBoxScheduled = (CheckBox) convertView.findViewById(R.id.schDwnChkBox);
                     imageViewIcon = (ImageView) convertView.findViewById(R.id.appicon);
-                    // Optimization: Tag the row with it's child views, so we don't have to
-                    // call findViewById() later when we reuse the row.
                     convertView.setTag(new Holder(textViewName, textViewVersion, checkBoxScheduled, imageViewIcon));
 
-                    // If CheckBox is toggled, update the planet it is tagged with.
                     checkBoxScheduled.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             CheckBox cb = (CheckBox) v;
@@ -236,9 +226,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         int i = item.getItemId();
 
 
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if (i == R.id.menu_install) {
 

@@ -2,16 +2,9 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.util.Log;
 
-import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
 import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
-import cm.aptoide.ptdev.downloadmanager.state.PendingState;
-import cm.aptoide.ptdev.events.BusProvider;
-import com.squareup.otto.Subscribe;
-
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -65,34 +58,11 @@ public class DownloadManager implements Serializable {
      */
     private ArrayList<DownloadInfo> mErrorList;
 
-    public void removeAllActiveDownloads() {
+/*    public void removeAllActiveDownloads() {
         while (mActiveList.iterator().hasNext()) {
             mActiveList.get(0).pause();
         }
-    }
-
-
-    /**
-     * Enum for default file exist behaviors.
-     */
-    public enum DefaultFileExistsBehavior implements Serializable {
-        /**
-         * ASK what to do.
-         */
-        ASK,
-        /**
-         * Rename the file.
-         */
-        RENAME,
-        /**
-         * Replace the file.
-         */
-        REPLACE,
-        /**
-         * Resume the file.
-         */
-        RESUME;
-    }
+    }*/
 
     /**
      * Construct a download manager. Initializes lists.
@@ -107,27 +77,6 @@ public class DownloadManager implements Serializable {
         //BusProvider.getInstance().register(this);
     }
 
-    /**
-     * Initialize settings.
-     */
-    public void init() {
-//		XMLConfigFile file = null;
-//		try {
-//			file = XMLConfigFile.loadFile();
-//			if (file == null) {
-        // If the config.xml file does not exist, these settings will be used and written to that file.
-        int maxDownloads = 3;
-//				DefaultFileExistsBehavior defaultFileExistsBehavior = DefaultFileExistsBehavior.RESUME;
-//				String defaultDirectory = new JFileChooser().getFileSystemView().getDefaultDirectory() + File.separator + "Downloads";
-//				file = new XMLConfigFile(defaultDirectory, maxDownloads, defaultFileExistsBehavior);
-//				file.saveFile();
-//			}
-//		} catch (Exception e) {
-//			DownloadLogger.LOGGER.log(Level.SEVERE, e.toString());
-//		}
-
-//		mConfigFile = file;
-    }
 
     /**
      * Check if there is room in the active list.
@@ -136,7 +85,7 @@ public class DownloadManager implements Serializable {
      */
     private boolean activeListHasRoom() {
         int maxDownloads = 1;
-        return maxDownloads == 0 || mActiveList.size() < maxDownloads;
+        return mActiveList.size() < maxDownloads;
     }
 
 //	/**
@@ -167,11 +116,7 @@ public class DownloadManager implements Serializable {
      * @return <tt>true</tt> if the download could be added, <tt>false</tt> otherwise.
      */
     public boolean addToActiveList(DownloadInfo downloadInfo) {
-        if (activeListHasRoom()) {
-            return mActiveList.add(downloadInfo);
-        }
-
-        return false;
+        return activeListHasRoom() && mActiveList.add(downloadInfo);
     }
 
     /**
@@ -352,14 +297,14 @@ public class DownloadManager implements Serializable {
 //			DownloadLogger.LOGGER.severe(e.toString());
 //		}
 //	}
-
-    /**
+/*
+    *//**
      * Verify an URL.
      *
      * @param url The String to verify as an url.
      * @return A new URL.
      * @throws java.net.MalformedURLException if the URL is not a valid URL.
-     */
+     *//*
     private URL verifyUrl(String url) throws MalformedURLException {
         // Only allow HTTP URLs.
         if (!url.toLowerCase().startsWith("http://")) {
@@ -371,8 +316,8 @@ public class DownloadManager implements Serializable {
         if (verifiedUrl.getFile().length() < 2) {
             throw new MalformedURLException("URL has to specify a file.");
         }
-        return verifiedUrl;
-    }
+       return verifiedUrl;
+    }*/
 
 //	public void downloadEventPerformed(DownloadProgressEvent downloadProgressEvent) {
 //		if (downloadProgressEvent.getPercentDownloaded() == 100) {
@@ -400,39 +345,48 @@ public class DownloadManager implements Serializable {
         }
 
     }
+/*
 
-    /**
+    */
+/**
      * Get the queue position of an active download.
      *
      * @param downloadInfo The download object to get the queue position of.
      * @return the download's queue position.
-     */
+     *//*
+
     public int getActiveQueuePosition(DownloadInfo downloadInfo) {
         return mActiveList.indexOf(downloadInfo) + 1;
     }
 
-    /**
+    */
+/**
      * Get the queue position of a pending download.
      *
      * @param downloadInfo The download object to get the queue position of.
      * @return the download's queue position.
-     */
+     *//*
+
     public int getPendingQueuePosition(DownloadInfo downloadInfo) {
         return mActiveList.size() + mPendingList.indexOf(downloadInfo) + 1;
     }
 
-    /**
+    */
+/**
      * @return The number of active and pending downloads.
-     */
+     *//*
+
     public int getNumberOfQueuedDownloads() {
         return mActiveList.size() + mPendingList.size();
     }
 
-    /**
+    */
+/**
      * Move an active download up the active queue.
      *
      * @param downloadInfo The download object to move.
-     */
+     *//*
+
     public void moveActiveUp(DownloadInfo downloadInfo) {
         int index = mActiveList.indexOf(downloadInfo);
         if (index != -1 && index != 0) {
@@ -442,11 +396,13 @@ public class DownloadManager implements Serializable {
         }
     }
 
-    /**
+    */
+/**
      * Move a pending download down the pending queue.
      *
      * @param downloadInfo The download object to move.
-     */
+     *//*
+
     public void movePendingDown(DownloadInfo downloadInfo) {
         int index = mPendingList.indexOf(downloadInfo);
         if (index != -1 && index != mPendingList.size() - 1) {
@@ -456,12 +412,14 @@ public class DownloadManager implements Serializable {
         }
     }
 
-    /**
+    */
+/**
      * Move a pending download up the pending queue,
      * or up to the active queue if it's at the top of the pending queue.
      *
      * @param downloadInfo The download object to move.
-     */
+     *//*
+
     public void movePendingUp(DownloadInfo downloadInfo) {
         int index = mPendingList.indexOf(downloadInfo);
         if (index != -1) {
@@ -475,12 +433,14 @@ public class DownloadManager implements Serializable {
         }
     }
 
-    /**
+    */
+/**
      * Move an active download down the active queue,
      * or down to the pending queue if it's at the bottom of the active queue.
      *
      * @param downloadInfo The download object to move.
-     */
+     *//*
+
     public void moveActiveDown(DownloadInfo downloadInfo) {
         int index = mActiveList.indexOf(downloadInfo);
         if (index != -1) {
@@ -495,10 +455,11 @@ public class DownloadManager implements Serializable {
             }
         }
     }
-
-    /**
+*/
+/*
+    *//**
      * Switch the bottommost active download object with the topmost pending download object.
-     */
+     *//*
     private void switchBottomActiveWithTopPending() {
         // move active first by setting it to pending.
         DownloadInfo bottomActive = mActiveList.get(mActiveList.size() - 1);
@@ -509,7 +470,7 @@ public class DownloadManager implements Serializable {
         mPendingList.add(0, bottomPending);
         // Now there're two of the same, so remove the one left at the bottom.
         mPendingList.remove(mPendingList.size() - 1);
-    }
+    }*/
 
     /**
      * Rmove a download from the download manager.

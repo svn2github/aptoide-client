@@ -1,11 +1,5 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -30,7 +24,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -61,7 +54,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Hours;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -73,11 +65,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
-import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
@@ -92,7 +82,6 @@ import cm.aptoide.ptdev.fragments.callbacks.ApkFlagCallback;
 import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
 import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Download;
-import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.model.MediaObject;
 import cm.aptoide.ptdev.model.MultiStoreItem;
 import cm.aptoide.ptdev.model.Screenshot;
@@ -106,8 +95,7 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
 import cm.aptoide.ptdev.webservices.AddApkFlagRequest;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
-import cm.aptoide.ptdev.webservices.Errors;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
@@ -156,9 +144,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
     boolean showBadgeLayout = false;
 
-
-
-
     private static GetApkInfoJson.Malware.Reason reason;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
 
@@ -170,9 +155,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             };
         }
 
-
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void onRequestSuccess(final GetApkInfoJson getApkInfoJson) {
 
@@ -194,7 +176,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     wUrl = getApkInfoJson.getMeta().getWUrl();
                     screen = getApkInfoJson.getApk().getMinScreen();
                     minSdk = getApkInfoJson.getApk().getMinSdk().intValue();
-                    //Log.d("AppView", "wUrl " + wUrl);
                     boolean showLatestString = false;
                     if (getApkInfoJson.getApk().getIconHd() != null) {
                         icon = getApkInfoJson.getApk().getIconHd();
@@ -265,9 +246,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         reason = getApkInfoJson.getMalware().getReason();
 
                         if (showBadgeLayout) {
-                            findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
-                            findViewById(R.id.badge_layout).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
-                            findViewById(R.id.badge_layout).setOnClickListener(new View.OnClickListener() {
+                            View badge_layout = findViewById(R.id.badge_layout);
+                            badge_layout.setVisibility(View.VISIBLE);
+                            badge_layout.startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+                            badge_layout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Badge_Dialog");
@@ -293,8 +275,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     //if (!isShown) show(true, true);
 
                     if (isFromActivityResult || autoDownload) {
-
-                        //Log.d("Downgrade", "iffromactivityresult");
                         Download download = new Download();
 
                         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
@@ -320,7 +300,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setPackageName(package_name);
                         download.setMd5(md5);
                         download.setCpiUrl(getIntent().getStringExtra("cpi"));
-
                         try {
                             waitForServiceToBeBound();
                         } catch (InterruptedException e) {
@@ -351,16 +330,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     }
 
                     // Check if Download is already completed to disable schedule
-
-
-
                 } else {
                     AptoideUtils.toastError(json.getErrors());
                     finish();
                 }
             }
-
-
         }
     };
 
@@ -368,8 +342,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         latestVersion = (TextView) findViewById(R.id.app_get_latest);
         if (json.getLatest() != null) {
             latestVersion.setVisibility(View.VISIBLE);
-
-
 
             String getLatestString;
             if (showLatestString) {
@@ -414,29 +386,32 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     private void checkInstallation(GetApkInfoJson getApkInfoJson) {
+
         try {
+            TextView btinstall = (TextView) findViewById(R.id.btinstall);
+            TextView app_version_installed = (TextView) findViewById(R.id.app_version_installed);
             PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
             isInstalled = true;
 
             installedSignature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(info.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
             if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
                 isUpdate = true;
-                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
-                findViewById(R.id.btinstall).setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
-                ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
+                btinstall.setText(getString(R.string.update));
+                btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
+                app_version_installed.setVisibility(View.VISIBLE);
+                app_version_installed.setText(getString(R.string.installed_tab) + ": " + info.versionName);
             } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
-                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
-                findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-                ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
-                ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
+                btinstall.setText(getString(R.string.downgrade));
+                btinstall.setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
+                app_version_installed.setVisibility(View.VISIBLE);
+                app_version_installed.setText(getString(R.string.installed_tab) + ": " + info.versionName);
             } else {
                 final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
 
-                ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.open));
+                btinstall.setText(getString(R.string.open));
 
                 if (i != null) {
-                    findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+                    btinstall.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -448,7 +423,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     });
 
                 } else {
-                    findViewById(R.id.btinstall).setEnabled(false);
+                    btinstall.setEnabled(false);
                 }
 
             }
@@ -609,11 +584,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
 
-        private String icon;
-        private String name;
-        private String versionName;
-        private String package_name;
-        private String md5;
+        protected String icon;
+        protected String name;
+        protected String versionName;
+        protected String package_name;
+        protected String md5;
 
 
         public InstallListener(String icon, String name, String versionName, String package_name, String md5) {
@@ -623,10 +598,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             this.package_name = package_name;
             this.md5 = md5;
         }
-
-        @Override
-        public void onClick(View v) {
-
+        protected Download makeDownLoad(){
             Download download = new Download();
 
             if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
@@ -652,17 +624,26 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setPackageName(this.package_name);
             download.setMd5(this.md5);
             download.setCpiUrl(getIntent().getStringExtra("cpi"));
+            return download;
+        }
 
-            if (service != null && json!=null) {
-                service.startDownloadFromJson(json, downloadId, download);
+        protected void FlurryIt(String s){
+            if(Build.VERSION.SDK_INT >= 10) {
                 Map<String, String> installParams = new HashMap<String, String>();
                 installParams.put("Package_Name", package_name);
                 installParams.put("Name", name);
                 installParams.put("Version_Name", versionName);
-                FlurryAgent.logEvent("App_View_Clicked_On_Install_Button", installParams);
+                FlurryAgent.logEvent(s, installParams);
+            }
+        }
 
+        @Override
+        public void onClick(View v) {
+            Download download = makeDownLoad();
 
-                Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+            if (service != null && json!=null) {
+                service.startDownloadFromJson(json, downloadId, download);
+                FlurryIt("App_View_Clicked_On_Install_Button");
             }
         }
 
@@ -672,82 +653,29 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
-    public class InstallFromUrlListener implements View.OnClickListener, DialogInterface.OnClickListener {
-
-        private String icon;
-        private String name;
-        private String versionName;
-        private String package_name;
-        private final String md5;
+    public class InstallFromUrlListener extends InstallListener {
         private final String url;
         private String repoName;
-        private String urlFallback;
-
 
         public InstallFromUrlListener(String icon, String name, String versionName, String package_name, String md5, String url, String repoName) {
-            this.icon = icon;
-            this.name = name;
-            this.versionName = versionName;
-            this.package_name = package_name;
-            this.md5 = md5;
+            super(icon,name,versionName,package_name,md5);
             this.url = url;
             this.repoName = repoName;
         }
 
         @Override
         public void onClick(View v) {
-
-            Download download = new Download();
-
-
-            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains("allowRoot") && !Aptoide.IS_SYSTEM) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isRooted()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
-                                }
-                            });
-                        }
-                    }
-                }).start();
-            }
-
-            download.setId(downloadId);
-            download.setName(this.name);
-            download.setVersion(this.versionName);
-            download.setIcon(this.icon);
-            download.setPackageName(this.package_name);
-            download.setMd5(this.md5);
-
-
-            service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
-            Map<String, String> installParams = new HashMap<String, String>();
-            installParams.put("Package_Name", package_name);
-            installParams.put("Name", name);
-            installParams.put("Version_Name", versionName);
-            FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
-            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            onClick(null);
+            service.startDownloadFromUrl(url, md5, downloadId, makeDownLoad(), repoName);
+            FlurryIt("Clicked_On_Install_Button");
         }
     }
 
-
     public class DowngradeListener implements View.OnClickListener {
-
         private String icon;
         private String name;
         private String versionName;
         private String downgradeVersion;
         private String package_name;
-
 
         public DowngradeListener(String icon, String name, String versionName, String downgradeVersion, String package_name) {
             this.icon = icon;
@@ -872,20 +800,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 MultiStoreItem[] items = new Database(Aptoide.getDb()).getOtherReposVersions(id, package_name, versionName, repoName, versionCode);
                 details.setOtherVersions(items);
-            } else {
-
-                //for(String error : json.getError_description()){
-                //  Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
-                //}
             }
         }
 
         return new DetailsEvent(details);
 
     }
-
-
-
 
     @Override
     protected void onDestroy() {
@@ -926,14 +846,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (json.getMeta().getLikevotes().getUservote() != null) {
                 event.setUservote(json.getMeta().getLikevotes().getUservote());
             }
-            if (json.getMeta().getFlags() != null){
-                event.setFlagVotes(json.getMeta().getFlags().getVotes());
-
-                if (json.getMeta().getFlags().getUservote() != null) {
-                    event.setFlagUservote(json.getMeta().getFlags().getUservote());
+            GetApkInfoJson.Meta.Flags flags = json.getMeta().getFlags();
+            if (flags != null){
+                event.setFlagVotes(flags.getVotes());
+                if (flags.getUservote() != null) {
+                    event.setFlagUservote(flags.getUservote());
                 }
-                if (json.getMeta().getFlags().getVeredict() != null){
-                    event.setFlagVeredict(json.getMeta().getFlags().getVeredict());
+                if (flags.getVeredict() != null){
+                    event.setFlagVeredict(flags.getVeredict());
                 }
             }
 
@@ -983,8 +903,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if (service != null && service.getDownload(downloadId).getDownload() != null) {
             onDownloadUpdate(service.getDownload(downloadId).getDownload());
         } else {
-            findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
-            findViewById(R.id.btinstall).startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
+            View v=findViewById(R.id.btinstall);
+            v.setVisibility(View.VISIBLE);
+            v.startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
         }
 
 
@@ -1061,12 +982,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             appName.setText(name);
         }
 
-
         if (getIntent().getExtras().containsKey("versionName")) {
             versionName = getIntent().getExtras().getString("versionName");
             appVersionName.setText(versionName);
         }
-
 
         if (pager != null) {
             PagerAdapter adapter = new AppViewPager(getSupportFragmentManager(), this);
@@ -1080,10 +999,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.applications);
 
-
         if(savedInstanceState==null) {
-
-
             if(getIntent().getBooleanExtra("fromSponsored", false)){
                 GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
 
@@ -1096,7 +1012,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 cacheKey = String.valueOf(id);
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
-
 
                 new Thread(new Runnable() {
                     @Override
@@ -1128,7 +1043,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 cacheKey = "pt.aptoide.backupapps";
 
-                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, "pt.aptoide.backupapps", DurationInMillis.ONE_HOUR, requestListener);
+                spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
             } else if (getIntent().getBooleanExtra("fromRollback", false)) {
 
@@ -1192,8 +1107,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
         loadPublicity();
-
-
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -1236,24 +1149,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-
-
-
         int i = item.getItemId();
 
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if (i == R.id.menu_schedule) {
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Schedule_Download_Button");
 
-            if (md5 != null) {
-                new Database(Aptoide.getDb()).insertScheduledDownload(package_name, md5, versionName, repoName, name, icon);
-                Toast.makeText(this, R.string.added_to_scheduled , Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.please_wait, Toast.LENGTH_SHORT).show();
-            }
+            new Database(Aptoide.getDb()).ScheduledDownloadifmd5(package_name, md5, versionName, repoName, name, icon);
 
         } else if (i == R.id.menu_uninstall) {
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Uninstall_Button");
@@ -1352,7 +1255,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             ImageLoader.getInstance().displayImage(icon = iconpath + localIcon, appIcon);
             downloadId = md5.hashCode();
 
-            GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+            GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
 
             request.setRepoName(repoName);
             request.setPackageName(package_name);
@@ -1370,28 +1273,29 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             try {
                 PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
                 isInstalled = true;
+                View btinstall = findViewById(R.id.btinstall);
 
                 if (versionCode > info.versionCode) {
                     isUpdate = true;
-                    ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.update));
-                    findViewById(R.id.btinstall).setEnabled(true);
-                    findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
+                    ((TextView)btinstall).setText(getString(R.string.update));
+                    btinstall.setEnabled(true);
+                    btinstall.setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
                     ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
                     ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
                 } else if (versionCode < info.versionCode) {
 
-                    ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.downgrade));
-                    findViewById(R.id.btinstall).setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
+                    ((TextView)btinstall).setText(getString(R.string.downgrade));
+                    btinstall.setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
                     ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
                     ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
                 } else {
 
                     final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
 
-                    ((TextView) findViewById(R.id.btinstall)).setText(getString(R.string.open));
+                    ((TextView)btinstall).setText(getString(R.string.open));
 
                     if (i != null) {
-                        findViewById(R.id.btinstall).setOnClickListener(new View.OnClickListener() {
+                        btinstall.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 try {
@@ -1399,12 +1303,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 } catch (ActivityNotFoundException e) {
 
                                 }
-
                             }
                         });
-
                     } else {
-                        findViewById(R.id.btinstall).setEnabled(false);
+                        btinstall.setEnabled(false);
                     }
                 }
                 supportInvalidateOptionsMenu();
@@ -1414,9 +1316,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 findViewById(R.id.btinstall).setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
             }
 
-
             spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
-
         } else {
             Toast.makeText(this, R.string.error_occured, Toast.LENGTH_LONG).show();
             finish();
@@ -1425,22 +1325,18 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Subscribe
     public void onDownloadEventUpdate(DownloadEvent download) {
-
         if (service != null && download.getId() == downloadId) {
             onDownloadUpdate(service.getDownload(download.getId()).getDownload());
         }
-
     }
 
 
 
     @Subscribe
     public void onDownloadStatusUpdate(Download download) {
-
         if (download.getId() == downloadId) {
             onDownloadUpdate(download);
         }
-
     }
 
     @Subscribe
@@ -1462,7 +1358,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Subscribe
     public void onRefresh(AppViewRefresh event) {
-        GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+        GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
 
         request.setRepoName(repoName);
         request.setPackageName(package_name);
@@ -1477,7 +1373,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Subscribe
     public void onSpinnerItemClick(OnMultiVersionClick event) {
 
-        GetApkInfoRequest request = new GetApkInfoRequest(getApplicationContext());
+        GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
 
         request.setRepoName(event.getRepoName());
         request.setPackageName(event.getPackage_name());
@@ -1494,8 +1390,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Subscribe
     public void onDownloadUpdate(Download download) {
-
-
         if (download != null && download.getId() == downloadId) {
 
             TextView progressText = (TextView) findViewById(R.id.progress);
@@ -1588,12 +1482,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             TITLES = new String[]{context.getString(R.string.info), context.getString(R.string.review), context.getString(R.string.related), context.getString(R.string.advanced)};
         }
 
-
-
         @Override
         public Fragment getItem(int i) {
-
-
             switch (i) {
                 case 0:
                     return new FragmentAppView.FragmentAppViewDetails();
@@ -1606,8 +1496,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 default:
                     return null;
             }
-
-
         }
 
         @Override
@@ -1987,27 +1875,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
     }
 
-    private static class Rating {
-    }
-
-    private static class Specs {
-    }
-
-    private static class Related {
-    }
-
-
+/*    private static class Rating {}
+    private static class Specs {}
+    private static class Related {}*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LOGIN_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
 
-            } else {
-
-            }
         } else if (requestCode == DOWGRADE_REQUEST_CODE) {
 
             //Log.d("Downgrade", "OnactivityResult");
@@ -2090,7 +1967,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(postCallback != null) {
                 postCallback.clearState();
             }
-            Log.d("likes","addCommentRequestListener");
             spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
             BusProvider.getInstance().post(new AppViewRefresh());
         }
@@ -2115,7 +1991,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void CaseOK() {
             Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
-            Log.d("likes","commentRequestListener");
             spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
             BusProvider.getInstance().post(new AppViewRefresh());
         }

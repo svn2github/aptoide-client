@@ -443,7 +443,6 @@ public class Start extends ActionBarActivity implements
                     //Log.d("Aptoide", "* * * * * * * * * *");
 
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-
                     final AlertDialog noSpaceDialog = dialogBuilder.create();
                     noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
                     noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));

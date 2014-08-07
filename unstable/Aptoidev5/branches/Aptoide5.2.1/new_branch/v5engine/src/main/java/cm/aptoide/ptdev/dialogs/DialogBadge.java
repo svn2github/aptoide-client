@@ -40,7 +40,6 @@ public class DialogBadge extends DialogFragment {
                     }
                 }).create();
 
-
         if (reason != null) {
             if (reason.getScanned() != null && reason.getScanned().getStatus()!=null && (reason.getScanned().getStatus().equals("passed") || reason.getScanned().getStatus().equals("warn"))) {
 

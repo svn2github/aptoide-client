@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
-
 	
 	private LayoutInflater inflater;
     private Callback callback;
@@ -29,17 +28,10 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
 		super(savedInstanceState, context, 0, items);
         this.callback = callback;
         inflater = LayoutInflater.from(context);
-
-
 	}
-
-
 
 	@Override
 	public long getItemId(int position) {
-
-        Log.d("Aptoide-", "Getting ItemId " + getItem(position).getId());
-
 		return getItem(position).getId();
 	}
 
@@ -85,12 +77,8 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
         }else{
             avatarImage.setImageResource(R.drawable.avatar_apps);
         }
-
-
         alphaView.setBackgroundResource(storeItem.getTheme().getStoreAlphaColor());
-        Log.d("Aptoide-", "BindView " + storeItem.getName());
         return convertView;
-
     }
 
     @Override
@@ -106,8 +94,6 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
     }
-
-
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -137,8 +123,6 @@ public class StoreAdapter extends MultiChoiceArrayAdapter<StoreItem> {
 			this.avatarImage = avatar;
             this.alphaView = alphaView;
 		}
-		
-
 
 		public TextView getStoreName() {
 			return storeName;

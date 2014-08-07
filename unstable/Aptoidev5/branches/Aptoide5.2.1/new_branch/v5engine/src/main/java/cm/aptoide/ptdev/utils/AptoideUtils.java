@@ -728,10 +728,10 @@ public class AptoideUtils {
     }
 
     public static void syncInstalledApps(Context context, SQLiteDatabase db) {
-        Log.d("Aptoide-InstalledSync", "Syncing");
+        //Log.d("Aptoide-InstalledSync", "Syncing");
         long startTime = System.currentTimeMillis();
         InstalledAppsHelper.sync(db, context);
-        Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
+        //Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
 
     }
 

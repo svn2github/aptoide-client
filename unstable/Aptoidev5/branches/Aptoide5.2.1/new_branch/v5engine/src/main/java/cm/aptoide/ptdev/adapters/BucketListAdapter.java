@@ -26,10 +26,6 @@ import java.util.List;
  */
 public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
 
-
-    private static final String TAG = "BucketListAdapter";
-    private final boolean DEBUG = true;
-
     protected Activity ctx;
     protected Integer bucketSize;
 
@@ -122,20 +118,14 @@ public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
         final LinearLayout bucket;
         if (convertView != null) {
             bucket = (LinearLayout)convertView;
-            
-            if (DEBUG) {
-                Log.i(TAG, "Reusing bucket view of type " + getItemViewType(bucketPosition));
-            }
+
         } else {
             bucket = new LinearLayout(ctx);
             bucket.setLayoutParams(new AbsListView.LayoutParams(
                     AbsListView.LayoutParams.MATCH_PARENT,
                     AbsListView.LayoutParams.MATCH_PARENT));
             bucket.setOrientation(LinearLayout.HORIZONTAL);
-            
-            if (DEBUG) {
-                Log.i(TAG, "Instantiating new bucket view");
-            }
+
         }
         
         int j = 0;
@@ -146,15 +136,9 @@ public abstract class BucketListAdapter<T> extends ArrayAdapter<T> {
             if (j < childCount) {
                 bucketElementFrame = (FrameLayout)bucket.getChildAt(j);
                 
-                if (DEBUG) {
-                    Log.i(TAG, "Reusing bucketElementFrame view with " + childCount + " childs");
-                }
-                
                 if (i < super.getCount()) {
                     bindBucketElement(i, getItem(i), bucketElementFrame.getChildAt(0), bucketElementFrame);
-                    if (DEBUG) {
-                        Log.i(TAG, "Reusing element view");
-                    }
+
                 }
             } else {
                 bucketElementFrame = new FrameLayout(ctx);

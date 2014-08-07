@@ -76,10 +76,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         final String serverId = "928466497334-7aqsaffv18r3k1ebthkchfi3nibft5vq.apps.googleusercontent.com";
 
-
-
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -100,46 +96,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     });
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Logged_In_With_Google_Plus");
 
-                } catch (IOException e) {
-                    if (mPlusClient != null && mPlusClient.isConnected()) {
-                        mPlusClient.clearDefaultAccount();
-                        mPlusClient.disconnect();
-                    }
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-
-                            android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                            if (pd != null) {
-                                pd.dismissAllowingStateLoss();
-                            }
-                        }
-                    });
-
-                } catch (UserRecoverableAuthException e) {
+                }catch (UserRecoverableAuthException e) {
                     startActivityForResult(e.getIntent(), 90);
-                } catch (GoogleAuthException e) {
-
-
-                    e.printStackTrace();
-                    if (mPlusClient != null && mPlusClient.isConnected()) {
-                        mPlusClient.clearDefaultAccount();
-                        mPlusClient.disconnect();
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-
-                            android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                            if (pd != null) {
-                                pd.dismissAllowingStateLoss();
-                            }
-                        }
-                    });
-                } catch (Exception e) {
+                }catch (Exception e) {
 
                     if (mPlusClient != null && mPlusClient.isConnected()) {
                         mPlusClient.clearDefaultAccount();
@@ -189,10 +148,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             }
         }
 
-        android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-        if (pd != null) {
-            pd.dismissAllowingStateLoss();
-        }
+        onDisconnected();
         // Save the intent so that we can start an activity when the user clicks
         // the sign-in button.
         mConnectionResult = result;
@@ -320,12 +276,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mPlusClient = new PlusClient.Builder(this, this, this).build();
 
                 int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-                boolean play_installed;
-                if (val == ConnectionResult.SUCCESS) {
-                    play_installed = true;
-                } else {
-                    play_installed = false;
-                }
+                boolean play_installed = val == ConnectionResult.SUCCESS;
 
                 SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
                 if(!play_installed){
@@ -549,13 +500,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 String error;
 
                 if(spiceException instanceof InvalidGrantSpiceException && ((InvalidGrantSpiceException) spiceException).getError_description().equals("Invalid username and password combination")){
-
                     error = getString(R.string.error_AUTH_1);
-
                 }else{
-
                     error = getString(R.string.error_occured);
-
                 }
 
                 Session session = Session.getActiveSession();
@@ -575,16 +522,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 if (pd != null) {
                     pd.dismissAllowingStateLoss();
                 }
-
-
-
             }
 
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
-
                 getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
-
             }
         });
 
@@ -676,10 +618,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
                             .edit()
                             .putString(Configs.LOGIN_USER_LOGIN, username)
-                            .commit();
-
-                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                            .edit()
                             .putString("loginType", mode.name())
                             .commit();
 
@@ -688,13 +626,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
                     preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 
-
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
-
 
                     final Intent res = new Intent();
                     res.putExtras(data);
@@ -713,7 +649,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         });
     }
@@ -779,9 +714,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         int i = item.getItemId();
 
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if( i == R.id.menu_SendFeedBack){
             FeedBackActivity.screenshot(this);
@@ -792,14 +725,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
     public static boolean isLoggedIn(Context context) {
-
         AccountManager manager = AccountManager.get(context);
 
         return manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length != 0;
-
     }
-
-
 }
 
 

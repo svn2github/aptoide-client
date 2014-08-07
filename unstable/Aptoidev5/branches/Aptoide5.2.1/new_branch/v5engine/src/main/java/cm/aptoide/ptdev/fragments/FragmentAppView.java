@@ -826,7 +826,7 @@ public abstract class FragmentAppView extends Fragment {
                     permissionsContainer.addView(noPermissions);
                 }
                 if(getActivity()!=null && permissionsContainer.getHeight()==0){
-                    FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
+                    fillPermissions(getActivity(), permissionsContainer, apkPermissions);
                     permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     permissionsContainer.setVisibility(View.VISIBLE);
                     loadingPb.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
@@ -834,9 +834,35 @@ public abstract class FragmentAppView extends Fragment {
                     setRetainInstance(false);
                 }
             }
+
+            private void fillPermissions(Context context, LinearLayout permissionsContainer, ArrayList<ApkPermission> permissions) {
+                View v;
+                String prevName=null;
+                if (permissionsContainer != null) {
+
+                    for (ApkPermission permission : permissions) {
+
+                        v = LayoutInflater.from(context).inflate(R.layout.row_permission, permissionsContainer, false);
+                        if(!permission.getName().equals(prevName)){
+                            prevName=permission.getName();
+                            TextView name = (TextView) v.findViewById(R.id.permission_name);
+                            name.setText(permission.getName());
+                        }
+                        else
+                            v.findViewById(R.id.permission_name).setVisibility(View.GONE);
+
+
+                        TextView description = (TextView) v.findViewById(R.id.permission_description);
+
+                        description.setText(permission.getDescription());
+                        permissionsContainer.addView(v);
+                    }
+
+                }
+            }
         }
 
-        public static class FillPermissions {
+        /*public static class FillPermissions {
 
             public static void fillPermissions(Context context, LinearLayout permissionsContainer, ArrayList<ApkPermission> permissions) {
 
@@ -858,7 +884,7 @@ public abstract class FragmentAppView extends Fragment {
 
                 }
             }
-        }
+        }*/
     }
 
     public static class FragmentAppViewRating extends FragmentAppView implements SuccessfullyPostCallback {
