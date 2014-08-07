@@ -14,7 +14,7 @@ import cm.aptoide.ptdev.R;
 /**
  * Created by asantos on 07-08-2014.
  */
-public class CanDownloadDialog2 extends DialogFragment {
+public class CanDownloadDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
