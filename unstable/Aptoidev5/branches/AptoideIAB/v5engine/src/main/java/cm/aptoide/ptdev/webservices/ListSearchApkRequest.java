@@ -77,7 +77,7 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
         if(!TextUtils.isEmpty(repos))options.add(new WebserviceOptions("repo", repos.toString()));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext())));
         options.add(new WebserviceOptions("u_limit", "4"));
-        options.add(new WebserviceOptions("limit", "10"));
+        options.add(new WebserviceOptions("limit", "15"));
 
         if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)){
             options.add(new WebserviceOptions("mature", "0"));

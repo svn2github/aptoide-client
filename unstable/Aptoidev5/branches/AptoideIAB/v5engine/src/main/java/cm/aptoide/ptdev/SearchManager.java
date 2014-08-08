@@ -386,7 +386,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 @Override
                 public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-                    if (apkSuggestionJson.getApp_suggested().size() > 0) {
+                    if (apkSuggestionJson.getApp_suggested()!=null && apkSuggestionJson.getApp_suggested().size() > 0) {
                         adapter.setActive(sponsoredApp, true);
                         final ApkSuggestionJson.AppSuggested appSuggested = apkSuggestionJson.getApp_suggested().get(0);
 
