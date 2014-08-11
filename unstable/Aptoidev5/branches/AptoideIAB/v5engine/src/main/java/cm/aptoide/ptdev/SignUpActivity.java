@@ -108,22 +108,22 @@ public class SignUpActivity extends ActionBarActivity{
                 return false;
             }
         });
-        passBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (hasFocus) {
-                    showPassword = false;
-                    passBox.setTransformationMethod(null);
-                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
-                } else {
-                    showPassword = true;
-                    passBox.setTransformationMethod(new PasswordTransformationMethod());
-                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
-                }
-            }
-        });
+//        passBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//
+//                if (hasFocus) {
+//                    showPassword = false;
+//                    passBox.setTransformationMethod(null);
+//                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+//                } else {
+//                    showPassword = true;
+//                    passBox.setTransformationMethod(new PasswordTransformationMethod());
+//                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+//                }
+//            }
+//        });
     }
 
     @Override

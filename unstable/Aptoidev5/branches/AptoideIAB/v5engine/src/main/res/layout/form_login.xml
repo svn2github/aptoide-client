@@ -39,9 +39,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword|textNoSuggestions"
-                android:singleLine="true">
-                <requestFocus />
-            </EditText>
+                android:singleLine="true"/>
 
             <CheckBox
                 android:id="@+id/link_my_device"

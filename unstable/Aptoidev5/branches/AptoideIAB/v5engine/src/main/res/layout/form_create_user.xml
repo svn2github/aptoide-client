@@ -34,9 +34,7 @@
             android:layout_weight="1"
             android:hint="@string/password"
             android:inputType="textPassword|textNoSuggestions"
-            android:textAppearance="?android:attr/textAppearanceMedium" >
-            <requestFocus />
-        </EditText>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/accept_terms"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.aptoide.partners"
-          android:versionCode="433"
-          android:versionName="5.1.0" android:installLocation="auto" >
+          android:versionCode="439"
+          android:versionName="5.2.0.1" android:installLocation="auto" >
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
@@ -86,11 +86,13 @@
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
 
+        <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity"/>
+
+
         <activity android:name=".AppViewActivityPartner" />
 
         <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
-                  android:theme="@style/transparent"
-                  android:launchMode="standard"/>
+                  android:theme="@style/transparent" />
 
         <activity android:name="cm.aptoide.ptdev.ScreenshotsViewer"/>
 
@@ -141,6 +143,7 @@
                 <data android:scheme="aptoidexml" />
                 <data android:scheme="aptoideinstall"/>
                 <data android:scheme="aptoidesearch" />
+                <data android:scheme="aptwords" />
             </intent-filter>
 
             <intent-filter>
@@ -321,10 +324,18 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+                android:name="com.inmobi.commons.analytics.androidsdk.IMAdTrackerReceiver"
+                android:enabled="true"
+                android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="com.aptoide.openiab.StoreService"
                  android:exported="true"
-                >
+                 >
             <intent-filter >
                 <action android:name="org.onepf.oms.openappstore.BIND"/>
             </intent-filter>/>
@@ -338,11 +349,36 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog" />
-        <activity android:name="com.aptoide.openiab.Buy" />
-        <activity android:name="com.aptoide.openiab.CreditCard" />
-        <activity android:name="com.paypal.android.MEP.PayPalActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog"
+            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" />
+
+        <receiver android:name="com.aptoide.openiab.PayPalReceiver" >
+            <intent-filter>
+                <action android:name="PAYPAL_PAYMENT" />
+            </intent-filter>
+        </receiver>
+
+
+
         <meta-data android:name="com.crashlytics.ApiKey" android:value="df90b10add729d8e34d67f6d4f0bb3dddce5b7eb"/>
+
+        <service android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+        <activity android:name="cm.aptoide.ptdev.FeedBackActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="io.card.payment.DataEntryActivity" />
+
+        
+
 
     </application>
 </manifest>

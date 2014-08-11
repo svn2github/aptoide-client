@@ -508,7 +508,7 @@
   <string name="account">Account</string>
   <string name="no_payments_available">Nessun pagamento disponibile.</string>
   <string name="change_payment">Indietro</string>
-  <string name="confirm_carrier_payment">Vuoi comprare \'{title}\' per {value}? Il costo ti verrà addebitato dal tuo operatore.</string>
+  <string name="confirm_carrier_payment">Vuoi comprare \'{titolo}\' per {valore}? Il costo ti verrà addebitato dal tuo operatore.</string>
   <string name="featured_editors_choice">Scelte della Redazione</string>
   <string name="set_mature_pin_title">Imposta pin per i contenuti per adulti</string>
   <string name="set_mature_pin_summary">Imposta un Pin che sarà necessario per sbloccare i contenuti per adulti</string>

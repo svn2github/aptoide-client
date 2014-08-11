@@ -22,6 +22,7 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentHome;
+import cm.aptoide.ptdev.fragments.FragmentHome2;
 import cm.aptoide.ptdev.fragments.FragmentStore;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
@@ -109,7 +110,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             }
         }
 
-       // super.loadEditorsChoice(url, countryCode);
+       super.loadEditorsChoice(url, countryCode);
     }
 
     @Override
@@ -402,7 +403,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
             switch (position) {
                 case 0:
-                    return new FragmentHome();
+                    return new FragmentHome2();
                 case 1:
                     fragmentStore = new com.aptoide.partners.Fragment();
                     return fragmentStore;

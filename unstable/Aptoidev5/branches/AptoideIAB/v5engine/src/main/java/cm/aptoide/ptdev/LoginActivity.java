@@ -385,22 +385,22 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     return false;
                 }
             });
-            password_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-
-                    if (hasFocus) {
-                        showPassword = false;
-                        password_box.setTransformationMethod(null);
-                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
-                    } else {
-                        showPassword = true;
-                        password_box.setTransformationMethod(new PasswordTransformationMethod());
-                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
-                    }
-                }
-            });
+//            password_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//                @Override
+//                public void onFocusChange(View v, boolean hasFocus) {
+//
+//                    if (hasFocus) {
+//                        showPassword = false;
+//                        password_box.setTransformationMethod(null);
+//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+//                    } else {
+//                        showPassword = true;
+//                        password_box.setTransformationMethod(new PasswordTransformationMethod());
+//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+//                    }
+//                }
+//            });
 
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override
