@@ -29,7 +29,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.model.IconDownloadPermissions;
+import cm.aptoide.ptdev.model.DownloadPermissions;
 
 import java.util.UUID;
 
@@ -115,16 +115,4 @@ public class ManagerPreferences {
     public String getAptoideClientUUID() {
         return getPreferences.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), null);
     }
-
-
-    public IconDownloadPermissions getIconDownloadPermissions() {
-        IconDownloadPermissions permissions = new IconDownloadPermissions(
-                getPreferences.getBoolean("wifi", true),
-                getPreferences.getBoolean("ethernet", true),
-                getPreferences.getBoolean("4g", true),
-                getPreferences.getBoolean("3g", true));
-        return permissions;
-    }
-
-
 }

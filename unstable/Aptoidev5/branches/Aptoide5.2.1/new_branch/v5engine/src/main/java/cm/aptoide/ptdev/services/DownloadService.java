@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.CanDownloadDialog;
 import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.model.*;
@@ -84,15 +86,11 @@ public class DownloadService extends Service{
                 downloads.put(info.getId(), info);
             }
 
-
         }catch (IOException e){
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     @Override
@@ -140,25 +138,24 @@ public class DownloadService extends Service{
     }
 
 
-
-
-
-    public void startExistingDownload(long id){
-        startService(new Intent(getApplicationContext(), DownloadService.class));
-        //Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
-        //Log.d("download-trace", "setmbuilder: startExistingDownload " + id);
-
-        DownloadInfo inf = getDownload(id);
-        final NotificationCompat.Builder builder = setNotification(id);
-
-        if(mBuilder==null) mBuilder = createDefaultNotification();
-        startForeground(-3, mBuilder.build());
-
+    private void startIfStopped(){
         if(isStopped){
             isStopped = false;
             timer = new Timer();
             timer.schedule(getTask(), 0, 1000);
         }
+    }
+
+
+    public void startExistingDownload(long id){
+        startService(new Intent(getApplicationContext(), DownloadService.class));
+
+        final NotificationCompat.Builder builder = setNotification(id);
+
+        if(mBuilder==null) mBuilder = createDefaultNotification();
+        startForeground(-3, mBuilder.build());
+
+        startIfStopped();
 
         //Log.d("Aptoide-DownloadManager", "Starting existing download " + id);
         for(final DownloadInfo info: manager.getmCompletedList()){
@@ -216,23 +213,12 @@ public class DownloadService extends Service{
                 return;
             }
         }
-
-
     }
 
 
     private static final String OBB_DESTINATION = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
 
-    private boolean CanDownload(){
-        Toast.makeText(Aptoide.getContext(),"Nope",Toast.LENGTH_LONG).show();
-        return false;
-    }
     public void startDownloadFromUrl(String remotePath, String md5, long id, Download download, String repoName){
-
-        if(!CanDownload()){
-            return;
-        }
-
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         String path = Aptoide.getConfiguration().getPathCacheApks();
@@ -253,9 +239,6 @@ public class DownloadService extends Service{
     }
 
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
-        if(!CanDownload()){
-            return;
-        }
         ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
 
         if(json.getObb()!=null){
@@ -307,11 +290,7 @@ public class DownloadService extends Service{
         startForeground(-3, mBuilder.build());
         startService(new Intent(getApplicationContext(), DownloadService.class));
 
-        if(isStopped){
-            isStopped = false;
-            timer = new Timer();
-            timer.schedule(getTask(), 0, 1000);
-        }
+        startIfStopped();
         Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
     }
 
@@ -387,13 +366,7 @@ public class DownloadService extends Service{
 
         info.download();
 
-        if(isStopped){
-            isStopped = false;
-            timer = new Timer();
-            timer.schedule(getTask(), 0, 1000);
-        }
-
-
+        startIfStopped();
     }
 
     public void removeNonActiveDownloads(boolean isChecked) {
@@ -406,9 +379,6 @@ public class DownloadService extends Service{
         }
 
     }
-
-
-
 
     public class DownloadRequest implements RequestListener<GetApkInfoJson> {
 
@@ -467,7 +437,6 @@ public class DownloadService extends Service{
         if(!manager.isStarted()) manager.start(getApplicationContext());
         final String sizeString = IconSizes.generateSizeString(getApplicationContext());
 
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -475,7 +444,6 @@ public class DownloadService extends Service{
                 Cursor apkCursor = new Database(Aptoide.getDb()).getApkInfo(id);
 
                 if(apkCursor.moveToFirst()){
-
 
                     String repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
                     final String name = apkCursor.getString(apkCursor.getColumnIndex("name"));
@@ -547,10 +515,6 @@ public class DownloadService extends Service{
 
         return mBuilder;
     }
-
-
-
-
 
     private NotificationCompat.Builder setNotification(final long id) {
 

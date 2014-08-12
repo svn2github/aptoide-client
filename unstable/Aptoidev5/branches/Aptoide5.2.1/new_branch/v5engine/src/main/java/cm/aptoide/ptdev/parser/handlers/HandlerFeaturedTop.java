@@ -53,7 +53,7 @@ public class HandlerFeaturedTop extends HandlerTopXml {
             public void endElement() throws SAXException {
                 getDb().insertCategory(category.name, category.parent, category.real_id, category.order, 0);
                 insideCat = false;
-                Log.d("Aptoide-", "Inserting category");
+                //Log.d("Aptoide-", "Inserting category");
             }
         });
 

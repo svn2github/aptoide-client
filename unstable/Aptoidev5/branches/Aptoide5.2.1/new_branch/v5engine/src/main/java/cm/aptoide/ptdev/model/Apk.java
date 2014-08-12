@@ -1,7 +1,13 @@
 package cm.aptoide.ptdev.model;
 
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
+
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.StatementHelper;
+import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
 
 import java.util.ArrayList;
@@ -19,9 +25,28 @@ import java.util.List;
 public abstract class Apk implements Cloneable {
 
     public Apk() {
-
+        signature = "";
+        name = "";
+        remotePath = "";
+        versionName = "";
+        packageName = "";
+        md5h = "";
+        category1 = "";
+        category2 = "";
+        categoryId = new ArrayList<Integer>();
+        age =Filters.Age.All;
+        minSdk = 0;
+        minScreen = Filters.Screen.notfound;
+        price = 0.0;
+        minGlEs = "0.0";
+        server = new Server() {
+            @Override
+            public String getApkpath() {
+                return super.getApkpath();
+            }
+        };
+        isRunning = true;
     }
-
 
     public Apk(Apk apk) {
         this.children = apk.children;
@@ -54,37 +79,32 @@ public abstract class Apk implements Cloneable {
     }
 
     private ArrayList<Apk> children;
-    private String signature = "";
+    private String signature ;
     private String path;
     private long repoId;
-    private String name = "";
-    private String remotePath = "";
-    private String versionName = "";
+    private String name ;
+    private String remotePath ;
+    private String versionName ;
     private int versionCode;
-    private String packageName = "";
+    private String packageName;
     private String iconPath;
-    private String md5h = "";
+    private String md5h ;
     private int downloads;
     private double rating;
-    private String category1 = "";
-    private String category2 = "";
-    private List<Integer> categoryId = new ArrayList<Integer>();
+    private String category1 ;
+    private String category2 ;
+    private List<Integer> categoryId;
     private long size;
-    private Filters.Age age = Filters.Age.All;
-    private int minSdk = 0;
-    private Filters.Screen minScreen = Filters.Screen.notfound;
+    private Filters.Age age;
+    private int minSdk ;
+    private Filters.Screen minScreen;
     private String screenCompat;
     private Date date;
-    private double price = 0.0;
-    private String minGlEs = "0.0";
-    private Server server = new Server() {
-        @Override
-        public String getApkpath() {
-            return super.getApkpath();
-        }
-    };
+    private double price;
+    private String minGlEs;
+    private Server server ;
     private String cpuAbi;
-    boolean isRunning = true;
+    boolean isRunning ;
 
     public long getRepoId() {
         return repoId;
@@ -93,9 +113,6 @@ public abstract class Apk implements Cloneable {
     public void setRepoId(long repoId) {
         this.repoId = repoId;
     }
-
-
-    public abstract List<String> getStatements();
 
     public String getCpuAbi() {
         return cpuAbi;
@@ -267,11 +284,6 @@ public abstract class Apk implements Cloneable {
         isRunning = running;
     }
 
-
-    public abstract void databaseDelete(Database db);
-
-    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds);
-
     public Server getServer() {
         return server;
     }
@@ -323,4 +335,35 @@ public abstract class Apk implements Cloneable {
 
 
     public abstract void addApkToChildren();
+
+    public abstract List<String> getStatements();
+
+    public abstract void databaseDelete(Database db);
+
+    public abstract void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds);
+
+    protected ArrayList<String> getValues(){
+        ArrayList<String> values = new ArrayList<String>();
+
+        values.add(Schema.Apk.COLUMN_APKID);
+        values.add(Schema.Apk.COLUMN_NAME);
+        values.add(Schema.Apk.COLUMN_VERCODE);
+        values.add(Schema.Apk.COLUMN_VERNAME);
+        values.add(Schema.Apk.COLUMN_REPO_ID);
+        values.add(Schema.Apk.COLUMN_DATE);
+        values.add(Schema.Apk.COLUMN_DOWNLOADS);
+        values.add(Schema.Apk.COLUMN_RATING);
+        values.add(Schema.Apk.COLUMN_MATURE);
+        values.add(Schema.Apk.COLUMN_SDK);
+        values.add(Schema.Apk.COLUMN_SCREEN);
+        values.add(Schema.Apk.COLUMN_GLES);
+        values.add(Schema.Apk.COLUMN_ICON);
+        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
+        values.add(Schema.Apk.COLUMN_SIGNATURE);
+        values.add(Schema.Apk.COLUMN_PATH);
+        values.add(Schema.Apk.COLUMN_MD5);
+        values.add(Schema.Apk.COLUMN_PRICE);
+        return values;
+    }
+
 }

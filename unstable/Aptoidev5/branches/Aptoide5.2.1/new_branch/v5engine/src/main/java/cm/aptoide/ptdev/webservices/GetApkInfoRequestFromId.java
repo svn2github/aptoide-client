@@ -42,7 +42,6 @@ public class GetApkInfoRequestFromId extends GetApkInfoRequest {
     }
 
     protected HashMap<String, String > getParameters(){
-        Log.d("Refactortest","GetApkInfoRequestFromId");
         HashMap<String, String > parameters = new HashMap<String, String>();
         parameters.put("identif", "id:" + appId);
         parameters.put("mode", "json");

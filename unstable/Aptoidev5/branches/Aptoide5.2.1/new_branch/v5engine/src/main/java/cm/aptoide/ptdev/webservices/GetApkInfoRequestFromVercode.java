@@ -28,7 +28,6 @@ public class GetApkInfoRequestFromVercode extends GetApkInfoRequest {
         return options;
     }
     protected HashMap<String, String > getParameters(){
-        Log.d("Refactortest", "GetApkInfoRequestFromVercode");
         HashMap<String, String > parameters = new HashMap<String, String>();
         parameters.put("repo", repoName);
         parameters.put("apkid", packageName);

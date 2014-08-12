@@ -1,7 +1,7 @@
 package cm.aptoide.ptdev.parser.handlers;
 
 import android.util.Log;
-import cm.aptoide.ptdev.Category;
+
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.ApkInfoXML;
@@ -9,16 +9,11 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Configs;
-import org.apache.commons.io.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -129,7 +124,7 @@ public class HandlerInfoXml extends AbstractHandler {
             public void endElement() throws SAXException {
 
                 if(Integer.parseInt(sb.toString())<7){
-                    Log.d("Aptoide-Parser", "Throwing exception");
+                    //Log.d("Aptoide-Parser", "Throwing exception");
                     throw new InvalidVersionException();
 
                 }
@@ -218,7 +213,7 @@ public class HandlerInfoXml extends AbstractHandler {
             public void endElement() throws SAXException {
                 getDb().insertCategory(category.name, category.parent, category.real_id, category.order, getRepoId());
                 insideCat = false;
-                Log.d("Aptoide-", "Inserting category");
+                //Log.d("Aptoide-", "Inserting category");
             }
         });
 
@@ -297,9 +292,9 @@ public class HandlerInfoXml extends AbstractHandler {
         getDb().updateAppsCount(repoId);
 
         if(!isDelta){
-            Log.d("Aptoide-Parser", "Calculating md5");
+            //Log.d("Aptoide-Parser", "Calculating md5");
             String md5 = AptoideUtils.Algorithms.md5Calc(file);
-            Log.d("Aptoide-Parser", "md5 is " + md5);
+            //Log.d("Aptoide-Parser", "md5 is " + md5);
             server.setHash(md5);
         }
         getDb().updateServer(server, getRepoId());

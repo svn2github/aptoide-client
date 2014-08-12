@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,11 @@ import com.flurry.android.FlurryAgent;
 
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -177,8 +180,21 @@ public class UpdatesSectionListAdapter extends BaseAdapter implements ListAdapte
                     @Override
                     public void onClick(View v) {
                         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All_Button");
-                        ((Start)context).updateAll(((UpdatesAdapter)linkedAdapter).getUpdateIds());
-                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                        ArrayList<Long> ids = ((UpdatesAdapter)linkedAdapter).getUpdateIds();
+                        if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(context)){
+                            ((Start)context).updateAll(ids);
+                        }
+                        else {
+                            int s = ids.size();
+                            long[] result = new long[s];
+                            System.arraycopy(ids, 0, result, 0, s);
+
+                            CanUpdateDialog dialog = new CanUpdateDialog();
+                            Bundle bundle = new Bundle();
+                            bundle.putLongArray("ids", result);
+                            dialog.setArguments(bundle);
+                            dialog.show(((Start) context).getSupportFragmentManager(), null);
+                        }
                     }
                 });
                 sectionView.findViewById(R.id.more).setVisibility(View.VISIBLE);

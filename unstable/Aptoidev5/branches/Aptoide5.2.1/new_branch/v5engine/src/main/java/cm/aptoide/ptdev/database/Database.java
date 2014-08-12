@@ -1,19 +1,31 @@
 package cm.aptoide.ptdev.database;
 
 import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
@@ -23,16 +35,14 @@ import cm.aptoide.ptdev.fragments.HomeBucket;
 import cm.aptoide.ptdev.fragments.HomeCategory;
 import cm.aptoide.ptdev.fragments.HomeFooter;
 import cm.aptoide.ptdev.fragments.HomeItem;
-import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.Collection;
+import cm.aptoide.ptdev.model.InstalledPackage;
+import cm.aptoide.ptdev.model.MultiStoreItem;
+import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.model.Server;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Weeks;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -68,7 +78,7 @@ public class Database {
         return SQLiteStatements;
     }
 
-    public void endTransaction() {
+ /*   public void endTransaction() {
         database.setTransactionSuccessful();
         database.endTransaction();
     }
@@ -82,7 +92,7 @@ public class Database {
             Log.d("TAG1", "Database yielded");
         }
     }
-
+*/
     public void addToExcludeUpdate(long itemId) {
         ContentValues values = new ContentValues();
         Cursor c = null;
@@ -415,7 +425,7 @@ public class Database {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
         boolean filterUpdates = AptoideUtils.getSharedPreferences().getBoolean("showAllUpdates", true);
-        final long startTime = System.currentTimeMillis();
+        //final long startTime = System.currentTimeMillis();
 
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
         Cursor c = database.rawQuery("select * from (select " +
@@ -439,7 +449,7 @@ public class Database {
                 " order by apk.version_code asc) as firstQuery " +
                 " group by package_name, is_update order by is_update desc, name collate nocase ", null);
 
-        final long endTime = System.currentTimeMillis();
+        //final long endTime = System.currentTimeMillis();
         c.getCount();
 
         return c;
@@ -472,11 +482,11 @@ public class Database {
 
     }
 
-    public void removeStore(long id) {
+/*    public void removeStore(long id) {
         Set<Long> aLong = new HashSet<Long>();
         aLong.add(id);
         removeStores(aLong);
-    }
+    }*/
 
     public long insertServer(Server server) {
 
@@ -650,7 +660,7 @@ public class Database {
 
         long[] ids = new long[5];
 
-        Log.d("Aptoide-Database", "GetFeatured count " + c.getCount());
+        //Log.d("Aptoide-Database", "GetFeatured count " + c.getCount());
 
         for(int i = 0; i!=ids.length && i < featuredGraphics.size() ;i++){
             ids[i] = ((HomeItem)featuredGraphics.get(i)).getId();
@@ -674,8 +684,9 @@ public class Database {
                     collections.get(collection).add(new HomeItem(c));
                 }
             }
-            else
+            else {
                 break;
+            }
         }
 
         c.moveToFirst();
@@ -696,19 +707,18 @@ public class Database {
                     collections.get(collection).add(new HomeItem(c));
                 }
             }
-            else
-                break;
+
         }
 
         for(String collection : collections.keySet()){
             fillElements(editorsChoiceBucketSize, collection, items, collections.get(collection), collectionIdList.get(collection));
         }
 
-        try {
+/*        try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         HashMap<String, ArrayList<Home>> returnVal = new HashMap<String, ArrayList<Home>>();
 
@@ -719,18 +729,18 @@ public class Database {
         return returnVal;
     }
 
-
-
     private boolean fillElementsWithoutFooter(int editorsChoiceBucketSize, String categoryName, ArrayList<Home> items, ArrayList<HomeItem> inElements, int parentId) {
         if(inElements.isEmpty())
             return false;
 
         items.add(new HomeCategory(categoryName, parentId));
-        HomeBucket bucket = new HomeBucket();
-        for (int j = 0; j < editorsChoiceBucketSize && !inElements.isEmpty(); j++) {
-            bucket.addItem(inElements.remove(0));
+        while (!inElements.isEmpty()) {
+            HomeBucket bucket = new HomeBucket();
+            for (int j = 0; j < editorsChoiceBucketSize && !inElements.isEmpty(); j++) {
+                bucket.addItem(inElements.remove(0));
+            }
+            items.add(bucket);
         }
-        items.add(bucket);
         return true;
     }
 
@@ -739,6 +749,7 @@ public class Database {
             items.add(new HomeFooter(integer));
         }
     }
+/*
 
     public synchronized ArrayList<Collection> getFeatured(int editorsChoiceBucketSize) {
         final boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
@@ -807,6 +818,7 @@ public class Database {
 
         return items;
     }
+*/
 
     public ArrayList<HomeItem> getCollectionFeatured(int id, int bucketSize) {
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
@@ -826,7 +838,7 @@ public class Database {
     }
 
 
-    public ArrayList<Collection> getNewEditorsFeatured(int id, int editorsChoiceBucketSize) {
+    public ArrayList<Collection> getNewEditorsFeatured() {
 
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
         boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
@@ -887,7 +899,7 @@ public class Database {
     public ArrayList<Collection> getSpecificFeatured(int id, int editorsChoiceBucketSize) {
 
         if(id == -1){
-            return getNewEditorsFeatured(id, editorsChoiceBucketSize);
+            return getNewEditorsFeatured();
         }
 
         boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
@@ -913,9 +925,6 @@ public class Database {
             String collection = c.getString(c.getColumnIndex("catname"));
 
             if(tempList.get(collection).size() < editorsChoiceBucketSize){
-                String iconPath = c.getString(c.getColumnIndex("iconpath"));
-                String icon = c.getString(c.getColumnIndex("icon"));
-                long apkid = c.getLong(c.getColumnIndex("id"));
                 tempList.get(collection).add(new HomeItem(c));
             }else{
                 tempList3.add(collection);
@@ -1034,7 +1043,7 @@ public class Database {
 
     }
 
-    public void putCategoriesIds(HashMap<Integer, Integer> categoriesIds, long repoId) {
+/*    public void putCategoriesIds(HashMap<Integer, Integer> categoriesIds, long repoId) {
         Cursor c = database.rawQuery("select id_real_category, id_real_category from category where id_repo = ? ", new String[]{String.valueOf(repoId)});
 
 
@@ -1042,7 +1051,7 @@ public class Database {
             categoriesIds.put(c.getInt(0), c.getInt(1));
         }
 
-    }
+    }*/
 
     public void deleteApk(String packageName, int versionCode, long repoId) {
 
@@ -1064,7 +1073,7 @@ public class Database {
 
     public void insertCategory(String name, int parent, int real_id, int order, long repoId) {
 
-        Log.e("Aptoide-Database", "Inserting category " +  name + " on " + repoId );
+        //Log.d("Aptoide-Database", "Inserting category " +  name + " on " + repoId );
 
         ContentValues values = new ContentValues();
 
@@ -1120,7 +1129,7 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_ACTION, newAction);
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 1);
 
-        int result = database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
+        database.update(Schema.RollbackTbl.getName(), values, "package_name = ? and action = ?", new String[]{packageName, oldAction});
         //Log.d("InstalledBroadcastReceiver", "Trying to update " + packageName + " with action completed " + newAction + " RESULT: " + ((result == 1) ? "Success" : "Fail"));
 
     }
@@ -1237,7 +1246,7 @@ public class Database {
         return c;
     }
 
-    public boolean isScheduledDownload(String repo_name, String md5) {
+/*    public boolean isScheduledDownload(String repo_name, String md5) {
 
         Cursor c = null;
         yield();
@@ -1257,7 +1266,7 @@ public class Database {
 
         return isScheduledDOwnload;
 
-    }
+    }*/
 
     public void ScheduledDownloadifmd5(String apkid, String md5, String vername, String repoName, String name, String icon) {
         if (md5 != null) {
@@ -1338,7 +1347,7 @@ public class Database {
         return ids;
     }
 
-    public boolean isRepoParsed(long storeId) {
+ /*   public boolean isRepoParsed(long storeId) {
 
         Cursor c = database.rawQuery("select 1 from repo where id_repo = ? and hash IS NOT NULL", new String[]{String.valueOf(storeId)});
 
@@ -1351,7 +1360,7 @@ public class Database {
     public void clearInstalled() {
         database.delete(Schema.Installed.getName(), null, null);
     }
-
+*/
     public MultiStoreItem[] getOtherReposVersions(long id, String packageName, String version, String repoName, int versionCode){
 
         Cursor c = database.rawQuery("select * from (select apk.downloads as downloads, apk.version_code as version_code, apk.version_name as version, id_apk as id, repo.name as name from apk join repo on apk.id_repo = repo.id_repo where package_name = ? and repo.is_user = 1 and is_compatible = 1 order by apk.sdk) group by version, name", new String[]{packageName});
@@ -1363,7 +1372,7 @@ public class Database {
 
             String apkVersion = c.getString(c.getColumnIndex("version"));
             String apkRepoName = c.getString(c.getColumnIndex("name"));
-            long apkId = c.getLong(c.getColumnIndex("id"));
+            //long apkId = c.getLong(c.getColumnIndex("id"));
             int apkVersionCode = c.getInt(c.getColumnIndex("version_code"));
             int downloads = c.getInt(c.getColumnIndex("downloads"));
             if(!repoName.equals(apkRepoName) || versionCode!=apkVersionCode) {

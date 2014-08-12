@@ -43,7 +43,6 @@ public class GetApkInfoRequestFromMd5 extends GetApkInfoRequest {
     }
 
     protected HashMap<String, String > getParameters(){
-        Log.d("Refactortest","GetApkInfoRequestFromMd5");
         HashMap<String, String > parameters = new HashMap<String, String>();
         if(repoName != null) {
             parameters.put("repo", repoName);

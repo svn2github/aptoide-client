@@ -429,10 +429,10 @@ public class Start extends ActionBarActivity implements
             } else {
                 StatFs stat = new StatFs(sdcard_file.getPath());
                 long blockSize = stat.getBlockSize();
-                long totalBlocks = stat.getBlockCount();
+                //long totalBlocks = stat.getBlockCount();
                 long availableBlocks = stat.getAvailableBlocks();
 
-                long total = (blockSize * totalBlocks) / 1024 / 1024;
+                //long total = (blockSize * totalBlocks) / 1024 / 1024;
                 long avail = (blockSize * availableBlocks) / 1024 / 1024;
                 //Log.d("Aptoide", "* * * * * * * * * *");
                 //Log.d("Aptoide", "Total: " + total + " Mb");
@@ -797,49 +797,39 @@ public class Start extends ActionBarActivity implements
 
         final AccountManager manager = AccountManager.get(this);
         final Account[] accountsByType = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
-        if(accountsByType.length > 0){
+        if(accountsByType.length > 0 || "APTOIDE".equals(sharedPreferences.getString("loginType", null))){
 
-            if("APTOIDE".equals(sharedPreferences.getString("loginType", null))){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
+                    oAuth2AuthenticationRequest.setMode(LoginActivity.Mode.APTOIDE);
+                    oAuth2AuthenticationRequest.setUsername(accountsByType[0].name);
+                    oAuth2AuthenticationRequest.setPassword(manager.getPassword(accountsByType[0]));
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
-                        oAuth2AuthenticationRequest.setMode(LoginActivity.Mode.APTOIDE);
-                        oAuth2AuthenticationRequest.setUsername(accountsByType[0].name);
-                        oAuth2AuthenticationRequest.setPassword(manager.getPassword(accountsByType[0]));
+                    try {
+                        oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
 
-                        try {
-                            oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                        OAuth oAuth = oAuth2AuthenticationRequest.loadDataFromNetwork();
 
-                            OAuth oAuth = oAuth2AuthenticationRequest.loadDataFromNetwork();
+                        String refreshToken = oAuth.getRefreshToken();
 
-                            String refreshToken = oAuth.getRefreshToken();
-
-                            String actualToken = manager.blockingGetAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
-                            manager.invalidateAuthToken(Aptoide.getConfiguration().getAccountType(), actualToken);
-                            manager.setAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, refreshToken);
-                            SecurePreferences.getInstance().edit().putString("access_token", oAuth.getAccess_token()).commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            AccountManager.get(Start.this).removeAccount(accountsByType[0], null, null);
-                        }
-
+                        String actualToken = manager.blockingGetAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                        manager.invalidateAuthToken(Aptoide.getConfiguration().getAccountType(), actualToken);
+                        manager.setAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, refreshToken);
+                        SecurePreferences.getInstance().edit().putString("access_token", oAuth.getAccess_token()).commit();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        AccountManager.get(Start.this).removeAccount(accountsByType[0], null, null);
                     }
-                }).start();
 
+                }
+            }).start();
 
-
-
-            }else{
-
-                AccountManager.get(this).removeAccount(accountsByType[0], null, null);
-
-            }
-
-
-
+        }else{
+            AccountManager.get(this).removeAccount(accountsByType[0], null, null);
         }
+
     }
 
     public void updateBadge(SharedPreferences sPref){
@@ -851,16 +841,10 @@ public class Start extends ActionBarActivity implements
         }else{
             if(badge.isShown())badge.hide(true);
         }
-
     }
-
-
 
     @Override
     public boolean onSearchRequested() {
-
-
-
         if (Build.VERSION.SDK_INT > 7) {
             WebSocketSingleton.getInstance().connect();
             isDisconnect = false;
@@ -986,6 +970,13 @@ public class Start extends ActionBarActivity implements
 
 
     public void updateAll(List<Long> ids){
+        Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+        for(long id : ids){
+            installApp(id);
+        }
+    }
+    public void updateAll(long[] ids){
+        Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         for(long id : ids){
             installApp(id);
         }
@@ -1261,18 +1252,12 @@ public class Start extends ActionBarActivity implements
         }
         mDrawerList.setAdapter(mMenuAdapter);
 
-
         if(refresh){
             BusProvider.getInstance().post(new RepoCompleteEvent(0));
             BusProvider.getInstance().post(new RepoCompleteEvent(-1));
             BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         }
-
-
     }
-
-
-
 
     @Override
     protected void onPause() {
@@ -1284,8 +1269,6 @@ public class Start extends ActionBarActivity implements
             rabbitMqService.stopAmqpService();
             unbindService(rabbitMqConn);
         }
-
-
     }
 
     @Override

@@ -38,26 +38,7 @@ public class ApkInfoXML extends Apk {
     public List<String> getStatements() {
 
         ArrayList<String> statements = new ArrayList<String>(10);
-        ArrayList<String> values = new ArrayList<String>();
-
-        values.add(Schema.Apk.COLUMN_APKID);
-        values.add(Schema.Apk.COLUMN_NAME);
-        values.add(Schema.Apk.COLUMN_VERCODE);
-        values.add(Schema.Apk.COLUMN_VERNAME);
-        values.add(Schema.Apk.COLUMN_REPO_ID);
-        values.add(Schema.Apk.COLUMN_DATE);
-        values.add(Schema.Apk.COLUMN_DOWNLOADS);
-        values.add(Schema.Apk.COLUMN_RATING);
-        values.add(Schema.Apk.COLUMN_MATURE);
-        values.add(Schema.Apk.COLUMN_SDK);
-        values.add(Schema.Apk.COLUMN_SCREEN);
-        values.add(Schema.Apk.COLUMN_GLES);
-        values.add(Schema.Apk.COLUMN_ICON);
-        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
-        values.add(Schema.Apk.COLUMN_SIGNATURE);
-        values.add(Schema.Apk.COLUMN_PATH);
-        values.add(Schema.Apk.COLUMN_MD5);
-        values.add(Schema.Apk.COLUMN_PRICE);
+        ArrayList<String> values = getValues();
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
 
@@ -75,18 +56,12 @@ public class ApkInfoXML extends Apk {
 
 
         statements.add(3, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
-
-
-
         return statements;
     }
 
     @Override
     public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds) {
-
         long apkid;
-        int categoryId;
-        long category2id;
 
         try {
 
@@ -138,7 +113,8 @@ public class ApkInfoXML extends Apk {
                 sqLiteStatements.get(2).executeInsert();
 
             } catch (SQLiteException e) {
-                e.printStackTrace();
+                //Log.e("RepoParser", e.getMessage());
+                //e.printStackTrace();
             }
 
             if (Aptoide.getDb().yieldIfContendedSafely(1000)) {

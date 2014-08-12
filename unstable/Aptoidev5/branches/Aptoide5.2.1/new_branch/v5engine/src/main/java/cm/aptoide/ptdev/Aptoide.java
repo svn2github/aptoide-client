@@ -200,7 +200,7 @@ public class Aptoide extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
 
                 .discCache(new UnlimitedDiscCache(new File(getConfiguration().getPathCacheIcons()), generator))
-                .imageDownloader(new ImageDownloaderWithPermissions(getContext(),managerPreferences))
+                .imageDownloader(new ImageDownloaderWithPermissions(getContext()))
                 .defaultDisplayImageOptions(options)
                 .build();
 
@@ -235,28 +235,19 @@ public class Aptoide extends Application {
         /** {@value} */
         public static final int DEFAULT_HTTP_READ_TIMEOUT = 10 * 1000; // milliseconds
 
-        private int connectTimeout;
-        private int readTimeout;
-        private ManagerPreferences managerPreferences;
-
-        public ImageDownloaderWithPermissions(Context context, ManagerPreferences managerPreferences) {
+        public ImageDownloaderWithPermissions(Context context) {
             this(context, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
-            this.managerPreferences = managerPreferences;
 
         }
 
         public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {
             super(context, connectTimeout, readTimeout);
-            this.connectTimeout = connectTimeout;
-            this.readTimeout = readTimeout;
         }
 
         @Override
         public InputStream getStream(String imageUri, Object extra) throws IOException {
 
-            boolean download = AptoideUtils.NetworkUtils.isPermittedConnectionAvailable(context, managerPreferences.getIconDownloadPermissions());
-
-
+            boolean download = AptoideUtils.NetworkUtils.isIconDownloadPermitted(context);
 
             switch (Scheme.ofUri(imageUri)) {
                 case HTTP:

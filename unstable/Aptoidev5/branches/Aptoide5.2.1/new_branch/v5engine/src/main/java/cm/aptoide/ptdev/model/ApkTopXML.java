@@ -35,26 +35,7 @@ public class ApkTopXML extends Apk {
     public List<String> getStatements() {
 
         ArrayList<String> statements = new ArrayList<String>(10);
-        ArrayList<String> values = new ArrayList<String>();
-
-        values.add(Schema.Apk.COLUMN_APKID);
-        values.add(Schema.Apk.COLUMN_NAME);
-        values.add(Schema.Apk.COLUMN_VERCODE);
-        values.add(Schema.Apk.COLUMN_VERNAME);
-        values.add(Schema.Apk.COLUMN_REPO_ID);
-        values.add(Schema.Apk.COLUMN_DATE);
-        values.add(Schema.Apk.COLUMN_DOWNLOADS);
-        values.add(Schema.Apk.COLUMN_RATING);
-        values.add(Schema.Apk.COLUMN_MATURE);
-        values.add(Schema.Apk.COLUMN_SDK);
-        values.add(Schema.Apk.COLUMN_SCREEN);
-        values.add(Schema.Apk.COLUMN_GLES);
-        values.add(Schema.Apk.COLUMN_ICON);
-        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
-        values.add(Schema.Apk.COLUMN_SIGNATURE);
-        values.add(Schema.Apk.COLUMN_PATH);
-        values.add(Schema.Apk.COLUMN_MD5);
-        values.add(Schema.Apk.COLUMN_PRICE);
+        ArrayList<String> values = getValues();
 
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
@@ -82,9 +63,6 @@ public class ApkTopXML extends Apk {
     public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds) {
 
         long apkid;
-        long category1id;
-
-
         try {
 
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(0),

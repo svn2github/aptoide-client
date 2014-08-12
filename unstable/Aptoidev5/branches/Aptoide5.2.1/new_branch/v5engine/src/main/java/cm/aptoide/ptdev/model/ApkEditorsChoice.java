@@ -23,11 +23,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ApkEditorsChoice extends Apk {
-
-
     private String featuredGraphic;
     private int order = -1;
-
 
     public ApkEditorsChoice(){
         super();
@@ -43,40 +40,15 @@ public class ApkEditorsChoice extends Apk {
     public List<String> getStatements() {
 
         ArrayList<String> statements = new ArrayList<String>(10);
-        ArrayList<String> values = new ArrayList<String>();
-
-        values.add(Schema.Apk.COLUMN_APKID);
-        values.add(Schema.Apk.COLUMN_NAME);
-        values.add(Schema.Apk.COLUMN_VERCODE);
-        values.add(Schema.Apk.COLUMN_VERNAME);
-        values.add(Schema.Apk.COLUMN_REPO_ID);
-        values.add(Schema.Apk.COLUMN_DATE);
-        values.add(Schema.Apk.COLUMN_DOWNLOADS);
-        values.add(Schema.Apk.COLUMN_RATING);
-        values.add(Schema.Apk.COLUMN_MATURE);
-        values.add(Schema.Apk.COLUMN_SDK);
-        values.add(Schema.Apk.COLUMN_SCREEN);
-        values.add(Schema.Apk.COLUMN_GLES);
-        values.add(Schema.Apk.COLUMN_ICON);
-        values.add(Schema.Apk.COLUMN_IS_COMPATIBLE);
-        values.add(Schema.Apk.COLUMN_SIGNATURE);
-        values.add(Schema.Apk.COLUMN_PATH);
-        values.add(Schema.Apk.COLUMN_MD5);
-        values.add(Schema.Apk.COLUMN_PRICE);
-
-
+        ArrayList<String> values = getValues();
 
         statements.add(0, StatementHelper.getInsertStatment(Schema.Apk.getName(), values));
-
-
 
         values.add(Schema.Category_Apk.COLUMN_APK_ID);
         values.add(Schema.Category_Apk.COLUMN_CATEGORY_ID);
         values.add(Schema.Category_Apk.COLUMN_REPO_ID);
 
-
         statements.add(1, StatementHelper.getInsertStatment(Schema.Category_Apk.getName(), values));
-
 
         statements.add(2, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
 
@@ -100,8 +72,6 @@ public class ApkEditorsChoice extends Apk {
     public void databaseInsert(List<SQLiteStatement> sqLiteStatements, HashMap<Integer, Integer> categoriesIds) {
 
         long apkid;
-        long category1id;
-        long category2id;
 
         try {
 
@@ -132,7 +102,7 @@ public class ApkEditorsChoice extends Apk {
         } catch (SQLiteException e) {
             if(Aptoide.DEBUG_MODE) e.printStackTrace();
 
-            Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
+            //Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(2), new String[]{ String.valueOf(getRepoId()), getPackageName(), String.valueOf(getVersionCode()) });
             apkid = sqLiteStatements.get(2).simpleQueryForLong();
 

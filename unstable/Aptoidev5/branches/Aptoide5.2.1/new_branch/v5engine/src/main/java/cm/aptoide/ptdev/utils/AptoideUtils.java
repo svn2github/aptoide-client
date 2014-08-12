@@ -22,11 +22,10 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.InstalledAppsHelper;
-import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.*;
 
+import cm.aptoide.ptdev.model.DownloadPermissions;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.webservices.Errors;
@@ -45,7 +44,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -326,11 +324,7 @@ public class AptoideUtils {
             NetworkUtils.TIME_OUT = timeout;
         }
 
-        static void getIconSize(Context context){
 
-
-
-        }
 
         public static int checkServerConnection(final String string, final String username, final String password) throws Exception {
 
@@ -392,7 +386,7 @@ public class AptoideUtils {
             return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + extraId;
         }
 
-
+/*
         public static boolean isConnectionAvailable(Context context) {
             ConnectivityManager connectivityState = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             boolean connectionAvailable = false;
@@ -418,37 +412,45 @@ public class AptoideUtils {
             }
 
             return connectionAvailable;
-        }
+        }*/
 
-        public static boolean isPermittedConnectionAvailable(Context context, IconDownloadPermissions permissions){
+        public static boolean isIconDownloadPermitted(Context context){
+            return isPermittedConnectionAvailable(context,
+                    new DownloadPermissions(
+                            getSharedPreferences().getBoolean("wifi", true),
+                            getSharedPreferences().getBoolean("ethernet", true),
+                            getSharedPreferences().getBoolean("4g", true),
+                            getSharedPreferences().getBoolean("3g", true)));
+        }
+        public static boolean isGeneral_DownloadPermitted(Context context){
+            return isPermittedConnectionAvailable(context,
+                    new DownloadPermissions(
+                    getSharedPreferences().getBoolean("generalnetworkwifi", true),
+                    getSharedPreferences().getBoolean("generalnetworkethernet", true),
+                    getSharedPreferences().getBoolean("generalnetwork4g", true),
+                    getSharedPreferences().getBoolean("generalnetwork3g", true)));
+        }
+        private static boolean isPermittedConnectionAvailable(Context context, DownloadPermissions permissions){
             ConnectivityManager connectivityState = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             boolean connectionAvailable = false;
-            if(permissions.isWiFi()){
-                try {
-                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
-                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wifi: "+connectionAvailable);
-                } catch (Exception ignore) { }
-            }
-            if(permissions.isWiMax()){
-                try {
+            try {
+                if(permissions.isWiFi()){
+                    connectionAvailable = connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
+                    if(connectionAvailable) {
+                        return true;
+                    }
+                }
+                if(permissions.isWiMax()){
                     connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(6).getState() == NetworkInfo.State.CONNECTED;
-                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable wimax: "+connectionAvailable);
-                } catch (Exception ignore) { }
-            }
-            if(permissions.isMobile()){
-                try {
+                }
+                if(permissions.isMobile()){
                     connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED;
-                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable mobile: "+connectionAvailable);
-                } catch (Exception ignore) { }
-            }
-            if(permissions.isEthernet()){
-                try {
+                }
+                if(permissions.isEthernet()){
                     connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(9).getState() == NetworkInfo.State.CONNECTED;
-                    //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable ethernet: "+connectionAvailable);
-                } catch (Exception ignore) { }
+                }
+            } catch (Exception e) {
             }
-
-            //if(ApplicationAptoide.DEBUG_MODE)Log.d("ManagerDownloads", "isPermittedConnectionAvailable: "+connectionAvailable+"  permissions: "+permissions);
             return connectionAvailable;
         }
 

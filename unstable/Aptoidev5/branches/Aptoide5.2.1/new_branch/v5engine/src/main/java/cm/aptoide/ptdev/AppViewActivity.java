@@ -68,6 +68,7 @@ import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.CanDownloadDialog;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
@@ -113,8 +114,8 @@ import roboguice.util.temp.Ln;
  * Time: 15:04
  * To change this template use File | Settings | File Templates.
  */
-public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>, MyAppsAddStoreInterface, ApkFlagCallback, AddCommentCallback, AddCommentVoteCallback {
-
+public class AppViewActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        MyAppsAddStoreInterface, ApkFlagCallback, AddCommentCallback, AddCommentVoteCallback {
 
     private static final int LOGIN_REQUEST_CODE = 123;
     public static final int DOWGRADE_REQUEST_CODE = 456;
@@ -164,8 +165,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
                     GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
-                    if(getApkInfoJson.getSignature()!=null){
-                        signature = getApkInfoJson.getSignature().getSHA1().replace(":","");
+                    if(s!=null){
+                        signature = s.getSHA1().replace(":","");
                     }
                     altPath = getApkInfoJson.getApk().getAltPath();
                     name = getApkInfoJson.getMeta().getTitle();
@@ -220,8 +221,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             if (service != null) {
                                 service.resumeDownload(downloadId);
                             }
-
-
                         }
                     });
 
@@ -363,7 +362,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     i.setData(Uri.parse(url));
                     try{
                         startActivity(i);
-                    }catch (ActivityNotFoundException e){
+                    }catch (ActivityNotFoundException ignored){
 
                     }
                 }
@@ -416,7 +415,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         public void onClick(View v) {
                             try {
                                 startActivity(i);
-                            } catch (ActivityNotFoundException e) {
+                            } catch (ActivityNotFoundException ignored) {
 
                             }
                         }
@@ -479,7 +478,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         return new InstallListener(icon, name, versionName, package_name, md5);
     }
 
-
     private ImageView appIcon;
     private TextView appName;
     private TextView appVersionName;
@@ -494,7 +492,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private String icon;
     private boolean isUpdate;
     private int versionCode;
-    private boolean isShown = false;
+    //private boolean isShown = false;
     private int downloadId;
 
     public boolean isUpdate() {
@@ -569,27 +567,29 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     public static boolean findBinary(String binaryName) {
         boolean found = false;
-        if (!found) {
-            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
-            for (String where : places) {
-                if (new File(where + binaryName).exists()) {
-                    found = true;
-                    break;
-                }
+
+        String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+        for (String where : places) {
+            if (new File(where + binaryName).exists()) {
+                found = true;
+                break;
             }
         }
+
         return found;
     }
 
-    public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
+    public DownloadService getService(){
+        return service;
+    }
 
+    public class InstallListener implements View.OnClickListener, DialogInterface.OnClickListener {
         protected String icon;
         protected String name;
         protected String versionName;
         protected String package_name;
         protected String md5;
-
 
         public InstallListener(String icon, String name, String versionName, String package_name, String md5) {
             this.icon = icon;
@@ -626,7 +626,18 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setCpiUrl(getIntent().getStringExtra("cpi"));
             return download;
         }
-
+        protected Bundle makeBundleForDialog(){
+            Bundle bundle = new Bundle();
+            bundle.putLong("downloadId", downloadId);
+            bundle.putSerializable("download", makeDownLoad());
+            bundle.putString("md5", md5);
+            bundle.putString("repoName",repoName);
+            bundle.putString("Package_Name", package_name);
+            bundle.putString("Version_Name", versionName);
+            bundle.putString("Name", name);
+            bundle.putString("Icon", icon);
+            return bundle;
+        }
         protected void FlurryIt(String s){
             if(Build.VERSION.SDK_INT >= 10) {
                 Map<String, String> installParams = new HashMap<String, String>();
@@ -636,12 +647,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 FlurryAgent.logEvent(s, installParams);
             }
         }
-
+        protected boolean CanDownload(){
+            return AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(Aptoide.getContext());
+        }
         @Override
         public void onClick(View v) {
             Download download = makeDownLoad();
 
             if (service != null && json!=null) {
+                if(!CanDownload()){
+                    CanDownloadDialog dialog = new CanDownloadDialog(json);
+                    dialog.setArguments(makeBundleForDialog());
+                    dialog.show(getSupportFragmentManager(),null);
+                    return;
+                }
                 service.startDownloadFromJson(json, downloadId, download);
                 FlurryIt("App_View_Clicked_On_Install_Button");
             }
@@ -665,6 +684,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onClick(View v) {
+            if(!CanDownload()){
+                CanDownloadDialog dialog = new CanDownloadDialog();
+                Bundle bundle = makeBundleForDialog();
+                bundle.putString("url", url);
+                dialog.setArguments(bundle);
+                dialog.show(getSupportFragmentManager(),null);
+                return;
+            }
             service.startDownloadFromUrl(url, md5, downloadId, makeDownLoad(), repoName);
             FlurryIt("Clicked_On_Install_Button");
         }
@@ -722,8 +749,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             } finally {
                 lock.unlock();
             }
-
-
         }
 
         @Override
@@ -938,7 +963,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
 
-        SearchManager manager;
+        //SearchManager manager;
+
         if (savedInstanceState != null) {
             package_name = savedInstanceState.getString("packageName");
             downloadId = savedInstanceState.getInt("downloadId");
@@ -1111,7 +1137,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
-        publicityView = (MoPubView) findViewById(R.id.adview);
+        publicityView = findViewById(R.id.adview);
 
         if (Build.VERSION.SDK_INT > 11) {
             publicityView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -1241,7 +1267,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             versionCode = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
 
 
-            float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
+            //float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
 
             appName.setText(Html.fromHtml(name).toString());
             appVersionName.setText(Html.fromHtml(versionName).toString());
@@ -1274,20 +1300,20 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 PackageInfo info = getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
                 isInstalled = true;
                 View btinstall = findViewById(R.id.btinstall);
-
+                TextView app_version_installed = (TextView) findViewById(R.id.app_version_installed);
                 if (versionCode > info.versionCode) {
                     isUpdate = true;
                     ((TextView)btinstall).setText(getString(R.string.update));
                     btinstall.setEnabled(true);
                     btinstall.setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
-                    ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
+                    app_version_installed.setVisibility(View.VISIBLE);
+                    app_version_installed.setText(getString(R.string.installed_tab) + ": " + info.versionName);
                 } else if (versionCode < info.versionCode) {
 
                     ((TextView)btinstall).setText(getString(R.string.downgrade));
                     btinstall.setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-                    ((TextView) findViewById(R.id.app_version_installed)).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.app_version_installed)).setText(getString(R.string.installed_tab) + ": " + info.versionName);
+                    app_version_installed.setVisibility(View.VISIBLE);
+                    app_version_installed.setText(getString(R.string.installed_tab) + ": " + info.versionName);
                 } else {
 
                     final Intent i = getPackageManager().getLaunchIntentForPackage(package_name);
@@ -1400,7 +1426,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             findViewById(R.id.badge_layout).setVisibility(View.GONE);
 
             switch (download.getDownloadState()) {
-
                 case ACTIVE:
                     findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     pb.setIndeterminate(false);
@@ -1436,11 +1461,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     pb.setProgress(download.getProgress());
                     break;
             }
-
-
         }
-
-
     }
 
     @Override
@@ -1883,24 +1904,24 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LOGIN_REQUEST_CODE) {
+        if (requestCode != LOGIN_REQUEST_CODE) {
+            if (requestCode == DOWGRADE_REQUEST_CODE) {
 
-        } else if (requestCode == DOWGRADE_REQUEST_CODE) {
+                //Log.d("Downgrade", "OnactivityResult");
+                try {
+                    getPackageManager().getPackageInfo(package_name, 0);
 
-            //Log.d("Downgrade", "OnactivityResult");
-            try {
-                getPackageManager().getPackageInfo(package_name, 0);
+                    Toast.makeText(this, getString(R.string.downgrade_requires_uninstall), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(this, getString(R.string.downgrade_requires_uninstall), Toast.LENGTH_SHORT).show();
+                } catch (PackageManager.NameNotFoundException e) {
+                    isFromActivityResult = true;
+                    spiceManager.getFromCache( GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener );
 
-            } catch (PackageManager.NameNotFoundException e) {
-                isFromActivityResult = true;
-                spiceManager.getFromCache( GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener );
-
+                }
+            } else if (requestCode == 359) {
+                //Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
+                refreshOnResume = true;
             }
-        } else if (requestCode == 359) {
-            //Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
-            refreshOnResume = true;
         }
     }
 
