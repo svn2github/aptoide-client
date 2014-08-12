@@ -803,5 +803,14 @@ public class AptoideUtils {
 
         return screen;
     }
+
+    public static long[] LongListtolongArray(List<Long> LongList){
+        int s = LongList.size();
+        long[] ret = new long[s];
+        for(int i=0;i<s;i++){
+            ret[i]=LongList.get(i);
+        }
+        return ret;
+    }
 }
 

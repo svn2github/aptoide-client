@@ -1,51 +1,28 @@
 package cm.aptoide.ptdev.adapters;
 
-/**
- * Created by rmateus on 17-03-2014.
- */
-/*
- * Copyright (C) 2012 Mobs and Geeks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 
+import com.flurry.android.FlurryAgent;
 
-        import android.content.Context;
-        import android.os.Build;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.*;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
-        import com.flurry.android.FlurryAgent;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
-        import cm.aptoide.ptdev.R;
-        import cm.aptoide.ptdev.Start;
 
-        import java.util.LinkedHashMap;
-        import java.util.Map.Entry;
-        import java.util.Set;
-
-/**
- * A very simple adapter that adds sections to adapters written for {@link ListView}s.
- * <br />
- * <b>NOTE: The adapter assumes that the data source of the decorated list adapter is sorted.</b>
- *
- * @author Ragunath Jawahar R <rj@mobsandgeeks.com>
- * @version 0.2
- */
-public class SimpleSectionAdapter<T> extends BaseAdapter {
+public class UpdatesSectionAdapter extends BaseAdapter {
 
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
@@ -53,8 +30,7 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     // Attributes
     private Context mContext;
     private BaseAdapter mListAdapter;
-    private int mSectionHeaderLayoutId;
-    private int mSectionTitleTextViewId;
+
     private Sectionizer<UpdateItem> mSectionizer = new Sectionizer<UpdateItem>() {
         @Override
         public String getSectionTitleForItem(UpdateItem instance) {
@@ -74,13 +50,7 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
         String getSectionTitleForItem(T instance);
     }
 
-    /**
-     * Constructs a {@linkplain SimpleSectionAdapter}.
-     *
-     * @param context The context for this adapter.
-     * @param listAdapter A {@link ListAdapter} that has to be sectioned.
-     */
-    public SimpleSectionAdapter(Context context, BaseAdapter listAdapter) {
+    public UpdatesSectionAdapter(Context context, BaseAdapter listAdapter) {
         if(context == null) {
             throw new IllegalArgumentException("context cannot be null.");
         } else if(listAdapter == null) {
@@ -94,13 +64,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
 
         // Find sections
         findSections();
-    }
-
-    private boolean isTextView(Context context, int layoutId, int textViewId) {
-        View inflatedView = View.inflate(context, layoutId, null);
-        View foundView = inflatedView.findViewById(textViewId);
-
-        return foundView instanceof TextView;
     }
 
     @Override
@@ -152,12 +115,20 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
                         @Override
                         public void onClick(View v) {
                             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All");
-                            ((Start)mContext).updateAll(((UpdatesAdapter)mListAdapter).getUpdateIds());
-                            Toast.makeText(mContext, mContext.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                            ArrayList<Long> ids = ((UpdatesAdapter)mListAdapter).getUpdateIds();
+                            if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(mContext)){
+                                ((Start)mContext).updateAll(ids);
+                            }
+                            else {
+                                CanUpdateDialog dialog = new CanUpdateDialog();
+                                Bundle bundle = new Bundle();
+                                bundle.putLongArray("ids", AptoideUtils.LongListtolongArray(ids));
+                                dialog.setArguments(bundle);
+                                dialog.show(((Start) mContext).getSupportFragmentManager(), null);
+                            }
                         }
                     });
                     sectionHolder.more.findViewById(R.id.more).setVisibility(View.VISIBLE);
-
                     break;
                 case 2:
                     break;
@@ -211,12 +182,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    /**
-     * Returns the actual index of the object in the data source linked to the this list item.
-     *
-     * @param position List item position in the {@link ListView}.
-     * @return Index of the item in the wrapped list adapter's data source.
-     */
     public int getIndexForPosition(int position) {
         int nSections = 0;
 
@@ -249,7 +214,6 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
             }
 
         }
-
     }
 
     private int getSectionCount() {

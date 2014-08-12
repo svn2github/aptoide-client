@@ -49,7 +49,7 @@ import java.util.Set;
 public class SectionAdapter<T> extends BaseAdapter {
     // Debug
     static final boolean DEBUG = false;
-    static final String TAG = SimpleSectionAdapter.class.getSimpleName();
+    static final String TAG = UpdatesSectionAdapter.class.getSimpleName();
 
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
@@ -63,7 +63,7 @@ public class SectionAdapter<T> extends BaseAdapter {
     private LinkedHashMap<String, Integer> mSections;
 
     /**
-     * Constructs a {@linkplain SimpleSectionAdapter}.
+     * Constructs a {@linkplain UpdatesSectionAdapter}.
      *
      * @param context The context for this adapter.
      * @param listAdapter A {@link ListAdapter} that has to be sectioned.

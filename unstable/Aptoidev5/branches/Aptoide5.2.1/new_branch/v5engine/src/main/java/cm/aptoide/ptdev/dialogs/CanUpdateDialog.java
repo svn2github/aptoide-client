@@ -41,7 +41,12 @@ public class CanUpdateDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (Build.VERSION.SDK_INT >= 10)
                             FlurryAgent.logEvent("CanUpdateDialog_DownLoad_AnyWay");
-                        callback.updateAll(getArguments().getLongArray("ids"));
+
+                        int id = getArguments().getInt("id",-1);
+                        if(id!=-1)
+                            callback.installApp(id);
+                        else
+                            callback.updateAll(getArguments().getLongArray("ids"));
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

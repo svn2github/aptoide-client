@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -10,14 +9,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.SimpleSectionAdapter;
+import cm.aptoide.ptdev.adapters.UpdatesSectionAdapter;
 import cm.aptoide.ptdev.adapters.UpdateItem;
 import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
@@ -29,7 +27,6 @@ import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -41,15 +38,10 @@ import java.util.ArrayList;
  */
 public class FragmentUpdates extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    //private InstalledAdapter installedAdapter;
-    //private RecentlyUpdated recentUpdates;
     private UpdatesAdapter updatesAdapter;
     private Database db;
 
-
-    //private UpdatesSectionListAdapter adapter;
-    private int counter;
-    private SimpleSectionAdapter<UpdateItem> adapter;
+    private UpdatesSectionAdapter adapter;
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
 
@@ -66,8 +58,6 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Subscribe
     public void refreshStoresEvent(RepoCompleteEvent event) {
-
-        Log.d("Aptoide-", "OnEvent");
         getLoaderManager().restartLoader(91, null, this);
 
     }
@@ -79,7 +69,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         return new SimpleCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
-                counter++;
+
 
                 return db.getUpdates();
             }
@@ -164,7 +154,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
         updatesAdapter = new UpdatesAdapter(getActivity(), items);
 
-        adapter = new SimpleSectionAdapter<UpdateItem>(getActivity(),updatesAdapter);
+        adapter = new UpdatesSectionAdapter(getActivity(),updatesAdapter);
 
         setHasOptionsMenu(true);
 

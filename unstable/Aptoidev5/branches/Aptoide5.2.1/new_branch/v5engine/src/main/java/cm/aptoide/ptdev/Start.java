@@ -972,13 +972,13 @@ public class Start extends ActionBarActivity implements
     public void updateAll(List<Long> ids){
         Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         for(long id : ids){
-            installApp(id);
+            downloadService.startDownloadFromAppId(id);
         }
     }
     public void updateAll(long[] ids){
         Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         for(long id : ids){
-            installApp(id);
+            downloadService.startDownloadFromAppId(id);
         }
     }
 
@@ -1028,6 +1028,7 @@ public class Start extends ActionBarActivity implements
 
     public void installApp(long id) {
         downloadService.startDownloadFromAppId(id);
+        Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
     }
 
     public void installAppFromManager(long id) {

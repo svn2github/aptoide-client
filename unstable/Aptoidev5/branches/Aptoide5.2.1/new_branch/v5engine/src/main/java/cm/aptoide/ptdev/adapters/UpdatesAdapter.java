@@ -1,9 +1,8 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Build;
-import android.support.v4.widget.CursorAdapter;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 
 import com.flurry.android.FlurryAgent;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Time: 15:46
  * To change this template use File | Settings | File Templates.
  */
-public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.Sectionizer<UpdateItem>{
+public class UpdatesAdapter extends BaseAdapter implements UpdatesSectionAdapter.Sectionizer<UpdateItem>{
 
     final private String sizeString;
     private final Context context;
@@ -102,8 +102,18 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
                     @Override
                     public void onClick(View v) {
                         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_Right_Icon");
-                        ((Start) context).installApp(id);
-                        Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+
+                        if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(context)){
+                            ((Start) context).installApp(id);
+
+                        }
+                        else{
+                            CanUpdateDialog dialog = new CanUpdateDialog();
+                            Bundle bundle = new Bundle();
+                            bundle.putLong("id", id);
+                            dialog.setArguments(bundle);
+                            dialog.show(((Start) context).getSupportFragmentManager(), null);
+                        }
                     }
                 });
 
@@ -133,11 +143,6 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
         return 2;
     }
 
-
-
-
-
-
     public ArrayList<Long> getUpdateIds() {
 
         ArrayList<Long> ids = new ArrayList<Long>();
@@ -147,13 +152,9 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
                 if(item.isUpdate()){
                     ids.add(item.getId());
                 }
-
         }
-
         return ids;
     }
-
-
 
     @Override
     public String getSectionTitleForItem(UpdateItem instance) {

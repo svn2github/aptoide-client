@@ -19,7 +19,7 @@ package cm.aptoide.ptdev.adapters;
 /**
  * Interface provides mechanism for supplying titles for instances based on the property they are 
  * compared against. The parameterized type of the <b>Sectionizer</b> should be same as that of the 
- * {@link SimpleSectionAdapter}.
+ * {@link UpdatesSectionAdapter}.
  *
  * @author Ragunath Jawahar R <rj@mobsandgeeks.com>
  * @version 1.0
