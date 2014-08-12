@@ -3,7 +3,6 @@ package cm.aptoide.ptdev.fragments;
 import android.app.Activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,23 +13,18 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import cm.aptoide.ptdev.DownloadServiceConnected;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
-
-import cm.aptoide.ptdev.adapters.DownloadManagerSectionAdapter;
 import cm.aptoide.ptdev.adapters.DownloadSimpleSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
-
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
-
 import cm.aptoide.ptdev.events.BusProvider;
-
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
+
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
@@ -128,7 +122,7 @@ public class FragmentDownloadManager extends ListFragment {
     NotOngoingAdapter notOngoingAdapter;
     ArrayList<Download> ongoingList = new ArrayList<Download>();
     ArrayList<Download> notOngoingList = new ArrayList<Download>();
-    DownloadSimpleSectionAdapter<Download> sectionAdapter;
+    DownloadSimpleSectionAdapter sectionAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,7 +136,7 @@ public class FragmentDownloadManager extends ListFragment {
         adapter.addAdapter(ongoingAdapter);
         adapter.addAdapter(notOngoingAdapter);
 
-        sectionAdapter = new DownloadSimpleSectionAdapter<Download>(getActivity(),  adapter);
+        sectionAdapter = new DownloadSimpleSectionAdapter(getActivity(),  adapter);
 
         setListAdapter(sectionAdapter);
     }

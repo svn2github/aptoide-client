@@ -971,13 +971,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             cacheKey = savedInstanceState.getString("cacheKey");
             downloads = savedInstanceState.getInt("downloads");
         }else{
-            new Thread(new Runnable() {
+/*            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     DateTime time = new DateTime();
                     Hours.hoursBetween(time, time);
                 }
-            }).start();
+            }).start();*/
 
 
             String downloadFrom = getIntent().getStringExtra("download_from");

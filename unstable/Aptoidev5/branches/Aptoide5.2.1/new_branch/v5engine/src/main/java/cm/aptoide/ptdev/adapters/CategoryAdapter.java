@@ -36,7 +36,6 @@ public class CategoryAdapter extends CursorAdapter {
 
 
     private final Context context;
-
     ArrayList<Category> items;
     final private String sizeString;
 

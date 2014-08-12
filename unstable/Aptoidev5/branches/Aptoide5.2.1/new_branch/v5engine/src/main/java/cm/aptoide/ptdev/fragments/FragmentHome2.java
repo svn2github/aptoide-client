@@ -7,7 +7,6 @@ import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -19,14 +18,12 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,11 +35,8 @@ import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
-
 import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
-import cm.aptoide.ptdev.adapters.HomeTopAdapter;
-import cm.aptoide.ptdev.adapters.SectionAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -85,31 +79,30 @@ import java.util.HashMap;
  */
 public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, OnRefreshListener {
 
-
-    private SectionAdapter<HomeItem> adapter;
     private ArrayList<Home> editorsChoice = new ArrayList<Home>();
-    private ArrayList<HomeItem> top = new ArrayList<HomeItem>();
-
-
     private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
-
-
     private Adapter homeBucketAdapterHome;
-    private HomeTopAdapter topAdapter;
+
     private HomeBucketAdapter recomendedAdapter;
     private View v2;
     private TextView moreReTv;
-    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
+
     private MergeAdapter mergeAdapter;
     private int bucketSize;
     private View moreRecommended;
     private PullToRefreshCallback pullToRefreshCallback;
     private PullToRefreshLayout mPullToRefreshLayout;
     private View featGraphFooter;
-    private boolean onConfigChange;
+
     private LinearLayout sponsoredLinearLayout;
     private View sponsoredHeader;
     private boolean fromRefresh;
+
+/*    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
+    private boolean onConfigChange;
+    private HomeTopAdapter topAdapter;
+    private ArrayList<HomeItem> top = new ArrayList<HomeItem>();
+    private SectionAdapter adapter;*/
 
     @Override
     public void onRefreshStarted( View view ) {
@@ -276,20 +269,12 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         loadRecommended(v2);
     }
 
-    //TopFeaturedLoader loader = new TopFeaturedLoader();
-    //FeaturedGraphicLoader featuredGraphicLoader = new FeaturedGraphicLoader();
-
-    BaseAdapter featurededchoice;
-
-
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
 
-    ArrayList<String> objects = new ArrayList<String>();
-    ViewPager pager;
 
     protected float getScreenWidthInDip(Activity context) {
         WindowManager wm = context.getWindowManager();
@@ -299,11 +284,6 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
         return screenWidth_in_pixel / dm.density;
     }
-
-
-
-
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

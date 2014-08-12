@@ -24,10 +24,8 @@ import java.util.ArrayList;
 public class ScreenshotsViewer extends ActionBarActivity {
 
 	String url;
-	int position;
 	private String[] images = new String[0];
 	Context context;
-	private String hashCode;
     private int currentItem;
 
     @Override
@@ -68,12 +66,11 @@ public class ScreenshotsViewer extends ActionBarActivity {
 //		getTheme().resolveAttribute(R.attr.custom_color, a, true);
 //		pi.setFillColor(a.data);
         ArrayList<String> uri = getIntent().getStringArrayListExtra("url");
-        hashCode = getIntent().getStringExtra("hashCode");
         if (uri != null) {
             images = uri.toArray(images);
         }
         if(images != null && images.length > 0){
-            screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,uri,hashCode,true));
+            screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,uri,true));
             screenshots.setCurrentItem(currentItem);
         }
 

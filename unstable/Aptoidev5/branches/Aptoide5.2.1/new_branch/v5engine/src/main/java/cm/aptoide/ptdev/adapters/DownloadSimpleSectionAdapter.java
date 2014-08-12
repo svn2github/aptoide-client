@@ -1,8 +1,4 @@
 package cm.aptoide.ptdev.adapters;
-
-/**
- * Created by rmateus on 17-03-2014.
- */
 /*
  * Copyright (C) 2012 Mobs and Geeks
  *
@@ -44,19 +40,13 @@ import java.util.Set;
  * @author Ragunath Jawahar R <rj@mobsandgeeks.com>
  * @version 0.2
  */
-public class DownloadSimpleSectionAdapter<T> extends BaseAdapter {
-    // Debug
-    static final boolean DEBUG = false;
-    static final String TAG = DownloadSimpleSectionAdapter.class.getSimpleName();
-
+public class DownloadSimpleSectionAdapter extends BaseAdapter {
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
 
     // Attributes
     private Context mContext;
     private BaseAdapter mListAdapter;
-    private int mSectionHeaderLayoutId;
-    private int mSectionTitleTextViewId;
     private Sectionizer<Download> mSectionizer = new Sectionizer<Download>() {
         @Override
         public String getSectionTitleForItem(Download instance) {
@@ -98,13 +88,6 @@ public class DownloadSimpleSectionAdapter<T> extends BaseAdapter {
         findSections();
     }
 
-    private boolean isTextView(Context context, int layoutId, int textViewId) {
-        View inflatedView = View.inflate(context, layoutId, null);
-        View foundView = inflatedView.findViewById(textViewId);
-
-        return foundView instanceof TextView;
-    }
-
     @Override
     public int getCount() {
         return mListAdapter.getCount() + getSectionCount();
@@ -114,25 +97,22 @@ public class DownloadSimpleSectionAdapter<T> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         SectionHolder sectionHolder = null;
-        Log.d("Aptoide", "Updating view " + position);
+
         switch (getItemViewType(position)) {
             case VIEW_TYPE_SECTION_HEADER:
-                Log.d("Aptoide", "Updating view4");
+
                 if(view == null) {
-
                     view = View.inflate(mContext, R.layout.separator_textview, null);
-
                     sectionHolder = new SectionHolder();
                     sectionHolder.titleTextView = (TextView) view;
                     view.setTag(sectionHolder);
-
                 } else {
                     sectionHolder = (SectionHolder) view.getTag();
                 }
                 break;
 
             default:
-                Log.d("Aptoide", "Updating view3");
+
                 view = mListAdapter.getView(getIndexForPosition(position),
                         convertView, parent);
                 break;
@@ -227,9 +207,6 @@ public class DownloadSimpleSectionAdapter<T> extends BaseAdapter {
             }
         }
 
-        if(DEBUG) {
-            Log.d(TAG, String.format("Found %d sections.", mSections.size()));
-        }
     }
 
     private int getSectionCount() {

@@ -1,8 +1,4 @@
 package cm.aptoide.ptdev.adapters;
-
-/**
- * Created by rmateus on 25-06-2014.
- */
 /*
  * Copyright (C) 2012 Mobs and Geeks
  *
@@ -18,9 +14,7 @@ package cm.aptoide.ptdev.adapters;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,10 +28,6 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-
-
-
-
 /**
  * A very simple adapter that adds sections to adapters written for {@link ListView}s.
  * <br />
@@ -46,10 +36,7 @@ import java.util.Set;
  * @author Ragunath Jawahar R <rj@mobsandgeeks.com>
  * @version 0.2
  */
-public class SectionAdapter<T> extends BaseAdapter {
-    // Debug
-    static final boolean DEBUG = false;
-    static final String TAG = UpdatesSectionAdapter.class.getSimpleName();
+public class SectionAdapter extends BaseAdapter {
 
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
@@ -223,9 +210,6 @@ public class SectionAdapter<T> extends BaseAdapter {
 
         }
 
-        if(DEBUG) {
-            Log.d(TAG, String.format("Found %d sections.", mSections.size()));
-        }
     }
 
     private int getSectionCount() {

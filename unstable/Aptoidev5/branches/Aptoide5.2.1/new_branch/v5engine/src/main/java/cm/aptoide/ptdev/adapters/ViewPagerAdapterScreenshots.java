@@ -33,11 +33,10 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 	private Context context;
 	ImageLoader imageLoader;
 	ArrayList<String> url;
-	private String hashCode;
 	private boolean hd;
 	DisplayImageOptions options;
 
-	public ViewPagerAdapterScreenshots(Context context, ArrayList<String> imagesurl, String hashCode, boolean hd) {
+	public ViewPagerAdapterScreenshots(Context context, ArrayList<String> imagesurl, boolean hd) {
 
 		this.context=context;
 		imageLoader = ImageLoader.getInstance();
@@ -45,13 +44,11 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 		this.url=imagesurl;
 		this.hd=hd;
 
-
 		options = new DisplayImageOptions.Builder()
 		 .displayer(new FadeInBitmapDisplayer(1000))
 		 .resetViewBeforeLoading(true)
 		 .cacheOnDisc(true)
 		 .build();
-
 	}
 
 	@Override
@@ -106,7 +103,6 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 					Intent i = new Intent(context, ScreenshotsViewer.class);
 					i.putStringArrayListExtra("url", url);
 					i.putExtra("position", position);
-					i.putExtra("hashCode", hashCode+".hd");
 					context.startActivity(i);
 				}
 			});
@@ -143,11 +139,4 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
         return db.toString();
     }
-
-
-
-
-
-
-
 }

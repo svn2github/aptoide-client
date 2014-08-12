@@ -80,13 +80,10 @@ public class UpdatesSectionAdapter extends BaseAdapter {
         switch (getItemViewType(position)) {
             case VIEW_TYPE_SECTION_HEADER:
                 if(view == null) {
-
                     view = View.inflate(mContext, R.layout.separator_updates, null);
-
                     sectionHolder = new SectionHolder();
                     sectionHolder.titleTextView = (TextView) view.findViewById(R.id.separator_label);
                     sectionHolder.more = (TextView) view.findViewById(R.id.more);
-
                     view.setTag(sectionHolder);
                 } else {
                     sectionHolder = (SectionHolder) view.getTag();
