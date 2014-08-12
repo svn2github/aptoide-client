@@ -364,7 +364,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .commit();
 
         if(RESTRICTIONLIST != null && !RESTRICTIONLIST.equals("")) {
-            SecurePreferences ssPref = SecurePreferences.getInstance();
+            SharedPreferences ssPref = SecurePreferences.getInstance();
             if (ssPref.contains("RESTRICTIONLIST")) {
                 RESTRICTIONLIST += ", " + ssPref.getString("RESTRICTIONLIST", "");
             }
