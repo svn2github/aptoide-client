@@ -59,7 +59,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -306,7 +308,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 setListShown(true);
                 setEmptyText(getString(R.string.no_search_result, query));
 
-
+                Map<String, String> searchParams = new HashMap<String, String>();
+                searchParams.put("Search_Query", query);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Searched_For", searchParams);
 
                 Handler handler = new Handler();
                 handler.post(new Runnable() {
@@ -386,8 +390,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 @Override
                 public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-                    if (apkSuggestionJson.getApp_suggested().size() > 0) {
-                        adapter.setActive(sponsoredApp, true);
+                    if (apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested()!=null && apkSuggestionJson.getApp_suggested().size() > 0) {                         adapter.setActive(sponsoredApp, true);
                         final ApkSuggestionJson.AppSuggested appSuggested = apkSuggestionJson.getApp_suggested().get(0);
 
                         ImageView icon = (ImageView) sponsoredApp.findViewById(R.id.app_icon);
@@ -545,7 +548,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     int uapksSize = searchJson.getResults().getU_Apks().size();
 
 
-                    if(uapksSize > 0){
+                    if(uapksSize > 0 && ((SearchManager)getActivity()).isSearchMoreVisible()){
                         hasUapks = true;
                         adapter.setActive(v, true);
                     }
@@ -583,8 +586,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                         setListShown(true);
                         setEmptyText(getString(R.string.no_search_result, query));
-                        adapter.setActive(v, true);
-
+                        if(((SearchManager)getActivity()).isSearchMoreVisible()) {
+                            adapter.setActive(v, true);
+                        }
                     }
 
                     getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -619,7 +623,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                         if(!searchJson.getResults().getApks().isEmpty()){
                                             adapter.notifyDataSetChanged();
                                             loading = false;
-                                        }else if(items2.size()> 9 && hasUapks){
+                                        }else if(items2.size()> 9 && hasUapks && ((SearchManager)getActivity()).isSearchMoreVisible()){
                                             adapter.setActive(v2, true);
                                         }
 

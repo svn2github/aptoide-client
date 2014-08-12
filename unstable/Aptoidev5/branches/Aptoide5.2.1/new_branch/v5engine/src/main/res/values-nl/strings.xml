@@ -508,7 +508,7 @@
   <string name="account">Account</string>
   <string name="no_payments_available">Geen betalingsmogelijkheden</string>
   <string name="change_payment">Terug</string>
-  <string name="confirm_carrier_payment">Wil je \'(title)\' kopen voor (value)? De kosten worden via je telefoon provider in rekening gebracht.</string>
+  <string name="confirm_carrier_payment">Wil je \'(titel)\' kopen voor (waarde)? De kosten worden via je telefoon provider in rekening gebracht.</string>
   <string name="featured_editors_choice">Keuze van Editor\'s</string>
   <string name="set_mature_pin_title">Zet pincode voor volwassen inhoud</string>
   <string name="set_mature_pin_summary">Zet een pincode die volwassen inhoud vrijgeeft</string>
