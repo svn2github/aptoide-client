@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.aptoide.partners"
           android:versionCode="440"
-          android:versionName="5.2.1" android:installLocation="auto" >
+          android:versionName="5.2.0" android:installLocation="auto" >
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 

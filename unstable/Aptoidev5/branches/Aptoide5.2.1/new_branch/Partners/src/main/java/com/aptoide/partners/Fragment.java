@@ -24,7 +24,12 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(cm.aptoide.ptdev.R.menu.menu_categories, menu);
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()) {
+            inflater.inflate(cm.aptoide.ptdev.R.menu.menu_categories, menu);
+        }else{
+            inflater.inflate(R.menu.partners_menu_categories, menu);
+        }
+
         StoreActivity.SortObject sort = ((CategoryCallback) getActivity()).getSort();
         switch(sort.getSort()){
             case NAMEAZ:

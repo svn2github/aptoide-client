@@ -1,36 +1,22 @@
 package com.aptoide.partners;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.os.Build;
-import android.view.Gravity;
-import android.view.Menu;
-import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.MenuListAdapter;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.events.RepoErrorEvent;
-import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome;
-import cm.aptoide.ptdev.fragments.FragmentHome2;
-import cm.aptoide.ptdev.fragments.FragmentStore;
-import cm.aptoide.ptdev.fragments.FragmentUpdates;
-import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.Store;
-import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.utils.AptoideUtils;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -38,13 +24,28 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.squareup.otto.Subscribe;
 
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.CategoryCallback;
+import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.adapters.MenuListAdapter;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
+import cm.aptoide.ptdev.fragments.FragmentHome2;
+import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentUpdates;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
  * Created by tdeus on 3/19/14.
