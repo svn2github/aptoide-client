@@ -12,20 +12,20 @@
               android:orientation="vertical">
 
     <TextView
-            android:id="@+id/clear_downloaded_apks"
+            android:id="@+id/data_usage_message"
             android:layout_width="match_parent"
             android:layout_margin="5dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/are_you_sure_clear_downloads" />
+            android:text="@string/Data_Usage_Message" />
 
 
-    <CheckBox android:id="@+id/checkbox_clear"
+    <CheckBox android:id="@+id/checkbox_schedule"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:checked="true"
               android:layout_gravity="center"
-              android:text="@string/clear_downloaded_apks"/>
+              android:text="@string/schDwnBtn"/>
 
 </LinearLayout>

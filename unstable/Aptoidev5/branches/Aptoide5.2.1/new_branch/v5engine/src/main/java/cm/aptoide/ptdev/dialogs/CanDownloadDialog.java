@@ -8,6 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
 
 import com.flurry.android.FlurryAgent;
 
@@ -45,21 +48,24 @@ public class CanDownloadDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         getArguments().getString("appName");
+        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_network_data_usage, null);
+
         return new AlertDialog.Builder(getActivity())
+                        .setView(view)
                         .setTitle(getActivity().getString(R.string.Data_Usage_warning))
-                        .setMessage(getActivity().getString(R.string.Data_Usage_Message))
+//                        .setMessage(getActivity().getString(R.string.Data_Usage_Message))
                         .setPositiveButton(R.string.downloadAnyWay, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (Build.VERSION.SDK_INT >= 10)
-                                    FlurryAgent.logEvent("CanDownLoadDialog_DownLoad_AnyWay");
+                                    FlurryAgent.logEvent("Network_Data_Usage_Can_Download_Anyway");
                                 if (json != null) {
-                                    Log.d("CanDownloadDialog", "Json != null");
+//                                    Log.d("CanDownloadDialog", "Json != null");
                                     callback.getService().startDownloadFromJson(json,
                                             getArguments().getLong("downloadId"),
                                             (Download) getArguments().getSerializable("download"));
                                 } else {
-                                    Log.d("CanDownloadDialog", "Json == null");
+//                                    Log.d("CanDownloadDialog", "Json == null");
                                     callback.getService().startDownloadFromUrl(
                                             getArguments().getString("url"),
                                             getArguments().getString("md5"),
@@ -69,25 +75,35 @@ public class CanDownloadDialog extends DialogFragment {
                                 }
                             }
                         })
-                        .setNeutralButton(R.string.schDwnBtn, new DialogInterface.OnClickListener() {
+//                        .setNeutralButton(R.string.schDwnBtn, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (Build.VERSION.SDK_INT >= 10)
+//                                    FlurryAgent.logEvent("CanDownLoadDialog_Schedule");
+//                                new Database(Aptoide.getDb()).ScheduledDownloadifmd5(
+//                                        getArguments().getString("Package_Name"),
+//                                        getArguments().getString("md5"),
+//                                        getArguments().getString("Version_Name"),
+//                                        getArguments().getString("repoName"),
+//                                        getArguments().getString("Name"),
+//                                        getArguments().getString("Icon"));
+//                            }
+//                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (Build.VERSION.SDK_INT >= 10)
-                                    FlurryAgent.logEvent("CanDownLoadDialog_Schedule");
-                                new Database(Aptoide.getDb()).ScheduledDownloadifmd5(
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Network_Data_Usage_Canceled");
+                                boolean isSchedule = ((CheckBox)view.findViewById(R.id.checkbox_schedule)).isChecked();
+                                if(isSchedule){
+                                    if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Network_Data_Usage_Canceled_Scheduled_Download");
+                                    new Database(Aptoide.getDb()).ScheduledDownloadifmd5(
                                         getArguments().getString("Package_Name"),
                                         getArguments().getString("md5"),
                                         getArguments().getString("Version_Name"),
                                         getArguments().getString("repoName"),
                                         getArguments().getString("Name"),
                                         getArguments().getString("Icon"));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (Build.VERSION.SDK_INT >= 10)
-                                    FlurryAgent.logEvent("CanDownLoadDialog_Cancel");
+                                }
                             }
                         })
                         .create();

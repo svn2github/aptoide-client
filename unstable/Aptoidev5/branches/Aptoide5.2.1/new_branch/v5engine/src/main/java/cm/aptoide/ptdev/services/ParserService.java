@@ -197,7 +197,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
 
         startService(new Intent(getApplicationContext(), ParserService.class));
-        startForeground(45, createDefaultNotification("Loading stores"));
+        startForeground(45, createDefaultNotification(getString(R.string.loading_stores)));
         final long id;
         if(newStore){
             if(db.existsServer(store.getBaseUrl())){
@@ -386,7 +386,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         //Log.d("Aptoide-ParserService", "Notification for "+string);
         Notification notification =new NotificationCompat.Builder(this)
                 .setSmallIcon(getApplicationInfo().icon)
-                .setContentTitle("Aptoide is working")
+                .setContentTitle(getString(R.string.market_is_working, Aptoide.getConfiguration().getMarketName()))
                 .setAutoCancel(true)
                 .setContentText(string).build();
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -462,7 +462,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 
 
             startService(new Intent(getApplicationContext(), ParserService.class));
-            startForeground(45, createDefaultNotification("Loading Editors' Choice"));
+            startForeground(45, createDefaultNotification(getString(R.string.loading_editors_choice)));
             parser.parse(url, null, 1, new HandlerEditorsChoiceXml(db, 0), editorsErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {
@@ -491,7 +491,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                 spiceManager.start(getApplicationContext());
             }
             startService(new Intent(getApplicationContext(), ParserService.class));
-            startForeground(45, createDefaultNotification("Loading Top Apps"));
+            startForeground(45, createDefaultNotification(getString(R.string.loading_top_apps)));
             parser.parse(url, null, 2, new HandlerFeaturedTop(database), topErrorCallback, this, new Runnable() {
                 @Override
                 public void run() {
