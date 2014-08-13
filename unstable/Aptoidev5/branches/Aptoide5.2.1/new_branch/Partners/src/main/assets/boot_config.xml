@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bootconf>
     <storeconf>
-        <theme>default</theme>
-        <avatar>https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <theme>black</theme>
+        <avatar>http://pool.img.aptoide.com/imgs/0b06faaa8c638e324cf4f1ae3fd6b557_ravatar_34x34.png</avatar>
         <description></description>
         <view>list</view>
-        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,recommended</items>
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid>6520c9616894aef755e1943d127af3e4</partnerid>
-        <marketname>Seleclineplay Market</marketname>
-        <defaultstorename>seleclineplay</defaultstorename>
-        <aptoidetheme>lightsky</aptoidetheme>
-        <splashscreen>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/seleclineplay/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/seleclineplay/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_seleclineplay</brand>
+        <partnerid>9731a67cfc4df54f231d41e970005581</partnerid>
+        <marketname>Aptoide Appstore</marketname>
+        <defaultstorename>jolla</defaultstorename>
+        <aptoidetheme>default</aptoidetheme>
+        <splashscreen>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_jolla</brand>
         <searchstores>true</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
-        <multiplestores>false</multiplestores>
+        <multiplestores>true</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid>8c2b5f9a1375691ada1bcc66670a8182</adunitid>
+        <adunitid>a58e7ba580726745c283b3119b0fd062</adunitid>
         <createshortcut>true</createshortcut>
         <linkedcomments>true</linkedcomments>
     </aptoideconf>
