@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -165,6 +167,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         }else if(uri.startsWith("aptoidesearch://")){
 
             startMarketIntent(uri.split("aptoidesearch://")[1]);
+        }else if(uri.startsWith("aptoidevoicesearch://")){
+
+            aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
 
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
@@ -249,10 +254,6 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
-
-
-
 
             Intent i = new Intent(this, Aptoide.getConfiguration().getAppViewActivityClass());
 
@@ -382,6 +383,25 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public void aptoidevoiceSearch(String param) {
+
+        Cursor c= new Database(Aptoide.getDb()).getSearchResults(param,StoreActivity.Sort.DOWNLOADS);
+
+        ArrayList<String> namelist = new ArrayList<String>();
+        ArrayList<Long> idlist= new ArrayList<Long>();
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            namelist.add(c.getString(c.getColumnIndex("name")));
+            idlist.add(c.getLong(c.getColumnIndex("_id")));
+        }
+
+        Intent i = new Intent();
+        i.putStringArrayListExtra("namelist",namelist);
+        i.putExtra("idlist",idlist);
+        setResult(789465,i);
+        finish();
     }
 
     public void startMarketIntent(String param) {

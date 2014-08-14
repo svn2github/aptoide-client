@@ -37,9 +37,6 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
         return TITLES.length;
     }
 
-
-
-
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         final Object fragment = super.instantiateItem(container, position);

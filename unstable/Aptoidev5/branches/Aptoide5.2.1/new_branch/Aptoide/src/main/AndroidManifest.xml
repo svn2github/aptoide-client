@@ -250,10 +250,6 @@
                        android:resource="@xml/authenticator"/>
         </service>
 
-
-
-
-
         <service android:name="cm.aptoide.ptdev.services.WebInstallSyncService"
                 android:exported="true" >
             <intent-filter>
@@ -350,7 +346,6 @@
         </receiver>
 
 
-
         <meta-data android:name="com.crashlytics.ApiKey" android:value="df90b10add729d8e34d67f6d4f0bb3dddce5b7eb"/>
 
         <service android:name="com.paypal.android.sdk.payments.PayPalService"
@@ -367,9 +362,6 @@
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
-
-        
-
 
     </application>
 </manifest>
