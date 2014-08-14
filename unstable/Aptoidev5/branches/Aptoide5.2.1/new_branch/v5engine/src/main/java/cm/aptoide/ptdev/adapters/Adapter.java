@@ -58,7 +58,6 @@ public class Adapter extends BaseAdapter {
     private final int bucketSize;
     private final LayoutInflater inflater;
 
-
     Set<Integer> set = new HashSet<Integer>();
     int maxCount;
 
@@ -69,7 +68,7 @@ public class Adapter extends BaseAdapter {
         if (120 >= screenWidth) {
             this.bucketSize = 1;
         } else {
-            this.bucketSize = (int) (screenWidth / 120);;
+            this.bucketSize = (int) (screenWidth / 120);
         }
 
         inflater = LayoutInflater.from(context);
@@ -94,14 +93,9 @@ public class Adapter extends BaseAdapter {
 
                     set.add(count);
                 }
-
-                Log.d("yuuup", set + " maxcount is: " + maxCount);
-
             }
         });
     }
-
-
 
     private Context context;
 
@@ -137,11 +131,7 @@ public class Adapter extends BaseAdapter {
             result= getItem(position).getItemsSize() + 1 ;
         }
 
-
-//        Log.d("yuuuup", "itemType" + result);
-
         return result;
-
     }
 
     @Override
@@ -172,8 +162,7 @@ public class Adapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        View item = null;
-//        Log.d("yuuup", "cenas");
+        View item;
         switch (getItemViewType(position)){
 
             case 1:
@@ -187,8 +176,6 @@ public class Adapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
 
-
-
                         HomeFooter item = (HomeFooter) getItem(position);
                         Intent i;
                         if(item.getParentId() > -2){
@@ -199,7 +186,6 @@ public class Adapter extends BaseAdapter {
                             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Top_Apps_Button");
                             i = new Intent(Aptoide.getContext(), MoreTopAppsActivity.class);
                         }
-
 
                         context.startActivity(i);
                     }
@@ -240,7 +226,6 @@ public class Adapter extends BaseAdapter {
 
         View view;
         if(convertView==null){
-//            Log.d("Sup", "Init view " );
             view = new LinearLayout(context);
             LinearLayout layout = (LinearLayout) view;
             layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -248,16 +233,11 @@ public class Adapter extends BaseAdapter {
 
             int itemCount = getItem(position).getItemsSize();
 
-
-
             for(int i = 0 ;  i < itemCount  ; i++ ){
                 layout.addView(inflater.inflate(R.layout.row_app_home, layout, false));
             }
 
-
-
         }else{
-//            Log.d("Sup", "Reusing view ");
             view = convertView;
         }
 
@@ -351,8 +331,6 @@ public class Adapter extends BaseAdapter {
         MenuListener(Context context, long id) {
             this.context = context;
             this.id = id;
-
-
         }
 
         @Override

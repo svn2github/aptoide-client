@@ -1,5 +1,6 @@
 package com.aptoide.partners;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
 import cm.aptoide.ptdev.Aptoide;
@@ -20,4 +21,6 @@ public class SearchManagerPartners extends SearchManager {
         }
 
     }
+
+
 }

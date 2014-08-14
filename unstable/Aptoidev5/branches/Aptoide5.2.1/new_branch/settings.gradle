@@ -3,7 +3,7 @@ include 'Aptoide',
         'v5engine',
 
         'hanselandgretel',
-        //'Partners',
+        'Partners',
         //'AptoideHelper',
 
         'android-websockets',

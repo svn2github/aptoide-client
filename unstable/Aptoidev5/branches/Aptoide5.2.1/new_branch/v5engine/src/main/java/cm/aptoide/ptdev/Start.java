@@ -372,20 +372,12 @@ public class Start extends ActionBarActivity implements
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
-
-
-
         mContext = this;
         setContentView(R.layout.activity_main);
 
-
-
-
         matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
-
         pager = (ViewPager) findViewById(R.id.pager);
-
 
         pager.setAdapter(getViewPagerAdapter());
 
@@ -630,7 +622,6 @@ public class Start extends ActionBarActivity implements
 
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
     }
 
     private void loadEditorsAndTopApps() {
