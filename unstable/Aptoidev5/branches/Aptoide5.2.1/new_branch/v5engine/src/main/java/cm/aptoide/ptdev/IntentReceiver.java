@@ -19,6 +19,8 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -399,8 +401,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         Intent i = new Intent();
         i.putStringArrayListExtra("namelist",namelist);
-        i.putExtra("idlist",idlist);
-        setResult(789465,i);
+        i.putExtra("idlist", AptoideUtils.LongListtolongArray(idlist));
+
+        setResult(789465, i);
         finish();
     }
 
