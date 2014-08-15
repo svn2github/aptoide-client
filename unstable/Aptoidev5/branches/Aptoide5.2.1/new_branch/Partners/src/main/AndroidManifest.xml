@@ -144,6 +144,7 @@
                 <data android:scheme="aptoideinstall"/>
                 <data android:scheme="aptoidesearch" />
                 <data android:scheme="aptwords" />
+                <data android:scheme="aptoidevoicesearch" />
             </intent-filter>
 
             <intent-filter>
