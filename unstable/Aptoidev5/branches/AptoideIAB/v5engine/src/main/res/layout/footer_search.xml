@@ -58,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
+            android:drawableLeft="@drawable/ic_action_web_site_dark"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/btn_search_other_stores" />
