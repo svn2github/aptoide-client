@@ -544,7 +544,6 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                     if(!items.isEmpty()){
                         items.clear();
-                        //items.addAll(searchJson.getResults().getApks());
                     }
 
                     if(!items2.isEmpty()){
