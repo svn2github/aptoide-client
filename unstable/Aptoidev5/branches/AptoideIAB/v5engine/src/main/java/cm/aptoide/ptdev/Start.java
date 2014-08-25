@@ -375,6 +375,7 @@ public class Start extends ActionBarActivity implements
 
 
 
+
         mContext = this;
         setContentView(R.layout.activity_main);
 

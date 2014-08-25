@@ -221,6 +221,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
             pb.setLayoutParams(params);
 
+
+
             adapter.addView(searchLayout);
 
             sponsoredApp = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_suggested, null);
@@ -540,10 +542,27 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                     fillUApks(searchJson, usearchContainer2, sizeString);
 
 
-                    if(items.isEmpty()){
+                    if(!items.isEmpty()){
                         items.clear();
-                        items.addAll(searchJson.getResults().getApks());
+                        //items.addAll(searchJson.getResults().getApks());
                     }
+
+                    if(!items2.isEmpty()){
+                        items2.clear();
+                    }
+
+
+
+                    for(int i = 0; i < searchJson.getResults().getApks().size(); i++){
+
+                        if(i<10){
+                            items.add(searchJson.getResults().getApks().get(i));
+                        }else{
+                            items2.add(searchJson.getResults().getApks().get(i));
+                        }
+
+                    }
+
 
                     int getDidyoumeanSize = searchJson.getResults().getDidyoumean().size();
                     int uapksSize = searchJson.getResults().getU_Apks().size();
@@ -625,7 +644,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                         if(!searchJson.getResults().getApks().isEmpty()){
                                             adapter.notifyDataSetChanged();
                                             loading = false;
-                                        }else if(items2.size()> 9 && hasUapks && ((SearchManager)getActivity()).isSearchMoreVisible()){
+                                        }else if(items2.size() > 9 && hasUapks && ((SearchManager)getActivity()).isSearchMoreVisible()){
                                                 adapter.setActive(v2, true);
                                         }
 

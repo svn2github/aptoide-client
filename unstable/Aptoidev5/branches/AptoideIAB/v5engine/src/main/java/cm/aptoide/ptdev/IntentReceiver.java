@@ -82,6 +82,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
                 e.printStackTrace();
                 finish();
             }
+
+
+
         }
 
         @Override
