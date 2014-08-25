@@ -1,3 +1,4 @@
+include ':app'
 include 'Aptoide',
         'pagerslidertabstrip',
         'v5engine',

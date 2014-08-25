@@ -6,62 +6,65 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-<LinearLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="?attr/backgroundCard"
-    android:layout_margin="5dp"
-    android:orientation="vertical">
-
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/maybe_in_other_stores"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
-            style="?attr/customRowForeground"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="2dp"
-                />
-
-        </FrameLayout>
+    <LinearLayout
+        style="?attr/backgroundCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical" >
 
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:background="#efefef" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/maybe_in_other_stores"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                style="?attr/customRowForeground"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="2dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
         <Button
             android:id="@+id/search"
+            style="?attr/customButtonColor"
             android:layout_width="match_parent"
-            android:background="?attr/selectableItemBackground"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="@string/btn_search_other_stores" />
+    </LinearLayout>
+
 
     </LinearLayout>
-</LinearLayout>
-    </FrameLayout>
+</FrameLayout>

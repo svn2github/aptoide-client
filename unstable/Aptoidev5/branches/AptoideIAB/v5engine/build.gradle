@@ -2,62 +2,57 @@ apply plugin: 'android-library'
 
 
 repositories {
-    maven { url "http://dl.bintray.com/populov/maven" }
+    maven { url 'http://dl.bintray.com/populov/maven' }
     mavenCentral()
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 19
     }
 
+    compileOptions {
+    }
 }
 
 dependencies {
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
     compile 'com.crashlytics.android:crashlytics:1.+'
-//    compile ('com.viewpagerindicator:library:2.4.1'){
-//        exclude group: 'com.google.android', module: 'support-v4'
-//    }
+    //    compile ('com.viewpagerindicator:library:2.4.1'){
+    //        exclude group: 'com.google.android', module: 'support-v4'
+    //    }
     compile 'joda-time:joda-time:2.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup:otto:1.3.4'
     compile 'com.rabbitmq:amqp-client:3.2.0'
-    compile ('com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.1.0'){
+    compile('com.github.manuelpeinado.multichoiceadapter:multichoiceadapter-abc:3.1.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.android.support:gridlayout-v7:19.1.0'
-
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
-    compile ('com.octo.android.robospice:robospice-google-http-client:1.4.12'){
-        exclude (group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+    compile('com.octo.android.robospice:robospice-google-http-client:1.4.12') {
+        exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
     }
-    compile ('com.google.http-client:google-http-client-jackson2:1.18.0-rc'){
-        exclude (group: 'xpp3', module: 'xpp3') //by both name and group
-        exclude (group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
-        exclude (group: 'junit', module: 'junit') //by both name and group
-        exclude (group: 'com.google.android', module: 'android') //by both name and group
+    compile('com.google.http-client:google-http-client-jackson2:1.18.0-rc') {
+        exclude(group: 'xpp3', module: 'xpp3') //by both name and group
+        exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+        exclude(group: 'junit', module: 'junit') //by both name and group
+        exclude(group: 'com.google.android', module: 'android') //by both name and group
     }
-
-    compile project (':pagerslidertabstrip')
-
-    compile project (':hanselandgretel')
-    compile project (':android-websockets')
-    compile project (':facebook')
-    compile project (':google-play-services')
-    compile project (':mopub-sdk')
-
-    compile ('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9'){
+    compile project(':pagerslidertabstrip')
+    compile project(':hanselandgretel')
+    compile project(':android-websockets')
+    compile project(':facebook')
+    compile project(':google-play-services')
+    compile project(':mopub-sdk')
+    compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-
     compile fileTree(dir: 'lib', include: '*.jar')
-
 }
 

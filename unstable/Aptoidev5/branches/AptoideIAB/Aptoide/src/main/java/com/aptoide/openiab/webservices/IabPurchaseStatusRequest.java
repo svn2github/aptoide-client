@@ -52,7 +52,6 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
         options.add(new WebserviceOptions("token", token));
 
-
 //        if(!rest){
 //            options.add(new WebserviceOptions("orderid", token));
 //        }else{
@@ -76,8 +75,6 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
 //            sb.append(";");
 //        }
 //        sb.append(")");
-
-
 
 
         //String baseUrl = "http://dev.aptoide.com/webservices/processInAppBilling/iabpurchasestatus/"+apiVersion+"/options="+sb.toString();
@@ -122,7 +119,7 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
         HttpResponse response;
         try{
             response = request.execute();
-        } catch (EOFException e){
+        } catch (EOFException e ){
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.put("Connection", "close");
             request.setHeaders(httpHeaders);

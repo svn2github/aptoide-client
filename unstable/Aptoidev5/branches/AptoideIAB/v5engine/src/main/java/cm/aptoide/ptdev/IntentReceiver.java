@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -59,6 +63,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //        public void onServiceDisconnected(ComponentName name) {
 //        }
 //    };
+
+
 
 
     private DownloadService service;
@@ -163,9 +169,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             finish();
 
         }else if(uri.startsWith("aptoidesearch://")){
-
             startMarketIntent(uri.split("aptoidesearch://")[1]);
-
+//        }else if(uri.startsWith("aptoidevoicesearch://")){
+//            aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
             String param = params.split("=")[1];
@@ -249,10 +255,6 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
-
-
-
 
             Intent i = new Intent(this, Aptoide.getConfiguration().getAppViewActivityClass());
 

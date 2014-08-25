@@ -71,7 +71,7 @@ public class RollBackAdapter extends CursorAdapter {
 
 
         final String name = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_NAME));
-        holder.name.setText(Html.fromHtml(name));
+        if(name!=null) holder.name.setText(Html.fromHtml(name));
         final String icon = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ICONPATH));
         ImageLoader.getInstance().displayImage(icon, holder.icon);
         final String versionName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_VERSION));

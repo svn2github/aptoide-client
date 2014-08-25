@@ -32,7 +32,7 @@ public class IabAvailableRequest extends GoogleHttpClientSpiceRequest<IabAvailab
     public IabAvailableJson loadDataFromNetwork() throws Exception {
 
         //String baseUrl = "http://dev.aptoide.com/webservices/processInAppBilling/iabavailable/"+apiVersion+"/options=(package="+packageName+";)";
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/processInAppBilling";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/processInAppBilling";
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String> parameters = new HashMap<String, String>();

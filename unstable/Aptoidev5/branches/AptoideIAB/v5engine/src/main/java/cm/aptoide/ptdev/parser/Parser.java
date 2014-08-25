@@ -121,7 +121,11 @@ public class Parser{
                             if (errorCallback != null) errorCallback.onError(e1, repoId);
                             Log.d("Aptoide-Parser", "Error");
                         } finally {
-                            Aptoide.getDb().endTransaction();
+
+                            if(Aptoide.getDb().inTransaction()){
+                                Aptoide.getDb().endTransaction();
+                            }
+
                         }
 
                         file.delete();

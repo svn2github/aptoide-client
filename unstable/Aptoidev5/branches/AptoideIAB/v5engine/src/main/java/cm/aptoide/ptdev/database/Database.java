@@ -222,8 +222,6 @@ public class Database {
             }
         }
 
-
-
         return c;
 
     }
@@ -356,7 +354,7 @@ public class Database {
         c.close();
     }
 
-    private long getAppsCount(long id_real_category, long id_repo) {
+    private synchronized long getAppsCount(long id_real_category, long id_repo) {
         long apps = 0;
         Cursor c = database.rawQuery("select id_real_category from category where id_category_parent = ? and id_repo = ?", new String[]{String.valueOf(id_real_category), String.valueOf(id_repo)});
         if(c.getCount()>0){
@@ -364,6 +362,7 @@ public class Database {
                 apps += getAppsCount(c.getLong(0), id_repo);
             }
         }else{
+            c.close();
             c = database.rawQuery("select count(id_real_category) from category_apk where id_real_category = ? and id_repo = ?", new String[]{String.valueOf(id_real_category),String.valueOf(id_repo)});
             if(c.moveToFirst()){
                 apps = c.getInt(0);
@@ -393,8 +392,8 @@ public class Database {
                     database.delete("category_apk", "id_real_category=? and id_repo = ?", new String[]{String.valueOf(c.getLong(0)),String.valueOf(id_store)});
                     //Log.d("Aptoide-", "Deleting " + c.getLong(0));
                 }
-
             }
+
             c.close();
 
         database.setTransactionSuccessful();

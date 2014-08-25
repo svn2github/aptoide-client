@@ -137,6 +137,7 @@ public class Aptoide extends Application {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
 
+                ex.printStackTrace();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(10);
 
@@ -255,8 +256,6 @@ public class Aptoide extends Application {
         public InputStream getStream(String imageUri, Object extra) throws IOException {
 
             boolean download = AptoideUtils.NetworkUtils.isPermittedConnectionAvailable(context, managerPreferences.getIconDownloadPermissions());
-
-
 
             switch (Scheme.ofUri(imageUri)) {
                 case HTTP:
