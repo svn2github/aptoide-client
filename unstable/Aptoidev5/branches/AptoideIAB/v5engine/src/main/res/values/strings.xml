@@ -561,6 +561,10 @@
     <string name="sponsored">Sponsored</string>
     <string name="btn_search_other_stores">Search Other Stores</string>
     <string name="results">Search results:</string>
+    <string name="is_working">%s is working</string>
+    <string name="loading_editors_choice">Loading Editors\' Choice</string>
+    <string name="loading_top_apps">Loading Top Apps</string>
+    <string name="loading_stores">Loading stores</string>
 
 
 </resources>
