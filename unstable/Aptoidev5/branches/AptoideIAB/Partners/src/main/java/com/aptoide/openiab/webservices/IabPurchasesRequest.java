@@ -36,7 +36,7 @@ public class IabPurchasesRequest extends GoogleHttpClientSpiceRequest<IabPurchas
     @Override
     public IabPurchasesJson loadDataFromNetwork() throws Exception {
         //String baseUrl = "http://dev.aptoide.com/webservices/processInAppBilling/iabpurchases/"+apiVersion+"/options=(package="+packageName+";purchasetype="+type+";token="+token+")";
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/processInAppBilling";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/processInAppBilling";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

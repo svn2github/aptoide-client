@@ -59,8 +59,8 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
             sb.append(";");
         }
         sb.append(")");
-        //String baseUrl = "http://webservices.aptoide.com/webservices/payProduct/3/"+token+"/"+productId+"/billing/"+ payType +"/options="+sb.toString()+"/json";
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/payProduct";
+        //String baseUrl = "https://webservices.aptoide.com/webservices/payProduct/3/"+token+"/"+productId+"/billing/"+ payType +"/options="+sb.toString()+"/json";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/payProduct";
         GenericUrl url = new GenericUrl(baseUrl);
 
         Log.e("Aptoide-InappBillingRequest", baseUrl);
