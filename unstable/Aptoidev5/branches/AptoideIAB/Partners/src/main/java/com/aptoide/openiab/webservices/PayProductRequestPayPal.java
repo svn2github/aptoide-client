@@ -80,6 +80,9 @@ public class PayProductRequestPayPal extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("payType","1");
         parameters.put("price",price);
         parameters.put("repo", repo);
+
+
+
         parameters.put("currency",currency);
 
         if(simCountryCode!=null)parameters.put("simcc",simCountryCode);

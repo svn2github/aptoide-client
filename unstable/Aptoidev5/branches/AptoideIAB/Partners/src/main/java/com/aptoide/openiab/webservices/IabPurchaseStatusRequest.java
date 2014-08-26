@@ -103,6 +103,12 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
         parameters.put("currency",currency);
         parameters.put("simcc",simcc);
 
+        String oemid = Aptoide.getConfiguration().getExtraId();
+
+        if(!TextUtils.isEmpty(oemid)){
+            parameters.put("oemid", oemid);
+        }
+
         if(developerPayload!=null && !TextUtils.isEmpty(developerPayload)) parameters.put("developerpayload", developerPayload);
 
 

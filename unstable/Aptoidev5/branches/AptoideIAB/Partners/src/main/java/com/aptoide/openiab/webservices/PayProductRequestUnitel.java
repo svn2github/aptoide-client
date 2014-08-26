@@ -82,7 +82,12 @@ public class PayProductRequestUnitel extends GoogleHttpClientSpiceRequest<IabPur
         parameters.put("currency",currency);
 
         parameters.put("imsi",imsi);
-        parameters.put("oemid",oemId);
+
+        String oemid = Aptoide.getConfiguration().getExtraId();
+
+        if(!TextUtils.isEmpty(oemid)){
+            parameters.put("oemid", oemid);
+        }
 
         token = SecurePreferences.getInstance().getString("access_token", null);
 
