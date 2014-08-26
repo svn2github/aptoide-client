@@ -734,6 +734,7 @@ public abstract class FragmentAppView extends Fragment {
                 doPreStuff();
             }
         }
+
         private final void doPreStuff(){
             ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
 
@@ -743,7 +744,7 @@ public abstract class FragmentAppView extends Fragment {
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
-            spiceManager.execute(listRelatedApkRequest, request);
+            spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
         }
 
 

@@ -907,10 +907,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             ((MoPubView) publicityView).destroy();
         }
 
-
-
-
-
     }
 
     @Produce

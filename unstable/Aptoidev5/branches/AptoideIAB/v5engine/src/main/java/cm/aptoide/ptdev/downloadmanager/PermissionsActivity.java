@@ -101,14 +101,14 @@ public class PermissionsActivity extends Activity {
             String permission = permissionArray.get(i);
 
             for (PermissionGroupInfo pgi : lstGroups) {
-                csPermissionGroupLabel = pgi.loadLabel(pm);
-
                 try {
                     List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, 0);
                     for (PermissionInfo pi : lstPermissions) {
-                        csPermissionLabel = pi.loadLabel(pm);
-                        if(pi.name.equals(permission))
+                        if(pi.name.equals(permission)){
+                            csPermissionLabel = pi.loadLabel(pm);
+                            csPermissionGroupLabel = pgi.loadLabel(pm);
                             list.add(new ApkPermission(csPermissionGroupLabel.toString(), csPermissionLabel.toString()));
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

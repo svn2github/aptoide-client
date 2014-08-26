@@ -126,8 +126,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         if(apk.getCpiUrl()!=null) {
 
-
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -144,9 +142,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             }).start();
 
         }
-
-
-
 
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
