@@ -753,7 +753,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
     public View getFooterView(int res){
         View footer = LayoutInflater.from(this).inflate(res, null);
-        Button search = (Button) footer.findViewById(R.id.search);
+        TextView search = (TextView) footer.findViewById(R.id.search);
         search.setOnClickListener(getSearchListener());
         return footer;
     }

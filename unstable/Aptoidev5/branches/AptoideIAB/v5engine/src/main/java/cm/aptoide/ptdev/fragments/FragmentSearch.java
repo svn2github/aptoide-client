@@ -177,7 +177,7 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
         View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
-        Button search = (Button) footer.findViewById(R.id.search);
+        TextView search = (TextView) footer.findViewById(R.id.search);
         search.setOnClickListener(getSearchListener());
 
         getListView().addFooterView(footer);
