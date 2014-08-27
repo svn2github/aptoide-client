@@ -63,7 +63,7 @@ public class IabPurchaseAuthorizationRequest extends GoogleHttpClientSpiceReques
         sb.append(")");
 
         //String baseUrl = "http://dev.aptoide.com/webservices/productPurchaseAuthorization/"+token+"/1/options="+sb.toString();
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/productPurchaseAuthorization";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/productPurchaseAuthorization";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

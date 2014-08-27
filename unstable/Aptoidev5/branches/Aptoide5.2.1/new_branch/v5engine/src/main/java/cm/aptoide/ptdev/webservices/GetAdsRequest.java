@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -15,6 +16,7 @@ import org.apache.http.params.HttpParams;
 
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
@@ -50,6 +52,8 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         String mature = "1";
 
+
+
         if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
             mature = "0";
         }
@@ -57,6 +61,15 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         parameters.put("location","native-aptoide:" + location);
         parameters.put("type","app:suggested");
         parameters.put("keywords", keyword);
+
+        String oemid = Aptoide.getConfiguration().getExtraId();
+
+        if(!TextUtils.isEmpty(oemid)){
+            parameters.put("oemid", oemid);
+        }
+
+
+
         parameters.put("limit", String.valueOf(limit));
 
         parameters.put("get_mature", mature);

@@ -304,8 +304,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             password_box = (EditText) findViewById(R.id.password);
             password_box.setTransformationMethod(new PasswordTransformationMethod());
 
+
+
             final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
             final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
+
             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
             password_box.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -333,7 +336,22 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     return false;
                 }
             });
-
+//            password_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//                @Override
+//                public void onFocusChange(View v, boolean hasFocus) {
+//
+//                    if (hasFocus) {
+//                        showPassword = false;
+//                        password_box.setTransformationMethod(null);
+//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+//                    } else {
+//                        showPassword = true;
+//                        password_box.setTransformationMethod(new PasswordTransformationMethod());
+//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+//                    }
+//                }
+//            });
 
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -585,46 +603,38 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
                 if ("OK".equals(checkUserCredentialsJson.getStatus())) {
+                    SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
 
                     if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
                         hasQueue = true;
 
-                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                .edit()
-                                .putString("queueName", checkUserCredentialsJson.getQueue())
-                                .commit();
+                        preferences.putString("queueName", checkUserCredentialsJson.getQueue());
                     }
                     if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
-                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                .edit()
-                                .putString("useravatar", checkUserCredentialsJson.getAvatar())
-                                .commit();
+                        preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
                     }
 
                     if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
-                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                .edit()
-                                .putString("userRepo", checkUserCredentialsJson.getRepo())
-                                .commit();
+                        preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
                     }
 
                     if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
-                        PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                                .edit()
-                                .putString("username", checkUserCredentialsJson.getUsername())
-                                .commit();
+                        preferences.putString("username", checkUserCredentialsJson.getUsername());
                     }
 
-                    PreferenceManager.getDefaultSharedPreferences(LoginActivity.this)
-                            .edit()
-                            .putString(Configs.LOGIN_USER_LOGIN, username)
-                            .putString("loginType", mode.name())
-                            .commit();
+                    preferences.putString(Configs.LOGIN_USER_LOGIN, username);
 
-                    SecurePreferences preferences = SecurePreferences.getInstance();
+                    preferences.putString("loginType", mode.name());
+                    preferences.commit();
 
-                    preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
-                    preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
+
+                    SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
+                    securePreferences.putString("access_token", oAuth.getAccess_token());
+                    securePreferences.putString("devtoken",checkUserCredentialsJson.getToken());
+
+                    securePreferences.commit();
+
+
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);

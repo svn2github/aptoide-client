@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bootconf>
     <storeconf>
-        <theme>default</theme>
-        <avatar>https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <theme>black</theme>
+        <avatar>http://pool.img.aptoide.com/imgs/0b06faaa8c638e324cf4f1ae3fd6b557_ravatar_34x34.png</avatar>
         <description></description>
         <view>list</view>
-        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,recommended</items>
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid>23a3c151dba9f4a5ac28a8293a088781</partnerid>
-        <marketname>Geniatech Market</marketname>
-        <defaultstorename>geniatechapps</defaultstorename>
-        <aptoidetheme>red</aptoidetheme>
-        <splashscreen>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_geniatechapps</brand>
+        <partnerid></partnerid>
+        <marketname>Aptoide Appstore</marketname>
+        <defaultstorename>apps</defaultstorename>
+        <aptoidetheme>default</aptoidetheme>
+        <splashscreen>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_aptoide</brand>
         <searchstores>true</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
-        <multiplestores>false</multiplestores>
+        <maturecontentswitchvalue>true</maturecontentswitchvalue>
+        <multiplestores>true</multiplestores>
         <customeditorschoice>true</customeditorschoice>
+        <adunitid></adunitid>
         <createshortcut>true</createshortcut>
-        <adunitid>fc30c5e696baea9672e75997b63ef04a</adunitid>
         <linkedcomments>true</linkedcomments>
+        <splashcolor>#FFE98023</splashcolor>
     </aptoideconf>
 </bootconf>

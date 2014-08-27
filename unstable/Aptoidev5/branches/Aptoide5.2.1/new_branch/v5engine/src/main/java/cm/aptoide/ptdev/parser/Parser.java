@@ -88,7 +88,7 @@ public class Parser{
                     @Override
                     public void run() {
                         Log.d("Aptoide-Parser", "Starting parse " + url);
-//                        long startTime = System.currentTimeMillis();
+                        //long startTime = System.currentTimeMillis();
                         Aptoide.getDb().beginTransaction();
 
                         try {
@@ -119,13 +119,14 @@ public class Parser{
                         } catch (Exception e1){
                             e1.printStackTrace();
                             if (errorCallback != null) errorCallback.onError(e1, repoId);
-//                            Log.d("Aptoide-Parser", "Error");
-                        } finally {
-                            Aptoide.getDb().endTransaction();
+                            Log.d("Aptoide-Parser", "Error");
                         }
 
-//                        Log.d("Aptoide-Parser", "Deleting file");
+                        Aptoide.getDb().endTransaction();
+                        Log.d("Aptoide-Parser", "Deleting file");
                         file.delete();
+                        Log.d("Aptoide-Parser", "Deleting file");
+
                         i--;
 //                        Log.d("Aptoide-Parser", url + " Took : " + (System.currentTimeMillis() - startTime) + " ms" + " i=" + i);
                         if(threadPoolIsIdle() && poolEndedCallback!=null){

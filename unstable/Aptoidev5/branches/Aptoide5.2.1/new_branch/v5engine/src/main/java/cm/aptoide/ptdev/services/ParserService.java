@@ -106,18 +106,20 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     }
 
     private void showUpdatesNotification() {
-
-        Cursor data = new Database(Aptoide.getDb()).getUpdates();
-
         int updates = 0;
-        for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
-            if(data.getInt(data.getColumnIndex("is_update"))==1){
-                updates++;
+        Cursor data=null;
+        try {
+            data = new Database(Aptoide.getDb()).getUpdates();
+
+            for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
+                if (data.getInt(data.getColumnIndex("is_update")) == 1) {
+                    updates++;
+                }
             }
+        }finally {
+            if(data!=null)
+                data.close();
         }
-
-        data.close();
-
         if(updates>0){
                 NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 int icon = android.R.drawable.stat_sys_download_done;
@@ -386,7 +388,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         //Log.d("Aptoide-ParserService", "Notification for "+string);
         Notification notification =new NotificationCompat.Builder(this)
                 .setSmallIcon(getApplicationInfo().icon)
-                .setContentTitle(getString(R.string.market_is_working, Aptoide.getConfiguration().getMarketName()))
+                .setContentTitle(getString(R.string.is_working, Aptoide.getConfiguration().getMarketName()))
                 .setAutoCancel(true)
                 .setContentText(string).build();
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

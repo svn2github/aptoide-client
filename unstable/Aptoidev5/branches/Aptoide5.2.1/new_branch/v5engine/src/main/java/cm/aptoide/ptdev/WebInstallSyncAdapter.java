@@ -139,7 +139,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
             JSONObject object = new JSONObject(body);
 
             Intent i = new Intent(getContext(), appViewClass);
-            SecurePreferences securePreferences = SecurePreferences.getInstance();
+            SharedPreferences securePreferences = SecurePreferences.getInstance();
             String authToken = securePreferences.getString("devtoken", "");
 
             String repo = object.getString("repo");

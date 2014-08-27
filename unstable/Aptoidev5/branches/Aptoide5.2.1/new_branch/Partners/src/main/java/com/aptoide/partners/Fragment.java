@@ -26,10 +26,9 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
         if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()) {
             inflater.inflate(cm.aptoide.ptdev.R.menu.menu_categories, menu);
-        }else{
+        } else{
             inflater.inflate(R.menu.partners_menu_categories, menu);
         }
-
         StoreActivity.SortObject sort = ((CategoryCallback) getActivity()).getSort();
         switch(sort.getSort()){
             case NAMEAZ:

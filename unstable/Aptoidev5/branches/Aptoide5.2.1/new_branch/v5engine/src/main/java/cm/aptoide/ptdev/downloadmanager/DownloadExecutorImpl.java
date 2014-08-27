@@ -126,8 +126,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         if(apk.getCpiUrl()!=null) {
 
-
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -144,9 +142,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             }).start();
 
         }
-
-
-
 
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
@@ -261,7 +256,10 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
             int size = dpToPixels(context, 36);
-            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size));
+            Bitmap bitmap = decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size);
+
+            if (bitmap != null) mBuilder.setLargeIcon(bitmap);
+
             mBuilder.setSmallIcon(android.R.drawable.stat_sys_download);
             mBuilder.setContentIntent(onClickAction);
             mBuilder.setAutoCancel(true);

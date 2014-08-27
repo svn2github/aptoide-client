@@ -3,6 +3,7 @@ package com.aptoide.partners;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -28,6 +31,7 @@ public class SplashDialogFragment extends DialogFragment {
 
 
     private ImageView imageSplash;
+    private RelativeLayout splashBackground;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,13 +97,22 @@ public class SplashDialogFragment extends DialogFragment {
 
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ImageLoader.getInstance().cancelDisplayTask(imageSplash);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         imageSplash = (ImageView) view.findViewById(R.id.splashscreen);
+        splashBackground = (RelativeLayout) view.findViewById(R.id.splash_background);
 
-
-
+        String color = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getSplashColor();
+        int parsed_color = Color.parseColor(color);
+        splashBackground.setBackgroundColor(parsed_color);
+//
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 
             ImageLoader.getInstance().displayImage(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getSplashscreenLand(), imageSplash, options, listener);

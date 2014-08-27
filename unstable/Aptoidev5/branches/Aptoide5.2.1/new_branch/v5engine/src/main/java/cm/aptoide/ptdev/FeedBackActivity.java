@@ -76,7 +76,7 @@ public class FeedBackActivity extends ActionBarActivity {
 
         Process process = null;
         try {
-            process = Runtime.getRuntime().exec("logcat");
+            process = Runtime.getRuntime().exec("logcat -d");
         } catch (IOException e) {
             Log.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
             return null;
@@ -136,6 +136,8 @@ public class FeedBackActivity extends ActionBarActivity {
                 uris.add(urifile);
                 //emailIntent.putExtra(Intent.EXTRA_STREAM, urifile);
             }
+
+
             File logs = readLogs();
             if (logs != null) {
                 Uri urifile = Uri.fromFile(logs);

@@ -96,7 +96,7 @@ public class RabbitMqService extends Service {
                                             JSONObject object = new JSONObject(body);
 
                                             Intent i = new Intent(getApplicationContext(), appViewClass);
-                                            SecurePreferences securePreferences = SecurePreferences.getInstance();
+                                            SharedPreferences securePreferences = SecurePreferences.getInstance();
                                             String authToken = securePreferences.getString("devtoken", "");
                                             String repo = object.getString("repo");
                                             long id = object.getLong("id");

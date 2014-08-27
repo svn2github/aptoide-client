@@ -67,7 +67,7 @@ public class PayProductRequestPayPal extends GoogleHttpClientSpiceRequest<IabPur
         }
         sb.append(")");
 
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/payProduct";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/payProduct";
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String> parameters = new HashMap<String, String>();

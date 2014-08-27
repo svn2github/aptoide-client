@@ -14,6 +14,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -69,7 +70,7 @@ public class WebSocketSingleton {
 
         @Override
         public void onMessage(byte[] data) {
-            Log.d("TAG", data.toString());
+            Log.d("TAG", Arrays.toString(data));
 
 
         }

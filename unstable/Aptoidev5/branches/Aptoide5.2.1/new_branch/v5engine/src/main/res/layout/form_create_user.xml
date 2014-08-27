@@ -33,7 +33,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:hint="@string/password"
-            android:inputType="textPassword"
+            android:inputType="textPassword|textNoSuggestions"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView

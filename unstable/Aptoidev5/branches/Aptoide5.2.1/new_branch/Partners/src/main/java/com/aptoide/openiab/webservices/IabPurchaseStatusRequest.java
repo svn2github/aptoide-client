@@ -81,7 +81,7 @@ public class IabPurchaseStatusRequest extends GoogleHttpClientSpiceRequest<IabPu
 
 
         //String baseUrl = "http://dev.aptoide.com/webservices/processInAppBilling/iabpurchasestatus/"+apiVersion+"/options="+sb.toString();
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/processInAppBilling";
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/processInAppBilling";
 
 
         HashMap<String, String> parameters = new HashMap<String, String>();

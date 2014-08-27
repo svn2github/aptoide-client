@@ -20,6 +20,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -106,7 +107,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
 
     @Override
     public void onRefreshStarted( View view ) {
-        Log.d( "pullToRefresh", "onRefreshStarted" );
+        Log.d("pullToRefresh", "onRefreshStarted");
 
         if(pullToRefreshCallback != null) {
             pullToRefreshCallback.reload();
@@ -158,9 +159,9 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                     try {
                         sponsoredLinearLayout.removeAllViews();
                         for (final ApkSuggestionJson.AppSuggested apkSuggestion : apkSuggestionJson.getApp_suggested()) {
-                            View v = View.inflate(getActivity(), R.layout.row_app_home, null);
+                            View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_home, sponsoredLinearLayout, false);
                             v.findViewById(R.id.ic_action).setVisibility(View.INVISIBLE);
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                             v.setLayoutParams(params);
                             ImageView icon = (ImageView) v.findViewById(R.id.app_icon);
                             TextView name = (TextView) v.findViewById(R.id.app_name);
@@ -187,10 +188,21 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
                                     startActivity(i);
                                 }
                             });
+                            FrameLayout layout = new FrameLayout(getActivity());
 
-                            sponsoredLinearLayout.addView(v);
+                            layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                            layout.addView(v);
+                            sponsoredLinearLayout.addView(layout);
                         }
 
+
+
+                        //Fill remaining space
+                        for(int i = apkSuggestionJson.getApp_suggested().size() ; i < recomendedAdapter.getBucketSize(); i++){
+                            FrameLayout layout = new FrameLayout(getActivity());
+                            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                            sponsoredLinearLayout.addView(layout);
+                        }
 
 
                         mergeAdapter.setActive(sponsoredHeader, true);
@@ -517,6 +529,7 @@ public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderC
         mergeAdapter.addView(featGraphFooter, false);
 
         sponsoredLinearLayout = new LinearLayout(getActivity());
+
 
         sponsoredLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 

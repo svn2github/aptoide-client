@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DefaultDatabaseErrorHandler;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -139,6 +140,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private Condition boundCondition = lock.newCondition();
     private boolean refreshOnResume;
     private String altPath;
+    private boolean paused = false;
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -152,7 +154,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onRequestFailure(SpiceException e) {
             Log.d( "networkerror", e.getLocalizedMessage() );
             if(AppViewActivity.this.json==null){
-                AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
+                if(!paused){
+                    AptoideDialog.errorDialog().show(getSupportFragmentManager(), "errorDialog");
+                }
             };
         }
 
@@ -284,13 +288,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
+                                                if(!paused){
+                                                    AptoideDialog.allowRootDialog().show(getSupportFragmentManager(), "allowRoot");
+                                                }
                                             }
                                         });
                                     }
                                 }
                             }).start();
                         }
+
+
 
                         download.setId(downloadId);
                         download.setName(name);
@@ -644,7 +652,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 installParams.put("Package_Name", package_name);
                 installParams.put("Name", name);
                 installParams.put("Version_Name", versionName);
-                FlurryAgent.logEvent(s, installParams);
+                if(Build.VERSION.SDK_INT >= 10)  FlurryAgent.logEvent("App_View_Clicked_On_Install_Button", installParams);
             }
         }
         protected boolean CanDownload(){
@@ -684,6 +692,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onClick(View v) {
+            Download download = new Download();
             if(!CanDownload()){
                 CanDownloadDialog dialog = new CanDownloadDialog();
                 Bundle bundle = makeBundleForDialog();
@@ -692,8 +701,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 dialog.show(getSupportFragmentManager(),null);
                 return;
             }
-            service.startDownloadFromUrl(url, md5, downloadId, makeDownLoad(), repoName);
-            FlurryIt("Clicked_On_Install_Button");
+
+            download.setId(downloadId);
+            download.setName(this.name);
+            download.setVersion(this.versionName);
+            download.setIcon(this.icon);
+            download.setPackageName(this.package_name);
+            download.setMd5(this.md5);
+
+
+            service.startDownloadFromUrl(url, md5, downloadId, download, repoName);
+            Map<String, String> installParams = new HashMap<String, String>();
+            installParams.put("Package_Name", package_name);
+            installParams.put("Name", name);
+            installParams.put("Version_Name", versionName);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Install_Button", installParams);
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -728,7 +751,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             installParams.put("Package_Name", package_name);
             installParams.put("Name", name);
             installParams.put("Version_Name", versionName);
-            FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
         }
     }
 
@@ -843,6 +866,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if (publicityView != null) {
             ((MoPubView) publicityView).destroy();
         }
+
     }
 
     @Produce
@@ -882,7 +906,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 }
             }
 
-
         }
         return event;
 
@@ -899,6 +922,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putString("cacheKey", cacheKey);
         outState.putString("packageName", package_name);
         outState.putInt("downloadId", downloadId);
@@ -916,8 +940,13 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onResume() {
         super.onResume();
-        spiceManager.start(this);
+        paused = false;
+        if(!spiceManager.isStarted()){
+            spiceManager.start(this);
+        }
+
         spiceManager.addListenerIfPending(GetApkInfoJson.class, cacheKey, requestListener);
+
 
         BusProvider.getInstance().register(this);
         if (json != null) {
@@ -951,7 +980,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     protected void onPause() {
-        spiceManager.shouldStop();
+        paused = true;
+        if(spiceManager.isStarted()){
+            spiceManager.shouldStop();
+        }
+
         BusProvider.getInstance().unregister(this);
         super.onPause();
     }
@@ -984,7 +1017,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(downloadFrom!=null){
                 Map<String, String> downloadParams = new HashMap<String, String>();
                 downloadParams.put("App_Opened_From", downloadFrom);
-                FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
             }
 
         }
@@ -1044,6 +1077,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     public void run() {
                         RegisterAdRequest registerAdRequest = new RegisterAdRequest(AppViewActivity.this);
                         registerAdRequest.setUrl(getIntent().getStringExtra("cpc"));
+
+
+
                         //registerAdRequest.setLocation(getIntent().getStringExtra("location"));
                         //registerAdRequest.setKeyword(getIntent().getStringExtra("keyword"));
                         try {
@@ -1189,7 +1225,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             Fragment uninstallFragment = new UninstallRetainFragment();
             Bundle args = new Bundle(  );
-            args.putString( "name", name );
+            args.putString("name", name);
             args.putString( "package", package_name );
             args.putString( "version", versionName );
             args.putString( "icon", icon );
@@ -2012,6 +2048,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void CaseOK() {
             Toast.makeText(Aptoide.getContext(), getString(R.string.vote_submitted), Toast.LENGTH_LONG).show();
+            //Log.d("likes","commentRequestListener");
             spiceManager.removeDataFromCache(GetApkInfoJson.class, (AppViewActivity.this).getCacheKey());
             BusProvider.getInstance().post(new AppViewRefresh());
         }

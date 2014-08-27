@@ -65,6 +65,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //    };
 
 
+
+
     private DownloadService service;
     private ServiceConnection downloadConnection = new ServiceConnection() {
         @Override
@@ -80,6 +82,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
                 e.printStackTrace();
                 finish();
             }
+
+
+
         }
 
         @Override
@@ -167,12 +172,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             finish();
 
         }else if(uri.startsWith("aptoidesearch://")){
-
             startMarketIntent(uri.split("aptoidesearch://")[1]);
         }else if(uri.startsWith("aptoidevoicesearch://")){
-
             aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
             String param = params.split("=")[1];

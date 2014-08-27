@@ -1,9 +1,6 @@
-
 apply plugin: 'android'
 apply plugin: 'crashlytics'
 //apply from: 'signing.gradle'
-
-
 
 
 android {
@@ -21,36 +18,18 @@ android {
 
     }
 
-    
-
-
     buildTypes {
-
         debug {
-            zipAlign  true
-
+            zipAlign true
         }
-
-
-        
-release {
-            //                                                signingConfig signingConfigs.release
-        }
-
-
-
+//        release {
+//            signingConfig signingConfigs.release
+//        }
     }
-
-
-
-
-
 }
 
-
-
 dependencies {
-    compile project (':v5engine')
+    compile project(':v5engine')
     compile fileTree(dir: 'libs', include: '*.jar')
 
 }

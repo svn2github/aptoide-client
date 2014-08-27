@@ -23,6 +23,11 @@ public class IconSizes {
 
 
     public static String generateSizeString(Context context){
+
+        if(context == null){
+            return "";
+        }
+
         int density = context.getResources().getDisplayMetrics().densityDpi;
         float densityMultiplier = context.getResources().getDisplayMetrics().density;
 

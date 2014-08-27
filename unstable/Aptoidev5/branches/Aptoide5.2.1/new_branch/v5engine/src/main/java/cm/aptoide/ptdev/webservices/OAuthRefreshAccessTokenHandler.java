@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.SharedPreferences;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -62,7 +63,7 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
             OAuth responseJson = oauth2RefresRequest.execute().parseAs(OAuth.class);
 
 
-            SecurePreferences preferences = SecurePreferences.getInstance();
+            SharedPreferences preferences = SecurePreferences.getInstance();
 
             preferences.edit().putString("access_token", responseJson.getAccess_token()).commit();
 

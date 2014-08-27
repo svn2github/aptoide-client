@@ -6,62 +6,62 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-<LinearLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="?attr/backgroundCard"
-    android:layout_margin="5dp"
-    android:orientation="vertical">
-
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/maybe_in_other_stores"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+    android:layout_height="wrap_content">
 
     <LinearLayout
+        style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
-        <FrameLayout
-            style="?attr/customRowForeground"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="2dp"
-                />
 
-        </FrameLayout>
-
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:background="#efefef" />
-
-        <Button
-            android:id="@+id/search"
-            android:layout_width="match_parent"
-            android:background="?attr/selectableItemBackground"
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/maybe_in_other_stores"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                style="?attr/customRowForeground"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="2dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/search"
+            style="?attr/customButtonColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:drawableLeft="@drawable/ic_action_web_site_dark"
             android:maxLines="2"
+            android:drawablePadding="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
             android:text="@string/btn_search_other_stores" />
 
     </LinearLayout>
-</LinearLayout>
-    </FrameLayout>
+
+
+</FrameLayout>

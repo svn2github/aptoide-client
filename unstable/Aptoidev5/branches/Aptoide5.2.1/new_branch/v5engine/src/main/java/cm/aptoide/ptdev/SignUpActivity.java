@@ -108,6 +108,22 @@ public class SignUpActivity extends ActionBarActivity{
                 return false;
             }
         });
+//        passBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//
+//                if (hasFocus) {
+//                    showPassword = false;
+//                    passBox.setTransformationMethod(null);
+//                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+//                } else {
+//                    showPassword = true;
+//                    passBox.setTransformationMethod(new PasswordTransformationMethod());
+//                    passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -223,7 +239,7 @@ public class SignUpActivity extends ActionBarActivity{
                             editor.putString("loginType", LoginActivity.Mode.APTOIDE.name());
                             editor.commit();
 
-                            SecurePreferences preferences = SecurePreferences.getInstance();
+                            SharedPreferences preferences = SecurePreferences.getInstance();
                             preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
                             preferences.edit().putString("devtoken",checkUserCredentialsJson.getToken()).commit();
 

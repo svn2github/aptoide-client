@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.downloadmanager;
 
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -35,6 +36,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
     @Override
     public void connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
         connection = (HttpURLConnection) this.mURL.openConnection();
+
 
 
         connection.setConnectTimeout(TIME_OUT);

@@ -49,12 +49,13 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
 
     public static String RESTRICTIONLIST;
+    public static String SPLASHCOLOR;
 
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
     }
 
@@ -139,6 +140,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public String getAdUnitId(){ return ADUNITID; }
     public static void setAdUnitId(String adUnitId){ AptoideConfigurationPartners.ADUNITID = adUnitId; }
 
+    public String getSplashColor(){ return SPLASHCOLOR; }
+    public static void setSplashColor(String color){ AptoideConfigurationPartners.SPLASHCOLOR = color; }
+
     @Override
     public String getExtraId(){
         return PARTNERID;
@@ -199,6 +203,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 try{
                     Elements element = Elements.valueOf(localName.toUpperCase(Locale.ENGLISH));
                     switch (element) {
+                        case BOOTCONF:
+                            break;
+                        case APTOIDECONF:
+                            break;
                         case PARTNERTYPE:
                             PARTNERTYPE = sb.toString();
                             Log.d("Partner type", PARTNERTYPE + "");
@@ -259,6 +267,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             CREATESHORTCUT = Boolean.parseBoolean(sb.toString());
                             Log.d("Create Shortcut", CREATESHORTCUT+ "");
                             break;
+                        case SPLASHCOLOR:
+                            SPLASHCOLOR = sb.toString();
+                            Log.d("Splash color", SPLASHCOLOR + "");
+                            break;
 
                         case THEME:
                             THEME = sb.toString();
@@ -316,6 +328,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             map.put("APTOIDETHEME", APTOIDETHEME);
             map.put("MARKETNAME", MARKETNAME);
             map.put("ADUNITID", ADUNITID);
+            map.put("SPLASHCOLOR", SPLASHCOLOR);
             map.put("CREATESHORTCUT", CREATESHORTCUT + "");
             map.put("STOREDESCRIPTION", DESCRIPTION);
             map.put("STORETHEME", THEME);
@@ -355,6 +368,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("APTOIDETHEME", APTOIDETHEME)
                 .putString("MARKETNAME", MARKETNAME)
                 .putString("ADUNITID", ADUNITID)
+                .putString("SPLASHCOLOR", SPLASHCOLOR)
                 .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
                 .putString("STOREDESCRIPTION", DESCRIPTION)
                 .putString("STOREAVATAR", AVATAR)
