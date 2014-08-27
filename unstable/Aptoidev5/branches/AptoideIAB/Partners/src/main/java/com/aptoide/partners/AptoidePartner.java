@@ -47,6 +47,7 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.MARKETNAME = sPref.getString("MARKETNAME", "Aptoide");
             AptoideConfigurationPartners.ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
             AptoideConfigurationPartners.CREATESHORTCUT = sPref.getBoolean("CREATESHORTCUT", true);
+            AptoideConfigurationPartners.SPLASHCOLOR = sPref.getString("SPLASHCOLOR", "");
             AptoideConfigurationPartners.ITEMS = sPref.getString("STOREITEMS", "applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
             AptoideConfigurationPartners.DESCRIPTION = sPref.getString("STOREDESCRIPTION", "");
             AptoideConfigurationPartners.THEME = sPref.getString("STORETHEME", "default");
@@ -103,6 +104,7 @@ public class AptoidePartner extends Aptoide {
                 AptoideConfigurationPartners.MARKETNAME = map.get("MARKETNAME");
                 AptoideConfigurationPartners.ADUNITID = map.get("ADUNITID");
                 AptoideConfigurationPartners.CREATESHORTCUT = Boolean.parseBoolean(map.get("CREATESHORTCUT"));
+                AptoideConfigurationPartners.SPLASHCOLOR = map.get("SPLASHCOLOR");
                 AptoideConfigurationPartners.ITEMS = map.get("STOREITEMS");
                 AptoideConfigurationPartners.DESCRIPTION = map.get("STOREDESCRIPTION");
                 AptoideConfigurationPartners.THEME = map.get("STORETHEME");
