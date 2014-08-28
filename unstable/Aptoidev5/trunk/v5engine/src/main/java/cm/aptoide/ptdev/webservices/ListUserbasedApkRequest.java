@@ -2,9 +2,10 @@ package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
 import android.util.Log;
+
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -26,10 +27,10 @@ import java.util.HashMap;
 public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRecomended> {
 
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/listUserBasedApks";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/listUserBasedApks";
 
     private Context context;
-    private String packageName;
+    private String token;
     private int limit;
 
 
@@ -48,7 +49,6 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
         HashMap<String, String > parameters = new HashMap<String, String>();
 
         parameters.put("mode", "json");
-        parameters.put("token", packageName);
 
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
 
@@ -70,49 +70,25 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        Log.d("Aptoide-ApkUserBased", url.toString());
+        token = SecurePreferences.getInstance().getString("access_token", null);
 
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
+
+        Log.d("Aptoide-ApkUserBased", url.toString());
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs( getResultType() );
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
+
 
     public void setLimit(int limit) {
         this.limit = limit;
     }
 
 
-    public class WebserviceOptions {
-        String key;
-        String value;
 
-
-        private WebserviceOptions(String key,String value) {
-            this.value = value;
-            this.key = key;
-        }
-
-        /**
-         * Returns a string containing a concise, human-readable description of this
-         * object. Subclasses are encouraged to override this method and provide an
-         * implementation that takes into account the object's type and data. The
-         * default implementation is equivalent to the following expression:
-         * <pre>
-         *   getClass().getName() + '@' + Integer.toHexString(hashCode())</pre>
-         * <p>See <a href="{@docRoot}reference/java/lang/Object.html#writing_toString">Writing a useful
-         * {@code toString} method</a>
-         * if you intend implementing your own {@code toString} method.
-         *
-         * @return a printable representation of this object.
-         */
-        @Override
-        public String toString() {
-            return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.
-        }
-
-    }
 }

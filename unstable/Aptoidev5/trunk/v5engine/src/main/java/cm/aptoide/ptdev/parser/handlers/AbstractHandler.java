@@ -390,7 +390,7 @@ public abstract class AbstractHandler extends DefaultHandler2 {
             public void endElement() throws SAXException {
                 if(multipleApk){
                     apk.addApkToChildren();
-                    Log.d("MultipleApk", "adding " + apk + " " + apk.getChildren());
+                    //Log.d("MultipleApk", "adding " + apk + " " + apk.getChildren());
                 }
             }
         });

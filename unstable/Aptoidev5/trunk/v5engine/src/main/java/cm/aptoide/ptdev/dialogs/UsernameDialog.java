@@ -5,11 +5,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import com.flurry.android.FlurryAgent;
+
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
 
@@ -39,7 +43,7 @@ public class UsernameDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         ((AppViewActivity)getActivity()).updateUsername(username.getText().toString());
-
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Updated_Username_To_Insert_Comment");
                     }
                 }).create();
 

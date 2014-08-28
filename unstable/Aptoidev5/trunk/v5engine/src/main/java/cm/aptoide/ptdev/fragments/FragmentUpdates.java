@@ -1,34 +1,35 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.animation.Animator;
-import android.animation.LayoutTransition;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.*;
+import cm.aptoide.ptdev.adapters.SimpleSectionAdapter;
+import cm.aptoide.ptdev.adapters.UpdateItem;
+import cm.aptoide.ptdev.adapters.UpdatesAdapter;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.commonsware.cwac.merge.MergeAdapter;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.otto.Subscribe;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -40,10 +41,11 @@ import java.util.ArrayList;
  */
 public class FragmentUpdates extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private InstalledAdapter installedAdapter;
+    //private InstalledAdapter installedAdapter;
+    //private RecentlyUpdated recentUpdates;
     private UpdatesAdapter updatesAdapter;
     private Database db;
-    private RecentlyUpdated recentUpdates;
+
 
     //private UpdatesSectionListAdapter adapter;
     private int counter;
@@ -72,11 +74,13 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        setListShown(false);
 
         return new SimpleCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 counter++;
+
                 return db.getUpdates();
             }
         };
@@ -85,55 +89,59 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     @Override
     public synchronized void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
 
-        if (getActivity() != null) {
-            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-            SharedPreferences.Editor editor = sPref.edit();
-            int updates = 0;
-            if (data.getCount() > 0) {
+        if(getActivity()!=null){
 
-                //updatesAdapter.swapCursor(data);
-                items.clear();
-                for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
-                    UpdateItem item = new UpdateItem();
+                    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                    SharedPreferences.Editor editor = sPref.edit();
+                    int updates = 0;
+                    if (data.getCount() > 0) {
 
-                    if (data.getInt(data.getColumnIndex("is_update")) == 1) {
-                        item.setUpdate(true);
-                        item.setVersionName(data.getString(data.getColumnIndex("version_name")));
-                        updates++;
+                        //updatesAdapter.swapCursor(data);
+                        items.clear();
+                        for(data.moveToFirst(); !data.isAfterLast(); data.moveToNext()){
+                            UpdateItem item = new UpdateItem();
+
+                            if(data.getInt(data.getColumnIndex("is_update"))==1){
+                                item.setUpdate(true);
+                                item.setVersionName(data.getString(data.getColumnIndex("version_name")));
+                                updates++;
+                            }else{
+                                item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
+                            }
+
+                            item.setIsSignatureValid(data.getInt(data.getColumnIndex("signature_valid"))==1);
+
+                            String iconPath = data.getString(data.getColumnIndex("iconpath"));
+                            String icon = data.getString(data.getColumnIndex("icon"));
+                            item.setName(data.getString(data.getColumnIndex("name")));
+                            item.setIcon(iconPath+icon);
+                            item.setId(data.getLong(data.getColumnIndex("_id")));
+                            items.add(item);
+
+                        }
+
+                        editor.putInt("updates", updates);
                     } else {
-                        item.setVersionName(data.getString(data.getColumnIndex("installed_version_name")));
+
+                        items.clear();
+                        //updatesAdapter.swapCursor(null);
+
+                        editor.remove("updates");
                     }
 
-                    String iconPath = data.getString(data.getColumnIndex("iconpath"));
-                    String icon = data.getString(data.getColumnIndex("icon"));
-                    item.setName(data.getString(data.getColumnIndex("name")));
-                    item.setIcon(iconPath + icon);
-                    item.setId(data.getLong(data.getColumnIndex("_id")));
-                    items.add(item);
+                    editor.commit();
 
+                    adapter.notifyDataSetChanged();
+
+                    if(getActivity()!=null){
+                        ((Start) getActivity()).updateBadge(sPref);
+                    }
+                    if (getListView().getAdapter() == null)
+                        setListAdapter(adapter);
+
+                    setListShown(true);
                 }
 
-                editor.putInt("updates", updates);
-            } else {
-
-                items.clear();
-                //updatesAdapter.swapCursor(null);
-
-                editor.remove("updates");
-            }
-
-            editor.commit();
-
-            adapter.notifyDataSetChanged();
-
-            if (getActivity() != null) {
-                ((Start) getActivity()).updateBadge(sPref);
-            }
-            if (getListView().getAdapter() == null)
-                setListAdapter(adapter);
-
-            setListShown(true);
-        }
 
 
     }
@@ -176,6 +184,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         int id = item.getItemId();
 
         if (id == R.id.menu_rollback) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Rollback_Button");
             Intent i = new Intent(getActivity(), RollbackActivity.class);
             startActivity(i);
         }
@@ -190,6 +199,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         if (id > 0) {
             Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "updates");
             startActivity(i);
         }
 
@@ -218,6 +228,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        getListView().setDivider(null);
 
         getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -270,13 +281,17 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int i = item.getItemId();
         if (i == R.id.menu_ignore_update) {
-
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Ignore_Update_Context_Menu");
             db.addToExcludeUpdate(info.id);
             //Toast.makeText(getActivity(), "Ignoring update...", Toast.LENGTH_LONG).show();
             refreshStoresEvent(null);
             return true;
         } else if (i == R.id.menu_discard) {
-            UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment(info.id);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Uninstall_Context_Menu");
+            UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment();
+            Bundle arg = new Bundle(  );
+            arg.putLong( "id", info.id );
+            uninstallRetainFragment.setArguments( arg );
             getFragmentManager().beginTransaction().add(uninstallRetainFragment, "UnistallTask").commit();
             return true;
         } else {

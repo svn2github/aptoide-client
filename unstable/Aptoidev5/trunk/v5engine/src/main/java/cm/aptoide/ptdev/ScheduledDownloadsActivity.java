@@ -7,17 +7,18 @@
  ******************************************************************************/
 package cm.aptoide.ptdev;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.*;
@@ -30,6 +31,8 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -37,7 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.HashMap;
 
-public class ScheduledDownloadsActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
+public class ScheduledDownloadsActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, ScheduledDownloadsDialog.DialogCallback {
 
     private ListView lv;
     private Database db;
@@ -57,17 +60,20 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
         }
     };
     private int i;
+    private boolean showDownloadAll;
 
     @Override
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
 
@@ -153,6 +159,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
 
         getSupportLoaderManager().initLoader(0, null, this);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -165,116 +172,10 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         });
 
-
-        DialogFragment pd = new DialogFragment() {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScheduledDownloadsActivity.this);
-                final AlertDialog scheduleDownloadDialog = dialogBuilder.create();
-                scheduleDownloadDialog.setTitle(getText(R.string.schDwnBtn));
-                scheduleDownloadDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                scheduleDownloadDialog.setCancelable(false);
-                scheduleDownloadDialog.setMessage(getText(R.string.schDown_install));
-                scheduleDownloadDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
-                        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-
-                            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
-                            requestFromMd5.setRepoName(schDown.getRepoName());
-                            requestFromMd5.setMd5Sum(schDown.getMd5());
-
-                            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
-                                @Override
-                                public void onRequestFailure(SpiceException spiceException) {
-
-                                }
-
-                                @Override
-                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-                                    if(getApkInfoJson == null) return;
-                                    Download download = new Download();
-                                    download.setId(schDown.getId());
-                                    download.setName(schDown.getName());
-                                    download.setVersion(schDown.getVername());
-                                    download.setIcon(schDown.getIconPath());
-                                    download.setPackageName(schDown.getApkid());
-                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
-                                    i++;
-                                    if(i==scheduledDownloadsHashMap.size()){
-                                        finish();
-                                    }
-                                }
-                            });
-                        }
-
-                    }
-                });
-                scheduleDownloadDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finish();
-                    }
-                });
-
-
-                return scheduleDownloadDialog;
-            }
-        };
-
-        if(getIntent().hasExtra("downloadAll")){
+        if(getIntent().hasExtra("downloadAll")) {
+            ScheduledDownloadsDialog pd = new ScheduledDownloadsDialog();
             pd.show(getSupportFragmentManager(), "installAllScheduled");
         }
-
-        Button installButton = (Button) findViewById(R.id.sch_down);
-        installButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                if (isAllChecked()) {
-                    for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-                        if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
-                            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
-
-
-                            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(ScheduledDownloadsActivity.this);
-                            requestFromMd5.setRepoName(schDown.getRepoName());
-                            requestFromMd5.setMd5Sum(schDown.getMd5());
-
-                            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
-                                @Override
-                                public void onRequestFailure(SpiceException spiceException) {
-
-                                }
-
-                                @Override
-                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
-
-                                    if(getApkInfoJson!=null){
-                                        Download download = new Download();
-                                        download.setId(schDown.getId());
-                                        download.setName(schDown.getName());
-                                        download.setVersion(schDown.getVername());
-                                        download.setIcon(schDown.getIconPath());
-                                        download.setPackageName(schDown.getApkid());
-                                        downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
-                                        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                                    }
-
-
-
-                                }
-                            });
-                        }
-                    }
-
-                } else {
-                    Toast toast = Toast.makeText(ScheduledDownloadsActivity.this, R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
 
 
         lv.setAdapter(adapter);
@@ -291,6 +192,9 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
 
         };
     }
+
+
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
@@ -336,26 +240,88 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             finish();
         } else if (i == R.id.home) {
             finish();
+        } else if (i == R.id.menu_install) {
+
+            if (isAllChecked()) {
+                for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                    if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
+                        final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+
+
+                        GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
+                        requestFromMd5.setRepoName(schDown.getRepoName());
+                        requestFromMd5.setMd5Sum(schDown.getMd5());
+
+                        spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {
+
+                            }
+
+                            @Override
+                            public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+
+                                if (getApkInfoJson != null) {
+                                    Download download = new Download();
+                                    download.setId(schDown.getMd5().hashCode());
+                                    download.setName(schDown.getName());
+                                    download.setVersion(schDown.getVername());
+                                    download.setIcon(schDown.getIconPath());
+                                    download.setPackageName(schDown.getApkid());
+                                    download.setMd5(schDown.getMd5());
+                                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Installed_Apps");
+                                }
+
+
+                            }
+                        });
+                    }
+                }
+
+            } else {
+                Toast toast = Toast.makeText(Aptoide.getContext(), R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         } else if (i == R.id.menu_remove) {
             Log.d("ScheduledDownloadsActivity-onOptionsItemSelected", "remove");
-            for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
-                if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
-                    db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
+            if (isAllChecked()) {
+                for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+                    if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
+                        db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Removed_Apps");
+                    }
                 }
+                getSupportLoaderManager().restartLoader(0, null, this);
+            }else{
+                Toast toast = Toast.makeText(Aptoide.getContext(), R.string.schDown_nodownloadselect, Toast.LENGTH_SHORT);
+                toast.show();
             }
-            getSupportLoaderManager().restartLoader(0, null, this);
         } else if (i == R.id.menu_invert) {
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Inverted_Apps");
             for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                 scheduledDownloadsHashMap.get(scheduledDownload).checked =
                         !scheduledDownloadsHashMap.get(scheduledDownload).checked;
             }
             adapter.notifyDataSetChanged();
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAllChecked() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+    }
+
+    public boolean isAllChecked() {
         if (scheduledDownloadsHashMap.isEmpty()) {
             return false;
         }
@@ -365,6 +331,50 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
             }
         }
         return false;
+    }
+
+
+
+    @Override
+    public void onOkClick() {
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
+
+            final ScheduledDownload schDown = scheduledDownloadsHashMap.get(scheduledDownload);
+            GetApkInfoRequestFromMd5 requestFromMd5 = new GetApkInfoRequestFromMd5(Aptoide.getContext());
+            requestFromMd5.setRepoName(schDown.getRepoName());
+            requestFromMd5.setMd5Sum(schDown.getMd5());
+
+            spiceManager.execute(requestFromMd5, new RequestListener<GetApkInfoJson>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+
+                }
+
+                @Override
+                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+                    if(getApkInfoJson == null) return;
+                    Download download = new Download();
+                    download.setId(schDown.getId());
+                    download.setName(schDown.getName());
+                    download.setVersion(schDown.getVername());
+                    download.setIcon(schDown.getIconPath());
+                    download.setPackageName(schDown.getApkid());
+                    download.setMd5(schDown.getMd5());
+                    downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
+                    i++;
+                    if(i==scheduledDownloadsHashMap.size()){
+                        finish();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onCancelClick() {
+       finish();
+
     }
 
     private static class ScheduledDownload {

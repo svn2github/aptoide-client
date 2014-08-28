@@ -101,14 +101,14 @@ public class PermissionsActivity extends Activity {
             String permission = permissionArray.get(i);
 
             for (PermissionGroupInfo pgi : lstGroups) {
-                csPermissionGroupLabel = pgi.loadLabel(pm);
-
                 try {
                     List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, 0);
                     for (PermissionInfo pi : lstPermissions) {
-                        csPermissionLabel = pi.loadLabel(pm);
-                        if(pi.name.equals(permission))
+                        if(pi.name.equals(permission)){
+                            csPermissionLabel = pi.loadLabel(pm);
+                            csPermissionGroupLabel = pgi.loadLabel(pm);
                             list.add(new ApkPermission(csPermissionGroupLabel.toString(), csPermissionLabel.toString()));
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -126,6 +126,28 @@ public class PermissionsActivity extends Activity {
 
         return list;
     }
+
+    public static boolean hasPermission(Context context, String permission) {
+        PackageManager pm = context.getPackageManager();
+
+        List<PermissionGroupInfo> lstGroups = pm.getAllPermissionGroups(0);
+
+        for (PermissionGroupInfo pgi : lstGroups) {
+            try {
+                List<PermissionInfo> lstPermissions = pm.queryPermissionsByGroup(pgi.name, 0);
+                for (PermissionInfo pi : lstPermissions) {
+                    if(pi.name.equals(permission)) {
+                        return true;
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+
 
     private void permissionsDialog(final FinishedApk viewApk, ArrayList<ApkPermission> permissions) {
 
@@ -190,7 +212,7 @@ public class PermissionsActivity extends Activity {
             }
         });
 
-
+        dialog.setCancelable(false);
 
 
         dialog.show();

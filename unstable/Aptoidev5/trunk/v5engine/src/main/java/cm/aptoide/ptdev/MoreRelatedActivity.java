@@ -181,7 +181,7 @@ public class MoreRelatedActivity extends ActionBarActivity {
 
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
+            getListView().setItemsCanFocus(true);
 
 
         }

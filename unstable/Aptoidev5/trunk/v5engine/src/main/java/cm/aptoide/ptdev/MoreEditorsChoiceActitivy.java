@@ -82,15 +82,12 @@ public class MoreEditorsChoiceActitivy extends ActionBarActivity implements Down
 
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+            getListView().setItemsCanFocus(true);
         }
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
-
-
-
-
 
             //page_collection.setExpanded(!page_collection.isExpanded());
 

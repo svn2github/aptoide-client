@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.downloadmanager;
 
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -37,6 +38,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
         connection = (HttpURLConnection) this.mURL.openConnection();
 
 
+
         connection.setConnectTimeout(TIME_OUT);
         connection.setReadTimeout(TIME_OUT);
         connection.setRequestProperty("User-Agent", AptoideUtils.NetworkUtils.getUserAgentString(Aptoide.getContext()));
@@ -56,12 +58,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
             if(responseCode == 404){
                 throw new NotFoundException();
             }else if(responseCode == 403){
-                InetAddress address = InetAddress.getByName(mURL.getHost());
-                String ip = "";
-                if (address != null) {
-                    ip = address.getHostAddress();
-                }
-                ACRA.getErrorReporter().handleException(new Exception("403 on "+ ip+"/"+mURL.toString()));
+
                 throw new IPBlackListedException();
             }
             // response not ok

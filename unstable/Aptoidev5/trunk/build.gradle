@@ -4,7 +4,9 @@ allprojects {
 
     // Top-level build file where you can add configuration options common to all sub-projects/modules.
     repositories {
+        maven { url "http://dl.bintray.com/populov/maven" }
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
     }
 
     apply plugin: 'idea'
@@ -14,10 +16,11 @@ allprojects {
 buildscript {
     repositories {
         mavenCentral()
-
+        maven { url 'http://download.crashlytics.com/maven' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
     }
 }

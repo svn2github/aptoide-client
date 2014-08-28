@@ -50,8 +50,8 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
 		 .displayer(new FadeInBitmapDisplayer(1000))
 		 .resetViewBeforeLoading(true)
 		 .cacheOnDisc(true)
-
 		 .build();
+
 	}
 
 	@Override

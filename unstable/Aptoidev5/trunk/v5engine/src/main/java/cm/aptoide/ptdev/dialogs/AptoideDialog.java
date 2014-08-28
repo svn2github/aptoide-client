@@ -2,7 +2,6 @@ package cm.aptoide.ptdev.dialogs;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.widget.ListPopupWindow;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +24,7 @@ public class AptoideDialog {
         return fragment;
     }
 
+
     public static DialogFragment addStoreDialog(){
         return new AddStoreDialog();
     }
@@ -37,9 +37,7 @@ public class AptoideDialog {
         return new ProgressDialogFragment();
     }
 
-    public static DialogFragment passwordDialog(){
-        return new PasswordDialog();
-    }
+    public static DialogFragment passwordDialog(){ return new PasswordDialog(); }
 
     public static DialogFragment wrongVersionXmlDialog(){
         return new WrongXmlVersionDialog();
@@ -49,7 +47,16 @@ public class AptoideDialog {
         return new ErrorDialog();
     }
 
+    public static ReplyCommentDialog replyCommentDialog(int commentId, String replyingTo) {
+        ReplyCommentDialog fragment = new ReplyCommentDialog();
 
+        Bundle bundle = new Bundle();
+        bundle.putInt("commentId", commentId);
+        bundle.putString("replyingTo", replyingTo);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
 
     public static DialogFragment myappInstall(String appName) {
 
@@ -68,16 +75,23 @@ public class AptoideDialog {
         DialogFragment fragment = new MyAppStoreDialog();
 
         Bundle bundle = new Bundle();
-
         bundle.putString("repoName", repoName);
-
         fragment.setArguments(bundle);
 
         return fragment;
-
     }
 
     public static DialogFragment updateUsernameDialog() {
         return new UsernameDialog();
+    }
+
+    public static FlagApkDialog flagAppDialog(String uservote) {
+        FlagApkDialog flagApkDialog = new FlagApkDialog();
+        if(uservote != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(FlagApkDialog.USERVOTE_ARGUMENT_KEY, uservote);
+            flagApkDialog.setArguments(bundle);
+        }
+        return flagApkDialog;
     }
 }

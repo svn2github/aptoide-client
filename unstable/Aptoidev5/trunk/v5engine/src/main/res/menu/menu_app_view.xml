@@ -21,5 +21,7 @@
           app:showAsAction="never"
           android:title="@string/search_other_market"
           android:icon="@android:drawable/ic_menu_search"/>
-
+    <item android:id="@+id/menu_SendFeedBack"
+        app:showAsAction="never"
+        android:title="@string/feedback_send_button"/>
 </menu>

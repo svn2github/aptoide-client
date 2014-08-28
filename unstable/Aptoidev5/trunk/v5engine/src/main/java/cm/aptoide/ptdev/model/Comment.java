@@ -3,28 +3,25 @@ package cm.aptoide.ptdev.model;
 
 import com.google.api.client.util.Key;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 
 public class Comment {
 
-    @Key
-   	private Number id;
-    @Key
-   	private String lang;
-    @Key
-   	private String reponame;
-    @Key
-   	private String subject;
-    @Key
-   	private String text;
+    @Key private Number id;
+    @Key private String lang;
+    @Key private String reponame;
+    @Key private String subject;
+    @Key private String text;
+    @Key private String timestamp;
+    @Key private String useridhash;
+    @Key private String username;
+    @Key private Number answerto;
+    @Key private Number votes;
 
-    @Key
-   	private String timestamp;
-
-    @Key
-   	private String useridhash;
-
-    @Key
-   	private String username;
+    private ArrayList<Comment> subComments = new ArrayList<Comment>();
+    private boolean isShowingSubcomments;
 
  	public Number getId(){
 		return this.id;
@@ -71,7 +68,21 @@ public class Comment {
  	public String getUsername(){
 		return this.username;
 	}
-	public void setUsername(String username){
-		this.username = username;
-	}
+	public void setUsername(String username){ this.username = username;	}
+    public Number getAnswerTo() { return answerto; }
+    public ArrayList<Comment> getSubComments() {
+        return subComments;
+    }
+    public void addSubComment(Comment subComment) {
+        subComments.add(subComment);
+    }
+    public boolean hasSubComments() {
+        return subComments.size() != 0;
+    }
+    public boolean isShowingSubcomments() {
+        return isShowingSubcomments;
+    }
+    public void setShowingSubcomments(boolean isShowingSubcomments) { this.isShowingSubcomments = isShowingSubcomments; }
+    public void clearSubcomments() { subComments.clear(); }
+    public Number getVotes() {  return votes; }
 }

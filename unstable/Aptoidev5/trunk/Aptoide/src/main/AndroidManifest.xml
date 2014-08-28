@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cm.aptoide.pt"
-          android:versionCode="436"
-          android:versionName="5.1.3" android:installLocation="auto">
+          android:versionCode="440"
+          android:versionName="5.2.0.2" android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
 
@@ -20,7 +20,8 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
 
 
 
@@ -74,6 +75,9 @@
         <activity android:name="cm.aptoide.ptdev.SignUpActivity" />
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity"/>
+
+        <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity"/>
+
 
         <activity android:name="cm.aptoide.ptdev.AppViewActivity" />
 
@@ -129,6 +133,7 @@
                 <data android:scheme="aptoidexml" />
                 <data android:scheme="aptoideinstall"/>
                 <data android:scheme="aptoidesearch" />
+                <data android:scheme="aptwords" />
             </intent-filter>
 
             <intent-filter>
@@ -183,17 +188,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name="com.mopub.mobileads.MraidBrowser" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.mobileads.MraidBrowser" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
         <activity android:name="com.google.android.gms.ads.AdActivity"
-                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@style/NoActionBar"/>
 
-        <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
+        <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard"/>
 
         <activity android:name="com.inmobi.androidsdk.IMBrowserActivity"
-                  android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
+                  android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" android:theme="@style/NoActionBar"
                   android:hardwareAccelerated="true"/>
 
 
@@ -335,10 +340,35 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog" />
-        <activity android:name="com.aptoide.openiab.Buy" />
-        <activity android:name="com.aptoide.openiab.CreditCard" />
-        <activity android:name="com.paypal.android.MEP.PayPalActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog"
+            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" />
+
+        <receiver android:name="com.aptoide.openiab.PayPalReceiver" >
+            <intent-filter>
+                <action android:name="PAYPAL_PAYMENT" />
+            </intent-filter>
+        </receiver>
+
+
+
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="df90b10add729d8e34d67f6d4f0bb3dddce5b7eb"/>
+
+        <service android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+        <activity android:name="cm.aptoide.ptdev.FeedBackActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="io.card.payment.DataEntryActivity" />
+
+        
 
 
     </application>

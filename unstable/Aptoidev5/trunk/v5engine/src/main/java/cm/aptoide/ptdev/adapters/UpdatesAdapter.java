@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -67,13 +70,14 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
 
         AppViewHolder holder = (AppViewHolder) v.getTag();
 
-
         if(holder==null){
             holder = new AppViewHolder();
             holder.appIcon = (ImageView) v.findViewById(R.id.app_icon);
             holder.manageIcon = (ImageView) v.findViewById(R.id.manage_icon);
             holder.appName = (TextView) v.findViewById(R.id.app_name);
             holder.versionName = (TextView) v.findViewById(R.id.app_version);
+            if(type==1) holder.notsafe = (TextView) v.findViewById(R.id.update_not_safe);
+
             v.setTag(holder);
         }
 
@@ -87,7 +91,6 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
             icon1 = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
         }
 
-
         ImageLoader.getInstance().displayImage(icon1,holder.appIcon);
 
         holder.versionName.setText(item.getVersionName());
@@ -98,12 +101,22 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
                 holder.manageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_Right_Icon");
                         ((Start) context).installApp(id);
                         Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                     }
                 });
+
+                if(!getItem(position).isSignature_valid()){
+                    holder.notsafe.setVisibility(View.VISIBLE);
+                }else{
+                    holder.notsafe.setVisibility(View.GONE);
+                }
+
                 break;
 
+            case 0:
+                break;
         }
 
         return v;
@@ -157,7 +170,8 @@ public class UpdatesAdapter extends BaseAdapter implements SimpleSectionAdapter.
         ImageView manageIcon;
         TextView appName;
         TextView versionName;
-        TextView downloads;
-        TextView rating;
+        TextView notsafe;
+        //TextView downloads;
+        //TextView rating;
     }
 }

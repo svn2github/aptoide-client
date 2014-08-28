@@ -20,7 +20,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:orientation="vertical">
 
 
-
         <TextView
                 style="@style/titleLabel"
                 android:text="@string/review"/>
@@ -82,10 +81,11 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         </LinearLayout>
 
         <TextView android:id="@+id/title_comments"
-                style="@style/titleLabel"
-                android:text="@string/comments"/>
+                  style="@style/titleLabel"
+                  android:text="@string/comments"/>
 
-        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content" android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
 
         <LinearLayout android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
@@ -93,7 +93,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                       android:orientation="vertical"
                       android:layout_margin="5dp"
                       android:visibility="gone"
-                      style="?attr/backgroundCard"
                       android:id="@+id/layout_comments">
 
             <LinearLayout
@@ -105,18 +104,17 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             </LinearLayout>
 
             <Button
-                    android:id="@+id/more_comments"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawableRight="@drawable/ic_more_arrow_right"
-                    android:gravity="fill_vertical|right"
-                    android:paddingLeft="5.0sp"
-                    android:paddingRight="5.0sp"
-                    android:text="@string/comment_see_all"
-                    android:visibility="gone"
-                    android:textColor="@android:color/darker_gray"/>
-
+                android:id="@+id/more_comments"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableRight="@drawable/ic_more_arrow_right"
+                android:gravity="fill_vertical|right"
+                android:paddingLeft="5.0sp"
+                android:paddingRight="5.0sp"
+                android:text="@string/comment_see_all"
+                android:visibility="gone"
+                android:textColor="@android:color/darker_gray"/>
 
         </LinearLayout>
 
@@ -129,23 +127,42 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/no_comments"/>
-        <!--<TextView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="@android:style/TextAppearance.Large"-->
-                <!--android:textColor="?attr/custom_color"-->
-                <!--android:paddingBottom="5dp"-->
-                <!--android:paddingLeft="5dp"-->
-                <!--android:paddingRight="5dp"-->
-                <!--android:paddingTop="10dp"-->
-                <!--android:gravity="left"-->
-                <!--android:text="@string/flag_this_app"/>-->
 
-        <!--<Button android:id="@+id/button_flag"-->
-                <!--style="@style/custom_button_style"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:text="@string/flag"-->
-                <!--android:layout_margin="10dp"/>-->
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="?attr/customColor"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:gravity="left"
+                android:text="@string/flags"/>
+
+        <ProgressBar android:id="@+id/loading_flags" android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+
+        <LinearLayout
+                android:id="@+id/flags_container"
+                style="?attr/backgroundCard"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+            <Button android:id="@+id/button_flag"
+                    style="?attr/customButtonColor"
+                    android:layout_width="fill_parent"
+                    android:text="@string/flag_this_app"
+                    android:layout_margin="10dp"/>
+
+            <include android:id="@+id/flag_layout"
+                     layout="@layout/fragment_flag_app"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -18,6 +18,13 @@ public class Download implements Serializable{
     private long timeLeft;
     private double speed;
     private String icon;
+    private String md5;
+
+    public String getCpiUrl() {
+        return cpiUrl;
+    }
+
+    private String cpiUrl;
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
@@ -108,6 +115,14 @@ public class Download implements Serializable{
         return packageName;
     }
 
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -121,5 +136,8 @@ public class Download implements Serializable{
     }
 
 
+    public void setCpiUrl(String cpiUrl) {
+        this.cpiUrl = cpiUrl;
+    }
 }
 

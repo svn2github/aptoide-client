@@ -3,6 +3,8 @@ package com.aptoide.partners;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.Menu;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,20 +17,19 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentHome;
+import cm.aptoide.ptdev.fragments.FragmentHome2;
 import cm.aptoide.ptdev.fragments.FragmentStore;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 
 /**
@@ -53,8 +55,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     private boolean isRefreshing;
     private StoreActivity.Sort sort;
     private boolean categories;
-
-
+    private static boolean startPartner = true;
 
 
     @Override
@@ -109,11 +110,24 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             }
         }
 
-        super.loadEditorsChoice(url, countryCode);
+       super.loadEditorsChoice(url, countryCode);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(AptoideConfigurationPartners.getRestrictionlist() != null) {
+            StringTokenizer tokenizer = new StringTokenizer(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getRestrictionlist(), ",");
+
+            startPartner = false;
+            while (tokenizer.hasMoreElements() && !startPartner) {
+                String token = tokenizer.nextToken().trim();
+                if (Build.MODEL.equals(token)) {
+                    startPartner = true;
+                    Log.d("Restriction List", "Device model " + token + " in restriction list, you're allowed to continue");
+                }
+            }
+        }
 
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
@@ -121,6 +135,17 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         super.onCreate(savedInstanceState);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!startPartner) {
+            Toast toast = Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.device_not_allowed), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            finish();
+        }
     }
 
     @Override
@@ -185,7 +210,6 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         boolean value = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch();
         menu.findItem(cm.aptoide.ptdev.R.id.menu_filter_mature_content).setVisible(value);
 
-        menu.findItem(cm.aptoide.ptdev.R.id.menu_about).setVisible(false);
         return true;
     }
 
@@ -263,7 +287,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 cm.aptoide.ptdev.R.attr.icMyAccountDrawable /* index 0 */,
                 cm.aptoide.ptdev.R.attr.icRollbackDrawable /* index 1 */,
                 cm.aptoide.ptdev.R.attr.icScheduledDrawable /* index 2 */,
-                cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable /* index 3 */
+                cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable /* index 3 */,
+                cm.aptoide.ptdev.R.attr.icSettingsDrawable /* index 4 */
         };
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
@@ -274,16 +299,14 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         int rollbackRes = typedArray.getResourceId(1, cm.aptoide.ptdev.R.drawable.ic_action_time_dark);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.rollback), rollbackRes, 1));
 
-        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icScheduledDrawable});
-        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
-        scheduleTypedArray.recycle();
+        int scheduleRes = typedArray.getResourceId(2, cm.aptoide.ptdev.R.drawable.ic_schedule);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.setting_schdwntitle), scheduleRes, 2));
 
-        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{cm.aptoide.ptdev.R.attr.icExcludedUpdatesDrawable});
-        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
-        excludedUpdatesTypedArray.recycle();
+        int excludedUpdatesRes = typedArray.getResourceId(3, cm.aptoide.ptdev.R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.excluded_updates), excludedUpdatesRes, 3));
 
+        int settingsRes = typedArray.getResourceId(4, cm.aptoide.ptdev.R.drawable.ic_action_settings_dark);
+        mItems.add(new MenuListAdapter.Item(getString(cm.aptoide.ptdev.R.string.settings), settingsRes, 7));
 
         typedArray.recycle();
 
@@ -380,7 +403,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
             switch (position) {
                 case 0:
-                    return new FragmentHome();
+                    return new FragmentHome2();
                 case 1:
                     fragmentStore = new com.aptoide.partners.Fragment();
                     return fragmentStore;

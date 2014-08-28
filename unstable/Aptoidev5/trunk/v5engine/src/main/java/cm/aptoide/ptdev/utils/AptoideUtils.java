@@ -19,15 +19,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
+import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.InstalledAppsHelper;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.model.Apk;
-import cm.aptoide.ptdev.model.IconDownloadPermissions;
+import cm.aptoide.ptdev.model.*;
 
+import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.webservices.Errors;
 import org.joda.time.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,6 +100,16 @@ public class AptoideUtils {
         }
 
         return uri_str;
+    }
+
+    public static void toastError(List<Error> errors) {
+        for (Error error: errors){
+            String localizedError = Aptoide.getContext().getString(Errors.getErrorsMap().get(error.getCode()));
+            if(localizedError==null){
+                localizedError = error.getMsg();
+            }
+            if (localizedError!=null) Toast.makeText(Aptoide.getContext(), localizedError, Toast.LENGTH_LONG).show();
+        }
     }
 
     public static class HWSpecifications {

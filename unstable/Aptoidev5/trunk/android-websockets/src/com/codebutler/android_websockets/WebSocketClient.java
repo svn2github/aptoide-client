@@ -228,6 +228,8 @@ public class WebSocketClient {
                     }
                 } catch (IOException e) {
                     mListener.onError(e);
+                } catch (NullPointerException e){
+                    mListener.onError(e);
                 }
             }
         });

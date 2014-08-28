@@ -3,6 +3,8 @@ package cm.aptoide.ptdev.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.model.RollBackItem;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.DateFormat;
@@ -67,7 +71,7 @@ public class RollBackAdapter extends CursorAdapter {
 
 
         final String name = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_NAME));
-        holder.name.setText(Html.fromHtml(name));
+        if(name!=null) holder.name.setText(Html.fromHtml(name));
         final String icon = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_ICONPATH));
         ImageLoader.getInstance().displayImage(icon, holder.icon);
         final String versionName = cursor.getString(cursor.getColumnIndex(Schema.RollbackTbl.COLUMN_VERSION));
@@ -106,14 +110,22 @@ public class RollBackAdapter extends CursorAdapter {
 
                 switch (action){
                     case INSTALLED:
-                        Fragment fragment = new UninstallRetainFragment(name, packageName, versionName, icon);
+                        Fragment fragment = new UninstallRetainFragment();
+                        Bundle args = new Bundle();
+                        args.putString( "name", name );
+                        args.putString( "package", packageName );
+                        args.putString( "version", versionName );
+                        args.putString( "icon", icon );
+                        fragment.setArguments( args );
                         activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Clicked_On_Uninstall_Button");
                         break;
 
                     default:
                         Intent intent = new Intent(context, appViewClass);
                         intent.putExtra("fromRollback", true);
                         intent.putExtra("md5sum", md5sum);
+                        intent.putExtra("download_from", "rollback");
                         context.startActivity(intent);
                         break;
                 }

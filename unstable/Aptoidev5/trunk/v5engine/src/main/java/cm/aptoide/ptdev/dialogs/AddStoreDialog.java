@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.dialogs;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,16 +17,17 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.ResponseCode;
-import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -34,6 +36,9 @@ import com.octo.android.robospice.request.CachedSpiceRequest;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -160,6 +165,10 @@ public class AddStoreDialog extends DialogFragment {
                             dismiss();
                         }
                         break;
+                    case 404:
+                        Toast.makeText(Aptoide.getContext(), R.string.error_REPO_1, Toast.LENGTH_LONG).show();
+                        dismissDialog();
+                        break;
                     default:
                         Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                         dismissDialog();
@@ -228,7 +237,15 @@ public class AddStoreDialog extends DialogFragment {
 
                 if ("FAIL".equals(repositoryInfoJson.getStatus())) {
 
-                    message = "Store doesn't exist.";
+                    if(!repositoryInfoJson.getErrors().isEmpty()) {
+                        final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
+
+                        Iterator i = repositoryInfoJson.getErrors().iterator();
+                        message = getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error)i.next()).getCode()));
+                        while (i.hasNext()) {
+                            message += ", " + getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error) i.next()).getCode()));
+                        }
+                    }
                     dismissDialog(message);
 
                 } else {
@@ -275,8 +292,8 @@ public class AddStoreDialog extends DialogFragment {
     void dismissDialog(){
         setRetainInstance(false);
         DialogFragment pd = (DialogFragment) getFragmentManager().findFragmentByTag("addStoreProgress");
-            if(pd!=null)
-                pd.dismissAllowingStateLoss();
+        if(pd!=null)
+            pd.dismissAllowingStateLoss();
 
     }
 
@@ -323,6 +340,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_Add_Store");
                 String url = ((EditText)view.findViewById(R.id.edit_store_uri)).getText().toString();
                 if(url!=null&&url.length()>0){
                     get(url, null);
@@ -334,6 +352,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_top_stores).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_See_Top_Stores");
                 Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos/q=" + Utils.filters(getActivity()));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 if(isAdded())dismiss();

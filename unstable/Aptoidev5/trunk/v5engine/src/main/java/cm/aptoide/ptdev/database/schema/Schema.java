@@ -91,7 +91,7 @@ public class Schema {
         @ColumnDefinition(type = SQLType.TEXT, unique = true, onConflict = OnConflict.REPLACE) public final static String COLUMN_APKID = "package_name";
         @ColumnDefinition(type = SQLType.TEXT ) public final static String COLUMN_NAME = "name";
         @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "0") public final static String COLUMN_VERCODE = "version_code";
-        @ColumnDefinition(type = SQLType.INTEGER, defaultValue = "") public final static String COLUMN_VERNAME = "version_name";
+        @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_VERNAME = "version_name";
 
         @ColumnDefinition(type = SQLType.TEXT, defaultValue = "") public final static String COLUMN_SIGNATURE = "signature";
 
@@ -254,10 +254,37 @@ public class Schema {
         @ColumnDefinition(type = SQLType.INTEGER, primaryKey = true, autoIncrement = true)
         public final static String COLUMN_ID = "id_repo";
 
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_FEATURED_GRAPHIC_PATH = "featured_graphic_path";
+
         public static String getName() {
             return "repo";
         }
     }
+
+
+    @TableDefinition(
+            indexes = {
+                    @TableDefinition.Index(index_name = "featuredGraphicsIdx",
+                            keys = @TableDefinition.Key(field = FeaturedEditorsChoice.COLUMN_ID))
+            })
+    public static class FeaturedEditorsChoice {
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_ORDER = "highlightorder";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public final static String COLUMN_ID = Apk.COLUMN_ID;
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public final static String COLUMN_FEATURED_GRAPHIC_PATH = "featured_graphic";
+
+
+        public static String getName() {
+            return "featurededitorschoice";
+        }
+    }
+
 
     @TableDefinition(
             indexes = {

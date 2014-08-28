@@ -2,12 +2,16 @@ package cm.aptoide.ptdev.downloadmanager;
 
 import android.os.StatFs;
 import android.util.Log;
+
+import org.acra.ACRA;
+
 import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
 
 
 import java.io.*;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
@@ -87,36 +91,7 @@ public class DownloadThread implements Runnable, Serializable {
             mDownloadFile.setDownloadedSize(file, fileSize);
             this.mRemainingSize =  mFullSize - fileSize;
 
-            mConnection.connect(fileSize);
-
-            Log.d("DownloadManager", "Starting Download " + (parent.getStatusState() instanceof ActiveState) + " "+this.mDownloadedSize+fileSize + " " +this.mRemainingSize);
-            byte[] bytes = new byte[1024];
-            int bytesRead;
-            BufferedInputStream mStream = mConnection.getStream();
-
-            if(parent.getStatusState() instanceof ActiveState){
-                StatFs stat = new StatFs(download.getDestination());
-
-                long blockSize = stat.getBlockSize();
-                long availableBlocks = stat.getAvailableBlocks();
-
-                long avail = (blockSize * availableBlocks);
-
-                if( mRemainingSize > avail){
-                    parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
-                }
-            }
-
-            while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
-                file.write(bytes, 0, bytesRead);
-                this.mDownloadedSize += bytesRead;
-                this.mProgress += bytesRead;
-            }
-
-            if(parent.getStatusState() instanceof ActiveState){
-                mDownloadFile.checkMd5();
-                mDownloadFile.rename();
-            }
+            download();
 
 //            Log.d("DownloadManager", "Download done with " + new Md5Handler().md5Calc(new File(mDestination)));
         }catch (NotFoundException exception){
@@ -127,8 +102,59 @@ public class DownloadThread implements Runnable, Serializable {
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.SD_ERROR));
         }catch (ContentTypeNotApkException e){
             parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
-        }catch (IPBlackListedException e){
-            parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.IP_BLACKLISTED));
+        } catch (IPBlackListedException e) {
+
+            if(mConnection!=null){
+                mConnection.close();
+            }
+
+            try {
+                mConnection = download.createFallbackConnection();
+                download();
+            } catch (NotFoundException exception) {
+                exception.printStackTrace();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NOT_FOUND));
+            } catch (FileNotFoundException exception) {
+                exception.printStackTrace();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.SD_ERROR));
+            } catch (ContentTypeNotApkException e1) {
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.PAIDAPP_NOTFOUND));
+            } catch (IPBlackListedException e1) {
+
+                InetAddress address = null;
+                try {
+                    address = InetAddress.getByName(mConnection.getURL().getHost());
+                } catch (UnknownHostException e2) {
+                    e2.printStackTrace();
+                }
+                String ip = "";
+                if (address != null) {
+                    ip = address.getHostAddress();
+                }
+                ACRA.getErrorReporter().setEnabled(true);
+                ACRA.getErrorReporter().handleException(new Exception("403 on "+ ip+"/"+mConnection.getURL().toString()));
+                ACRA.getErrorReporter().setEnabled(false);
+
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.IP_BLACKLISTED));
+            } catch (Md5FailedException e1) {
+                e1.printStackTrace();
+                mDownloadFile.delete();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.MD5_CHECK_FAILED));
+            } catch (UnknownHostException e1) {
+                e1.printStackTrace();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
+            } catch (CompletedDownloadException e1) {
+                mFullSize = mProgress = fileSize;
+                mRemainingSize = 0;
+                e1.printStackTrace();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.CONNECTION_ERROR));
+            }
+
         }catch (Md5FailedException e){
             e.printStackTrace();
             mDownloadFile.delete();
@@ -163,6 +189,39 @@ public class DownloadThread implements Runnable, Serializable {
 
 //        BusProvider.getInstance().post(parent);
 
+    }
+
+    private void download() throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException, Md5FailedException {
+        mConnection.connect(fileSize);
+
+        Log.d("DownloadManager", "Starting Download " + (parent.getStatusState() instanceof ActiveState) + " " + this.mDownloadedSize + fileSize + " " + this.mRemainingSize);
+        byte[] bytes = new byte[1024];
+        int bytesRead;
+        BufferedInputStream mStream = mConnection.getStream();
+
+        if( parent.getStatusState() instanceof ActiveState){
+            StatFs stat = new StatFs(download.getDestination());
+
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+
+            long avail = (blockSize * availableBlocks);
+
+            if( mRemainingSize > avail){
+                parent.changeStatusState(new ErrorState(parent, EnumDownloadFailReason.NO_FREE_SPACE));
+            }
+        }
+
+        while ( (bytesRead = mStream.read(bytes)) != -1 && parent.getStatusState() instanceof ActiveState) {
+            file.write(bytes, 0, bytesRead);
+            this.mDownloadedSize += bytesRead;
+            this.mProgress += bytesRead;
+        }
+
+        if(parent.getStatusState() instanceof ActiveState){
+            mDownloadFile.checkMd5();
+            mDownloadFile.rename();
+        }
     }
 
 

@@ -22,10 +22,14 @@ package cm.aptoide.ptdev.adapters;
 
 
         import android.content.Context;
+        import android.os.Build;
         import android.util.Log;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.*;
+
+        import com.flurry.android.FlurryAgent;
+
         import cm.aptoide.ptdev.R;
         import cm.aptoide.ptdev.Start;
 
@@ -42,9 +46,6 @@ package cm.aptoide.ptdev.adapters;
  * @version 0.2
  */
 public class SimpleSectionAdapter<T> extends BaseAdapter {
-    // Debug
-    static final boolean DEBUG = false;
-    static final String TAG = SimpleSectionAdapter.class.getSimpleName();
 
     // Constants
     private static final int VIEW_TYPE_SECTION_HEADER = 0;
@@ -110,6 +111,7 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+
         SectionHolder sectionHolder = null;
 
         switch (getItemViewType(position)) {
@@ -149,6 +151,7 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
                     sectionHolder.more.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All");
                             ((Start)mContext).updateAll(((UpdatesAdapter)mListAdapter).getUpdateIds());
                             Toast.makeText(mContext, mContext.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
                         }
@@ -244,11 +247,9 @@ public class SimpleSectionAdapter<T> extends BaseAdapter {
                 mSections.put(sectionName, i + nSections);
                 nSections ++;
             }
+
         }
 
-        if(DEBUG) {
-            Log.d(TAG, String.format("Found %d sections.", mSections.size()));
-        }
     }
 
     private int getSectionCount() {

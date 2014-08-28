@@ -67,6 +67,8 @@
 
     <attr name="icExcludedUpdatesDrawable" format="reference"/>
 
+    <attr name="icSettingsDrawable" format="reference"/>
+
     <attr name="icRevertDrawable" format="reference"/>
 
     <attr name="icErrorDrawable" format="reference"/>
@@ -101,4 +103,8 @@
     <attr name="icCreditCardDrawable" format="reference"/>
     <attr name="icCellphoneDrawable" format="reference"/>
 
+    <attr name="icViewMoreComments" format="reference"/>
+    <attr name="icDialogDrawable" format="reference"/>
+
+    <attr name="icNextItemDrawable" format="reference"/>
 </resources>

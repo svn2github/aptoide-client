@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bootconf>
     <storeconf>
-        <theme>maroon</theme>
-        <avatar>https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <theme>black</theme>
+        <avatar>http://pool.img.aptoide.com/imgs/0b06faaa8c638e324cf4f1ae3fd6b557_ravatar_34x34.png</avatar>
         <description></description>
         <view>list</view>
         <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,recommended</items>
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid>07e72b31014233e338115a5f40ca5410</partnerid>
-        <marketname>Millennium@EDU Appstore</marketname>
-        <defaultstorename>millenniumedu</defaultstorename>
-        <aptoidetheme>maroon</aptoidetheme>
-        <splashscreen>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/millenniumedu/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/millenniumedu/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_millenniumedu</brand>
-        <searchstores>false</searchstores>
+        <partnerid></partnerid>
+        <marketname>Aptoide Appstore</marketname>
+        <defaultstorename>apps</defaultstorename>
+        <aptoidetheme>default</aptoidetheme>
+        <splashscreen>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_aptoide</brand>
+        <searchstores>true</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
-        <multiplestores>false</multiplestores>
+        <multiplestores>true</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid>6131061b2e7678f827644b58f37380c7</adunitid>
+        <adunitid></adunitid>
+        <createshortcut>true</createshortcut>
+        <linkedcomments>true</linkedcomments>
+        <splashcolor>#FFE98023</splashcolor>
     </aptoideconf>
 </bootconf>

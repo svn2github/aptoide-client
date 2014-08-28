@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -15,6 +16,8 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.model.Collection;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -61,7 +64,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         int viewType = list.get(position).isExpanded()?0:1;
-        Log.d("Aptoide-HomeLayout", "viewType is " + viewType);
+//        Log.d("Aptoide-HomeLayout", "viewType is " + viewType);
         return viewType;
     }
 
@@ -93,7 +96,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, MoreEditorsChoiceActitivy.class);
-                    Log.d("Aptoide-HomeLayout", String.valueOf(collection.getParentId()));
+//                    Log.d("Aptoide-HomeLayout", String.valueOf(collection.getParentId()));
                     i.putExtra("parentId", collection.getParentId());
                     context.startActivity(i);
                 }
@@ -143,10 +146,10 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
             try {
                 categoryName = context.getString(EnumCategories.getCategoryName(list.get(position).getParentId()));
-                Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
+//                Log.d("HomeLayoutAdapter-categ", "Category Name: " + categoryName);
             } catch (Exception e) {
                 categoryName = name;
-                Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
+//                Log.d("HomeLayoutAdapter-categ", "Untranslated Category Name: " + categoryName);
             }
         }
         tv.setText(categoryName);
@@ -158,7 +161,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
 
         //gl.setAlignmentMode();
 
-        Log.d("Aptoide-GridView", "Orientation is " + context.getResources().getConfiguration().orientation);
+//        Log.d("Aptoide-GridView", "Orientation is " + context.getResources().getConfiguration().orientation);
 
 
 
@@ -188,7 +191,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             }
 
             i++;
-            Log.d("Aptoide-HomeLayout", "Adding item " + item.getName() + " " + i);
+//            Log.d("Aptoide-HomeLayout", "Adding item " + item.getName() + " " + i);
 
             FrameLayout tvChild;
             if(b){
@@ -199,7 +202,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             TextView nameTv = (TextView) tvChild.findViewById(R.id.app_name);
             nameTv.setText(item.getName());
             ImageView iconIv = (ImageView) tvChild.findViewById(R.id.app_icon);
-            Log.d("Home-Name", "Name length: " + item.getName().length());
+//            Log.d("Home-Name", "Name length: " + item.getName().length());
 
             String icon = item.getIcon();
             if(icon.contains("_icon")){
@@ -214,6 +217,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     Intent i = new Intent(context, appViewClass);
                     long id = item.getId();
                     i.putExtra("id", id);
+                    i.putExtra("download_from", "home_page");
                     context.startActivity(i);
                 }
             });
@@ -222,10 +226,10 @@ public class HomeLayoutAdapter extends BaseAdapter {
             try {
                 int cat = Integer.parseInt(item.getCategory());
                 category = context.getString(EnumCategories.getCategoryName(cat));
-                Log.d("Home-categ", "Category Name: " + category);
+//                Log.d("Home-categ", "Category Name: " + category);
             }catch (Exception e){
                 category = item.getCategoryString();
-                Log.d("Home-categ", "Untranslated Category Name: " + category);
+//                Log.d("Home-categ", "Untranslated Category Name: " + category);
             }
 
             if(list.get(position).getParentId()!=-1){
@@ -252,11 +256,12 @@ public class HomeLayoutAdapter extends BaseAdapter {
             overflow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Opened_Popup_Menu");
                     showPopup(v, item.getId());
                 }
             });
             RatingBar rating = (RatingBar) tvChild.findViewById(R.id.app_rating);
-            Log.d("Aptoide-Rating", String.valueOf(item.getRating()));
+//            Log.d("Aptoide-Rating", String.valueOf(item.getRating()));
             rating.setRating(item.getRating());
             rating.setOnRatingBarChangeListener(null);
             rating.setVisibility(View.VISIBLE);
@@ -317,18 +322,17 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     sizeToGrow++;
                 }
 
-                Log.d("Aptoide-HomeLayout", "Size to grow is " + sizeToGrow + " " + collection.getAppsList().size());
+//                Log.d("Aptoide-HomeLayout", "Size to grow is " + sizeToGrow + " " + collection.getAppsList().size());
                 int maxMargin = (int) ((190) * density * sizeToGrow);
 
-                Log.d("Aptoide-HomeLayout", "MaxMargin  is " + maxMargin);
+//                Log.d("Aptoide-HomeLayout", "MaxMargin  is " + maxMargin);
 
                 int mMarginStart = (int) (-maxMargin + 190 * density);
 
-                Log.d("Aptoide-HomeLayout", "MarginStart  is " + mMarginStart);
+//                Log.d("Aptoide-HomeLayout", "MarginStart  is " + mMarginStart);
 
                 collection.setMarginBottom(mMarginStart);
                 notifyDataSetChanged();
-
             }
 
             final LinearLayout toolbar = (LinearLayout) view.findViewById(R.id.collectionList);
@@ -378,6 +382,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     context.getTheme().resolveAttribute( R.attr.icCollapseDrawable, outValue, true );
                     iv.setImageResource(outValue.resourceId);
                     collection.setExpanded2(true);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("More_Editors_Choice_Expanded_Apps");
                 }else{
                     mMarginEnd = (int) ((190)*density) - maxMargin;
                     mMarginStart = 0;
@@ -385,6 +390,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     context.getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
                     iv.setImageResource(outValue.resourceId);
                     collection.setExpanded2(false);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("More_Editors_Choice_Collapsed_Apps");
                 }
 
                 mWasEndedAlready = false;
@@ -405,7 +411,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     params.bottomMargin = mMarginStart + (int) ((mMarginEnd - mMarginStart) * interpolatedTime);
 
                     // Invalidating the layout, making us seeing the changes we made
-                    Log.d("Aptoide-HomeLayout", "Applying transform: bottom margin is " + params.bottomMargin + " " + mMarginStart + " " + mMarginEnd);
+//                    Log.d("Aptoide-HomeLayout", "Applying transform: bottom margin is " + params.bottomMargin + " " + mMarginStart + " " + mMarginEnd);
                     mAnimatedView.requestLayout();
 
                     // Making sure we didn't run the ending before (it happens!)
@@ -461,6 +467,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             if (i == R.id.menu_install) {
                 ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

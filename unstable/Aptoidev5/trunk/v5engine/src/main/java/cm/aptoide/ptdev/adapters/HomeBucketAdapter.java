@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.Build;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.*;
@@ -12,6 +13,8 @@ import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.utils.IconSizes;
+
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -61,11 +64,13 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             holder = new ViewHolder();
             v = LayoutInflater.from(ctx).inflate(R.layout.row_app_home, parent, false);
 
-            holder.category= (TextView) v.findViewById(R.id.app_category);
+            //holder.category= (TextView) v.findViewById(R.id.app_category);
             holder.name = (TextView) v.findViewById(R.id.app_name);
             holder.icon = (ImageView) v.findViewById(R.id.app_icon);
-            holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
-            holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
+            holder.category = (TextView) v.findViewById(R.id.app_category);
+            holder.overflow = (ImageView) v.findViewById(R.id.ic_action);
+            //holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
+            //holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
 
             v.setTag(holder);
         } else {
@@ -76,7 +81,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         final HomeItem item = currentElement;
 
         holder.name.setText(item.getName());
-        holder.category.setText(item.getCategory());
+        holder.category.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
         String icon = item.getIcon();
 
         if(icon.contains("_icon")){
@@ -86,21 +91,22 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
 
         ImageLoader.getInstance().displayImage(icon, holder.icon);
 
-        holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+        //holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
         if(item.getName().length()>10){
-            holder.downloads.setMaxLines(1);
+        //    holder.downloads.setMaxLines(1);
         }else{
-            holder.downloads.setMaxLines(2);
+        //    holder.downloads.setMaxLines(2);
         }
-        holder.downloads.setVisibility(View.VISIBLE);
+        //holder.downloads.setVisibility(View.VISIBLE);
 
-        holder.rating.setRating(item.getRating());
-        holder.rating.setOnRatingBarChangeListener(null);
+        //holder.rating.setRating(item.getRating());
+        //holder.rating.setOnRatingBarChangeListener(null);
 
-        ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
-        overflow.setOnClickListener(new View.OnClickListener() {
+        //ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
+        holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Opened_Popup_Install");
                 showPopup(v, item.getId());
             }
         });
@@ -114,6 +120,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
                     i.putExtra("fromRelated", true);
                     i.putExtra("md5sum", item.getMd5());
                     i.putExtra("repoName", item.getRepoName());
+                    i.putExtra("download_from", "recommended_apps");
                 }else{
                     long id = item.getId();
                     i.putExtra("id", id);
@@ -122,12 +129,6 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
                 getContext().startActivity(i);
             }
         });
-
-
-
-
-
-
 
         return v;
     }
@@ -143,8 +144,9 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         TextView name;
         TextView category;
         ImageView icon;
-        TextView downloads;
-        RatingBar rating;
+        ImageView overflow;
+        //TextView downloads;
+        //RatingBar rating;
     }
 
     static class MenuListener implements PopupMenu.OnMenuItemClickListener{
@@ -166,6 +168,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
             if (i == R.id.menu_install) {
                 ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

@@ -6,10 +6,7 @@ import android.support.v4.app.*;
 import android.util.Log;
 import android.view.ViewGroup;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome;
-import cm.aptoide.ptdev.fragments.FragmentStores;
-import cm.aptoide.ptdev.fragments.FragmentUpdates;
+import cm.aptoide.ptdev.fragments.*;
 
 import java.lang.reflect.Field;
 
@@ -28,7 +25,6 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
     public AptoidePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
-
     }
 
     @Override
@@ -40,6 +36,8 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return TITLES.length;
     }
+
+
 
 
     @Override
@@ -63,7 +61,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new FragmentHome();
+                return new FragmentHome2();
             case 1:
                 return new FragmentStores();
             case 2:

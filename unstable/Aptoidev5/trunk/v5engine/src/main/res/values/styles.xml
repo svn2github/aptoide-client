@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" >
 
     <style name="separatorLabel">
         <item name="android:padding">2dp</item>
@@ -51,12 +51,26 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="overflowMenuButton">
+    <style name="focusableRowBackground">
+        <item name="android:background">@drawable/highlight_overlay</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="overflowHomeButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:src">@drawable/overflow_menu</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="overflowStoreButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:src">@drawable/overflow_menu</item>
     </style>
 
     <style name="headerSeparatorButtonStyle">
@@ -73,6 +87,7 @@
         <item name="android:textStyle">italic</item>
         <item name="android:layout_gravity">center_vertical|right</item>
         <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
     </style>
 
     <style name="headerSeparatorButtonStyleAptoide" parent="headerSeparatorButtonStyle">
@@ -220,6 +235,13 @@
         <item name="android:background">@drawable/paypal_btn_default_holo_light</item>
     </style>
 
+    <style name="WidgetButtonCarrierBillingUnitel" parent="WidgetButtonCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableLeft">@drawable/ic_action_unitel2</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/unitel_btn_default_holo_light</item>
+    </style>
+
 
     <style name="Animations"/>
     <!--  PopDownMenu  -->
@@ -344,7 +366,14 @@
     </style>
     <style name="PurchaseDialog" parent="@style/FinskyLightDialogTheme">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">false</item>
+    </style>
 
+    <style name="NoActionBar" parent="AptoideThemeDefault">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">false</item>
     </style>
 
 

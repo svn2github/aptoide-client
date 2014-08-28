@@ -3,12 +3,8 @@ package cm.aptoide.ptdev;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -16,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentBreadCrumbs;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import cm.aptoide.ptdev.database.Database;
@@ -27,17 +22,15 @@ import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.ParserService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.SpiceService;
+
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -70,12 +63,13 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         }
     };
     private EnumStoreTheme storeTheme;
+    private FragmentBreadCrumbs breadCrumbs;
 
     public EnumStoreTheme getStoreTheme() {
         return storeTheme;
     }
 
-    public enum Sort{ 	NAME, DOWNLOADS, DATE, PRICE, RATING}
+    public enum Sort{ 	NAMEAZ,NAMEZA, DOWNLOADS, DATE, PRICE, RATING}
     public boolean categories;
     public Sort sort;
 
@@ -120,10 +114,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
         storeTheme = EnumStoreTheme.values()[getIntent().getIntExtra("theme", 0)];
         //storeAvatarUrl = getIntent().getStringExtra("storeavatarurl");
-        FragmentBreadCrumbs breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
+        breadCrumbs = (FragmentBreadCrumbs) findViewById(R.id.breadcrumbs);
 
         breadCrumbs.setActivity(this);
-        breadCrumbs.setTitle("Home", null);
+        breadCrumbs.setTitle(getString(R.string.categories), null);
 
         if (savedInstanceState == null) {
             setFragment();
@@ -152,7 +146,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         Fragment fragmentHeader = new FragmentStoreHeader();
 
-        Log.d("Aptoide-", "StoreActivity id" + storeid);
+        //Log.d("Aptoide-", "StoreActivity id" + storeid);
 
 
         Bundle args = new Bundle();
@@ -175,12 +169,15 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     protected void onStart() {
         super.onStart();
         BusProvider.getInstance().register(this);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         BusProvider.getInstance().unregister(this);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -196,8 +193,11 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         getMenuInflater().inflate(R.menu.menu_categories, menu);
 
         switch(sort){
-            case NAME:
-                menu.findItem(R.id.name).setChecked(true);
+            case NAMEAZ:
+                menu.findItem(R.id.nameAZ).setChecked(true);
+                break;
+            case NAMEZA:
+                menu.findItem(R.id.nameZA).setChecked(true);
                 break;
             case DOWNLOADS:
                 menu.findItem(R.id.download).setChecked(true);
@@ -213,8 +213,11 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
                 break;
         }
 
-        if(!categories){
+        if(categories && storeid != -1){
+            breadCrumbs.setTitle(getString(R.string.categories), null);
+        }else{
             menu.findItem(R.id.show_all).setChecked(true);
+            breadCrumbs.setTitle(getString(R.string.order_popup_catg2), null);
         }
 
         menu.findItem(R.id.show_all).setVisible(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false));
@@ -226,42 +229,55 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
 
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
+        if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if( i == R.id.refresh_store){
             refreshList();
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Refresh_Button");
+        }else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Feedback_Button");
         }
-        else if( i == R.id.name){
-            sort = Sort.NAME;
-            setSort(item);
-        } else if( i == R.id.date){
-            sort = Sort.DATE;
-            setSort(item);
-        }else if( i == R.id.download){
-            sort = Sort.DOWNLOADS;
-            setSort(item);
-        }else if( i == R.id.rating){
-            sort = Sort.RATING;
-            setSort(item);
-        }else if( i == R.id.price){
-            sort = Sort.PRICE;
-            setSort(item);
-
-        }else if( i == R.id.show_all){
-
-            categories = !categories;
-            getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            setSort(item);
-
+        else {
+            if (i == R.id.nameAZ) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_AZ");
+                sort = Sort.NAMEAZ;
+                setSort(item);
+            } else if (i == R.id.nameZA) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_ZA");
+                sort = Sort.NAMEZA;
+                setSort(item);
+            } else if (i == R.id.date) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Date");
+                sort = Sort.DATE;
+                setSort(item);
+            } else if (i == R.id.download) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Downloads");
+                sort = Sort.DOWNLOADS;
+                setSort(item);
+            } else if (i == R.id.rating) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Rating");
+                sort = Sort.RATING;
+                setSort(item);
+            } else if (i == R.id.price) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Price");
+                sort = Sort.PRICE;
+                setSort(item);
+            } else if (i == R.id.show_all) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_All_Applications");
+                categories = !categories;
+                getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                setSort(item);
+            }
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("orderByCategory", categories).putInt("order_list", sort.ordinal()).commit();
-
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putBoolean("orderByCategory", categories)
+                .putInt("order_list", sort.ordinal()).commit();
         return true;
     }
 

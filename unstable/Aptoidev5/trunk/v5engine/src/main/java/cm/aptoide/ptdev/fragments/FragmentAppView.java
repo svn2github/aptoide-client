@@ -1,28 +1,75 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
-import cm.aptoide.ptdev.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Subscribe;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cm.aptoide.ptdev.AllCommentsActivity;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.MoreRelatedActivity;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.ScreenshotsViewer;
+import cm.aptoide.ptdev.VeredictReview;
 import cm.aptoide.ptdev.adapters.RelatedBucketAdapter;
 import cm.aptoide.ptdev.adapters.StoreSpinnerAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -32,36 +79,20 @@ import cm.aptoide.ptdev.downloadmanager.PermissionsActivity;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
-import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentCallback;
+import cm.aptoide.ptdev.fragments.callbacks.SuccessfullyPostCallback;
+import cm.aptoide.ptdev.model.ApkPermission;
+import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.MediaObject;
+import cm.aptoide.ptdev.model.MultiStoreItem;
+import cm.aptoide.ptdev.model.Screenshot;
+import cm.aptoide.ptdev.model.Video;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.AddCommentRequest;
 import cm.aptoide.ptdev.webservices.AddLikeRequest;
 import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
-import com.commonsware.cwac.merge.MergeAdapter;
-import com.nostra13.universalimageloader.cache.disc.BaseDiscCache;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -73,7 +104,6 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class FragmentAppView extends Fragment {
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -93,9 +123,7 @@ public abstract class FragmentAppView extends Fragment {
         BusProvider.getInstance().unregister(this);
     }
 
-
     public static class FragmentAppViewDetails extends FragmentAppView{
-
 
         private TextView description;
         private TextView showAllDescription;
@@ -112,7 +140,6 @@ public abstract class FragmentAppView extends Fragment {
         private TextView publisher;
 
 
-
         private ProgressBar loadingPb;
 
         private TextView publisherWebsite;
@@ -126,18 +153,18 @@ public abstract class FragmentAppView extends Fragment {
         private View row2;
         private View row3;
         private Spinner spinner;
-        private boolean initializedView = false;
+        private boolean initializedView;
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.DetailsEvent event) {
-            Log.d("Aptoide-AppView", "getting event");
-            Log.d("Aptoide-AppView", "Setting description");
+            //Log.d("Aptoide-AppView", "getting event");
+            //Log.d("Aptoide-AppView", "Setting description");
             if(event == null) return;
 
             if (event.getDescription()!=null)
                 description.setText(event.getDescription());
 
-//            Log.d("Aptoide-description", "lines "+ description.getLineCount() );
+//            //Log.d("Aptoide-description", "lines "+ description.getLineCount() );
             if (event.getDescription()!=null && event.getDescription().length() > 250) {
 
                 description.setMaxLines(10);
@@ -155,6 +182,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Expanded_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -163,11 +191,11 @@ public abstract class FragmentAppView extends Fragment {
                             description.setMaxLines(10);
 //                            scroller.scrollTo(0, scrollPosition);
                             showAllDescription.setText(getString(R.string.show_more));
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Colapsed_Description");
                         }
                     }
                 });
                 descriptionContainer.setOnClickListener(new View.OnClickListener() {
-
 
                     @Override
                     public void onClick(View v) {
@@ -179,6 +207,7 @@ public abstract class FragmentAppView extends Fragment {
                             getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             showAllDescription.setText(getString(R.string.show_less));
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
                         } else {
                             collapsed = true;
                             TypedValue outValue = new TypedValue();
@@ -186,6 +215,7 @@ public abstract class FragmentAppView extends Fragment {
                             showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
                             description.setMaxLines(10);
                             showAllDescription.setText(getString(R.string.show_more));
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
                         }
                     }
                 });
@@ -206,35 +236,32 @@ public abstract class FragmentAppView extends Fragment {
 
             MultiStoreItem[] items = event.getOtherVersions();
 
-            if (items != null) {
-                final StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
-
-                spinner.setAdapter(adapter);
+            if(items != null) {
+                StoreSpinnerAdapter adapter = new StoreSpinnerAdapter(getActivity(), items);
 
                 initializedView = false;
 
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if(!initializedView){
-                            initializedView = true;
-                        }else{
-                            MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
-                            BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode()));
-                        }
+                spinner.setAdapter(adapter);
 
-                    }
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if(!initializedView){
+                                    initializedView = true;
+                                }else {
+                                    spinner.setOnItemSelectedListener(null);
+                                    MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
+                                    BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
+                                    if (Build.VERSION.SDK_INT >= 10)
+                                        FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
+                                }
+                            }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
-
-
-
-
-
+                            }
+                        });
 
 
 
@@ -243,11 +270,24 @@ public abstract class FragmentAppView extends Fragment {
 
             publisher.setText(Html.fromHtml("<b>" + getString(R.string.publisher) + "</b>" + ": " + event.getPublisher()));
             size.setText(Html.fromHtml("<b>" + getString(R.string.size) + "</b>" + ": " + AptoideUtils.formatBytes(event.getSize())));
-            if(event.getStore()!=null){
-                store.setVisibility(View.VISIBLE);
-                store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "));
+
+            if(((AppViewActivity)getActivity()).isMultipleStores()){
+
+                if(event.getStore()!=null){
+                    store.setVisibility(View.VISIBLE);
+                    store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "));
+                }else{
+                    store.setVisibility(View.INVISIBLE);
+                }
+
             }else{
-                store.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.GONE);
+                if(event.getStore()!=null){
+                    store.setVisibility(View.VISIBLE);
+                    store.setText(Html.fromHtml("<b>" + getString(R.string.store) + "</b>" + ": "+event.getStore()));
+                }else{
+                    store.setVisibility(View.INVISIBLE);
+                }
             }
 
             downloads.setText(Html.fromHtml("<b>" + getString(R.string.downloads) + "</b>" + ": " + withSuffix(String.valueOf(event.getDownloads()))));
@@ -303,7 +343,7 @@ public abstract class FragmentAppView extends Fragment {
 
             if (event.getScreenshotsAndThumbVideo() != null){
                 mediaObjects = event.getScreenshotsAndThumbVideo();
-                Log.d("FragmentAppView","media objects "+ Arrays.toString(mediaObjects.toArray()));
+                //Log.d("FragmentAppView","media objects "+ Arrays.toString(mediaObjects.toArray()));
                 String imagePath = "";
                 DisplayImageOptions options = new DisplayImageOptions.Builder()
                         .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
@@ -320,11 +360,12 @@ public abstract class FragmentAppView extends Fragment {
                     if(mediaObjects.get(i) instanceof Video){
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
-                        Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
+                        //Log.d("FragmentAppView", "VIDEOIMAGEPATH: " + imagePath);
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         play.setVisibility(View.VISIBLE);
                         imageView.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
-                        Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
+                        mediaLayout.setOnClickListener(new VideoListener(getActivity(), ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
                         options = new DisplayImageOptions.Builder()
                                 .showImageForEmptyUri(android.R.drawable.sym_def_app_icon)
                                 .cacheOnDisc(false)
@@ -336,8 +377,9 @@ public abstract class FragmentAppView extends Fragment {
                                 .cacheOnDisc(true)
                                 .build();
                         imagePath = AptoideUtils.screenshotToThumb(getActivity(), mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-                        Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
+                        //Log.d("FragmentAppView", "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(getActivity(), new ArrayList<String>(event.getScreenshots()), i - screenshotIndexToAdd));
                     }
 
                     mainLayout.addView(cell);
@@ -352,7 +394,7 @@ public abstract class FragmentAppView extends Fragment {
                         public void onLoadingFailed(String uri, View v, FailReason failReason) {
                             imageView.setImageResource(android.R.drawable.ic_delete);
                             progress.setVisibility(View.GONE);
-                            Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
+                            //Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
                         }
 
                         @Override
@@ -389,6 +431,7 @@ public abstract class FragmentAppView extends Fragment {
                 intent.putStringArrayListExtra("url", urls);
                 intent.putExtra("position", position);
                 context.startActivity(intent);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
             }
         }
 
@@ -406,9 +449,9 @@ public abstract class FragmentAppView extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                 context.startActivity(intent);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Video");
             }
         }
-
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -426,7 +469,6 @@ public abstract class FragmentAppView extends Fragment {
             size = (TextView) layoutInfoDetails.findViewById(R.id.size_label);
             publisher = (TextView) layoutInfoDetails.findViewById(R.id.publisher_label);
 
-
             publisherContainer = v.findViewById(R.id.publisher_container);
             publisherWebsite = (TextView) v.findViewById(R.id.publisher_website);
             publisherEmail = (TextView) v.findViewById(R.id.publisher_email);
@@ -440,6 +482,7 @@ public abstract class FragmentAppView extends Fragment {
             row3 = v.findViewById(R.id.row3);
 
             spinner = (Spinner) v.findViewById(R.id.store_spinner);
+
             return v;
         }
 
@@ -453,7 +496,6 @@ public abstract class FragmentAppView extends Fragment {
 
     public static class FragmentAppViewRelated extends ListFragment {
 
-
         private RelatedBucketAdapter multiVersionAdapter;
         private RelatedBucketAdapter develBasedAdapter;
         private RelatedBucketAdapter itemBasedAdapter;
@@ -465,7 +507,7 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Log.d("FragmentRelated", "onCreate");
+            //Log.d("FragmentRelated", "onCreate");
             adapter = new MergeAdapter();
             itemBasedAdapter = new RelatedBucketAdapter(getActivity(), itemBasedElements);
             develBasedAdapter = new RelatedBucketAdapter(getActivity(), develBasedElements);
@@ -495,12 +537,8 @@ public abstract class FragmentAppView extends Fragment {
 
                     }
                 });
-
-
-
                 setEmptyText(getString(R.string.connection_error));
                 setListAdapter(new ArrayAdapter<String>(getActivity(), 0));
-
             }
 
             @Override
@@ -508,47 +546,52 @@ public abstract class FragmentAppView extends Fragment {
                 setEmptyText(getString(R.string.no_related));
 
                 if(relatedApkJson == null){
-                    Log.d("FragmentRelated", "Related was null");
+                    //Log.d("FragmentRelated", "Related was null");
                     return;
                 }
-                Log.d("FragmentRelated", "onRequestSuccess");
+                //Log.d("FragmentRelated", "onRequestSuccess");
 
                 //Toast.makeText(getActivity(), "ItemBased size " + relatedApkJson.getItembased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "DevelBased size " + relatedApkJson.getDevelbased().size(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "MultiVersion size " + relatedApkJson.getMultiversion().size(), Toast.LENGTH_SHORT).show();
 
+                List<RelatedApkJson.Item> relaatedlist= relatedApkJson.getItembased();
+                if(relaatedlist != null){
 
-                if(relatedApkJson.getItembased() != null && relatedApkJson.getItembased().size()>0){
-                    Log.d("FragmentRelated", "itembased: "+ Arrays.toString(relatedApkJson.getItembased().toArray()));
-
-                    itemBasedElements.clear();
-                    if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox",true)){
+                    //Log.d("FragmentRelated", "items " +  " " + relatedApkJson.getItembased().toString());
 
 
-                        for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
-                            if(!item.getAge().equals("Mature")){
-                                itemBasedElements.add(item);
+                    if(relaatedlist.size()>0) {
+                        //Log.d("FragmentRelated", "itembased: " + Arrays.toString(relatedApkJson.getItembased().toArray()));
+
+                        itemBasedElements.clear();
+                        if (PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true)) {
+                            for (RelatedApkJson.Item item : relatedApkJson.getItembased()) {
+                                if (!item.getAge().equals("Mature")) {
+                                    itemBasedElements.add(item);
+                                }
                             }
+                        } else {
+                            itemBasedElements.addAll(relatedApkJson.getItembased());
                         }
-
-                    }else{
-                        itemBasedElements.addAll(relatedApkJson.getItembased());
+                        View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
+                        ((TextView) v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
+                        v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
+                                Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
+                                i.putExtra("item", true);
+                                i.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
+                                i.putExtra("versionCode", ((AppViewActivity) getActivity()).getVersionCode());
+                                i.putExtra("appName", ((AppViewActivity) getActivity()).getName());
+                                i.putExtra("download_from", "app_view_related_apps");
+                                startActivity(i);
+                            }
+                        });
+                        adapter.addView(v);
+                        adapter.addAdapter(itemBasedAdapter);
                     }
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.separator_frag_related, null);
-                    ((TextView)v.findViewById(R.id.separator_label)).setText(getString(R.string.related_apps));
-                    v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
-                            i.putExtra("item", true);
-                            i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
-                            i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
-                            i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
-                            startActivity(i);
-                        }
-                    });
-                    adapter.addView(v);
-                    adapter.addAdapter(itemBasedAdapter);
                 }
 
                 if(relatedApkJson.getDevelbased() != null && relatedApkJson.getDevelbased().size()>0){
@@ -571,11 +614,13 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("developer", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
                             i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
+                            i.putExtra("download_from", "app_view_more_from_publisher");
                             startActivity(i);
                         }
                     });
@@ -605,11 +650,13 @@ public abstract class FragmentAppView extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("version", true);
                             i.putExtra("packageName", ((AppViewActivity)getActivity()).getPackage_name());
                             i.putExtra("versionCode", ((AppViewActivity)getActivity()).getVersionCode());
                             i.putExtra("appName", ((AppViewActivity)getActivity()).getName());
+                            i.putExtra("download_from","app_view_more_multiversion");
                             startActivity(i);
                         }
                     });
@@ -622,53 +669,93 @@ public abstract class FragmentAppView extends Fragment {
                 multiVersionAdapter.notifyDataSetChanged();
 
                 setListAdapter(adapter);
+                if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setListViewHeightBasedOnChildren(getListView());
+                }
             }
-        };
 
+        };
+        private final void setListViewHeightBasedOnChildren(ListView listView) {
+            ////Log.d("setheight", "setListViewHeightBasedOnChildren called");
+            ListAdapter listAdapter = listView.getAdapter();
+            if (listAdapter == null){
+                return;
+            }
+            ////Log.d("setheight", "listAdapter not null");
+            if (listAdapter.getCount()<1){
+            return;
+            }
+            ////Log.d("setheight", "Setting ListAdapter with " + listAdapter.getCount()+  " elements");
+            int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+            for (int i = 0; i < listAdapter.getCount(); i++) {
+                View listItem = listAdapter.getView(i, null, listView);
+                if (listItem instanceof ViewGroup)
+                    listItem.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT));
+                listItem.measure(0, 0);
+                totalHeight += listItem.getMeasuredHeight();
+            }
+            ////Log.d("setheight", "Setting ListAdapter with " + totalHeight+  " height");
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+            listView.setLayoutParams(params);
+
+            ////Log.d("setheight", "list has" + listView.getLayoutParams().height+  " height");
+        }
 
 
         @Override
         public void onStart() {
             super.onStart();
+            BusProvider.getInstance().register(this);
             spiceManager.start(getActivity());
         }
 
         @Override
         public void onStop() {
             super.onStop();
+            BusProvider.getInstance().unregister(this);
             if(spiceManager.isStarted()){
                 spiceManager.shouldStop();
             }
         }
 
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             View v = super.onCreateView(inflater, container, savedInstanceState);
-            ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
-            Log.d("FragmentRelated", "onCreateView");
+            if(!(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                doPreStuff();
+            }
+            return v;
+        }
 
-            if(((AppViewActivity)getActivity()).isMultipleStores()){
+        @Subscribe
+        public void refresh(AppViewActivity.RelatedEvent e){
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                doPreStuff();
+            }
+        }
+
+        private final void doPreStuff(){
+            ListRelatedApkRequest listRelatedApkRequest = new ListRelatedApkRequest(getActivity());
+
+            if(!((AppViewActivity)getActivity()).isMultipleStores()){
                 listRelatedApkRequest.setRepos(((AppViewActivity)getActivity()).getRepoName());
             }
-
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
             spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
-            return v;
         }
+
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
+            getListView().setItemsCanFocus(true);
 
-            Log.d("FragmentRelated", "onViewCreated");
-
-
+            ////Log.d("FragmentRelated", "onViewCreated");
         }
     }
 
@@ -694,19 +781,15 @@ public abstract class FragmentAppView extends Fragment {
         @Override
         public void onStop() {
             super.onStop();
-            Log.d("Aptoide-AppView-Permissions", "On Stop");
+            ////Log.d("Aptoide-AppView-Permissions", "On Stop");
             if (task != null) {
-                Log.d("Aptoide-AppView-Permissions", "Canceling task " + System.identityHashCode(task));
+                ////Log.d("Aptoide-AppView-Permissions", "Canceling task " + System.identityHashCode(task));
                 task.cancel(true);
             }
         }
 
-
-
         @Subscribe
         public void refreshDetails(final AppViewActivity.SpecsEvent event) {
-
-
             if (event.getPermissions() != null) {
 
                 min_sdk.setText(getString(R.string.min_sdk) + ": " + event.getMinSdk());
@@ -717,9 +800,6 @@ public abstract class FragmentAppView extends Fragment {
                 task = new PermissionGetter().execute(event.getPermissions());
 
             }
-
-
-
         }
 
         public class PermissionGetter extends AsyncTask<ArrayList<String>, Void, ArrayList<ApkPermission>>{
@@ -738,14 +818,14 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             protected void onPostExecute(ArrayList<ApkPermission> apkPermissions) {
                 super.onPostExecute(apkPermissions);
-                Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
+                //Log.d("Aptoide-AppView-Permissions", "onPostExecute " + System.identityHashCode(task));
                 if(apkPermissions.size()==0){
                     TextView noPermissions = new TextView(getActivity());
                     noPermissions.setText(getString(R.string.no_permissions_required));
                     noPermissions.setPadding(5,5,5,5);
                     permissionsContainer.addView(noPermissions);
                 }
-                if(getActivity()!=null){
+                if(getActivity()!=null && permissionsContainer.getHeight()==0){
                     FillPermissions.fillPermissions(getActivity(), permissionsContainer, apkPermissions);
                     permissionsContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     permissionsContainer.setVisibility(View.VISIBLE);
@@ -781,7 +861,7 @@ public abstract class FragmentAppView extends Fragment {
         }
     }
 
-    public static class FragmentAppViewRating extends FragmentAppView {
+    public static class FragmentAppViewRating extends FragmentAppView implements SuccessfullyPostCallback {
 
         private TextView commentsTitle;
         private LinearLayout commentsLayout;
@@ -793,13 +873,41 @@ public abstract class FragmentAppView extends Fragment {
         private Button dontLikeBtn;
         private Button likeBtn;
         private View loadingPb;
+        private TextView goodVotes;
+        private TextView licenseVotes;
+        private TextView fakeVotes;
+        private TextView freezeVotes;
+        private TextView virusVotes;
+        private TextView review;
+        private Button flagThisApp;
+        private LinearLayout flags_container;
+        private ProgressBar loading_flags;
+        private AddCommentCallback addCommentCallback;
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ////Log.d("likes","onAttach");
+            addCommentCallback = (AddCommentCallback) activity;
+            ((AppViewActivity) activity).setSuccessfullyPostCallback(this);
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            addCommentCallback = null;
+            //Log.d("likes","onDetach");
+            ((AppViewActivity) getActivity()).setSuccessfullyPostCallback(null);
+
+        }
 
         @Subscribe
         public void refreshDetails(final AppViewActivity.RatingEvent event) {
-            Log.d("Aptoide-AppView", "getting event");
+            //Log.d("Aptoide-AppView", "getting event");
 
             if(event.getComments() != null) {
                 FillComments.fillComments(getActivity(), commentsContainer, event.getComments());
+
 
                 if (event.getComments().size() == 0) {
                     commentsLayout.setVisibility(View.GONE);
@@ -814,14 +922,17 @@ public abstract class FragmentAppView extends Fragment {
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_See_All_Comments_Button");
                             Intent intent = new Intent(getActivity(), AllCommentsActivity.class);
                             intent.putExtra("repoName", ((AppViewActivity) getActivity()).getRepoName());
                             intent.putExtra("versionName", ((AppViewActivity) getActivity()).getVersionName());
                             intent.putExtra("packageName", ((AppViewActivity) getActivity()).getPackage_name());
-                            startActivity(intent);
+                            intent.putExtra("token", ((AppViewActivity) getActivity()).getToken());
+                            getActivity().startActivityForResult(intent, 359);
                         }
                     });
                 }else{
+                    noComments.setVisibility(View.GONE);
                     commentsLayout.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                     commentsLayout.setVisibility(View.VISIBLE);
                 }
@@ -837,7 +948,7 @@ public abstract class FragmentAppView extends Fragment {
                     }else if(event.getUservote().equals("dislike")){
                         dontLikeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_bad_pressed, 0,0,0);
                         TypedValue outValue = new TypedValue();
-                        getActivity().getTheme().resolveAttribute( R.attr.icRatingBadDrawable, outValue, true );
+                        getActivity().getTheme().resolveAttribute( R.attr.icRatingGoodDrawable, outValue, true );
                         likeBtn.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0,0,0);
                     }
 
@@ -848,14 +959,129 @@ public abstract class FragmentAppView extends Fragment {
 
             }
 
+            if(event.getVeredict()!=null){
+                loading_flags.setVisibility(View.GONE);
+                flagThisApp.setVisibility(View.GONE);
+                goodVotes.setVisibility(View.GONE);
+                licenseVotes.setVisibility(View.GONE);
+                fakeVotes.setVisibility(View.GONE);
+                freezeVotes.setVisibility(View.GONE);
+                virusVotes.setVisibility(View.GONE);
+
+                flags_container.setVisibility(View.VISIBLE);
+
+                int stringResource;
+                int drawable=0;
+                switch ( VeredictReview.reverseLookup( event.getVeredict().getFlag() )) {
+                    case GOOD:
+                        stringResource = VeredictReview.GOOD.getString();
+                        drawable=R.drawable.ic_action_flag_good;
+                        break;
+                    case FAKE:
+                        stringResource = VeredictReview.FAKE.getString();
+                        drawable=R.drawable.ic_action_flag_fake;
+                        break;
+                    case LICENSE:
+                        stringResource = VeredictReview.LICENSE.getString();
+                        drawable=R.drawable.ic_action_flag_license;
+                        break;
+                    case FREEZE:
+                        stringResource = VeredictReview.FREEZE.getString();
+                        drawable=R.drawable.ic_action_flag_freeze;
+                        break;
+                    case VIRUS:
+                        stringResource = VeredictReview.VIRUS.getString();
+                        drawable=R.drawable.ic_action_flag_virus;
+                        break;
+                    default:
+                        stringResource = VeredictReview.UNKNOWN.getString();
+                        break;
+                }
+                //Log.d( "veredictReview", VeredictReview.reverseLookup(event.getVeredict().getFlag()).getString()+ " VS" +stringResource );
+                //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
 
 
+                if(stringResource != -1) {
+                    review.setVisibility(View.VISIBLE);
+                    review.setText( "" + getString( stringResource ) );
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(drawable), null, null, null);
+                    //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+                }
+
+/*
+                int stringResource;
+                switch ( VeredictReview.reverseLookup( event.getVeredict().getFlag() )) {
+                    case GOOD:
+                        stringResource = VeredictReview.GOOD.getString();
+                        break;
+                    case FAKE:
+                        stringResource = VeredictReview.FAKE.getString();
+                        break;
+                    case LICENSE:
+                        stringResource = VeredictReview.LICENSE.getString();
+                        break;
+                    case FREEZE:
+                        stringResource = VeredictReview.FREEZE.getString();
+                        break;
+                    case VIRUS:
+                        stringResource = VeredictReview.VIRUS.getString();
+                        break;
+                    default:
+                        stringResource = VeredictReview.UNKNOWN.getString();
+                        break;
+                }
+
+
+                if(stringResource != -1) {
+                    review.setVisibility(View.VISIBLE);
+                    review.setText( "" + getString( stringResource ) );
+                    //Log.d( "veredictReview", getString( VeredictReview.reverseLookup( event.getVeredict().getFlag() ).getString()) );
+                }
+
+                if(event.getVeredict().getFlag().equals("good")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_good), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("license")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_license), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("fake")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_fake), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("freeze")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_freeze), null, null, null);
+                }
+                if(event.getVeredict().getFlag().equals("virus")) {
+                    review.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_action_flag_virus), null, null, null);
+                }*/
+            }else if(event.getFlagVotes()!=null){
+                loading_flags.setVisibility(View.GONE);
+                flags_container.setVisibility(View.VISIBLE);
+                goodVotes.setText(getString(R.string.flag_good) +": "+event.getFlagVotes().getGood());
+                licenseVotes.setText(getString(R.string.flag_license)+ ": "+ event.getFlagVotes().getLicense());
+                fakeVotes.setText(getString(R.string.flag_fake)+": "+event.getFlagVotes().getFake());
+                freezeVotes.setText(getString(R.string.flag_freeze)+": "+event.getFlagVotes().getFreeze());
+                virusVotes.setText(getString(R.string.flag_virus)+": "+event.getFlagVotes().getVirus());
+                flagThisApp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final AccountManager ac = AccountManager.get(getActivity());
+
+                        if (ac.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                            AptoideDialog.flagAppDialog(event.getFlagUservote()).show(getFragmentManager(), "flagAppDialog");
+                            if(Build.VERSION.SDK_INT >= 10)
+                                FlurryAgent.logEvent("App_View_Opened_Flag_App_Dialog");
+                        } else {
+                            ac.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
+                        }
+                    }
+                });
+            }
 
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+            //Log.d("likes","onCreateView");
             View v = inflater.inflate(R.layout.fragment_app_rating, container, false);
 
             commentsTitle = (TextView) v.findViewById(R.id.title_comments);
@@ -872,29 +1098,46 @@ public abstract class FragmentAppView extends Fragment {
             addComment.setOnClickListener(new AddCommentListener());
             loadingPb = v.findViewById(R.id.loadingPb);
 
-            return v;
+            goodVotes = (TextView) v.findViewById(R.id.flag_good);
+            licenseVotes = (TextView) v.findViewById(R.id.flag_license);
+            fakeVotes = (TextView) v.findViewById(R.id.flag_fake);
+            freezeVotes = (TextView) v.findViewById(R.id.flag_freeze);
+            virusVotes = (TextView) v.findViewById(R.id.flag_virus);
+            review = (TextView) v.findViewById(R.id.flag_review);
 
+            flagThisApp = (Button) v.findViewById(R.id.button_flag);
+            flags_container = (LinearLayout) v.findViewById(R.id.flags_container);
+            loading_flags = (ProgressBar) v.findViewById(R.id.loading_flags);
+            return v;
         }
+
+        @Override
+        public void clearState() {
+            editText.setText("");
+            //editText.setEnabled(false);
+            editText.setEnabled(true);
+        }
+
         public class AddLikeListener implements View.OnClickListener {
 
             private final boolean isLike;
             RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
+                private final void dismiss(){
+                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager()
+                                                    .findFragmentByTag("pleaseWaitDialog");
+                    if(pd!=null)
+                        pd.dismissAllowingStateLoss();
+                }
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(Aptoide.getContext(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null && pd.isAdded()) pd.dismiss();
+                    //Log.d("likes","onRequestFailure");
+                    dismiss();
                 }
 
                 @Override
                 public void onRequestSuccess(GenericResponse genericResponse) {
-
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null && pd.isAdded()){
-                        pd.dismiss();
-                    }
-
-
+                    //Log.d("likes","onRequestSuccess");
+                    dismiss();
                     if(genericResponse.getStatus().equals("OK")){
                         Toast.makeText(Aptoide.getContext(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
@@ -917,39 +1160,13 @@ public abstract class FragmentAppView extends Fragment {
             @Override
             public void onClick(View v) {
 
+                final AccountManager accountManager = AccountManager.get(getActivity());
 
-                    final AccountManager manager = AccountManager.get(getActivity());
-
-                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                        addLike();
-                    } else {
-                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-
-                                if (LoginActivity.isLoggedIn(getActivity())) {
-                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                        @Override
-                                        public void run(AccountManagerFuture<Bundle> future) {
-                                            try {
-                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                            } catch (OperationCanceledException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-                                    }, null);
-                                }
-
-
-                            }
-                        }, null);
-                    }
+                if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    addLike();
+                } else {
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
+                }
 
             }
 
@@ -963,154 +1180,58 @@ public abstract class FragmentAppView extends Fragment {
                 request.setToken(((AppViewActivity) getActivity()).getToken());
                 request.setLike(isLike);
 
+                if(Build.VERSION.SDK_INT >= 10) {
+                    if (isLike) {
+                        FlurryAgent.logEvent("App_View_Clicked_On_Like_Button");
+                    } else {
+                        FlurryAgent.logEvent("App_View_Clicked_On_Dont_Like_Button");
+                    }
+                }
+                manager.execute(request, "1234" , DurationInMillis.ONE_SECOND, requestListener);
 
-                manager.execute(request, requestListener);
+
+
+
                 AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
             }
         }
 
         public class AddCommentListener implements View.OnClickListener {
 
-            RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_LONG).show();
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null){
-                        pd.dismissAllowingStateLoss();
-                    }
-
-                }
-
-                @Override
-                public void onRequestSuccess(GenericResponse genericResponse) {
-
-                    ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
-                    if(pd!=null){
-                        pd.dismissAllowingStateLoss();
-                    }
-
-
-                    if(genericResponse.getStatus().equals("OK")){
-                        Toast.makeText(getActivity(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
-                        editText.setText("");
-                        editText.setEnabled(false);
-                        editText.setEnabled(true);
-                        manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
-                        BusProvider.getInstance().post(new AppViewRefresh());
-                    }else{
-                        for(String error :  genericResponse.getErrors()){
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                }
-            };
-            private SpiceManager manager;
-
-
             @Override
             public void onClick(View v) {
 
+                final AccountManager accountManager = AccountManager.get(getActivity());
 
-                    final AccountManager manager = AccountManager.get(getActivity());
-
-                    if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                        addComment();
-                    } else {
-
-                        manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-                                if (LoginActivity.isLoggedIn(getActivity())) {
-
-                                    Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                                    manager.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, getActivity(), new AccountManagerCallback<Bundle>() {
-                                        @Override
-                                        public void run(AccountManagerFuture<Bundle> future) {
-                                            try {
-
-                                                ((AppViewActivity) getActivity()).setToken(future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                                                //addComment();
-                                            } catch (OperationCanceledException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }, null);
-                                }
-                            }
-                        }, null);
+                if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Added_A_Comment");
+                    if(addCommentCallback != null) {
+                        addCommentCallback.addComment(editText.getText().toString(), null);
                     }
-
-            }
-
-            private void addComment() {
-
-
-                if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
-                    manager = ((AppViewActivity) getActivity()).getSpice();
-
-                    AddCommentRequest request = new AddCommentRequest(getActivity());
-                    request.setApkversion(((AppViewActivity) getActivity()).getVersionName());
-                    request.setPackageName(((AppViewActivity) getActivity()).getPackage_name());
-                    request.setRepo(((AppViewActivity) getActivity()).getRepoName());
-                    request.setToken(((AppViewActivity) getActivity()).getToken());
-
-                    request.setText(editText.getText().toString());
-
-                    manager.execute(request, requestListener);
-                    AptoideDialog.pleaseWaitDialog().show(getFragmentManager(), "pleaseWaitDialog");
                 } else {
 
-                    AptoideDialog.updateUsernameDialog().show(getFragmentManager(), "updateNameDialog");
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, getActivity(), null, null);
 
                 }
-            }
 
+            }
         }
+
 
         public static class FillComments{
 
-            public static void fillComments(Context context, LinearLayout commentsContainer, ArrayList<Comment> comments) {
-                final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
-                final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context);
-
+            public static void fillComments(Activity activity, LinearLayout commentsContainer, ArrayList<Comment> comments) {
                 final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                View v;
+                View view;
+
                 commentsContainer.removeAllViews();
-
-                for(Comment comment : comments){
-
-                    v = LayoutInflater.from(context).inflate(R.layout.row_comment, commentsContainer, false);
-
-                    TextView content = (TextView) v.findViewById(R.id.content);
-                    TextView dateTv = (TextView) v.findViewById(R.id.date);
-                    TextView author = (TextView) v.findViewById(R.id.author);
-
-                    content.setText(comment.getText());
-
-                    try {
-                        dateTv.setText(AptoideUtils.DateTimeUtils.getInstance(context).getTimeDiffString(dateFormater.parse(comment.getTimestamp()).getTime()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    author.setText(comment.getUsername());
-                    commentsContainer.addView(v);
+                for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
+                    view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
+                    commentsContainer.addView(view);
                 }
-
             }
         }
-
-
     }
-
-
-
 
 }
 

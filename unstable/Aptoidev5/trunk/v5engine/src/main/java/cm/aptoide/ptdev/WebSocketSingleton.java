@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
@@ -13,6 +14,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -38,8 +40,6 @@ public class WebSocketSingleton {
         @Override
         public void onConnect() {
             Log.d("TAG", "On Connect");
-
-
 
         }
 
@@ -70,17 +70,14 @@ public class WebSocketSingleton {
 
         @Override
         public void onMessage(byte[] data) {
-            Log.d("TAG", data.toString());
+            Log.d("TAG", Arrays.toString(data));
 
 
         }
 
         @Override
         public void onDisconnect(int code, String reason) {
-            //To change body of implemented methods use File | Settings | File Templates.
             Log.d("TAG", reason);
-
-
         }
 
         @Override
@@ -91,7 +88,7 @@ public class WebSocketSingleton {
     };
     private Uri mNotificationUri;
     private Context mContext;
-    private BlockingQueue blockingQueue;
+    private BlockingQueue<Cursor> blockingQueue;
 
     private WebSocketSingleton() {}
 

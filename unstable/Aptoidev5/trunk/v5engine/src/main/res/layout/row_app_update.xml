@@ -57,6 +57,22 @@
                 android:layout_below="@+id/app_name"
                 android:layout_alignRight="@+id/app_name"/>
 
+        <TextView
+            android:id="@+id/update_not_safe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/not_compatible"
+            android:gravity="center|left"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_alignLeft="@+id/app_name"
+            android:layout_below="@+id/app_version"
+            android:layout_alignRight="@+id/app_name"
+            android:textColor="?attr/customColor"
+            android:visibility="gone"/>
+
 
         <View android:layout_width="1dip"
               android:layout_height="50dp"

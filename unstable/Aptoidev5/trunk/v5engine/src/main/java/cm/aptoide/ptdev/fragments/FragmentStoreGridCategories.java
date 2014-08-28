@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +20,8 @@ import cm.aptoide.ptdev.adapters.CategoryGridAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
+
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -84,9 +87,15 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
     StoreActivity.SortObject sort;
 
@@ -125,7 +134,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
 
 
-        Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
+//        Log.d("Aptoide-", "StoreFragment id" + getArguments().getLong("storeid") + " " + storeId + " " + parentId + " " +  getArguments().getLong("parentid"));
 
 
     }
@@ -315,6 +324,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
             default:
                 Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
+                i.putExtra("download_from", "store_navigation");
                 startActivity(i);
                 break;
         }

@@ -25,12 +25,18 @@ import java.util.List;
 public class ApkEditorsChoice extends Apk {
 
 
+    private String featuredGraphic;
+    private int order = -1;
+
+
     public ApkEditorsChoice(){
         super();
     }
 
     public ApkEditorsChoice(ApkEditorsChoice apkEditorsChoice) {
         super(apkEditorsChoice);
+        this.featuredGraphic = apkEditorsChoice.featuredGraphic;
+        this.order = apkEditorsChoice.order;
     }
 
     @Override
@@ -74,6 +80,12 @@ public class ApkEditorsChoice extends Apk {
 
         statements.add(2, "select id_apk from apk where id_repo = ? and package_name = ? and version_code = ?");
 
+
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_FEATURED_GRAPHIC_PATH);
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_ID);
+        values.add(Schema.FeaturedEditorsChoice.COLUMN_ORDER);
+
+        statements.add(3, StatementHelper.getInsertStatment(Schema.FeaturedEditorsChoice.getName(), values));
 
 
         return statements;
@@ -138,6 +150,15 @@ public class ApkEditorsChoice extends Apk {
             }
         }
 
+        if(featuredGraphic != null){
+            StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{
+                    String.valueOf(featuredGraphic),
+                    String.valueOf(apkid),
+                    String.valueOf(order)
+            });
+            sqLiteStatements.get(3).executeInsert();
+        }
+
 
     }
 
@@ -147,6 +168,12 @@ public class ApkEditorsChoice extends Apk {
     }
 
 
+    public void setFeaturedGraphic(String featuredGraphic) {
+        this.featuredGraphic = featuredGraphic;
+    }
 
 
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

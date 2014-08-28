@@ -90,6 +90,8 @@ public class ParserHelper {
                     }
                 });
             } else {
+                context.unbindService(conn);
+
                 if (spiceManager.isStarted()) {
                     spiceManager.shouldStop();
                 }

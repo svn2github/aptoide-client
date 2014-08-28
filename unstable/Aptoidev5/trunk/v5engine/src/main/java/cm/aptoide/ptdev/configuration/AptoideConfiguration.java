@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.configuration;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.widget.SearchWidgetActivity;

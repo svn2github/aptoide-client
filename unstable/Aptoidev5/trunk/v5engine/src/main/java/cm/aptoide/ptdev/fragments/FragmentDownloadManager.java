@@ -2,13 +2,19 @@ package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 import cm.aptoide.ptdev.DownloadServiceConnected;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.R;
@@ -18,6 +24,7 @@ import cm.aptoide.ptdev.adapters.DownloadSimpleSectionAdapter;
 import cm.aptoide.ptdev.adapters.NotOngoingAdapter;
 import cm.aptoide.ptdev.adapters.OngoingAdapter;
 
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 
 import cm.aptoide.ptdev.events.BusProvider;
@@ -25,6 +32,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -166,8 +174,29 @@ public class FragmentDownloadManager extends ListFragment {
         int id = item.getItemId();
 
         if (id == R.id.menu_clear_downloads) {
-            service.removeNonActiveDownloads();
+            final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_clear_downloads, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()).setView(view);
+            final AlertDialog clearDownloadsDialog = alertDialogBuilder.create();
+            clearDownloadsDialog.setTitle(getString(R.string.clear));
+            clearDownloadsDialog.setIcon(android.R.drawable.ic_dialog_alert);
+            clearDownloadsDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            clearDownloadsDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    boolean clearApks = ((CheckBox)view.findViewById(R.id.checkbox_clear)).isChecked();
+                    service.removeNonActiveDownloads(clearApks);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Cleared_Apks");
+                }
+            });
+
+            clearDownloadsDialog.show();
         }
+
 
         return super.onOptionsItemSelected(item);
     }

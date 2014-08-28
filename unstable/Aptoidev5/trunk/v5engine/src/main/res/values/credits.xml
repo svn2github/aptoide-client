@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="aptoide_version">Version 5.1.3</string>
+    <string name="aptoide_version">Version 5.2.0.2</string>
     <string name="aptoide_brand">APTOiDE</string>
 
     <string name="credits">
@@ -10,6 +10,8 @@
     \t\t rui.mateus [at] aptoide.com\n\n
     \t\t Teresa Deus\n
     \t\t teresa.deus [at] aptoide.com\n\n
+    \t\t André Santos\n
+    \t\t andre.santos [at] aptoide.com\n\n
     \t\t Jose Costa\n
     \t\t jose.costa [at] aptoide.com\n\n
     \t\t Roberto Jacinto\n
@@ -19,30 +21,30 @@
     \t\t
 
     Albanian: Eni Çuçka |
-    Arabic: Manaa Alshihe, Zuheir Sharafeldin, Mohamed Gorrab, Ahmed Sami, omarioamriky |
+    Arabic: Zuheir Sharafeldin, ذوالفقار الزاملي, Ahmed Sami, Manaa Alshihe, Mohamed Gorrab, omarioamriky |
     Bosnian/Serbian: Rijad Spahic, Toni Grubisic  |
     Catalan: Francisco Villalba Segarra, Marc Bres Gil |
-    Croatian: Roko Jurjevic, Rijad Spahic, Toni Grubisic |
+    Croatian: Rijad Spahic, Toni Grubisic, Roko Jurjevic |
     Chinese: Theodore Wte |
     Czech: Jan Krumpholc |
-    Dutch: Shane Kloosterman, Ismail Gürol Celiktas, Stefan de Jong |
-    Finnish: Sami Kuusisto |
-    French: Ultrapeer, Alexis Bonvin, Guillaume NV |
+    Dutch: Shane Kloosterman, Jehan Bont, Ismail Gürol Celiktas, Stefan de Jong |
+    Finnish: Sami Kuusisto, Allu Saarinen |
+    French: Ultrapeer, Damien Mallard, Alexis Bonvin, Guillaume NV |
     Georgian: Sandro Kakabadze |
-    German: Martin Nehrdich, Robert Reep, Manuel Stroh, Michael Mayer, Marlon Bruske, Simon Grabert, Lionel Wyser |
+    German: Manuel Stroh, Marlon Bruske, Benny La, Simon Grabert, Robert Reep, Martin Nehrdich, Michael Mayer, Lionel Wyser |
     Greek: Basileios Pitas |
     Hebrew: שלו מויאל , David Liron, shiranbfree |
     Indonesian: Adi Juarsa |
-    Italian: Rapper Skull Pavo Baxter, Gabry Carne, Simili Giuseppe, Damiano Chiacchiaretta |
+    Italian: Rapper Skull, Arshdeep Singh, Pavo Baxter, Gabry Carne, Simili Giuseppe, Damiano Chiacchiaretta |
     Lithuanian: Saulius Pranckevicius, Titus Virbickas |
     Persian:  Mehrdad Allahkarami |
-    Polish: Trurl, Stanislaw, Tomasz Gregorczyk |
-    Portuguese (Brazil): Caio Fonseca, Paulo Henrique, Maurilio Filho, Marchus Santos, Edu Salgado |
+    Polish: Trurl, Artur Stempkowski, Stanislaw, Tomasz Gregorczyk |
+    Portuguese (Brazil): Paulo Henrique, Juanito Silva, Marchus Santos, Caio Fonseca, Maurilio Filho, Edu Salgado |
  	Portuguese (Portugal): Joao Redondo |
  	Romanian: Munteanu Ovidiu, Heim Bogdan, Tudor Bobei |
-    Russian: Kanat Yesseyev, Leonid Bogolubov |
+    Russian: Anton Tkachenko, Leonid Bogolubov, Kanat Yesseyev |
     Spanish: Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Ronnie Simon, jvnski, Denis Arroyabe |
-    Turkish: Ultrapeer, Zeynal Zeynalov
+    Turkish: Ultrapeer, Zeynal Zeynalov, Emre Tosunkaya
  	</string>
 
 </resources>

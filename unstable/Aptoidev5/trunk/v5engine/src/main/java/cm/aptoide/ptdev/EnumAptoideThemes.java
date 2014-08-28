@@ -62,10 +62,12 @@ public enum EnumAptoideThemes {
     APTOIDE_THEME_GREEN,
     APTOIDE_THEME_GREEN_DARK,
     APTOIDE_THEME_YELLOW,
-    APTOIDE_THEME_YELLOW_DARK;
+    APTOIDE_THEME_YELLOW_DARK,
+    APTOIDE_THEME_CRIMSON,
+    APTOIDE_THEME_CRIMSON_DARK;
 
 
-	public static EnumAptoideThemes reverseOrdinal(int ordinal){
+    public static EnumAptoideThemes reverseOrdinal(int ordinal){
 		return values()[ordinal];
 	}
 }

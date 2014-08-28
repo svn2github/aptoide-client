@@ -180,6 +180,7 @@ public class LatestLikesFragment extends ListFragment implements FragmentStore{
         if(id>0){
             Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "latest_likes");
             startActivity(i);
         }
 

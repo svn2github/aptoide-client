@@ -63,6 +63,46 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             }
         });
 
+        elements.put("featuregraphic", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                ((ApkEditorsChoice)apk).setFeaturedGraphic(server.getFeaturedGraphicPath() + sb.toString());
+            }
+        });
+
+        elements.put("featuregraphicpath", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                server.setFeaturedGraphicPath(sb.toString());
+            }
+        });
+
+        elements.put("highlight", new ElementHandler() {
+            public void startElement(Attributes atts) throws SAXException {
+
+            }
+
+            @Override
+            public void endElement() throws SAXException {
+                try{
+                    ((ApkEditorsChoice)apk).setOrder(Integer.valueOf(sb.toString()));
+                }catch (Exception e) {
+                    ((ApkEditorsChoice)apk).setOrder(-1);
+                }
+
+            }
+        });
+
+
+
         elements.put("package", new ElementHandler() {
             @Override
             public void startElement(Attributes attributes) throws SAXException {
@@ -79,7 +119,7 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
                 if (isRunning()) {
                     if (apk.getChildren() != null) {
                         for (Apk theApk : apk.getChildren()) {
-                            Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk " + theApk + " " + apk.getChildren());
+                            //Log.d("Aptoide-Multiple-Apk", "Inserting multipleApk " + theApk + " " + apk.getChildren());
                             theApk.databaseInsert(statements, categoriesIds);
                         }
                         apk.setChildren(null);
@@ -101,7 +141,7 @@ public class HandlerEditorsChoiceXml extends AbstractHandler {
             public void endElement() throws SAXException {
                 getDb().insertCategory(category.name, category.parent, category.real_id, category.order, 0);
                 insideCat = false;
-                Log.d("Aptoide-", "Inserting category");
+                //Log.d("Aptoide-", "Inserting category");
             }
         });
 

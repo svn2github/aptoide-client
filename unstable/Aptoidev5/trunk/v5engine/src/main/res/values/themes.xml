@@ -5,6 +5,10 @@
 
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+
+
+
+
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
 
@@ -50,6 +54,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time</item>
         <item name="icScheduledDrawable">@drawable/ic_drawer_schedule</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -59,10 +64,15 @@
         <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
         <item name="backgroundHeaderLoggedIn">?android:attr/listDivider</item>
 
+        <item name="icViewMoreComments">@drawable/ic_action_comments_light</item>
+        <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
     </style>
 
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
+
+
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
 
@@ -108,6 +118,7 @@
         <item name="icRollbackDrawable">@drawable/ic_action_time_dark</item>
         <item name="icScheduledDrawable">@drawable/ic_action_go_to_today_dark</item>
         <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
+        <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
         <item name="icRevertDrawable">@drawable/ic_action_undo_dark</item>
         <item name="icAddStoreDrawable">@drawable/ic_action_new_dark</item>
         <item name="icAcceptDrawable">@drawable/ic_action_accept_dark</item>
@@ -117,6 +128,9 @@
         <item name="icExpandDrawable">@drawable/ic_action_home_expand_dark</item>
         <item name="backgroundHeaderLoggedIn">@drawable/ab_stacked_transparent_light_holo</item>
 
+        <item name="icViewMoreComments">@drawable/ic_action_comments_dark</item>
+        <item name="icDialogDrawable">@drawable/dialog_background_dark</item>
+        <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
     </style>
 
 

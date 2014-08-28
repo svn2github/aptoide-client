@@ -9,12 +9,21 @@ public class MultiStoreItem {
     String name;
     int versionCode;
     private String packageName;
+    private int downloads;
 
     public MultiStoreItem(String version, String name, int versionCode, String packageName) {
         this.name = name;
         this.version = version;
         this.versionCode = versionCode;
         this.packageName = packageName;
+    }
+
+    public MultiStoreItem(String version, String name, int versionCode, String packageName, int downloads) {
+        this.version = version;
+        this.name = name;
+        this.versionCode = versionCode;
+        this.packageName = packageName;
+        this.downloads = downloads;
     }
 
     public String getName() {
@@ -37,4 +46,9 @@ public class MultiStoreItem {
     public String getPackageName() {
         return packageName;
     }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
 }

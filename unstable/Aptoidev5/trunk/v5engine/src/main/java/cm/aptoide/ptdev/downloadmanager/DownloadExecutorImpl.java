@@ -26,6 +26,10 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.webservices.RegisterAdRequest;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.*;
@@ -88,6 +92,7 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
     }
 
 
+
     @Override
     public void execute() {
 
@@ -119,6 +124,26 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
 
+        if(apk.getCpiUrl()!=null) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    RegisterAdRequest registerAdRequest = new RegisterAdRequest(context);
+                    registerAdRequest.setUrl(apk.getCpiUrl());
+                    registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    try {
+                        registerAdRequest.loadDataFromNetwork();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    apk.setCpiUrl(null);
+                }
+            }).start();
+
+        }
+
+
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
 
             Intent i = new Intent(context, PermissionsActivity.class);
@@ -139,6 +164,10 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         }
     }
+
+
+
+
 
 
     public static boolean canRunRootCommands() {
@@ -186,10 +215,12 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         return retval;
     }
 
-    protected static int dpToPixels(Context context, int dpi) {
+    public static int dpToPixels(Context context, int dpi) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         return (int) (dpi * dm.density);
     }
+
+
 
 
     public static void installWithRoot(final FinishedApk apk) {
@@ -198,15 +229,16 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             final Process p;
             DataOutputStream os;
-
+            byte[] arrayOfByte = Base64.decode("cG0gaW5zdGFsbCAtciA=", 0);
+            String install = new String(arrayOfByte, "UTF-8");
             if (!Aptoide.IS_SYSTEM) {
                 p = Runtime.getRuntime().exec("su");
                 os = new DataOutputStream(p.getOutputStream());
                 // Execute commands that require root access
-                os.writeBytes("pm install -r \"" + apk.getPath() + "\"\n");
+                os.writeBytes(install + "\"" + apk.getPath() + "\"\n");
                 os.flush();
             } else {
-                p = Runtime.getRuntime().exec("pm install -r " + apk.getPath());
+                p = Runtime.getRuntime().exec(install   + apk.getPath());
                 os = new DataOutputStream(p.getOutputStream());
             }
 
@@ -224,7 +256,10 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
             int size = dpToPixels(context, 36);
-            mBuilder.setLargeIcon(decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size));
+            Bitmap bitmap = decodeSampledBitmapFromResource(ImageLoader.getInstance().getDiscCache().get(apk.getIconPath()).getAbsolutePath(), size, size);
+
+            if (bitmap != null) mBuilder.setLargeIcon(bitmap);
+
             mBuilder.setSmallIcon(android.R.drawable.stat_sys_download);
             mBuilder.setContentIntent(onClickAction);
             mBuilder.setAutoCancel(true);

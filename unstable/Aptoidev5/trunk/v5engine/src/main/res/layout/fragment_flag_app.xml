@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/flags_info_container"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="5dp"
+              android:orientation="vertical">
+
+
+    <TextView
+            android:id="@+id/flag_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_action_flag_good"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center_horizontal|left"/>
+
+    <TextView
+            android:id="@+id/flag_license"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_action_flag_license"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center_horizontal|left"/>
+
+    <TextView
+            android:id="@+id/flag_fake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_action_flag_fake"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center_horizontal|left"/>
+
+    <TextView
+            android:id="@+id/flag_freeze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_action_flag_freeze"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center_horizontal|left"/>
+    <TextView
+            android:id="@+id/flag_virus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp"
+            android:singleLine="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_action_flag_virus"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center_horizontal|left"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone"
+            android:gravity="center"
+            android:id="@+id/flag_review"
+            android:layout_gravity="center_horizontal"/>
+
+
+</LinearLayout>

@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,8 +19,11 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -60,6 +65,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //    };
 
 
+
+
     private DownloadService service;
     private ServiceConnection downloadConnection = new ServiceConnection() {
         @Override
@@ -69,7 +76,15 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 //                onDownloadUpdate(service.getDownload(id).getDownload());
             }
 
-            continueLoading();
+            try {
+                continueLoading();
+            }catch (Exception e){
+                e.printStackTrace();
+                finish();
+            }
+
+
+
         }
 
         @Override
@@ -134,6 +149,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
 
     private void continueLoading(){
+
+
+
         TMP_MYAPP_FILE = getCacheDir()+"/myapp.myapp";
         String uri = getIntent().getDataString();
         System.out.println(uri);
@@ -154,9 +172,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             finish();
 
         }else if(uri.startsWith("aptoidesearch://")){
-
             startMarketIntent(uri.split("aptoidesearch://")[1]);
-
+//        }else if(uri.startsWith("aptoidevoicesearch://")){
+//            aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
             String param = params.split("=")[1];
@@ -225,6 +243,32 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
             startFromMyApp(id);
             finish();
+        } else if (uri.startsWith("aptwords://")) {
+
+            String parsedString = uri.substring("aptwords://".length());
+
+            String[] splittedString = parsedString.split("/");
+
+            long id = Long.parseLong(splittedString[0]);
+            String cpi = splittedString[1];
+
+
+            try {
+                cpi = URLDecoder.decode(cpi, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            Intent i = new Intent(this, Aptoide.getConfiguration().getAppViewActivityClass());
+
+            i.putExtra("fromMyapp", true);
+            i.putExtra("id", id);
+            i.putExtra("cpi", cpi);
+            i.putExtra("download_from", "my_app_with_cpi");
+
+            startActivity(i);
+            finish();
+
         } else {
             finish();
         }
@@ -234,6 +278,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         Intent i = new Intent(this, appViewClass);
         i.putExtra("fromMyapp", true);
         i.putExtra("id", id);
+        i.putExtra("download_from", "my_app");
 
         startActivity(i);
     }
@@ -351,6 +396,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         if(id > 0){
             i = new Intent(this, appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "market_intent");
         }else{
             i = new Intent(this,Aptoide.getConfiguration().getSearchActivityClass());
             i.putExtra("search", param);

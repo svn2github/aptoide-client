@@ -51,10 +51,6 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         adapter.addAdapter(cursorAdapter);
         query = getArguments().getString("query");
         setHasOptionsMenu(true);
-
-
-
-
     }
 
 
@@ -77,10 +73,14 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
 
         int id = item.getItemId();
 
-        if(id == R.id.name){
+        if(id == R.id.nameAZ){
             setListShown(false);
 
-            sort = StoreActivity.Sort.NAME;
+            sort = StoreActivity.Sort.NAMEAZ;
+        }else if(id == R.id.nameZA){
+            setListShown(false);
+
+            sort = StoreActivity.Sort.NAMEZA;
         }else if(id == R.id.date){
             setListShown(false);
 
@@ -110,6 +110,7 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(getActivity(), appViewClass);
         i.putExtra("id", id);
+        i.putExtra("download_from", "search_results");
         startActivity(i);
     }
 
@@ -176,7 +177,7 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
 
         View footer = LayoutInflater.from(getActivity()).inflate(R.layout.footer_search, null);
-        Button search = (Button) footer.findViewById(R.id.search);
+        TextView search = (TextView) footer.findViewById(R.id.search);
         search.setOnClickListener(getSearchListener());
 
         getListView().addFooterView(footer);

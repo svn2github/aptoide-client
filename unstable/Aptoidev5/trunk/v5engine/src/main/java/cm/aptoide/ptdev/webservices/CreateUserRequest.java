@@ -4,6 +4,8 @@ import android.os.Build;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
+import cm.aptoide.ptdev.webservices.json.OAuth;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -21,19 +23,21 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
+public class CreateUserRequest extends GoogleHttpClientSpiceRequest<OAuth> {
 
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/createUser";
 
-    String baseUrlNonSsl = "http://webservices.aptoide.com/webservices/createUser";
+    String baseUrlNonSsl = "https://webservices.aptoide.com/webservices/3/createUser";
+
+
 
     private String email;
     private String pass;
     private String name = "";
 
     public CreateUserRequest() {
-        super(CreateUserJson.class);
+        super(OAuth.class);
     }
 
     public void setEmail(String email){
@@ -45,16 +49,9 @@ public class CreateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
     }
 
     @Override
-    public CreateUserJson loadDataFromNetwork() throws Exception {
-        GenericUrl url;
+    public OAuth loadDataFromNetwork() throws Exception {
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1){
-            url = new GenericUrl(baseUrl);
-        }else{
-            url = new GenericUrl(baseUrlNonSsl);
-        }
-
-
+        GenericUrl url = new GenericUrl(baseUrl);
 
 
         HashMap<String, String > parameters = new HashMap<String, String>();

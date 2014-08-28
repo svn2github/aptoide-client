@@ -8,31 +8,110 @@
 package cm.aptoide.ptdev;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.*;
 import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+
+import com.flurry.android.FlurryAgent;
+
+import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
 	String aptoide_path = Aptoide.getConfiguration().getPathCache();
 	String icon_path = aptoide_path + "icons/";
 	ManagerPreferences preferences;
 	Context mctx;
 	private boolean unlocked = false;
+    private static boolean isSetingPIN = false;
 
+    private Dialog DialogSetAdultpin(final Preference mp){
+        isSetingPIN=true;
+        final View v = LayoutInflater.from(this).inflate(R.layout.dialog_requestpin, null);
+        AlertDialog.Builder builder= new AlertDialog.Builder(this)
+                .setMessage(R.string.asksetadultpinmessage)
+                .setView(v)
+
+                .setPositiveButton(R.string.setpin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
+                        if (!TextUtils.isEmpty(input)) {
+                            SecurePreferences.getInstance()
+                                    .edit()
+                                    .putInt(AdultDialog.MATUREPIN, new Integer(input))
+                                    .commit();
+                            mp.setTitle(R.string.remove_mature_pin_title);
+                            mp.setSummary(R.string.remove_mature_pin_summary);
+                            if (Build.VERSION.SDK_INT >= 10)
+                                FlurryAgent.logEvent("Settings_Added_Pin_To_Lock_Adult_Content");
+                            //mp.setOnPreferenceClickListener(removeclick);
+                        }
+                        isSetingPIN = false;
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isSetingPIN=false;
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                isSetingPIN = false;
+            }
+        });
+
+        return alertDialog;
+    }
+
+    private void maturePinSetRemoveClick(){
+        int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN,-1);
+        final Preference mp= findPreference("Maturepin");
+        if(pin!=-1) {
+            // With Pin
+            AdultDialog.DialogRequestMaturepin(Settings.this,new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SecurePreferences.getInstance().edit().putInt(AdultDialog.MATUREPIN,-1).commit();
+                    final Preference mp= findPreference("Maturepin");
+                    mp.setTitle(R.string.set_mature_pin_title);
+                    mp.setSummary(R.string.set_mature_pin_summary);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
+                }
+            }).show();
+        }
+        else{
+            DialogSetAdultpin(mp).show();// Without Pin
+
+        }
+    }
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +133,47 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //			}
 //		});
 
+        int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN,-1);
+        final Preference mp= findPreference("Maturepin");
+        if(pin!=-1) {
+            Log.d("PINTEST","PinBuild");
+            mp.setTitle(R.string.remove_mature_pin_title);
+            mp.setSummary(R.string.remove_mature_pin_summary);
+        }
+        mp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                maturePinSetRemoveClick();
+                return true;
+            }
+        });
+        findPreference("matureChkBox").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final CheckBoxPreference cb = (CheckBoxPreference) preference;
+                if (!cb.isChecked()) {
+                    cb.setChecked(true);
+                    AdultDialog.BuildAreYouAdultDialog(Settings.this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            cb.setChecked(false);
+                        }
+                    }).show();
+                }
+                return true;
+            }
+        });
+
+        findPreference("showAllUpdates").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SettingsResult();
+                if(!((CheckBoxPreference)preference).isChecked()){
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
+                }
+                return true;
+            }
+        });
 
         findPreference("clearcache").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -62,7 +182,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
 					new DeleteDir().execute(new File(icon_path));
-				}
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Cleared_Cache");
+                }
 
 				return false;
 			}
@@ -72,8 +193,9 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
-					new DeleteDir().execute(new File(aptoide_path));
-				}
+                    new DeleteDir().execute(new File(aptoide_path));
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Removed_Data_And_Configurations");
+                }
 
 				return false;
 			}
@@ -93,11 +215,13 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         findPreference("theme").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Changed_Application_Theme");
                 Toast.makeText(Settings.this, getString(R.string.restart_aptoide), Toast.LENGTH_LONG).show();
                 return true;
             }
         });
+
+
 
 
 
@@ -119,6 +243,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_Dialog_Hardware_Filters");
                         }
                     });
 				AlertDialog alertDialog = alertDialogBuilder.create();
@@ -145,36 +270,33 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				((EditTextPreference) preference).getEditText().setText(PreferenceManager.getDefaultSharedPreferences(mctx).getString("maxFileCache","200"));
-				return false;
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Added_Max_File_Cache");
+                return false;
 			}
 		});
 
 
-//		Preference about = findPreference("aboutDialog");
-//		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//			@Override
-//			public boolean onPreferenceClick(Preference preference) {
-//                ContextThemeWrapper wrapper = new ContextThemeWrapper(Settings.this, Settings.this.obtainStyledAttributes(new int[]{R.attr.alertDialog}).getResourceId(0,0));
-//
-//                View view = LayoutInflater.from(wrapper).inflate(R.layout.dialog_about, null);
-//				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(wrapper).setView(view);
-//
-//				final AlertDialog aboutDialog = alertDialogBuilder.create();
-//
-//
-//				aboutDialog.setTitle(getString(R.string.about_us));
-//				aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
-//				aboutDialog.setCancelable(false);
-//				aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, "Ok", new Dialog.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.cancel();
-//					}
-//				});
-//				aboutDialog.show();
-//
-//				return true;
-//			}
-//		});
+		Preference about = findPreference("aboutDialog");
+		about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+                View view = LayoutInflater.from(mctx).inflate(R.layout.dialog_about, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mctx).setView(view);
+                final AlertDialog aboutDialog = alertDialogBuilder.create();
+                aboutDialog.setTitle(getString(R.string.about_us));
+                aboutDialog.setIcon(android.R.drawable.ic_menu_info_details);
+                aboutDialog.setCancelable(false);
+                aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
+                        dialog.cancel();
+                    }
+                });
+                aboutDialog.show();
+
+				return true;
+			}
+		});
 
 //		if(ApplicationAptoide.PARTNERID!=null){
 //			PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -201,11 +323,15 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //        getActionBar().setHomeButtonEnabled(true);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(isSetingPIN) {
+            Log.d("PINTEST","is Setting adult pin");
+            DialogSetAdultpin(mp).show();
+        }
 
+    }
 
-
-
-
+    private final void SettingsResult(){
+        setResult(RESULT_OK);
     }
 
     @Override
@@ -316,6 +442,11 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 	  }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int i = item.getItemId();
@@ -324,9 +455,24 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             finish();
         } else if (i == R.id.home) {
             finish();
+        }else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+    }
 }

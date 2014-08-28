@@ -2,6 +2,7 @@ package com.example.aptoidehelper.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.os.Environment;
@@ -25,12 +26,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         findViewById(R.id.delete_aptoide_cache).setOnClickListener(new Listeners.OnDeleteCacheClick(this));
         findViewById(R.id.delete_aptoide_settings_cache).setOnClickListener(new Listeners.OnDeleteCacheClick(this));
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;

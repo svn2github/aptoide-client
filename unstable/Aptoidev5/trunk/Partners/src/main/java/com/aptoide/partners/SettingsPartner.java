@@ -49,15 +49,14 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
             }
         });
 
+        PreferenceScreen screen = (PreferenceScreen) findPreference("root");
+
 //        Log.d("MatureContentSwitch","value: "+((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch());
 		if(!((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
-			CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference("matureChkBox");
-            PreferenceCategory mCategory = (PreferenceCategory) findPreference("filters");
-			mCategory.removePreference(mCheckBoxPref);
+            screen.removePreference(findPreference("adultContent"));
 		}
 
-        PreferenceScreen screen = (PreferenceScreen) findPreference("root");
         screen.removePreference(findPreference("changetheme"));
-
+        screen.removePreference(findPreference("about"));
     }
 }

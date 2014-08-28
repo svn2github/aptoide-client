@@ -3,6 +3,8 @@ package cm.aptoide.ptdev.webservices;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -52,7 +54,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         this.apkversion = apkversion;
     }
 
-    String baseUrl = "http://webservices.aptoide.com/webservices/addApkLike";
+    String baseUrl = "https://webservices.aptoide.com/webservices/3/addApkLike";
     @Override
     public GenericResponse loadDataFromNetwork() throws Exception {
 
@@ -73,6 +75,13 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
+
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs( getResultType() );

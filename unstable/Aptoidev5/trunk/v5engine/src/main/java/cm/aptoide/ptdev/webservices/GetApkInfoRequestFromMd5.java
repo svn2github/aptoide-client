@@ -2,15 +2,23 @@ package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
 import android.util.Log;
+
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.io.EOFException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,7 +53,6 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
 
 
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
-        if(token!=null)options.add(new WebserviceOptions("token", token));
         options.add(new WebserviceOptions("cmtlimit", "5"));
         options.add(new WebserviceOptions("payinfo", "true"));
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
@@ -59,21 +66,44 @@ public class GetApkInfoRequestFromMd5 extends GoogleHttpClientSpiceRequest<GetAp
             sb.append(";");
         }
         sb.append(")");
-        String baseUrl;
-        if(repoName!=null){
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/"+repoName+"/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }else{
-            baseUrl = "http://webservices.aptoide.com/webservices/2/getApkInfo/md5sum:"+md5Sum+"/options="+sb.toString()+"/json";
-        }
+
+        String baseUrl = "https://webservices.aptoide.com/webservices/3/getApkInfo";
 
         GenericUrl url = new GenericUrl(baseUrl);
 
-        Log.e("Aptoide-Request", baseUrl);
-        HttpRequest request = getHttpRequestFactory().buildGetRequest(url);
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        if(repoName != null) {
+            parameters.put("repo", repoName);
+        }
+        parameters.put("identif", "md5sum:" + md5Sum);
+        parameters.put("options", sb.toString());
+        parameters.put("mode", "json");
 
+        HttpContent content = new UrlEncodedContent(parameters);
+
+        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+
+        token = SecurePreferences.getInstance().getString("access_token", null);
+
+        request.setReadTimeout(5000);
+        if (token!=null) {
+            parameters.put("access_token", token);
+            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return request.execute().parseAs(getResultType());
+        HttpResponse response;
+        try{
+            response = request.execute();
+        } catch (EOFException e){
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.put("Connection", "close");
+            request.setHeaders(httpHeaders);
+            response = request.execute();
+        }
+
+        return response.parseAs(getResultType());
     }
 
     public void setRepoName(String repoName) {

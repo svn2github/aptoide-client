@@ -73,6 +73,9 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
         @Override
         public void onRequestSuccess(RepositoryCommentsJson relatedApkJson) {
             if(relatedApkJson!=null){
+
+
+
                 setListAdapter(new CommentsAdapter(getActivity(), relatedApkJson.getListing()));
             }else{
                 setListShown(true);
@@ -193,6 +196,7 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
         if(id>0){
             Intent i = new Intent(getActivity(), appViewClass);
             i.putExtra("id", id);
+            i.putExtra("download_from", "latest_comments");
             startActivity(i);
         }
 

@@ -16,16 +16,12 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -125,7 +121,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
             getListView().setPadding(0, AptoideUtils.getPixels(getActivity(), 10), 0, 0);
             getListView().setDivider(null);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
-
+            getListView().setItemsCanFocus(true);
 
             final AccountManager accountManager = AccountManager.get(getActivity());
 
@@ -135,11 +131,13 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                     final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
                     Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
                     String token = null;
+
                     try {
+
                         token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
+                        request.setLimit(10);
+                        //request.setToken(token);
 
-
-                        request.setPackageName(token);
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -204,11 +202,6 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                     });
                 }
             }).start();
-
-
-
-
-
 
         }
 

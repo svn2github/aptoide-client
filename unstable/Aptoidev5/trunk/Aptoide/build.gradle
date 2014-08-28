@@ -1,14 +1,14 @@
 
 apply plugin: 'android'
-
-apply from: "signing.gradle"
+apply plugin: 'crashlytics'
+apply from: 'signing.gradle'
 
 
 
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 7
@@ -21,6 +21,8 @@ android {
 
     }
 
+    
+
 
     buildTypes {
 
@@ -30,8 +32,9 @@ android {
         }
 
 
-        release {
-            signingConfig signingConfigs.release
+        
+release {
+                                                            signingConfig signingConfigs.release
         }
 
 
@@ -48,6 +51,8 @@ android {
 
 dependencies {
     compile project (':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+
 }
 
 

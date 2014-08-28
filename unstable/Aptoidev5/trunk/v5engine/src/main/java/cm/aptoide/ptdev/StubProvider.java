@@ -2,24 +2,21 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.google.api.client.util.Data;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -85,7 +82,8 @@ public class StubProvider extends ContentProvider {
 
                     switch (uriMatcher.match(uri)) {
                         case TOKEN:
-                            String token = accountManager.blockingGetAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                            SharedPreferences preferences = SecurePreferences.getInstance();
+                            String token = preferences.getString("devtoken", "");
                             mx = new MatrixCursor(new String[]{"userToken"}, 1);
                             mx.addRow(new Object[]{token});
 
@@ -146,10 +144,6 @@ public class StubProvider extends ContentProvider {
                 }
 
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (AuthenticatorException e) {
-                e.printStackTrace();
-            } catch (OperationCanceledException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();

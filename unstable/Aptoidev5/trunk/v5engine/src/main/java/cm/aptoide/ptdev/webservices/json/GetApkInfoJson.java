@@ -160,7 +160,12 @@ public class GetApkInfoJson {
         @Key private String news;
         @Key private String title;
         @Key private String wurl;
+        @Key private Flags flags;
+        @Key private int downloads;
 
+
+        public int getDownloads(){return this.downloads;}
+        public void setDownloads(int downloads){this.downloads = downloads; }
         public List<Comment> getComments(){
             return this.comments;
         }
@@ -179,9 +184,7 @@ public class GetApkInfoJson {
         public void setDeveloper(Developer developer){
             this.developer = developer;
         }
-        public Likevotes getLikevotes(){
-            return this.likevotes;
-        }
+        public Likevotes getLikevotes(){ return this.likevotes; }
         public void setLikevotes(Likevotes likevotes){
             this.likevotes = likevotes;
         }
@@ -198,6 +201,9 @@ public class GetApkInfoJson {
             this.title = title;
         }
         public String getWUrl() { return wurl; }
+
+        public Flags getFlags() { return flags; }
+        public void setFlags(Flags flags) { this.flags = flags;}
 
         public static class Likevotes{
             @Key private Number dislikes;
@@ -231,6 +237,83 @@ public class GetApkInfoJson {
             }
             public void setRating(Number rating){
                 this.rating = rating;
+            }
+        }
+
+        public static class Flags{
+            @Key private Votes votes;
+            @Key private String uservote;
+            @Key private Veredict veredict;
+
+            public String getUservote() {
+                return uservote;
+            }
+
+            public Votes getVotes(){
+                return this.votes;
+            }
+            public void setVotes(Votes votes){
+                this.votes = votes;
+            }
+
+            public Veredict getVeredict(){ return this.veredict;}
+            public void setVeredict(Veredict veredict){ this.veredict = veredict;}
+        }
+
+        public static class Veredict{
+            @Key private String flag;
+            @Key private String review;
+
+            public String getFlag(){
+                return this.flag;
+            }
+            public void setFlag(String flag){
+                this.flag = flag;
+            }
+            public String getReview(){
+                return this.review;
+            }
+            public void setReview(String review){
+                this.review = review;
+            }
+        }
+
+        public static class Votes{
+            @Key private Number fake;
+            @Key private Number freeze;
+            @Key private Number good;
+            @Key private Number license;
+            @Key private Number virus;
+
+            public Number getFake(){
+                return this.fake;
+            }
+            public void setFake(Number fake){
+                this.fake = fake;
+            }
+            public Number getFreeze(){
+                return this.freeze;
+            }
+            public void setFreeze(Number freeze){
+                this.freeze = freeze;
+            }
+            public Number getGood(){
+                return this.good;
+            }
+            public void setGood(Number good){
+                this.good = good;
+            }
+            public Number getLicense(){
+                return this.license;
+            }
+            public void setLicense(Number license){
+                this.license = license;
+            }
+            public Number getVirus(){
+                return this.virus;
+            }
+            public void setVirus(Number virus){
+                this.virus = virus;
             }
         }
 
@@ -434,8 +517,8 @@ public class GetApkInfoJson {
         @Key private String cN;
         @Key private String l;
         @Key private String o;
-        @Key private String sHA1;
         @Key private String sT;
+        @Key private String SHA1;
 
         public String getC(){
             return this.c;
@@ -462,10 +545,10 @@ public class GetApkInfoJson {
             this.o = o;
         }
         public String getSHA1(){
-            return this.sHA1;
+            return this.SHA1;
         }
         public void setSHA1(String sHA1){
-            this.sHA1 = sHA1;
+            this.SHA1 = sHA1;
         }
         public String getST(){
             return this.sT;
@@ -495,6 +578,8 @@ public class GetApkInfoJson {
         @Key
         private String path;
         @Key
+        private String altpath;
+        @Key
         private List<String> permissions;
         @Key
         private String repo;
@@ -506,7 +591,6 @@ public class GetApkInfoJson {
         private String vername;
         @Key
         private String icon_hd;
-
 
         public String getIcon(){
             return this.icon;
@@ -580,6 +664,10 @@ public class GetApkInfoJson {
 
         public String getMinScreen() {
             return minScreen;
+        }
+
+        public String getAltPath() {
+            return altpath;
         }
     }
 

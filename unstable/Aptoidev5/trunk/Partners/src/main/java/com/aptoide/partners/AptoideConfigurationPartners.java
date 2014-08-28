@@ -3,12 +3,9 @@ package com.aptoide.partners;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.SearchManager;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.configuration.Defaults;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -17,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.lang.String;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -41,6 +39,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String ADUNITID = "";
     public static boolean CREATESHORTCUT = true;
 
+
     public static String THEME = null;
     public static String AVATAR = null;
     public static String DESCRIPTION = null;
@@ -49,12 +48,16 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
 
+    public static String RESTRICTIONLIST;
+    public static String SPLASHCOLOR;
+
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT,
-        STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS }
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR,
+        STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
+    }
 
     private static Context context = AptoidePartner.getContext();
 
@@ -137,6 +140,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public String getAdUnitId(){ return ADUNITID; }
     public static void setAdUnitId(String adUnitId){ AptoideConfigurationPartners.ADUNITID = adUnitId; }
 
+    public String getSplashColor(){ return SPLASHCOLOR; }
+    public static void setSplashColor(String color){ AptoideConfigurationPartners.SPLASHCOLOR = color; }
+
     @Override
     public String getExtraId(){
         return PARTNERID;
@@ -165,6 +171,11 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public String getStoreItems(){ return ITEMS; }
     public static void setItems(String items){ AptoideConfigurationPartners.ITEMS = items; }
 
+    public static String getRestrictionlist() {
+        return RESTRICTIONLIST;
+    }
+
+
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
@@ -192,6 +203,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 try{
                     Elements element = Elements.valueOf(localName.toUpperCase(Locale.ENGLISH));
                     switch (element) {
+                        case BOOTCONF:
+                            break;
+                        case APTOIDECONF:
+                            break;
                         case PARTNERTYPE:
                             PARTNERTYPE = sb.toString();
                             Log.d("Partner type", PARTNERTYPE + "");
@@ -252,6 +267,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             CREATESHORTCUT = Boolean.parseBoolean(sb.toString());
                             Log.d("Create Shortcut", CREATESHORTCUT+ "");
                             break;
+                        case SPLASHCOLOR:
+                            SPLASHCOLOR = sb.toString();
+                            Log.d("Splash color", SPLASHCOLOR + "");
+                            break;
 
                         case THEME:
                             THEME = sb.toString();
@@ -272,6 +291,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                         case VIEW:
                             VIEW = sb.toString();
                             Log.d("Store view", VIEW+ "");
+                            break;
+                        case RESTRICTIONLIST:
+                            RESTRICTIONLIST = sb.toString();
+                            Log.d("Restriction list", RESTRICTIONLIST + "");
                             break;
 
                     }
@@ -305,6 +328,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             map.put("APTOIDETHEME", APTOIDETHEME);
             map.put("MARKETNAME", MARKETNAME);
             map.put("ADUNITID", ADUNITID);
+            map.put("SPLASHCOLOR", SPLASHCOLOR);
             map.put("CREATESHORTCUT", CREATESHORTCUT + "");
             map.put("STOREDESCRIPTION", DESCRIPTION);
             map.put("STORETHEME", THEME);
@@ -344,6 +368,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("APTOIDETHEME", APTOIDETHEME)
                 .putString("MARKETNAME", MARKETNAME)
                 .putString("ADUNITID", ADUNITID)
+                .putString("SPLASHCOLOR", SPLASHCOLOR)
                 .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
                 .putString("STOREDESCRIPTION", DESCRIPTION)
                 .putString("STOREAVATAR", AVATAR)
@@ -351,6 +376,17 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("STOREITEMS", ITEMS)
                 .putString("STOREVIEW", VIEW)
                 .commit();
+
+        if(RESTRICTIONLIST != null && !RESTRICTIONLIST.equals("")) {
+            SharedPreferences ssPref = SecurePreferences.getInstance();
+            if (ssPref.contains("RESTRICTIONLIST")) {
+                RESTRICTIONLIST += ", " + ssPref.getString("RESTRICTIONLIST", "");
+            }
+            Log.d("Restriction List", "Restriction List saved: " + RESTRICTIONLIST);
+            ssPref.edit().putString("RESTRICTIONLIST", RESTRICTIONLIST).commit();
+        }
+
+
     }
 
     @Override

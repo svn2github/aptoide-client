@@ -33,8 +33,6 @@ public class CheckUserCredentialsJson {
     @Key
     private List<Error> errors;
 
-   // @Key
-    //private String queueName;
 
     public String getStatus() {
         return status;
@@ -74,9 +72,4 @@ public class CheckUserCredentialsJson {
 
     public String getRepo() { return repo; }
 
-    /*
-    public String getQueueName() { return queueName; }
-
-    public void setQueueName(String queueName) { this.queueName = queueName; }
-    */
 }

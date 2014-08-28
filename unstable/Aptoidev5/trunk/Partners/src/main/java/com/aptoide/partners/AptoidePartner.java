@@ -8,6 +8,8 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+import com.crashlytics.android.Crashlytics;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +27,7 @@ public class AptoidePartner extends Aptoide {
     @Override
     public void bootImpl(ManagerPreferences managerPreferences) {
 //        super.bootImpl(managerPreferences);
+        Crashlytics.start(this);
 
         SharedPreferences sPref = getContext().getSharedPreferences("aptoide_settings", 0);
         if (sPref.contains("PARTNERID") && sPref.getString("PARTNERID", null) != null) {
@@ -44,12 +47,15 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.MARKETNAME = sPref.getString("MARKETNAME", "Aptoide");
             AptoideConfigurationPartners.ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
             AptoideConfigurationPartners.CREATESHORTCUT = sPref.getBoolean("CREATESHORTCUT", true);
+            AptoideConfigurationPartners.SPLASHCOLOR = sPref.getString("SPLASHCOLOR", "");
             AptoideConfigurationPartners.ITEMS = sPref.getString("STOREITEMS", "applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
             AptoideConfigurationPartners.DESCRIPTION = sPref.getString("STOREDESCRIPTION", "");
             AptoideConfigurationPartners.THEME = sPref.getString("STORETHEME", "default");
             AptoideConfigurationPartners.AVATAR = sPref.getString("STOREAVATAR", "https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png");
             AptoideConfigurationPartners.VIEW = sPref.getString("STOREVIEW", "list");
 
+            AptoideConfigurationPartners.RESTRICTIONLIST = SecurePreferences.getInstance().getString("RESTRICTIONLIST", null);
+            Log.d("Restriction List", "Retrived from secure preferences: " + AptoideConfigurationPartners.RESTRICTIONLIST);
             if (AptoideConfigurationPartners.PARTNERID != null && !new File(AptoideConfigurationPartners.SDCARD + "/.aptoide_settings/oem").exists()) {
                 AptoideConfigurationPartners.createSdCardBinary();
             }
@@ -98,6 +104,7 @@ public class AptoidePartner extends Aptoide {
                 AptoideConfigurationPartners.MARKETNAME = map.get("MARKETNAME");
                 AptoideConfigurationPartners.ADUNITID = map.get("ADUNITID");
                 AptoideConfigurationPartners.CREATESHORTCUT = Boolean.parseBoolean(map.get("CREATESHORTCUT"));
+                AptoideConfigurationPartners.SPLASHCOLOR = map.get("SPLASHCOLOR");
                 AptoideConfigurationPartners.ITEMS = map.get("STOREITEMS");
                 AptoideConfigurationPartners.DESCRIPTION = map.get("STOREDESCRIPTION");
                 AptoideConfigurationPartners.THEME = map.get("STORETHEME");

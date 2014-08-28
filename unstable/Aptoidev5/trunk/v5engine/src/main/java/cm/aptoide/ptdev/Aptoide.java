@@ -5,17 +5,23 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.http.AndroidHttpClient;
 import android.os.StrictMode;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.CrashlyticsListener;
 import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -58,20 +64,17 @@ import static org.acra.ReportField.*;
 )
 public class Aptoide extends Application {
 
-
-
-
     public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
+    private static String sponsoredCache;
 
     public static AptoideThemePicker getThemePicker() {
         return themePicker;
     }
 
     private static AptoideThemePicker themePicker;
-
 
     public static AptoideConfiguration getConfiguration() {
         return configuration;
@@ -88,6 +91,14 @@ public class Aptoide extends Application {
         return context;
     }
 
+    public static String getSponsoredCache() {
+        return sponsoredCache;
+    }
+
+    public static void setSponsoredCache(String sponsoredCache) {
+        Aptoide.sponsoredCache = sponsoredCache;
+    }
+
     public void setThemePicker(AptoideThemePicker themePicker) {
         Aptoide.themePicker = themePicker;
     }
@@ -97,6 +108,7 @@ public class Aptoide extends Application {
     }
 
     public static boolean IS_SYSTEM;
+
 
     @Override
     public void onCreate() {
@@ -110,6 +122,8 @@ public class Aptoide extends Application {
             e.printStackTrace();
         }
 
+        sponsoredCache = UUID.randomUUID().toString();
+
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems
 //                .penaltyLog()
@@ -119,6 +133,16 @@ public class Aptoide extends Application {
 //                .penaltyLog()
 //                .build());
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+
+                ex.printStackTrace();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(10);
+
+            }
+        });
 
         ACRA.init(this);
 
@@ -130,16 +154,26 @@ public class Aptoide extends Application {
         } catch (ACRAConfigurationException e) {
             e.printStackTrace();
         }
-        //acraConfiguration.setResDialogText(R.string.crash_text);
+        acraConfiguration.setResDialogText(R.string.crash_text);
+
+        ACRA.getErrorReporter().setEnabled(false);
 
         ACRA.setConfig(acraConfiguration);
 
-        db = DatabaseHelper.getInstance(getApplicationContext());
+
+
+
         setConfiguration(getAptoideConfiguration());
+
+
+        db = DatabaseHelper.getInstance(getApplicationContext());
+        initDatabase(db);
+
 
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
+
         managerPreferences.init();
         setThemePicker(getNewThemePicker());
 
@@ -174,7 +208,14 @@ public class Aptoide extends Application {
         ImageLoader.getInstance().init(config);
     }
 
+    private void initDatabase(SQLiteOpenHelper dbHelper) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if(db!=null) db.rawQuery("pragma synchronous = 0", null);
+    }
+
     public void bootImpl(ManagerPreferences managerPreferences) {
+        Crashlytics.start(this);
+
         if (managerPreferences.getAptoideClientUUID() == null) {
             managerPreferences.createLauncherShortcut(getContext(), R.drawable.icon_brand_aptoide);
         }
@@ -202,6 +243,7 @@ public class Aptoide extends Application {
         public ImageDownloaderWithPermissions(Context context, ManagerPreferences managerPreferences) {
             this(context, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
             this.managerPreferences = managerPreferences;
+
         }
 
         public ImageDownloaderWithPermissions(Context context, int connectTimeout, int readTimeout) {
@@ -214,8 +256,6 @@ public class Aptoide extends Application {
         public InputStream getStream(String imageUri, Object extra) throws IOException {
 
             boolean download = AptoideUtils.NetworkUtils.isPermittedConnectionAvailable(context, managerPreferences.getIconDownloadPermissions());
-
-
 
             switch (Scheme.ofUri(imageUri)) {
                 case HTTP:
@@ -251,4 +291,5 @@ public class Aptoide extends Application {
     public static void setWebInstallServiceRunning(boolean webInstallServiceRunning) {
         Aptoide.webInstallServiceRunning = webInstallServiceRunning;
     }
+
 }

@@ -13,13 +13,28 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:background="?attr/homeLabelbackground"
                 android:paddingBottom="5dp">
 
+    <TextView
+            android:id="@+id/message"
+            android:text="@string/row_app_update_not_safe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@android:color/darker_gray"
+            android:padding="8dp"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textIsSelectable="false"
+            android:visibility="gone"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
     <ImageView
             android:id="@+id/app_icon"
             android:layout_width="72dp"
             android:layout_height="72dp"
+            android:layout_below="@+id/message"
+            android:layout_margin="5dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="5dp"/>
+            android:layout_alignParentStart="true"/>
 
     <TextView
             android:id="@+id/app_name"
@@ -61,6 +76,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                   android:singleLine="true"
                   android:layout_weight="1"
                   android:visibility="gone"
+                  android:focusable="true"
+                  style="@style/focusableRowBackground"
                   android:textColor="?attr/customColor"/>
 
     </LinearLayout>
@@ -104,6 +121,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_alignTop="@+id/btinstall"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/btinstall"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"

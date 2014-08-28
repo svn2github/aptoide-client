@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.LauncherActivity;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.*;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
@@ -29,21 +27,59 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Subscribe;
+
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
+import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
@@ -51,6 +87,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
@@ -60,29 +97,11 @@ import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.BadgeView;
-import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
+import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
+import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Subscribe;
-import org.apache.http.message.BasicNameValuePair;
 import roboguice.util.temp.Ln;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Start extends ActionBarActivity implements
         StoresCallback,
@@ -91,12 +110,14 @@ public class Start extends ActionBarActivity implements
         DownloadInterface,
         MyAppsAddStoreInterface,
         ProgressDialogFragment.OnCancelListener,
-        AdultDialog.Callback {
+        AdultDialog.Callback,
+        PullToRefreshCallback {
 
-    private static final String TAG = Start.class.getName();
+    private static final String TAG = "Start";
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
     private Class settingsClass = Aptoide.getConfiguration().getSettingsActivityClass();
 
+    private static final int Settings_REQ_CODE = 21;
     private static final int WIZARD_REQ_CODE = 50;
     static Toast toast;
     private ArrayList<Server> server;
@@ -129,6 +150,7 @@ public class Start extends ActionBarActivity implements
         }
     };
     private String queueName;
+    private boolean refresh;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -157,7 +179,7 @@ public class Start extends ActionBarActivity implements
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
-            Log.d("Aptoide-Start", "onServiceConnected");
+            //Log.d("Aptoide-Start", "onServiceConnected");
             parserServiceIsBound = true;
 
             lock.lock();
@@ -192,7 +214,7 @@ public class Start extends ActionBarActivity implements
         super.onStop();
         BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
-
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -214,7 +236,8 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("Aptoide-OnClick", "OnClick");
+
+        //Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
         if (i == R.id.home || i == android.R.id.home) {
@@ -223,29 +246,32 @@ public class Start extends ActionBarActivity implements
             } else {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
-        } else if (i == R.id.menu_settings) {
-            Intent settingsIntent = new Intent(this, settingsClass);
-            startActivityForResult(settingsIntent, 0);
-        } else if (i == R.id.menu_about) {
-            showAbout();
+//        } else if (i == R.id.menu_settings) {
+//            Intent settingsIntent = new Intent(this, settingsClass);
+//            startActivityForResult(settingsIntent, 0);
+//        } else if (i == R.id.menu_about) {
+//            showAbout();
         } else if (i == R.id.menu_search) {
             onSearchRequested();
-            Log.d("Aptoide-OnClick", "OnSearchRequested");
+            //Log.d("Aptoide-OnClick", "OnSearchRequested");
 
+//            Log.d("Aptoide-OnClick", "OnSearchRequested");
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Search_Button");
         } else if ( i == R.id.menu_filter_mature_content){
 
             if (item.isChecked()) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
                 new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
             } else {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("matureChkBox", !item.isChecked()).commit();
-                item.setChecked(true);
-                matureCheck = false;
-                BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-                BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+                maturelock();
             }
 
-        }
+        } else if( i == R.id.menu_SendFeedBack){
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Feedback_Button");
 
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -265,8 +291,6 @@ public class Start extends ActionBarActivity implements
 
     }
 
-
-
     @Subscribe
     public void onRepoComplete(RepoCompleteEvent event) {
         long repoId = event.getRepoId();
@@ -276,9 +300,7 @@ public class Start extends ActionBarActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -324,7 +346,7 @@ public class Start extends ActionBarActivity implements
 
                                 c.close();
 
-                                Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
+                                //Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
                                 service.setShowNotification(!isLoggedin);
                                 service.startParse(database, store, false);
                             }
@@ -351,8 +373,14 @@ public class Start extends ActionBarActivity implements
         }
 
 
+
+
+
         mContext = this;
         setContentView(R.layout.activity_main);
+
+
+
 
         matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
@@ -375,30 +403,11 @@ public class Start extends ActionBarActivity implements
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
-
         if (savedInstanceState == null) {
 
             File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
             if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                final AlertDialog noSDDialog = dialogBuilder.create();
-                noSDDialog.setTitle(getText(R.string.remote_in_noSD_title));
-                noSDDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                String message;
-                if(!Build.DEVICE.equals("alien_jolla_bionic")){
-                    message=""+getText(R.string.remote_in_noSD);
-                }else{
-                    message=""+getText(R.string.remote_in_noSD_jolla);
-                }
-                noSDDialog.setMessage(message);
-                noSDDialog.setCancelable(false);
-                noSDDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                    }
-                });
-                noSDDialog.show();
+                getNoSpaceDialog();
 
             } else {
                 StatFs stat = new StatFs(sdcard_file.getPath());
@@ -408,26 +417,15 @@ public class Start extends ActionBarActivity implements
 
                 long total = (blockSize * totalBlocks) / 1024 / 1024;
                 long avail = (blockSize * availableBlocks) / 1024 / 1024;
-                Log.d("Aptoide", "* * * * * * * * * *");
-                Log.d("Aptoide", "Total: " + total + " Mb");
-                Log.d("Aptoide", "Available: " + avail + " Mb");
+                //Log.d("Aptoide", "* * * * * * * * * *");
+                //Log.d("Aptoide", "Total: " + total + " Mb");
+                //Log.d("Aptoide", "Available: " + avail + " Mb");
 
                 if (avail < 10) {
-                    Log.d("Aptoide", "No space left on SDCARD...");
-                    Log.d("Aptoide", "* * * * * * * * * *");
+                    //Log.d("Aptoide", "No space left on SDCARD...");
+                    //Log.d("Aptoide", "* * * * * * * * * *");
 
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-
-                    final AlertDialog noSpaceDialog = dialogBuilder.create();
-                    noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
-                    noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
-                    noSpaceDialog.setMessage(getText(R.string.remote_in_noSD_jolla));
-                    noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                        }
-                    });
-                    noSpaceDialog.show();
+                    getNoSpaceDialog();
                 }
             }
 
@@ -449,6 +447,7 @@ public class Start extends ActionBarActivity implements
                         store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                         startParse(store);
                         pager.setCurrentItem(1);
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
                     }
 
                 }
@@ -456,6 +455,7 @@ public class Start extends ActionBarActivity implements
             } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
                 pager.setCurrentItem(3);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Updates_Notification");
             }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             queueName = sharedPreferences.getString("queueName", null);
@@ -473,46 +473,48 @@ public class Start extends ActionBarActivity implements
                 Properties properties = new Properties();
                 properties.load(is);
 
-                String id = properties.getProperty("downloadId");
-                long savedId = sharedPreferences.getLong("downloadId", 0);
 
-                if (Long.valueOf(id) != savedId) {
-                    sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
-                    Intent intent = new Intent(this, appViewClass);
+                if(properties.containsKey("downloadId")) {
 
-                    intent.putExtra("fromApkInstaller", true);
-                    intent.putExtra("id", Long.valueOf(id));
+                    String id = properties.getProperty("downloadId");
+                    long savedId = sharedPreferences.getLong("downloadId", 0);
 
-                    startActivityForResult(intent, 50);
+                    if (Long.valueOf(id) != savedId) {
+                        sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
+                        Intent intent = new Intent(this, appViewClass);
 
+                        intent.putExtra("fromApkInstaller", true);
+                        intent.putExtra("id", Long.valueOf(id));
+
+
+                        if(properties.containsKey("cpi_url")){
+
+                            String cpi = properties.getProperty("cpi_url");
+
+                            try {
+                                cpi = URLDecoder.decode(cpi, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            intent.putExtra("cpi",  cpi);
+                        }
+
+                        startActivityForResult(intent, 50);
+                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Started_From_Apkfy");
+
+                    }
                 }
 
             } catch (IOException e) {
                 Log.e("MYTAG", "");
                 e.printStackTrace();
+            } catch (NullPointerException e){
+                e.printStackTrace();
             }
 
 
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        waitForServiceToBeBound();
-                        String countryCode = Geolocation.getCountryCode(Start.this);
-                        String url = Aptoide.getConfiguration().getEditorsUrl();
-
-                        loadEditorsChoice(url, countryCode);
-                        loadTopApps(Aptoide.getConfiguration().getTopAppsUrl());
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            loadEditorsAndTopApps();
 
             executorService.execute(new Runnable() {
                 @Override
@@ -533,8 +535,8 @@ public class Start extends ActionBarActivity implements
             c.close();
 
 
-            StringBuffer repos = new StringBuffer();
-            StringBuffer hashes = new StringBuffer();
+            StringBuilder repos = new StringBuilder();
+            StringBuilder hashes = new StringBuilder();
             Iterator<?> it = storesToCheck.iterator();
             while (it.hasNext()) {
                 BasicNameValuePair next = (BasicNameValuePair) it.next();
@@ -588,13 +590,57 @@ public class Start extends ActionBarActivity implements
             }
 
             public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
+                mDrawerLayout.findViewById(R.id.left_drawer).requestFocus();
             }
         };
 
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    }
+
+    private void getNoSpaceDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        final AlertDialog noSpaceDialog = dialogBuilder.create();
+        noSpaceDialog.setIcon(android.R.drawable.ic_dialog_alert);
+        noSpaceDialog.setTitle(getText(R.string.remote_in_noSD_title));
+        String message;
+        if(!Build.DEVICE.equals("alien_jolla_bionic")){
+            message=""+getText(R.string.remote_in_noSDspace);
+        }else{
+            message=""+getText(R.string.remote_in_noSD_jolla);
+        }
+        noSpaceDialog.setMessage(message);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
+        noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+            }
+        });
+        noSpaceDialog.show();
+    }
+
+    private void loadEditorsAndTopApps() {
+        if(executorService != null && !executorService.isShutdown()) {
+            executorService.execute( new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        waitForServiceToBeBound();
+                        String countryCode = Geolocation.getCountryCode( Start.this );
+                        String url = Aptoide.getConfiguration().getEditorsUrl();
+
+                        loadEditorsChoice( url, countryCode );
+                        loadTopApps( Aptoide.getConfiguration().getTopAppsUrl() );
+                        //Log.d( "pullToRefresh", "execute(=)" );
+                    } catch ( Exception e ) {
+                        e.printStackTrace();
+                        BusProvider.getInstance().post( new DismissRefreshEvent());
+                    }
+                }
+            } );
+        }
     }
 
     public List<Object> getDrawerList() {
@@ -604,7 +650,8 @@ public class Start extends ActionBarActivity implements
                 R.attr.icMyAccountDrawable /* index 0 */,
                 R.attr.icRollbackDrawable /* index 1 */,
                 R.attr.icScheduledDrawable /* index 2 */,
-                R.attr.icExcludedUpdatesDrawable /* index 3 */
+                R.attr.icExcludedUpdatesDrawable /* index 3 */,
+                R.attr.icSettingsDrawable /* index 4 */
         };
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
@@ -615,15 +662,14 @@ public class Start extends ActionBarActivity implements
         int rollbackRes = typedArray.getResourceId(1, R.drawable.ic_action_time_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.rollback), rollbackRes, 1));
 
-        TypedArray scheduleTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icScheduledDrawable});
-        int scheduleRes = scheduleTypedArray.getResourceId(0, 0);
-        scheduleTypedArray.recycle();
+        int scheduleRes = typedArray.getResourceId(2, R.drawable.ic_schedule);
         mItems.add(new MenuListAdapter.Item(getString(R.string.setting_schdwntitle), scheduleRes, 2));
 
-        TypedArray excludedUpdatesTypedArray = getTheme().obtainStyledAttributes(Aptoide.getThemePicker().getAptoideTheme(this), new int[]{R.attr.icExcludedUpdatesDrawable});
-        int excludedUpdatesRes = excludedUpdatesTypedArray.getResourceId(0, 0);
-        excludedUpdatesTypedArray.recycle();
+        int excludedUpdatesRes = typedArray.getResourceId(3, R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
+
+        int settingsRes = typedArray.getResourceId(4, R.drawable.ic_action_settings_dark);
+        mItems.add(new MenuListAdapter.Item(getString(R.string.settings), settingsRes, 7));
 
         mItems.add(new MenuListAdapter.Category(getString(R.string.social_networks)));
         mItems.add(new MenuListAdapter.Item(getString(R.string.facebook), R.drawable.ic_action_facebook, 4));
@@ -632,13 +678,14 @@ public class Start extends ActionBarActivity implements
         mItems.add(new MenuListAdapter.Category(getString(R.string.other)));
         mItems.add(new MenuListAdapter.Item(getString(R.string.backup_apps), R.drawable.ic_action_backup_custom, 6));
 
+
         typedArray.recycle();
         return mItems;
     }
 
     public void loadTopApps(String url) throws IOException {
 
-        Log.d("Aptoide-Featured", "Loading " + url);
+        //Log.d("Aptoide-Featured", "Loading " + url);
 
         service.parseTopApps(database, url);
     }
@@ -649,7 +696,7 @@ public class Start extends ActionBarActivity implements
             url = url + "?country=" + countryCode;
         }
 
-        Log.d("Aptoide-Featured", "Loading " + url);
+        //Log.d("Aptoide-Featured", "Loading " + url);
 
         service.parseEditorsChoice(database, url);
     }
@@ -707,20 +754,78 @@ public class Start extends ActionBarActivity implements
         } else {
 
             try {
+
                 if (Aptoide.isUpdate()) {
 
-                    if(PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0) < 431){
+                    int previousVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0);
+                    if(previousVersion < 438){
                         Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                         whatsNewTutorial.putExtra("isUpdate", true);
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
                     }
 
+                    if(previousVersion > 431){
+                       updateAccount();
+                    }
+
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+
+
 
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
+        }
+    }
+
+    private void updateAccount() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final AccountManager manager = AccountManager.get(this);
+        final Account[] accountsByType = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
+        if(accountsByType.length > 0){
+
+            if("APTOIDE".equals(sharedPreferences.getString("loginType", null))){
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
+                        oAuth2AuthenticationRequest.setMode(LoginActivity.Mode.APTOIDE);
+                        oAuth2AuthenticationRequest.setUsername(accountsByType[0].name);
+                        oAuth2AuthenticationRequest.setPassword(manager.getPassword(accountsByType[0]));
+
+                        try {
+                            oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+
+                            OAuth oAuth = oAuth2AuthenticationRequest.loadDataFromNetwork();
+
+                            String refreshToken = oAuth.getRefreshToken();
+
+                            String actualToken = manager.blockingGetAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                            manager.invalidateAuthToken(Aptoide.getConfiguration().getAccountType(), actualToken);
+                            manager.setAuthToken(accountsByType[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, refreshToken);
+                            SecurePreferences.getInstance().edit().putString("access_token", oAuth.getAccess_token()).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            AccountManager.get(Start.this).removeAccount(accountsByType[0], null, null);
+                        }
+
+                    }
+                }).start();
+
+
+
+
+            }else{
+
+                AccountManager.get(this).removeAccount(accountsByType[0], null, null);
+
+            }
+
+
 
         }
     }
@@ -742,6 +847,8 @@ public class Start extends ActionBarActivity implements
     @Override
     public boolean onSearchRequested() {
 
+
+
         if (Build.VERSION.SDK_INT > 7) {
             WebSocketSingleton.getInstance().connect();
             isDisconnect = false;
@@ -761,8 +868,6 @@ public class Start extends ActionBarActivity implements
 
                         }
                     }, 10000);
-
-
                 }
             });
 
@@ -793,6 +898,19 @@ public class Start extends ActionBarActivity implements
             case 20:
                 Toast.makeText(this, String.valueOf(resultCode), Toast.LENGTH_LONG).show();
                 break;
+            case Settings_REQ_CODE:
+                if(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true))
+                    matureUnlock();
+                else
+                    maturelock();
+
+
+                refresh = true;
+
+                BusProvider.getInstance().post(new RepoCompleteEvent(0));
+                BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+                BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+                break;
             case 50:
                 spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
                 spiceManager.getFromCache(RepositoryChangeJson.class, checkServerCacheString, DurationInMillis.ONE_DAY, requestListener);
@@ -802,14 +920,11 @@ public class Start extends ActionBarActivity implements
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-                    Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
+                    //Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
                 }
                 break;
         }
-        matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-        ActivityCompat.invalidateOptionsMenu(this);
-
-        ActivityCompat.invalidateOptionsMenu(this);
+        //InvalidateAptoideMenu();
     }
 
 
@@ -831,6 +946,7 @@ public class Start extends ActionBarActivity implements
         super.onStart();
         spiceManager.start(this);
         BusProvider.getInstance().register(this);
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
 
@@ -873,8 +989,9 @@ public class Start extends ActionBarActivity implements
             Runnable runnable = new Runnable() {
                 public void run() {
                     final Database db = new Database(Aptoide.getDb());
+
                     final Store store = new Store();
-                    Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
+                    //Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
                     Cursor c = db.getStore(storeid);
 
                     if (c.moveToFirst()) {
@@ -945,58 +1062,94 @@ public class Start extends ActionBarActivity implements
     }
 
     @Override
-    public void onOk() {
+    public void matureUnlock() {
+        //Log.d("Mature","Unlocked");
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Unlocked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        ActivityCompat.invalidateOptionsMenu(this);
+        InvalidateAptoideMenu();
     }
 
+    public void maturelock() {
+        //Log.d("Mature","locked");
+        matureCheck = false;
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Locked_Mature_Content");
+        BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+        InvalidateAptoideMenu();
+    }
+
+    private void InvalidateAptoideMenu() {
+        if(!ActivityCompat.invalidateOptionsMenu(this)) {
+            supportInvalidateOptionsMenu();
+        }
+    }
 
     public PagerAdapter getViewPagerAdapter() {
         return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
     }
 
+    @Override
+    public void reload() {
+        //Log.d( "pullToRefresh", "reload()" );
+        loadEditorsAndTopApps();
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Drawer");
 
             int switchId = (int) id;
 
             switch (switchId) {
                 case 0:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                     startActivity(loginIntent);
-
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_My_Account_Drawer_Button");
                     break;
                 case 1:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                     startActivity(rollbackIntent);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Rollback_Drawer_Button");
                     break;
                 case 2:
-                    Log.d("MenuDrawer-position", "pos: "+position);
+                    //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
                     startActivity(scheduledIntent);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Scheduled_Downloads_Drawer_Button");
                     break;
                 case 3:
-                    Log.d("MenuDrawer-position", "pos: "+position);
+                    //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
                     startActivity(excludedIntent);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Excluded_Updates_Drawer_Button");
                     break;
                 case 4:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
+//                    Log.d("MenuDrawer-position", "pos: " + position);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Facebook_Drawer_Button");
                     showFacebook();
                     break;
                 case 5:
-                    Log.d("MenuDrawer-position", "pos: " + position);
+                    //Log.d("MenuDrawer-position", "pos: " + position);
+//                    Log.d("MenuDrawer-position", "pos: " + position);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Twitter_Drawer_Button");
                     showTwitter();
                     break;
                 case 6:
                     initBackupApps();
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_BackupApps_Drawer_Button");
+                    break;
+                case 7:
+                    Intent settingsIntent = new Intent(mContext, settingsClass);
+                    startActivityForResult(settingsIntent, Settings_REQ_CODE);
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Settings_Drawer_Button");
                     break;
                 default:
                     break;
@@ -1016,6 +1169,7 @@ public class Start extends ActionBarActivity implements
 
             if (intent != null) {
                 startActivity(intent);
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Launched_BackupApps");
             }
 
 
@@ -1024,6 +1178,8 @@ public class Start extends ActionBarActivity implements
             Intent i = new Intent(this, AppViewActivity.class);
             i.putExtra("getBackupApps", true);
             startActivity(i);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_App_View_To_Download_BackupApps");
+
         }
 
     }
@@ -1054,12 +1210,12 @@ public class Start extends ActionBarActivity implements
         isResumed = true;
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
+        mDrawerList.setItemsCanFocus(true);
         TextView login_email;
         ImageView user_avatar;
         accountManager = AccountManager.get(this);
 
-        Log.d("Aptoide-DrawerHeader", String.valueOf(mDrawerList.getHeaderViewsCount()));
+        //Log.d("Aptoide-DrawerHeader", String.valueOf(mDrawerList.getHeaderViewsCount()));
 
         if(mDrawerList.getHeaderViewsCount()>0){
             View v = (mDrawerList.getAdapter()).getView(0, null, null);
@@ -1093,6 +1249,14 @@ public class Start extends ActionBarActivity implements
         }
         mDrawerList.setAdapter(mMenuAdapter);
 
+
+        if(refresh){
+            BusProvider.getInstance().post(new RepoCompleteEvent(0));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        }
+
+
     }
 
 
@@ -1103,8 +1267,6 @@ public class Start extends ActionBarActivity implements
         isResumed=false;
         super.onPause();
         //Toast.makeText(this, "OnPause", Toast.LENGTH_LONG).show();
-
-
 
         if(rabbitMqConnBound){
             rabbitMqService.stopAmqpService();
@@ -1130,10 +1292,13 @@ public class Start extends ActionBarActivity implements
                 startActivity(sharingIntent);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+            } catch (ActivityNotFoundException notFound){
+                Toast.makeText(mContext, getString(R.string.not_found), Toast.LENGTH_SHORT).show();
             }
         } else {
             Intent intent = new Intent(mContext, WebViewFacebook.class);
             startActivity(intent);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Facebook_Webview");
         }
     }
 
@@ -1142,12 +1307,15 @@ public class Start extends ActionBarActivity implements
             String url = "http://www.twitter.com/aptoide";
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(twitterIntent);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Twitter_App");
         } else {
             Intent intent = new Intent(mContext, WebViewTwitter.class);
             startActivity(intent);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Twitter_Webview");
         }
     }
 
+/*
     private void showAbout() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_about, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext).setView(view);
@@ -1161,8 +1329,5 @@ public class Start extends ActionBarActivity implements
             }
         });
         aboutDialog.show();
-    }
-
-
-
+    }*/
 }
