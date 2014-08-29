@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.AptoideThemePicker;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import com.crashlytics.android.Crashlytics;
@@ -48,6 +49,7 @@ public class AptoidePartner extends Aptoide {
             AptoideConfigurationPartners.ADUNITID = sPref.getString("ADUNITID", "18947d9a99e511e295fa123138070049");
             AptoideConfigurationPartners.CREATESHORTCUT = sPref.getBoolean("CREATESHORTCUT", true);
             AptoideConfigurationPartners.SPLASHCOLOR = sPref.getString("SPLASHCOLOR", "");
+            AptoideConfigurationPartners.SHOWSPLASH = sPref.getBoolean("SHOWSPLASH", true);
             AptoideConfigurationPartners.ITEMS = sPref.getString("STOREITEMS", "applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended");
             AptoideConfigurationPartners.DESCRIPTION = sPref.getString("STOREDESCRIPTION", "");
             AptoideConfigurationPartners.THEME = sPref.getString("STORETHEME", "default");
@@ -105,6 +107,7 @@ public class AptoidePartner extends Aptoide {
                 AptoideConfigurationPartners.ADUNITID = map.get("ADUNITID");
                 AptoideConfigurationPartners.CREATESHORTCUT = Boolean.parseBoolean(map.get("CREATESHORTCUT"));
                 AptoideConfigurationPartners.SPLASHCOLOR = map.get("SPLASHCOLOR");
+                AptoideConfigurationPartners.SHOWSPLASH = Boolean.parseBoolean(map.get("SHOWSPLASH"));
                 AptoideConfigurationPartners.ITEMS = map.get("STOREITEMS");
                 AptoideConfigurationPartners.DESCRIPTION = map.get("STOREDESCRIPTION");
                 AptoideConfigurationPartners.THEME = map.get("STORETHEME");
