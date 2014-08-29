@@ -1,5 +1,6 @@
 package com.aptoide.openiab.webservices;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.aptoide.openiab.webservices.json.IabPurchaseStatusJson;
@@ -16,6 +17,7 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 

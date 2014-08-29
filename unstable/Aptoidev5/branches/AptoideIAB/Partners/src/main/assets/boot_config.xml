@@ -24,6 +24,7 @@
         <adunitid></adunitid>
         <createshortcut>true</createshortcut>
         <linkedcomments>true</linkedcomments>
+        <showsplash>true</showsplash>
         <splashcolor>#FFE98023</splashcolor>
     </aptoideconf>
 </bootconf>

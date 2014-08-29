@@ -50,12 +50,13 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     public static String RESTRICTIONLIST;
     public static String SPLASHCOLOR;
+    public static boolean SHOWSPLASH = true;
 
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR,
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR, SHOWSPLASH,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
     }
 
@@ -142,6 +143,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     public String getSplashColor(){ return SPLASHCOLOR; }
     public static void setSplashColor(String color){ AptoideConfigurationPartners.SPLASHCOLOR = color; }
+
+    public boolean getShowSplash() { return SHOWSPLASH; }
+    public static void setShowSplash(boolean showSplash) { AptoideConfigurationPartners.SHOWSPLASH = showSplash; }
 
     @Override
     public String getExtraId(){
@@ -270,6 +274,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                         case SPLASHCOLOR:
                             SPLASHCOLOR = sb.toString();
                             Log.d("Splash color", SPLASHCOLOR + "");
+                            break;
+                        case SHOWSPLASH:
+                            SHOWSPLASH = Boolean.parseBoolean(sb.toString());
+                            Log.d("Show splashscreen", SHOWSPLASH+ "");
                             break;
 
                         case THEME:

@@ -199,9 +199,10 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             e.printStackTrace();
         }
 
-        new SplashDialogFragment().show(getSupportFragmentManager(), "splashDialog");
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getShowSplash()) {
+            new SplashDialogFragment().show(getSupportFragmentManager(), "splashDialog");
+        }
 
-//        Toast.makeText(getApplicationContext(), "SKIP WIZARD", Toast.LENGTH_LONG).show();
     }
 
     @Override
