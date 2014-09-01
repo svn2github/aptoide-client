@@ -78,7 +78,7 @@ import java.util.HashMap;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, OnRefreshListener {
+public class FragmentHome2 extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, OnRefreshListener {
 
     private ArrayList<Home> editorsChoice = new ArrayList<Home>();
     private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
@@ -358,7 +358,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                     .insertLayoutInto( viewGroup )
                     .useViewDelegate( ListView.class, new AbsListViewDelegate())
                     .theseChildrenArePullable( getListView().getId())
-                    .listener( FragmentHome.this )
+                    .listener( FragmentHome2.this )
                     .options( Options.create().headerTransformer( new AbcDefaultHeaderTransformer() ).scrollDistance( 0.5f ).build() )
                     .setup( mPullToRefreshLayout );
         }
