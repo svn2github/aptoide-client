@@ -14,8 +14,10 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,6 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            Log.d("Aptoide-TopAppsActivity", "ServiceBound");
             downloadService = ((DownloadService.LocalBinder) binder).getService();
         }
 
@@ -52,7 +53,8 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         bindService(new Intent(this, DownloadService.class), conn, Context.BIND_AUTO_CREATE);
 
         Fragment fragment = new MoreTopAppsFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        if(savedInstanceState==null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,28 +68,34 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         downloadService.startDownloadFromAppId(id);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int i = item.getItemId();
+
+        if (i == android.R.id.home || i == R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public static class MoreTopAppsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayList<Home>> {
 
-        ArrayList<Home> items = new ArrayList<Home>();
-
         Adapter adapterHome;
 
-
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             adapterHome = new Adapter(getActivity());
-            getLoaderManager().restartLoader(0, null, this);
-
+            setListAdapter(adapterHome);
+            return super.onCreateView(inflater, container, savedInstanceState);
         }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            getLoaderManager().initLoader(0, null, this);
+        }
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
@@ -97,7 +105,6 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
             getListView().setItemsCanFocus(true);
 
         }
-
 
         @Override
         public Loader<ArrayList<Home>> onCreateLoader(int i, Bundle bundle) {
@@ -119,28 +126,12 @@ public class MoreTopAppsActivity extends ActionBarActivity implements DownloadIn
         public void onLoadFinished(Loader<ArrayList<Home>> arrayListLoader, ArrayList<Home> homeItems) {
             adapterHome.setItems(homeItems);
             adapterHome.notifyDataSetChanged();
-            setListAdapter(adapterHome);
         }
 
         @Override
         public void onLoaderReset(Loader<ArrayList<Home>> arrayListLoader) {
             setListAdapter(null);
         }
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int i = item.getItemId();
-
-        if (i == android.R.id.home) {
-            finish();
-        } else if (i == R.id.home) {
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }

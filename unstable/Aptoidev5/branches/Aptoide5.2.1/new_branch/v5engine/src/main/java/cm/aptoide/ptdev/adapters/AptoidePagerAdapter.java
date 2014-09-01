@@ -58,7 +58,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new FragmentHome2();
+                return new FragmentHome();
             case 1:
                 return new FragmentStores();
             case 2:

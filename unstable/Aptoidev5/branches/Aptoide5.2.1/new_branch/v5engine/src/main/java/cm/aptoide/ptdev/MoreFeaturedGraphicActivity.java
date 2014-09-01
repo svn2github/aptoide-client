@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,9 +35,7 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         Aptoide.getThemePicker().setAptoideTheme(this);
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
@@ -46,19 +45,16 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.featured_editors_choice);
 
-
         FeaturedGraphicFragment featuredGraphicFragment = new FeaturedGraphicFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, featuredGraphicFragment).commit();
+        if(savedInstanceState==null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, featuredGraphicFragment).commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if(item.getItemId() == android.R.id.home || item.getItemId() == R.id.home){
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -87,26 +83,26 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
 
         CursorAdapter cursorAdapter ;
 
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            cursorAdapter = new FeaturedGraphicAdapter(getActivity(), null);
+            setListAdapter(cursorAdapter);
+            return super.onCreateView(inflater, container, savedInstanceState);
+        }
+
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
-
             Intent i = new Intent(getActivity(), Aptoide.getConfiguration().getAppViewActivityClass());
             i.putExtra("id", id);
             i.putExtra("download_from", "more_featured_editors_choice");
             startActivity(i);
-
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            cursorAdapter = new FeaturedGraphicAdapter(activity, null);
         }
 
         @Override
         public void onResume() {
             super.onResume();
-            setListAdapter(cursorAdapter);
+
             getLoaderManager().initLoader(90, null, this);
         }
 
@@ -125,6 +121,7 @@ public class MoreFeaturedGraphicActivity extends ActionBarActivity {
             super.onViewCreated(view, savedInstanceState);
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
+
         }
 
         @Override
