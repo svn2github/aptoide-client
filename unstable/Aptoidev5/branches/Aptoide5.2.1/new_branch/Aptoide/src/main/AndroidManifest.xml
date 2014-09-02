@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
 
 
@@ -317,6 +318,14 @@
                 android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="cm.aptoide.ptdev.PushNotification.PushNotificationReceiver" >
+            <intent-filter>
+                <action android:name="cm.aptoide.ptdev.PushNotification"/>
+                <action android:name="cm.aptoide.ptdev.PushNotificationFirstTime"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 

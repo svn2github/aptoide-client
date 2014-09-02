@@ -16,19 +16,18 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import cm.aptoide.ptdev.*;
+
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome2;
+import cm.aptoide.ptdev.fragments.FragmentHome;
 import cm.aptoide.ptdev.fragments.FragmentStore;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -47,18 +46,6 @@ import java.util.concurrent.Executors;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
-import cm.aptoide.ptdev.adapters.MenuListAdapter;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.events.RepoErrorEvent;
-import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome2;
-import cm.aptoide.ptdev.fragments.FragmentStore;
-import cm.aptoide.ptdev.fragments.FragmentUpdates;
-import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.Store;
-import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
  * Created by tdeus on 3/19/14.
@@ -418,7 +405,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
             switch (position) {
                 case 0:
-                    return new FragmentHome2();
+                    return new FragmentHome();
                 case 1:
                     fragmentStore = new com.aptoide.partners.Fragment();
                     return fragmentStore;

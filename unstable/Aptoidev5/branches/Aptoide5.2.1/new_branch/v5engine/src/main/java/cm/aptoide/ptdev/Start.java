@@ -66,6 +66,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import cm.aptoide.ptdev.PushNotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -732,6 +733,11 @@ public class Start extends ActionBarActivity implements
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (sPref.getBoolean("firstrun", true)) {
+
+            Intent i = new Intent();
+            i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
+            this.sendBroadcast(i);
+
             Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
             startActivityForResult(newToAptoideTutorial, WIZARD_REQ_CODE);
             sPref.edit().putBoolean("firstrun", false).commit();
