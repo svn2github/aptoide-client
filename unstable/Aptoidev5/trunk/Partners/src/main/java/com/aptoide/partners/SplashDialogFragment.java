@@ -110,9 +110,15 @@ public class SplashDialogFragment extends DialogFragment {
         splashBackground = (RelativeLayout) view.findViewById(R.id.splash_background);
 
         String color = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getSplashColor();
-        int parsed_color = Color.parseColor(color);
-        splashBackground.setBackgroundColor(parsed_color);
-//
+        int parsed_color = 0;
+        try{
+            parsed_color = Color.parseColor(color);
+        }catch(Exception e){
+            parsed_color = Color.parseColor("#50FFFFFF");
+        }finally{
+            splashBackground.setBackgroundColor(parsed_color);
+        }
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 
             ImageLoader.getInstance().displayImage(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getSplashscreenLand(), imageSplash, options, listener);
