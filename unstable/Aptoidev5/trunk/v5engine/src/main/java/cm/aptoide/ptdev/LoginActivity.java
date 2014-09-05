@@ -3,12 +3,16 @@ package cm.aptoide.ptdev;
 import android.accounts.*;
 import android.app.ProgressDialog;
 import android.content.*;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
 
@@ -22,8 +26,11 @@ import android.widget.*;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.InnJooDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -31,19 +38,24 @@ import cm.aptoide.ptdev.utils.Configs;
 import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.Errors;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import com.facebook.*;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.*;
 import com.google.android.gms.plus.PlusClient;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.util.Data;
+import com.inncloud.client.gettoken.InnCloudGetToken_Client;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -56,7 +68,11 @@ import java.util.Locale;
 /**
  * Created by brutus on 09-12-2013.
  */
-public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener, ProgressDialogFragment.OnCancelListener {
+public class LoginActivity extends AccountAuthenticatorActivity implements
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        View.OnClickListener,
+        ProgressDialogFragment.OnCancelListener, InnJooDialog.Callback {
 
     private ProgressDialog mConnectionProgressDialog;
     private PlusClient mPlusClient;
@@ -68,6 +84,20 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private CheckUserCredentialsRequest request;
     private boolean fromPreviousAptoideVersion;
     private Class signupClass = Aptoide.getConfiguration().getSignUpActivityClass();
+    private DownloadService service;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+
+            service =  ((DownloadService.LocalBinder)binder).getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -226,7 +256,17 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     }
 
-    public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
+    @Override
+    public void onOkClick() {
+        downloadInnJooApp();
+    }
+
+    @Override
+    public void onCancelClick() {
+        finish();
+    }
+
+    public enum Mode {APTOIDE, GOOGLE, INNCLOUD, FACEBOOK}
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
@@ -297,94 +337,113 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-
-
         if (AccountManager.get(this).getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
 
         } else {
 
-            setContentView(R.layout.form_login);
-
-            if (Build.VERSION.SDK_INT >= 8) {
-
-                findViewById(R.id.g_sign_in_button).setOnClickListener(this);
-                mConnectionProgressDialog = new ProgressDialog(this);
-                mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
-
-                uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-                uiLifecycleHelper.onCreate(savedInstanceState);
-
-
-                mPlusClient = new PlusClient.Builder(this, this, this).build();
-
-                int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-                boolean play_installed;
-                if (val == ConnectionResult.SUCCESS) {
-                    play_installed = true;
-                } else {
-                    play_installed = false;
-                }
-
-                SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
-                if(!play_installed){
-                    signInButton.setVisibility(View.GONE);
-                }
-
-            }
             mAccountManager = AccountManager.get(getBaseContext());
-
             String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
             mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
             if (mAuthTokenType == null)
                 mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-            if (accountName != null) {
-                ((EditText) findViewById(R.id.username)).setText(accountName);
-            }
+
 
             if (PreferenceManager.getDefaultSharedPreferences(this).contains(Constants.LOGIN_USER_LOGIN)) {
                 ((EditText) findViewById(R.id.username)).setText(PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.LOGIN_USER_LOGIN, ""));
                 fromPreviousAptoideVersion = true;
             }
 
+            if (Aptoide.getConfiguration().getExtraId().equals("830a1ec9c85391a6274efd81a0a5414b")) {
 
-            password_box = (EditText) findViewById(R.id.password);
-            password_box.setTransformationMethod(new PasswordTransformationMethod());
-
-
-
-            final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
-            final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
-
-            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
-            password_box.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (password_box.getCompoundDrawables()[2] == null) {
-                        return false;
-                    }
-                    if (event.getAction() == MotionEvent.ACTION_UP){
-                        return false;
-                    }
-                    if (event.getX() > password_box.getWidth() - password_box.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
-                        if(showPassword){
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Show_Password");
-                            showPassword=false;
-                            password_box.setTransformationMethod(null);
-                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
-                        }else{
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Hide_Password");
-                            showPassword=true;
-                            password_box.setTransformationMethod(new PasswordTransformationMethod());
-                            password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
-                        }
-                    }
-
-                    return false;
+                if(innCloudExists()){
+                    Intent intent = new Intent();
+                    intent.setClass(this, InnCloudGetToken_Client.class);
+                    // intent.setAction("android.inncloudGetToken");
+                    startActivityForResult(intent, 105);
+                }else{
+                    Intent i = new Intent(this, DownloadService.class);
+                    bindService(i, conn, Context.BIND_AUTO_CREATE);
+                    AptoideDialog.InnJooDialog().show(getSupportFragmentManager(), "InnJooDialog");
                 }
-            });
+
+
+            } else {
+                setContentView(R.layout.form_login);
+
+
+                if (Build.VERSION.SDK_INT >= 8) {
+
+                    findViewById(R.id.g_sign_in_button).setOnClickListener(this);
+                    mConnectionProgressDialog = new ProgressDialog(this);
+                    mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
+
+                    uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+                    uiLifecycleHelper.onCreate(savedInstanceState);
+
+
+                    mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+                    int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+                    boolean play_installed;
+                    if (val == ConnectionResult.SUCCESS) {
+                        play_installed = true;
+                    } else {
+                        play_installed = false;
+                    }
+
+                    SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
+                    if (!play_installed) {
+                        signInButton.setVisibility(View.GONE);
+                    }
+
+                }
+
+
+                if (accountName != null) {
+                    ((EditText) findViewById(R.id.username)).setText(accountName);
+                }
+
+                password_box = (EditText) findViewById(R.id.password);
+                password_box.setTransformationMethod(new PasswordTransformationMethod());
+
+
+                final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
+                final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
+
+                password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                password_box.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (password_box.getCompoundDrawables()[2] == null) {
+                            return false;
+                        }
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            return false;
+                        }
+                        if (event.getX() > password_box.getWidth() - password_box.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
+                            if (showPassword) {
+                                if (Build.VERSION.SDK_INT >= 10)
+                                    FlurryAgent.logEvent("Login_Page_Clicked_On_Show_Password");
+                                showPassword = false;
+                                password_box.setTransformationMethod(null);
+                                password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
+                            } else {
+                                if (Build.VERSION.SDK_INT >= 10)
+                                    FlurryAgent.logEvent("Login_Page_Clicked_On_Hide_Password");
+                                showPassword = true;
+                                password_box.setTransformationMethod(new PasswordTransformationMethod());
+                                password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
+                            }
+                        }
+
+                        return false;
+                    }
+                });
+
+
 //            password_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //
 //                @Override
@@ -402,65 +461,136 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 //                }
 //            });
 
-            findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Login_Button");
+                findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Build.VERSION.SDK_INT >= 10)
+                            FlurryAgent.logEvent("Login_Page_Clicked_On_Login_Button");
 
-                    String username = ((EditText) findViewById(R.id.username)).getText().toString();
-                    String password = ((EditText) findViewById(R.id.password)).getText().toString();
+                        String username = ((EditText) findViewById(R.id.username)).getText().toString();
+                        String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-                    if(username.length()==0 || password.length()==0 ){
-                        Toast.makeText(getApplicationContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG).show();
-                        return;
+                        if (username.length() == 0 || password.length() == 0) {
+                            Toast.makeText(getApplicationContext(), R.string.fields_cannot_empty, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        submit(Mode.APTOIDE, username, password, null);
                     }
+                });
 
-                    submit(Mode.APTOIDE, username, password, null);
-                }
-            });
+                TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
+                SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide, Aptoide.getConfiguration().getMarketName()));
+                newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
+                new_to_aptoide.setText(newToAptoideString);
+                new_to_aptoide.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Build.VERSION.SDK_INT >= 10)
+                            FlurryAgent.logEvent("Login_Page_Clicked_On_New_To_Aptoide_Button");
+                        Intent signup = new Intent(LoginActivity.this, signupClass);
+                        startActivityForResult(signup, REQ_SIGNUP);
+                    }
+                });
 
-            TextView new_to_aptoide = (TextView) findViewById(R.id.new_to_aptoide);
-            SpannableString newToAptoideString = new SpannableString(getString(R.string.new_to_aptoide, Aptoide.getConfiguration().getMarketName()));
-            newToAptoideString.setSpan(new UnderlineSpan(), 0, newToAptoideString.length(), 0);
-            new_to_aptoide.setText(newToAptoideString);
-            new_to_aptoide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_New_To_Aptoide_Button");
-                    Intent signup = new Intent(LoginActivity.this, signupClass);
-                    startActivityForResult(signup, REQ_SIGNUP);
-                }
-            });
-
-            registerDevice = (CheckBox) findViewById(R.id.link_my_device);
+                registerDevice = (CheckBox) findViewById(R.id.link_my_device);
 
 
+                TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
+                SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
+                forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
+                forgot_password.setText(forgetString);
+                forgot_password.setOnClickListener(new View.OnClickListener() {
 
-            TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
-            SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
-            forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
-            forgot_password.setText(forgetString);
-            forgot_password.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Build.VERSION.SDK_INT >= 10)
+                            FlurryAgent.logEvent("Login_Page_Clicked_On_Forgot_Password");
+                        Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
+                        startActivity(passwordRecovery);
+                    }
+                });
 
-                @Override
-                public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Forgot_Password");
-                    Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
-                    startActivity(passwordRecovery);
-                }
-            });
-
-            getSupportActionBar().setTitle(getString(R.string.setcredentials));
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.login_or_register));
+                getSupportActionBar().setTitle(getString(R.string.setcredentials));
+                getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setTitle(getString(R.string.login_or_register));
+            }
         }
+
+    }
+
+    public void downloadInnJooApp() {
+
+
+        final DialogFragment pd = AptoideDialog.pleaseWaitDialog();
+
+        pd.show(getSupportFragmentManager(), "pleaseWaitDialog");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    GetApkInfoRequestFromPackageName requestFromPackageName = new GetApkInfoRequestFromPackageName(LoginActivity.this);
+
+                    requestFromPackageName.setPackageName("com.innjoo.innjoologin");
+                    requestFromPackageName.setRepoName("innjoo");
+
+                    requestFromPackageName.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    GetApkInfoJson json = requestFromPackageName.loadDataFromNetwork();
+
+                    Download download = new Download();
+                    download.setId(json.getApk().getMd5sum().hashCode());
+                    download.setName(json.getMeta().getTitle());
+                    download.setVersion(json.getApk().getVername());
+                    download.setIcon(json.getApk().getIcon());
+                    download.setPackageName(json.getApk().getPackage());
+                    download.setMd5(json.getApk().getMd5sum());
+
+                    service.startDownloadFromJson(json, json.getApk().getMd5sum().hashCode(), download);
+                } catch (Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(LoginActivity.this, R.string.error_occured, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    e.printStackTrace();
+                } finally {
+                    pd.dismissAllowingStateLoss();
+                    finish();
+                }
+
+            }
+        }).start();
+
+
+    }
+
+    private boolean innCloudExists() {
+
+        try {
+            getPackageManager().getPackageInfo("com.innjoo.innjoologin", 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+
+        }
+
+
+        return false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if(service!=null){
+            unbindService(conn);
+        }
+
         if (Build.VERSION.SDK_INT >= 8) {
             if(uiLifecycleHelper!=null) uiLifecycleHelper.onDestroy();
         }
@@ -470,7 +600,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if(Build.VERSION.SDK_INT>=8){
-            uiLifecycleHelper.onSaveInstanceState(outState);
+            if(uiLifecycleHelper!=null) uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
 
@@ -497,6 +627,26 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             finishLogin(data);
         }
 
+
+
+        if (requestCode == 105) {
+
+            if (resultCode == RESULT_OK) {
+
+                String token = data.getExtras().getString("token");
+                //Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_LONG).show();
+
+                if (token != null) {
+                    submit(Mode.INNCLOUD, null, token, null);
+                } else {
+                    finish();
+                }
+
+            } else {
+                finish();
+            }
+        }
+
     }
 
     @Override
@@ -511,7 +661,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= 8) {
-            uiLifecycleHelper.onResume();
+            if(uiLifecycleHelper!=null) uiLifecycleHelper.onResume();
         }
     }
 
@@ -519,7 +669,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onPause() {
         super.onPause();
         if (Build.VERSION.SDK_INT >= 8) {
-            uiLifecycleHelper.onPause();
+            if(uiLifecycleHelper!=null) uiLifecycleHelper.onPause();
         }
     }
 
@@ -594,6 +744,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     pd.dismissAllowingStateLoss();
                 }
 
+                if(mode.equals(Mode.INNCLOUD)){
+                    finish();
+                }
+
 
 
             }
@@ -614,7 +768,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        request.setRegisterDevice(registerDevice.isChecked());
+
+
+        if(registerDevice != null){
+            request.setRegisterDevice(registerDevice.isChecked());
+        }else{
+            request.setRegisterDevice(true);
+        }
 
         request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
         request.setDeviceId(deviceId);
@@ -648,6 +808,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 if (pd != null) {
                     pd.dismissAllowingStateLoss();
                 }
+
+                if(mode.equals(Mode.INNCLOUD)){
+                    finish();
+                }
+
             }
 
             @Override
@@ -659,6 +824,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     pd.dismissAllowingStateLoss();
                 }
 
+                String localUsername = username;
 
                 if ("OK".equals(checkUserCredentialsJson.getStatus())) {
                     SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
@@ -680,7 +846,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         preferences.putString("username", checkUserCredentialsJson.getUsername());
                     }
 
-                    preferences.putString(Configs.LOGIN_USER_LOGIN, username);
+                    if(Aptoide.getConfiguration().getExtraId().equals("830a1ec9c85391a6274efd81a0a5414b")){
+                        localUsername = checkUserCredentialsJson.getUsername();
+                    }
+
+                    preferences.putString(Configs.LOGIN_USER_LOGIN, localUsername);
 
                     preferences.putString("loginType", mode.name());
                     preferences.commit();
@@ -696,7 +866,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
                     Bundle data = new Bundle();
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, localUsername);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
@@ -762,12 +932,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
         */
         finish();
-        if(registerDevice.isChecked()){
+        if(registerDevice == null || registerDevice.isChecked()){
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Linked_Account_With_WebInstall");
         }else{
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Did_Not_Link_Account_With_WebInstall");
         }
-        if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
+        if((registerDevice == null || registerDevice.isChecked()) && hasQueue) startService(new Intent(this, RabbitMqService.class));
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
         if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration(). getAutoUpdatesSyncAdapterAuthority(), true);

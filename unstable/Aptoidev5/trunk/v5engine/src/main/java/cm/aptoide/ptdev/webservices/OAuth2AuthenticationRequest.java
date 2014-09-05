@@ -55,6 +55,10 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
                 parameters.put("authMode", "facebook");
                 parameters.put("oauthToken", password);
                 break;
+            case INNCLOUD:
+                parameters.put("authMode", "inncloud");
+                parameters.put("oauthToken", password);
+                break;
         }
 
         if(Aptoide.getConfiguration().getExtraId().length()>0){

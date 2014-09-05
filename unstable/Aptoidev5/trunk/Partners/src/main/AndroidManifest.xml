@@ -237,6 +237,16 @@
         </activity>
 
         <activity
+            android:name="com.inncloud.client.gettoken.InnCloudGetToken_Client"            >
+            <intent-filter>
+                <action android:name="com.inncloud.inncloudgettoken" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="consumer_key" android:value="663d709f097593b9dbfec50c167a1780"/>
+            <meta-data android:name="callback_uri" android:value="http://www.aptoide.com/"/>
+        </activity>
+
+        <activity
             android:name="com.mopub.mobileads.MoPubActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity

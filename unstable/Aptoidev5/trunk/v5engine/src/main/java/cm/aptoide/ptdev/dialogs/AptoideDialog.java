@@ -94,4 +94,10 @@ public class AptoideDialog {
         }
         return flagApkDialog;
     }
+
+    public static DialogFragment InnJooDialog() {
+        DialogFragment dialog = new InnJooDialog();
+        return dialog;
+
+    }
 }
