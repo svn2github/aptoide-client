@@ -97,12 +97,14 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
 import cm.aptoide.ptdev.webservices.AddApkFlagRequest;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
+import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
 import cm.aptoide.ptdev.webservices.RegisterAdRequest;
 import cm.aptoide.ptdev.webservices.UpdateUserRequest;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
@@ -1178,11 +1180,31 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if (Build.VERSION.SDK_INT > 11) {
             publicityView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+        spiceManager.execute(new GetAdsRequest(this), new RequestListener<ApkSuggestionJson>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                loadMoPub();
+            }
 
+            @Override
+            public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+
+
+                if (apkSuggestionJson.getApp_suggested().isEmpty()) {
+                    loadMoPub();
+                } else {
+                    //TODO
+                }
+
+
+            }
+        });
+    }
+
+    private void loadMoPub() {
         publicityView.setVisibility(View.VISIBLE);
         ((MoPubView) publicityView).setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
         ((MoPubView) publicityView).loadAd();
-
     }
 
     @Override
