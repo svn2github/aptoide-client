@@ -20,7 +20,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -83,6 +85,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
     private DownloadService downloadService;
 
     String query;
+    private boolean isDisconnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,10 +148,87 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
         if(i == android.R.id.home){
             finish();
-        }else if(i == android.R.id.home){
+        }else if(i == R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final android.app.SearchManager searchManager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItemCompat.expandActionView(searchItem);
+        searchView.setQuery(query, false);
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                MenuItemCompat.collapseActionView(searchItem);
+                searchView.setQuery(query, false);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if(!hasFocus){
+                    isDisconnect = true;
+
+                    if (Build.VERSION.SDK_INT > 7) {
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (isDisconnect) {
+                                    WebSocketSingleton.getInstance().disconnect();
+                                }
+
+                            }
+                        }, 10000);
+
+                    }
+                }
+
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDisconnect = false;
+
+                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Search_Button");
+
+                if (Build.VERSION.SDK_INT > 7) {
+                    WebSocketSingleton.getInstance().connect();
+                } else {
+                    onSearchRequested();
+                    MenuItemCompat.collapseActionView(searchItem);
+                }
+            }
+        });
+
+
+        if (Build.VERSION.SDK_INT > 7) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

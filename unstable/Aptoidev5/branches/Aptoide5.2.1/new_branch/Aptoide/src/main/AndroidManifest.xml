@@ -104,7 +104,7 @@
                   android:theme="@style/Settings"/>
 
         <activity android:name="cm.aptoide.ptdev.SearchManager"
-                  android:exported="false">
+                  android:exported="false" >
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -113,6 +113,9 @@
 
             <meta-data android:name="android.app.searchable"
                        android:resource="@xml/find"/>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="cm.aptoide.ptdev.SearchManager"/>
         </activity>
 
         <activity android:name="cm.aptoide.ptdev.IntentReceiver" android:exported="true" >

@@ -17,10 +17,12 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -254,12 +256,7 @@ public class Start extends ActionBarActivity implements
 //            startActivityForResult(settingsIntent, 0);
 //        } else if (i == R.id.menu_about) {
 //            showAbout();
-        } else if (i == R.id.menu_search) {
-            onSearchRequested();
-            //Log.d("Aptoide-OnClick", "OnSearchRequested");
 
-//            Log.d("Aptoide-OnClick", "OnSearchRequested");
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Search_Button");
         } else if ( i == R.id.menu_filter_mature_content){
 
             if (item.isChecked()) {
@@ -304,6 +301,72 @@ public class Start extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final android.app.SearchManager searchManager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                MenuItemCompat.collapseActionView(searchItem);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if(!hasFocus){
+                    MenuItemCompat.collapseActionView(searchItem);
+                    isDisconnect = true;
+
+                    if (Build.VERSION.SDK_INT > 7) {
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (isDisconnect) {
+                                    WebSocketSingleton.getInstance().disconnect();
+                                }
+
+                            }
+                        }, 10000);
+
+                    }
+                }
+
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDisconnect = false;
+
+                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Search_Button");
+
+                if (Build.VERSION.SDK_INT > 7) {
+                    WebSocketSingleton.getInstance().connect();
+                } else {
+                    onSearchRequested();
+                    MenuItemCompat.collapseActionView(searchItem);
+                }
+            }
+        });
+
+
+        if (Build.VERSION.SDK_INT > 7) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -391,7 +454,7 @@ public class Start extends ActionBarActivity implements
 
 
         Intent i = new Intent(this, ParserService.class);
-        final SQLiteDatabase db = ((Aptoide) getApplication()).getDb();
+        final SQLiteDatabase db = Aptoide.getDb();
         database = new Database(db);
 
         bindService(i, conn, BIND_AUTO_CREATE);
@@ -832,45 +895,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onSearchRequested() {
-        if (Build.VERSION.SDK_INT > 7) {
-            WebSocketSingleton.getInstance().connect();
-            isDisconnect = false;
-            android.app.SearchManager manager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            manager.setOnCancelListener(new android.app.SearchManager.OnCancelListener() {
-                @Override
-                public void onCancel() {
 
-                    isDisconnect = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            if (isDisconnect) {
-                                WebSocketSingleton.getInstance().disconnect();
-                            }
-
-                        }
-                    }, 10000);
-                }
-            });
-
-            manager.setOnDismissListener(new android.app.SearchManager.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    isDisconnect = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            if (isDisconnect) {
-                                WebSocketSingleton.getInstance().disconnect();
-                            }
-
-                        }
-                    }, 10000);
-                }
-            });
-        }
         return super.onSearchRequested();
     }
 
@@ -887,12 +912,12 @@ public class Start extends ActionBarActivity implements
                 else
                     maturelock();
 
-
                 refresh = true;
 
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));
                 BusProvider.getInstance().post(new RepoCompleteEvent(-1));
                 BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+
                 break;
             case 50:
                 spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
