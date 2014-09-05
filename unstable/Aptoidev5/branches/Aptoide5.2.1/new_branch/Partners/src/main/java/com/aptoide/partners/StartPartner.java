@@ -195,6 +195,11 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 sharedPreferences.edit().putBoolean("firstrun", false).commit();
 
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+
+                Intent i = new Intent();
+                i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
+                this.sendBroadcast(i);
+
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
