@@ -407,7 +407,6 @@
     <string name="error_IARG_110">Invalid reply comment</string>
     <string name="error_IARG_200">Invalid login token</string>
     <string name="error_IARG_201">Invalid login mode</string>
-    <string name="error_IARG_202">Invalid upload</string>
     <string name="error_IARG_300">Invalid custom category</string>
     <string name="error_IARG_301">Invalid category</string>
     <string name="error_IARG_302">The application provided already exists in this category</string>
@@ -421,11 +420,6 @@
     <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
     <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
 
-    <string name="error_WOP_1">Your account has a store already. You cannot create another one under the same account.</string>
-    <string name="error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters (A to Z and 0 to 9) or hyphens (-), and it cannot start nor end with a hyphen.</string>
-    <string name="error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
-    <string name="error_WOP_4">The store could not be created. Please try again.</string>
-    <string name="error_WOP_5">You need to give a name for your store.</string>
     <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
     <string name="error_WOP_7">Comment error</string>
     <string name="error_WOP_8">Comment vote error</string>
@@ -495,14 +489,9 @@
     <string name="allow_root">Allow root installation</string>
     <string name="other">Other</string>
     <string name="fields_cannot_empty">Please check your email and password.</string>
-    <string name="password_validation_text">Password must be at least 8 caracters and should have at least one letter
-        and one number or special caracter (!@#$%*)
+    <string name="password_validation_text">Password must be at least 8 characters and should have at least one letter and one number or special characters (!@#$%*)
     </string>
     <string name="jolla_not_supported">This feature is not yet supported by Jolla platform.</string>
-    <string name="carrier_billing">Carrier billing</string>
-    <string name="visa">Visa</string>
-    <string name="paypal_future_payments">Paypal future payments</string>
-    <string name="paypal_single_payment">Paypal single payment</string>
     <string name="flags">Flags</string>
     <string name="flag_good">Good</string>
     <string name="flag_license">Needs License</string>

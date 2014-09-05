@@ -1026,7 +1026,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     }
 
-    private void continueLoading(Bundle savedInstanceState) {
+    public void continueLoading(Bundle savedInstanceState) {
         message = (TextView) findViewById(R.id.message);
         appIcon = (ImageView) findViewById(R.id.app_icon);
         appName = (TextView) findViewById(R.id.app_name);

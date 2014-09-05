@@ -294,13 +294,8 @@
   <string name="wizard_search_local">Mga app na makukuha sa mga Lokal na Tindahan</string>
   <string name="wizard_search_online">Maghanap sa iba pang mga tindahan sa Aptoide na website</string>
   <string name="wizard_new_layout">1 - Bagong Layout</string>
-  <string name="wizard_rollback">2 - I-rollback</string>
-  <string name="wizard_widget">3 - Widget</string>
   <string name="wizard_new_account">4 - Tagapamahala ng Account</string>
   <string name="wizard_add_more_stores">Maari kang magdagdag ng mga bagong tindahan ng Android</string>
-  <string name="wizard_rollback_description">Maari kang mag-reinstall o magbalik ng mga app</string>
-  <string name="wizard_widget_description">Mabilis na paghahanap ng mga aplikasyon</string>
-  <string name="wizard_account_description">Maaring gamitin ng Aptoide apps ang parehong login</string>
   <string name="wizard_secure_fast_reliable">Sigurado. Mabilis. Maasahan.</string>
   <string name="wizard_next">Susunod</string>
   <string name="wizard_prev">Nakaraan</string>

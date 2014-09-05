@@ -42,6 +42,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
+import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
@@ -135,7 +136,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     private void refreshSponseredList() {
 
-        SpiceManager manager = ((Start)getActivity()).getSpiceManager();
+        SpiceManager manager = ((GetStartActivityCallback)getActivity()).getSpiceManager();
 
         GetAdsRequest request = new GetAdsRequest(getActivity());
 
@@ -369,7 +370,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         final AccountManager accountManager = AccountManager.get(getActivity());
 
         if(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length>0){
-            final SpiceManager manager = ((Start) getActivity()).getSpiceManager();
+            final SpiceManager manager = ((GetStartActivityCallback) getActivity()).getSpiceManager();
 
             new Thread(new Runnable() {
                 @Override

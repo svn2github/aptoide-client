@@ -57,14 +57,14 @@
   <string name="follow_twitter">تابعنا على تويتر</string>
   <string name="loading_facebook">جار تحميل فيسبوك...</string>
   <string name="loading_twitter">جار تحميل تويتر...</string>
-  <string name="new_to_aptoide">هل انت جديد في%s؟ انشاء حساب مجاني</string>
+  <string name="new_to_aptoide">هل انت جديد فيs%؟ انشاء حساب مجاني</string>
   <string name="forgot_passwd">نسيت كلمة المرور؟</string>
   <string name="check_your_credentials">أعد تدقيق معلومات حسابك</string>
   <string name="settings_title_bar">الإعدادات</string>
   <string name="setting_icon_download_rules">قواعد تحميل الايقونة</string>
   <string name="setting_wifi">واي فاي</string>
-  <string name="setting_3g">شبكة الجوال الجيل الثالث 3G</string>
-  <string name="setting_4g">شبكة الجوال الجيل الرابع 4G</string>
+  <string name="setting_3g">الجيل الثالث</string>
+  <string name="setting_4g">الجيل الرابع</string>
   <string name="setting_ethernet">إيثرنت</string>
   <string name="setting_filters_title">المرشحات</string>
   <string name="setting_hwspecstitle">مواصفات الجهاز</string>

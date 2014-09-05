@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class Geolocation {
 
-    static String getCountryCode(Context context){
+    public static String getCountryCode(Context context){
         String countryCode = "";
         try{
 
@@ -40,7 +40,7 @@ public class Geolocation {
         return countryCode;
     }
 
-    private static String getCountryCodeByGps(Context context) {
+    public static String getCountryCodeByGps(Context context) {
         String countryCode = "";
         try{
 

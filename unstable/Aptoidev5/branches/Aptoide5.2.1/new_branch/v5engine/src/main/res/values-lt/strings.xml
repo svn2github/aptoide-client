@@ -294,13 +294,8 @@
   <string name="wizard_search_local">Programos prieinamos vietinėse saugyklose</string>
   <string name="wizard_search_online">Ieškoti kitose saugyklose pasitelkiant Aptoide tinklalapį</string>
   <string name="wizard_new_layout">1 - Naujas išdėstymas</string>
-  <string name="wizard_rollback">2 - Grįžimas į ankstesnę versiją</string>
-  <string name="wizard_widget">3 - Valdiklis</string>
   <string name="wizard_new_account">4 - Abonento valdymas</string>
   <string name="wizard_add_more_stores">Galite pridėti naujas Android saugyklas</string>
-  <string name="wizard_rollback_description">Galite iš naujo įdiegti arba grįžti prie ankstesnių programų versijų</string>
-  <string name="wizard_widget_description">Greita programų paieška</string>
-  <string name="wizard_account_description">Aptoide programos gali naudoti tą patį naudotojo vardą</string>
   <string name="wizard_secure_fast_reliable">Saugu. Greita. Patikima.</string>
   <string name="wizard_next">Toliau</string>
   <string name="wizard_prev">Anksčiau</string>

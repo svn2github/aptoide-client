@@ -43,14 +43,14 @@
                 android:layout_height="wrap_content" />
 
             <fragment
-                android:id="@+id/FragmentAppViewRelated"
-                android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRelated"
+                android:id="@+id/FragmentAppViewSpecs"
+                android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewSpecs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <fragment
-                android:id="@+id/FragmentAppViewSpecs"
-                android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewSpecs"
+                android:id="@+id/FragmentAppViewRelated"
+                android:name="cm.aptoide.ptdev.fragments.FragmentAppView$FragmentAppViewRelated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

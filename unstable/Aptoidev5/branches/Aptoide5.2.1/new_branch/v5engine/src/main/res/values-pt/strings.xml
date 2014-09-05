@@ -528,4 +528,9 @@
   <string name="suggested_apps">Apps sugeridas</string>
   <string name="sponsored">Patrocinado</string>
   <string name="btn_search_other_stores">Procurar em outras Lojas</string>
+  <string name="results">Resultados da procura:</string>
+  <string name="is_working">%s a carregar</string>
+  <string name="loading_editors_choice">A carregar as Escolhas do Editor</string>
+  <string name="loading_top_apps">A carregar Aplicações Principais</string>
+  <string name="loading_stores">A carregar lojas</string>
 </resources>

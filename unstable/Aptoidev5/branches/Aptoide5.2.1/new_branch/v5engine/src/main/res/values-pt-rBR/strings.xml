@@ -2,12 +2,12 @@
 <resources>
   <string name="WidgetProvider_timestamp_today">Hoje</string>
   <string name="WidgetProvider_timestamp_yesterday">Ontem</string>
-  <string name="WidgetProvider_timestamp_hour_ago">%s hora atrás</string>
+  <string name="WidgetProvider_timestamp_hour_ago">há %s hora</string>
   <string name="WidgetProvider_timestamp_hours_ago">há %s horas</string>
-  <string name="WidgetProvider_timestamp_minutes_ago">há %s minutos atrás</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">há %s minutos</string>
   <string name="WidgetProvider_timestamp_just_now">Agora mesmo</string>
-  <string name="WidgetProvider_timestamp_weeks_ago">%s semanas atrás</string>
-  <string name="WidgetProvider_timestamp_week_ago">há %s semana atrás</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">há %s semanas</string>
+  <string name="WidgetProvider_timestamp_week_ago">há %s semana</string>
   <string name="WidgetProvider_timestamp_this_week">Esta semana</string>
   <string name="timestamp_months">%s meses</string>
   <string name="timestamp_month">%s mês</string>
@@ -528,4 +528,9 @@
   <string name="suggested_apps">Aplicativos sugeridos</string>
   <string name="sponsored">Patrocinado</string>
   <string name="btn_search_other_stores">Procurar outras lojas</string>
+  <string name="results">Resultados da busca:</string>
+  <string name="is_working">%s trabalhando</string>
+  <string name="loading_editors_choice">Carregando as Escolhas do Editor</string>
+  <string name="loading_top_apps">Carregando Aplicativos Principais</string>
+  <string name="loading_stores">Carregando lojas</string>
 </resources>

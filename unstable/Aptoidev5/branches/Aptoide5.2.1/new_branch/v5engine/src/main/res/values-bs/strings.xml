@@ -317,15 +317,11 @@
   <string name="wizard_search">3 - Pretražite hiljade apliakcija</string>
   <string name="wizard_search_local">Aplikacije dostupne u lokalnim skladištima</string>
   <string name="wizard_search_online">Pretražite u drugim skladištima na web stranici Aptoide</string>
-  <string name="wizard_new_layout">1- Novi Izgled</string>
-  <string name="wizard_rollback">2- Povrat na staro</string>
-  <string name="wizard_widget">3- Widget</string>
+  <string name="wizard_new_layout">Novi Izgled</string>
   <string name="wizard_new_account">4- Upravitelj Računa</string>
   <string name="wizard_add_more_stores">Možete dodati nova Android skladišta</string>
-  <string name="wizard_rollback_description">Možete reinstalirati ili vratiti aplikacije</string>
-  <string name="wizard_widget_description">Brza pretraga aplikacija</string>
-  <string name="wizard_account_description">Aptoide aplikacije mogu koristiti iste podatke za prijavu</string>
   <string name="wizard_secure_fast_reliable">Sigurno. Brzo. Pouzdano.</string>
+  <string name="wizard_new_pin">Postavite pin za sadržaj za odrasle</string>
   <string name="wizard_next">Sljedeće</string>
   <string name="wizard_prev">Prethodno</string>
   <string name="create_username">Korisničko ime</string>

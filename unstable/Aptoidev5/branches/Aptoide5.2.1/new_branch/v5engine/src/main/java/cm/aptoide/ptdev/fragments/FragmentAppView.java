@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -745,7 +746,11 @@ public abstract class FragmentAppView extends Fragment {
             listRelatedApkRequest.setVercode(((AppViewActivity)getActivity()).getVersionCode());
             listRelatedApkRequest.setLimit(develBasedAdapter.getBucketSize());
             listRelatedApkRequest.setPackageName(((AppViewActivity)getActivity()).getPackage_name());
-            spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related", DurationInMillis.ONE_DAY, request);
+            String cacheKey = "portrait";
+            if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                cacheKey = "landscape";
+            };
+            spiceManager.execute(listRelatedApkRequest,((AppViewActivity)getActivity()).getPackage_name() + "-related" + cacheKey, DurationInMillis.ONE_DAY, request);
         }
 
 
@@ -1117,6 +1122,7 @@ public abstract class FragmentAppView extends Fragment {
             commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);
             seeAllButton = (Button) v.findViewById(R.id.more_comments);
             editText = (EditText) v.findViewById(R.id.editText_addcomment);
+            editText.setEnabled(false);
             addComment = (Button) v.findViewById(R.id.button_add_comment);
             dontLikeBtn = (Button) v.findViewById(R.id.button_dont_like);
             dontLikeBtn.setOnClickListener(new AddLikeListener(false));

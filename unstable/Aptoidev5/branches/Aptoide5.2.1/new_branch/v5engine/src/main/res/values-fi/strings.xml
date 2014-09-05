@@ -304,7 +304,7 @@
   <string name="board">Lautapelit</string>
   <string name="live_wallpaper">Live-taustakuva</string>
   <string name="editors_choice_new">Uudet toimittajan valinnat</string>
-  <string name="editors_choice">Toimittajan valinta</string>
+  <string name="editors_choice">Toimittajan valinnat</string>
   <string name="top_apps">Huippusovellukset</string>
   <string name="latest_apps">Viimeisimmät sovellukset</string>
   <string name="latest_comments">Viimeisimmät kommentit</string>
@@ -509,7 +509,7 @@
   <string name="no_payments_available">Ei maksuja saatavilla.</string>
   <string name="change_payment">Takaisin</string>
   <string name="confirm_carrier_payment">Haluatko ostaa kohteen \'{title}\' hintaan {value}? Operaattorisi veloittaa sinua.</string>
-  <string name="featured_editors_choice">Esitelty toimittajan valinta</string>
+  <string name="featured_editors_choice">Esitellyt toimittajan valinnat</string>
   <string name="set_mature_pin_title">Aseta aikuisviihdesisällön pin-koodi</string>
   <string name="set_mature_pin_summary">Aseta pin-koodi aikuisviihdesisällön lukituksen poistamiseksi</string>
   <string name="remove_mature_pin_title">Poista aikuisviihteen pin-koodi</string>
@@ -528,4 +528,9 @@
   <string name="suggested_apps">Suositellut sovellukset</string>
   <string name="sponsored">Sponsoroitu</string>
   <string name="btn_search_other_stores">Etsi toisista kaupoista</string>
+  <string name="results">Hakutulokset:</string>
+  <string name="is_working">%s on toiminnassa</string>
+  <string name="loading_editors_choice">Ladataan toimittajan valintoja</string>
+  <string name="loading_top_apps">Ladataan huippusovelluksia</string>
+  <string name="loading_stores">Ladataan kauppoja</string>
 </resources>

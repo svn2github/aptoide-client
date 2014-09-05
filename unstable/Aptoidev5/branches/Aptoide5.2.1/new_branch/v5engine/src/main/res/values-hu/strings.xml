@@ -529,7 +529,7 @@
   <string name="sponsored">Szponzorált</string>
   <string name="btn_search_other_stores">További áruházak keresése</string>
   <string name="results">Keresési eredmények:</string>
-  <string name="is_working">A(z) %s dolgozik</string>
+  <string name="is_working">%s dolgozik</string>
   <string name="loading_editors_choice">Szerkesztők kedvencei betöltése</string>
   <string name="loading_top_apps">Legjobb appok betöltése</string>
   <string name="loading_stores">Áruházak betöltése</string>

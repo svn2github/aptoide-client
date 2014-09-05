@@ -80,6 +80,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
+import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
@@ -112,7 +113,8 @@ public class Start extends ActionBarActivity implements
         MyAppsAddStoreInterface,
         ProgressDialogFragment.OnCancelListener,
         AdultDialog.Callback,
-        PullToRefreshCallback {
+        PullToRefreshCallback,
+        GetStartActivityCallback {
 
     private static final String TAG = "Start";
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();

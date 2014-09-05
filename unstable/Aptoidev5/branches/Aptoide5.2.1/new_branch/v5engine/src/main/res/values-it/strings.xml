@@ -528,4 +528,9 @@
   <string name="suggested_apps">App Consigliate</string>
   <string name="sponsored">Sponsorizzata</string>
   <string name="btn_search_other_stores">Cerca in Altri Store</string>
+  <string name="results">Risultati della ricerca:</string>
+  <string name="is_working">%s sta lavorando</string>
+  <string name="loading_editors_choice">Caricamento Scelte dalla Redazione</string>
+  <string name="loading_top_apps">Caricamento App Migliori</string>
+  <string name="loading_stores">Caricamento store</string>
 </resources>
