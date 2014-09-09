@@ -8,33 +8,34 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 
 /**
  * Created by asantos on 01-09-2014.
  */
 public class PushNotificationReceiver extends BroadcastReceiver{
-
-
     private static final String PUSH_NOTIFICATION_TITLE = "title";
+    private static final String PUSH_NOTIFICATION_MSG = "MSG";
     private static final String PUSH_NOTIFICATION_IMG_URL = "img";
-    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_HOUR * 24;//AlarmManager.INTERVAL_FIFTEEN_MINUTES/15;//
-
+    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES/30;//
 
     // same as Manifest
     public static final String PUSH_NOTIFICATION_Action = "cm.aptoide.ptdev.PushNotification";
     public static final String PUSH_NOTIFICATION_Action_FIRST_TIME ="cm.aptoide.ptdev.PushNotificationFirstTime";
-
 
     public class MyImageLoadingListener implements ImageLoadingListener{
 
@@ -102,6 +103,7 @@ public class PushNotificationReceiver extends BroadcastReceiver{
     private Intent fillintentStuffFortest(Intent i){
         return i
                 .putExtra(PUSH_NOTIFICATION_TITLE,"Title Test")
+                .putExtra(PUSH_NOTIFICATION_MSG,"Little nice Text for Test")
                 .putExtra(PUSH_NOTIFICATION_IMG_URL,"http://pool.img.aptoide.com/kitmaker/48857f0adf9a553b722baf76fd069f83.png");
     }
 
@@ -113,11 +115,53 @@ public class PushNotificationReceiver extends BroadcastReceiver{
         Log.i("PushNotificationReceiver",o==null?"Image was null":"Image was good");
         Log.i("PushNotificationReceiver","Title: "+extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
 
+
+
+
+        Intent resultIntent = new Intent(context, Start.class);
+
+// This ensures that the back button follows the recommended
+// convention for the back key.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(Start.class);
+
+// Adds the Intent that starts the Activity to the top of the stack.
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+// Create remote view and set bigContentView.
+        /*RemoteViews expandedView = new RemoteViews(context.getPackageName(),
+                R.layout.pushnotificationlayout);
+        expandedView.setBitmap(R.id.PushNotificationImageView,"setImageBitmap",o);
+        expandedView.setTextViewText(R.id.text1, "Pois!");*/
+
+
+        Notification notification = new NotificationCompat.Builder(context)
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setAutoCancel(true)
+                .setContentIntent(resultPendingIntent)
+                .setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE))
+                .setContentText(extra.getCharSequence(PUSH_NOTIFICATION_MSG)).build();
+
+        if(Build.VERSION.SDK_INT >= 16)
+        {
+            Log.d("PushNotificationReceiver","is 16 or more, BIG!!!");
+            RemoteViews expandedView = new RemoteViews(context.getPackageName(),
+                    R.layout.pushnotificationlayout);
+            expandedView.setBitmap(R.id.PushNotificationImageView,"setImageBitmap",o);
+            expandedView.setTextViewText(R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
+            notification.bigContentView = expandedView;
+        }
+/*
         NotificationCompat.BigPictureStyle notiStyle = new
                 NotificationCompat.BigPictureStyle();
         notiStyle.setBigContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
         notiStyle.setSummaryText("Blabla.");
         notiStyle.bigPicture(o);
+
 
 
         Intent resultIntent = new Intent(context, Start.class);
@@ -145,6 +189,7 @@ public class PushNotificationReceiver extends BroadcastReceiver{
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         managerNotification.notify(86456, myNotification);
         Log.i("PushNotificationReceiver","notification built");
+*/
 
        /* Intent onClick = new Intent(Intent.ACTION_VIEW);
         onClick.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -157,8 +202,10 @@ public class PushNotificationReceiver extends BroadcastReceiver{
         mBuilder.setLargeIcon(o);
         mBuilder.setContentIntent(onClickAction);
         mBuilder.setAutoCancel(true);
+        */
+        Log.i("PushNotificationReceiver","notification built");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        managerNotification.notify(86456, mBuilder.build());
-        Log.i("PushNotificationReceiver","notification built");*/
+        managerNotification.notify(86456, notification);
+
     }
 }

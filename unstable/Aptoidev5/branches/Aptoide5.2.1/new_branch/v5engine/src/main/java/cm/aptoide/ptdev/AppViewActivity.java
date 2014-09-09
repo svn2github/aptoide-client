@@ -986,8 +986,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if(spiceManager.isStarted()){
             spiceManager.shouldStop();
         }
-
-        BusProvider.getInstance().unregister(this);
+        try{
+            BusProvider.getInstance().unregister(this);
+        }catch (IllegalArgumentException e){
+            //no it is not
+        }
         super.onPause();
     }
 
