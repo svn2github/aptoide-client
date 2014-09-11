@@ -1,19 +1,17 @@
 package cm.aptoide.ptdev.downloadmanager;
 
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import org.acra.ACRA;
 import org.apache.http.HttpStatus;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
  * Created with IntelliJ IDEA.

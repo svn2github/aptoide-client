@@ -2,66 +2,31 @@ package cm.aptoide.ptdev;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.http.AndroidHttpClient;
-import android.os.StrictMode;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.CrashlyticsListener;
-import com.google.api.client.extensions.android.AndroidUtils;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FlushedInputStream;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
-import org.acra.*;
-import org.acra.annotation.ReportsCrashes;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.UUID;
-
-import static org.acra.ReportField.*;
-
-/**
- * Created with IntelliJ IDEA.
- * User: rmateus
- * Date: 07-10-2013
- * Time: 15:19
- * To change this template use File | Settings | File Templates.
- */
-@ReportsCrashes(
-        formKey = "",
-        reportType = org.acra.sender.HttpSender.Type.JSON,
-        httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        //formUriBasicAuthLogin="mmorthemysisserealstandl",
-        //formUriBasicAuthPassword="2tERYIQeYVpC2Cpq8v35PQMb",
-        // Your usual ACRA configuration
-
-        formUri = "http://acra.aptoide.com/acra-aptoide/_design/acra-storage/_update/report"
-)
 public class Aptoide extends Application {
 
     public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
@@ -143,25 +108,6 @@ public class Aptoide extends Application {
 
             }
         });
-
-        /*ACRA.init(this);
-
-        ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
-        try {
-            acraConfiguration.setMode(ReportingInteractionMode.TOAST);
-            acraConfiguration.setCustomReportContent(new ReportField[]{ APP_VERSION_CODE, APP_VERSION_NAME,
-                    PACKAGE_NAME, BRAND, PRODUCT, ANDROID_VERSION, PHONE_MODEL, STACK_TRACE, LOGCAT, REPORT_ID, BUILD });
-        } catch (ACRAConfigurationException e) {
-            e.printStackTrace();
-        }
-        acraConfiguration.setResDialogText(R.string.crash_text);
-
-        ACRA.getErrorReporter().setEnabled(false);
-
-        ACRA.setConfig(acraConfiguration);*/
-
-
-
 
         setConfiguration(getAptoideConfiguration());
 
