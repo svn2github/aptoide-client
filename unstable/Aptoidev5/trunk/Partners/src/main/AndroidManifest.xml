@@ -105,7 +105,7 @@
         <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity" />
 
 
-        <activity android:name=".AppViewActivityPartner" />
+        <activity android:name=".AppViewActivityPartner" android:exported="true"/>
 
         <activity
             android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
@@ -172,6 +172,7 @@
                 <data android:scheme="aptoideinstall" />
                 <data android:scheme="aptoidesearch" />
                 <data android:scheme="aptwords" />
+                <data android:scheme="aptoideinstallfrom" />
             </intent-filter>
 
             <intent-filter>
