@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.utils;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.InstalledAppsHelper;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.model.*;
 
 import cm.aptoide.ptdev.model.DownloadPermissions;
@@ -62,6 +65,26 @@ public class AptoideUtils {
     private final static String cpu2 = HWSpecifications.getCpuAbi2();
     private final static String cpu3 = cpu2.equals("armeabi-v7a") ? "armeabi" : "";
 
+
+    public static boolean isLoggedIn(Context context) {
+        AccountManager manager = AccountManager.get(context);
+
+        return manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length != 0;
+    }
+
+
+    public static boolean isLoggedInOrAsk(Activity activity) {
+        final AccountManager manager = AccountManager.get(activity);
+
+        if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
+
+            manager.addAccount(Aptoide.getConfiguration().getAccountType(),
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity,null, null);
+
+            return false;
+        }
+        return true;
+    }
 
     public static boolean isCompatible(Apk apk) {
         return apk.getMinSdk() <= sdk &&

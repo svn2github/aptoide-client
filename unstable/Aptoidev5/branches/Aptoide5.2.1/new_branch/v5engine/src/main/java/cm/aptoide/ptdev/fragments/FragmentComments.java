@@ -102,7 +102,7 @@ public class FragmentComments extends ListFragment {
                 @Override
                 public void onClick(View v) {
 
-                    if(isLoggedIn(activity)) {
+                    if(AptoideUtils.isLoggedInOrAsk(activity)) {
                         if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
 
                             ReplyCommentDialog replyDialog = AptoideDialog.replyCommentDialog(comment.getId().intValue(), comment.getUsername());
@@ -280,7 +280,7 @@ public class FragmentComments extends ListFragment {
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
-            if (!isLoggedIn(activity)) return false;
+            if (!AptoideUtils.isLoggedInOrAsk(activity)) return false;
 
             int i = menuItem.getItemId();
 
@@ -307,25 +307,4 @@ public class FragmentComments extends ListFragment {
 
 
     }
-
-    public static boolean isLoggedIn(final Activity activity) {
-        final AccountManager manager = AccountManager.get(activity);
-
-        if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
-
-            manager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-
-
-
-                    }
-
-            }, null);
-
-            return false;
-        }
-        return true;
-    }
-
 }

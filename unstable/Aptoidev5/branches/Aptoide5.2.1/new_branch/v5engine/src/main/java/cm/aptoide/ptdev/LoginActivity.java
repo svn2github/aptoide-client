@@ -255,7 +255,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
 
-        if (AccountManager.get(this).getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+        if (AptoideUtils.isLoggedIn(this)) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
 
@@ -732,12 +732,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static boolean isLoggedIn(Context context) {
-        AccountManager manager = AccountManager.get(context);
-
-        return manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length != 0;
     }
 }
 

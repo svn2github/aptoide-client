@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -20,7 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
-import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 
@@ -31,7 +29,7 @@ public class PushNotificationReceiver extends BroadcastReceiver{
     private static final String PUSH_NOTIFICATION_TITLE = "title";
     private static final String PUSH_NOTIFICATION_MSG = "MSG";
     private static final String PUSH_NOTIFICATION_IMG_URL = "img";
-    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES/30;//
+    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_HOUR*24;//
 
     // same as Manifest
     public static final String PUSH_NOTIFICATION_Action = "cm.aptoide.ptdev.PushNotification";
@@ -50,24 +48,20 @@ public class PushNotificationReceiver extends BroadcastReceiver{
 
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            Log.i("PushNotificationReceiver","onLoadingStarted");
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            Log.i("PushNotificationReceiver","onLoadingFailed");
             loadNotification(extra, context);
         }
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            Log.i("PushNotificationReceiver","onLoadingComplete");
             loadNotification(extra, context, loadedImage);
         }
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-            Log.i("PushNotificationReceiver","onLoadingCancelled");
 
         }
     }
@@ -87,10 +81,8 @@ public class PushNotificationReceiver extends BroadcastReceiver{
                 i.setAction(PUSH_NOTIFICATION_Action);
                 PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
                 am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), PUSH_NOTIFICATION_TIME_INTERVAL, pi);
-                Log.i("PushNotificationReceiver","Alarm Registed Received");
             }
             else if(action.equals(PUSH_NOTIFICATION_Action)){
-                Log.i("PushNotificationReceiver","PUSH_NOTIFICATION_Action");
                 Bundle extra = intent.getExtras();
                 ImageLoader.getInstance().loadImage(
                         extra.getString(PUSH_NOTIFICATION_IMG_URL),
@@ -112,12 +104,6 @@ public class PushNotificationReceiver extends BroadcastReceiver{
     }
 
     private void loadNotification(Bundle extra, Context context, Bitmap o) {
-        Log.i("PushNotificationReceiver",o==null?"Image was null":"Image was good");
-        Log.i("PushNotificationReceiver","Title: "+extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-
-
-
-
         Intent resultIntent = new Intent(context, Start.class);
 
 // This ensures that the back button follows the recommended
@@ -148,7 +134,6 @@ public class PushNotificationReceiver extends BroadcastReceiver{
 
         if(Build.VERSION.SDK_INT >= 16)
         {
-            Log.d("PushNotificationReceiver","is 16 or more, BIG!!!");
             RemoteViews expandedView = new RemoteViews(context.getPackageName(),
                     R.layout.pushnotificationlayout);
             expandedView.setBitmap(R.id.PushNotificationImageView,"setImageBitmap",o);
@@ -203,7 +188,6 @@ public class PushNotificationReceiver extends BroadcastReceiver{
         mBuilder.setContentIntent(onClickAction);
         mBuilder.setAutoCancel(true);
         */
-        Log.i("PushNotificationReceiver","notification built");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         managerNotification.notify(86456, notification);
 

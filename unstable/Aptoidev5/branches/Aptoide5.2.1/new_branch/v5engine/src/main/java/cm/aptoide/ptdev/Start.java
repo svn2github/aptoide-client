@@ -953,6 +953,7 @@ public class Start extends ActionBarActivity implements
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
+        Ln.getConfig().setLoggingLevel(Log.ERROR);
         BusProvider.getInstance().register(this);
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
@@ -1242,7 +1243,7 @@ public class Start extends ActionBarActivity implements
         mDrawerList.setAdapter(null);
 
         //Login Header
-        if (accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+        if (AptoideUtils.isLoggedIn(this)) {
             isLoggedin = true;
 
 

@@ -144,7 +144,7 @@ public class Aptoide extends Application {
             }
         });
 
-        ACRA.init(this);
+        /*ACRA.init(this);
 
         ACRAConfiguration acraConfiguration = ACRA.getNewDefaultConfig(this);
         try {
@@ -158,7 +158,7 @@ public class Aptoide extends Application {
 
         ACRA.getErrorReporter().setEnabled(false);
 
-        ACRA.setConfig(acraConfiguration);
+        ACRA.setConfig(acraConfiguration);*/
 
 
 
