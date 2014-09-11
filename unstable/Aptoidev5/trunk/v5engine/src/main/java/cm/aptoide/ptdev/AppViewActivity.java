@@ -286,8 +286,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     versionCode = json.getApk().getVercode().intValue();
                     loadGetLatest(showLatestString);
 
-                    if (getIntent().getBooleanExtra("fromMyapp", false)) {
+                    if (getIntent().getBooleanExtra("fromMyapp", false) || getIntent().getBooleanExtra("installFromId", false) ) {
                         getIntent().removeExtra("fromMyapp");
+                        getIntent().removeExtra("installFromId");
                         AptoideDialog.myappInstall(name).show(getSupportFragmentManager(), "myApp");
                     }
                     md5 = json.getApk().getMd5sum();

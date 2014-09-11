@@ -5,25 +5,17 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.*;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
-import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -173,8 +165,8 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
         }else if(uri.startsWith("aptoidesearch://")){
             startMarketIntent(uri.split("aptoidesearch://")[1]);
-//        }else if(uri.startsWith("aptoidevoicesearch://")){
-//            aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
+        }else if(uri.startsWith("aptoideinstallfrom://")){
+            startIntentFromExternalId(uri.split("aptoideinstallfrom://")[1]);
         }else if(uri.startsWith("market")){
             String params = uri.split("&")[0];
             String param = params.split("=")[1];
@@ -403,6 +395,26 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         }
 
         startActivity(i);
+        finish();
+    }
+
+    public void startIntentFromExternalId(String param) {
+
+        Cursor c= new Database(Aptoide.getDb()).getSearchResults(param,StoreActivity.Sort.DOWNLOADS);
+
+        ArrayList<String> namelist = new ArrayList<String>();
+        ArrayList<Long> idlist= new ArrayList<Long>();
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            namelist.add(c.getString(c.getColumnIndex("name")));
+            idlist.add(c.getLong(c.getColumnIndex("_id")));
+        }
+
+        Intent i = new Intent();
+        i.putStringArrayListExtra("namelist",namelist);
+        i.putExtra("idlist", AptoideUtils.LongListtolongArray(idlist));
+
+        setResult(789465, i);
         finish();
     }
 
