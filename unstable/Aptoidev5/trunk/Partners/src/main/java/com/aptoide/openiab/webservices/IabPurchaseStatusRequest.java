@@ -17,6 +17,7 @@ import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 
