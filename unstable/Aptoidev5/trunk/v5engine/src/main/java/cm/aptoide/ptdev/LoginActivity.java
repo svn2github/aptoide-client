@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 
 import android.text.style.UnderlineSpan;
@@ -631,20 +632,20 @@ public class LoginActivity extends AccountAuthenticatorActivity implements
 
         if (requestCode == 105) {
 
-            if (resultCode == RESULT_OK) {
+            //if (resultCode == RESULT_OK) {
 
                 String token = data.getExtras().getString("token");
-                //Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_LONG).show();
+//                Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_LONG).show();
 
                 if (token != null) {
                     submit(Mode.INNCLOUD, null, token, null);
                 } else {
-                    finish();
+                    //finish();
                 }
 
-            } else {
-                finish();
-            }
+            //} else {
+               // finish();
+            //}
         }
 
     }
@@ -816,7 +817,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements
             }
 
             @Override
-            public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
+            public void onRequestSuccess(final CheckUserCredentialsJson checkUserCredentialsJson) {
 
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
 
@@ -848,6 +849,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements
 
                     if(Aptoide.getConfiguration().getExtraId().equals("830a1ec9c85391a6274efd81a0a5414b")){
                         localUsername = checkUserCredentialsJson.getUsername();
+                        if(TextUtils.isEmpty(localUsername)) localUsername = "Unknown User";
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(Aptoide.getContext(), getString(R.string.login_successfully), Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
 
                     preferences.putString(Configs.LOGIN_USER_LOGIN, localUsername);
