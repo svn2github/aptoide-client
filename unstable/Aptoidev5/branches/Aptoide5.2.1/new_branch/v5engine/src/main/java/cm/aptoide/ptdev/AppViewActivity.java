@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.DefaultDatabaseErrorHandler;
 import android.net.Uri;
@@ -29,12 +30,15 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -124,7 +128,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static final int DOWGRADE_REQUEST_CODE = 456;
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
-    private View publicityView;
+    private View publicityView, customAdBannerView, urlAdBannerView;
 
     private GetApkInfoJson json;
 
@@ -143,6 +147,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean refreshOnResume;
     private String altPath;
     private boolean paused = false;
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
 
     public GetApkInfoJson.Malware.Reason getReason() {
         return reason;
@@ -1178,28 +1184,139 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
+//        Log.d("AppViewActivity", "loadPublicity");
+
         publicityView = findViewById(R.id.adview);
+        customAdBannerView = findViewById(R.id.custom_ad_banner);
+        urlAdBannerView = findViewById(R.id.url_ad_banner);
 
         if (Build.VERSION.SDK_INT > 11) {
             publicityView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        spiceManager.execute(new GetAdsRequest(this), new RequestListener<ApkSuggestionJson>() {
+
+        final GetAdsRequest getAdsRequest = new GetAdsRequest(AppViewActivity.this);
+
+        getAdsRequest.setLocation("appview");
+        getAdsRequest.setKeyword("__NULL__");
+        getAdsRequest.setLimit(1);
+
+        spiceManager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
+//                Log.d("AppViewActivity", "onRequestFailure; mopub");
                 loadMoPub();
             }
 
             @Override
             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+//                Log.d("AppViewActivity", "onRequestSuccess");
 
+                if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
 
-                if (apkSuggestionJson.getApp_suggested().isEmpty()) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
+//                    Log.d("AppViewActivity", "onRequestSuccess; mopub");
                     loadMoPub();
+
                 } else {
-                    //TODO
+
+                    final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
+//                    Log.d("AppViewActivity", "onRequestSuccess; ad type " + appSuggested.getInfo().getAd_type());
+
+                    if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
+//                        Log.d("AppViewActivity", "onRequestSuccess; app:suggested");
+
+                        customAdBannerView.setVisibility(View.VISIBLE);
+                        ImageView icon = (ImageView) customAdBannerView.findViewById(R.id.app_icon);
+                        TextView name = (TextView) customAdBannerView.findViewById(R.id.app_name);
+                        RatingBar rating = (RatingBar) customAdBannerView.findViewById(R.id.app_rating);
+                        Button openApk = (Button) customAdBannerView.findViewById(R.id.button);
+
+                        name.setText(appSuggested.getData().getName());
+                        ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), icon);
+                        rating.setRating(appSuggested.getData().getStars().floatValue());
+                        customAdBannerView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App");
+                                Intent i = new Intent(getApplicationContext(), appViewClass);
+                                long id = appSuggested.getData().getId().longValue();
+                                i.putExtra("id", id);
+                                i.putExtra("fromSponsored", true);
+                                i.putExtra("location", "appview");
+                                i.putExtra("keyword", "__NULL__");
+                                i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
+                                i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
+                                i.putExtra("whereFrom", "sponsored");
+                                i.putExtra("download_from", "sponsored");
+                                startActivity(i);
+                            }
+                        });
+                        openApk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App");
+                                Intent i = new Intent(getApplicationContext(), appViewClass);
+                                long id = appSuggested.getData().getId().longValue();
+                                i.putExtra("id", id);
+                                i.putExtra("fromSponsored", true);
+                                i.putExtra("location", "appview");
+                                i.putExtra("keyword", "__NULL__");
+                                i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
+                                i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
+                                i.putExtra("whereFrom", "sponsored");
+                                i.putExtra("download_from", "sponsored");
+                                startActivity(i);
+                            }
+                        });
+
+                    } else if (appSuggested.getInfo().getAd_type().equals("url:googleplay")) {
+//                        Log.d("AppViewActivity", "onRequestSuccess; url:googleplay");
+
+                        urlAdBannerView.setVisibility(View.VISIBLE);
+                        ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
+                        ImageLoader.getInstance().displayImage(appSuggested.getData().getImage(), banner);
+                        urlAdBannerView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Google_Play_Link");
+                                try {
+                                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
+                                    List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(i, 0);
+                                    String activityToOpen = "";
+                                    for (ResolveInfo resolveInfo : resolveInfos) {
+                                        if (resolveInfo.activityInfo.packageName.equals("com.android.vending")) {
+                                            activityToOpen = resolveInfo.activityInfo.name;
+                                        }
+                                    }
+                                    i.setClassName("com.android.vending", activityToOpen);
+                                    startActivity(i);
+                                }catch(ActivityNotFoundException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
+
+                    } else if (appSuggested.getInfo().getAd_type().equals("url:banner")) {
+//                        Log.d("AppViewActivity", "onRequestSuccess; url:banner");
+
+                        urlAdBannerView.setVisibility(View.VISIBLE);
+                        ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
+                        ImageLoader.getInstance().displayImage(appSuggested.getData().getImage(), banner);
+
+                        urlAdBannerView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Banner_Link");
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
+                                startActivity(intent);
+                            }
+                        });
+                    }
+
                 }
-
-
             }
         });
     }

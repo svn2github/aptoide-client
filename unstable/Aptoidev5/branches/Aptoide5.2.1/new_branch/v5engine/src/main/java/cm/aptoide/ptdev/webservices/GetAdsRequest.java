@@ -37,7 +37,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         this.context = context;
     }
 
-    String url = "http://webservices.aptwords.net/api/1/getAds";
+    String url = "http://webservices.aptwords.net/api/2/getAds";
 
     @Override
     public ApkSuggestionJson loadDataFromNetwork() throws Exception {
@@ -59,7 +59,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         }
 
         parameters.put("location","native-aptoide:" + location);
-        parameters.put("type","app:suggested");
+        parameters.put("type", "url:banner,url:googleplay,app:suggested");
         parameters.put("keywords", keyword);
 
         String oemid = Aptoide.getConfiguration().getExtraId();

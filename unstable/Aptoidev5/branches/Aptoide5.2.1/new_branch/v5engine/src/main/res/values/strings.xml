@@ -559,5 +559,6 @@
     <string name="downloadAnyWay">Download anyway</string>
     <string name="Data_Usage_warning">Warning: Network Data Usage</string>
     <string name="Data_Usage_Message">You are about to make a download using a network not defined on Settings > General Download Rules</string>
+    <string name="view_permissions">View Permissions</string>
 
 </resources>

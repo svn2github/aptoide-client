@@ -222,5 +222,5 @@ public class AptoideConfiguration {
         return SearchManager.class;
     }
 
-
+    public Class getMoreEditorsChoiceActivityClass() { return  cm.aptoide.ptdev.MoreEditorsChoiceActitivy.class;}
 }

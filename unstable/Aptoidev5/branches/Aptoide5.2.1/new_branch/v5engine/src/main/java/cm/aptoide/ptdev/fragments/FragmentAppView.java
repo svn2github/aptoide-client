@@ -1122,7 +1122,6 @@ public abstract class FragmentAppView extends Fragment {
             commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);
             seeAllButton = (Button) v.findViewById(R.id.more_comments);
             editText = (EditText) v.findViewById(R.id.editText_addcomment);
-            editText.setEnabled(false);
             addComment = (Button) v.findViewById(R.id.button_add_comment);
             dontLikeBtn = (Button) v.findViewById(R.id.button_dont_like);
             dontLikeBtn.setOnClickListener(new AddLikeListener(false));

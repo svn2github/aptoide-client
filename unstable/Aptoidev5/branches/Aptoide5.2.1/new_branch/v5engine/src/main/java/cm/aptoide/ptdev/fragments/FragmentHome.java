@@ -5,10 +5,13 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,12 +33,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -71,6 +74,7 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -96,7 +100,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private PullToRefreshLayout mPullToRefreshLayout;
     private View featGraphFooter;
 
-    private LinearLayout sponsoredLinearLayout;
+    private LinearLayout sponsoredLinearLayout, sponsoredCustomAdsLinearLayout, sponsoredGoogleAdsLinearLayout;
     private View sponsoredHeader;
     private boolean fromRefresh;
 
@@ -125,7 +129,9 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
-        refreshSponseredList();
+//        refreshSponsoredAdsList();
+        refreshSponsoredList();
+
         refreshRecommendedList();
         if(!isNetworkAvailable(Aptoide.getContext())){
             setListShown(true);
@@ -134,7 +140,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
     }
 
-    private void refreshSponseredList() {
+    private void refreshSponsoredList() {
 
         SpiceManager manager = ((GetStartActivityCallback)getActivity()).getSpiceManager();
 
@@ -143,71 +149,181 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         request.setLimit(recomendedAdapter.getBucketSize());
         request.setLocation("homepage");
         request.setKeyword("__NULL__");
+        Log.d("FragmentHome", "refreshSponsoredList");
 
         manager.execute(request, Aptoide.getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+//                Log.d("FragmentHome", "onRequestFailure");
                 sponsoredLinearLayout.removeAllViews();
+                sponsoredCustomAdsLinearLayout.removeAllViews();
+                sponsoredGoogleAdsLinearLayout.removeAllViews();
                 mergeAdapter.setActive(sponsoredHeader, false);
                 mergeAdapter.setActive(sponsoredLinearLayout, false);
+                mergeAdapter.setActive(sponsoredCustomAdsLinearLayout, false);
+                mergeAdapter.setActive(sponsoredGoogleAdsLinearLayout, false);
             }
 
             @Override
             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+//                Log.d("FragmentHome", "onRequestSuccess");
 
-                if(apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested()!=null && apkSuggestionJson.getApp_suggested().size()>0) {
+                if(apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()>0) {
+//                    Log.d("FragmentHome", "there are ads");
 
                     try {
                         sponsoredLinearLayout.removeAllViews();
-                        for (final ApkSuggestionJson.AppSuggested apkSuggestion : apkSuggestionJson.getApp_suggested()) {
-                            View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_home, sponsoredLinearLayout, false);
-                            v.findViewById(R.id.ic_action).setVisibility(View.INVISIBLE);
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                            v.setLayoutParams(params);
-                            ImageView icon = (ImageView) v.findViewById(R.id.app_icon);
-                            TextView name = (TextView) v.findViewById(R.id.app_name);
+                        sponsoredCustomAdsLinearLayout.removeAllViews();
+                        sponsoredGoogleAdsLinearLayout.removeAllViews();
+                        for (Object apkSuggestionObject : apkSuggestionJson.getAds()) {
 
-                            TextView category = (TextView) v.findViewById(R.id.app_category);
-                            ImageLoader.getInstance().displayImage(apkSuggestion.getIcon(), icon);
-                            category.setText(R.string.sponsored);
-                            name.setText(apkSuggestion.getName());
+                            final ApkSuggestionJson.Ads apkSuggestion = (ApkSuggestionJson.Ads) apkSuggestionObject;
+//                            Log.d("FragmentHome", "ad type " + apkSuggestion.getInfo().getAd_type());
 
-                            v.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
-                                    Intent i = new Intent(getActivity(), appViewClass);
-                                    long id = apkSuggestion.getId().longValue();
-                                    i.putExtra("id", id);
-                                    i.putExtra("fromSponsored", true);
-                                    i.putExtra("location", "homepage");
-                                    i.putExtra("keyword", "__NULL__");
-                                    i.putExtra("cpc", apkSuggestion.getCpc_url());
-                                    i.putExtra("cpi", apkSuggestion.getCpi_url());
-                                    i.putExtra("whereFrom", "sponsored");
-                                    i.putExtra("download_from", "sponsored");
-                                    startActivity(i);
+                            if(apkSuggestion.getInfo().getAd_type().equals("app:suggested")){
+//                                Log.d("FragmentHome", "onRequestSuccess; app:suggested");
+                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_home, sponsoredLinearLayout, false);
+                                v.findViewById(R.id.ic_action).setVisibility(View.INVISIBLE);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                v.setLayoutParams(params);
+                                ImageView icon = (ImageView) v.findViewById(R.id.app_icon);
+                                TextView name = (TextView) v.findViewById(R.id.app_name);
+
+                                TextView category = (TextView) v.findViewById(R.id.app_category);
+                                ImageLoader.getInstance().displayImage(apkSuggestion.getData().getIcon(), icon);
+                                category.setText(R.string.sponsored);
+                                name.setText(apkSuggestion.getData().getName());
+
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                        Intent i = new Intent(getActivity(), appViewClass);
+                                        long id = apkSuggestion.getData().getId().longValue();
+                                        i.putExtra("id", id);
+                                        i.putExtra("fromSponsored", true);
+                                        i.putExtra("location", "homepage");
+                                        i.putExtra("keyword", "__NULL__");
+                                        i.putExtra("cpc", apkSuggestion.getInfo().getCpc_url());
+                                        i.putExtra("cpi", apkSuggestion.getInfo().getCpi_url());
+                                        i.putExtra("whereFrom", "sponsored");
+                                        i.putExtra("download_from", "sponsored");
+                                        startActivity(i);
+                                    }
+                                });
+                                FrameLayout layout = new FrameLayout(getActivity());
+
+                                layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                                layout.addView(v);
+                                sponsoredLinearLayout.addView(layout);
+
+                                mergeAdapter.setActive(sponsoredHeader, true);
+                                mergeAdapter.setActive(sponsoredLinearLayout, true);
+
+
+                            }else if(apkSuggestion.getInfo().getAd_type().equals("url:googleplay")){
+//                                Log.d("FragmentHome", "onRequestSuccess; url:googleplay");
+                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredGoogleAdsLinearLayout, false);
+
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                v.setLayoutParams(params);
+                                ImageView banner = (ImageView) v.findViewById(R.id.app_ad_banner);
+                                ImageLoader.getInstance().displayImage(apkSuggestion.getData().getImage(), banner);
+
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App_Google_Play_Link");
+                                        try {
+                                            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
+                                            List<ResolveInfo> resolveInfos = getActivity().getPackageManager().queryIntentActivities(i, 0);
+                                            String activityToOpen = "";
+                                            for (ResolveInfo resolveInfo : resolveInfos) {
+                                                if (resolveInfo.activityInfo.packageName.equals("com.android.vending")) {
+                                                    activityToOpen = resolveInfo.activityInfo.name;
+                                                }
+                                            }
+                                            i.setClassName("com.android.vending", activityToOpen);
+                                            startActivity(i);
+                                        } catch (ActivityNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+//                                DisplayMetrics metrics = new DisplayMetrics();
+//                                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//                                int widthPixels = metrics.widthPixels;
+//                                float screenWidth_in_dip = widthPixels / metrics.density;
+//
+//                                if (screenWidth_in_dip >= 720 ) {
+//                                    for (int i=0; i<apkSuggestionJson.getAds().size(); i++) {
+//
+//                                    }
+//                                }
+
+                                //Center 1 banner
+                                if(apkSuggestionJson.getAds().size()==1){
+                                    AbsListView.LayoutParams params1 = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    v.setLayoutParams(params1);
+                                    sponsoredGoogleAdsLinearLayout.addView(v);
                                 }
-                            });
-                            FrameLayout layout = new FrameLayout(getActivity());
 
-                            layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                            layout.addView(v);
-                            sponsoredLinearLayout.addView(layout);
+                                FrameLayout layout = new FrameLayout(getActivity());
+
+                                layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                                layout.addView(v);
+                                sponsoredGoogleAdsLinearLayout.addView(layout);
+
+                                mergeAdapter.setActive(sponsoredHeader, true);
+                                mergeAdapter.setActive(sponsoredGoogleAdsLinearLayout, true);
+
+                            }else if(apkSuggestion.getInfo().getAd_type().equals("url:banner")){
+//                                Log.d("FragmentHome", "onRequestSuccess; url:banner");
+                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredCustomAdsLinearLayout, false);
+
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                v.setLayoutParams(params);
+                                ImageView banner = (ImageView) v.findViewById(R.id.app_ad_banner);
+                                ImageLoader.getInstance().displayImage(apkSuggestion.getData().getImage(), banner);
+                                Log.d("FragmentHome", "showing banner...");
+
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App_Banner_Link");
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                //Center 1 banner
+                                if(apkSuggestionJson.getAds().size()==1){
+//                                    Log.d("FragmentHome", "1 ad");
+                                    AbsListView.LayoutParams params1 = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    v.setLayoutParams(params1);
+                                    sponsoredCustomAdsLinearLayout.addView(v);
+                                }
+
+                                FrameLayout layout = new FrameLayout(getActivity());
+
+                                layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                                layout.addView(v);
+                                sponsoredCustomAdsLinearLayout.addView(layout);
+
+                                mergeAdapter.setActive(sponsoredHeader, true);
+                                mergeAdapter.setActive(sponsoredCustomAdsLinearLayout, true);
+                            }
+
                         }
-
-
 
                         //Fill remaining space
-                        for(int i = apkSuggestionJson.getApp_suggested().size() ; i < recomendedAdapter.getBucketSize(); i++){
-                            FrameLayout layout = new FrameLayout(getActivity());
-                            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                            sponsoredLinearLayout.addView(layout);
+                        for(int i = apkSuggestionJson.getAds().size() ; i < recomendedAdapter.getBucketSize(); i++){
+                            FrameLayout frameLayout = new FrameLayout(getActivity());
+                            frameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+                            sponsoredLinearLayout.addView(frameLayout);
                         }
 
-
-                        mergeAdapter.setActive(sponsoredHeader, true);
-                        mergeAdapter.setActive(sponsoredLinearLayout, true);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -218,6 +334,12 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
             }
         });
+
+
+    }
+
+    private void addSponsoredAdRow(boolean isOnlyElement) {
+
 
 
     }
@@ -530,9 +652,13 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         mergeAdapter.addView(featGraphFooter, false);
 
         sponsoredLinearLayout = new LinearLayout(getActivity());
-
-
         sponsoredLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        sponsoredCustomAdsLinearLayout = new LinearLayout(getActivity());
+        sponsoredCustomAdsLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        sponsoredGoogleAdsLinearLayout = new LinearLayout(getActivity());
+        sponsoredGoogleAdsLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         sponsoredHeader = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView)sponsoredHeader.findViewById(R.id.separator_label)).setText(R.string.suggested_apps);
@@ -542,6 +668,12 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         mergeAdapter.addView(sponsoredLinearLayout);
         mergeAdapter.setActive(sponsoredLinearLayout, false);
+
+        mergeAdapter.addView(sponsoredCustomAdsLinearLayout);
+        mergeAdapter.setActive(sponsoredCustomAdsLinearLayout, false);
+
+        mergeAdapter.addView(sponsoredGoogleAdsLinearLayout);
+        mergeAdapter.setActive(sponsoredGoogleAdsLinearLayout, false);
 
         mergeAdapter.addAdapter(homeBucketAdapterHome);
 

@@ -6,7 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.TypedArray;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,7 +28,6 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.*;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,7 +38,6 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.adapters.SearchAdapter2;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.services.DownloadService;
@@ -250,6 +248,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         private View searchLayout;
         private boolean hasUapks;
         private View sponsoredApp;
+        private View sponsoredAdApp, sponsoredAdLabel;
         private View searchResultsLabel;
         //private View v2;
 
@@ -309,6 +308,14 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             adapter.addView(sponsoredApp);
             adapter.setActive(sponsoredApp, false);
+
+            sponsoredAdLabel = LayoutInflater.from(getActivity()).inflate(R.layout.separator_ad_banner, null);
+            adapter.addView(sponsoredAdLabel);
+            adapter.setActive(sponsoredAdLabel, false);
+
+            sponsoredAdApp = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, null);
+            adapter.addView(sponsoredAdApp);
+            adapter.setActive(sponsoredAdApp, false);
 
             searchResultsLabel = LayoutInflater.from(getActivity()).inflate(R.layout.separator_searchu, null);
             adapter.addView(searchResultsLabel);
@@ -457,6 +464,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                 return;
             }
 
+
+
             GetAdsRequest getAdsRequest = new GetAdsRequest(getActivity());
 
             getAdsRequest.setLocation("search");
@@ -466,46 +475,102 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             manager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
+//                    Log.d("SearchManager", "onRequestFailure");
 
                 }
 
                 @Override
                 public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-                    if (apkSuggestionJson!=null && apkSuggestionJson.getApp_suggested()!=null && apkSuggestionJson.getApp_suggested().size() > 0) {
-                        adapter.setActive(sponsoredApp, true);
-                        final ApkSuggestionJson.AppSuggested appSuggested = apkSuggestionJson.getApp_suggested().get(0);
+                    if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size() > 0) {
 
-                        ImageView icon = (ImageView) sponsoredApp.findViewById(R.id.app_icon);
-                        TextView name = (TextView) sponsoredApp.findViewById(R.id.app_name);
-                        TextView description = (TextView) sponsoredApp.findViewById(R.id.app_description);
-                        RatingBar rating = (RatingBar) sponsoredApp.findViewById(R.id.app_rating);
-                        TextView downloads = (TextView) sponsoredApp.findViewById(R.id.app_downloads);
+                        final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
 
-                        ImageLoader.getInstance().displayImage(appSuggested.getIcon(), icon);
+                        if(appSuggested.getInfo().getAd_type().equals("app:suggested")){
+//                            Log.d("SearchManager", "onRequestSuccess; app:suggested");
 
-                        name.setText(appSuggested.getName());
-                        description.setText(appSuggested.getDescription());
-                        rating.setRating(appSuggested.getStars().floatValue());
-                        String down = String.valueOf(appSuggested.getDownloads().intValue());
-                        downloads.setText(getString(R.string.X_download_number, withSuffix(down)));
-                        sponsoredApp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App");
-                                Intent i = new Intent(getActivity(), appViewClass);
-                                long id = appSuggested.getId().longValue();
-                                i.putExtra("id", id);
-                                i.putExtra("fromSponsored", true);
-                                i.putExtra("location", "search");
-                                i.putExtra("keyword", query);
-                                i.putExtra("cpc", appSuggested.getCpc_url());
-                                i.putExtra("cpi", appSuggested.getCpi_url());
-                                i.putExtra("whereFrom", "sponsored");
-                                i.putExtra("download_from", "sponsored");
-                                startActivity(i);
-                            }
-                        });
+                            ImageView icon = (ImageView) sponsoredApp.findViewById(R.id.app_icon);
+                            TextView name = (TextView) sponsoredApp.findViewById(R.id.app_name);
+                            TextView description = (TextView) sponsoredApp.findViewById(R.id.app_description);
+                            RatingBar rating = (RatingBar) sponsoredApp.findViewById(R.id.app_rating);
+                            TextView downloads = (TextView) sponsoredApp.findViewById(R.id.app_downloads);
+
+                            ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), icon);
+
+                            name.setText(appSuggested.getData().getName());
+                            description.setText(appSuggested.getData().getDescription());
+                            rating.setRating(appSuggested.getData().getStars().floatValue());
+                            String down = String.valueOf(appSuggested.getData().getDownloads().intValue());
+                            downloads.setText(getString(R.string.X_download_number, withSuffix(down)));
+                            sponsoredApp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App");
+                                    Intent i = new Intent(getActivity(), appViewClass);
+                                    long id = appSuggested.getData().getId().longValue();
+                                    i.putExtra("id", id);
+                                    i.putExtra("fromSponsored", true);
+                                    i.putExtra("location", "search");
+                                    i.putExtra("keyword", query);
+                                    i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
+                                    i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
+                                    i.putExtra("whereFrom", "sponsored");
+                                    i.putExtra("download_from", "sponsored");
+                                    startActivity(i);
+                                }
+                            });
+
+                            adapter.setActive(sponsoredApp, true);
+                        }else if(appSuggested.getInfo().getAd_type().equals("url:googleplay")){
+//                            Log.d("SearchManager", "onRequestSuccess; url:googleplay");
+
+                            ImageView banner = (ImageView) sponsoredAdApp.findViewById(R.id.app_ad_banner);
+                            ImageLoader.getInstance().displayImage(appSuggested.getData().getImage(), banner);
+
+                            banner.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (Build.VERSION.SDK_INT >= 10)
+                                        FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App_Google_Play_Link");
+                                    try {
+                                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
+                                        List<ResolveInfo> resolveInfos = getActivity().getPackageManager().queryIntentActivities(i, 0);
+                                        String activityToOpen = "";
+                                        for (ResolveInfo resolveInfo : resolveInfos) {
+                                            if (resolveInfo.activityInfo.packageName.equals("com.android.vending")) {
+                                                activityToOpen = resolveInfo.activityInfo.name;
+                                            }
+                                        }
+                                        i.setClassName("com.android.vending", activityToOpen);
+                                        startActivity(i);
+                                    } catch (ActivityNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                            adapter.setActive(sponsoredAdLabel, true);
+                            adapter.setActive(sponsoredAdApp, true);
+
+                        }else if(appSuggested.getInfo().getAd_type().equals("url:banner")){
+//                            Log.d("SearchManager", "onRequestSuccess; url:banner");
+
+                            ImageView banner = (ImageView) sponsoredAdApp.findViewById(R.id.app_ad_banner);
+                            ImageLoader.getInstance().displayImage(appSuggested.getData().getImage(), banner);
+
+                            banner.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App_Banner_Link");
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
+                                    startActivity(intent);
+                                }
+                            });
+
+                            adapter.setActive(sponsoredAdLabel, true);
+                            adapter.setActive(sponsoredAdApp, true);
+                        }
+
 
 
                     }

@@ -171,7 +171,7 @@ public class Collection extends PrincipalLayoutAdapter.AbstractItem {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Aptoide.getContext(), MoreEditorsChoiceActitivy.class);
+                Intent i = new Intent(Aptoide.getContext(), Aptoide.getConfiguration().getMoreEditorsChoiceActivityClass());
                 Log.d("Aptoide-HomeLayout", String.valueOf(getParentId()));
                 i.putExtra("parentId", getParentId());
                 context.startActivity(i);

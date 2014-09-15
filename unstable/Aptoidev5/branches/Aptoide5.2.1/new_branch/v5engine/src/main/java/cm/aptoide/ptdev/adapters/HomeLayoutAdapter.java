@@ -95,7 +95,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, MoreEditorsChoiceActitivy.class);
+                    Intent i = new Intent(context, Aptoide.getConfiguration().getMoreEditorsChoiceActivityClass());
 //                    Log.d("Aptoide-HomeLayout", String.valueOf(collection.getParentId()));
                     i.putExtra("parentId", collection.getParentId());
                     context.startActivity(i);

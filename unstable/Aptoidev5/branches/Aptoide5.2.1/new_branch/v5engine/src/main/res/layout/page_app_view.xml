@@ -46,7 +46,7 @@
     <RelativeLayout
             android:id="@+id/advertisement"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true">
 
         <com.mopub.mobileads.MoPubView
@@ -56,16 +56,19 @@
                 android:foregroundGravity="center"
                 android:layout_centerHorizontal="true"/>
 
-        <!--<com.adsdk.sdk.banner.AdView-->
-                <!--android:id="@+id/mobFoxView"-->
-                <!--android:layout_width="320dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:gravity="center"-->
-                <!--android:visibility="gone"-->
-                <!--request_url="http://my.mobfox.com/request.php"-->
-                <!--publisherId="6a7d6041aec6aa5ea624e7d9ad6fb60e"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--animation="true" />-->
+        <include layout="@layout/row_app_view_ad_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:id="@+id/custom_ad_banner" />
+
+        <include layout="@layout/row_app_ad_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:id="@+id/url_ad_banner" />
 
     </RelativeLayout>
 
