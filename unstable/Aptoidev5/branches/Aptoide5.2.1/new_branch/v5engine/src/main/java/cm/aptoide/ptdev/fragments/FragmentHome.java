@@ -152,6 +152,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         Log.d("FragmentHome", "refreshSponsoredList");
 
         manager.execute(request, Aptoide.getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
+            public int nativeAd;
+
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 //                Log.d("FragmentHome", "onRequestFailure");
@@ -181,6 +183,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 //                            Log.d("FragmentHome", "ad type " + apkSuggestion.getInfo().getAd_type());
 
                             if(apkSuggestion.getInfo().getAd_type().equals("app:suggested")){
+                                nativeAd++;
 //                                Log.d("FragmentHome", "onRequestSuccess; app:suggested");
                                 View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_home, sponsoredLinearLayout, false);
                                 v.findViewById(R.id.ic_action).setVisibility(View.INVISIBLE);
@@ -318,7 +321,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                         }
 
                         //Fill remaining space
-                        for(int i = apkSuggestionJson.getAds().size() ; i < recomendedAdapter.getBucketSize(); i++){
+                        for(int i = nativeAd ; i < recomendedAdapter.getBucketSize(); i++){
                             FrameLayout frameLayout = new FrameLayout(getActivity());
                             frameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
                             sponsoredLinearLayout.addView(frameLayout);
