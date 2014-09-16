@@ -12,6 +12,12 @@
     android:layout_gravity="center_horizontal"
     android:clickable="true">
 
+    <ImageView
+        android:id="@+id/app_icon_background"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
     <RelativeLayout
         android:background="@color/transparent_white"
         android:layout_width="320dp"
@@ -37,7 +43,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/app_rating"
             android:layout_alignStart="@+id/app_rating"
-            android:layout_toLeftOf="@+id/button" />
+            android:layout_toLeftOf="@+id/textView" />
 
         <RatingBar
             android:id="@+id/app_rating"
@@ -59,17 +65,18 @@
             android:layout_below="@+id/app_rating"
             android:layout_toRightOf="@+id/app_icon" />
 
-        <Button
-            android:id="@+id/button"
+        <TextView
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="100dp"
             android:text="@string/install"
             android:layout_gravity="right"
+            android:clickable="false"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:id="@+id/textView" />
 
 
     </RelativeLayout>

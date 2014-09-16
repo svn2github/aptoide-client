@@ -1199,6 +1199,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getAdsRequest.setLocation("appview");
         getAdsRequest.setKeyword("__NULL__");
         getAdsRequest.setLimit(1);
+        getAdsRequest.setTimeout(2000);
 
         spiceManager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
             @Override
@@ -1227,32 +1228,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 //                        Log.d("AppViewActivity", "onRequestSuccess; app:suggested");
 
                         customAdBannerView.setVisibility(View.VISIBLE);
+                        ImageView iconbackground = (ImageView) customAdBannerView.findViewById(R.id.app_icon_background);
                         ImageView icon = (ImageView) customAdBannerView.findViewById(R.id.app_icon);
                         TextView name = (TextView) customAdBannerView.findViewById(R.id.app_name);
                         RatingBar rating = (RatingBar) customAdBannerView.findViewById(R.id.app_rating);
-                        Button openApk = (Button) customAdBannerView.findViewById(R.id.button);
 
                         name.setText(appSuggested.getData().getName());
+                        ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), iconbackground);
                         ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), icon);
                         rating.setRating(appSuggested.getData().getStars().floatValue());
                         customAdBannerView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App");
-                                Intent i = new Intent(getApplicationContext(), appViewClass);
-                                long id = appSuggested.getData().getId().longValue();
-                                i.putExtra("id", id);
-                                i.putExtra("fromSponsored", true);
-                                i.putExtra("location", "appview");
-                                i.putExtra("keyword", "__NULL__");
-                                i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
-                                i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
-                                i.putExtra("whereFrom", "sponsored");
-                                i.putExtra("download_from", "sponsored");
-                                startActivity(i);
-                            }
-                        });
-                        openApk.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App");

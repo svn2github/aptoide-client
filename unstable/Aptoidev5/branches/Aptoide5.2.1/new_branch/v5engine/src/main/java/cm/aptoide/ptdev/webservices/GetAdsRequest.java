@@ -27,6 +27,7 @@ import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
  */
 public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJson> {
 
+    private int CONNECTION_TIMEOUT = 10000;
     private final Context context;
     private String location;
     private String keyword;
@@ -81,9 +82,15 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
+        request.setConnectTimeout(CONNECTION_TIMEOUT);
+        request.setReadTimeout(CONNECTION_TIMEOUT);
 
 
         return request.execute().parseAs( getResultType() );
+    }
+
+    public void setTimeout(int timeout){
+        CONNECTION_TIMEOUT = timeout;
     }
 
 
