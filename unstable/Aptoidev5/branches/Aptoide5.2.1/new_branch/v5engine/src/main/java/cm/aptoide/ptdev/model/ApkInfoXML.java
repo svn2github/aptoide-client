@@ -1,19 +1,19 @@
 package cm.aptoide.ptdev.model;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.StatementHelper;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Filters;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -91,7 +91,7 @@ public class ApkInfoXML extends Apk {
         } catch (SQLiteException e) {
             //e.printStackTrace();
 
-            Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
+            //Log.d("RepoParser-ApkInfo-Insert", "Conflict: " + e.getMessage() + " on " + getPackageName() + " " + getRepoId() + " " + getVersionCode());
             StatementHelper.bindAllArgsAsStrings(sqLiteStatements.get(3), new String[]{
                     String.valueOf(getRepoId()),
                     getPackageName(),

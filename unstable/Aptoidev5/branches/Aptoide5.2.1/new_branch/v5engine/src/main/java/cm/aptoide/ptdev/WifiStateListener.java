@@ -26,7 +26,6 @@ public class WifiStateListener extends BroadcastReceiver {
         Cursor c = null;
         if (wifi.getState() == NetworkInfo.State.CONNECTED) {
             Database db = new Database(Aptoide.getDb());
-            Log.d("Receiver", "Wireless Connected");
             try {
                 c = db.getScheduledDownloads();
                 if (sPref.getBoolean("schDwnBox", false) && c.getCount() != 0 && sPref.getBoolean("schTrigger", true)) {

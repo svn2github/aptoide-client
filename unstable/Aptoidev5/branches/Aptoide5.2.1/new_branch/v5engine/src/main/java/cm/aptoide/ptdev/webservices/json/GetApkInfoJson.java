@@ -1,10 +1,12 @@
 
 package cm.aptoide.ptdev.webservices.json;
 
-import cm.aptoide.ptdev.model.*;
 import com.google.api.client.util.Key;
 
 import java.util.List;
+
+import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.model.Obb;
 
 
 public class GetApkInfoJson {
@@ -122,7 +124,6 @@ public class GetApkInfoJson {
             @Key private String path;
             @Key private String orient;
 
-
             public String getOrient() {
                 return orient;
             }
@@ -135,20 +136,133 @@ public class GetApkInfoJson {
 
     public static class Payment{
 
-        @Key private Number amount;
+        @Key private String amount;
+        @Key private String error;
+        @Key private String apkpath;
+        @Key private List<Payment_services> payment_services;
         @Key private String status;
 
-        public Number getAmount(){
+        public String getAmount(){
             return this.amount;
         }
-        public void setAmount(Number amount){
+        public void setAmount(String amount){
             this.amount = amount;
+        }
+        public String getapkpath(){
+            return this.apkpath;
+        }
+        public void setapkpath(String apkpath){
+            this.apkpath = apkpath;
+        }
+        public String geterror(){
+            return this.error;
+        }
+        public void seterror(String error){
+            this.error = error;
         }
         public String getStatus(){
             return this.status;
         }
         public void setStatus(String status){
             this.status = status;
+        }
+        public List<Payment_services> getPayment_services(){
+            return this.payment_services;
+        }
+        public void setPayment_services(List<Payment_services> payment_services){
+            this.payment_services = payment_services;
+        }
+        public static class Payment_services {
+            @Key private int id;
+            @Key private String short_name;
+            @Key private String name;
+            @Key private double price;
+            @Key private String currency;
+            @Key private String sign;
+            @Key private String tax_rate;
+            @Key private List<Payment_services_Type> types;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getShort_name() {
+                return short_name;
+            }
+
+            public void setShort_name(String short_name) {
+                this.short_name = short_name;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public double getPrice() {
+                return price;
+            }
+
+            public void setPrice(double price) {
+                this.price = price;
+            }
+
+            public String getCurrency() {
+                return currency;
+            }
+
+            public void setCurrency(String currency) {
+                this.currency = currency;
+            }
+
+            public String getSign() {
+                return sign;
+            }
+
+            public void setSign(String sign) {
+                this.sign = sign;
+            }
+
+            public String getTax_rate() {
+                return tax_rate;
+            }
+
+            public void setTax_rate(String tax_rate) {
+                this.tax_rate = tax_rate;
+            }
+
+            public List<Payment_services_Type> getTypes() {
+                return types;
+            }
+
+            public void setTypes(List<Payment_services_Type> types) {
+                this.types = types;
+            }
+
+            public static class Payment_services_Type {
+                @Key private String label;
+                @Key private String reqType;
+
+                public String getReqType() {
+                    return reqType;
+                }
+                public void setReqType(String reqType) {
+                    this.reqType = reqType;
+                }
+                public String getLabel() {
+                    return label;
+                }
+                public void setLabel(String label) {
+                    this.label = label;
+                }
+            }
         }
     }
 

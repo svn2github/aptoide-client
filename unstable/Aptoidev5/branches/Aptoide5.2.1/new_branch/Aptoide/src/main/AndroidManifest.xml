@@ -332,7 +332,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.aptoide.openiab.StoreService"
+        <service android:name="openiab.StoreService"
                  android:exported="true"
                  >
             <intent-filter >
@@ -340,7 +340,7 @@
             </intent-filter>/>
         </service>
 
-        <service android:name="com.aptoide.openiab.BillingService"
+        <service android:name="openiab.BillingService"
                  android:exported="true">
 
             <intent-filter >
@@ -348,10 +348,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.aptoide.openiab.PurchaseActivity" android:theme="@style/PurchaseDialog"
+        <activity android:name="openiab.IABPurchaseActivity" android:theme="@style/PurchaseDialog"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" />
 
-        <receiver android:name="com.aptoide.openiab.PayPalReceiver" >
+        <receiver android:name="openiab.PayPalReceiver" >
             <intent-filter>
                 <action android:name="PAYPAL_PAYMENT" />
             </intent-filter>

@@ -47,7 +47,7 @@ public abstract class  GetApkInfoRequest extends GoogleHttpClientSpiceRequest<Ge
 
         HttpContent content = new UrlEncodedContent(parameters);
         HttpRequest request = getHttpRequestFactory().buildPostRequest(
-                new GenericUrl( "https://webservices.aptoide.com/webservices/3/getApkInfo"),
+                new GenericUrl( WebserviceOptions.WebServicesLink+"3/getApkInfo"),
                 content);
         if (token!=null) {
             parameters.put("access_token", token);

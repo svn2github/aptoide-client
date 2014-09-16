@@ -1,9 +1,6 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import cm.aptoide.ptdev.fragments.GenericResponse;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -14,13 +11,14 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+
 /**
  * Created by rmateus on 30-12-2013.
  */
 public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse>{
 
-
-    private Context activity;
     private String token;
     private String repo;
     private String packageName;
@@ -34,8 +32,6 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
     public AddLikeRequest(Context activity) {
         super(GenericResponse.class);
-
-        this.activity = activity;
     }
 
     public void setToken(String token) {
@@ -54,7 +50,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         this.apkversion = apkversion;
     }
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/3/addApkLike";
+    String baseUrl = WebserviceOptions.WebServicesLink+"3/addApkLike";
     @Override
     public GenericResponse loadDataFromNetwork() throws Exception {
 

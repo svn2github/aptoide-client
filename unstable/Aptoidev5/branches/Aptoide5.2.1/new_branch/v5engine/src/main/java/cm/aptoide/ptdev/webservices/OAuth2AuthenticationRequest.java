@@ -1,10 +1,5 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.LoginActivity;
-import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
-import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
-import cm.aptoide.ptdev.webservices.json.OAuth;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -13,9 +8,13 @@ import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
-
-
 import java.util.HashMap;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
+import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
+import cm.aptoide.ptdev.webservices.json.OAuth;
 
 /**
  * Created by rmateus on 03-07-2014.
@@ -62,7 +61,7 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
         }
 
         HttpContent content = new UrlEncodedContent(parameters);
-        GenericUrl url = new GenericUrl("https://webservices.aptoide.com/webservices/3/oauth2Authentication");
+        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/oauth2Authentication");
         HttpRequest oauth2RefresRequest = getHttpRequestFactory().buildPostRequest(url, content);
         oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
 

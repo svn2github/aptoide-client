@@ -1,32 +1,24 @@
 package cm.aptoide.ptdev.webservices;
 
-import android.os.Build;
-import android.util.Log;
-import cm.aptoide.ptdev.LoginActivity;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 
 import java.util.HashMap;
+
+import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 
 /**
  * Created by brutus on 09-12-2013.
  */
 public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/3/getUserInfo";
-    String baseUrlWithoutSsl = "https://webservices.dev.aptoide.com/webservices/3/getUserInfo";
+    String baseUrl = WebserviceOptions.WebServicesLink+"3/getUserInfo";
+
 
     //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
@@ -55,16 +47,7 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     @Override
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
 
-
-        GenericUrl url;
-
-        if (Build.VERSION.SDK_INT >= 10) {
-            url = new GenericUrl(baseUrl);
-        } else {
-            url = new GenericUrl(baseUrlWithoutSsl);
-        }
-
-
+        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         //token = SecurePreferences.getInstance().getString("access_token", null);

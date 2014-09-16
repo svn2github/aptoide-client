@@ -66,7 +66,6 @@ import java.util.Map;
 import cm.aptoide.ptdev.AllCommentsActivity;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.MoreRelatedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.ScreenshotsViewer;
