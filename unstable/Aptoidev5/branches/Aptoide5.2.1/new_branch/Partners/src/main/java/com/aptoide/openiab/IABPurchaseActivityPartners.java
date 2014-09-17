@@ -31,16 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aptoide.openiab.webservices.IabPurchaseAuthorizationRequest;
-import com.aptoide.openiab.webservices.IabPurchaseStatusRequest;
-import com.aptoide.openiab.webservices.IabSkuDetailsRequest;
-import com.aptoide.openiab.webservices.PayProductRequestPayPal;
-import com.aptoide.openiab.webservices.PayProductRequestUnitel;
-import com.aptoide.openiab.webservices.json.IabPurchaseStatusJson;
-import com.aptoide.openiab.webservices.json.IabSimpleResponseJson;
-import com.aptoide.openiab.webservices.json.IabSkuDetailsJson;
-import com.aptoide.openiab.webservices.json.PaymentServices;
-import com.aptoide.partners.AccountGeneralPartners;
 import com.aptoide.partners.AptoideConfigurationPartners;
 import com.aptoide.partners.AptoidePartner;
 import com.flurry.android.FlurryAgent;
@@ -76,11 +66,24 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import openiab.BillingBinder;
+import openiab.BillingService;
+import openiab.IABPurchaseActivity;
+import openiab.UnitelPurchaseListener;
+import openiab.webservices.IabPurchaseAuthorizationRequest;
+import openiab.webservices.IabPurchaseStatusRequest;
+import openiab.webservices.IabSkuDetailsRequest;
+import openiab.webservices.PayProductRequestPayPal;
+import openiab.webservices.PayProductRequestUnitel;
+import openiab.webservices.json.IabPurchaseStatusJson;
+import openiab.webservices.json.IabSimpleResponseJson;
+import openiab.webservices.json.IabSkuDetailsJson;
+import openiab.webservices.json.PaymentServices;
 
 /**
  * Created by j-pac on 12-02-2014.
  */
-public class PurchaseActivity extends ActionBarActivity implements Callback {
+public class IABPurchaseActivityPartners extends IABPurchaseActivity {
 
     private static final String TAG = "paymentExample";
 
@@ -208,7 +211,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
                         e.printStackTrace();
                     }
 
-                    AccountManager accountManager = AccountManager.get(PurchaseActivity.this);
+                    AccountManager accountManager = AccountManager.get(IABPurchaseActivityPartners.this);
 
                     try {
                         Bundle bundle = ((BillingBinder)service).getPurchases(apiVersion, packageName, type, "");
@@ -285,7 +288,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
                                     Button button;
 
                                     if (response.getPayment_services()!=null && response.getPayment_services().isEmpty()) {
-                                        TextView noPaymentsFound = new TextView(PurchaseActivity.this);
+                                        TextView noPaymentsFound = new TextView(IABPurchaseActivityPartners.this);
                                         noPaymentsFound.setText(R.string.no_payments_available);
                                         paymentMethodsLayout.addView(noPaymentsFound);
                                     }else if(response.getPayment_services() !=null ){
@@ -301,7 +304,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
                                                         if ("future".equals(type.getReqType())) {
 
-                                                            button = (Button) LayoutInflater.from(PurchaseActivity.this).inflate(R.layout.button_paypal, null);
+                                                            button = (Button) LayoutInflater.from(IABPurchaseActivityPartners.this).inflate(R.layout.button_paypal, null);
                                                             button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
                                                             paymentMethodsLayout.addView(button);
 
@@ -316,7 +319,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
                                                         } else if ("single".equals(type.getReqType())) {
 
-                                                            button = (Button) LayoutInflater.from(PurchaseActivity.this).inflate(R.layout.button_visa, null);
+                                                            button = (Button) LayoutInflater.from(IABPurchaseActivityPartners.this).inflate(R.layout.button_visa, null);
 
                                                             button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
                                                             OnPaypalClick onPaypalClick = new OnPaypalClick();
@@ -357,7 +360,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
 
                                                     for (PaymentServices.PaymentType type : service.getTypes()) {
-                                                        button = (Button) LayoutInflater.from(PurchaseActivity.this).inflate(R.layout.button_carrier, null);
+                                                        button = (Button) LayoutInflater.from(IABPurchaseActivityPartners.this).inflate(R.layout.button_carrier, null);
 
                                                         if (button != null) {
                                                             button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
@@ -574,8 +577,8 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(price), currency, description,
                     PayPalPayment.PAYMENT_INTENT_SALE);
 
-            Intent intent = new Intent(PurchaseActivity.this, PaymentActivity.class);
-            PurchaseActivity.this.currency = currency;
+            Intent intent = new Intent(IABPurchaseActivityPartners.this, PaymentActivity.class);
+            IABPurchaseActivityPartners.this.currency = currency;
             intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
 
             startActivityForResult(intent, REQUEST_CODE_PAYMENT);
@@ -620,7 +623,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             valuesToVerify.repo = repo;
             final Intent intent = getIntent();
             if (alreadyRegistered) {
-                final String correlationId = PayPalConfiguration.getApplicationCorrelationId(PurchaseActivity.this);
+                final String correlationId = PayPalConfiguration.getApplicationCorrelationId(IABPurchaseActivityPartners.this);
                 PayProductRequestPayPal request = new PayProductRequestPayPal();
                 request.setToken(token);
                 request.setRepo(repo);
@@ -698,7 +701,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
                     }
                 });
             } else {
-                Intent ppIntent = new Intent(PurchaseActivity.this, PayPalFuturePaymentActivity.class);
+                Intent ppIntent = new Intent(IABPurchaseActivityPartners.this, PayPalFuturePaymentActivity.class);
                 startActivityForResult(ppIntent, REQUEST_CODE_FUTURE_PAYMENT);
                 spiceManager.removeDataFromCache(IabSimpleResponseJson.class, "authorization-" + token);
             }
@@ -792,7 +795,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
 
                         if(account!=null){
                             ((TextView) findViewById(R.id.username)).setText(getString(R.string.account) + ": " + account);
-                            Intent billingIntent = new Intent(PurchaseActivity.this, BillingService.class);
+                            Intent billingIntent = new Intent(IABPurchaseActivityPartners.this, BillingService.class);
                             bindService(billingIntent, mConnection, BIND_AUTO_CREATE);
                         }else {
                             finish();
@@ -938,7 +941,7 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
             public void onRequestSuccess(IabSimpleResponseJson iabPurchaseStatusJson) {
                 final Intent intent = new Intent();
 
-                String correlationId = PayPalConfiguration.getApplicationCorrelationId(PurchaseActivity.this);
+                String correlationId = PayPalConfiguration.getApplicationCorrelationId(IABPurchaseActivityPartners.this);
                 PayProductRequestPayPal request = new PayProductRequestPayPal();
                 request.setToken(token);
                 request.setApiVersion(String.valueOf(apiVersion));
@@ -1054,11 +1057,11 @@ public class PurchaseActivity extends ActionBarActivity implements Callback {
         }
     };
 
-    private void processPaymentConfirmation(final ProofOfPayment confirmation) {
+    protected void processPaymentConfirmation(final ProofOfPayment confirmation) {
 
 
         final IabPurchaseStatusRequest purchaseStatus = new IabPurchaseStatusRequest();
-        purchaseStatus.setApiVersion(apiVersion);
+        purchaseStatus.setApiVersion(String.valueOf(apiVersion));
         purchaseStatus.setToken(token);
         purchaseStatus.setRest(true);
 

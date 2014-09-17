@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
         android:name="com.aptoide.partners.AptoidePartner"
@@ -398,8 +399,17 @@
             </intent-filter>
         </receiver>
 
+
+        <receiver android:name="com.aptoide.partners.PushNotification.PushNotificationReceiver" >
+            <intent-filter>
+                <action android:name="com.aptoide.partners.PushNotification"/>
+                <action android:name="com.aptoide.partners.PushNotificationFirstTime"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
         <service
-            android:name="com.aptoide.openiab.StoreService"
+            android:name="openiab.StoreService"
             android:exported="true">
             <intent-filter>
                 <action android:name="org.onepf.oms.openappstore.BIND" />
@@ -408,7 +418,7 @@
         </service>
 
         <service
-            android:name="com.aptoide.openiab.BillingService"
+            android:name="openiab.BillingService"
             android:exported="true">
 
             <intent-filter>
@@ -417,11 +427,11 @@
         </service>
 
         <activity
-            android:name="com.aptoide.openiab.PurchaseActivity"
+            android:name="com.aptoide.openiab.IABPurchaseActivityPartners"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
             android:theme="@style/PurchaseDialog" />
 
-        <receiver android:name="com.aptoide.openiab.PayPalReceiver">
+        <receiver android:name="openiab.PayPalReceiver">
             <intent-filter>
                 <action android:name="PAYPAL_PAYMENT" />
             </intent-filter>
