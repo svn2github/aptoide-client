@@ -136,16 +136,17 @@ public class GetApkInfoJson {
 
     public static class Payment{
 
-        @Key private String amount;
+        @Key private Number amount;
+        @Key("currency_symbol") private String symbol;
         @Key private String error;
         @Key private String apkpath;
         @Key private List<Payment_services> payment_services;
         @Key private String status;
 
-        public String getAmount(){
+        public Number getAmount(){
             return this.amount;
         }
-        public void setAmount(String amount){
+        public void setAmount(Number amount){
             this.amount = amount;
         }
         public String getapkpath(){
@@ -169,9 +170,11 @@ public class GetApkInfoJson {
         public List<Payment_services> getPayment_services(){
             return this.payment_services;
         }
-        public void setPayment_services(List<Payment_services> payment_services){
-            this.payment_services = payment_services;
-        }
+        public void setPayment_services(List<Payment_services> payment_services){ this.payment_services = payment_services;}
+        public String getSymbol() { return symbol; }
+        public void setSymbol(String symbol) { this.symbol = symbol; }
+
+
         public static class Payment_services {
             @Key private int id;
             @Key private String short_name;
