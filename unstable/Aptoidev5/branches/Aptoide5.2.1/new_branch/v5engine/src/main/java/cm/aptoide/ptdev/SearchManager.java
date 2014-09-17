@@ -531,7 +531,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                 @Override
                                 public void onClick(View v) {
                                     if (Build.VERSION.SDK_INT >= 10)
-                                        FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App_Google_Play_Link");
+                                        FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_Google_Play_Link");
                                     try {
                                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                         List<ResolveInfo> resolveInfos = getActivity().getPackageManager().queryIntentActivities(i, 0);
@@ -561,7 +561,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                             banner.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App_Banner_Link");
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_Banner_Link");
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                     startActivity(intent);
                                 }

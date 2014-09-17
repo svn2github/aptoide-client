@@ -12,7 +12,7 @@ public class ApkSuggestionJson {
     @Key private List<Ads> ads;
     @Key private String status;
 
-    public List getAds(){
+    public List<Ads> getAds(){
         return this.ads;
     }
     public void setAds(List ads){

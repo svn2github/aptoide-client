@@ -34,6 +34,7 @@ public class IabPurchaseStatusRequest extends BaseRequest<IabPurchaseStatusJson>
     private String developerPayload;
     private String simcc;
     private String repo;
+    private boolean rest;
 
     public IabPurchaseStatusRequest() {
         super(IabPurchaseStatusJson.class);
@@ -185,4 +186,7 @@ public class IabPurchaseStatusRequest extends BaseRequest<IabPurchaseStatusJson>
         this.repo = repo;
     }
 
+    public void setRest(boolean rest) {
+        this.rest = rest;
+    }
 }

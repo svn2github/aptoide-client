@@ -1,10 +1,14 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
+import android.os.Build;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.impl.analytics.FlurryAnalyticsModule;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -15,6 +19,8 @@ import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpice
 import org.apache.http.params.HttpParams;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
@@ -70,7 +76,6 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         }
 
 
-
         parameters.put("limit", String.valueOf(limit));
 
         parameters.put("get_mature", mature);
@@ -85,8 +90,40 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         request.setConnectTimeout(CONNECTION_TIMEOUT);
         request.setReadTimeout(CONNECTION_TIMEOUT);
 
+        ApkSuggestionJson result = request.execute().parseAs( getResultType() );
 
-        return request.execute().parseAs( getResultType() );
+        Map<String, String> adsParams = new HashMap<String, String>();
+        adsParams.put("placement", location);
+
+//        int play = 0, banner  = 0 , suggested = 0;
+
+        for(ApkSuggestionJson.Ads suggestionJson : result.getAds()) {
+            String ad_type = suggestionJson.getInfo().getAd_type();
+            adsParams.put("type", ad_type);
+//            if(ad_type.equals("url:googleplay")){
+//                play++;
+//            }else if(ad_type.equals("url:banner")){
+//                banner++;
+//            }else if(ad_type.equals("app:suggested")){
+//                suggested++;
+//            }
+
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Show_Sponsored_Ad", adsParams);
+//            Log.d("AdsFlurry", "Map is " + adsParams);
+
+        }
+
+
+
+
+        //if (play > 0) adsParams.put("url:googleplay", String.valueOf(play));
+        //if (banner > 0) adsParams.put("url:banner", String.valueOf(banner));
+        //if (suggested > 0) adsParams.put("app:suggested", String.valueOf(suggested));
+
+
+
+
+        return result;
     }
 
     public void setTimeout(int timeout){

@@ -75,6 +75,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -149,10 +150,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         request.setLimit(recomendedAdapter.getBucketSize());
         request.setLocation("homepage");
         request.setKeyword("__NULL__");
-        Log.d("FragmentHome", "refreshSponsoredList");
+//        Log.d("FragmentHome", "refreshSponsoredList");
+
 
         manager.execute(request, Aptoide.getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
-            public int nativeAd;
+            int nativeAd;
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -177,6 +179,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                         sponsoredLinearLayout.removeAllViews();
                         sponsoredCustomAdsLinearLayout.removeAllViews();
                         sponsoredGoogleAdsLinearLayout.removeAllViews();
+
                         for (Object apkSuggestionObject : apkSuggestionJson.getAds()) {
 
                             final ApkSuggestionJson.Ads apkSuggestion = (ApkSuggestionJson.Ads) apkSuggestionObject;
@@ -223,20 +226,21 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                 mergeAdapter.setActive(sponsoredHeader, true);
                                 mergeAdapter.setActive(sponsoredLinearLayout, true);
 
-
                             }else if(apkSuggestion.getInfo().getAd_type().equals("url:googleplay")){
 //                                Log.d("FragmentHome", "onRequestSuccess; url:googleplay");
-                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredGoogleAdsLinearLayout, false);
+                                View gplayView = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredGoogleAdsLinearLayout, false);
 
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                v.setLayoutParams(params);
-                                ImageView banner = (ImageView) v.findViewById(R.id.app_ad_banner);
+                                gplayView.setLayoutParams(params);
+                                ImageView banner = (ImageView) gplayView.findViewById(R.id.app_ad_banner);
                                 ImageLoader.getInstance().displayImage(apkSuggestion.getData().getImage(), banner);
 
-                                v.setOnClickListener(new View.OnClickListener() {
+
+                                gplayView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App_Google_Play_Link");
+                                        if (Build.VERSION.SDK_INT >= 10)
+                                            FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Google_Play_Link");
                                         try {
                                             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
                                             List<ResolveInfo> resolveInfos = getActivity().getPackageManager().queryIntentActivities(i, 0);
@@ -254,28 +258,10 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                     }
                                 });
 
-//                                DisplayMetrics metrics = new DisplayMetrics();
-//                                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//                                int widthPixels = metrics.widthPixels;
-//                                float screenWidth_in_dip = widthPixels / metrics.density;
-//
-//                                if (screenWidth_in_dip >= 720 ) {
-//                                    for (int i=0; i<apkSuggestionJson.getAds().size(); i++) {
-//
-//                                    }
-//                                }
-
-                                //Center 1 banner
-                                if(apkSuggestionJson.getAds().size()==1){
-                                    AbsListView.LayoutParams params1 = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                    v.setLayoutParams(params1);
-                                    sponsoredGoogleAdsLinearLayout.addView(v);
-                                }
-
                                 FrameLayout layout = new FrameLayout(getActivity());
 
                                 layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                                layout.addView(v);
+                                layout.addView(gplayView);
                                 sponsoredGoogleAdsLinearLayout.addView(layout);
 
                                 mergeAdapter.setActive(sponsoredHeader, true);
@@ -283,36 +269,29 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
                             }else if(apkSuggestion.getInfo().getAd_type().equals("url:banner")){
 //                                Log.d("FragmentHome", "onRequestSuccess; url:banner");
-                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredCustomAdsLinearLayout, false);
+                                View customView = LayoutInflater.from(getActivity()).inflate(R.layout.row_app_ad_banner, sponsoredCustomAdsLinearLayout, false);
 
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                v.setLayoutParams(params);
-                                ImageView banner = (ImageView) v.findViewById(R.id.app_ad_banner);
+                                customView.setLayoutParams(params);
+                                ImageView banner = (ImageView) customView.findViewById(R.id.app_ad_banner);
                                 ImageLoader.getInstance().displayImage(apkSuggestion.getData().getImage(), banner);
-                                Log.d("FragmentHome", "showing banner...");
 
-                                v.setOnClickListener(new View.OnClickListener() {
+                                customView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App_Banner_Link");
+                                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Banner_Link");
                                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
                                         startActivity(intent);
                                     }
                                 });
 
-                                //Center 1 banner
-                                if(apkSuggestionJson.getAds().size()==1){
-//                                    Log.d("FragmentHome", "1 ad");
-                                    AbsListView.LayoutParams params1 = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                    v.setLayoutParams(params1);
-                                    sponsoredCustomAdsLinearLayout.addView(v);
-                                }
-
                                 FrameLayout layout = new FrameLayout(getActivity());
 
                                 layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-                                layout.addView(v);
+                                layout.addView(customView);
                                 sponsoredCustomAdsLinearLayout.addView(layout);
+
+
 
                                 mergeAdapter.setActive(sponsoredHeader, true);
                                 mergeAdapter.setActive(sponsoredCustomAdsLinearLayout, true);
@@ -327,7 +306,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                             sponsoredLinearLayout.addView(frameLayout);
                         }
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -337,12 +315,6 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
             }
         });
-
-
-    }
-
-    private void addSponsoredAdRow(boolean isOnlyElement) {
-
 
 
     }

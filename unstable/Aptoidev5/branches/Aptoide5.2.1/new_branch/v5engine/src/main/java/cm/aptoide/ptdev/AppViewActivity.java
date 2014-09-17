@@ -49,6 +49,7 @@ import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.util.Data;
+import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -438,7 +439,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     private void changebtInstalltoBuy(TextView btinstall){
 
-        btinstall.setText(getString(R.string.buy) + " (" + payment.getAmount() + ")");
+        btinstall.setText(getString(R.string.buy) + " (" +payment.getSymbol() + " " + payment.getAmount() + ")");
         btinstall.setEnabled(true);
         final Activity thisActivity = this;
         btinstall.setOnClickListener(new View.OnClickListener() {
@@ -1274,7 +1275,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         spiceManager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
 //                Log.d("AppViewActivity", "onRequestFailure; mopub");
                 loadMoPub();
             }
@@ -1285,7 +1285,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
 
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
 //                    Log.d("AppViewActivity", "onRequestSuccess; mopub");
                     loadMoPub();
 
@@ -1310,7 +1309,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         customAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App");
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Suggested");
                                 Intent i = new Intent(getApplicationContext(), appViewClass);
                                 long id = appSuggested.getData().getId().longValue();
                                 i.putExtra("id", id);
@@ -1334,7 +1333,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         urlAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Google_Play_Link");
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Google_Play_Link");
                                 try {
                                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                     List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(i, 0);
@@ -1364,7 +1363,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         urlAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Banner_Link");
+                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Banner_Link");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                 startActivity(intent);
                             }
@@ -1380,6 +1379,26 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         publicityView.setVisibility(View.VISIBLE);
         ((MoPubView) publicityView).setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
         ((MoPubView) publicityView).loadAd();
+        ((MoPubView) publicityView).setBannerAdListener(new MoPubView.BannerAdListener() {
+            @Override
+            public void onBannerLoaded(MoPubView banner) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
+            }
+
+            @Override
+            public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {}
+
+            @Override
+            public void onBannerClicked(MoPubView banner) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_MoPub_Ad");
+            }
+
+            @Override
+            public void onBannerExpanded(MoPubView banner) {}
+
+            @Override
+            public void onBannerCollapsed(MoPubView banner) {}
+        });
     }
 
     @Override
