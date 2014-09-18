@@ -41,11 +41,12 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
-import openiab.webservices.IabPurchaseAuthorizationRequest;
+import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.IabPurchasesRequest;
 import openiab.webservices.IabSkuDetailsRequest;
 import openiab.webservices.PayProductRequestBase;
+import openiab.webservices.PaypalPurchaseAuthorizationRequest;
 import openiab.webservices.json.IabPurchaseStatusJson;
 import openiab.webservices.json.IabPurchasesJson;
 import openiab.webservices.json.IabSkuDetailsJson;
@@ -357,14 +358,13 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                                                     button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
                                                     paymentMethodsLayout.addView(button);
 
-                                                    IabPurchaseAuthorizationRequest request = new IabPurchaseAuthorizationRequest();
+                                                    PaypalPurchaseAuthorizationRequest request = new PaypalPurchaseAuthorizationRequest();
                                                     request.setToken(token);
                                                     HasAuthorization hasAuthorization = new HasAuthorization(button);
                                                     hasAuthorization.setCurrency(service.getCurrency());
                                                     hasAuthorization.setPrice(service.getPrice());
                                                     hasAuthorization.setTax(service.getTaxRate());
                                                     spiceManager.execute(request, "authorization-" + token, DurationInMillis.ONE_DAY, hasAuthorization);
-
 
                                                 } else if ("single".equals(type.getReqType())) {
 
@@ -410,7 +410,13 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                                                         button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
                                                         paymentMethodsLayout.addView(button);
                                                         DecimalFormat df = new DecimalFormat("######.#");
-                                                        button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(), String.valueOf(response.getPublisher_response().getDetails_list().get(0).getPrice()), telephonyManager.getSimOperatorName(), response.getPublisher_response().getDetails_list().get(0).getTitle(), service.getId(), telephonyManager.getSubscriberId(), service.getCurrency(), df.format(service.getPrice())));
+                                                        button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(),
+                                                                String.valueOf(response.getPublisher_response().getDetails_list().get(0).getPrice()),
+                                                                telephonyManager.getSimOperatorName(),
+                                                                response.getPublisher_response().getDetails_list().get(0).getTitle(),
+                                                                service.getId(), telephonyManager.getSubscriberId(),
+                                                                service.getCurrency(),
+                                                                df.format(service.getPrice())));
                                                     }
                                                 }
 
@@ -464,7 +470,7 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
 
     @Override
     protected void processPaymentConfirmation(final ProofOfPayment confirmation) {
-        final IabPurchaseStatusRequest purchaseStatus = BuildPurchaseStatusRequest(confirmation);
+        final BasePurchaseStatusRequest purchaseStatus = BuildPurchaseStatusRequest(confirmation);
 
         purchaseStatus.setDeveloperPayload(developerPayload);
         purchaseStatus.setApiVersion(String.valueOf(apiVersion));
@@ -489,5 +495,10 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                 dismissAllowingStateLoss();
             }
         });
+    }
+
+    @Override
+    protected BasePurchaseStatusRequest BuildPurchaseStatusRequest() {
+        return new IabPurchaseStatusRequest();
     }
 }

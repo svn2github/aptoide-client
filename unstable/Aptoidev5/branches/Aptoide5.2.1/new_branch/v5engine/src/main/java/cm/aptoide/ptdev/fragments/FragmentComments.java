@@ -1,47 +1,50 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.accounts.*;
 import android.app.Activity;
-import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
-import cm.aptoide.ptdev.dialogs.ReplyCommentDialog;
-import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
-import cm.aptoide.ptdev.model.*;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
-import cm.aptoide.ptdev.webservices.AllCommentsRequest;
-import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.ptdev.AllCommentsActivity;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.dialogs.ReplyCommentDialog;
+import cm.aptoide.ptdev.fragments.callbacks.AddCommentVoteCallback;
+import cm.aptoide.ptdev.model.Comment;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
+import cm.aptoide.ptdev.webservices.AllCommentsRequest;
+import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
+
 /**
  * Created by rmateus on 26-12-2013.
  */
 public class FragmentComments extends ListFragment {
-
 
     public static View createCommentView(Activity activity, ViewGroup commentsContainer, Comment comment, SimpleDateFormat dateFormater) {
         View view;

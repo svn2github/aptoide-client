@@ -37,11 +37,11 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import openiab.webservices.IabPurchaseAuthorizationRequest;
-import openiab.webservices.IabPurchaseStatusRequest;
+import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.PayProductRequestBase;
 import openiab.webservices.PayProductRequestPayPal;
 import openiab.webservices.PayProductRequestUnitel;
+import openiab.webservices.PaypalPurchaseAuthorizationRequest;
 import openiab.webservices.json.IabPurchaseStatusJson;
 import openiab.webservices.json.IabSimpleResponseJson;
 
@@ -58,10 +58,12 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     protected static final int UNITEL_CODE = 2;
     protected static final int FORTUMO_CODE = 3;
 
-    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
+    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
 
     // note that these credentials will differ between live & sandbox environments.
-    private static final String CONFIG_CLIENT_ID = "AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
+    //private static final String CONFIG_CLIENT_ID = "AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
+
+    private static final String CONFIG_CLIENT_ID = "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr";
 
     private static final int REQUEST_CODE_PAYMENT = 1;
     private static final int REQUEST_CODE_FUTURE_PAYMENT = 2;
@@ -639,7 +641,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
          */
 
 
-        IabPurchaseAuthorizationRequest request = new IabPurchaseAuthorizationRequest();
+        PaypalPurchaseAuthorizationRequest request = new PaypalPurchaseAuthorizationRequest();
 
         request.setAuthToken(authorization.getAuthorizationCode());
         request.setToken(token);
@@ -708,8 +710,11 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         if(simcc!=null)i.putExtra("simcc", simcc);
         return i;
     }
-    protected IabPurchaseStatusRequest BuildPurchaseStatusRequest(ProofOfPayment confirmation){
-        final IabPurchaseStatusRequest purchaseStatus = new IabPurchaseStatusRequest();
+
+    protected abstract BasePurchaseStatusRequest BuildPurchaseStatusRequest();
+
+    protected BasePurchaseStatusRequest BuildPurchaseStatusRequest(ProofOfPayment confirmation){
+        final BasePurchaseStatusRequest purchaseStatus = BuildPurchaseStatusRequest();
         purchaseStatus.setToken(token);
         purchaseStatus.setProductId(aptoideProductId);
         purchaseStatus.setPayType(1);

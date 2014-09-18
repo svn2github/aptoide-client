@@ -2,8 +2,6 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -17,10 +15,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
@@ -60,7 +58,6 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -444,42 +441,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         btinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                          /*developerPayload = intent.getStringExtra("developerPayload");
-                            packageName = intent.getStringExtra("packageName");
-                            sku = intent.getStringExtra("sku");
-                            apiVersion = intent.getIntExtra("apiVersion", 3);
-                            type = intent.getStringExtra("type");
-                            token = intent.getStringExtra("token");
-                            String user = intent.getStringExtra("user");*/
-                AptoideUtils.isLoggedInOrAsk(thisActivity);
+
                 final AccountManager accountManager = AccountManager.get(thisActivity);
                 final Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
-                new AsyncTask<Void, Void, String>(){
-                    @Override
-                    protected void onPostExecute(String s) {
-                        super.onPostExecute(s);
-                        Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
 
-                        i.putExtra("packageName", package_name);
-                        i.putExtra("token",s);
-                        i.putExtra("user", accounts[0].name);
-                        thisActivity.startActivityForResult(i,Purchase_REQUEST_CODE);
-                    }
+                Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
 
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        try {
-                            return accountManager.blockingGetAuthToken(accounts[0], "Full access", true);
-                        } catch (OperationCanceledException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (AuthenticatorException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute();
+                i.putExtra("packageName", package_name);
+                i.putExtra("ID", payment.getMetadata().getId());
+                if(accounts.length>0)
+                    i.putExtra("user", accounts[0].name);
+                i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
+                thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);
+
             }
         });
     }

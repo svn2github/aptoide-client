@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
@@ -1082,8 +1083,11 @@ public class Database {
         values.put(Schema.Category.COLUMN_RID, real_id);
         values.put(Schema.Category.COLUMN_REPO_ID, repoId);
         values.put(Schema.Category.COLUMN_ORDER, order);
+        try{
+            database.insert(Schema.Category.getName(), null, values);
+        }catch (SQLiteConstraintException e){
 
-        database.insert(Schema.Category.getName(), null, values);
+        }
     }
 
     public void insertRollbackAction(RollBackItem rollBackItem) {

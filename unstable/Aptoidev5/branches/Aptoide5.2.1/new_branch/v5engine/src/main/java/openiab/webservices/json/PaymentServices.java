@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.api.client.util.Key;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rmateus on 21-05-2014.
@@ -38,7 +39,7 @@ public class PaymentServices implements Parcelable {
         return sign;
     }
 
-    public ArrayList<PaymentType> getTypes() {
+    public List<PaymentType> getTypes() {
         return types;
     }
 
@@ -60,6 +61,10 @@ public class PaymentServices implements Parcelable {
         out.writeString(short_name);
         out.writeString(name);
         out.writeList(types);
+        out.writeDouble(price);
+        out.writeString(currency);
+        out.writeDouble(taxRate);
+        out.writeString(sign);
 
     }
 
@@ -82,7 +87,13 @@ public class PaymentServices implements Parcelable {
         id = in.readInt();
         short_name = in.readString();
         name = in.readString();
-        in.readList(types, getClass().getClassLoader());
+        if(types==null)
+            types = new ArrayList<PaymentType>();
+        in.readList(types, PaymentType.class.getClassLoader());
+        price = in.readDouble();
+        currency=in.readString();
+        taxRate=in.readDouble();
+        sign= in.readString();
     }
 
 

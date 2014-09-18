@@ -15,9 +15,6 @@ import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 import openiab.webservices.json.IabPurchasesJson;
 
-/**
- * Created by j-pac on 19-02-2014.
- */
 public class IabPurchasesRequest extends BaseRequest<IabPurchasesJson> {
 
     private String type;

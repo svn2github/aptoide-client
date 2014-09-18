@@ -16,29 +16,30 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.format.DateUtils;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.Toast;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.InstalledAppsHelper;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.model.*;
 
-import cm.aptoide.ptdev.model.DownloadPermissions;
-import cm.aptoide.ptdev.model.Error;
-import cm.aptoide.ptdev.preferences.EnumPreferences;
-import cm.aptoide.ptdev.webservices.Errors;
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Minutes;
+import org.joda.time.Months;
+import org.joda.time.Seconds;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,7 +47,25 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.InstalledAppsHelper;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.model.Apk;
+import cm.aptoide.ptdev.model.DownloadPermissions;
+import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.webservices.Errors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -77,7 +96,7 @@ public class AptoideUtils {
         final AccountManager manager = AccountManager.get(activity);
 
         if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
-
+            Log.d("pois","adding new account");
             manager.addAccount(Aptoide.getConfiguration().getAccountType(),
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity,null, null);
 

@@ -21,15 +21,12 @@ import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import openiab.webservices.json.IabSimpleResponseJson;
 
 
-/**
- * Created by j-pac on 19-02-2014.
- */
-public class IabPurchaseAuthorizationRequest extends GoogleHttpClientSpiceRequest<IabSimpleResponseJson> {
+public class PaypalPurchaseAuthorizationRequest extends GoogleHttpClientSpiceRequest<IabSimpleResponseJson> {
 
     private String token;
     private String authToken;
 
-    public IabPurchaseAuthorizationRequest() {
+    public PaypalPurchaseAuthorizationRequest() {
         super(IabSimpleResponseJson.class);
     }
 

@@ -3,6 +3,8 @@ package openiab.webservices;
 import com.google.api.client.http.GenericUrl;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import cm.aptoide.ptdev.webservices.WebserviceOptions;
+
 /**
  * Created by asantos on 15-09-2014.
  */
@@ -12,7 +14,7 @@ public abstract class BaseRequest<E> extends GoogleHttpClientSpiceRequest<E> {
     protected String packageName;
 
     protected GenericUrl getURL(){
-        String baseUrl = "https://webservices.aptoide.com/webservices/3/processInAppBilling";
+        String baseUrl = WebserviceOptions.WebServicesLink+"3/processInAppBilling";
         return new GenericUrl(baseUrl);
     }
 
