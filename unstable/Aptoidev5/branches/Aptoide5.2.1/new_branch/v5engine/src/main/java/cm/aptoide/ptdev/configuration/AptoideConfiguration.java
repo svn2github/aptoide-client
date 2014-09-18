@@ -2,12 +2,15 @@ package cm.aptoide.ptdev.configuration;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.widget.SearchWidgetActivity;
 
 import java.io.File;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.SearchManager;
+import openiab.IABPurchaseActivity;
+import openiab.PaidAppPurchaseActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -223,4 +226,12 @@ public class AptoideConfiguration {
     }
 
     public Class getMoreEditorsChoiceActivityClass() { return  cm.aptoide.ptdev.MoreEditorsChoiceActitivy.class;}
+
+    public Class getIABPurchaseActivityClass(){
+        return IABPurchaseActivity.class;
+    }
+    public Class getPaidAppPurchaseActivityClass(){
+        return PaidAppPurchaseActivity.class;
+    }
+
 }

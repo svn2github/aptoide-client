@@ -39,7 +39,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
 
 
         if (user == null) {
-            AccountManager.get(this).addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+            AccountManager.get(this).addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
 
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {

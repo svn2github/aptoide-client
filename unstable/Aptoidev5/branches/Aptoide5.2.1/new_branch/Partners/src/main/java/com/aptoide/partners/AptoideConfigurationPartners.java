@@ -4,19 +4,27 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
+
+import com.aptoide.openiab.IABPurchaseActivityPartners;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Locale;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
-import java.lang.String;
-import java.util.HashMap;
-import java.util.Locale;
+
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 /**
  * Created by tdeus on 12/23/13.
@@ -439,5 +447,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     @Override
     public Class<?> getSearchActivityClass() {
         return com.aptoide.partners.SearchManagerPartners.class;
+    }
+
+    @Override
+    public Class getIABPurchaseActivityClass(){
+        return IABPurchaseActivityPartners.class;
     }
 }

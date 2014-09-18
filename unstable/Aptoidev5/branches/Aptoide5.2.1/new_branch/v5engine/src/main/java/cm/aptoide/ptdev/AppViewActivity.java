@@ -113,7 +113,6 @@ import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import openiab.IABPurchaseActivity;
 import roboguice.util.temp.Ln;
 
 /**
@@ -459,7 +458,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     @Override
                     protected void onPostExecute(String s) {
                         super.onPostExecute(s);
-                        Intent i = new Intent(thisActivity, IABPurchaseActivity.class);
+                        Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
 
                         i.putExtra("packageName", package_name);
                         i.putExtra("token",s);
@@ -494,10 +493,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         final TextView btinstall = (TextView) findViewById(R.id.btinstall);
         PackageInfo info = getPackageInfo(package_name);
         if (info == null) {
-            if("0".equals(payment.getAmount())){
-                btinstall.setText(getString(R.string.install));
-                btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
-            }else {
+            if(Double.valueOf(0)<payment.getAmount().doubleValue()){
                 String path = payment.getapkpath();
                 if(path!=null){
                     btinstall.setText(getString(R.string.install));
@@ -506,6 +502,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 else {
                     changebtInstalltoBuy(btinstall);
                 }
+            }else {
+                btinstall.setText(getString(R.string.install));
+                btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
             }
         } else {
             isInstalled = true;

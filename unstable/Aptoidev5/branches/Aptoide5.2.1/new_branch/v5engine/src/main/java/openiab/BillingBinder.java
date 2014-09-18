@@ -203,7 +203,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
         Bundle result = new Bundle();
 
         PendingIntent pendingIntent;
-        Intent purchaseIntent = new Intent(context, IABPurchaseActivity.class);
+        Intent purchaseIntent = new Intent(context, Aptoide.getConfiguration().getIABPurchaseActivityClass());
 
         if (apiVersion < 3 || !(type.equals(ITEM_TYPE_INAPP) || type.equals(ITEM_TYPE_SUBS))) {
             result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);

@@ -13,14 +13,14 @@ import android.net.Uri;
 import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.configuration.Constants;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
+
+import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
  * Created by j-pac on 29-01-2014.
@@ -62,7 +62,7 @@ public class StubProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         AccountManager accountManager = AccountManager.get(getContext());
-        Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+        Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
         if(accounts.length != 0) {
             try {

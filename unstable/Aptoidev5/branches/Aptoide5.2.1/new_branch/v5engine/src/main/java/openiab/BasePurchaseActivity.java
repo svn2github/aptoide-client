@@ -391,7 +391,6 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         requestUnitel.setCurrency(currency);
         requestUnitel.setRepo(repo);
         requestsetExtra(requestUnitel);
-        //requestUnitel.setOemId(((AptoideConfigurationPartners) Aptoide.getConfiguration()).PARTNERID);
         requestUnitel.setRetryPolicy(noRetryPolicy);
         spiceManager.execute(requestUnitel, new PurchaseRequestListener());
 

@@ -101,14 +101,15 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
         final String user = intent.getStringExtra("user");
 
         if (user == null) {
-            AccountManager.get(this).addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+            //
+            AccountManager.get(this).addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
                     try {
                         String account = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
 
                         if(account!=null){
-                            updateUI(user);
+                            updateUI(account);
                         }else {
                             finish();
                         }
@@ -263,6 +264,9 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
     private int mncPortionLength(String networkOperator) {
         return Math.min(3, networkOperator.length());
     }
+    protected IabSkuDetailsRequest BuildIabSkuDetailsRequest(){
+        return new IabSkuDetailsRequest();
+    }
     private void thingThatisNotAService(){
         final Activity THIS = this;
         new Thread(new Runnable() {
@@ -287,7 +291,7 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                 //String token =  "27286b943179065fcef3b6adcafe8680d8515e4652010602c45f6";
                 final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-                IabSkuDetailsRequest request = new IabSkuDetailsRequest();
+                IabSkuDetailsRequest request = BuildIabSkuDetailsRequest();
 
                 request.setPackageName(packageName);
                 request.setToken(token);
