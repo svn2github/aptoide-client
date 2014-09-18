@@ -50,13 +50,13 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     private static final String TAG = "paymentExample";
 
     static HashMap<String, Integer> servicesList = new HashMap<String, Integer>();
-    private static final String PAYPAL_NAME = "paypal";
-    private static final String UNITEL_NAME = "unitel";
-    private static final String FORTUMO_NAME = "fortumo";
+    protected static final String PAYPAL_NAME = "paypal";
+    protected static final String UNITEL_NAME = "unitel";
+    protected static final String FORTUMO_NAME = "fortumo";
 
-    private static final int PAYPAL_CODE = 1;
-    private static final int UNITEL_CODE = 2;
-    private static final int FORTUMO_CODE = 3;
+    protected static final int PAYPAL_CODE = 1;
+    protected static final int UNITEL_CODE = 2;
+    protected static final int FORTUMO_CODE = 3;
 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
 

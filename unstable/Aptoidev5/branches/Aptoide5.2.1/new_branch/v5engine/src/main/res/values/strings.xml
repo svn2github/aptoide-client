@@ -539,6 +539,11 @@
     <string name="feedback_send_button">Send FeedBack</string>
     <string name="feedback_subject">Subject</string>
     <string name="feedback_to_write">Write here to send us your feedback</string>
+    <string name="feedback_to_write2">Write here to send us your feedback...
+        \n\
+        \n\ Please give us all the details you can get:
+        \n\- Steps you've done
+        \n\- Errors you're seeing</string>
     <string name="feedback_include_logs">Include ScreenShot and Logs</string>
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
     <string name="feedback_no_email">No email client installed!</string>

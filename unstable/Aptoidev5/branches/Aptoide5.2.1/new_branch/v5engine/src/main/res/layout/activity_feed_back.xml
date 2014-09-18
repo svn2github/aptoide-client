@@ -19,7 +19,7 @@
         android:layout_gravity="center_horizontal" />
     <EditText
         android:id="@+id/FeedBacktext"
-        android:hint="@string/feedback_to_write"
+        android:hint="@string/feedback_to_write2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
