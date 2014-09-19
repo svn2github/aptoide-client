@@ -12,8 +12,7 @@
 
     <ImageView
         android:id="@+id/app_ad_banner"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="50dp"
         android:contentDescription="@null"
         android:layout_gravity="center_horizontal" />

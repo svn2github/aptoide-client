@@ -477,6 +477,8 @@
   <string name="categories">Categorías</string>
   <string name="view_replies">Ver respuestas</string>
   <string name="reply">Responder</string>
+  <string name="vote_down">Voto -1</string>
+  <string name="vote_up">Voto +1</string>
   <string name="view_one_more_comment">Ver más %s comentario</string>
   <string name="view_more_comments">Ver más %s comentarios</string>
   <string name="vote">%s voto</string>

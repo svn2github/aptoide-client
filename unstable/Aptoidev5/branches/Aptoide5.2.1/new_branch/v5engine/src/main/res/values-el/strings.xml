@@ -204,7 +204,7 @@
   <string name="min_sdk">Min SDK</string>
   <string name="min_screen">Min Screen</string>
   <string name="found_results">Βρέθηκαν %s αποτελέσμα(τα)</string>
-  <string name="no_search_result">Δεν έχετε ‘%s’ στα καταστήματά σας.</string>
+  <string name="no_search_result">Δεν υπάρχει το ‘%s’ στα καταστήματά σας.</string>
   <string name="error_occured">Παρουσιάστηκε σφάλμα. Παρακαλώ δοκιμάστε ξανά</string>
   <string name="installapp_alrt">Θέλετε να εγκαταστήσετε: \n\n</string>
   <string name="starting_download">Έναρξη λήψης</string>
@@ -521,7 +521,7 @@
   <string name="feedback_not_valid">Παρακαλώ εισάγετε έγκυρο Θέμα!</string>
   <string name="feedback_no_email">Δεν έχει εγκατασταθεί εφαρμογή ηλεκτρονικού ταχυδρομείου!</string>
   <string name="search_result_looking_for">Ψάχνετε για..?</string>
-  <string name="search_result_did_you_mean">Μήπως εννοείται:</string>
+  <string name="search_result_did_you_mean">Μήπως εννοείτε:</string>
   <string name="device_not_allowed">Αυτή η εφαρμογή δεν επιτρέπεται να εκτελεστεί σε αυτό το μοντέλο συσκευής!</string>
   <string name="maybe_in_other_stores">Ίσως σε άλλα καταστήματα?</string>
   <string name="suggested_app">Προτεινόμενη Εφαρμογή</string>

@@ -528,4 +528,9 @@
   <string name="suggested_apps">推荐的应用</string>
   <string name="sponsored">赞助的</string>
   <string name="btn_search_other_stores">搜索其他商店</string>
+  <string name="results">搜索结果：</string>
+  <string name="is_working">％s正在运行</string>
+  <string name="loading_editors_choice">正在加载编辑精选</string>
+  <string name="loading_top_apps">加载Top应用</string>
+  <string name="loading_stores">加载商店</string>
 </resources>
