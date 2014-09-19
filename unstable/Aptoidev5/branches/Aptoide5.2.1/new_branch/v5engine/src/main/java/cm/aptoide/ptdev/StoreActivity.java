@@ -148,7 +148,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         //Log.d("Aptoide-", "StoreActivity id" + storeid);
 
-
         Bundle args = new Bundle();
         args.putLong("storeid", storeid);
 

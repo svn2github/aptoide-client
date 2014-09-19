@@ -37,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 public class DownloadInfo implements Runnable, Serializable {
 
 
+    private boolean paid;
+
     public DownloadInfo(DownloadManager manager, long id) {
         this.id = id;
         this.downloadManager = manager;
@@ -445,5 +447,9 @@ public class DownloadInfo implements Runnable, Serializable {
     public void setDownload(Download download) {
         this.download = download;
         this.download.setParent(this);
+    }
+
+    public boolean isPaid() {
+        return download.isPaid();
     }
 }

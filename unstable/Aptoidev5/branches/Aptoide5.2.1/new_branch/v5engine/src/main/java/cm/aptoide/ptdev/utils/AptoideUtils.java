@@ -130,7 +130,7 @@ public class AptoideUtils {
     public static String checkStoreUrl(String uri_str){
         uri_str = uri_str.trim();
         if (!uri_str.contains(".")) {
-            uri_str = uri_str.concat(".store.aptoide.com");
+            uri_str = uri_str.concat(".store.dev.aptoide.com");
         }
 
         uri_str = RepoUtils.formatRepoUri(uri_str);

@@ -19,6 +19,7 @@ public class Download implements Serializable{
     private double speed;
     private String icon;
     private String md5;
+    private boolean paid;
 
     public String getCpiUrl() {
         return cpiUrl;
@@ -138,6 +139,14 @@ public class Download implements Serializable{
 
     public void setCpiUrl(String cpiUrl) {
         this.cpiUrl = cpiUrl;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 }
 

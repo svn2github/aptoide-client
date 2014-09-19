@@ -35,7 +35,13 @@ package com.mopub.mobileads;
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
-import com.millennialmedia.android.*;
+
+
+import com.millennialmedia.android.MMAd;
+import com.millennialmedia.android.MMAdView;
+import com.millennialmedia.android.MMBroadcastReceiver;
+import com.millennialmedia.android.MMRequest;
+import com.millennialmedia.android.MMSDK;
 
 import java.util.Map;
 

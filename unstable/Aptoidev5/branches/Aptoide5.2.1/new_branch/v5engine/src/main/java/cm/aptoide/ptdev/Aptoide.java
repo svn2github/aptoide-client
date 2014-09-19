@@ -202,6 +202,7 @@ public class Aptoide extends Application {
                     if(download){
                         return getStreamFromNetwork(imageUri, extra);
                     }
+                    return null;
                 case FILE:
                     return getStreamFromFile(imageUri, extra);
                 case CONTENT:

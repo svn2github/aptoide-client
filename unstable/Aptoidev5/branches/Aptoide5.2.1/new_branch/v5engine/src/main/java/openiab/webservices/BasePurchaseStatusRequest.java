@@ -36,6 +36,7 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
     }
 
     protected abstract GenericUrl getURL();
+
     @Override
     public IabPurchaseStatusJson loadDataFromNetwork() throws Exception {
 
@@ -70,8 +71,8 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("mode","json");
         parameters.put("apiversion", String.valueOf(apiVersion));
-        parameters.put("reqtype","iabpurchasestatus");
-        parameters.put("paykey",payKey);
+        parameters.put("reqtype",getReqType());
+        parameters.put("paykey", payKey);
         parameters.put("payreqtype", "rest");
         parameters.put("paytype", String.valueOf(payType));
 
@@ -112,6 +113,8 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
 
         return response.parseAs(getResultType());
     }
+
+    abstract String getReqType();
 
     public int getOrderId() {
         return orderId;

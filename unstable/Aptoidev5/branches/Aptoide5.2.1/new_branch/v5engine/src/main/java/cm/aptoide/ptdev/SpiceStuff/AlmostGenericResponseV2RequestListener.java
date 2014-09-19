@@ -7,6 +7,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.HashMap;
+
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
@@ -19,17 +20,17 @@ import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 /**
  * Created by asantos on 29-07-2014.
  */
-public abstract class AlmostGenericResponseV2RequestListener implements RequestListener<GenericResponseV2>{
+public abstract class AlmostGenericResponseV2RequestListener implements RequestListener<GenericResponseV2> {
 
     FragmentActivity a;
 
-    public AlmostGenericResponseV2RequestListener(FragmentActivity a){
-        this.a=a;
+    public AlmostGenericResponseV2RequestListener(FragmentActivity a) {
+        this.a = a;
     }
 
-    private final void dismiss(){
+    private final void dismiss() {
         ProgressDialogFragment pd = (ProgressDialogFragment) a.getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
-        if(pd!=null){
+        if (pd != null) {
             pd.dismissAllowingStateLoss();
         }
     }
@@ -45,16 +46,16 @@ public abstract class AlmostGenericResponseV2RequestListener implements RequestL
     @Override
     public void onRequestSuccess(GenericResponseV2 genericResponse) {
         dismiss();
-        if("OK".equals(genericResponse.getStatus())){
+        if ("OK".equals(genericResponse.getStatus())) {
             CaseOK();
-        }else{
+        } else {
             HashMap<String, Integer> errorsMap = Errors.getErrorsMap();
             Integer stringId;
             String message;
-            for(cm.aptoide.ptdev.model.Error error :  genericResponse.getErrors()){
-                stringId = errorsMap.get( error.getCode() );
-                if(stringId != null) {
-                    message = a.getString( stringId );
+            for (cm.aptoide.ptdev.model.Error error : genericResponse.getErrors()) {
+                stringId = errorsMap.get(error.getCode());
+                if (stringId != null) {
+                    message = a.getString(stringId);
                 } else {
                     message = error.getMsg();
                 }

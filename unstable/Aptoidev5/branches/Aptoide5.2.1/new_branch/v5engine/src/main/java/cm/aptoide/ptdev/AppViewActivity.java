@@ -2,6 +2,8 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -17,7 +19,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -31,6 +35,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
@@ -43,7 +48,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.util.Data;
@@ -69,6 +74,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -449,10 +455,21 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 i.putExtra("packageName", package_name);
                 i.putExtra("ID", payment.getMetadata().getId());
-                if(accounts.length>0)
+                if(accounts.length>0) {
                     i.putExtra("user", accounts[0].name);
-                i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
-                thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);
+                    i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
+                    thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);
+                } else {
+                    accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, thisActivity, new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> bundleAccountManagerFuture) {
+
+                            refreshOnResume = true;
+
+                        }
+                    }, new Handler(Looper.getMainLooper()));
+                }
+
 
             }
         });
@@ -463,46 +480,60 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         app_version_installed.setVisibility(View.VISIBLE);
         app_version_installed.setText(getString(R.string.installed_tab) + ": " + versionName);
     }
+
     private void checkInstallation(GetApkInfoJson getApkInfoJson) {
+
         final TextView btinstall = (TextView) findViewById(R.id.btinstall);
-        PackageInfo info = getPackageInfo(package_name);
-        if (info == null) {
-            if(Double.valueOf(0)<payment.getAmount().doubleValue()){
-                String path = payment.getapkpath();
-                if(path!=null){
-                    btinstall.setText(getString(R.string.install));
-                    new InstallFromUrlListener(icon, name, versionName, package_name, md5, path, repoName);
-                }
-                else {
-                    changebtInstalltoBuy(btinstall);
-                }
-            }else {
+        btinstall.setEnabled(true);
+
+
+        if (Double.valueOf(0) < payment.getAmount().doubleValue()) {
+            String path = getApkInfoJson.getApk().getPath();
+
+            if (!TextUtils.isEmpty(path)) {
+                btinstall.setText(getString(R.string.install));
+
+                InstallListener installListener = new InstallListener(icon, name, versionName, package_name, md5);
+
+                installListener.setPaid(true);
+                btinstall.setOnClickListener(installListener);
+
+            } else {
+                changebtInstalltoBuy(btinstall);
+            }
+
+        } else {
+
+
+            PackageInfo info = getPackageInfo(package_name);
+            if (info == null) {
                 btinstall.setText(getString(R.string.install));
                 btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
-            }
-        } else {
-            isInstalled = true;
-            try {
-                installedSignature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(info.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
-                isUpdate = true;
-                btinstall.setText(getString(R.string.update));
-                btinstall.setEnabled(true);
-                btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
-                Updateapp_version_installed(info.versionName);
-            } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
-                btinstall.setText(getString(R.string.downgrade));
-                btinstall.setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
-                Updateapp_version_installed(info.versionName);
             } else {
-                changebtInstalltoOpen(btinstall);
+                isInstalled = true;
+                try {
+                    installedSignature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(info.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (getApkInfoJson.getApk().getVercode().intValue() > info.versionCode) {
+                    isUpdate = true;
+                    btinstall.setText(getString(R.string.update));
+                    btinstall.setEnabled(true);
+                    btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
+                    Updateapp_version_installed(info.versionName);
+                } else if (getApkInfoJson.getApk().getVercode().intValue() < info.versionCode) {
+                    btinstall.setText(getString(R.string.downgrade));
+                    btinstall.setOnClickListener(new DowngradeListener(icon, name, info.versionName, versionName, info.packageName));
+                    Updateapp_version_installed(info.versionName);
+                } else {
+                    changebtInstalltoOpen(btinstall);
+                }
+                supportInvalidateOptionsMenu();
             }
-            supportInvalidateOptionsMenu();
+
         }
     }
 
@@ -656,6 +687,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         protected String versionName;
         protected String package_name;
         protected String md5;
+        private boolean paid;
 
         public InstallListener(String icon, String name, String versionName, String package_name, String md5) {
             this.icon = icon;
@@ -718,7 +750,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
         @Override
         public void onClick(View v) {
+
             Download download = makeDownLoad();
+            download.setPaid(paid);
 
             if (service != null && json!=null) {
                 if(!CanDownload()){
@@ -736,6 +770,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         public void onClick(DialogInterface dialog, int which) {
             onClick(null);
         }
+
+        public void setPaid(boolean paid) {
+            this.paid = paid;
+        }
     }
 
     public class InstallFromUrlListener extends InstallListener {
@@ -751,6 +789,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         @Override
         public void onClick(View v) {
             Download download = new Download();
+
             if(!CanDownload()){
                 CanDownloadDialog dialog = new CanDownloadDialog();
                 Bundle bundle = makeBundleForDialog();
@@ -1522,6 +1561,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             PackageInfo info = getPackageInfo(package_name);
             TextView btinstall =(TextView) findViewById(R.id.btinstall);
+
+            if(isPaidApp){
+                btinstall.setEnabled(false);
+            }
+
             if (info == null) {
                 btinstall.setText(getString(R.string.install));
                 btinstall.setOnClickListener(new InstallFromUrlListener(icon, name, versionName, package_name, md5, apkpath + path, repoName));
@@ -2123,7 +2167,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 //Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
                 refreshOnResume = true;
             } else if(requestCode == Purchase_REQUEST_CODE){
-                //TODO after purchase
+
+
+                if(resultCode == RESULT_OK){
+                    refreshOnResume = true;
+                }
+
+                //Toast.makeText(this, "OnActivityResult " + getCacheKey(), Toast.LENGTH_LONG).show();
+
+
             }
         }
     }

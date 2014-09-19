@@ -143,7 +143,7 @@ public class AddStoreDialog extends DialogFragment {
                         break;
                     case 0:
 
-                        if (!url.endsWith(".store.aptoide.com/")) {
+                        if (!url.endsWith(".store.dev.aptoide.com/")) {
 
                             Store store = new Store();
 

@@ -501,16 +501,14 @@ public abstract class AbstractHandler extends DefaultHandler2 {
 
         });
 
-        elements.put("price", new ElementHandler() {
+        elements.put("paidapp", new ElementHandler() {
 
 
-            public void startElement(Attributes atts) throws SAXException {
-
-            }
+            public void startElement(Attributes atts) throws SAXException { apk.setPrice(1.0f);}
 
             @Override
             public void endElement() throws SAXException {
-                apk.setPrice(Double.parseDouble(sb.toString()));
+
             }
         });
 

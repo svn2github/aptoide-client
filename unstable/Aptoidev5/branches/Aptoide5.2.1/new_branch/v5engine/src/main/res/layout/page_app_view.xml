@@ -26,11 +26,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-        <com.astuetz.viewpager.extensions.PagerSlidingTabStrip
+        <com.astuetz.PagerSlidingTabStrip
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                app:indicatorColor="?attr/customColor"
+                app:pstsIndicatorColor="?attr/customColor"
                 android:layout_height="48dp"
                 style="?backgroundTabs" />
 

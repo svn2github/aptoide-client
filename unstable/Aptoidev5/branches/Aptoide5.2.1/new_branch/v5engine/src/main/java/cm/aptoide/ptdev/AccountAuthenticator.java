@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.accounts.*;
+import android.accounts.AccountAuthenticatorActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     public AccountAuthenticator(Context context) {
         super(context);
 
+
         // I hate you! Google - set mContext as protected!
         this.mContext = context;
     }
@@ -50,6 +52,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+
         return bundle;
     }
 

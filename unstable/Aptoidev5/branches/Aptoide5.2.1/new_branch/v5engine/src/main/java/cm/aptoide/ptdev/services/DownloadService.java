@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.dialogs.CanDownloadDialog;
 import cm.aptoide.ptdev.downloadmanager.*;
 import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
 import cm.aptoide.ptdev.model.*;
@@ -235,7 +233,7 @@ public class DownloadService extends Service{
                 new ArrayList<String>());
         apk.setRepoName(repoName);
 
-        Download(id, download, apk, filesToDownload);
+        download(id, download, apk, filesToDownload);
     }
 
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){
@@ -268,11 +266,12 @@ public class DownloadService extends Service{
                 path + json.getApk().getMd5sum() + ".apk",
                 new ArrayList<String>(json.getApk().getPermissions()));
 
-        Download(download.getId(),download,apk,filesToDownload);
+        download(download.getId(), download, apk, filesToDownload);
     }
 
-    private void Download(long id, Download download, FinishedApk apk, ArrayList<DownloadModel> filesToDownload){
+    private void download(long id, Download download, FinishedApk apk, ArrayList<DownloadModel> filesToDownload){
         DownloadInfo info = getDownload(id);
+
         if(download.getCpiUrl()!=null){
             apk.setCpiUrl(download.getCpiUrl());
         }

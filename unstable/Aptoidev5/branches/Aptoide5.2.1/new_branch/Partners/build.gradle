@@ -2,9 +2,12 @@
 apply plugin: 'android'
 apply plugin: 'crashlytics'
 
+apply from: 'signing.gradle'
+
 
 repositories {
     mavenCentral()
+    maven { url 'http://download.crashlytics.com/maven' }
 }
 
 android {
@@ -22,7 +25,7 @@ android {
 
     }
 
-buildTypes {
+    buildTypes {
         
     }
 

@@ -61,9 +61,9 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
 
     // note that these credentials will differ between live & sandbox environments.
-    //private static final String CONFIG_CLIENT_ID = "AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
+    private static final String CONFIG_CLIENT_ID = "AUWmKhAVvs19NH2TE_6RO9T7JtHgs35i7QGzCi1zs_siIDiSiRggI2EhioaB";
 
-    private static final String CONFIG_CLIENT_ID = "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr";
+    //private static final String CONFIG_CLIENT_ID = "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr";
 
     private static final int REQUEST_CODE_PAYMENT = 1;
     private static final int REQUEST_CODE_FUTURE_PAYMENT = 2;
@@ -79,9 +79,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
                 .environment(CONFIG_ENVIRONMENT)
                 .clientId(CONFIG_CLIENT_ID)
                         // The following are only used in PayPalFuturePaymentActivity.
-                .merchantName("Aptoide")
-                .merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy"))
-                .merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
+                .merchantName("Aptoide");
     }
 
 
@@ -699,7 +697,8 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     };
 
     protected abstract void processPaymentConfirmation(final ProofOfPayment confirmation);
-    protected Intent BuildIntentForAlarm(ProofOfPayment confirmation){
+
+    protected Intent BuildIntentForAlarm(ProofOfPayment confirmation, String paymenType){
         Intent i = new Intent("PAYPAL_PAYMENT");
         i.putExtra("token", token);
         i.putExtra("aptoideProductId", aptoideProductId);
@@ -707,6 +706,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         i.putExtra("price", valuesToVerify.price);
         i.putExtra("currency", valuesToVerify.currency);
         i.putExtra("paymentId", confirmation.getPaymentId());
+        i.putExtra("paymentType", paymenType);
         if(simcc!=null)i.putExtra("simcc", simcc);
         return i;
     }

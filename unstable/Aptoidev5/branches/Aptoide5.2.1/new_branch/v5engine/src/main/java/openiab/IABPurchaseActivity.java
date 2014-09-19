@@ -485,7 +485,7 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                 AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 Toast.makeText(Aptoide.getContext(), R.string.error_occured_retry_later, Toast.LENGTH_LONG).show();
 
-                Intent i = BuildIntentForAlarm(confirmation);
+                Intent i = BuildIntentForAlarm(confirmation, "iab");
                 i.putExtra("apiVersion", apiVersion);
                 i.putExtra("developerPayload", developerPayload);
 

@@ -100,9 +100,7 @@ public class StoreBinder extends IOpenAppstore.Stub {
     @Override
     public int getPackageVersion(String packageName) throws RemoteException {
         Log.d("AptoideStore", "[getPackageVersion]");
-
         return Integer.MAX_VALUE; //Undefined
-
     }
 
     @Override

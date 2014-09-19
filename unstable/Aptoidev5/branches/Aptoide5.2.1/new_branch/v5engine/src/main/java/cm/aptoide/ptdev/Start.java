@@ -33,6 +33,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -47,7 +48,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -58,6 +59,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import org.apache.http.message.BasicNameValuePair;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -252,6 +254,7 @@ public class Start extends ActionBarActivity implements
         //Log.d("Aptoide-OnClick", "OnClick");
         int i = item.getItemId();
 
+
         if (i == R.id.home || i == android.R.id.home) {
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
@@ -279,6 +282,7 @@ public class Start extends ActionBarActivity implements
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -292,7 +296,6 @@ public class Start extends ActionBarActivity implements
         long repoId = event.getRepoId();
 
         if (e instanceof InvalidVersionException) {
-
             if(isResumed)AptoideDialog.wrongVersionXmlDialog().show(getSupportFragmentManager(), "wrongXmlDialog");
         }
 
@@ -306,6 +309,7 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
 
@@ -346,10 +350,8 @@ public class Start extends ActionBarActivity implements
 
                             }
                         }, 10000);
-
                     }
                 }
-
             }
         });
 
@@ -369,6 +371,10 @@ public class Start extends ActionBarActivity implements
             }
         });
 
+
+        RecyclerView view = new RecyclerView(this);
+
+        view.getAdapter();
 
         if (Build.VERSION.SDK_INT > 7) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -805,6 +811,8 @@ public class Start extends ActionBarActivity implements
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         if (sPref.getBoolean("firstrun", true)) {
+
+
 
             Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
             startActivityForResult(newToAptoideTutorial, WIZARD_REQ_CODE);

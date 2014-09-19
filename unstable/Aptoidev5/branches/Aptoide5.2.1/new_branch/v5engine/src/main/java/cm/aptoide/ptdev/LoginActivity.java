@@ -675,10 +675,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
+
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
+
         } else {
             Log.d("aptoide", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);

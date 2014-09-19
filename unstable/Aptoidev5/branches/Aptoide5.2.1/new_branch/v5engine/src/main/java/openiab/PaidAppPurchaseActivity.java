@@ -6,6 +6,7 @@ import android.accounts.AccountManagerFuture;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -197,10 +198,29 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                 Toast.makeText(Aptoide.getContext(), R.string.error_occured_retry_later, Toast.LENGTH_LONG).show();
 
                 PendingIntent intent = PendingIntent.getBroadcast(getApplicationContext(), 1,
-                        BuildIntentForAlarm(confirmation), PendingIntent.FLAG_UPDATE_CURRENT);
+                        BuildIntentForAlarm(confirmation, "paidapk"), PendingIntent.FLAG_UPDATE_CURRENT);
                 manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 60000, 60000, intent);
 
                 dismissAllowingStateLoss();
+            }
+
+            @Override
+            public void onRequestSuccess(IabPurchaseStatusJson iabPurchaseStatusJson) {
+                Intent intent = new Intent();
+                dismissAllowingStateLoss();
+
+                if (iabPurchaseStatusJson != null) {
+                    if ("OK".equals(iabPurchaseStatusJson.getStatus())) {
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }else{
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }

@@ -86,6 +86,9 @@ public class DownloadThread implements Runnable, Serializable {
             file = mDownloadFile.getmFile();
 
             this.mConnection = download.createConnection();
+
+            ((DownloadConnectionImpl)mConnection).setPaidApp(parent.isPaid());
+
             this.mDownloadedSize = 0;
             fileSize = DownloadFile.getFileLength(download.getDestination());
             mDownloadFile.setDownloadedSize(file, fileSize);

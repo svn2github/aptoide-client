@@ -1,5 +1,5 @@
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 repositories {
     mavenCentral()
@@ -20,5 +20,5 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
+    //compile 'com.android.support:support-v4:18.0.+'
 }

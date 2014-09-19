@@ -10,7 +10,9 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.retry.RetryPolicy;
 
+import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
+import openiab.webservices.PaidAppPurchaseStatusRequest;
 
 /**
  * Created by rmateus on 02-06-2014.
@@ -19,7 +21,17 @@ public class PayPalReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
 
-        final IabPurchaseStatusRequest purchaseStatus = new IabPurchaseStatusRequest();
+        final BasePurchaseStatusRequest purchaseStatus;
+
+
+        if(intent.getStringExtra("paymentType").equals("iab")){
+            purchaseStatus = new IabPurchaseStatusRequest();
+        }else{
+            purchaseStatus = new PaidAppPurchaseStatusRequest();
+        }
+
+
+
 
         final int apiVersion = intent.getIntExtra("apiVersion", 3);
         purchaseStatus.setApiVersion(String.valueOf(apiVersion));

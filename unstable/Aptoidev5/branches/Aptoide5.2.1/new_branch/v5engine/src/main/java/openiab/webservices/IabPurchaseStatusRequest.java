@@ -10,4 +10,8 @@ public class IabPurchaseStatusRequest extends BasePurchaseStatusRequest {
         String baseUrl = WebserviceOptions.WebServicesLink+"3/processInAppBilling";
         return new GenericUrl(baseUrl);
     }
+
+    String getReqType(){
+        return "iabpurchasestatus";
+    }
 }

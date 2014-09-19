@@ -30,7 +30,6 @@ public class ProgressDialogFragment extends DialogFragment {
         void onCancel();
     }
 
-
     OnCancelListener onCancelListener;
 
     @Override
