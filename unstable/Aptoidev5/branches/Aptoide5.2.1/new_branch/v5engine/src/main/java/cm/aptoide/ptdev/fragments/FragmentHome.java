@@ -309,15 +309,15 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                         }
 
                         //Center 1 Ad
-                        FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        if(googlePlayAd == 1){
-                            gplayView.setLayoutParams(params1);
-                            sponsoredGoogleAdsLinearLayout.addView(gplayView);
-                        }
-                        if(bannerAd == 1){
-                            customView.setLayoutParams(params1);
-                            sponsoredCustomAdsLinearLayout.addView(customView);
-                        }
+//                        FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                        if(googlePlayAd == 1){
+//                            gplayView.setLayoutParams(params1);
+//                            sponsoredGoogleAdsLinearLayout.addView(gplayView);
+//                        }
+//                        if(bannerAd == 1){
+//                            customView.setLayoutParams(params1);
+//                            sponsoredCustomAdsLinearLayout.addView(customView);
+//                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
