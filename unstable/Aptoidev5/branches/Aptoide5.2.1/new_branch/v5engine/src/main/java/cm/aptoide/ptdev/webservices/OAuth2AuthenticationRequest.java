@@ -8,6 +8,7 @@ import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -75,6 +76,12 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
         }catch (InvalidGrantException e){
                 cancel();
                 throw new InvalidGrantSpiceException(e.getError_description());
+        }catch (IOException e){
+            if("No authentication challenges found".equals(e.getMessage())){
+                throw new InvalidGrantSpiceException("Invalid username and password combination");
+            }else{
+                throw e;
+            }
         }
 
 
