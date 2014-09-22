@@ -6,7 +6,9 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import com.octo.android.robospice.retry.RetryPolicy;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,10 +76,11 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
         try{
             response = oauth2RefresRequest.execute();
         }catch (InvalidGrantException e){
-                cancel();
+                    setRetryPolicy(noRetry);
                 throw new InvalidGrantSpiceException(e.getError_description());
         }catch (IOException e){
             if("No authentication challenges found".equals(e.getMessage())){
+                setRetryPolicy(noRetry);
                 throw new InvalidGrantSpiceException("Invalid username and password combination");
             }else{
                 throw e;
@@ -87,6 +90,23 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
 
         return response.parseAs(OAuth.class);
     }
+
+    RetryPolicy noRetry = new RetryPolicy() {
+        @Override
+        public int getRetryCount() {
+            return 0;
+        }
+
+        @Override
+        public void retry(SpiceException e) {
+
+        }
+
+        @Override
+        public long getDelayBeforeRetry() {
+            return 0;
+        }
+    };
 
     public void setUsername(String username) {
         this.username = username;

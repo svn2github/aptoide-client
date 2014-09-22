@@ -516,10 +516,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             public void onRequestFailure(SpiceException spiceException) {
 
                 String error;
+                Toast.makeText(Aptoide.getContext(), spiceException.getClass().getCanonicalName(), Toast.LENGTH_LONG).show();
 
-                if(spiceException instanceof InvalidGrantSpiceException && ((InvalidGrantSpiceException) spiceException).getError_description().equals("Invalid username and password combination")){
+                if(spiceException.getCause() instanceof InvalidGrantSpiceException && spiceException.getCause().getMessage().equals("Invalid username and password combination")){
                     error = getString(R.string.error_AUTH_1);
-                }else{
+                } else {
                     error = getString(R.string.error_occured);
                 }
 
