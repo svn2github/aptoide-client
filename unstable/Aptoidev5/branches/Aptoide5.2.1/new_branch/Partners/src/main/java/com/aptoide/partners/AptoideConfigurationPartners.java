@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.aptoide.openiab.IABPurchaseActivityPartners;
+import com.aptoide.openiab.PaidAppPurchaseActivityPartners;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -452,5 +453,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     @Override
     public Class getIABPurchaseActivityClass(){
         return IABPurchaseActivityPartners.class;
+    }
+
+    @Override
+    public Class getPaidAppPurchaseActivityClass(){
+        return PaidAppPurchaseActivityPartners.class;
     }
 }

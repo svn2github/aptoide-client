@@ -32,7 +32,6 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
-import openiab.webservices.PayProductRequestBase;
 import openiab.webservices.PaypalPurchaseAuthorizationRequest;
 import openiab.webservices.json.IabPurchaseStatusJson;
 import openiab.webservices.json.PaymentServices;
@@ -176,14 +175,6 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
 
             }
         }
-    }
-    @Override
-    protected void requestsetExtra(PayProductRequestBase pprb) {
-
-    }
-    @Override
-    protected boolean makeExtraTestsOnPurchaseOk(IabPurchaseStatusJson iabPurchaseStatusJson) {
-        return false;
     }
     @Override
     protected void processPaymentConfirmation(final ProofOfPayment confirmation) {

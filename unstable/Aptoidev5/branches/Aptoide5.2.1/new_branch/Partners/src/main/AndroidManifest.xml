@@ -426,6 +426,8 @@
             android:name="com.aptoide.openiab.IABPurchaseActivityPartners"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
             android:theme="@style/PurchaseDialog" />
+        <activity android:name="com.aptoide.openiab.PaidAppPurchaseActivityPartners" android:theme="@style/PurchaseDialog"
+            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" />
 
         <receiver android:name="openiab.PayPalReceiver">
             <intent-filter>

@@ -2,7 +2,6 @@ package openiab;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -374,7 +373,9 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     };
 */
 
-    protected abstract void requestsetExtra(PayProductRequestBase pprb);
+    protected void requestsetExtra(PayProductRequestBase pprb){
+        return;
+    }
 
     @Override
     public void onClick(int payType, String imsi,  String price, String currency) {
@@ -783,5 +784,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         }
     }
 
-    protected abstract boolean makeExtraTestsOnPurchaseOk(IabPurchaseStatusJson iabPurchaseStatusJson);
+    protected boolean makeExtraTestsOnPurchaseOk(IabPurchaseStatusJson iabPurchaseStatusJson){
+        return false;
+    }
 }

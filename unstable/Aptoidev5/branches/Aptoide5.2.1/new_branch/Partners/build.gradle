@@ -2,7 +2,7 @@
 apply plugin: 'android'
 apply plugin: 'crashlytics'
 
-apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 
 repositories {
