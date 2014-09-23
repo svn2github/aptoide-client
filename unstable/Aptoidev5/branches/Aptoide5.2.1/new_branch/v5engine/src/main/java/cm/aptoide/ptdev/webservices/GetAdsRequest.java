@@ -95,33 +95,13 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         Map<String, String> adsParams = new HashMap<String, String>();
         adsParams.put("placement", location);
 
-//        int play = 0, banner  = 0 , suggested = 0;
-
         for(ApkSuggestionJson.Ads suggestionJson : result.getAds()) {
             String ad_type = suggestionJson.getInfo().getAd_type();
             adsParams.put("type", ad_type);
-//            if(ad_type.equals("url:googleplay")){
-//                play++;
-//            }else if(ad_type.equals("url:banner")){
-//                banner++;
-//            }else if(ad_type.equals("app:suggested")){
-//                suggested++;
-//            }
 
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Show_Sponsored_Ad", adsParams);
+            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Get_Sponsored_Ad", adsParams);
 //            Log.d("AdsFlurry", "Map is " + adsParams);
-
         }
-
-
-
-
-        //if (play > 0) adsParams.put("url:googleplay", String.valueOf(play));
-        //if (banner > 0) adsParams.put("url:banner", String.valueOf(banner));
-        //if (suggested > 0) adsParams.put("app:suggested", String.valueOf(suggested));
-
-
-
 
         return result;
     }

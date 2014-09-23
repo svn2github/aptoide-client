@@ -1398,7 +1398,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
             @Override
-            public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {}
+            public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Failed_MoPub_Ad");
+            }
 
             @Override
             public void onBannerClicked(MoPubView banner) {
