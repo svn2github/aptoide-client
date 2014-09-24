@@ -410,7 +410,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
     }
 
     public void startMarketIntent(String param) {
-        System.out.println(param);
+//        System.out.println(param);
         long id = db.getApkFromPackage(param);
         Intent i;
         if(id > 0){

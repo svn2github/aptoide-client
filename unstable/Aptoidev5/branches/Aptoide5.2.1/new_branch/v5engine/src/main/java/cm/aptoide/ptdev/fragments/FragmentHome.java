@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,7 @@ import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
+import cm.aptoide.ptdev.widget.SearchWidgetActivity;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -253,6 +256,11 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                             startActivity(i);
                                         } catch (ActivityNotFoundException e) {
                                             e.printStackTrace();
+
+                                            Intent i = new Intent(getActivity(), Aptoide.getConfiguration().getSearchActivityClass());
+                                            String param = apkSuggestion.getData().getUrl().split("=")[1];
+                                            i.putExtra(android.app.SearchManager.QUERY, param);
+                                            startActivity(i);
                                         }
                                     }
                                 });

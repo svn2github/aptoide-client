@@ -447,7 +447,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         btinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Buy_Button");
                 final AccountManager accountManager = AccountManager.get(thisActivity);
                 final Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
@@ -1287,26 +1287,24 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         spiceManager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-//                Log.d("AppViewActivity", "onRequestFailure; mopub");
                 loadMoPub();
             }
 
             @Override
             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
-//                Log.d("AppViewActivity", "onRequestSuccess");
 
                 if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
-
-//                    Log.d("AppViewActivity", "onRequestSuccess; mopub");
                     loadMoPub();
 
                 } else {
 
+                    HashMap<String, String> adTypeArgs = new HashMap<String, String>();
+
                     final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
-//                    Log.d("AppViewActivity", "onRequestSuccess; ad type " + appSuggested.getInfo().getAd_type());
 
                     if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
-//                        Log.d("AppViewActivity", "onRequestSuccess; app:suggested");
+                        adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         customAdBannerView.setVisibility(View.VISIBLE);
                         ImageView iconbackground = (ImageView) customAdBannerView.findViewById(R.id.app_icon_background);
@@ -1337,7 +1335,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         });
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:googleplay")) {
-//                        Log.d("AppViewActivity", "onRequestSuccess; url:googleplay");
+                        adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         urlAdBannerView.setVisibility(View.VISIBLE);
                         ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
@@ -1359,6 +1358,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                     startActivity(i);
                                 }catch(ActivityNotFoundException e){
                                     e.printStackTrace();
+
+                                    Intent i = new Intent(getApplicationContext(), Aptoide.getConfiguration().getSearchActivityClass());
+                                    String param = appSuggested.getData().getUrl().split("=")[1];
+                                    i.putExtra(android.app.SearchManager.QUERY, param);
+                                    startActivity(i);
                                 }
                             }
                         });
@@ -1366,7 +1370,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:banner")) {
-//                        Log.d("AppViewActivity", "onRequestSuccess; url:banner");
+                        adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
+                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         urlAdBannerView.setVisibility(View.VISIBLE);
                         ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
@@ -1391,6 +1396,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         publicityView.setVisibility(View.VISIBLE);
         ((MoPubView) publicityView).setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
         ((MoPubView) publicityView).loadAd();
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("type", "mopub");
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", map);
+
         ((MoPubView) publicityView).setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
             public void onBannerLoaded(MoPubView banner) {

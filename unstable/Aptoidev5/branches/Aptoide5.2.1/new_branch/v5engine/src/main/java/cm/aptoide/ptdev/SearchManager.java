@@ -545,6 +545,11 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                                         startActivity(i);
                                     } catch (ActivityNotFoundException e) {
                                         e.printStackTrace();
+
+                                        Intent i = new Intent(getActivity(), Aptoide.getConfiguration().getSearchActivityClass());
+                                        String param = appSuggested.getData().getUrl().split("=")[1];
+                                        i.putExtra(android.app.SearchManager.QUERY, param);
+                                        startActivity(i);
                                     }
                                 }
                             });
