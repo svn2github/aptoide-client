@@ -102,7 +102,7 @@ public class PushNotificationReceiver extends BroadcastReceiver{
 
     private Intent fillintentStuffFortest(Intent i){
         return i
-                .putExtra(PUSH_NOTIFICATION_TITLE,"Title Test")
+                .putExtra(PUSH_NOTIFICATION_TITLE,"This is a push notification from")
                 .putExtra(PUSH_NOTIFICATION_MSG,"Little nice Text for Test")
                 .putExtra(PUSH_NOTIFICATION_IMG_URL,"http://pool.img.aptoide.com/kitmaker/48857f0adf9a553b722baf76fd069f83.png");
     }
