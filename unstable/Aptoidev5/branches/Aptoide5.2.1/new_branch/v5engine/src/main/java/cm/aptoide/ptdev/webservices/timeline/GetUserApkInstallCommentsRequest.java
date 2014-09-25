@@ -8,7 +8,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 /**
  * Created by asantos on 24-09-2014.
  */
-public class GetUserApkInstallComments extends TimelineRequest<ApkInstallComments> {
+public class GetUserApkInstallCommentsRequest extends TimelineRequest<ApkInstallComments> {
 
     private long postID;
     private int limit;
@@ -16,7 +16,7 @@ public class GetUserApkInstallComments extends TimelineRequest<ApkInstallComment
     public void setPostID(long id) { this.postID = id; }
     public void setPostLimit(int limit) { this.limit = limit; }
     public void setPostOffSet(int offset) { this.offset = offset; }
-    public GetUserApkInstallComments() {    super(ApkInstallComments.class);    }
+    public GetUserApkInstallCommentsRequest() {    super(ApkInstallComments.class);    }
 
     @Override
     protected String GetURL() {

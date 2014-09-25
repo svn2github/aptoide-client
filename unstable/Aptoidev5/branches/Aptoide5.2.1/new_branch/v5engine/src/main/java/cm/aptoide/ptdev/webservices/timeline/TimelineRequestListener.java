@@ -16,16 +16,6 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public abstract class TimelineRequestListener implements RequestListener<GenericResponse> {
 
-    public interface TimelineCallback {
-        void OnGetServerSetting(boolean serverResponse);
-    }
-
-    protected TimelineCallback callBack;
-
-    public TimelineRequestListener(TimelineCallback callBack){
-        this.callBack=callBack;
-    }
-
     @Override
     public void onRequestFailure(SpiceException spiceException) {
         Log.d("Timeline-Request", "onRequestFailure - " + spiceException.getMessage());

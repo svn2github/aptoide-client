@@ -10,14 +10,12 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  * Created by asantos on 24-09-2014.
  */
 public class TimelineListAPKsJson extends GenericResponse {
-
     public UsersApks getUsersapks() {
         return usersapks;
     }
 
     @Key
     private UsersApks usersapks;
-
 
     public static class UsersApks{
         public List<Entry> getUsers_apks() {
@@ -88,7 +86,6 @@ public class TimelineListAPKsJson extends GenericResponse {
                 @Key
                 boolean userliked;
             }
-
 
             public static class APK {
                 public String getName() {

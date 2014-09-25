@@ -11,15 +11,15 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class ApkInstallComments extends GenericResponse {
 
-    public List<ApkInstallComments.Comment> getComment() {
+    public Comment getComment() {
         return Comment;
     }
 
     @Key
-    List<Comment> Comment;
+    Comment Comment;
 
     public static class Comment{
-        public List<Entry> getEetry() {
+        public List<Entry> getEntry() {
             return entry;
         }
 
