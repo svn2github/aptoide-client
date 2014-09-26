@@ -1,6 +1,12 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
@@ -12,7 +18,9 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.ArrayList;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
+import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
@@ -110,13 +118,38 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         super.onCreate(savedInstanceState);
 
         adapter = new EndlessWrapperAdapter(this, apks);
-
-
         adapter.setRunInBackground(false);
         setContentView(R.layout.page_timeline);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
-        init();
+
+        Bundle addAccountOptions=new Bundle();
+        if(AptoideUtils.isLoggedIn(this)){
+            if (PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("loginType", null).equals("FACEBOOK")){
+                init();
+                return;
+            }
+            else{
+                addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL,true);
+            }
+        }
+        addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL,true);
+        AccountManager.get(this).addAccount(
+                Aptoide.getConfiguration().getAccountType(),
+                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+                null, addAccountOptions, this,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        init();
+                    }
+                },
+                new Handler(Looper.getMainLooper())
+        );
+
+
+
 
 
     }

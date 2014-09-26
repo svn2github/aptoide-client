@@ -201,6 +201,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
     public final static String ARG_OPTIONS_BUNDLE = "BE";
+    public final static String OPTIONS_LOGOUT_BOOL = "OLOUT";
     public final static String OPTIONS_FASTBOOK_BOOL = "OFASTBOOK";
     public final static String OPTIONS_EMAIL_STRING = "OEMAIL";
     public final static String OPTIONS_TOKEN_STRING = "OTOKEN";
@@ -270,9 +271,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         super.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
-        if(b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)){
+        if(b!=null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)){
             String email = b.getString(OPTIONS_EMAIL_STRING);
             String token = b.getString(OPTIONS_TOKEN_STRING);
+
+            if(b.getBoolean(OPTIONS_LOGOUT_BOOL,false)){
+                Account current = AptoideUtils.getUser(this);
+                AccountManager.get(this).removeAccount(current,null,null);
+            }
 
             submit(Mode.FACEBOOK, email, token, null);
         }else if (AptoideUtils.isLoggedIn(this)) {
