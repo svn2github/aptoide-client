@@ -17,8 +17,8 @@
             android:layout_height="wrap_content">
 
             <ImageView android:id="@+id/timeline_post_user_photo"
-                android:layout_width="60sp"
-                android:layout_height="60sp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
-                android:text="Someone"
+                android:text="Rui installed WhatsApp"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/timeline_post_user_photo"
                 android:layout_toEndOf="@+id/timeline_post_user_photo"
@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="installed"
+                android:visibility="gone"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/timeline_post_user_name"
                 android:layout_toEndOf="@+id/timeline_post_user_name"
@@ -53,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Centuries ago"
+                android:text="1h ago"
+                android:drawableLeft="@drawable/ic_timestamp"
                 android:layout_below="@+id/timeline_post_user_name"
                 android:layout_toRightOf="@+id/timeline_post_user_photo"
                 android:layout_toEndOf="@+id/timeline_post_user_photo"
@@ -87,8 +89,8 @@
 
 
             <ImageView android:id="@+id/timeline_post_app_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:src="@drawable/icon_non_available"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
@@ -108,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="App Name"
+                    android:text="WhatsApp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:layout_toRightOf="@+id/timeline_post_app_icon"
@@ -156,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/dimgray"
-                android:text="X Likes"/>
+                android:text="2 Likes"/>
 
             <TextView android:id="@+id/timeline_post_and"
                 android:layout_width="wrap_content"
@@ -170,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/dimgray"
-                android:text="X Comments"/>
+                android:text="3 Comments"/>
 
         </LinearLayout>
 
