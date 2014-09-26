@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 repositories{
 
@@ -34,7 +34,7 @@ android {
 
 
         release {
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
     }
 }

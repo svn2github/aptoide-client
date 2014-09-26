@@ -32,6 +32,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -46,6 +47,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -65,25 +67,6 @@ import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
-import com.facebook.*;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
-import com.flurry.android.FlurryAgent;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.*;
-import com.google.android.gms.plus.PlusClient;
-import com.google.api.client.util.Data;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -216,6 +199,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     public enum Mode {APTOIDE, GOOGLE, FACEBOOK}
 
+
+    public final static String ARG_OPTIONS_BUNDLE = "BE";
+    public final static String OPTIONS_FASTBOOK_BOOL = "OFASTBOOK";
+    public final static String OPTIONS_EMAIL_STRING = "OEMAIL";
+    public final static String OPTIONS_TOKEN_STRING = "OTOKEN";
+
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -240,8 +229,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
         public void call(final Session session, SessionState state, Exception exception) {
-
-
             if (state.isOpened()) {
 
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
@@ -282,7 +269,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-        if (AptoideUtils.isLoggedIn(this)) {
+        Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
+        if(b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)){
+            String email = b.getString(OPTIONS_EMAIL_STRING);
+            String token = b.getString(OPTIONS_TOKEN_STRING);
+
+            submit(Mode.FACEBOOK, email, token, null);
+        }else if (AptoideUtils.isLoggedIn(this)) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
 
@@ -362,22 +355,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     return false;
                 }
             });
-//            password_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//
-//                @Override
-//                public void onFocusChange(View v, boolean hasFocus) {
-//
-//                    if (hasFocus) {
-//                        showPassword = false;
-//                        password_box.setTransformationMethod(null);
-//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
-//                    } else {
-//                        showPassword = true;
-//                        password_box.setTransformationMethod(new PasswordTransformationMethod());
-//                        password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
-//                    }
-//                }
-//            });
 
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override

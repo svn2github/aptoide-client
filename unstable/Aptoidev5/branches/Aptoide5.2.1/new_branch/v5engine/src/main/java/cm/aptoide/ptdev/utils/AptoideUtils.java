@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.utils;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -104,7 +105,14 @@ public class AptoideUtils {
 
         return manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length != 0;
     }
+    public static Account getUser(Context context) {
+        AccountManager manager = AccountManager.get(context);
 
+        Account[] accounts = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
+        if(accounts.length != 0)
+            return accounts[0];
+        return null;
+    }
 
     public static boolean isLoggedInOrAsk(Activity activity) {
         final AccountManager manager = AccountManager.get(activity);
