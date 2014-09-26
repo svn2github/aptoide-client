@@ -3,18 +3,22 @@ package cm.aptoide.ptdev;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.widget.ListView;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
@@ -40,10 +44,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             adapter.stopAppending();
         } else {
             if(firstId == null){
-                firstId =  apks.get(0).getInfo().getId();
+                firstId =  data.get(0).getInfo().getId();
             }
             apks.addAll(data);
-            lastId = apks.get(apks.size()).getInfo().getId();
+            lastId = apks.get(apks.size()-1).getInfo().getId();
             adapter.onDataReady();
         }   // Tell the EndlessAdapter to
             // remove it's pending
@@ -52,8 +56,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
-        apks.addAll(data);
+        apks.addAll(0, data);
         firstId = apks.get(0).getInfo().getId();
+        adapter.notifyDataSetChanged();
         // remove it's pending
         // view and call
         // notifyDataSetChanged()
@@ -75,6 +80,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         @Override
         public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
             onItemsReady(new ArrayList<TimelineListAPKsJson.UserApk>(timelineListAPKsJson.getUsersapks()));
+            swipeRefreshLayout.setRefreshing(false);
         }
 
     };
@@ -95,6 +101,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     };
 
     public void runRequest() {
+        listAPKsInstallsRequest = new ListApksInstallsRequest();
 
         if(lastId!=null) {
             listAPKsInstallsRequest.setOffset_id(String.valueOf(lastId.intValue()));
@@ -105,10 +112,15 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     public void refreshRequest() {
-        listAPKsInstallsRequest.setOffset_id(String.valueOf(firstId.intValue()));
-        listAPKsInstallsRequest.setUpwardsDirection();
+        listAPKsInstallsRequest = new ListApksInstallsRequest();
+
+        //listAPKsInstallsRequest.setOffset_id(String.valueOf(firstId.intValue()));
+        //listAPKsInstallsRequest.setUpwardsDirection();
         apks.clear();
+
         adapter.notifyDataSetChanged();
+        adapter.restartAppending();
+
         manager.execute(listAPKsInstallsRequest, listenerRefresh);
     }
 
@@ -122,11 +134,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         setContentView(R.layout.page_timeline);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshing(true);
+
 
         Bundle addAccountOptions=new Bundle();
         if(AptoideUtils.isLoggedIn(this)){
-            if (PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString("loginType", null).equals("FACEBOOK")){
+            if (PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null).equals("FACEBOOK")){
                 init();
                 return;
             }
@@ -142,12 +155,24 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
-                        init();
+
+                        try {
+                            String name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
+
+                            if(TextUtils.isEmpty(name)){
+                                finish();
+                            }else{
+                                init();
+                            }
+
+                        } catch (Exception e) {
+                            finish();
+                        }
+
                     }
                 },
                 new Handler(Looper.getMainLooper())
         );
-
 
 
 
@@ -157,7 +182,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     private void init() {
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setAdapter(adapter);
-        listAPKsInstallsRequest = new ListApksInstallsRequest();
     }
 
 

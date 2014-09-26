@@ -2,6 +2,8 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -11,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -266,25 +270,34 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
-        if(b!=null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)){
-            String email = b.getString(OPTIONS_EMAIL_STRING);
-            String token = b.getString(OPTIONS_TOKEN_STRING);
+        if(b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
 
-            if(b.getBoolean(OPTIONS_LOGOUT_BOOL,false)){
+            if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
                 Account current = AptoideUtils.getUser(this);
-                AccountManager.get(this).removeAccount(current,null,null);
+                AccountManager.get(this).removeAccount(current, new AccountManagerCallback<Boolean>() {
+                    @Override
+                    public void run(AccountManagerFuture<Boolean> future) {
+                        initLogin(savedInstanceState);
+                    }
+                }, new Handler(Looper.myLooper()));
             }
 
-            submit(Mode.FACEBOOK, email, token, null);
-        }else if (AptoideUtils.isLoggedIn(this)) {
+        }else{
+            initLogin(savedInstanceState);
+        }
+
+    }
+
+    private void initLogin(Bundle savedInstanceState) {
+
+        if (AptoideUtils.isLoggedIn(this)) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
-
         } else {
 
             setContentView(R.layout.form_login);

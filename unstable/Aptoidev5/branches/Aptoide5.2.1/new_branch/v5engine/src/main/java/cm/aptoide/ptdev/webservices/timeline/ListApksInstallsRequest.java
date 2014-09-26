@@ -31,7 +31,7 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
     @Override
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
         parameters.put("limit", limit);
-        parameters.put("offset", offset_id);
+        parameters.put("offset_id", offset_id);
         parameters.put("offset_dir", upwards ? "up":"");
         return parameters;
     }

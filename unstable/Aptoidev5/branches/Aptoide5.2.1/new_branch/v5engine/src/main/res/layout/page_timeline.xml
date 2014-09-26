@@ -6,13 +6,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/page_timeline_spinner"
-        style="@android:style/Widget.ProgressBar.Large.Inverse"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerInParent="true"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/timeline_PullToRefresh"

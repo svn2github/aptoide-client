@@ -1,8 +1,8 @@
 include 'v5engine',
         'Aptoide',
         'hanselandgretel',
-        'Partners',
-        'AptoideHelper',
+        //'Partners',
+        //'AptoideHelper',
 
         'android-websockets',
         'facebook',
