@@ -107,4 +107,7 @@
     <attr name="icDialogDrawable" format="reference"/>
 
     <attr name="icNextItemDrawable" format="reference"/>
+
+    <attr name="icTimelineDrawable" format="reference"/>
+
 </resources>

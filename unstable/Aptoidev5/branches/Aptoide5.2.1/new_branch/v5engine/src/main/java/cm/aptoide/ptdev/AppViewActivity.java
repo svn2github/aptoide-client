@@ -46,6 +46,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -140,7 +141,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     public static final short DOWGRADE_REQUEST_CODE = 456;
 
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
-    private View publicityView, customAdBannerView, urlAdBannerView;
+    private View advertising, publicityView, customAdBannerView, urlAdBannerView;
 
     private GetApkInfoJson json;
 
@@ -1304,6 +1305,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
 //        Log.d("AppViewActivity", "loadPublicity");
+
+        advertising = findViewById(R.id.advertisement);
+        advertising.setVisibility(View.VISIBLE);
 
         publicityView = findViewById(R.id.adview);
         customAdBannerView = findViewById(R.id.custom_ad_banner);

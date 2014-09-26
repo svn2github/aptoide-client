@@ -49,7 +49,6 @@
             android:id="@+id/icon"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/icon_brand_aptoide"
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
