@@ -99,6 +99,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     public void refreshRequest() {
         listAPKsInstallsRequest.setOffset_id(String.valueOf(firstId.intValue()));
         listAPKsInstallsRequest.setUpwardsDirection();
+        apks.clear();
+        adapter.notifyDataSetChanged();
         manager.execute(listAPKsInstallsRequest, listenerRefresh);
     }
 
@@ -106,6 +108,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         adapter = new EndlessWrapperAdapter(this, apks);
 
 
@@ -113,13 +116,16 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         setContentView(R.layout.page_timeline);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
-        ListView lv = (ListView) findViewById(R.id.timeline_list);
-        lv.setAdapter(adapter);
-        listAPKsInstallsRequest = new ListApksInstallsRequest();
+        init();
 
 
     }
 
+    private void init() {
+        ListView lv = (ListView) findViewById(R.id.timeline_list);
+        lv.setAdapter(adapter);
+        listAPKsInstallsRequest = new ListApksInstallsRequest();
+    }
 
 
     @Override
