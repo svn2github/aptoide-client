@@ -11,6 +11,24 @@ public class UpdateItem {
     private String versionName;
     private String name;
     private String icon;
+    private String packageName;
+    private String repoName;
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
+    }
 
     public void setUpdate(boolean update) {
         this.update = update;

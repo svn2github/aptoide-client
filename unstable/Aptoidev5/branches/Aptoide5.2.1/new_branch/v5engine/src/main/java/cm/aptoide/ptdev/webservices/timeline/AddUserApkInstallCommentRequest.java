@@ -18,7 +18,7 @@ public class AddUserApkInstallCommentRequest extends TimelineRequest<GenericResp
         public AddUserApkInstallCommentRequest() {     super(GenericResponse.class);   }
 
         @Override
-        protected String GetURL() {
+        protected String getUrl() {
                 return WebserviceOptions.WebServicesLink+"3/addUserApkInstallComment";
         }
 

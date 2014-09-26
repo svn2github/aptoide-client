@@ -21,7 +21,7 @@ public class AddUserApkInstallLikeRequest extends TimelineRequest<GetUserSetting
     public AddUserApkInstallLikeRequest() { super(GetUserSettingsJson.class);   }
 
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/addUserApkInstallLike";
     }
     @Override

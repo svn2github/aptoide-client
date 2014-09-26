@@ -8,9 +8,10 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 /**
  * Created by asantos on 24-09-2014.
  */
-public class ListAPKsInstallsRequest extends TimelineRequest<TimelineListAPKsJson> {
+public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJson> {
     private String limit;
     private String offset_id;
+    private boolean upwards = false;
 
     public void setLimit(String limit) {
         this.limit = limit;
@@ -19,18 +20,27 @@ public class ListAPKsInstallsRequest extends TimelineRequest<TimelineListAPKsJso
         this.offset_id = offset_id;
     }
 
-    public ListAPKsInstallsRequest() {
+    public ListApksInstallsRequest() {
         super(TimelineListAPKsJson.class);
     }
 
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/listUserApkInstalls";
     }
     @Override
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
         parameters.put("limit", limit);
         parameters.put("offset", offset_id);
+        parameters.put("offset_dir", upwards ? "up":"");
         return parameters;
+    }
+
+    public void setUpwardsDirection() {
+        upwards = true;
+    }
+
+    public void setDownwardsDirection() {
+        upwards = false;
     }
 }

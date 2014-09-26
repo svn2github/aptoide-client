@@ -291,6 +291,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
         Log.d("Aptoide-Stores", String.valueOf(type));
 
+        Cursor c = (Cursor) l.getAdapter().getItem(position);
 
         switch (type) {
             case 1:
@@ -298,7 +299,6 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
                 args.putLong("storeid", storeId);
                 args.putLong("parentid", id);
                 fragment.setArguments(args);
-                Cursor c = (Cursor) l.getAdapter().getItem(position);
                 String name;
                 int res = EnumCategories.getCategoryName((int) id);
                 if ( res == 0) {
@@ -324,6 +324,11 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
             default:
                 Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", id);
+                String repo_name = c.getString(c.getColumnIndex("repo_name"));
+                String package_name = c.getString(c.getColumnIndex("package_name"));
+
+                i.putExtra("packageName", package_name);
+                i.putExtra("repoName", repo_name);
                 i.putExtra("download_from", "store_navigation");
                 startActivity(i);
                 break;

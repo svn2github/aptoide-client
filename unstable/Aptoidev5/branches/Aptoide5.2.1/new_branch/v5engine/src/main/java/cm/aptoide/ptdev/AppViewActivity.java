@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.*;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -42,6 +44,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -50,7 +53,9 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
@@ -70,6 +75,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -197,6 +204,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     screen = apk.getMinScreen();
                     minSdk = apk.getMinSdk().intValue();
                     payment= getApkInfoJson.getPayment();
+
+
 
                     boolean showLatestString = false;
                     if (apk.getIconHd() != null) {
@@ -333,6 +342,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         isFromActivityResult = false;
                         autoDownload = false;
+
                     }
 
 
@@ -456,10 +466,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 i.putExtra("packageName", package_name);
                 i.putExtra("ID", payment.getMetadata().getId());
                 if(accounts.length>0) {
+
                     i.putExtra("user", accounts[0].name);
                     i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
                     thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);
+
                 } else {
+
+                    Toast.makeText(Aptoide.getContext(), "You need to login to purchase.", Toast.LENGTH_LONG).show();
+
                     accountManager.addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, thisActivity, new AccountManagerCallback<Bundle>() {
                         @Override
                         public void run(AccountManagerFuture<Bundle> bundleAccountManagerFuture) {
@@ -1105,6 +1120,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     Hours.hoursBetween(time, time);
                 }
             }).start();*/
+            package_name = getIntent().getStringExtra("packageName");
+            repoName = getIntent().getStringExtra("repoName");
 
 
             String downloadFrom = getIntent().getStringExtra("download_from");
@@ -1154,36 +1171,51 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         if(savedInstanceState==null) {
             if(getIntent().getBooleanExtra("fromSponsored", false)){
-                GetApkInfoRequestFromId request = new GetApkInfoRequestFromId(getApplicationContext());
+                GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
+                String id = getIntent().getStringExtra("id");
 
-                long id = getIntent().getLongExtra("id", 0);
-                request.setAppId(String.valueOf(id));
+                String repo = getIntent().getStringExtra("repoName");
+                package_name = getIntent().getStringExtra("packageName");
+                request.setRepoName(repo);
 
-                if (token != null) {
-                    request.setToken(token);
-                }
+                request.setPackageName(package_name);
+
                 cacheKey = String.valueOf(id);
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        RegisterAdRequest registerAdRequest = new RegisterAdRequest(AppViewActivity.this);
-                        registerAdRequest.setUrl(getIntent().getStringExtra("cpc"));
+
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                if(getIntent().hasExtra("partnerExtra")){
+
+                    try {
+                        String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
 
 
+                        String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+                        String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
 
-                        //registerAdRequest.setLocation(getIntent().getStringExtra("location"));
-                        //registerAdRequest.setKeyword(getIntent().getStringExtra("keyword"));
-                        try {
-                            registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-                            registerAdRequest.loadDataFromNetwork();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
+                        clickUrl = clickUrl.replace("[USER_UDID]", aaId);
+
+                        GenericUrl url = new GenericUrl(clickUrl);
+
+                        AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }).start();
+                }
+
+
+                try {
+                    GenericUrl url = new GenericUrl(getIntent().getStringExtra("cpc"));
+                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
 
             }else if (getIntent().getBooleanExtra("getBackupApps", false)) {
@@ -1257,12 +1289,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             } else {
                 getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
+
             }
         }
 
+        loadPublicity();
+
+
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
-        loadPublicity();
+
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -1281,6 +1317,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         getAdsRequest.setLocation("appview");
         getAdsRequest.setKeyword("__NULL__");
+        getAdsRequest.setRepo(repoName);
+        getAdsRequest.setPackage_name(package_name);
         getAdsRequest.setLimit(1);
         getAdsRequest.setTimeout(2000);
 
@@ -1295,6 +1333,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
                     loadMoPub();
+
+
 
                 } else {
 
@@ -1319,20 +1359,35 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         customAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_App_Suggested");
-                                Intent i = new Intent(getApplicationContext(), appViewClass);
+                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                Intent i = new Intent(AppViewActivity.this, appViewClass);
                                 long id = appSuggested.getData().getId().longValue();
                                 i.putExtra("id", id);
+                                i.putExtra("packageName", appSuggested.getData().getPackageName());
+                                i.putExtra("repoName", appSuggested.getData().getRepo());
                                 i.putExtra("fromSponsored", true);
-                                i.putExtra("location", "appview");
+                                i.putExtra("location", "homepage");
                                 i.putExtra("keyword", "__NULL__");
                                 i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
                                 i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
                                 i.putExtra("whereFrom", "sponsored");
                                 i.putExtra("download_from", "sponsored");
+
+
+                                if(appSuggested.getPartner() != null){
+                                    Bundle bundle = new Bundle();
+
+                                    bundle.putString("partnerType", appSuggested.getPartner().getPartnerInfo().getName());
+                                    bundle.putString("partnerClickUrl", appSuggested.getPartner().getPartnerData().getClick_url());
+
+                                    i.putExtra("partnerExtra", bundle);
+                                }
+
+
                                 startActivity(i);
                             }
                         });
+
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:googleplay")) {
                         adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
@@ -1458,7 +1513,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         } else if (i == R.id.menu_schedule) {
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Schedule_Download_Button");
 
-            new Database(Aptoide.getDb()).ScheduledDownloadifmd5(package_name, md5, versionName, repoName, name, icon);
+            new Database(Aptoide.getDb()).scheduledDownloadIfMd5(package_name, md5, versionName, repoName, name, icon);
 
         } else if (i == R.id.menu_uninstall) {
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Uninstall_Button");
@@ -1604,6 +1659,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             Toast.makeText(this, R.string.error_occured, Toast.LENGTH_LONG).show();
             finish();
         }
+
+
+
     }
 
     @Subscribe
@@ -2183,6 +2241,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 if(resultCode == RESULT_OK){
                     refreshOnResume = true;
+                    autoDownload = true;
                 }
 
                 //Toast.makeText(this, "OnActivityResult " + getCacheKey(), Toast.LENGTH_LONG).show();

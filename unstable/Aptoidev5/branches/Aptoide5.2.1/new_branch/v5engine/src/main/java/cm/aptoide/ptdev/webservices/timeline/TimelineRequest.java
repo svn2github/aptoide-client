@@ -17,11 +17,11 @@ import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
  */
 public abstract class TimelineRequest<E> extends GoogleHttpClientSpiceRequest<E> {
     public TimelineRequest(Class<E> i) {    super(i);    }
-    protected abstract String GetURL();
+    protected abstract String getUrl();
     protected abstract HashMap<String, String > fillWithExtraOptions(HashMap<String, String > parameters);
     @Override
     public E loadDataFromNetwork() throws Exception {
-        GenericUrl url= new GenericUrl(GetURL());
+        GenericUrl url= new GenericUrl(getUrl());
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         parameters.put("mode" , "json");

@@ -19,7 +19,7 @@ public class RegisterUserApkInstallRequest extends TimelineRequest<GenericRespon
     }
 
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/registerUserApkInstall";
     }
     @Override

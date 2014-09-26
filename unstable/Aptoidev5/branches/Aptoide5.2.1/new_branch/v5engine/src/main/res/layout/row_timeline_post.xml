@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="?attr/backgroundCard">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp">
+
+        <RelativeLayout android:id="@+id/timeline_post_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView android:id="@+id/timeline_post_user_photo"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:contentDescription="fb_photo"
+                android:src="@drawable/icon_non_available"
+                android:scaleType="fitXY"
+                android:layout_marginRight="10dp"/>
+
+            <TextView android:id="@+id/timeline_post_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:text="Someone"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/timeline_post_user_photo"
+                android:layout_toEndOf="@+id/timeline_post_user_photo"
+                android:textColor="@color/black"
+                android:layout_marginRight="5dp"/>
+
+            <TextView android:id="@+id/timeline_post_user_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="installed"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/timeline_post_user_name"
+                android:layout_toEndOf="@+id/timeline_post_user_name"
+                android:textColor="@color/black"/>
+
+            <TextView android:id="@+id/timeline_post_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Centuries ago"
+                android:layout_below="@+id/timeline_post_user_name"
+                android:layout_toRightOf="@+id/timeline_post_user_photo"
+                android:layout_toEndOf="@+id/timeline_post_user_photo"
+                android:textColor="@color/medium_custom_gray"/>
+
+            <ImageButton android:id="@+id/timeline_post_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_action_comment_vote_down_light"
+                android:background="@color/transparent_white"
+                android:layout_alignBottom="@+id/timeline_post_user_photo"
+                android:minWidth="50dp"
+                android:contentDescription="Menu button"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <LinearLayout android:id="@+id/timeline_post_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/timeline_post_top"
+            android:padding="8dp"
+            style="?attr/backgroundCard"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:clickable="true">
+
+
+            <ImageView android:id="@+id/timeline_post_app_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_non_available"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:maxHeight="90dp"/>
+
+            <LinearLayout android:id="@+id/timeline_post_center_texts"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/timeline_post_app_icon"
+                android:layout_toEndOf="@+id/timeline_post_app_icon"
+                android:layout_centerVertical="true"
+                android:layout_weight="2">
+
+                <TextView android:id="@+id/timeline_post_app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="App Name"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_toRightOf="@+id/timeline_post_app_icon"
+                    android:layout_weight="1"
+                    android:gravity="bottom"/>
+
+                <TextView android:id="@+id/timeline_post_app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Version: 1.23.456"
+                    android:layout_toEndOf="@+id/timeline_post_app_icon"
+                    android:textColor="@color/dark_custom_gray"
+                    android:layout_below="@+id/timeline_post_app_name"
+                    android:layout_alignLeft="@+id/timeline_post_app_name"
+                    android:layout_alignStart="@+id/timeline_post_app_name"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"/>
+
+                <TextView android:id="@+id/timeline_post_app_store"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Store: apps"
+                    android:layout_toEndOf="@+id/timeline_post_app_icon"
+                    android:textColor="@color/medium_custom_gray"
+                    android:layout_below="@+id/timeline_post_app_version"
+                    android:layout_alignLeft="@+id/timeline_post_app_version"
+                    android:layout_alignStart="@+id/timeline_post_app_version"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/timeline_post_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/timeline_post_center">
+
+            <TextView android:id="@+id/timeline_post_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/dimgray"
+                android:text="X Likes"/>
+
+            <TextView android:id="@+id/timeline_post_and"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/dimgray"
+                android:text=" and "/>
+
+            <TextView android:id="@+id/timeline_post_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/dimgray"
+                android:text="X Comments"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/light_custom_gray">
+
+        <FrameLayout android:id="@+id/timeline_post_like_button"
+            style="?attr/customRowForegroundHomeLayout"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_height="match_parent"
+            android:clickable="true">
+
+            <TextView android:id="@+id/timeline_post_like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/dark_custom_gray"
+                android:drawableLeft="?attr/icLikeDrawable"
+                android:gravity="center"
+                android:text="@string/like" />
+
+        </FrameLayout>
+
+        <View    android:layout_width="1dp"
+                 android:layout_height="match_parent"
+                 android:layout_marginBottom="8dp"
+                 android:layout_marginTop="8dp"
+                 android:background="@color/medium_custom_gray" />
+
+        <FrameLayout android:id="@+id/timeline_post_comment"
+            style="?attr/customRowForegroundHomeLayout"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_height="match_parent"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/dark_custom_gray"
+                android:drawableLeft="?attr/icViewMoreComments"
+                android:gravity="center"
+                android:text="Comment" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

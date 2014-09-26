@@ -222,7 +222,7 @@ public class DownloadManager implements Serializable {
      * @throws URLAlreadyExistsException if the URL already exists in the download manager in some other download object.
      */
 //	public DownloadInfo addDownload(DownloadInfo downloadInfo) throws MalformedURLException, URLAlreadyExistsException {
-//		URL verifiedURL = downloadInfo.getConnection().getURL();
+//		URL verifiedURL = downloadInfo.getConnection().getUrl();
 //		for (URL url : mURLs) {
 //			if (url.equals(verifiedURL)) {
 //				throw new URLAlreadyExistsException("This URL already exists.");
@@ -479,7 +479,7 @@ public class DownloadManager implements Serializable {
      * @param downloadInfo Which download object to remove.
      */
     public void removeDownload(DownloadInfo downloadInfo) {
-//		mURLs.remove(downloadInfo.getConnection().getURL());
+//		mURLs.remove(downloadInfo.getConnection().getUrl());
 //		saveDownloadsFile();
         mCompletedList.remove(downloadInfo);
     }

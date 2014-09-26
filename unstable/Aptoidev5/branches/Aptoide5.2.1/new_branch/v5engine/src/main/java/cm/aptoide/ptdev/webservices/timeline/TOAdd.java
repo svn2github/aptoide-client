@@ -29,8 +29,8 @@ public class TOAdd {
         @Override
         protected void caseOK(GenericResponse response) {
             if (((TimelineListAPKsJson)response).getUsersapks()!=null &&
-                    ((TimelineListAPKsJson)response).getUsersapks().getUsers_apks() !=null) {
-                OnlistUserApkInstalls(((TimelineListAPKsJson) response).getUsersapks().getUsers_apks());
+                    ((TimelineListAPKsJson)response).getUsersapks() !=null) {
+                OnlistUserApkInstalls(((TimelineListAPKsJson) response).getUsersapks());
             }
         }
     }
@@ -52,10 +52,10 @@ public class TOAdd {
         //TODO
     }
 
-    private void OnlistUserApkInstalls(List<TimelineListAPKsJson.UsersApks.Entry> users_apks) {
+    private void OnlistUserApkInstalls(List<TimelineListAPKsJson.UserApk> users_apks) {
         //TODO
     }
-    private void OnGetUserApkInstallComments(List<ApkInstallComments.Comment.Entry> entry) {
+    private void OnGetUserApkInstallComments(List<ApkInstallComments.Comments.Comment> entry) {
         //TODO
     }
 }

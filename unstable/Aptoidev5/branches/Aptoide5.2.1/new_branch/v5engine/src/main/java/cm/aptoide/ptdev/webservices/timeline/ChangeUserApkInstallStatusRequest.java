@@ -9,17 +9,20 @@ import cm.aptoide.ptdev.webservices.WebserviceOptions;
  * Created by asantos on 24-09-2014.
  */
 public class ChangeUserApkInstallStatusRequest extends TimelineRequest<GenericResponse> {
+
     public static final String STATUSACTIVE = "active";
     public static final String STATUSHIDDEN = "hidden";
+
     private long postID;
     public void setPostID(long id){this.postID = id;}
     private String status;
+
     public void setPostID(String status){this.status = status;}
 
     public ChangeUserApkInstallStatusRequest() {  super(GenericResponse.class);  }
 
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/changeUserApkInstallStatus";
     }
     @Override

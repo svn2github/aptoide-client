@@ -7,6 +7,8 @@ import java.util.HashMap;
 /**
  * Created by j-pac on 19-05-2014.
  */
+
+
 public class Errors {
 
     private static HashMap<String, Integer> errors = new HashMap<String, Integer>();

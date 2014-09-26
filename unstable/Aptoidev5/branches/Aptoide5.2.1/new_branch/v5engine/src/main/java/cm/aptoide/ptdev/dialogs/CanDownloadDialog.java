@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -80,7 +79,7 @@ public class CanDownloadDialog extends DialogFragment {
 //                            public void onClick(DialogInterface dialog, int which) {
 //                                if (Build.VERSION.SDK_INT >= 10)
 //                                    FlurryAgent.logEvent("CanDownLoadDialog_Schedule");
-//                                new Database(Aptoide.getDb()).ScheduledDownloadifmd5(
+//                                new Database(Aptoide.getDb()).scheduledDownloadIfMd5(
 //                                        getArguments().getString("Package_Name"),
 //                                        getArguments().getString("md5"),
 //                                        getArguments().getString("Version_Name"),
@@ -96,13 +95,13 @@ public class CanDownloadDialog extends DialogFragment {
                                 boolean isSchedule = ((CheckBox)view.findViewById(R.id.checkbox_schedule)).isChecked();
                                 if(isSchedule){
                                     if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Network_Data_Usage_Canceled_Scheduled_Download");
-                                    new Database(Aptoide.getDb()).ScheduledDownloadifmd5(
-                                        getArguments().getString("Package_Name"),
-                                        getArguments().getString("md5"),
-                                        getArguments().getString("Version_Name"),
-                                        getArguments().getString("repoName"),
-                                        getArguments().getString("Name"),
-                                        getArguments().getString("Icon"));
+                                    new Database(Aptoide.getDb()).scheduledDownloadIfMd5(
+                                            getArguments().getString("Package_Name"),
+                                            getArguments().getString("md5"),
+                                            getArguments().getString("Version_Name"),
+                                            getArguments().getString("repoName"),
+                                            getArguments().getString("Name"),
+                                            getArguments().getString("Icon"));
                                 }
                             }
                         })

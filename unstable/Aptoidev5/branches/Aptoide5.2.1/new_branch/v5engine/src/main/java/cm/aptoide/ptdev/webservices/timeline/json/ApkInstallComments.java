@@ -11,22 +11,22 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class ApkInstallComments extends GenericResponse {
 
-    public Comment getComment() {
+    public Comments getComment() {
         return Comment;
     }
 
     @Key
-    Comment Comment;
+    Comments Comment;
 
-    public static class Comment{
-        public List<Entry> getEntry() {
+    public static class Comments {
+        public List<Comments.Comment> getEntry() {
             return entry;
         }
 
         @Key
-        List<Entry> entry;
+        List<Comments.Comment> entry;
 
-        public static class Entry {
+        public static class Comment {
 
                 public Number getId() {
                     return id;

@@ -67,6 +67,20 @@ import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.webservices.Errors;
 
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.net.ConnectivityManager.TYPE_ETHERNET;
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_MOBILE_DUN;
+import static android.net.ConnectivityManager.TYPE_MOBILE_HIPRI;
+import static android.net.ConnectivityManager.TYPE_MOBILE_MMS;
+import static android.net.ConnectivityManager.TYPE_MOBILE_SUPL;
+import static android.net.ConnectivityManager.TYPE_WIFI;
+import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.ETHERNET;
+import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.MOBILE;
+import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.UNKNOWN;
+import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.WIFI;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -408,6 +422,56 @@ public class AptoideUtils {
             br.close();
 
             return new JSONObject(sb.toString());
+
+        }
+
+
+
+        private static int getActiveNetworkType(Context mContext) {
+
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+
+            if (mContext.checkCallingOrSelfPermission(ACCESS_NETWORK_STATE) == PERMISSION_GRANTED) {
+                NetworkInfo activeNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+                return activeNetworkInfo != null ? activeNetworkInfo.getType() : -1;
+            }
+            return -1;
+        }
+
+        public static enum NetworkType {
+            UNKNOWN,
+            ETHERNET,
+            WIFI,
+            MOBILE;
+
+            @Override
+            public String toString() {
+                return super.toString().toLowerCase(Locale.ENGLISH);
+            }
+        }
+
+
+
+        public static NetworkType getConnectionType(){
+            Context context = Aptoide.getContext();
+            int type = getActiveNetworkType(context);
+
+            switch(type) {
+                case TYPE_ETHERNET:
+                    return NetworkType.ETHERNET;
+                case TYPE_WIFI:
+                    return NetworkType.WIFI;
+                case TYPE_MOBILE:
+                case TYPE_MOBILE_DUN:
+                case TYPE_MOBILE_HIPRI:
+                case TYPE_MOBILE_MMS:
+                case TYPE_MOBILE_SUPL:
+                    return NetworkType.MOBILE;
+                default:
+                    return NetworkType.UNKNOWN;
+            }
+
 
         }
 

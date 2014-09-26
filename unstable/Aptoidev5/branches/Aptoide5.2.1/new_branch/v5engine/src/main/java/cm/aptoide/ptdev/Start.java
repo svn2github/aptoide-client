@@ -33,7 +33,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -73,6 +72,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -165,6 +165,7 @@ public class Start extends ActionBarActivity implements
     };
     private String queueName;
     private boolean refresh;
+    private String sponsoredCache;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -372,9 +373,6 @@ public class Start extends ActionBarActivity implements
         });
 
 
-        RecyclerView view = new RecyclerView(this);
-
-        view.getAdapter();
 
         if (Build.VERSION.SDK_INT > 7) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -414,6 +412,7 @@ public class Start extends ActionBarActivity implements
                                     store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
                                     store.setDelta(c.getString(c.getColumnIndex("hash")));
                                     store.setId(c.getLong(c.getColumnIndex("id_repo")));
+
                                     if (c.getString(c.getColumnIndex("username")) != null) {
                                         Login login = new Login();
                                         login.setUsername(c.getString(c.getColumnIndex("username")));
@@ -433,12 +432,15 @@ public class Start extends ActionBarActivity implements
                         }
                     }
                 });
-            }catch (RejectedExecutionException e){
-
-            }
+            }catch (RejectedExecutionException ignored){}
 
         }
     };
+
+    public String getSponsoredCache() {
+        return sponsoredCache;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -474,6 +476,7 @@ public class Start extends ActionBarActivity implements
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
         if (savedInstanceState == null) {
+            sponsoredCache = UUID.randomUUID().toString();
 
             File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
             if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
@@ -637,6 +640,8 @@ public class Start extends ActionBarActivity implements
 
             updateBadge(PreferenceManager.getDefaultSharedPreferences(this));
 
+        }else{
+            sponsoredCache = savedInstanceState.getString("sponsoredCache");
         }
 
 
@@ -1219,6 +1224,7 @@ public class Start extends ActionBarActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("queueName", queueName);
+        outState.putString("sponsoredCache", sponsoredCache);
     }
 
     @Override

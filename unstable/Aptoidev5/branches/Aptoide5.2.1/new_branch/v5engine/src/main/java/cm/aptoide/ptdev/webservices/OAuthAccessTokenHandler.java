@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.accounts.AccountManager;
+import android.util.Log;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -32,9 +33,10 @@ public class OAuthAccessTokenHandler implements HttpUnsuccessfulResponseHandler 
 
     @Override
     public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
+        Log.d("AptoideCenas", "HandleResponse");
+
         if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED && retries > 0) {
             retries--;
-
 
                 OAuth responseJson = response.parseAs(OAuth.class);
 

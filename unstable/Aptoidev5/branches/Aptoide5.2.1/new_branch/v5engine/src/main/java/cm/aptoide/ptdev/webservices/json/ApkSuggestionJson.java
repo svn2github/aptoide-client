@@ -133,6 +133,7 @@ public class ApkSuggestionJson {
     public static class Ads{
         @Key private Data data;
         @Key private Info info;
+        @Key private Partner partner;
 
         public Data getData(){
             return this.data;
@@ -145,6 +146,10 @@ public class ApkSuggestionJson {
         }
         public void setInfo(Info info){
             this.info = info;
+        }
+
+        public Partner getPartner() {
+            return partner;
         }
     }
 
@@ -171,6 +176,50 @@ public class ApkSuggestionJson {
         public void setCpi_url(String cpi_url){
             this.cpi_url = cpi_url;
         }
+    }
+
+    public static class Partner{
+
+        public Info getPartnerInfo() {
+            return partnerInfo;
+        }
+
+        public Data getPartnerData() {
+            return partnerData;
+        }
+
+        @Key("info") private Info partnerInfo;
+        @Key("data") private Data partnerData;
+
+        public static class Info{
+
+            public Number getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            @Key private Number id;
+            @Key private String name;
+        }
+
+        public static class Data{
+
+            public String getClick_url() {
+                return click_url;
+            }
+
+            public String getImpression_url() {
+                return impression_url;
+            }
+
+            @Key private String click_url;
+            @Key private String impression_url;
+        }
+
+
     }
 
 }

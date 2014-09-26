@@ -10,22 +10,18 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  * Created by asantos on 24-09-2014.
  */
 public class TimelineListAPKsJson extends GenericResponse {
-    public UsersApks getUsersapks() {
+
+
+    public List<UserApk> getUsersapks() {
         return usersapks;
     }
 
     @Key
-    private UsersApks usersapks;
+    private List<UserApk> usersapks;
 
-    public static class UsersApks{
-        public List<Entry> getUsers_apks() {
-            return users_apks;
-        }
 
-        @Key
-        List<Entry> users_apks;
 
-        public static class Entry {
+        public static class UserApk {
             public Info getInfo() {
                 return info;
             }
@@ -155,5 +151,5 @@ public class TimelineListAPKsJson extends GenericResponse {
                 String signature;
             }
         }
-    }
+
 }

@@ -48,9 +48,10 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
 
         String user = getIntent().getStringExtra("user");
         aptoideProductId = getIntent().getIntExtra("ID",0);
-        final ArrayList<PaymentServices> PaymentServicesList = getIntent().getParcelableArrayListExtra("PaymentServices");
+        final ArrayList<PaymentServices> paymentServicesList = getIntent().getParcelableArrayListExtra("PaymentServices");
 
         if (user == null) {
+
             AccountManager.get(this).addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
 
                 @Override
@@ -60,7 +61,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                         String account = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
 
                         if(account!=null){
-                            updateUI(account,PaymentServicesList);
+                            updateUI(account,paymentServicesList);
                             ((TextView) findViewById(R.id.username)).setText(getString(R.string.account) + ": " + account);
                         }else {
                             finish();
@@ -73,8 +74,9 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                 }
 
             }, new Handler(Looper.getMainLooper()));
+
         } else {
-            updateUI(user,PaymentServicesList);
+            updateUI(user,paymentServicesList);
         }
 
         findViewById(R.id.buttonCancel).setOnClickListener(new Button.OnClickListener() {
@@ -189,7 +191,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                 Toast.makeText(Aptoide.getContext(), R.string.error_occured_retry_later, Toast.LENGTH_LONG).show();
 
                 PendingIntent intent = PendingIntent.getBroadcast(getApplicationContext(), 1,
-                        BuildIntentForAlarm(confirmation, "paidapk"), PendingIntent.FLAG_UPDATE_CURRENT);
+                        buildIntentForAlarm(confirmation, "paidapk"), PendingIntent.FLAG_UPDATE_CURRENT);
                 manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 60000, 60000, intent);
 
                 dismissAllowingStateLoss();

@@ -56,9 +56,6 @@ public class Aptoide extends Application {
         return context;
     }
 
-    public static String getSponsoredCache() {
-        return sponsoredCache;
-    }
 
     public static void setSponsoredCache(String sponsoredCache) {
         Aptoide.sponsoredCache = sponsoredCache;
@@ -87,7 +84,6 @@ public class Aptoide extends Application {
             e.printStackTrace();
         }
 
-        sponsoredCache = UUID.randomUUID().toString();
 
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems

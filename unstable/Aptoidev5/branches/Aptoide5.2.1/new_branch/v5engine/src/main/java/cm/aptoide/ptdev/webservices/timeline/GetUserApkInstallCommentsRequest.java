@@ -19,7 +19,7 @@ public class GetUserApkInstallCommentsRequest extends TimelineRequest<ApkInstall
     public GetUserApkInstallCommentsRequest() {    super(ApkInstallComments.class);    }
 
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/getUserApkInstallComments";
     }
 

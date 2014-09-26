@@ -57,7 +57,7 @@ public class Database {
     public SQLiteDatabase getDatabaseInstance() {
         return database;
     }
-    private static final String SELECT_START = "select * from (select apk.package_name as package_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk";
+    private static final String SELECT_START = "select * from (select apk.package_name as package_name, repo.name as repo_name, apk.name as name, apk.downloads as downloads, apk.rating as rating, apk.price as price, apk.date as date,apk.id_apk as _id, apk.downloads as count,apk.version_name as version_name,'0' as type, apk.icon as icon, repo.icons_path as iconpath, repo.theme as theme from apk";
     private final SQLiteDatabase database;
 
 
@@ -440,6 +440,7 @@ public class Database {
                 " apk.version_name as version_name, " +
                 " installed.version_name as installed_version_name, " +
                 " apk.icon as icon, " +
+                " repo.name as repo_name, " +
                 " repo.icons_path as iconpath " +
                 " from apk inner " +
                 " join installed on apk.package_name = installed.package_name " +
@@ -1272,7 +1273,7 @@ public class Database {
 
     }*/
 
-    public void ScheduledDownloadifmd5(String apkid, String md5, String vername, String repoName, String name, String icon) {
+    public void scheduledDownloadIfMd5(String apkid, String md5, String vername, String repoName, String name, String icon) {
         if (md5 != null) {
             insertScheduledDownload(apkid, md5, vername, repoName, name, icon);
             Toast.makeText(Aptoide.getContext(), R.string.added_to_scheduled , Toast.LENGTH_SHORT).show();
@@ -1291,6 +1292,7 @@ public class Database {
             c.close();
             return;
         }
+
         c.close();
 
         ContentValues values = new ContentValues();

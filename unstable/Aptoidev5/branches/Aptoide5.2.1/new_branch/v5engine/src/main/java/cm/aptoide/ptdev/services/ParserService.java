@@ -212,7 +212,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             id = store.getId();
         }
 
-        if(store.getBaseUrl().contains("store.aptoide.com")){
+        if(store.getBaseUrl().contains("store.dev.aptoide.com")){
             store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));
         }
 

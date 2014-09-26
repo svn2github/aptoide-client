@@ -22,7 +22,7 @@ public class GetUserSettingsRequest extends TimelineRequest<GenericResponse> {
         sb  = new StringBuilder();
     }
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/getUserSettings";
     }
 

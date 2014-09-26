@@ -65,6 +65,25 @@ import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
+import com.facebook.*;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.*;
+import com.google.android.gms.plus.PlusClient;
+import com.google.api.client.util.Data;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -224,14 +243,16 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
             if (state.isOpened()) {
+
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
-                        if(session == Session.getActiveSession() && user != null){
+                        if (session == Session.getActiveSession() && user != null) {
 
-                            try{
+                            try {
                                 submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
-                            }catch (Exception e){
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -246,7 +267,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                                 });
                                 session.closeAndClearTokenInformation();
                             }
-                        }else{
+                        } else {
                             session.closeAndClearTokenInformation();
                         }
                     }
@@ -275,6 +296,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mConnectionProgressDialog = new ProgressDialog(this);
                 mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
 
+                LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
+                fbButton.setReadPermissions(Arrays.asList("email"));
                 uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
                 uiLifecycleHelper.onCreate(savedInstanceState);
 
@@ -517,7 +540,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             public void onRequestFailure(SpiceException spiceException) {
 
                 String error;
-                Toast.makeText(Aptoide.getContext(), spiceException.getClass().getCanonicalName(), Toast.LENGTH_LONG).show();
 
                 if(spiceException.getCause() instanceof InvalidGrantSpiceException && spiceException.getCause().getMessage().equals("Invalid username and password combination")){
                     error = getString(R.string.error_AUTH_1);
@@ -655,6 +677,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         } else {
                             message = error.getMsg();
                         }
+
                         Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 }

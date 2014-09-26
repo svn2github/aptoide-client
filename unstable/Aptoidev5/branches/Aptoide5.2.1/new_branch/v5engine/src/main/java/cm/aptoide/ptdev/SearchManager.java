@@ -22,11 +22,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.*;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.*;
+import android.view.CollapsibleActionView;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -152,6 +154,8 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -160,9 +164,10 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
         final android.app.SearchManager searchManager = (android.app.SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItemCompat.expandActionView(searchItem);
-        searchView.setQuery(query, false);
+
+        //searchView.setQuery(query, false);
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -337,7 +342,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
 
 
-            setHasOptionsMenu(true);
+
         }
 
         @Override
@@ -347,11 +352,15 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             if(adapter.getItem(position) instanceof Cursor){
                 intent.putExtra("id", id);
+
             }else{
+
                 intent.putExtra("fromRelated", true);
                 intent.putExtra("repoName", ((SearchJson.Results.Apks) adapter.getItem(position)).getRepo());
+                intent.putExtra("packageName", ((SearchJson.Results.Apks) adapter.getItem(position)).getPackage());
                 intent.putExtra("md5sum", ((SearchJson.Results.Apks) adapter.getItem(position)).getMd5sum());
                 intent.putExtra("download_from", "search_result");
+
             }
             startActivity(intent);
         }
@@ -505,17 +514,29 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                             sponsoredApp.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_App");
+                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                     Intent i = new Intent(getActivity(), appViewClass);
                                     long id = appSuggested.getData().getId().longValue();
                                     i.putExtra("id", id);
+                                    i.putExtra("packageName", appSuggested.getData().getPackageName());
+                                    i.putExtra("repoName", appSuggested.getData().getRepo());
                                     i.putExtra("fromSponsored", true);
-                                    i.putExtra("location", "search");
-                                    i.putExtra("keyword", query);
+                                    i.putExtra("location", "homepage");
+                                    i.putExtra("keyword", "__NULL__");
                                     i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
                                     i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
                                     i.putExtra("whereFrom", "sponsored");
                                     i.putExtra("download_from", "sponsored");
+
+                                    if(appSuggested.getPartner() != null){
+                                        Bundle bundle = new Bundle();
+
+                                        bundle.putString("partnerType", appSuggested.getPartner().getPartnerInfo().getName());
+                                        bundle.putString("partnerClickUrl", appSuggested.getPartner().getPartnerData().getClick_url());
+
+                                        i.putExtra("partnerExtra", bundle);
+                                    }
+
                                     startActivity(i);
                                 }
                             });

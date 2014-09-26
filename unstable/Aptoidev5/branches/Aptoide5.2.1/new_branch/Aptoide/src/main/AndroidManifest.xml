@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
-
+    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
 
     <application
         android:name="cm.aptoide.ptdev.Aptoide"
@@ -65,6 +65,8 @@
 
 
         <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
+        <activity android:name="cm.aptoide.ptdev.TimelineActivity" />
+
 
         <activity android:name="com.facebook.LoginActivity" />
 
@@ -397,16 +399,16 @@
 
         <service
             android:name="openiab.StoreService"
-            android:exported="true">
+            android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
             <intent-filter>
                 <action android:name="org.onepf.oms.openappstore.BIND" />
             </intent-filter>
-            />
+
         </service>
 
         <service
             android:name="openiab.BillingService"
-            android:exported="true">
+            android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
 
             <intent-filter>
                 <action android:name="org.onepf.oms.billing.BIND" />

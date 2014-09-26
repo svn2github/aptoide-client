@@ -699,7 +699,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
 
     protected abstract void processPaymentConfirmation(final ProofOfPayment confirmation);
 
-    protected Intent BuildIntentForAlarm(ProofOfPayment confirmation, String paymenType){
+    protected Intent buildIntentForAlarm(ProofOfPayment confirmation, String paymenType){
         Intent i = new Intent("PAYPAL_PAYMENT");
         i.putExtra("token", token);
         i.putExtra("aptoideProductId", aptoideProductId);

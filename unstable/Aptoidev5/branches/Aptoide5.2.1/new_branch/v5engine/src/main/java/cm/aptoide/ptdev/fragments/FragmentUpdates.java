@@ -104,6 +104,10 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
                             String iconPath = data.getString(data.getColumnIndex("iconpath"));
                             String icon = data.getString(data.getColumnIndex("icon"));
                             item.setName(data.getString(data.getColumnIndex("name")));
+                            item.setPackageName(data.getString(data.getColumnIndex("package_name")));
+                            item.setRepoName(data.getString(data.getColumnIndex("repo_name")));
+
+
                             item.setIcon(iconPath+icon);
                             item.setId(data.getLong(data.getColumnIndex("_id")));
                             items.add(item);
@@ -188,6 +192,12 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
 
         if (id > 0) {
             Intent i = new Intent(getActivity(), appViewClass);
+
+            UpdateItem item = (UpdateItem) l.getAdapter().getItem(position);
+
+            i.putExtra("packageName", item.getPackageName());
+            i.putExtra("repoName", item.getRepoName());
+
             i.putExtra("id", id);
             i.putExtra("download_from", "updates");
             startActivity(i);

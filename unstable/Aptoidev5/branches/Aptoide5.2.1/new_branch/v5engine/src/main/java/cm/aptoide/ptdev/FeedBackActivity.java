@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -46,6 +47,8 @@ public class FeedBackActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.feedback_send_button));
+
+
     }
 
     public static File screenshot(Activity a) {

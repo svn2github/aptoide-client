@@ -41,6 +41,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -156,7 +157,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 //        Log.d("FragmentHome", "refreshSponsoredList");
 
 
-        manager.execute(request, Aptoide.getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
+        manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
             int nativeAd, googlePlayAd, bannerAd;
 
             @Override
@@ -210,6 +211,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                         Intent i = new Intent(getActivity(), appViewClass);
                                         long id = apkSuggestion.getData().getId().longValue();
                                         i.putExtra("id", id);
+                                        i.putExtra("packageName", apkSuggestion.getData().getPackageName());
+                                        i.putExtra("repoName", apkSuggestion.getData().getRepo());
                                         i.putExtra("fromSponsored", true);
                                         i.putExtra("location", "homepage");
                                         i.putExtra("keyword", "__NULL__");
@@ -217,6 +220,16 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                         i.putExtra("cpi", apkSuggestion.getInfo().getCpi_url());
                                         i.putExtra("whereFrom", "sponsored");
                                         i.putExtra("download_from", "sponsored");
+
+                                        if(apkSuggestion.getPartner() != null){
+                                            Bundle bundle = new Bundle();
+
+                                            bundle.putString("partnerType", apkSuggestion.getPartner().getPartnerInfo().getName());
+                                            bundle.putString("partnerClickUrl", apkSuggestion.getPartner().getPartnerData().getClick_url());
+
+                                            i.putExtra("partnerExtra", bundle);
+                                        }
+
                                         startActivity(i);
                                     }
                                 });
@@ -616,6 +629,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         v2 = View.inflate(getActivity(), R.layout.separator_home_header, null);
         ((TextView) v2.findViewById(R.id.separator_label)).setText(getString(R.string.recommended_for_you));
 //        v2.setClickable(true);
+
 
 
         mergeAdapter = new MergeAdapter();

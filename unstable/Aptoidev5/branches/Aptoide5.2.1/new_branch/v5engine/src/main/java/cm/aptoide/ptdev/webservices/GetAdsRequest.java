@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Build;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.impl.analytics.FlurryAnalyticsModule;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -38,6 +40,16 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
     private String location;
     private String keyword;
     private int limit;
+    private String package_name;
+    private String repo;
+
+    public void setPackage_name(String package_name) {
+        this.package_name = package_name;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
+    }
 
     public GetAdsRequest(Context context) {
         super(ApkSuggestionJson.class);
@@ -80,6 +92,15 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("get_mature", mature);
 
+        parameters.put("partners", "1");
+
+
+        parameters.put("app_pkg", package_name);
+        parameters.put("app_store", repo);
+
+        parameters.put("conn_type", AptoideUtils.NetworkUtils.getConnectionType().toString());
+
+
         GenericUrl url = new GenericUrl(this.url);
 
         HttpContent content = new UrlEncodedContent(parameters);
@@ -95,13 +116,33 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         Map<String, String> adsParams = new HashMap<String, String>();
         adsParams.put("placement", location);
 
+
+
         for(ApkSuggestionJson.Ads suggestionJson : result.getAds()) {
             String ad_type = suggestionJson.getInfo().getAd_type();
             adsParams.put("type", ad_type);
 
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Get_Sponsored_Ad", adsParams);
+
+            if(suggestionJson.getPartner() != null){
+
+                String deviceId = Settings.Secure.getString(Aptoide.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
+
+                String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
+
+                impressionUrlString = impressionUrlString.replace("[USER_ANDROID_ID]", deviceId);
+                impressionUrlString = impressionUrlString.replace("[USER_UDID]", aaId);
+
+                GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
+                getHttpRequestFactory().buildGetRequest(impressionUrl).execute();
+
+
+            }
+
 //            Log.d("AdsFlurry", "Map is " + adsParams);
         }
+
 
         return result;
     }

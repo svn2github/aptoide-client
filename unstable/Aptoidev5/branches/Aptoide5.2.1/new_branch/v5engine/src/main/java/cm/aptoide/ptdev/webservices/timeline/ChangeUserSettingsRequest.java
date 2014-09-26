@@ -21,7 +21,7 @@ public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponse> 
         sb  = new StringBuilder();
     }
     @Override
-    protected String GetURL() {
+    protected String getUrl() {
         return WebserviceOptions.WebServicesLink+"3/changeUserSettings";
     }
 
