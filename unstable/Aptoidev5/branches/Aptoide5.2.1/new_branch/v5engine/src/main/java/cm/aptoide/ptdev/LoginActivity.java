@@ -1,8 +1,12 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ProgressDialog;
-import android.content.*;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -11,14 +15,40 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
-
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.flurry.android.FlurryAgent;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.plus.PlusClient;
+import com.google.api.client.util.Data;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.HashMap;
+import java.util.Locale;
+
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
@@ -35,23 +65,6 @@ import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
-import com.facebook.*;
-import com.facebook.model.GraphUser;
-import com.flurry.android.FlurryAgent;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.*;
-import com.google.android.gms.plus.PlusClient;
-import com.google.api.client.util.Data;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -243,17 +256,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
     };
 
-
-    /**
-     * Called when the activity is first created.
-     */
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-
-
 
         if (AptoideUtils.isLoggedIn(this)) {
             finish();
@@ -271,7 +277,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                 uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
                 uiLifecycleHelper.onCreate(savedInstanceState);
-
 
                 mPlusClient = new PlusClient.Builder(this, this, this).build();
 
@@ -303,8 +308,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
             password_box = (EditText) findViewById(R.id.password);
             password_box.setTransformationMethod(new PasswordTransformationMethod());
-
-
 
             final Drawable hidePasswordRes = getResources().getDrawable(R.drawable.ic_show_password);
             final Drawable showPasswordRes = getResources().getDrawable(R.drawable.ic_hide_password);
@@ -384,8 +387,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             });
 
             registerDevice = (CheckBox) findViewById(R.id.link_my_device);
-
-
 
             TextView forgot_password = (TextView) findViewById(R.id.forgot_password);
             SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
@@ -628,14 +629,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     preferences.putString("loginType", mode.name());
                     preferences.commit();
 
-
                     SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
                     securePreferences.putString("access_token", oAuth.getAccess_token());
                     securePreferences.putString("devtoken",checkUserCredentialsJson.getToken());
 
                     securePreferences.commit();
-
-
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
@@ -704,10 +702,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
         */
         finish();
-        if(registerDevice.isChecked()){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Linked_Account_With_WebInstall");
-        }else{
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Did_Not_Link_Account_With_WebInstall");
+        if(Build.VERSION.SDK_INT >= 10) {
+            if (registerDevice.isChecked()) {
+                FlurryAgent.logEvent("Login_Page_Linked_Account_With_WebInstall");
+            } else {
+                FlurryAgent.logEvent("Login_Page_Did_Not_Link_Account_With_WebInstall");
+            }
         }
         if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);

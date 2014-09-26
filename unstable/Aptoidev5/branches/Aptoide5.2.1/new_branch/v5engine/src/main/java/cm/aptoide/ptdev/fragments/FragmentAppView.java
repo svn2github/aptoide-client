@@ -671,23 +671,22 @@ public abstract class FragmentAppView extends Fragment {
 
                 setListAdapter(adapter);
 /*                if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    Log.d("pois","is LandScape");
                     setListViewHeightBasedOnChildren(getListView());
                 }*/
             }
 
         };
        /* private final void setListViewHeightBasedOnChildren(ListView listView) {
-            Log.d("pois", "setListViewHeightBasedOnChildren called");
+
             ListAdapter listAdapter = listView.getAdapter();
             if (listAdapter == null){
                 return;
             }
-            Log.d("pois", "listAdapter not null");
+
             if (listAdapter.getCount()<1){
                 return;
             }
-            Log.d("pois", "Setting ListAdapter with " + listAdapter.getCount()+  " elements");
+
             int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
             for (int i = 0; i < listAdapter.getCount(); i++) {
                 View listItem = listAdapter.getView(i, null, listView);
@@ -696,12 +695,11 @@ public abstract class FragmentAppView extends Fragment {
                 listItem.measure(0, 0);
                 totalHeight += listItem.getMeasuredHeight();
             }
-            Log.d("pois", "Setting ListAdapter with " + totalHeight+  " height");
+
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
             listView.setLayoutParams(params);
 
-            Log.d("pois", "list has" + listView.getLayoutParams().height+  " height");
         }*/
 
 

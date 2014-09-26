@@ -96,7 +96,6 @@ public class AptoideUtils {
         final AccountManager manager = AccountManager.get(activity);
 
         if (manager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length == 0) {
-            Log.d("pois","adding new account");
             manager.addAccount(Aptoide.getConfiguration().getAccountType(),
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, activity,null, null);
 
