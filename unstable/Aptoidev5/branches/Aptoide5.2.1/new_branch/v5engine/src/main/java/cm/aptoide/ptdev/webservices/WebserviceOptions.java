@@ -4,7 +4,7 @@ package cm.aptoide.ptdev.webservices;
  * Created by rmateus on 08-07-2014.
  */
 public class WebserviceOptions {
-    public static String WebServicesLink ="https://webservices.aptoide.com/webservices/";
+    public static String WebServicesLink ="http://webservices.aptoide.com/webservices/";
 
     String key;
     String value;
@@ -27,6 +27,7 @@ public class WebserviceOptions {
      *
      * @return a printable representation of this object.
      */
+
     @Override
     public String toString() {
         return key+"="+value;    //To change body of overridden methods use File | Settings | File Templates.

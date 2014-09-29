@@ -97,10 +97,13 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
                 @Override
                 public void onClick(View v) {
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("My_Account_Clicked_On_Logout_Button");
-                    Session session = Session.getActiveSession();
 
-                    if (session != null && session.isOpened()) {
-                        session.closeAndClearTokenInformation();
+                    if (Build.VERSION.SDK_INT >= 8) {
+                        Session session = new Session(MyAccountActivity.this);
+                        Session.setActiveSession(session);
+                        if (Session.getActiveSession() != null) {
+                            Session.getActiveSession().closeAndClearTokenInformation();
+                        }
                     }
 
                     if (mPlusClient.isConnected()) {

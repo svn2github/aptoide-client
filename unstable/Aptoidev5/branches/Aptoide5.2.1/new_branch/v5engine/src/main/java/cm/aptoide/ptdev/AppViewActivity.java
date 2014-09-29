@@ -72,6 +72,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1171,6 +1172,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setTitle(R.string.applications);
 
         if(savedInstanceState==null) {
+
             if(getIntent().getBooleanExtra("fromSponsored", false)){
                 GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
                 String id = getIntent().getStringExtra("id");
@@ -1185,29 +1187,43 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
+                Log.d("Aptoide", "InSponsored");
 
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-                if(getIntent().hasExtra("partnerExtra")){
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(getIntent().hasExtra("partnerExtra")){
 
-                    try {
-                        String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
+                            try {
 
 
-                        String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-                        String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
 
-                        clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
-                        clickUrl = clickUrl.replace("[USER_UDID]", aaId);
+                                String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
 
-                        GenericUrl url = new GenericUrl(clickUrl);
+                                Log.d("Aptoide", "InSponsoredExtras");
+                                String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+                                String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
 
-                        AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+                                clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
+                                clickUrl = clickUrl.replace("[USER_UDID]", aaId);
+                                clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+                                clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                                GenericUrl url = new GenericUrl(clickUrl);
+
+                                AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                }
+                });
+
+
 
 
                 try {

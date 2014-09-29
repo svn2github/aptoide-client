@@ -20,19 +20,12 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/button"
+        <com.facebook.widget.LoginButton
+            xmlns:fb="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fb_login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/facebook_btn_default_holo_light"
-            android:drawableLeft="@drawable/ic_drawable_left_facebook"
-            android:text="@string/facebook_logout_and_login"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            fb:login_text="@string/facebook_logout_and_login" />
 
     </LinearLayout>
 </ScrollView>

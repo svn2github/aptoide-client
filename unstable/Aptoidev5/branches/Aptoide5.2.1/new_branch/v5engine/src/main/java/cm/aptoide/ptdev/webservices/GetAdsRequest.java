@@ -78,7 +78,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         }
 
         parameters.put("location","native-aptoide:" + location);
-        parameters.put("type", "url:banner,url:googleplay,app:suggested");
+        parameters.put("type", "1-3");
         parameters.put("keywords", keyword);
 
         String oemid = Aptoide.getConfiguration().getExtraId();
@@ -133,6 +133,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
                 impressionUrlString = impressionUrlString.replace("[USER_ANDROID_ID]", deviceId);
                 impressionUrlString = impressionUrlString.replace("[USER_UDID]", aaId);
+                impressionUrlString = impressionUrlString.replace("[USER_AAID]", aaId);
 
                 GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
                 getHttpRequestFactory().buildGetRequest(impressionUrl).execute();

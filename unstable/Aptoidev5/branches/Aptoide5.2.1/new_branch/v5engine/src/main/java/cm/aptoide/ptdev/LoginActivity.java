@@ -6,6 +6,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.method.PasswordTransformationMethod;
 import android.text.style.UnderlineSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -87,6 +90,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     private CheckUserCredentialsRequest request;
     private boolean fromPreviousAptoideVersion;
     private Class signupClass = Aptoide.getConfiguration().getSignUpActivityClass();
+    private boolean removeAccount;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -94,6 +98,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
         final String serverId = "928466497334-7aqsaffv18r3k1ebthkchfi3nibft5vq.apps.googleusercontent.com";
+        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
 
         new Thread(new Runnable() {
             @Override
@@ -235,14 +240,26 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         @Override
         public void call(final Session session, SessionState state, Exception exception) {
             if (state.isOpened()) {
+                AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
 
                 Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
                     @Override
-                    public void onCompleted(GraphUser user, Response response) {
+                    public void onCompleted(final GraphUser user, Response response) {
                         if (session == Session.getActiveSession() && user != null) {
 
                             try {
-                                submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+
+                                if(removeAccount && mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0){
+                                    mAccountManager.removeAccount(mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], new AccountManagerCallback<Boolean>() {
+                                        @Override
+                                        public void run(AccountManagerFuture<Boolean> future) {
+                                            submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                                        }
+                                    }, new Handler(Looper.getMainLooper()));
+                                }else{
+                                    submit(Mode.FACEBOOK, user.getProperty("email").toString(), session.getAccessToken(), null);
+                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 runOnUiThread(new Runnable() {
@@ -269,28 +286,54 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
     };
 
+
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
+
         if(b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
 
             if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
-                Account current = AptoideUtils.getUser(this);
-                AccountManager.get(this).removeAccount(current, new AccountManagerCallback<Boolean>() {
-                    @Override
-                    public void run(AccountManagerFuture<Boolean> future) {
-                        initLogin(savedInstanceState);
-                    }
-                }, new Handler(Looper.myLooper()));
+                setContentView(R.layout.page_timeline_logout_and_login);
+                removeAccount = true;
+            } else {
+                setContentView(R.layout.page_timeline_not_logged_in);
             }
 
         }else{
             initLogin(savedInstanceState);
         }
 
+        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+        uiLifecycleHelper.onCreate(savedInstanceState);
+
+        mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+        LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
+        fbButton.setReadPermissions(Arrays.asList("email"));
+
+        fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mAccountManager = AccountManager.get(getBaseContext());
+
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+        if (mAuthTokenType == null)
+            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
+        getSupportActionBar().setTitle(getString(R.string.setcredentials));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.login_or_register));
     }
 
     private void initLogin(Bundle savedInstanceState) {
@@ -308,28 +351,18 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mConnectionProgressDialog = new ProgressDialog(this);
                 mConnectionProgressDialog.setMessage(getString(R.string.signing_in));
 
-                LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
-                fbButton.setReadPermissions(Arrays.asList("email"));
-                uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-                uiLifecycleHelper.onCreate(savedInstanceState);
-
-                mPlusClient = new PlusClient.Builder(this, this, this).build();
-
                 int val = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
                 boolean play_installed = val == ConnectionResult.SUCCESS;
 
                 SignInButton signInButton = (SignInButton) findViewById(R.id.g_sign_in_button);
-                if(!play_installed){
+                if (!play_installed) {
                     signInButton.setVisibility(View.GONE);
                 }
 
             }
-            mAccountManager = AccountManager.get(getBaseContext());
 
             String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-            mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-            if (mAuthTokenType == null)
-                mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
 
             if (accountName != null) {
                 ((EditText) findViewById(R.id.username)).setText(accountName);
@@ -421,11 +454,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 }
             });
 
-            getSupportActionBar().setTitle(getString(R.string.setcredentials));
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.login_or_register));
+
         }
     }
 
@@ -519,8 +548,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
 
+        Toast.makeText(Aptoide.getContext(), passwordOrToken, Toast.LENGTH_LONG).show();
 
-        AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
 
         OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
 
@@ -564,7 +593,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
+
                 getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
+
             }
         });
 
@@ -576,7 +607,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        request.setRegisterDevice(registerDevice.isChecked());
+        request.setRegisterDevice(registerDevice != null && registerDevice.isChecked());
 
         request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
         request.setDeviceId(deviceId);
@@ -722,13 +753,13 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         */
         finish();
         if(Build.VERSION.SDK_INT >= 10) {
-            if (registerDevice.isChecked()) {
+            if (registerDevice != null && registerDevice.isChecked()) {
                 FlurryAgent.logEvent("Login_Page_Linked_Account_With_WebInstall");
             } else {
                 FlurryAgent.logEvent("Login_Page_Did_Not_Link_Account_With_WebInstall");
             }
         }
-        if(registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
+        if(registerDevice != null && registerDevice.isChecked() && hasQueue) startService(new Intent(this, RabbitMqService.class));
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
         if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration(). getAutoUpdatesSyncAdapterAuthority(), true);

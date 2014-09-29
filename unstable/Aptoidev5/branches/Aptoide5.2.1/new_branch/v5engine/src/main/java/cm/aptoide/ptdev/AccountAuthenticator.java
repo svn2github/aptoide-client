@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -146,19 +147,14 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         return null;
     }
 
+    @NonNull
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
 
         final Bundle result = new Bundle();
         result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
 
-        if (Build.VERSION.SDK_INT >= 8) {
-            Session session = new Session(mContext);
-            Session.setActiveSession(session);
-            if (Session.getActiveSession() != null) {
-                Session.getActiveSession().closeAndClearTokenInformation();
-            }
-        }
+
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sPref.edit()
                 .remove("queueName")
