@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/TimeLineListView"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="70">
+
+        </ListView>
+    <EditText
+        android:id="@+id/TimeLineCommentEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/write_your_comment"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
