@@ -318,7 +318,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             fragStoreHeader.onError();
             FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
             fragStore.onError();
-            fragStore.onRefresh();
+            fragStore.onRefreshCalled();
             fragStore.setRefreshing(service.repoIsParsing(storeid));
         }
     }
@@ -334,7 +334,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         if(service!=null){
             isRefreshing = service.repoIsParsing(storeid);
             FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-            fragStore.onRefresh();
+            fragStore.onRefreshCalled();
             fragStore.setListShown(false);
             fragStore.setRefreshing(isRefreshing);
         }

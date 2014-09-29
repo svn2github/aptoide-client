@@ -125,7 +125,7 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
 
     }
 

@@ -9,7 +9,7 @@ package cm.aptoide.ptdev.fragments;
  */
 public interface FragmentStore {
 
-    void onRefresh();
+    void onRefreshCalled();
     void onError();
     void setRefreshing(boolean bool);
     void setListShown(boolean b);

@@ -1,21 +1,20 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.*;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import cm.aptoide.ptdev.*;
 import cm.aptoide.ptdev.adapters.CategoryAdapter;
-import cm.aptoide.ptdev.adapters.ListSocialAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -27,8 +26,6 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
-import java.util.ArrayList;
-
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -36,23 +33,91 @@ import java.util.ArrayList;
  * Time: 17:12
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreListCategories extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore {
+public class FragmentStoreListCategories extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener, FragmentStore {
 
     private Database database;
     private CategoryAdapter categoryAdapter;
 
-    private PullToRefreshLayout mPullToRefreshLayout;
+
     private long parentId;
     private long storeId;
     private MergeAdapter mainAdapter;
     private CategoryAdapter apkAdapter;
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+    private ListFragmentSwipeRefreshLayout mSwipeRefreshLayout;
 
 
+    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
+
+        public ListFragmentSwipeRefreshLayout(Context context) {
+            super(context);
+        }
+
+        /**
+         * As mentioned above, we need to override this method to properly signal when a
+         * 'swipe-to-refresh' is possible.
+         *
+         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
+         */
+        @Override
+        public boolean canChildScrollUp() {
+            final ListView listView = getListView();
+            if (listView.getVisibility() == View.VISIBLE) {
+                return canListViewScrollUp(listView);
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    /**
+     * Utility method to check whether a {@link ListView} can scroll up from it's current position.
+     * Handles platform version differences, providing backwards compatible functionality where
+     * needed.
+     */
+    private static boolean canListViewScrollUp(ListView listView) {
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            // For ICS and above we can call canScrollVertically() to determine this
+            return ViewCompat.canScrollVertically(listView, -1);
+        } else {
+            // Pre-ICS we need to manually check the first visible item and the child view's top
+            // value
+            return listView.getChildCount() > 0 &&
+                    (listView.getFirstVisiblePosition() > 0
+                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
+        }
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Create the list fragment's content view by calling the super method
+        final View listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
+
+        if (storeId != -1) {
+            mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
+
+            // Add the list fragment's content view to the SwipeRefreshLayout, making sure that it fills
+            // the SwipeRefreshLayout
+            mSwipeRefreshLayout.addView(listFragmentView,
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            // Make sure that the SwipeRefreshLayout will fill the fragment
+            mSwipeRefreshLayout.setLayoutParams(
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+
+            // Now return the SwipeRefreshLayout as this fragment's content view
+            return mSwipeRefreshLayout;
+        }else{
+            return listFragmentView;
+        }
+        // Now create a SwipeRefreshLayout to wrap the fragment's content view
+
     }
 
     @Override
@@ -70,28 +135,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
 
         // We can now setup the PullToRefreshLayout
-        if (storeId != -1) {
-            mPullToRefreshLayout = new PullToRefreshLayout(Aptoide.getContext());
-            if(getActivity()!=null){
-                ActionBarPullToRefresh.from(getActivity())
 
-                        // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                        .insertLayoutInto((ViewGroup) view)
-                        .useViewDelegate(TextView.class, new ViewDelegate() {
-                            @Override
-                            public boolean isReadyForPull(View view, float v, float v2) {
-                                return Boolean.TRUE;
-                            }
-                        })
-                                // We need to mark the ListView and it's Empty View as pullable
-                                // This is because they are not dirent children of the ViewGroup
-                        .theseChildrenArePullable(getListView().getId(), getListView().getEmptyView().getId())
-                                // We can now complete the setup as desired
-                        .listener(FragmentStoreListCategories.this)
-                        .options(Options.create().headerTransformer(new AbcDefaultHeaderTransformer()).scrollDistance(0.5f).build())
-                        .setup(mPullToRefreshLayout);
-            }
-        }
 
     }
 
@@ -172,8 +216,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
         setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
-
-
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
     }
 
@@ -293,14 +336,14 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
 
         ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
@@ -323,24 +366,9 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void setRefreshing(final boolean bool) {
 
-        if(mPullToRefreshLayout!=null){
-            final View v = getActivity().getWindow().getDecorView();
+        mSwipeRefreshLayout.setRefreshing(bool);
 
-            v.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (v.getWindowToken() != null) {
-                        // The Decor View has a Window Token, so we can add the HeaderView!
-                        mPullToRefreshLayout.setRefreshing(bool);
-                    } else {
-                        // The Decor View doesn't have a Window Token yet, post ourselves again...
-                        v.post(this);
-                    }
-                }
-            });
-        }
-
-        onRefresh();
+        onRefreshCalled();
         getActivity().supportInvalidateOptionsMenu();
     }
 

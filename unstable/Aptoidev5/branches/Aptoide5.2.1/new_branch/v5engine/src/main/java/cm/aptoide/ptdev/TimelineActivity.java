@@ -7,10 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 
 import com.octo.android.robospice.SpiceManager;
@@ -36,6 +42,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     private Number lastId;
     private Number firstId;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean mListShown = false;
+    private View mProgressContainer;
 
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
@@ -79,6 +87,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
             onItemsReady(new ArrayList<TimelineListAPKsJson.UserApk>(timelineListAPKsJson.getUsersapks()));
             swipeRefreshLayout.setRefreshing(false);
+            if (!mListShown) setListShown(true, true);
+
         }
 
     };
@@ -92,8 +102,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         @Override
         public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
+            apks.clear();
             onItemsReadyRefresh(new ArrayList<TimelineListAPKsJson.UserApk>(timelineListAPKsJson.getUsersapks()));
             swipeRefreshLayout.setRefreshing(false);
+
+            if (!mListShown) setListShown(true, true);
+
         }
 
     };
@@ -114,12 +128,49 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         //listAPKsInstallsRequest.setOffset_id(String.valueOf(firstId.intValue()));
         //listAPKsInstallsRequest.setUpwardsDirection();
-        apks.clear();
+
 
         adapter.notifyDataSetChanged();
         adapter.restartAppending();
 
         manager.execute(listAPKsInstallsRequest, listenerRefresh);
+    }
+
+
+    private void setListShown(boolean shown, boolean animate) {
+
+        if (mProgressContainer == null) {
+            throw new IllegalStateException("Can't be used with a custom content view");
+        }
+        if (mListShown == shown) {
+            return;
+        }
+        mListShown = shown;
+        if (shown) {
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+                swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_in));
+            } else {
+                mProgressContainer.clearAnimation();
+                swipeRefreshLayout.clearAnimation();
+            }
+            mProgressContainer.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
+        } else {
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
+                       this, android.R.anim.fade_in));
+                swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+            } else {
+                mProgressContainer.clearAnimation();
+                swipeRefreshLayout.clearAnimation();
+            }
+            mProgressContainer.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.GONE);
+        }
     }
 
 
@@ -131,10 +182,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         adapter = new EndlessWrapperAdapter(this, apks);
         adapter.setRunInBackground(false);
         setContentView(R.layout.page_timeline);
+        mProgressContainer = findViewById(android.R.id.empty);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
+
+
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
-
+        setListShown(false, false);
 
         Bundle addAccountOptions=new Bundle();
         if(AptoideUtils.isLoggedIn(this)){
@@ -146,7 +201,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL,true);
             }
         }
-        addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL,true);
+        addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL, true);
         AccountManager.get(this).addAccount(
                 Aptoide.getConfiguration().getAccountType(),
                 AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
@@ -173,18 +228,24 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new Handler(Looper.getMainLooper())
         );
 
-
-
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
+
     }
 
+
+
+
     private void init() {
+
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setAdapter(adapter);
+
+        //force loading
+        adapter.getView(0, null, null);
+
     }
 
 

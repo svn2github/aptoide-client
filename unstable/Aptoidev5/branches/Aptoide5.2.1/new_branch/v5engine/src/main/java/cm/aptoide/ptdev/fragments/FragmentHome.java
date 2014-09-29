@@ -22,6 +22,8 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,7 +90,7 @@ import java.util.Map;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, OnRefreshListener {
+public class FragmentHome extends ListFragment implements LoaderManager.LoaderCallbacks<HashMap<String, ArrayList<Home>>>, SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Home> editorsChoice = new ArrayList<Home>();
     private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
@@ -102,12 +104,13 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private int bucketSize;
     private View moreRecommended;
     private PullToRefreshCallback pullToRefreshCallback;
-    private PullToRefreshLayout mPullToRefreshLayout;
+
     private View featGraphFooter;
 
     private LinearLayout sponsoredLinearLayout, sponsoredCustomAdsLinearLayout, sponsoredGoogleAdsLinearLayout;
     private View sponsoredHeader;
     private boolean fromRefresh;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 /*    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
     private boolean onConfigChange;
@@ -116,7 +119,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private SectionAdapter adapter;*/
 
     @Override
-    public void onRefreshStarted( View view ) {
+    public void onRefresh() {
         Log.d("pullToRefresh", "onRefreshStarted");
 
         if(pullToRefreshCallback != null) {
@@ -126,10 +129,75 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Create the list fragment's content view by calling the super method
+        final FrameLayout listFragmentView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
+
+        // Now create a SwipeRefreshLayout to wrap the fragment's content view
+         mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        // Add the list fragment's content view to the SwipeRefreshLayout, making sure that it fills
+        // the SwipeRefreshLayout
+        mSwipeRefreshLayout.addView(listFragmentView,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        // Make sure that the SwipeRefreshLayout will fill the fragment
+        mSwipeRefreshLayout.setLayoutParams(
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
+        // Now return the SwipeRefreshLayout as this fragment's content view
+        return mSwipeRefreshLayout;
+    }
+
+    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
+
+        public ListFragmentSwipeRefreshLayout(Context context) {
+            super(context);
+        }
+
+        /**
+         * As mentioned above, we need to override this method to properly signal when a
+         * 'swipe-to-refresh' is possible.
+         *
+         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
+         */
+        @Override
+        public boolean canChildScrollUp() {
+            final ListView listView = getListView();
+            if (listView.getVisibility() == View.VISIBLE) {
+                return canListViewScrollUp(listView);
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    private static boolean canListViewScrollUp(ListView listView) {
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            // For ICS and above we can call canScrollVertically() to determine this
+            return ViewCompat.canScrollVertically(listView, -1);
+        } else {
+            // Pre-ICS we need to manually check the first visible item and the child view's top
+            // value
+            return listView.getChildCount() > 0 &&
+                    (listView.getFirstVisiblePosition() > 0
+                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(50, null, this);
 
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
 
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
@@ -384,7 +452,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             refreshTopList();
         }
 
-        if (mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
+        //if (mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
 
     }
 
@@ -485,17 +554,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         ViewGroup viewGroup = (ViewGroup) view;
 
-        if ( getActivity() != null ) {
-            mPullToRefreshLayout = new PullToRefreshLayout( viewGroup.getContext() );
 
-            ActionBarPullToRefresh.from(getActivity())
-                    .insertLayoutInto( viewGroup )
-                    .useViewDelegate( ListView.class, new AbsListViewDelegate())
-                    .theseChildrenArePullable( getListView().getId())
-                    .listener( FragmentHome.this )
-                    .options( Options.create().headerTransformer( new AbcDefaultHeaderTransformer() ).scrollDistance( 0.5f ).build() )
-                    .setup( mPullToRefreshLayout );
-        }
 
     }
 
@@ -797,13 +856,13 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             homeBucketAdapterHome.notifyDataSetChanged();
         }
 
-        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 
     @Subscribe
     public void onDismissEvent(DismissRefreshEvent event){
-        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -121,7 +121,7 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
 
     }
 

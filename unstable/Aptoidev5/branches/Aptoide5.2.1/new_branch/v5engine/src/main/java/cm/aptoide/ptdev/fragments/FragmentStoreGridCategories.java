@@ -2,32 +2,22 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
+
 import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.adapters.CategoryGridAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.flurry.android.FlurryAgent;
-
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,12 +26,12 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
  * Time: 17:12
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreGridCategories extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, OnRefreshListener, FragmentStore, AdapterView.OnItemClickListener {
+public class FragmentStoreGridCategories extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener, FragmentStore, AdapterView.OnItemClickListener {
 
     private Database database;
     private CategoryGridAdapter categoryAdapter;
 
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mPullToRefreshLayout;
     private long parentId;
     private long storeId;
     private MergeAdapter mainAdapter;
@@ -53,6 +43,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
         return inflater.inflate(R.layout.page_store_grid, container, false);
     }
@@ -70,20 +62,10 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
         }
         gridView.setOnItemClickListener(this);
                 // We need to create a PullToRefreshLayout manually
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        mPullToRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.ptr_layout);
+        mPullToRefreshLayout.setOnRefreshListener(this);
+        mPullToRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
-
-        // We can now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
-                .options(Options.create()
-                        // Here we make the refresh scroll distance to 75% of the GridView height
-                        .scrollDistance(.75f)
-                        .build())
-                .allChildrenArePullable()
-                .listener(this)
-                        // Here we'll set a custom ViewDelegate
-                .useViewDelegate(GridView.class, new AbsListViewDelegate())
-                .setup(mPullToRefreshLayout);
 
     }
 
@@ -227,14 +209,14 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
 
         ((CategoryCallback)getActivity()).onRefreshStarted();
 
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
         Bundle bundle = new Bundle();
         bundle.putLong("storeid", storeId);
         bundle.putLong("parentid", parentId);
@@ -250,21 +232,8 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
     @Override
     public void setRefreshing(final boolean bool) {
-        final View v = getActivity().getWindow().getDecorView();
-
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                if (v.getWindowToken() != null) {
-                    // The Decor View has a Window Token, so we can add the HeaderView!
-                    mPullToRefreshLayout.setRefreshing(bool);
-                } else {
-                    // The Decor View doesn't have a Window Token yet, post ourselves again...
-                    v.post(this);
-                }
-            }
-        });
-        onRefresh();
+        mPullToRefreshLayout.setRefreshing(bool);
+        onRefreshCalled();
         getActivity().supportInvalidateOptionsMenu();
     }
 

@@ -110,7 +110,7 @@ public class LatestLikesFragment extends ListFragment implements FragmentStore{
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
 
     }
 
