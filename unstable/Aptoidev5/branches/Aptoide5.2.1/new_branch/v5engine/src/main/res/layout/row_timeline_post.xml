@@ -23,7 +23,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:contentDescription="fb_photo"
-                android:src="@drawable/icon_non_available"
+                android:src="@drawable/facebook_profile_pic"
                 android:scaleType="fitXY"
                 android:layout_marginRight="10dp"/>
 

@@ -3,8 +3,6 @@ package cm.aptoide.ptdev;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,13 +10,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
@@ -127,6 +125,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
         adapter = new EndlessWrapperAdapter(this, apks);
@@ -177,6 +176,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
 
 
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.social_timeline);
     }
 
     private void init() {
@@ -205,5 +208,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     public void onRefresh() {
         refreshRequest();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
