@@ -2,13 +2,13 @@ package cm.aptoide.ptdev.webservices.timeline;
 
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
-import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
 
 /**
  * Created by asantos on 24-09-2014.
  */
-public class AddUserApkInstallLikeRequest extends TimelineRequest<GetUserSettingsJson> {
+public class AddUserApkInstallLikeRequest extends TimelineRequest<GenericResponse> {
     public static final String LIKE = "like";
     public static final String DISLIKE = "dislike";
     public static final String UNLIKE = "unlike";
@@ -18,7 +18,7 @@ public class AddUserApkInstallLikeRequest extends TimelineRequest<GetUserSetting
     public void setPostId(long postID) {	this.postID = postID;	}
     public void setLike(String s) {	this.like = s;	}
 
-    public AddUserApkInstallLikeRequest() { super(GetUserSettingsJson.class);   }
+    public AddUserApkInstallLikeRequest() { super(GenericResponse.class);   }
 
     @Override
     protected String getUrl() {

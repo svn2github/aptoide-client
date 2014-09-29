@@ -14,7 +14,7 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
 /**
  * Created by asantos on 24-09-2014.
  */
-public abstract class TimelineRequestListener implements RequestListener<GenericResponse> {
+public abstract class TimelineRequestListener<E> implements RequestListener<E> {
 
     @Override
     public void onRequestFailure(SpiceException spiceException) {
@@ -29,10 +29,11 @@ public abstract class TimelineRequestListener implements RequestListener<Generic
         }
     }
 
-    protected abstract void caseOK(GenericResponse response);
+    protected abstract void caseOK(E response);
+
     @Override
-    public  void onRequestSuccess(GenericResponse response){
-        String status = response.getStatus();
+    public  void onRequestSuccess(E response){
+        String status = ((GenericResponse)response).getStatus();
         if (status.equals("OK"))
             caseOK(response);
 

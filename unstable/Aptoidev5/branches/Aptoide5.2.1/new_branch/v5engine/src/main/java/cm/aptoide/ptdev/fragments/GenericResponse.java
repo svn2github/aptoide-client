@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by rmateus on 27-12-2013.
  */
-public class GenericResponse {
+public abstract class GenericResponse {
 
     @Key
     String status;
