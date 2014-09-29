@@ -60,12 +60,13 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String RESTRICTIONLIST;
     public static String SPLASHCOLOR;
     public static boolean SHOWSPLASH = true;
+    public static boolean SHOWADS = true;
 
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR, SHOWSPLASH,
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR, SHOWSPLASH, SHOWADS,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
     }
 
@@ -155,6 +156,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     public boolean getShowSplash() { return SHOWSPLASH; }
     public static void setShowSplash(boolean showSplash) { AptoideConfigurationPartners.SHOWSPLASH = showSplash; }
+
+    public boolean getShowAds() { return SHOWADS; }
+    public static void setShowAds(boolean showAds) { AptoideConfigurationPartners.SHOWADS = showAds; }
+
 
     @Override
     public String getExtraId(){
@@ -288,6 +293,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             SHOWSPLASH = Boolean.parseBoolean(sb.toString());
                             Log.d("Show splashscreen", SHOWSPLASH+ "");
                             break;
+                        case SHOWADS:
+                            SHOWADS = Boolean.parseBoolean(sb.toString());
+                            Log.d("Show ads", SHOWADS+ "");
+                            break;
 
                         case THEME:
                             THEME = sb.toString();
@@ -346,6 +355,8 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             map.put("MARKETNAME", MARKETNAME);
             map.put("ADUNITID", ADUNITID);
             map.put("SPLASHCOLOR", SPLASHCOLOR);
+            map.put("SHOWSPLASH", SHOWSPLASH + "");
+            map.put("SHOWADS", SHOWADS + "");
             map.put("CREATESHORTCUT", CREATESHORTCUT + "");
             map.put("STOREDESCRIPTION", DESCRIPTION);
             map.put("STORETHEME", THEME);
@@ -387,6 +398,8 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("ADUNITID", ADUNITID)
                 .putString("SPLASHCOLOR", SPLASHCOLOR)
                 .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
+                .putBoolean("SHOWSPLASH", SHOWSPLASH)
+                .putBoolean("SHOWADS", SHOWADS)
                 .putString("STOREDESCRIPTION", DESCRIPTION)
                 .putString("STOREAVATAR", AVATAR)
                 .putString("STORETHEME", THEME)

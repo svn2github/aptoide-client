@@ -3,6 +3,7 @@ package com.aptoide.partners;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.ptdev.Aptoide;
@@ -30,6 +31,14 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
 
     private AdView mAdView;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+
+    }
+
     private DialogInterface.OnDismissListener defaultDismissListener = new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
@@ -124,39 +133,48 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     @Override
     public void loadPublicity() {
 
-        if(TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())){
-            super.loadPublicity();
-        }else {
-            RelativeLayout layout = (RelativeLayout) findViewById(R.id.advertisement);
-            layout.removeAllViews();
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getShowAds()) {
 
-            mAdView = new AdView(this, "http://my.mobfox.com/request.php", ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId(), true, true);
+            if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
+                super.loadPublicity();
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.advertisement);
+                layout.setVisibility(View.VISIBLE);
+                layout.removeAllViews();
 
-            mAdView.setAdspaceWidth(320); // Optional, used to set the custom size of banner placement. Without setting it, the SDK will use default size of 320x50 or 300x50 depending on device type.
+                mAdView = new AdView(this, "http://my.mobfox.com/request.php", ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId(), true, true);
 
-            mAdView.setAdspaceHeight(50);
+                mAdView.setAdspaceWidth(320); // Optional, used to set the custom size of banner placement. Without setting it, the SDK will use default size of 320x50 or 300x50 depending on device type.
 
-            mAdView.setAdspaceStrict(false); // Optional, tells the server to only supply banner ads that are exactly of the desired size. Without setting it, the server could also supply smaller Ads when no ad of desired size is available.
+                mAdView.setAdspaceHeight(50);
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                mAdView.setAdspaceStrict(false); // Optional, tells the server to only supply banner ads that are exactly of the desired size. Without setting it, the server could also supply smaller Ads when no ad of desired size is available.
 
-            layout.addView(mAdView, params);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
-            HashMap<String, String> adTypeArgs = new HashMap<String, String>();
-            adTypeArgs.put("type", "mobfox");
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+                layout.addView(mAdView, params);
 
+                HashMap<String, String> adTypeArgs = new HashMap<String, String>();
+                adTypeArgs.put("type", "mobfox");
+                if (Build.VERSION.SDK_INT >= 10)
+                    FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+
+            }
         }
 
     }
 
     @Override
     public void destroyPublicity() {
-        if(TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
-            super.destroyPublicity();
-        }else{
-            mAdView.release();
+        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getShowAds()) {
+
+            if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
+                super.destroyPublicity();
+            } else {
+                mAdView.release();
+            }
+
         }
     }
 
@@ -171,4 +189,12 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     public boolean isMultipleStores() {
         return ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores();
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+    }
+
 }

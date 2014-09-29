@@ -21,10 +21,11 @@
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
         <multiplestores>true</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid></adunitid>
+        <adunitid>a58e7ba580726745c283b3119b0fd062</adunitid>
         <createshortcut>true</createshortcut>
         <linkedcomments>true</linkedcomments>
         <showsplash>true</showsplash>
         <splashcolor>#FFE98023</splashcolor>
+        <showads>true</showads>
     </aptoideconf>
 </bootconf>
