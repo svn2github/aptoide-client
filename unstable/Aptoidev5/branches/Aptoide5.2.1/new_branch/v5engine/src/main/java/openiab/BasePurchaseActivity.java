@@ -60,7 +60,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
 
     // note that these credentials will differ between live & sandbox environments.
-    private static final String CONFIG_CLIENT_ID = "AUWmKhAVvs19NH2TE_6RO9T7JtHgs35i7QGzCi1zs_siIDiSiRggI2EhioaB";
+    private static final String CONFIG_CLIENT_ID = "AW47wxAycZoTcXd5KxcJPujXWwImTLi-GNe3XvUUwFavOw8Nq4ZnlDT1SZIY";
 
     //private static final String CONFIG_CLIENT_ID = "AQ7o2RBHX3UxiM3xhHccETYWVVLLU0nD7GXxsmQg2MhRajAZztqHeidrPgqr";
 
