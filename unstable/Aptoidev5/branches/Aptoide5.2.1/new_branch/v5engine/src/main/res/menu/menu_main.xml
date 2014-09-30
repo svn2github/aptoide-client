@@ -13,10 +13,10 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
 
-    <item android:id="@+id/menu_filter_mature_content"
-          android:checkable="true"
-          app:showAsAction="never"
-          android:title="@string/setting_hide_mature"/>
+    <!--<item android:id="@+id/menu_filter_mature_content"-->
+          <!--android:checkable="true"-->
+          <!--app:showAsAction="never"-->
+          <!--android:title="@string/setting_hide_mature"/>-->
 
     <item android:id="@+id/menu_SendFeedBack"
         app:showAsAction="never"

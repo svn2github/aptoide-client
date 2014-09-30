@@ -268,14 +268,14 @@ public class Start extends ActionBarActivity implements
 //        } else if (i == R.id.menu_about) {
 //            showAbout();
 
-        } else if ( i == R.id.menu_filter_mature_content){
-
-            if (item.isChecked()) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
-                new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
-            } else {
-                maturelock();
-            }
+//        } else if ( i == R.id.menu_filter_mature_content){
+//
+//            if (item.isChecked()) {
+//                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
+//                new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
+//            } else {
+//                matureLock();
+//            }
 
         } else if( i == R.id.menu_SendFeedBack){
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Feedback_Button");
@@ -312,7 +312,7 @@ public class Start extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
+//        menu.findItem(R.id.menu_filter_mature_content).setChecked(!matureCheck);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -930,7 +930,7 @@ public class Start extends ActionBarActivity implements
                 if(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true))
                     matureUnlock();
                 else
-                    maturelock();
+                    matureLock();
 
                 refresh = true;
 
@@ -1109,7 +1109,7 @@ public class Start extends ActionBarActivity implements
         InvalidateAptoideMenu();
     }
 
-    public void maturelock() {
+    public void matureLock() {
         //Log.d("Mature","locked");
         matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();

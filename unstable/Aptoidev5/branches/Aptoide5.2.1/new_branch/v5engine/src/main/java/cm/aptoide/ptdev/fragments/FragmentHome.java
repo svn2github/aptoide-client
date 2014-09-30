@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -31,23 +30,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
+
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.adapters.Adapter;
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
@@ -57,13 +56,6 @@ import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import cm.aptoide.ptdev.widget.SearchWidgetActivity;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.flurry.android.FlurryAgent;
@@ -81,7 +73,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -111,6 +102,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private View sponsoredHeader;
     private boolean fromRefresh;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private View adultSwitchView;
+    private CompoundButton adultContent;
 
 /*    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
     private boolean onConfigChange;
@@ -759,6 +752,23 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         mergeAdapter.setActive(v2, false);
         mergeAdapter.setActive(featGraphFooter, false);
 
+        adultSwitchView = View.inflate(getActivity(), R.layout.widget_switch, null);
+        adultContent = (CompoundButton) adultSwitchView.findViewById(R.id.adult_content);
+        adultContent.setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
+        adultContent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
+                    new AdultDialog().show(getFragmentManager(), "adultDialog");
+                } else {
+                    ((GetStartActivityCallback) getActivity()).matureLock();
+                }
+            }
+        });
+
+        mergeAdapter.addView(adultSwitchView);
+        mergeAdapter.setActive(adultSwitchView, false);
 
 
 
@@ -855,6 +865,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         }else{
             homeBucketAdapterHome.notifyDataSetChanged();
         }
+
+        mergeAdapter.setActive(adultSwitchView, true);
 
         mSwipeRefreshLayout.setRefreshing(false);
 

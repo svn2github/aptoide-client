@@ -6,5 +6,7 @@ public interface GetStartActivityCallback {
 
     public SpiceManager getSpiceManager();
     public String getSponsoredCache();
+    public void matureUnlock();
+    public void matureLock();
 
 }
