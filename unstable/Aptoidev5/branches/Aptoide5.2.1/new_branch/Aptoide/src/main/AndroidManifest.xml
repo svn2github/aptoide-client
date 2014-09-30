@@ -389,7 +389,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="cm.aptoide.ptdev.PushNotification.PushNotificationReceiver">
+        <receiver android:name="cm.aptoide.ptdev.pushnotification.PushNotificationReceiver">
             <intent-filter>
                 <action android:name="cm.aptoide.ptdev.PushNotification" />
                 <action android:name="cm.aptoide.ptdev.PushNotificationFirstTime" />
