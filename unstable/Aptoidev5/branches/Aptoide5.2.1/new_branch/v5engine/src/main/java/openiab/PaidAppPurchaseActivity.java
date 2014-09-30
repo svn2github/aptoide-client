@@ -121,7 +121,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                                 hasAuthorization.setCurrency(service.getCurrency());
                                 hasAuthorization.setPrice(service.getPrice());
                                 hasAuthorization.setTax(service.getTaxRate());
-                                spiceManager.execute(request, "authorization-" + token, DurationInMillis.ONE_DAY, hasAuthorization);
+                                spiceManager.execute(request, hasAuthorization);
 
                             } else if ("single".equals(type.getReqType())) {
 

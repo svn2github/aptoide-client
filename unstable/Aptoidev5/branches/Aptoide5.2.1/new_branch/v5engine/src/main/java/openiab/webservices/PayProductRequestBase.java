@@ -32,7 +32,7 @@ public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatu
 
     @Override
     protected GenericUrl getURL() {
-        String baseUrl = "https://webservices.aptoide.com/webservices/3/payProduct";
+        String baseUrl = "http://webservices.aptoide.com/webservices/3/payProduct";
         return new GenericUrl(baseUrl);
     }
 

@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -611,8 +612,9 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             }
             c.close();
 
+            boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
-            manager.execute(request, query + sb.toString().hashCode(), DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
+            manager.execute(request, query + sb.toString().hashCode() + matureCheck, DurationInMillis.ONE_HOUR, new RequestListener<SearchJson>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     Bundle bundle = new Bundle();

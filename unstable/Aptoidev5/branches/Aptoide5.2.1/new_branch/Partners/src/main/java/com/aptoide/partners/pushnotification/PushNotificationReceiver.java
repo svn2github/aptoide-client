@@ -130,10 +130,10 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                                 final Bundle extra = intent.getExtras();
 
                                 extra.putString(PUSH_NOTIFICATION_EXTERNAL_URL, notification.getTarget_url());
-                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getTitle());
+                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getMessage());
                                 extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
-                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
 
+                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
 
                                 handler.post(new Runnable() {
                                     @Override

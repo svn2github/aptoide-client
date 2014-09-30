@@ -23,12 +23,20 @@ public class PushNotificationJson extends GenericResponseV2 {
         Number id;
         @Key
         String title;
+
+        @Key
+        String message;
+
         @Key
         String target_url;
         @Key
         String track_url;
 
         @Key Images images;
+
+        public String getMessage() {
+            return message;
+        }
 
         public Images getImages() {
             return images;

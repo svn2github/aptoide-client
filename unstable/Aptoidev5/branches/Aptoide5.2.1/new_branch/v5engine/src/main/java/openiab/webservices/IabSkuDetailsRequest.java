@@ -73,7 +73,7 @@ public class IabSkuDetailsRequest extends GoogleHttpClientSpiceRequest<IabSkuDet
 
 
         //String baseUrl = "http://dev.aptoide.com/webservices/processInAppBilling/iabskudetails/"+apiVersion+"/options="+sb.toString();
-        String baseUrl = "https://webservices.aptoide.com/webservices/3/processInAppBilling";
+        String baseUrl = "http://webservices.aptoide.com/webservices/3/processInAppBilling";
 
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("mode","json");
