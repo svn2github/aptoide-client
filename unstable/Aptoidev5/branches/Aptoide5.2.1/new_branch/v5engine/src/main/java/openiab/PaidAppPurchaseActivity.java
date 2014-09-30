@@ -71,6 +71,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                         e.printStackTrace();
                         finish();
                     }
+
                 }
 
             }, new Handler(Looper.getMainLooper()));
@@ -82,7 +83,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
         findViewById(R.id.buttonCancel).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_OK, getIntent());
+                setResult(RESULT_CANCELED, getIntent());
                 finish();
             }
         });
