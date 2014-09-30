@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.ads.AptoideAdNetworks;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
@@ -106,6 +107,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         HttpContent content = new UrlEncodedContent(parameters);
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        request.setSuppressUserAgentSuffix(true);
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         request.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -117,7 +119,6 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         adsParams.put("placement", location);
 
 
-
         for(ApkSuggestionJson.Ads suggestionJson : result.getAds()) {
             String ad_type = suggestionJson.getInfo().getAd_type();
             adsParams.put("type", ad_type);
@@ -126,18 +127,12 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
             if(suggestionJson.getPartner() != null){
 
-                String deviceId = Settings.Secure.getString(Aptoide.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
-
                 String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
 
-                impressionUrlString = impressionUrlString.replace("[USER_ANDROID_ID]", deviceId);
-                impressionUrlString = impressionUrlString.replace("[USER_UDID]", aaId);
-                impressionUrlString = impressionUrlString.replace("[USER_AAID]", aaId);
+                impressionUrlString = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), impressionUrlString);
 
                 GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
-                getHttpRequestFactory().buildGetRequest(impressionUrl).execute();
-
+                getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).execute();
 
             }
 

@@ -265,7 +265,7 @@ public class DownloadService extends Service{
                 download.getIcon(),
                 path + json.getApk().getMd5sum() + ".apk",
                 new ArrayList<String>(json.getApk().getPermissions()));
-
+        apk.setId(json.getApk().getId().longValue());
         download(download.getId(), download, apk, filesToDownload);
     }
 

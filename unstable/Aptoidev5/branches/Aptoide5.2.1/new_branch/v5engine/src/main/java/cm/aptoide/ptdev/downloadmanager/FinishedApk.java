@@ -26,6 +26,7 @@ public class FinishedApk implements Parcelable, Serializable{
     private ArrayList<String> permissionsList;
     private String repoName;
     private String cpiUrl;
+    private long id;
 
 
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
@@ -91,6 +92,7 @@ public class FinishedApk implements Parcelable, Serializable{
         dest.writeString(path);
         dest.writeStringList(permissionsList);
         dest.writeString(repoName);
+        dest.writeLong(id);
         Log.d("Aptoide-FinishedApkParcel", "" + path);
 
     }
@@ -115,7 +117,7 @@ public class FinishedApk implements Parcelable, Serializable{
         permissionsList = new ArrayList<String>();
         in.readStringList(permissionsList);
         repoName = in.readString();
-
+        id = in.readLong();
 
         Log.d("Aptoide-FinishedApkParceOut", "Path" + path);
 
@@ -148,5 +150,13 @@ public class FinishedApk implements Parcelable, Serializable{
 
     public String getCpiUrl() {
         return cpiUrl;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

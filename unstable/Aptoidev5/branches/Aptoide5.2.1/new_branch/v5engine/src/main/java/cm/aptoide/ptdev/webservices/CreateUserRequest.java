@@ -26,9 +26,9 @@ import java.util.HashMap;
 public class CreateUserRequest extends GoogleHttpClientSpiceRequest<OAuth> {
 
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/3/createUser";
+    String baseUrl = WebserviceOptions.WebServicesLink + "3/createUser";
 
-    String baseUrlNonSsl = "https://webservices.aptoide.com/webservices/3/createUser";
+    String baseUrlNonSsl = WebserviceOptions.WebServicesLink + "3/createUser";
 
 
 

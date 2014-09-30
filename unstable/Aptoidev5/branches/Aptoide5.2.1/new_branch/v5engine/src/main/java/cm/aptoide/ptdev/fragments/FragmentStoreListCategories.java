@@ -113,7 +113,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
 
             // Now return the SwipeRefreshLayout as this fragment's content view
             return mSwipeRefreshLayout;
-        }else{
+        } else {
             return listFragmentView;
         }
         // Now create a SwipeRefreshLayout to wrap the fragment's content view

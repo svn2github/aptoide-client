@@ -591,6 +591,9 @@ public class AptoideUtils {
         }
 
         public static String formatRepoUri(String uri_str) {
+
+            uri_str = uri_str.toLowerCase(Locale.ENGLISH);
+
             if (uri_str.contains("http//")) {
                 uri_str = uri_str.replaceFirst("http//", "http://");
             }

@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.api.client.http.HttpRequest;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -83,6 +84,7 @@ public class Aptoide extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
 
 
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()

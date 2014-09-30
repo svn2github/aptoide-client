@@ -25,15 +25,22 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.webservices.RegisterAdRequest;
+import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.UrlEncodedContent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -142,6 +149,24 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             }).start();
 
         }
+
+
+        if(sPref.getBoolean("shareTimelineDownload", true) && apk.getId() > 0){
+
+            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
+
+            HashMap<String, String> parameters = new HashMap<String, String>();
+
+            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
+            parameters.put("appid", String.valueOf(apk.getId()));
+            HttpContent content = new UrlEncodedContent(parameters);
+            try {
+                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {

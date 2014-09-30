@@ -20,7 +20,7 @@ import java.util.HashMap;
  */
 public class AddCommentRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2>{
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/3/addApkComment";
+    String baseUrl = WebserviceOptions.WebServicesLink + "3/addApkComment";
     private Context context;
     private String token;
     private String repo;

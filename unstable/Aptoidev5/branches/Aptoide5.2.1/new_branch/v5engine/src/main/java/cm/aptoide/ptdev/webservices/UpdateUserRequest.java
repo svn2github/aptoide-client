@@ -31,7 +31,7 @@ import java.util.Locale;
 public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
 
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/createUser";
+    String baseUrl = WebserviceOptions.WebServicesLink + "createUser";
 
     private String name = "";
     private Context context;

@@ -31,7 +31,7 @@ public class ListRepositoryLikesRequest extends GoogleHttpClientSpiceRequest<Rep
 
     @Override
     public RepositoryLikesJson loadDataFromNetwork() throws Exception {
-        String baseUrl = "https://webservices.aptoide.com/webservices/listRepositoryLikes";
+        String baseUrl = WebserviceOptions.WebServicesLink + "listRepositoryLikes";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

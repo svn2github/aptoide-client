@@ -55,6 +55,8 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Data;
@@ -69,6 +71,7 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -83,6 +86,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
+import cm.aptoide.ptdev.ads.AptoideAdNetworks;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
@@ -105,6 +109,7 @@ import cm.aptoide.ptdev.model.MediaObject;
 import cm.aptoide.ptdev.model.MultiStoreItem;
 import cm.aptoide.ptdev.model.Screenshot;
 import cm.aptoide.ptdev.model.Video;
+import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -1187,7 +1192,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, id, DurationInMillis.ONE_HOUR, requestListener);
 
-                Log.d("Aptoide", "InSponsored");
+
 
                 final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -1198,23 +1203,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                             try {
 
-
-
                                 String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
-
                                 Log.d("Aptoide", "InSponsoredExtras");
-                                String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-                                String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
-
-                                clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
-                                clickUrl = clickUrl.replace("[USER_UDID]", aaId);
-                                clickUrl = clickUrl.replace("[USER_AAID]", aaId);
-                                clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
-
-
+                                clickUrl = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), clickUrl);
                                 GenericUrl url = new GenericUrl(clickUrl);
-
-                                AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+                                AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync(executorService);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1228,7 +1221,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 try {
                     GenericUrl url = new GenericUrl(getIntent().getStringExtra("cpc"));
-                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync(executorService);
+                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync(executorService);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1317,6 +1310,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 
     }
+
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
@@ -1679,8 +1674,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             Toast.makeText(this, R.string.error_occured, Toast.LENGTH_LONG).show();
             finish();
         }
-
-
 
     }
 

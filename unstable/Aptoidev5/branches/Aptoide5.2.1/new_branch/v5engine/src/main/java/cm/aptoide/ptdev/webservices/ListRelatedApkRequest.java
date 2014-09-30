@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedApkJson> {
 
 
-    String baseUrl = "https://webservices.aptoide.com/webservices/2/listRelatedApks";
+    String baseUrl = WebserviceOptions.WebServicesLink + "2/listRelatedApks";
     private String repos;
     private int limit;
     private Context context;
