@@ -184,10 +184,10 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
 
     @Override
-    public void onRefresh() {
+    public void onRefreshCalled() {
         FragmentStore fragStore = (FragmentStore) getChildFragmentManager().findFragmentByTag("fragStore");
         if(fragStore!=null){
-            fragStore.onRefresh();
+            fragStore.onRefreshCalled();
         }
     }
 

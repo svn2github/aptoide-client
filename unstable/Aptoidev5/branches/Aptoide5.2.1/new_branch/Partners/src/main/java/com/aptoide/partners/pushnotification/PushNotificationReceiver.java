@@ -1,4 +1,4 @@
-package com.aptoide.partners.PushNotification;
+package com.aptoide.partners.pushnotification;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -11,22 +11,29 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.aptoide.partners.AptoidePartner;
 import com.aptoide.partners.R;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
-
-import cm.aptoide.ptdev.Start;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by asantos on 01-09-2014.
@@ -78,7 +85,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         if (action != null) {
             if (action.equals(Intent.ACTION_BOOT_COMPLETED)
@@ -95,10 +102,59 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                 Log.i("PushNotificationReceiver", "Alarm Registed Received");
             } else if (action.equals(PUSH_NOTIFICATION_Action)) {
                 Log.i("PushNotificationReceiver", "PUSH_NOTIFICATION_Action");
-                Bundle extra = intent.getExtras();
-                ImageLoader.getInstance().loadImage(
-                        extra.getString(PUSH_NOTIFICATION_IMG_URL),
-                        new MyImageLoadingListener(context, extra));
+
+
+                final Handler handler = new Handler(Looper.getMainLooper());
+
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+
+                            GenericUrl url = new GenericUrl("http://192.168.1.229/webservices/3/getPushNotifications");
+
+                            HashMap<String, String> parameters = new HashMap<String, String>();
+
+                            parameters.put("oem_id", "5eb808a36b2dcb3b8e21839979980e37");
+                            parameters.put("mode", "json");
+
+                            HttpContent content = new UrlEncodedContent(parameters);
+                            HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
+                            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
+
+                            PushNotificationJson response = httpRequest.execute().parseAs(PushNotificationJson.class);
+                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
+
+                            for (final PushNotificationJson.Notification notification : response.getResults()) {
+                                final Bundle extra = intent.getExtras();
+
+                                extra.putString(PUSH_NOTIFICATION_EXTERNAL_URL, notification.getTarget_url());
+                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getTitle());
+                                extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
+                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
+
+
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ImageLoader.getInstance().loadImage(notification.getImages()!=null?
+                                                        notification.getImages().getBanner_url():null,
+                                                new MyImageLoadingListener(context, extra));
+                                    }
+                                });
+
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+
+
 
             }
         }
@@ -224,7 +280,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         */
         Log.i("PushNotificationReceiver", "notification built");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        managerNotification.notify(86456, notification);
+        managerNotification.notify(new Random().nextInt(), notification);
 
     }
 }

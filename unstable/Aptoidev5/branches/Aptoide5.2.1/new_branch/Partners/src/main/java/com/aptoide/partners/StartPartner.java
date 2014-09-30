@@ -31,7 +31,7 @@ import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
-import com.aptoide.partners.PushNotification.PushNotificationReceiver;
+import com.aptoide.partners.pushnotification.PushNotificationReceiver;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -250,7 +250,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
             if(fragmentStore!=null){
                 ((FragmentStore)fragmentStore).onError();
-                ((FragmentStore)fragmentStore).onRefresh();
+                ((FragmentStore)fragmentStore).onRefreshCalled();
                 ((FragmentStore)fragmentStore).setRefreshing(service.repoIsParsing(storeid));
             }
 
@@ -261,7 +261,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         if(service!=null){
             isRefreshing = service.repoIsParsing(storeid);
             if(fragmentStore!=null){
-                ((FragmentStore)fragmentStore).onRefresh();
+                ((FragmentStore)fragmentStore).onRefreshCalled();
                 ((FragmentStore)fragmentStore).setListShown(false);
                 ((FragmentStore)fragmentStore).setRefreshing(isRefreshing);
             }
