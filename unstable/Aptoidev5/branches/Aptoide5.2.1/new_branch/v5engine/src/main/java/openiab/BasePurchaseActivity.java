@@ -57,7 +57,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     protected static final int UNITEL_CODE = 2;
     protected static final int FORTUMO_CODE = 3;
 
-    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
+    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
 
     // note that these credentials will differ between live & sandbox environments.
     private static final String CONFIG_CLIENT_ID = "AUWmKhAVvs19NH2TE_6RO9T7JtHgs35i7QGzCi1zs_siIDiSiRggI2EhioaB";

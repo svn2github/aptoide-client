@@ -1221,13 +1221,10 @@ public class Start extends ActionBarActivity implements
             i.putExtra("getBackupApps", true);
             startActivity(i);
             if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_App_View_To_Download_BackupApps");
-
         }
-
     }
 
     boolean isLoggedin = false;
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1265,17 +1262,14 @@ public class Start extends ActionBarActivity implements
             mDrawerList.removeHeaderView(v);
         }
 
-
         mDrawerList.setAdapter(null);
 
         //Login Header
         if (AptoideUtils.isLoggedIn(this)) {
             isLoggedin = true;
 
-
             View header = LayoutInflater.from(mContext).inflate(R.layout.header_logged_in, null);
             mDrawerList.addHeaderView(header, null, false);
-
 
             login_email = (TextView) header.findViewById(R.id.login_email);
             login_email.setText(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0].name);

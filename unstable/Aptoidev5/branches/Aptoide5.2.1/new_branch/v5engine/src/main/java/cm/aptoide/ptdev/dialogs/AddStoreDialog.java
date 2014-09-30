@@ -14,11 +14,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
+import com.octo.android.robospice.request.listener.RequestCancellationListener;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.HashMap;
+import java.util.Iterator;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.ResponseCode;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -26,19 +39,6 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
-
-import com.flurry.android.FlurryAgent;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.CachedSpiceRequest;
-import com.octo.android.robospice.request.listener.PendingRequestListener;
-import com.octo.android.robospice.request.listener.RequestCancellationListener;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.util.HashMap;
-import java.util.Iterator;
 
 
 /**
@@ -143,7 +143,7 @@ public class AddStoreDialog extends DialogFragment {
                         break;
                     case 0:
 
-                        if (!url.endsWith(".store.dev.aptoide.com/")) {
+                        if (!url.endsWith(".store.aptoide.com/")) {
 
                             Store store = new Store();
 
