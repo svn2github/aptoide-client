@@ -24,7 +24,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.*;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
@@ -34,7 +33,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -44,9 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -54,9 +50,6 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Data;
@@ -71,11 +64,9 @@ import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -109,7 +100,6 @@ import cm.aptoide.ptdev.model.MediaObject;
 import cm.aptoide.ptdev.model.MultiStoreItem;
 import cm.aptoide.ptdev.model.Screenshot;
 import cm.aptoide.ptdev.model.Video;
-import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -124,7 +114,6 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
-import cm.aptoide.ptdev.webservices.RegisterAdRequest;
 import cm.aptoide.ptdev.webservices.UpdateUserRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
@@ -168,6 +157,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
     private GetApkInfoJson.Payment payment;
     private boolean isPaidApp;
+    private boolean isPaidToschedule;
 
 
     public GetApkInfoJson.Malware.Reason getReason() {
@@ -457,7 +447,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     private void changebtInstalltoBuy(TextView btinstall){
-
+        supportInvalidateOptionsMenu();
         btinstall.setText(getString(R.string.buy) + " (" +payment.getSymbol() + " " + payment.getAmount() + ")");
         btinstall.setEnabled(true);
         final Activity thisActivity = this;
@@ -513,6 +503,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             String path = getApkInfoJson.getApk().getPath();
 
             if (!TextUtils.isEmpty(path)) {
+                isPaidToschedule=true;
                 btinstall.setText(getString(R.string.install));
 
                 InstallListener installListener = new InstallListener(icon, name, versionName, package_name, md5);
@@ -555,7 +546,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 }
                 supportInvalidateOptionsMenu();
             }
-
         }
     }
 
@@ -1497,18 +1487,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_app_view, menu);
 
         if (isInstalled) {
             menu.findItem(R.id.menu_uninstall).setVisible(true);
 
-            if(!isUpdate) {
+            if(!isUpdate ) {
                 //Log.d( "schedule_download", "isInstalled && !isUpdate" );
                 menu.findItem( R.id.menu_schedule ).setVisible( false );
             }
 
-        } else if(isDownloadCompleted) {
+        } else if(isDownloadCompleted || !isPaidToschedule) {
             //Log.d( "schedule_download", "isDownloadCompleted" );
             menu.findItem(R.id.menu_schedule).setVisible(false);
         }
@@ -1540,7 +1529,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             args.putString( "version", versionName );
             args.putString( "icon", icon );
             uninstallFragment.setArguments( args );
-
+            supportInvalidateOptionsMenu();
             getSupportFragmentManager().beginTransaction().add(uninstallFragment, "uninstallFrag").commit();
 
         } else if (i == R.id.menu_search_other) {
@@ -1612,7 +1601,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             String path = apkCursor.getString(apkCursor.getColumnIndex("path"));
             versionCode = apkCursor.getInt(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERCODE));
             isPaidApp = apkCursor.getInt(apkCursor.getColumnIndex("price"))>0;
-
+            isPaidToschedule = !isPaidApp;
             //float rating = apkCursor.getFloat(apkCursor.getColumnIndex(Schema.Apk.COLUMN_RATING));
 
             appName.setText(Html.fromHtml(name).toString());
