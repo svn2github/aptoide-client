@@ -212,7 +212,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             id = store.getId();
         }
 
-        if(store.getBaseUrl().contains("store.dev.aptoide.com")){
+        if(store.getBaseUrl().contains("store.aptoide.com")){
             store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));
         }
 
@@ -261,6 +261,8 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         beginParse(db, store, id);
                     }
                 }).start();
+            }else{
+                onError(new Exception("Failed repositoryInfo"), id);
             }
         }
     }
@@ -288,7 +290,6 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
             currentLatestTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getLatestXmlUrl()));
             currentTopTimestamp = AptoideUtils.NetworkUtils.getLastModified(new URL(store.getTopXmlUrl()));
         } catch (IOException e) {
-            onError(e,store.getId());
             e.printStackTrace();
         }
 

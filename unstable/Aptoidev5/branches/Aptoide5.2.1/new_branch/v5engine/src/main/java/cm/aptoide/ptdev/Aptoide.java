@@ -194,6 +194,7 @@ public class Aptoide extends Application {
 
             boolean download = AptoideUtils.NetworkUtils.isIconDownloadPermitted(context);
 
+            Log.i("AptoideDownloadPermitted?", String.valueOf(download));
             switch (Scheme.ofUri(imageUri)) {
                 case HTTP:
                 case HTTPS:

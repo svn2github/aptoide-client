@@ -117,7 +117,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
         ArrayList<String> itemIdList = skusBundle.getStringArrayList(ITEM_ID_LIST);
 
-        if (itemIdList == null || itemIdList.size() <= 0 || itemIdList.size() >= 20) {
+        if ( itemIdList == null || itemIdList.size() <= 0 ) {
             result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
             return result;
         }

@@ -216,7 +216,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
         getLoaderManager().restartLoader(20, bundle, this);
         getLoaderManager().restartLoader(21, bundle, this);
         setRefreshing(((CategoryCallback) getActivity()).isRefreshing());
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
+        if( mSwipeRefreshLayout!=null) mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
     }
 
@@ -366,7 +366,7 @@ public class FragmentStoreListCategories extends ListFragment implements LoaderM
     @Override
     public void setRefreshing(final boolean bool) {
 
-        mSwipeRefreshLayout.setRefreshing(bool);
+        if(mSwipeRefreshLayout!=null) mSwipeRefreshLayout.setRefreshing(bool);
 
         onRefreshCalled();
         getActivity().supportInvalidateOptionsMenu();

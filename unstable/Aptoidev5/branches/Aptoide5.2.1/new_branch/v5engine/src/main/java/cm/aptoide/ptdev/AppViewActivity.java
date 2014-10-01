@@ -1303,9 +1303,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         }
 
-        loadPublicity();
-
-
+        if(!getIntent().getBooleanExtra("fromSponsored", false)){
+            loadPublicity();
+        }
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 

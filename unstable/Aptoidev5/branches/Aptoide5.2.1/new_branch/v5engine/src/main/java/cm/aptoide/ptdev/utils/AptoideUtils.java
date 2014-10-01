@@ -545,26 +545,40 @@ public class AptoideUtils {
         }
         private static boolean isPermittedConnectionAvailable(Context context, DownloadPermissions permissions){
             ConnectivityManager connectivityState = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean connectionAvailable = false;
-            try {
-                if(permissions.isWiFi()){
-                    connectionAvailable = connectivityState.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
-                    if(connectionAvailable) {
-                        return true;
-                    }
+
+            if( permissions.isWiFi() ){
+                if(checkConnection(TYPE_WIFI,  connectivityState)){
+                    return true;
                 }
-                if(permissions.isWiMax()){
-                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(6).getState() == NetworkInfo.State.CONNECTED;
-                }
-                if(permissions.isMobile()){
-                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED;
-                }
-                if(permissions.isEthernet()){
-                    connectionAvailable = connectionAvailable || connectivityState.getNetworkInfo(9).getState() == NetworkInfo.State.CONNECTED;
-                }
-            } catch (Exception e) {
             }
-            return connectionAvailable;
+
+            if(permissions.isWiMax()){
+               if(checkConnection(6,  connectivityState)){
+                   return true;
+               }
+            }
+
+            if(permissions.isMobile()){
+                if(checkConnection(TYPE_MOBILE,  connectivityState)){
+                    return true;
+                }
+            }
+
+            if(permissions.isEthernet()){
+                if(checkConnection(9,  connectivityState)){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static boolean checkConnection(int networkType, ConnectivityManager connectivityState) {
+            try{
+                return  connectivityState.getNetworkInfo(networkType).getState() == NetworkInfo.State.CONNECTED;
+            }catch (Exception i){
+                return false;
+            }
         }
 
         public static long getLastModified(URL url) throws IOException {

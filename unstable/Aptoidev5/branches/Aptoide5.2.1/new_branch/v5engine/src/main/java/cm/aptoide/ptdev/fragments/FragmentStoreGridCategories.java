@@ -232,7 +232,7 @@ public class FragmentStoreGridCategories extends Fragment implements LoaderManag
 
     @Override
     public void setRefreshing(final boolean bool) {
-        mPullToRefreshLayout.setRefreshing(bool);
+        if(mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshing(bool);
         onRefreshCalled();
         getActivity().supportInvalidateOptionsMenu();
     }

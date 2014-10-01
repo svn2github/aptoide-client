@@ -549,7 +549,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
 
-        Toast.makeText(Aptoide.getContext(), passwordOrToken, Toast.LENGTH_LONG).show();
 
 
         OAuth2AuthenticationRequest oAuth2AuthenticationRequest = new OAuth2AuthenticationRequest();
