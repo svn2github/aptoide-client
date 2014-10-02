@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.IOException;
 import java.util.Date;
@@ -21,12 +22,16 @@ public class AptoideAdNetworks {
     public static String parseAppiaString(Context context, String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
 
         String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
+
+
         String myid = PreferenceManager.getDefaultSharedPreferences(context).getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
 
         clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
         clickUrl = clickUrl.replace("[USER_UDID]", myid);
-        clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+        if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
+            String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
+            clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+        }
         clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
         return clickUrl;
 

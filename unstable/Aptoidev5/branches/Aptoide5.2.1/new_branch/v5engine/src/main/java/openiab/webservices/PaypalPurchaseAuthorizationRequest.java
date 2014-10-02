@@ -50,7 +50,7 @@ public class PaypalPurchaseAuthorizationRequest extends GoogleHttpClientSpiceReq
         sb.append(")");
 
         //String baseUrl = "http://dev.aptoide.com/webservices/productPurchaseAuthorization/"+token+"/1/options="+sb.toString();
-        String baseUrl = "http://webservices.aptoide.com/webservices/3/productPurchaseAuthorization";
+        String baseUrl = WebserviceOptions.WebServicesLink + "3/productPurchaseAuthorization";
 
         GenericUrl url = new GenericUrl(baseUrl);
 

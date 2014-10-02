@@ -499,7 +499,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         btinstall.setEnabled(true);
 
 
-        if (Double.valueOf(0) < payment.getAmount().doubleValue()) {
+        if ( payment.getAmount().doubleValue() > 0) {
             String path = getApkInfoJson.getApk().getPath();
 
             if (!TextUtils.isEmpty(path)) {

@@ -840,19 +840,18 @@ public class Start extends ActionBarActivity implements
                 if (Aptoide.isUpdate()) {
 
                     int previousVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0);
+
                     if(previousVersion < 438){
                         Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                         whatsNewTutorial.putExtra("isUpdate", true);
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
                     }
 
-                    if(previousVersion > 431){
+                    if(previousVersion > 430 && previousVersion < 438 ){
                        updateAccount();
                     }
 
                     PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
-
-
 
                 }
             } catch (PackageManager.NameNotFoundException e) {
@@ -896,7 +895,8 @@ public class Start extends ActionBarActivity implements
                 }
             }).start();
 
-        }else{
+
+        } else if (accountsByType.length > 0) {
             AccountManager.get(this).removeAccount(accountsByType[0], null, null);
         }
 
@@ -952,7 +952,7 @@ public class Start extends ActionBarActivity implements
                 }
                 break;
         }
-        //InvalidateAptoideMenu();
+        //invalidateAptoideMenu();
     }
 
 
@@ -1104,9 +1104,8 @@ public class Start extends ActionBarActivity implements
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Unlocked_Mature_Content");
-        BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        InvalidateAptoideMenu();
+        invalidateAptoideMenu();
     }
 
     public void matureLock() {
@@ -1114,12 +1113,11 @@ public class Start extends ActionBarActivity implements
         matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Locked_Mature_Content");
-        BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        InvalidateAptoideMenu();
+        invalidateAptoideMenu();
     }
 
-    private void InvalidateAptoideMenu() {
+    private void invalidateAptoideMenu() {
         if(!ActivityCompat.invalidateOptionsMenu(this)) {
             supportInvalidateOptionsMenu();
         }

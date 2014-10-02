@@ -135,7 +135,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                                 onPaypalClick.setTax(service.getTaxRate());
                                 onPaypalClick.setRepo(repo);
 
-                                onPaypalClick.setDescription("TODO description Title!!!");
+                                onPaypalClick.setDescription( Aptoide.getConfiguration().getMarketName() + " Paid App - " + packageName);
 
 
                                 button.setOnClickListener(onPaypalClick);

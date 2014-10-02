@@ -104,6 +104,17 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View adultSwitchView;
     private CompoundButton adultContent;
+    private CompoundButton.OnCheckedChangeListener adultListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
+                new AdultDialog().show(getFragmentManager(), "adultDialog");
+            } else {
+                ((GetStartActivityCallback) getActivity()).matureLock();
+            }
+        }
+    };
 
 /*    private ArrayList<HomeItem> featuredGraphicItems =  new ArrayList<HomeItem>();;
     private boolean onConfigChange;
@@ -192,6 +203,12 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
+
+        adultContent.setOnCheckedChangeListener(null);
+
+        adultContent.setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
+
+        adultContent.setOnCheckedChangeListener(adultListener);
 
         //getLoaderManager().restartLoader(52, null, featuredGraphicLoader);
 
@@ -445,6 +462,8 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             refreshTopList();
         }
 
+
+
         mSwipeRefreshLayout.setRefreshing(false);
         //if (mPullToRefreshLayout!=null) mPullToRefreshLayout.setRefreshComplete();
 
@@ -453,6 +472,14 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
 
     private void refreshEditorsList() {
+
+
+        adultContent.setOnCheckedChangeListener(null);
+
+        adultContent.setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
+
+        adultContent.setOnCheckedChangeListener(adultListener); 
+
         editorsChoice.clear();
         fromRefresh = true;
         if(getLoaderManager().getLoader(50)!=null){
@@ -755,17 +782,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         adultSwitchView = View.inflate(getActivity(), R.layout.widget_switch, null);
         adultContent = (CompoundButton) adultSwitchView.findViewById(R.id.adult_content);
         adultContent.setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
-        adultContent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Switch_Turned_On_Show_Adult_Content");
-                    new AdultDialog().show(getFragmentManager(), "adultDialog");
-                } else {
-                    ((GetStartActivityCallback) getActivity()).matureLock();
-                }
-            }
-        });
+        adultContent.setOnCheckedChangeListener(adultListener);
 
         mergeAdapter.addView(adultSwitchView);
         mergeAdapter.setActive(adultSwitchView, false);
@@ -870,7 +887,10 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 
         mSwipeRefreshLayout.setRefreshing(false);
 
+
     }
+
+
 
     @Subscribe
     public void onDismissEvent(DismissRefreshEvent event){

@@ -96,14 +96,15 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         final Preference mp= findPreference("Maturepin");
         if(pin!=-1) {
             // With Pin
-            AdultDialog.DialogRequestMaturepin(Settings.this,new DialogInterface.OnClickListener() {
+            AdultDialog.dialogRequestMaturepin( Settings.this, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    SecurePreferences.getInstance().edit().putInt(AdultDialog.MATUREPIN,-1).commit();
-                    final Preference mp= findPreference("Maturepin");
+                    SecurePreferences.getInstance().edit().putInt(AdultDialog.MATUREPIN, -1).commit();
+                    final Preference mp = findPreference("Maturepin");
                     mp.setTitle(R.string.set_mature_pin_title);
                     mp.setSummary(R.string.set_mature_pin_summary);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
+                    if (Build.VERSION.SDK_INT >= 10)
+                        FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
                 }
             }).show();
         }
@@ -153,10 +154,12 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 final CheckBoxPreference cb = (CheckBoxPreference) preference;
                 if (!cb.isChecked()) {
                     cb.setChecked(true);
-                    AdultDialog.BuildAreYouAdultDialog(Settings.this, new DialogInterface.OnClickListener() {
+                    AdultDialog.buildAreYouAdultDialog( Settings.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            cb.setChecked(false);
+                            if(which == DialogInterface.BUTTON_POSITIVE) {
+                                cb.setChecked(false);
+                            }
                         }
                     }).show();
                 }

@@ -65,6 +65,8 @@
 
 
         <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
+
+
         <!--<activity android:name="cm.aptoide.ptdev.TimelineActivity" />-->
 
 

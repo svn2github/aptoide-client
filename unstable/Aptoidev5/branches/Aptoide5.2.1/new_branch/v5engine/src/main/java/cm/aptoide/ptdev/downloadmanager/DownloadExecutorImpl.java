@@ -151,21 +151,21 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         }
 
 
-        if(sPref.getBoolean("shareTimelineDownload", true) && apk.getId() > 0){
-
-            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
-
-            HashMap<String, String> parameters = new HashMap<String, String>();
-
-            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
-            parameters.put("appid", String.valueOf(apk.getId()));
-            HttpContent content = new UrlEncodedContent(parameters);
-            try {
-                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if(sPref.getBoolean("shareTimelineDownload", false) && apk.getId() > 0){
+//
+//            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
+//
+//            HashMap<String, String> parameters = new HashMap<String, String>();
+//
+//            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
+//            parameters.put("appid", String.valueOf(apk.getId()));
+//            HttpContent content = new UrlEncodedContent(parameters);
+//            try {
+//                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
 

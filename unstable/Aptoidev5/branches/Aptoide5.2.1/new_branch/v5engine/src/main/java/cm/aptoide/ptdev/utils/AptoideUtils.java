@@ -542,6 +542,7 @@ public class AptoideUtils {
                     getSharedPreferences().getBoolean("generalnetworkethernet", true),
                     getSharedPreferences().getBoolean("generalnetwork4g", true),
                     getSharedPreferences().getBoolean("generalnetwork3g", true)));
+
         }
         private static boolean isPermittedConnectionAvailable(Context context, DownloadPermissions permissions){
             ConnectivityManager connectivityState = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
