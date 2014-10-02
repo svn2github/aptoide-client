@@ -13,11 +13,12 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 
 /**
  * Created by rmateus on 30-12-2013.
  */
-public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse>{
+public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2>{
 
     private String token;
     private String repo;
@@ -31,7 +32,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
     private boolean isLike;
 
     public AddLikeRequest(Context activity) {
-        super(GenericResponse.class);
+        super(GenericResponseV2.class);
     }
 
     public void setToken(String token) {
@@ -52,7 +53,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
     String baseUrl = WebserviceOptions.WebServicesLink+"3/addApkLike";
     @Override
-    public GenericResponse loadDataFromNetwork() throws Exception {
+    public GenericResponseV2 loadDataFromNetwork() throws Exception {
 
 
 

@@ -91,6 +91,7 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.AddLikeRequest;
 import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 
@@ -1148,7 +1149,7 @@ public abstract class FragmentAppView extends Fragment {
         public class AddLikeListener implements View.OnClickListener {
 
             private final boolean isLike;
-            RequestListener<GenericResponse> requestListener = new RequestListener<GenericResponse>() {
+            RequestListener<GenericResponseV2> requestListener = new RequestListener<GenericResponseV2>() {
                 private final void dismiss(){
                     ProgressDialogFragment pd = (ProgressDialogFragment) getFragmentManager()
                                                     .findFragmentByTag("pleaseWaitDialog");
@@ -1162,7 +1163,7 @@ public abstract class FragmentAppView extends Fragment {
                 }
 
                 @Override
-                public void onRequestSuccess(GenericResponse genericResponse) {
+                public void onRequestSuccess(GenericResponseV2 genericResponse) {
                     //Log.d("likes","onRequestSuccess");
                     dismiss();
                     if(genericResponse.getStatus().equals("OK")){
@@ -1170,9 +1171,7 @@ public abstract class FragmentAppView extends Fragment {
                         manager.removeDataFromCache(GetApkInfoJson.class, ((AppViewActivity)getActivity()).getCacheKey());
                         BusProvider.getInstance().post(new AppViewRefresh());
                     }else{
-                        for(String error :  genericResponse.getErrors()){
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-                        }
+                        AptoideUtils.toastError(genericResponse.getErrors());
                     }
 
                 }
