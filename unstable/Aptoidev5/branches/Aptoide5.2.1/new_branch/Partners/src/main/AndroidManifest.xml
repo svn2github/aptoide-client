@@ -398,6 +398,7 @@
 
         <receiver android:name="com.aptoide.partners.pushnotification.PushNotificationReceiver" >
             <intent-filter>
+                <action android:name="com.aptoide.partners.PushNotificationtrackurl"/>
                 <action android:name="com.aptoide.partners.PushNotification"/>
                 <action android:name="com.aptoide.partners.PushNotificationFirstTime"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

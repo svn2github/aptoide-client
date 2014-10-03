@@ -25,7 +25,6 @@ import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -58,7 +57,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import org.apache.http.message.BasicNameValuePair;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -1111,7 +1109,6 @@ public class Start extends ActionBarActivity implements
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Unlocked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        invalidateAptoideMenu();
     }
 
     public void matureLock() {
@@ -1120,13 +1117,6 @@ public class Start extends ActionBarActivity implements
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Locked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
-        invalidateAptoideMenu();
-    }
-
-    private void invalidateAptoideMenu() {
-        if(!ActivityCompat.invalidateOptionsMenu(this)) {
-            supportInvalidateOptionsMenu();
-        }
     }
 
     public PagerAdapter getViewPagerAdapter() {

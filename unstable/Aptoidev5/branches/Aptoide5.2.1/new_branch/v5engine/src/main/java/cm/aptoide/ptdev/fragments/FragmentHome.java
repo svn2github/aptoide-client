@@ -35,8 +35,23 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import android.widget.TextView;
+
+import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Subscribe;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreFeaturedGraphicActivity;
@@ -56,23 +71,6 @@ import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-
-import com.commonsware.cwac.merge.MergeAdapter;
-import com.flurry.android.FlurryAgent;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Subscribe;
-
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -883,13 +881,16 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             homeBucketAdapterHome.notifyDataSetChanged();
         }
 
-        mergeAdapter.setActive(adultSwitchView, true);
+        getSwitchView();
 
         mSwipeRefreshLayout.setRefreshing(false);
 
 
     }
 
+    protected void getSwitchView() {
+        mergeAdapter.setActive(adultSwitchView, true);
+    }
 
 
     @Subscribe
