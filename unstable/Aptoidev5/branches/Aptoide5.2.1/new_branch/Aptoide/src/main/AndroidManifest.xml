@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="441"
-    android:versionName="5.3.0">
+    android:versionCode="442"
+    android:versionName="5.3.1">
 
     <uses-sdk tools:node="replace" />
 

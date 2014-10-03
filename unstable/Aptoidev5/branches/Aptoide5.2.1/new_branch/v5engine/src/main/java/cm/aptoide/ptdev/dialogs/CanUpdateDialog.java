@@ -18,6 +18,9 @@ import cm.aptoide.ptdev.Start;
  */
 public class CanUpdateDialog extends DialogFragment {
 
+
+
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -27,6 +30,8 @@ public class CanUpdateDialog extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+
     }
 
     Start callback;
@@ -42,11 +47,13 @@ public class CanUpdateDialog extends DialogFragment {
                         if (Build.VERSION.SDK_INT >= 10)
                             FlurryAgent.logEvent("CanUpdateDialog_DownLoad_AnyWay");
 
-                        int id = getArguments().getInt("id",-1);
-                        if(id!=-1)
-                            callback.installApp(id);
-                        else
+                        int id = getArguments().getInt("id", -1);
+                        if (id != -1) {
+                            if (callback != null) callback.installApp(id);
+                        }  else if (callback != null) {
                             callback.updateAll(getArguments().getLongArray("ids"));
+                        }
+
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

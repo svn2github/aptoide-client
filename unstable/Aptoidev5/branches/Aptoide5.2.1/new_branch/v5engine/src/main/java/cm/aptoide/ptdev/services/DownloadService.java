@@ -506,7 +506,7 @@ public class DownloadService extends Service{
 
         mBuilder.setOngoing(true);
         mBuilder.setContentTitle(getString(R.string.aptoide_downloading, Aptoide.getConfiguration().getMarketName()))
-                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setSmallIcon(R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
                 .setContentIntent(onClickAction);
         mBuilder.setProgress(100, 0, true);

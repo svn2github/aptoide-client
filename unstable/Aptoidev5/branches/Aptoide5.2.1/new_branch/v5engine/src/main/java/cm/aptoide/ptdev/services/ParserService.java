@@ -122,6 +122,9 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }
         if(updates>0){
                 NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+
                 int icon = android.R.drawable.stat_sys_download_done;
 
 
@@ -160,7 +163,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
                         .setContentIntent(contentIntent)
                         .setTicker(tickerText)
                         .build();
-                managerNotification.notify(1, notification);
+                managerNotification.notify(546, notification);
 
         }
     }

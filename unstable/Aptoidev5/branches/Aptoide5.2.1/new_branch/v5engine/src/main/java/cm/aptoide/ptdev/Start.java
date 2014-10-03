@@ -228,7 +228,9 @@ public class Start extends ActionBarActivity implements
     protected void onStop() {
         super.onStop();
         BusProvider.getInstance().unregister(this);
-        spiceManager.shouldStop();
+        if(spiceManager.isStarted()){
+            spiceManager.shouldStop();
+        }
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 
@@ -972,7 +974,11 @@ public class Start extends ActionBarActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(this);
+
+        if(!spiceManager.isStarted()){
+            spiceManager.start(this);
+        }
+
         Ln.getConfig().setLoggingLevel(Log.ERROR);
         BusProvider.getInstance().register(this);
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");

@@ -15,6 +15,7 @@
         android:id="@+id/pininput"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"/>
+        android:maxLength="8"
+        android:inputType="number" />
 
     </LinearLayout>

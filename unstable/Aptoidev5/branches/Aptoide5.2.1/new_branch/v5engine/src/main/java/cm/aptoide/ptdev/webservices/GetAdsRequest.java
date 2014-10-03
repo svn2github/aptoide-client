@@ -23,6 +23,8 @@ import org.apache.http.params.HttpParams;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.ads.AptoideAdNetworks;
@@ -58,7 +60,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
     }
 
     String url = "http://webservices.aptwords.net/api/2/getAds";
-
+    ExecutorService executor = Executors.newSingleThreadExecutor();
     @Override
     public ApkSuggestionJson loadDataFromNetwork() throws Exception {
 
@@ -71,8 +73,6 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         parameters.put("cpuid", myid);
 
         String mature = "1";
-
-
 
         if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
             mature = "0";
@@ -127,12 +127,16 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
             if(suggestionJson.getPartner() != null){
 
-                String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
+                try{
 
-                impressionUrlString = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), impressionUrlString);
+                    String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
 
-                GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
-                getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).execute();
+                    impressionUrlString = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), impressionUrlString);
+
+                    GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
+                    getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).executeAsync(executor);
+
+                } catch (Exception ignored) {}
 
             }
 

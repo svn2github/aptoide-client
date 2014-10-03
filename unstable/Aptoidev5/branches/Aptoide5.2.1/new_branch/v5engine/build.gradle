@@ -25,9 +25,6 @@ android {
         targetSdkVersion 'L'
     }
 
-    dexOptions {
-        jumboMode = true
-    }
 
 
 

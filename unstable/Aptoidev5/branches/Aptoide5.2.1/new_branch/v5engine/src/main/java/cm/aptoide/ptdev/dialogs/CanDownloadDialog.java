@@ -60,12 +60,12 @@ public class CanDownloadDialog extends DialogFragment {
                                     FlurryAgent.logEvent("Network_Data_Usage_Can_Download_Anyway");
                                 if (json != null) {
 //                                    Log.d("CanDownloadDialog", "Json != null");
-                                    callback.getService().startDownloadFromJson(json,
+                                    if( callback!=null ) callback.getService().startDownloadFromJson(json,
                                             getArguments().getLong("downloadId"),
                                             (Download) getArguments().getSerializable("download"));
                                 } else {
 //                                    Log.d("CanDownloadDialog", "Json == null");
-                                    callback.getService().startDownloadFromUrl(
+                                    if( callback!=null ) callback.getService().startDownloadFromUrl(
                                             getArguments().getString("url"),
                                             getArguments().getString("md5"),
                                             getArguments().getLong("downloadId"),

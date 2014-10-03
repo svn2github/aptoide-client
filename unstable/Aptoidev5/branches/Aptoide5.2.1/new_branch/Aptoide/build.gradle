@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-//apply from: 'signing.gradle'
+apply from: 'signing.gradle'
 
 repositories{
 
@@ -22,9 +22,6 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
-    dexOptions {
-        jumboMode = true
-    }
 
     buildTypes {
 
@@ -34,7 +31,7 @@ android {
 
 
         release {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -42,7 +39,6 @@ android {
 dependencies {
     compile project(':v5engine')
     compile fileTree(dir: 'libs', include: '*.jar')
-
 }
 
 
