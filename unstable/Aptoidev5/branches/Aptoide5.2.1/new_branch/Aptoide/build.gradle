@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-//apply from: 'signing.gradle'
+
+def signingExists = false
+
+if(new File("signing.gradle").exists()){
+    apply from: 'signing.gradle'
+    signingExists = true
+}
+
 
 repositories{
 
@@ -31,7 +38,9 @@ android {
 
 
         release {
- //           signingConfig signingConfigs.release
+            if(signingExists){
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
