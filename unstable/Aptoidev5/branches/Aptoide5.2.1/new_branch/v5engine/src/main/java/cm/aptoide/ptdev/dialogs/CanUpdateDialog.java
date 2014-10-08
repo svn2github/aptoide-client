@@ -17,10 +17,7 @@ import cm.aptoide.ptdev.Start;
  * Created by asantos on 11-08-2014.
  */
 public class CanUpdateDialog extends DialogFragment {
-
-
-
-
+    public final static String ARGKEYIDS = "ids";
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -47,11 +44,8 @@ public class CanUpdateDialog extends DialogFragment {
                         if (Build.VERSION.SDK_INT >= 10)
                             FlurryAgent.logEvent("CanUpdateDialog_DownLoad_AnyWay");
 
-                        int id = getArguments().getInt("id", -1);
-                        if (id != -1) {
-                            if (callback != null) callback.installApp(id);
-                        }  else if (callback != null) {
-                            callback.updateAll(getArguments().getLongArray("ids"));
+                        if (callback != null && getArguments().getLongArray(ARGKEYIDS)!=null) {
+                            callback.updateAll(getArguments().getLongArray(ARGKEYIDS));
                         }
 
                     }

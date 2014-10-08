@@ -8,18 +8,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 import com.flurry.android.FlurryAgent;
-
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
-import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 
 public class UpdatesSectionAdapter extends BaseAdapter {
@@ -119,7 +118,7 @@ public class UpdatesSectionAdapter extends BaseAdapter {
                             else {
                                 CanUpdateDialog dialog = new CanUpdateDialog();
                                 Bundle bundle = new Bundle();
-                                bundle.putLongArray("ids", AptoideUtils.LongListtolongArray(ids));
+                                bundle.putLongArray(CanUpdateDialog.ARGKEYIDS, AptoideUtils.LongListtolongArray(ids));
                                 dialog.setArguments(bundle);
                                 dialog.show(((Start) mContext).getSupportFragmentManager(), null);
                             }

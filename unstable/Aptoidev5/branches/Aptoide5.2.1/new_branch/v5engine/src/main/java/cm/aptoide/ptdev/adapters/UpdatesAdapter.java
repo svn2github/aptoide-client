@@ -7,17 +7,20 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import cm.aptoide.ptdev.Start;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.IconSizes;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.dialogs.CanUpdateDialog;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 
 /**
  * Created with IntelliJ IDEA.
@@ -105,12 +108,11 @@ public class UpdatesAdapter extends BaseAdapter implements UpdatesSectionAdapter
 
                         if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(context)){
                             ((Start) context).installApp(id);
-
                         }
                         else{
                             CanUpdateDialog dialog = new CanUpdateDialog();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("id", id);
+                            bundle.putLongArray(CanUpdateDialog.ARGKEYIDS, new long[]{id});
                             dialog.setArguments(bundle);
                             dialog.show(((Start) context).getSupportFragmentManager(), null);
                         }
