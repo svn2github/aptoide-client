@@ -7,7 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
+
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.*;
@@ -34,11 +38,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
             InstalledPackage apk;
             try {
                 PackageManager mPm = context.getPackageManager();
-                PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), PackageManager.GET_SIGNATURES);
-
-
-
-
+                final PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), PackageManager.GET_SIGNATURES);
 
 
                 apk = new InstalledPackage(
@@ -56,12 +56,23 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
 
                 if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
-                    String action = db.getNotConfirmedRollbackAction(pkg.packageName);
+                    final String action = db.getNotConfirmedRollbackAction(pkg.packageName);
                     if(action != null) {
-                        if(action.equals(RollBackItem.Action.INSTALLING.toString())) {
+                        final String referrer = action.split("\\|")[1];
+
+                        if(action.split("\\|")[0].equals(RollBackItem.Action.INSTALLING.toString())) {
+
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.INSTALLED.toString());
+
+                            Toast.makeText(Aptoide.getContext(), "sending broadcast " + intent.getData().getEncodedSchemeSpecificPart() + " " +  referrer, Toast.LENGTH_LONG).show();
+                            Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
+                            i.setPackage(intent.getData().getEncodedSchemeSpecificPart());
+                            i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                            i.putExtra("referrer", referrer);
+                            context.sendBroadcast(i);
+
                             Log.d("InstalledBroadcastReceiver", "Installed rollback action");
-                        } else if(action.equals(RollBackItem.Action.DOWNGRADING.toString())) {
+                        } else if(action.split("|")[0].equals(RollBackItem.Action.DOWNGRADING.toString())) {
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.DOWNGRADED.toString());
                             Log.d("InstalledBroadcastReceiver", "Downgraded rollback action");
                         }

@@ -12,6 +12,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -19,14 +22,21 @@ import android.widget.RemoteViews;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.Executors;
 
-import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.IconSizes;
 
 /**
  * Created by asantos on 01-09-2014.
@@ -39,10 +49,11 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;//
 
     // same as Manifest
-    public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationtrackurl";
+    public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationTrackUrl";
     public static final String PUSH_NOTIFICATION_Action = "cm.aptoide.pt.PushNotification";
     public static final String PUSH_NOTIFICATION_Action_FIRST_TIME = "cm.aptoide.pt.PushNotificationFirstTime";
     private static final String PUSH_NOTIFICATION_TRACK_URL = "trackUrl";
+    public static final String SPREF_PNOTIFICATION_ID = "lastPNotificationId";
 
     public class MyImageLoadingListener implements ImageLoadingListener {
 
@@ -75,32 +86,93 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
             Log.i("PushNotificationReceiver", "onLoadingCancelled");
-
         }
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         if (action != null) {
-            if (action.equals(Intent.ACTION_BOOT_COMPLETED)
-                    || action.equals(PUSH_NOTIFICATION_Action_FIRST_TIME)) {
+            if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(PUSH_NOTIFICATION_Action_FIRST_TIME)) {
                 AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent i = new Intent(context, PushNotificationReceiver.class);
-
-                //TO Be Removed
-                i = fillintentStuffFortest(i);
-
                 i.setAction(PUSH_NOTIFICATION_Action);
-                PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), PUSH_NOTIFICATION_TIME_INTERVAL, pi);
+                PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PUSH_NOTIFICATION_TIME_INTERVAL, pi);
                 Log.i("PushNotificationReceiver", "Alarm Registed Received");
             } else if (action.equals(PUSH_NOTIFICATION_Action)) {
                 Log.i("PushNotificationReceiver", "PUSH_NOTIFICATION_Action");
-                Bundle extra = intent.getExtras();
-                ImageLoader.getInstance().loadImage(
-                        extra.getString(PUSH_NOTIFICATION_IMG_URL),
-                        new MyImageLoadingListener(context, extra));
+
+                final Handler handler = new Handler(Looper.getMainLooper());
+
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getPushNotifications");
+
+                            HashMap<String, String> parameters = new HashMap<String, String>();
+
+                            parameters.put("oem_id", "2dae2cd9fa7b328bffe4570327dd4e3c");
+                            parameters.put("mode", "json");
+                            parameters.put("limit", "1");
+
+                            int lastId = PreferenceManager.getDefaultSharedPreferences(context).getInt(SPREF_PNOTIFICATION_ID,0);
+
+                            parameters.put("id", String.valueOf(lastId));
+
+                            HttpContent content = new UrlEncodedContent(parameters);
+                            HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
+                            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
+
+                            PushNotificationJson response = httpRequest.execute().parseAs(PushNotificationJson.class);
+                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
+
+                            for (final PushNotificationJson.Notification notification : response.getResults()) {
+                                final Bundle extra = intent.getExtras();
+
+                                extra.putString(PUSH_NOTIFICATION_EXTERNAL_URL, notification.getTarget_url());
+                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getMessage());
+                                extra.putString(PUSH_NOTIFICATION_TRACK_URL, notification.getTrack_url());
+                                extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
+
+                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
+
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        String bannerUrl = notification.getImages()!=null?getSize(notification.getImages().getBanner_url()):null;
+
+                                        ImageLoader.getInstance().loadImage(bannerUrl,
+                                                new MyImageLoadingListener(context, extra));
+                                    }
+                                });
+
+
+
+                            }
+
+                            if(!response.getResults().isEmpty()){
+                                lastId = response.getResults().get(0).getId().intValue();
+                            }
+
+
+
+
+
+                            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SPREF_PNOTIFICATION_ID, lastId).commit();
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (NullPointerException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
 
             }else if(action.equals(PUSH_NOTIFICATION_Action_TRACK_URL)){
                 String trackUrl = intent.getStringExtra(PUSH_NOTIFICATION_TRACK_URL);
@@ -108,8 +180,9 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                 GenericUrl url = new GenericUrl(trackUrl);
 
                 try {
-                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
+                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync();
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl));
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -117,6 +190,12 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             }
         }
 
+    }
+
+    private String getSize(String banner_url) {
+            String[] splittedUrl = banner_url.split("\\.(?=[^\\.]+$)");
+            banner_url = splittedUrl[0] + "_" + IconSizes.generateSizeStringNotification(Aptoide.getContext()) + "."+ splittedUrl[1];
+        return banner_url;
     }
 
     private Intent fillintentStuffFortest(Intent i) {
@@ -137,42 +216,16 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         Log.i("PushNotificationReceiver", "Msg: " + extra.getCharSequence(PUSH_NOTIFICATION_MSG));
         Log.i("PushNotificationReceiver", "URL: " + extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
 
-        Intent resultIntent = new Intent("");
-
-        resultIntent.putExtra(PUSH_NOTIFICATION_TRACK_URL, extra.getCharSequence(PUSH_NOTIFICATION_TRACK_URL));
-        resultIntent.putExtra(PUSH_NOTIFICATION_EXTERNAL_URL, extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
-        //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 86456, resultIntent, PendingIntent.FLAG_ONE_SHOT);
-
-//        Intent resultIntent = new Intent(context, AptoidePartner.getConfiguration().getStartActivityClass());
-//        Intent resultIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PUSH_NOTIFICATION_EXTERNAL_URL));
-//        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-//                Intent.FLAG_ACTIVITY_SINGLE_TOP |
-//                Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // This ensures that the back button follows the recommended convention for the back key.
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-
-        // Adds the back stack for the Intent (but not the Intent itself)
-//        stackBuilder.addParentStack(AptoidePartner.getConfiguration().getStartActivityClass());
-
-        // Adds the Intent that starts the Activity to the top of the stack.
-//        stackBuilder.addNextIntent(resultIntent);
-//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent resultIntent = new Intent(PUSH_NOTIFICATION_Action_TRACK_URL);
 
 
+        resultIntent.putExtra(PUSH_NOTIFICATION_TRACK_URL, extra.getString(PUSH_NOTIFICATION_TRACK_URL));
+        resultIntent.putExtra(PUSH_NOTIFICATION_EXTERNAL_URL, extra.getString(PUSH_NOTIFICATION_EXTERNAL_URL));
 
-         PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, new Random().nextInt(), resultIntent, 0);
-
-        // Create remote view and set bigContentView.
-        /*RemoteViews expandedView = new RemoteViews(context.getPackageName(),
-                R.layout.pushnotificationlayout);
-        expandedView.setBitmap(R.id.PushNotificationImageView,"setImageBitmap",o);
-        expandedView.setTextViewText(R.id.text1, "Pois!");*/
-
+        PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, new Random().nextInt(), resultIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.icon_brand_aptoide)
+                .setSmallIcon(cm.aptoide.ptdev.R.drawable.icon_brand_aptoide)
                 .setContentIntent(resultPendingIntent)
                 .setOngoing(false)
                 .setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE))
@@ -181,67 +234,18 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= 16) {
             Log.d("PushNotificationReceiver", "is 16 or more, BIG!!!");
             RemoteViews expandedView = new RemoteViews(context.getPackageName(),
-                    R.layout.pushnotificationlayout);
-            expandedView.setBitmap(R.id.PushNotificationImageView, "setImageBitmap", o);
-            expandedView.setTextViewText(R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-            expandedView.setTextViewText(R.id.description, extra.getCharSequence(PUSH_NOTIFICATION_MSG));
+                    cm.aptoide.ptdev.R.layout.pushnotificationlayout);
+            expandedView.setBitmap(cm.aptoide.ptdev.R.id.PushNotificationImageView, "setImageBitmap", o);
+            expandedView.setTextViewText(cm.aptoide.ptdev.R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
+            expandedView.setTextViewText(cm.aptoide.ptdev.R.id.description, extra.getCharSequence(PUSH_NOTIFICATION_MSG));
             notification.bigContentView = expandedView;
         }
 
 
-
-
-/*
-        NotificationCompat.BigPictureStyle notiStyle = new
-                NotificationCompat.BigPictureStyle();
-        notiStyle.setBigContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-        notiStyle.setSummaryText("Blabla.");
-        notiStyle.bigPicture(o);
-
-
-
-        Intent resultIntent = new Intent(context, Start.class);
-
-        // This ensures that the back button follows the recommended
-// convention for the back key.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-
-// Adds the back stack for the Intent (but not the Intent itself).
-        stackBuilder.addParentStack(Start.class);
-
-// Adds the Intent that starts the Activity to the top of the stack.
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification myNotification = new NotificationCompat.Builder(context)
-                .setSmallIcon(android.R.drawable.stat_sys_download)
-                .setAutoCancel(true)
-                .setLargeIcon(o)
-                .setContentIntent(resultPendingIntent)
-                .setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE))
-                .setContentText("pois!")
-                .setStyle(notiStyle).build();
-        final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        managerNotification.notify(86456, myNotification);
-        Log.i("PushNotificationReceiver","notification built");
-*/
-
-       /* Intent onClick = new Intent(Intent.ACTION_VIEW);
-        onClick.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent onClickAction = PendingIntent.getActivity(context, 0, onClick, 0);
-
-        final Builder mBuilder = new Builder(context);
-        mBuilder.setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-        mBuilder.setContentText("Blablabla");
-        mBuilder.setSmallIcon(android.R.drawable.stat_sys_download);
-        mBuilder.setLargeIcon(o);
-        mBuilder.setContentIntent(onClickAction);
-        mBuilder.setAutoCancel(true);
-        */
         Log.i("PushNotificationReceiver", "notification built");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         managerNotification.notify(86456, notification);
 
     }
+
 }

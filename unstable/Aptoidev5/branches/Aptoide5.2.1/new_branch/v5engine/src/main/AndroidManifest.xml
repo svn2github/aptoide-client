@@ -3,10 +3,8 @@
     package="cm.aptoide.ptdev"
     android:versionCode="1"
     android:versionName="1.0">
-    <uses-sdk tools:node="replace" />
 
+    <uses-sdk tools:overrideLibrary = "com.astuetz.pagerslidingtabstrip,com.mopub.mobileads" />
     <application />
-
-
 
 </manifest>

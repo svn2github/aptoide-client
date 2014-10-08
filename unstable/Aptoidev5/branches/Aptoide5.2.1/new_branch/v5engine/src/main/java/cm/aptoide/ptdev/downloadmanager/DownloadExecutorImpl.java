@@ -123,15 +123,14 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             // Check if its a downgrade
             if (!db.updateDowngradingAction(apk.getApkid())) {
                 // New Installation
-                db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING, apk.getRepoName()));
+                db.insertRollbackAction(new RollBackItem(apk.getName(), apk.getApkid(), apk.getVersion(), null, apk.getIconPath(), null, null, RollBackItem.Action.INSTALLING.setReferrer(apk.getReferrer()), apk.getRepoName()));
             }
         }
 
 
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-
-        if(apk.getCpiUrl()!=null) {
+        if(apk.getCpiUrl() != null) {
 
             new Thread(new Runnable() {
                 @Override
@@ -189,11 +188,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         }
     }
-
-
-
-
-
 
     public static boolean canRunRootCommands() {
         boolean retval;

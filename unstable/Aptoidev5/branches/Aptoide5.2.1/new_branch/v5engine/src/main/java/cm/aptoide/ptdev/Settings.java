@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
@@ -284,6 +286,16 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
                 View view = LayoutInflater.from(mctx).inflate(R.layout.dialog_about, null);
+                String versionName = "";
+
+                try {
+                     versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                ( (TextView) view.findViewById(R.id.aptoide_version) ).setText("Version " + versionName);
+
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mctx).setView(view);
                 final AlertDialog aboutDialog = alertDialogBuilder.create();
                 aboutDialog.setTitle(getString(R.string.about_us));

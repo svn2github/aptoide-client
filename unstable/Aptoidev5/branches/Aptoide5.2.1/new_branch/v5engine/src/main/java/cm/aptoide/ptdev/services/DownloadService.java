@@ -276,6 +276,10 @@ public class DownloadService extends Service{
             apk.setCpiUrl(download.getCpiUrl());
         }
 
+        if(download.getReferrer()!=null){
+            apk.setReferrer(download.getReferrer());
+        }
+
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);

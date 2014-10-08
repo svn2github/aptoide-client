@@ -39,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -99,6 +100,7 @@ import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
@@ -744,8 +746,8 @@ public class Start extends ActionBarActivity implements
         int excludedUpdatesRes = typedArray.getResourceId(3, R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
 
-/*        int timelineRes = typedArray.getResourceId(4, R.drawable.ic_action_timeline_dark);
-        mItems.add(new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8));*/
+        int timelineRes = typedArray.getResourceId(4, R.drawable.ic_action_timeline_dark);
+        mItems.add(new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8));
 
         int settingsRes = typedArray.getResourceId(5, R.drawable.ic_action_settings_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.settings), settingsRes, 7));
@@ -818,6 +820,9 @@ public class Start extends ActionBarActivity implements
 
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        Intent i = new Intent(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
+        sendBroadcast(i);
 
         if (sPref.getBoolean("firstrun", true)) {
 
@@ -1182,11 +1187,11 @@ public class Start extends ActionBarActivity implements
                     startActivityForResult(settingsIntent, Settings_REQ_CODE);
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Settings_Drawer_Button");
                     break;
-                /*case 8:
+                case 8:
                     Intent timelineIntent = new Intent(mContext, TimelineActivity.class);
                     startActivity(timelineIntent);
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Timeline_Drawer_Button");
-                    break;*/
+                    break;
                 default:
                     break;
             }
@@ -1207,6 +1212,7 @@ public class Start extends ActionBarActivity implements
                 startActivity(intent);
                 if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Launched_BackupApps");
             }
+
 
 
         } catch (PackageManager.NameNotFoundException e) {

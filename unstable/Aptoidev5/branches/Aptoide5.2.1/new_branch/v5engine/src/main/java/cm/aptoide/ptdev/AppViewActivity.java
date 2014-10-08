@@ -52,6 +52,10 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
@@ -63,8 +67,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,6 +166,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private GetApkInfoJson.Payment payment;
     private boolean isPaidApp;
     private boolean isPaidToschedule;
+    private String referrer;
 
 
     public GetApkInfoJson.Malware.Reason getReason() {
@@ -329,7 +338,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setIcon(icon);
                         download.setPackageName(package_name);
                         download.setMd5(md5);
-                        download.setCpiUrl(getIntent().getStringExtra("cpi"));
+
+                        if(!isUpdate){
+                            download.setCpiUrl(getIntent().getStringExtra("cpi"));
+                        }
+                        download.setReferrer(referrer);
                         try {
                             waitForServiceToBeBound();
                         } catch (InterruptedException e) {
@@ -733,7 +746,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             download.setIcon(this.icon);
             download.setPackageName(this.package_name);
             download.setMd5(this.md5);
-            download.setCpiUrl(getIntent().getStringExtra("cpi"));
+            if (!isUpdate) download.setCpiUrl(getIntent().getStringExtra("cpi"));
+            download.setReferrer(referrer);
+
             return download;
         }
         protected Bundle makeBundleForDialog(){
@@ -1170,7 +1185,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             if(getIntent().getBooleanExtra("fromSponsored", false)){
                 GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
-                String id = getIntent().getStringExtra("id");
+                long id = getIntent().getLongExtra("id", 0);
 
                 String repo = getIntent().getStringExtra("repoName");
                 package_name = getIntent().getStringExtra("packageName");
@@ -1196,8 +1211,40 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
                                 Log.d("Aptoide", "InSponsoredExtras");
                                 clickUrl = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), clickUrl);
-                                GenericUrl url = new GenericUrl(clickUrl);
-                                AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync(executorService);
+                                HttpResponse response;
+                                boolean repeat;
+                                do  {
+                                    repeat = false;
+                                    GenericUrl url = new GenericUrl(clickUrl);
+                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, null).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
+
+                                    try{
+                                        response = httpRequest.execute();
+                                    } catch (HttpResponseException exception){
+
+                                        if(exception.getStatusCode() == 302) {
+                                            repeat = true;
+                                            final String location = exception.getHeaders().getLocation();
+                                            Log.d("CENAAS", "Response was: " + exception.getStatusCode());
+
+                                            if (!TextUtils.isEmpty(location)) {
+                                                clickUrl = location;
+                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com"))) {
+                                                    referrer = getReferrer(clickUrl);
+                                                }
+                                            } else {
+                                                Log.d("CENAAS", "Cenas was epmty");
+                                            }
+                                        }
+
+                                    }
+
+
+
+                                } while ( repeat );
+
+
+
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1299,6 +1346,23 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 
+    }
+
+
+
+    public String getReferrer(String uri){
+        List<NameValuePair> params = URLEncodedUtils.parse(URI.create(uri), "UTF-8");
+
+        String referrer = null;
+        for (NameValuePair param : params) {
+
+            if(param.getName().equals("referrer")){
+                referrer = param.getValue();
+            }
+
+            System.out.println(param.getName() + " : " + param.getValue());
+        }
+        return referrer;
     }
 
 

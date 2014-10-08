@@ -27,6 +27,7 @@ public class FinishedApk implements Parcelable, Serializable{
     private String repoName;
     private String cpiUrl;
     private long id;
+    private String referrer;
 
 
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
@@ -158,5 +159,13 @@ public class FinishedApk implements Parcelable, Serializable{
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getReferrer() {
+        return referrer;
+    }
+
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
     }
 }

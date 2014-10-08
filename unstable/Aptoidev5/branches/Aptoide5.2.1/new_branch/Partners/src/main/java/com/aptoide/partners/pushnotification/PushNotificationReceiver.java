@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,8 +47,10 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;//
 
     // same as Manifest
-    public static final String PUSH_NOTIFICATION_Action = "com.aptoide.partners.PushNotification";
-    public static final String PUSH_NOTIFICATION_Action_FIRST_TIME = "com.aptoide.partners.PushNotificationFirstTime";
+    public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationTrackUrl";
+    public static final String PUSH_NOTIFICATION_Action = "cm.aptoide.pt.PushNotification";
+    public static final String PUSH_NOTIFICATION_Action_FIRST_TIME = "cm.aptoide.pt.PushNotificationFirstTime";
+    private static final String PUSH_NOTIFICATION_TRACK_URL = "trackUrl";
 
     public class MyImageLoadingListener implements ImageLoadingListener {
 
@@ -156,6 +159,18 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
 
 
+            }else if(action.equals(PUSH_NOTIFICATION_Action_TRACK_URL)){
+                String trackUrl = intent.getStringExtra(PUSH_NOTIFICATION_TRACK_URL);
+                String externalUrl = intent.getStringExtra(PUSH_NOTIFICATION_EXTERNAL_URL);
+                GenericUrl url = new GenericUrl(trackUrl);
+
+                try {
+                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl));
+                    context.startActivity(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ActivityNotFoundException ignore){}
             }
         }
 
@@ -179,8 +194,11 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         Log.i("PushNotificationReceiver", "Msg: " + extra.getCharSequence(PUSH_NOTIFICATION_MSG));
         Log.i("PushNotificationReceiver", "URL: " + extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
 
-        Intent resultIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(extra.getString(PUSH_NOTIFICATION_EXTERNAL_URL)));
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent resultIntent = new Intent("");
+
+        resultIntent.putExtra(PUSH_NOTIFICATION_TRACK_URL, extra.getCharSequence(PUSH_NOTIFICATION_TRACK_URL));
+        resultIntent.putExtra(PUSH_NOTIFICATION_EXTERNAL_URL, extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
+        //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        PendingIntent pendingIntent = PendingIntent.getActivity(context, 86456, resultIntent, PendingIntent.FLAG_ONE_SHOT);
 
 //        Intent resultIntent = new Intent(context, AptoidePartner.getConfiguration().getStartActivityClass());
@@ -201,7 +219,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
 
 
-         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, new Random().nextInt(), resultIntent, 0);
+        PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, new Random().nextInt(), resultIntent, 0);
 
         // Create remote view and set bigContentView.
         /*RemoteViews expandedView = new RemoteViews(context.getPackageName(),
@@ -211,7 +229,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
 
         Notification notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(cm.aptoide.ptdev.R.drawable.icon_brand_aptoide)
                 .setContentIntent(resultPendingIntent)
                 .setOngoing(false)
                 .setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE))
@@ -220,15 +238,12 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= 16) {
             Log.d("PushNotificationReceiver", "is 16 or more, BIG!!!");
             RemoteViews expandedView = new RemoteViews(context.getPackageName(),
-                    R.layout.pushnotificationlayout);
-            expandedView.setBitmap(R.id.PushNotificationImageView, "setImageBitmap", o);
-            expandedView.setTextViewText(R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-            expandedView.setTextViewText(R.id.description, extra.getCharSequence(PUSH_NOTIFICATION_MSG));
+                    cm.aptoide.ptdev.R.layout.pushnotificationlayout);
+            expandedView.setBitmap(cm.aptoide.ptdev.R.id.PushNotificationImageView, "setImageBitmap", o);
+            expandedView.setTextViewText(cm.aptoide.ptdev.R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
+            expandedView.setTextViewText(cm.aptoide.ptdev.R.id.description, extra.getCharSequence(PUSH_NOTIFICATION_MSG));
             notification.bigContentView = expandedView;
         }
-
-
-
 
 /*
         NotificationCompat.BigPictureStyle notiStyle = new
@@ -280,7 +295,8 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         */
         Log.i("PushNotificationReceiver", "notification built");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        managerNotification.notify(new Random().nextInt(), notification);
+        managerNotification.notify(86456, notification);
 
     }
+
 }

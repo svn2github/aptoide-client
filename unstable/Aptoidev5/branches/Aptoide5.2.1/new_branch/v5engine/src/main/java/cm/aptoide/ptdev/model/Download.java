@@ -21,6 +21,12 @@ public class Download implements Serializable{
     private String md5;
     private boolean paid;
 
+    public String getReferrer() {
+        return referrer;
+    }
+
+    private String referrer;
+
     public String getCpiUrl() {
         return cpiUrl;
     }
@@ -147,6 +153,10 @@ public class Download implements Serializable{
 
     public void setPaid(boolean paid) {
         this.paid = paid;
+    }
+
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
     }
 }
 

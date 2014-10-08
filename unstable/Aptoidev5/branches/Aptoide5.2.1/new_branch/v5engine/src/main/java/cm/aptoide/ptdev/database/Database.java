@@ -1100,7 +1100,7 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
         values.put(Schema.RollbackTbl.COLUMN_ICONPATH, rollBackItem.getIconPath());
         values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
-        values.put(Schema.RollbackTbl.COLUMN_ACTION, (rollBackItem.getAction() == null ? "" : rollBackItem.getAction().toString()));
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, (rollBackItem.getAction() == null ? "" : rollBackItem.getAction().toString() + "|" + rollBackItem.getAction().getReferrer()));
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 0);
         values.put(Schema.RollbackTbl.COLUMN_REPO, rollBackItem.getRepoName());
 

@@ -27,6 +27,7 @@ public class RollBackItem {
         DOWNGRADING("Downgrading"),
         DOWNGRADED("Downgraded");
 
+        private String referrer;
         private String action;
 
         private Action(String action) {
@@ -36,6 +37,15 @@ public class RollBackItem {
         @Override
         public String toString() {
             return action;
+        }
+
+        public String getReferrer() {
+            return referrer;
+        }
+
+        public Action setReferrer(String referrer) {
+            this.referrer = referrer;
+            return this;
         }
     }
 
