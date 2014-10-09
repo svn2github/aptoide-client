@@ -61,7 +61,7 @@ public class TimeLineFriendsListDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (callback != null) {
-                            callback.acceptTimeLine(true);
+                            callback.acceptTimeLine(false);
                             callback = null;
                         }
                     }

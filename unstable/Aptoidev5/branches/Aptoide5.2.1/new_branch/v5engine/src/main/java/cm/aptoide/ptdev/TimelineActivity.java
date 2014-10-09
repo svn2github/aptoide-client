@@ -259,7 +259,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             adapter.getView(0, null, null);
         }
         else{
-            TimeLineCommentsDialog timelineFriendsList = new TimeLineCommentsDialog();
+            TimeLineFriendsListDialog timelineFriendsList = new TimeLineFriendsListDialog();
             //timelineFriendsList.setArguments(args);
             timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
         }
