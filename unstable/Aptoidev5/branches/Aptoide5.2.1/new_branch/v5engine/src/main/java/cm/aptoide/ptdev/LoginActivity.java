@@ -543,8 +543,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
     public void submit(final Mode mode, final String username, final String passwordOrToken, final String nameForGoogle) {
 
-        //final String userName = ((EditText) findViewById(R.id.username)).getText().toString();
-        //final String userPass = ((EditText) findViewById(R.id.password)).getText().toString();
+        //final String userName = ((EditText) findViewById(R.id.username)).getAvatar().toString();
+        //final String userPass = ((EditText) findViewById(R.id.password)).getAvatar().toString();
 
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 

@@ -40,7 +40,7 @@
                 android:textStyle="bold"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/user_avatar" android:text="Daniel Antonio"/>
+                android:layout_toRightOf="@+id/user_avatar" android:text="User"/>
 
         <TextView
                 android:id="@+id/comment"

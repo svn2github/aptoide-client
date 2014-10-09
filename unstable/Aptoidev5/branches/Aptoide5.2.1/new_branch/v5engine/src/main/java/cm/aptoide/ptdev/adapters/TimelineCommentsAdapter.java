@@ -14,14 +14,14 @@ import java.util.List;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments.Comments.Comment;
+import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 
 public class TimelineCommentsAdapter extends BaseAdapter {
 
-	private final List<Comment> list;
+	private final List<ApkInstallComments.Comment> list;
 	protected Context ctx;
 
-    public TimelineCommentsAdapter(Context ctx, List<Comment> list) {
+    public TimelineCommentsAdapter(Context ctx, List<ApkInstallComments.Comment> list) {
         this.list = list;
         this.ctx = ctx;
     }
@@ -34,7 +34,7 @@ public class TimelineCommentsAdapter extends BaseAdapter {
     }
 
     @Override
-    public Comment getItem(int position) { return list.get(position); }
+    public ApkInstallComments.Comment getItem(int position) { return list.get(position); }
 
 	@Override
     public long getItemId(int position) {
@@ -67,7 +67,7 @@ public class TimelineCommentsAdapter extends BaseAdapter {
 	    }
 
 
-	    Comment comment = getItem(position);
+        ApkInstallComments.Comment comment = getItem(position);
 
 	    holder.personName.setText(comment.getUsername());
 		holder.comment.setText(comment.getText());

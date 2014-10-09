@@ -330,9 +330,9 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
             saveit.close();
         } catch(Exception e){
 //			AlertDialog p = new AlertDialog.Builder(this).create();
-//			p.setTitle(getText(R.string.top_error));
-//			p.setMessage(getText(R.string.aptoide_error));
-//			p.setButton(getText(R.string.btn_ok), new DialogInterface.OnClickListener() {
+//			p.setTitle(getAvatar(R.string.top_error));
+//			p.setMessage(getAvatar(R.string.aptoide_error));
+//			p.setButton(getAvatar(R.string.btn_ok), new DialogInterface.OnClickListener() {
 //			      public void onClick(DialogInterface dialog, int which) {
 //			          return;
 //			        } });

@@ -161,7 +161,7 @@ public class SignUpActivity extends ActionBarActivity{
 
 
         createUserRequest.setEmail(emailBox.getText().toString());
-//        createUserRequest.setName(nameBox.getText().toString());
+//        createUserRequest.setName(nameBox.getAvatar().toString());
         createUserRequest.setPass(passBox.getText().toString());
 
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
@@ -316,9 +316,9 @@ public class SignUpActivity extends ActionBarActivity{
 //
 //        new AsyncTask<String, Void, Intent>() {
 //
-//            String name = ((TextView) findViewById(R.id.name)).getText().toString().trim();
-//            String accountName = ((TextView) findViewById(R.id.accountName)).getText().toString().trim();
-//            String accountPassword = ((TextView) findViewById(R.id.accountPassword)).getText().toString().trim();
+//            String name = ((TextView) findViewById(R.id.name)).getAvatar().toString().trim();
+//            String accountName = ((TextView) findViewById(R.id.accountName)).getAvatar().toString().trim();
+//            String accountPassword = ((TextView) findViewById(R.id.accountPassword)).getAvatar().toString().trim();
 //
 //            @Override
 //            protected Intent doInBackground(String... params) {

@@ -62,8 +62,11 @@ public class TimelineListAPKsJson extends GenericResponse {
                     return timestamp;
                 }
 
-                public boolean isUserliked() {
+                public String isUserliked() {
                     return userliked;
+                }
+                public void setUserliked(String userliked) {
+                    this.userliked=userliked;
                 }
                 @Key
                 Number id;
@@ -71,6 +74,11 @@ public class TimelineListAPKsJson extends GenericResponse {
                 String username;
                 @Key
                 String status;
+
+                public void setLikes(Number likes) {
+                    this.likes = likes;
+                }
+
                 @Key
                 Number likes;
                 @Key
@@ -80,7 +88,7 @@ public class TimelineListAPKsJson extends GenericResponse {
                 @Key
                 String timestamp;
                 @Key
-                boolean userliked;
+                String userliked;
             }
 
             public static class APK {

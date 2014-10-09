@@ -573,5 +573,8 @@
     <string name="facebook_start_timeline">Start Timeline</string>
     <string name="facebook_friends_list_using_timeline">{friends} and %s more friends are already using Aptoide Social Timeline</string>
     <string name="facebook_friends_using_timeline">{friends} are already using Aptoide Social Timeline</string>
+    <string name="share_on_timeline">Share on TimeLine</string>
+    <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
+    <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
 
 </resources>

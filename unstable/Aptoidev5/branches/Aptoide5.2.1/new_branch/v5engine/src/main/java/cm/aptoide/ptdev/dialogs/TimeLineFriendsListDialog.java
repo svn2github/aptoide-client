@@ -9,22 +9,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.List;
-
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.adapters.TimelineCommentsAdapter;
+import cm.aptoide.ptdev.adapters.FriendsListAdapter;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
-import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
+import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
 /**
  * Created by asantos on 29-09-2014.
  */
-public class TimeLineCommentsDialog extends DialogFragment {
-
-    public static final String POSTID = "ID";
+public class TimeLineFriendsListDialog extends DialogFragment {
 
     @Override
     public void onAttach(Activity activity) {
@@ -38,36 +33,37 @@ public class TimeLineCommentsDialog extends DialogFragment {
     }
 
     private TimeLineManager callback;
-    private long id;
     private ListView lv;
 
-    public void SetComments(List<ApkInstallComments.Comment> entry){
-        this.lv.setAdapter(new TimelineCommentsAdapter(getActivity(), entry));
+    public void setFriends(ListUserFriendsJson friends){
+        this.lv.setAdapter(new FriendsListAdapter(getActivity(), friends));
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context c = getActivity();
-        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_timelinecomments, null);
-        id=getArguments().getLong(POSTID);
+        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_timeline_friends, null);
+
         lv = (ListView) v.findViewById(R.id.TimeLineListView);
         return new AlertDialog.Builder(c)
                 .setView(v)
-                .setPositiveButton(R.string.add_comment,new DialogInterface.OnClickListener() {
+                .setTitle(R.string.do_you_accept_timeline)
+                .setPositiveButton(android.R.string.yes,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (callback != null) {
-                            String s = ((EditText) v.findViewById(R.id.TimeLineCommentEditText))
-                                    .getText().toString();
-                            callback.commentPost(id,s);
+                            callback.acceptTimeLine(true);
                             callback = null;
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        if (callback != null) {
+                            callback.acceptTimeLine(true);
+                            callback = null;
+                        }
                     }
                 })
                 .create();
@@ -76,6 +72,6 @@ public class TimeLineCommentsDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        callback.getComments(id);
+        callback.getFriends();
     }
 }

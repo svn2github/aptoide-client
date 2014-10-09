@@ -33,12 +33,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -108,6 +110,7 @@ import cm.aptoide.ptdev.model.MediaObject;
 import cm.aptoide.ptdev.model.MultiStoreItem;
 import cm.aptoide.ptdev.model.Screenshot;
 import cm.aptoide.ptdev.model.Video;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -507,10 +510,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     private void checkInstallation(GetApkInfoJson getApkInfoJson) {
-
         final TextView btinstall = (TextView) findViewById(R.id.btinstall);
         btinstall.setEnabled(true);
-
+        boolean setShareButtonVisible=Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false);
 
         if ( payment.getAmount().doubleValue() > 0) {
             String path = getApkInfoJson.getApk().getPath();
@@ -523,14 +525,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 installListener.setPaid(true);
                 btinstall.setOnClickListener(installListener);
-
             } else {
                 changebtInstalltoBuy(btinstall);
             }
 
         } else {
-
-
             PackageInfo info = getPackageInfo(package_name);
             if (info == null) {
                 btinstall.setText(getString(R.string.install));
@@ -560,8 +559,32 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 supportInvalidateOptionsMenu();
             }
         }
-    }
+        findViewById(R.id.btinstallshare)
+                .setVisibility( setShareButtonVisible ?
+                        View.VISIBLE:View.INVISIBLE);
 
+    }
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.menu_share_install) {
+
+                    menuItem.setChecked(!menuItem.isChecked());
+                    Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, menuItem.isChecked());
+                    return true;
+                }
+                return false;
+            }
+        });
+        inflater.inflate(R.menu.menu_share_install, popup.getMenu());
+
+        popup.getMenu().findItem(R.id.menu_share_install).setChecked(
+                Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
+        popup.show();
+    }
 
     DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
         @Override
@@ -1573,7 +1596,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int i = item.getItemId();
 
         if (i == android.R.id.home || i == R.id.home) {
@@ -1626,6 +1648,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));
+        }else if(i== R.id.menu_share_install){
+            if (item.isChecked()) item.setChecked(false);
+            else item.setChecked(true);
+            return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev.adapters;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ import java.util.ArrayList;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -30,20 +29,21 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> {
 
 
-
+    private TimeLineManager mTimeLineManager;
     private final LayoutInflater mInflater;
 
     public TimelineAdapter(Context context, ArrayList<TimelineListAPKsJson.UserApk> apks) {
         super(context,0,apks);
         mInflater = LayoutInflater.from(context);
+        mTimeLineManager = (TimeLineManager)context;
     }
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
-        View v;
-        ViewHolder holder;
+        final View v;
+        final ViewHolder holder;
 
         if(convertView == null){
             convertView = mInflater.inflate(R.layout.row_timeline_post, parent, false);
@@ -78,7 +78,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             v = convertView;
         }
 
-        TimelineListAPKsJson.UserApk entry = getItem(position);
+        final TimelineListAPKsJson.UserApk entry = getItem(position);
 
         //addAppListener(holder.centerLayout, entry.getApk_id().longValue());
         //addLikeListener(holder.likeButton, entry.getPostID().longValue());
@@ -99,11 +99,11 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 //        }
 //        holder.likes.setText(NumberFormat.getIntegerInstance().format(entry.getLikes())
 //                +((entry.getLikes().longValue()==1)?" Like" :" Likes"));
-//        holder.comments.setText(NumberFormat.getIntegerInstance().format(entry.getComments())
-//                +((entry.getComments().longValue()==1)?" Comment" :" Comments"));
+//        holder.comments.setText(NumberFormat.getIntegerInstance().format(entry.getFriends())
+//                +((entry.getFriends().longValue()==1)?" Comment" :" Comments"));
 //
 //        boolean hasLikes = !(entry.getLikes().longValue()==0);
-//        boolean hasComments = !(entry.getComments().longValue() == 0);
+//        boolean hasComments = !(entry.getFriends().longValue() == 0);
 //        if (hasLikes || hasComments) {
 //            holder.bottomLayout.setVisibility(View.VISIBLE);
 //
@@ -116,14 +116,58 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 //            holder.bottomLayout.setVisibility(View.GONE);
 //        }
 
+        final int likes = entry.getInfo().getLikes().intValue();
+        int comments = entry.getInfo().getComments().intValue();
+        if(likes > 0 && comments >0 ) {
+            holder.and.setVisibility(View.VISIBLE);
+        }else {
+            holder.and.setVisibility(View.INVISIBLE);
+        }
+
+        holder.likes.setText(likes>0?String.valueOf(likes)+ getContext().getString(R.string.likes):"");
+
+        holder.comments.setText(comments>0?String.valueOf(comments) + getContext().getString(R.string.comments):"");
+
         holder.time.setText(getTime(entry.getInfo().getTimestamp()));
         holder.appVersion.setText(entry.getApk().getVername());
-        holder.appRepo.setText("Store: " + entry.getApk().getRepo());
+        holder.appRepo.setText(getContext().getString(R.string.store)+": " + entry.getApk().getRepo());
 
-        boolean isLiked = entry.getInfo().isUserliked();
-        holder.likeButtonText.setText(isLiked? "Unlike" : "Like");
+        final boolean isLiked = entry.getInfo().isUserliked().equals("like");
+        final long id = entry.getInfo().getId().longValue();
+        ChangeLikeButtonText(isLiked,holder.likeButtonText);
 
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+            boolean selfIsLiked = isLiked;
+            int selfLikes = likes;
+            final TextView likeButtonText = holder.likeButtonText;
+            final TextView holderlikes = holder.likes;
+            @Override
+            public void onClick(View v) {
+                if(selfIsLiked) {
+                    mTimeLineManager.unlikePost(id);
+                    selfIsLiked =false;
+                    entry.getInfo().setUserliked("nolike");
+                    entry.getInfo().setLikes(--selfLikes);
+                }else{
+                    mTimeLineManager.likePost(id);
+                    selfIsLiked =true;
+                    entry.getInfo().setUserliked("like");
+                    entry.getInfo().setLikes(++selfLikes);
+                }
+                holderlikes.setText(String.valueOf(selfLikes)+ getContext().getString(R.string.likes));
+                ChangeLikeButtonText(selfIsLiked,likeButtonText);
+            }
+        });
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTimeLineManager.openCommentsDialog(id);
+            }
+        });
         return v;
+    }
+    private static void ChangeLikeButtonText(boolean isLiked, TextView likeButtonText){
+        likeButtonText.setText(isLiked ? "Unlike" : "Like");
     }
 
 

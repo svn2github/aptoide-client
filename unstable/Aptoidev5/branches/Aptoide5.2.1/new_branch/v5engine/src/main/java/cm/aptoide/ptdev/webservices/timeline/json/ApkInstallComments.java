@@ -10,53 +10,36 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  * Created by asantos on 24-09-2014.
  */
 public class ApkInstallComments extends GenericResponse {
-
-    public Comments getComment() {
-        return Comment;
+    public List<Comment> getComments() {
+        return comments;
     }
+    @Key List<Comment> comments;
 
-    @Key
-    Comments Comment;
-
-    public static class Comments {
-        public List<Comments.Comment> getEntry() {
-            return entry;
+    public static class Comment {
+        public Number getId() {
+            return id;
         }
-
+        public String getUsername() {
+            return username;
+        }
+        public String getText() {
+            return text;
+        }
+        public String getTimestamp() {
+            return timestamp;
+        }
+        public boolean isOwned() {
+            return owned;
+        }
         @Key
-        List<Comments.Comment> entry;
-
-        public static class Comment {
-
-                public Number getId() {
-                    return id;
-                }
-
-                public String getUsername() {
-                    return username;
-                }
-
-                public String getText() {
-                    return text;
-                }
-
-                public String getTimestamp() {
-                    return timestamp;
-                }
-
-                public boolean isOwned() {
-                    return owned;
-                }
-                @Key
-                Number id;
-                @Key
-                String username;
-                @Key
-                String text;
-                @Key
-                String timestamp;
-                @Key
-                boolean owned;
-            }
+        Number id;
+        @Key
+        String username;
+        @Key
+        String text;
+        @Key
+        String timestamp;
+        @Key
+        boolean owned;
     }
 }

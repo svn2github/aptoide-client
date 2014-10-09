@@ -68,7 +68,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                     channel.close();
                     connection.disconnectChannel(channel);
                     connection.close();
-                    //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
+                    //sPref.edit().putBooleanAndCommit(Constants.WEBINSTALL_QUEUE_EXCLUDED, false);
                 } catch (ShutdownSignalException e) {
                     e.printStackTrace();
 
@@ -103,7 +103,7 @@ public class WebInstallSyncAdapter extends AbstractThreadedSyncAdapter {
                     } catch (ShutdownSignalException e1) {
                         e1.printStackTrace();
                     }
-                    //sPref.edit().putBoolean(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
+                    //sPref.edit().putBooleanAndCommit(Constants.WEBINSTALL_QUEUE_EXCLUDED, true).commit();
                 }
             }
         } catch (Exception e){

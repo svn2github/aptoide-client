@@ -5,9 +5,11 @@ package cm.aptoide.ptdev.webservices.timeline;
  */
 public interface TimeLineManager {
 
+    public void getFriends();
+    public void acceptTimeLine(boolean accepted);
     public void likePost(long id);
     public void unlikePost(long id);
     public void commentPost(long id,String comment);
-    public void getComment(long id);
+    public void getComments(long id);
     public void openCommentsDialog(long id);
 }

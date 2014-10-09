@@ -5,31 +5,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
-import android.view.WindowManager;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.model.RollBackItem;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.Base64;
-import cm.aptoide.ptdev.webservices.RegisterAdRequest;
-import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -37,10 +23,27 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.UrlEncodedContent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.preferences.Preferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.webservices.RegisterAdRequest;
+import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 /**
  * Created with IntelliJ IDEA.
@@ -149,24 +152,20 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         }
 
+        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0){
+            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
 
-//        if(sPref.getBoolean("shareTimelineDownload", false) && apk.getId() > 0){
-//
-//            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
-//
-//            HashMap<String, String> parameters = new HashMap<String, String>();
-//
-//            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
-//            parameters.put("appid", String.valueOf(apk.getId()));
-//            HttpContent content = new UrlEncodedContent(parameters);
-//            try {
-//                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+            HashMap<String, String> parameters = new HashMap<String, String>();
 
-
+            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
+            parameters.put("appid", String.valueOf(apk.getId()));
+            HttpContent content = new UrlEncodedContent(parameters);
+            try {
+                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
 

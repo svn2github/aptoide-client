@@ -20,22 +20,25 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
+import cm.aptoide.ptdev.dialogs.TimeLineFriendsListDialog;
 import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
+import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
+import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -44,6 +47,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class TimelineActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener, TimeLineManager {
     private static final int COMMENTSLIMIT = 10;
     private static final String COMMENTSDIALOGTAG = "CD";
+    private static final String TIMELINEFRIENDSLISTDIALOGTAG = "TLFLD";
 
     private ArrayList<TimelineListAPKsJson.UserApk> apks = new ArrayList<TimelineListAPKsJson.UserApk>();
     private EndlessWrapperAdapter adapter;
@@ -71,8 +75,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
         apks.addAll(0, data);
-        firstId = apks.get(0).getInfo().getId();
-        adapter.notifyDataSetChanged();
+        if(apks.size()>0) {
+            firstId = apks.get(0).getInfo().getId();
+            adapter.notifyDataSetChanged();
+        }
         // remove it's pending
         // view and call
         // notifyDataSetChanged()
@@ -134,10 +140,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     public void refreshRequest() {
         listAPKsInstallsRequest = new ListApksInstallsRequest();
 
-        //listAPKsInstallsRequest.setOffset_id(String.valueOf(firstId.intValue()));
+        //listAPKsInstallsRequest.setOffset(String.valueOf(firstId.intValue()));
         //listAPKsInstallsRequest.setUpwardsDirection();
-
-
         adapter.notifyDataSetChanged();
         adapter.restartAppending();
 
@@ -187,13 +191,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
+/*
+
+        ListUserFriendsRequest request = new ListUserFriendsRequest();
+        request.setLimit("10");
+        request.setOffset("0");
+        manager.execute(request, new NothingRequestListener<ListUserFriendsJson>());
+*/
+
         adapter = new EndlessWrapperAdapter(this, apks);
         adapter.setRunInBackground(false);
         setContentView(R.layout.page_timeline);
         mProgressContainer = findViewById(android.R.id.empty);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
-        swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color, R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
-
+        swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+                R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
@@ -201,7 +213,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         Bundle addAccountOptions=new Bundle();
         if(AptoideUtils.isLoggedIn(this)){
-            if (PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null).equals("FACEBOOK")){
+            if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))){
                 init();
                 return;
             }
@@ -217,7 +229,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
-
                         try {
                             String name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
 
@@ -226,11 +237,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                             }else{
                                 init();
                             }
-
                         } catch (Exception e) {
                             finish();
                         }
-
                     }
                 },
                 new Handler(Looper.getMainLooper())
@@ -240,22 +249,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
-
     }
-
-
-
 
     private void init() {
-
-        ListView lv = (ListView) findViewById(R.id.timeline_list);
-        lv.setAdapter(adapter);
-
-        //force loading
-        adapter.getView(0, null, null);
-
+        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
+            ListView lv = (ListView) findViewById(R.id.timeline_list);
+            lv.setAdapter(adapter);
+            //force loading
+            adapter.getView(0, null, null);
+        }
+        else{
+            TimeLineCommentsDialog timelineFriendsList = new TimeLineCommentsDialog();
+            //timelineFriendsList.setArguments(args);
+            timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
+        }
     }
-
 
     @Override
     protected void onResume() {
@@ -289,7 +297,27 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     /* *************** Methods of the TimeLineManager Interface *************** */
-
+    @Override
+    public void acceptTimeLine(boolean accepted){
+        if(accepted) {
+            Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+            init();
+        }
+        else {
+            finish();
+        }
+    }
+    @Override
+    public void getFriends(){
+        ListUserFriendsRequest request = new ListUserFriendsRequest();
+        manager.execute(request, new TimelineRequestListener<ListUserFriendsJson>() {
+            @Override
+            protected void caseOK(ListUserFriendsJson response) {
+                ((TimeLineFriendsListDialog) getSupportFragmentManager().findFragmentByTag(TIMELINEFRIENDSLISTDIALOGTAG))
+                        .setFriends((response));
+            }
+        });
+    }
     @Override
     public void likePost(long id){
         likeRequestPost(id, AddUserApkInstallLikeRequest.LIKE);
@@ -313,7 +341,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     }
     @Override
-    public void getComment(long id) {
+    public void getComments(long id) {
         GetUserApkInstallCommentsRequest request = new GetUserApkInstallCommentsRequest();
         request.setPostID(id);
         request.setPostLimit(COMMENTSLIMIT);
@@ -321,7 +349,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
     @Override
     public void openCommentsDialog(long id){
-        new TimeLineCommentsDialog().show(getSupportFragmentManager(), COMMENTSDIALOGTAG);
+        Bundle args = new Bundle();
+        args.putLong(TimeLineCommentsDialog.POSTID,id);
+        TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
+        commentsDialog.setArguments(args);
+        commentsDialog.show(getSupportFragmentManager(), COMMENTSDIALOGTAG);
     }
 
     /* *************** Methods of the TimeLineManager Interface *************** */
@@ -340,7 +372,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         protected void caseOK(GetUserSettingsJson response) {
             if (((GetUserSettingsJson)response).getResults() != null) {
                 boolean serverResponse = ((GetUserSettingsJson)response).getResults().getTimeline().equals("active");
-                OnGetServerSetting(serverResponse);
+
             }
         }
     }
@@ -348,22 +380,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     public class GetUserApkInstallCommentsRequestListener extends TimelineRequestListener<ApkInstallComments> {
         @Override
         protected void caseOK(ApkInstallComments response) {
-            if (((ApkInstallComments)response).getComment()!=null &&
-                    ((ApkInstallComments)response).getComment().getEntry() !=null) {
-                OnGetUserApkInstallComments(((ApkInstallComments) response).getComment().getEntry());
+            if ((response).getComments()!=null) {
+                ((TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG))
+                        .SetComments((response).getComments());
             }
         }
-    }
-
-    /**
-     * Called be the listener of ChangeUserSettingsRequest and GetUserSettingsRequest
-     */
-    private void OnGetServerSetting(boolean timeline){
-        //TODO
-    }
-
-    private void OnGetUserApkInstallComments(List<ApkInstallComments.Comments.Comment> entry) {
-        ((TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG))
-                .SetComments(entry);
     }
 }

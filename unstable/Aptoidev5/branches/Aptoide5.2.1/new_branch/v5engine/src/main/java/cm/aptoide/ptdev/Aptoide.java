@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.api.client.http.HttpRequest;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -21,7 +20,6 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
@@ -194,7 +192,7 @@ public class Aptoide extends Application {
 
             boolean download = AptoideUtils.NetworkUtils.isIconDownloadPermitted(context);
 
-            Log.i("AptoideDownloadPermitted?", String.valueOf(download));
+
             switch (Scheme.ofUri(imageUri)) {
                 case HTTP:
                 case HTTPS:

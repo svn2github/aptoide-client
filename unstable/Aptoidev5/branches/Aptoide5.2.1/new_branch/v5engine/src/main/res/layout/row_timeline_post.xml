@@ -157,8 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/dimgray"
-                android:text="2 Likes"/>
+                android:textColor="@color/dimgray"/>
 
             <TextView android:id="@+id/timeline_post_and"
                 android:layout_width="wrap_content"
@@ -171,9 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/dimgray"
-                android:text="3 Comments"/>
-
+                android:textColor="@color/dimgray"/>
         </LinearLayout>
 
     </RelativeLayout>

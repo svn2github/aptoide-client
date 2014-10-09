@@ -9,8 +9,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="bottom"
+    android:layout_margin="10dp"
     android:orientation="vertical" >
+
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/friends_that_use_timeline">
+
+    </TextView>
 
     <ListView
         android:id="@+id/TimeLineListView"
@@ -18,13 +26,5 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        </ListView>
-    <EditText
-        android:id="@+id/TimeLineCommentEditText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/write_your_comment"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
+    </ListView>
 </LinearLayout>
