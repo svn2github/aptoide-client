@@ -190,27 +190,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-
-/*
-
-        ListUserFriendsRequest request = new ListUserFriendsRequest();
-        request.setLimit("10");
-        request.setOffset("0");
-        manager.execute(request, new NothingRequestListener<ListUserFriendsJson>());
-*/
-
-        adapter = new EndlessWrapperAdapter(this, apks);
-        adapter.setRunInBackground(false);
-        setContentView(R.layout.page_timeline);
-        mProgressContainer = findViewById(android.R.id.empty);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
-        swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-                R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
-
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setRefreshing(true);
-        setListShown(false, false);
-
         Bundle addAccountOptions=new Bundle();
         if(AptoideUtils.isLoggedIn(this)){
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))){
@@ -229,29 +208,40 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
+                        String name="";
                         try {
-                            String name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
-
-                            if(TextUtils.isEmpty(name)){
-                                finish();
-                            }else{
-                                init();
-                            }
+                            name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
                         } catch (Exception e) {
                             finish();
+                        }
+
+                        if(TextUtils.isEmpty(name)){
+                            finish();
+                        }else{
+                            init();
                         }
                     }
                 },
                 new Handler(Looper.getMainLooper())
         );
+    }
 
+    private void init() {
+        adapter = new EndlessWrapperAdapter(this, apks);
+        adapter.setRunInBackground(false);
+        setContentView(R.layout.page_timeline);
+        mProgressContainer = findViewById(android.R.id.empty);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+                R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshing(true);
+        setListShown(false, false);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
-    }
-
-    private void init() {
         if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
             ListView lv = (ListView) findViewById(R.id.timeline_list);
             lv.setAdapter(adapter);

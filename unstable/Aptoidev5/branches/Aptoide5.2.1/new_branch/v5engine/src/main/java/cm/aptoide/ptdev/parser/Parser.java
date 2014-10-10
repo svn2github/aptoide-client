@@ -2,6 +2,23 @@ package cm.aptoide.ptdev.parser;
 
 import android.content.ContentValues;
 import android.util.Log;
+
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.Comparator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
@@ -14,15 +31,6 @@ import cm.aptoide.ptdev.parser.handlers.AbstractHandler;
 import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
 import cm.aptoide.ptdev.services.FileRequest;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.InputStream;
-import java.util.Comparator;
-import java.util.concurrent.*;
 
 public class Parser{
 
@@ -31,7 +39,7 @@ public class Parser{
 
     public Parser(SpiceManager manager){
         spiceManager = manager;
-        Log.d("Aptoide-Parser", "newParser");
+        //Log.d("Aptoide-Parser", "newParser");
     }
 
     public ExecutorService getExecutor() {
@@ -53,7 +61,7 @@ public class Parser{
 
     public void parse(final String url, Login login, final int priority, final AbstractHandler handler, final ErrorCallback errorCallback, final CompleteCallback completeCallback, final Runnable runnable) {
 
-        Log.d("Aptoide-Parser", "Starting parse: " + url);
+        //Log.d("Aptoide-Parser", "Starting parse: " + url);
         int key = url.hashCode();
         AptoideConfiguration configuration = Aptoide.getConfiguration();
 
@@ -61,14 +69,14 @@ public class Parser{
         final File file = new File(path+key+".xml");
         i++;
         final long repoId = handler.getRepoId();
-        Log.d("Aptoide-Parser", "Starting request: " + url);
+        //Log.d("Aptoide-Parser", "Starting request: " + url);
         if(!spiceManager.isStarted()){
             spiceManager.start(Aptoide.getContext());
         }
         spiceManager.execute(new FileRequest(url,file, login), new RequestListener<InputStream>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.d("Aptoide-Parser", "onRequestFailure");
+                //Log.d("Aptoide-Parser", "onRequestFailure");
                 i--;
                 if(threadPoolIsIdle() && poolEndedCallback!=null){
                     poolEndedCallback.onEnd();
@@ -83,17 +91,17 @@ public class Parser{
             @Override
             public void onRequestSuccess(final InputStream inputStream) {
 
-                Log.d("Aptoide-Parser", "onRequestSuccess " + url);
+                //Log.d("Aptoide-Parser", "onRequestSuccess " + url);
                 service.execute(new RunnableWithPriority(priority) {
                     @Override
                     public void run() {
-                        Log.d("Aptoide-Parser", "Starting parse " + url);
+                        //Log.d("Aptoide-Parser", "Starting parse " + url);
                         //long startTime = System.currentTimeMillis();
                         Aptoide.getDb().beginTransaction();
 
                         try {
                             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-                            Log.d("Aptoide-Parser", "New SaxParser");
+                            //Log.d("Aptoide-Parser", "New SaxParser");
                             if(runnable!=null) 
                                 runnable.run();
 
@@ -105,7 +113,7 @@ public class Parser{
                             }
 
                             parser.parse(inputStream, handler);
-                            Log.d("Aptoide-Parser", "Parse ended");
+                            //Log.d("Aptoide-Parser", "Parse ended");
 
                             if (handler instanceof HandlerInfoXml && !((HandlerInfoXml) handler).isDelta() &&
                                     ((HandlerInfoXml) handler).getCountriesPermitted() != null &&
@@ -119,16 +127,20 @@ public class Parser{
                         } catch (Exception e1){
                             e1.printStackTrace();
                             if (errorCallback != null) errorCallback.onError(e1, repoId);
-                            Log.d("Aptoide-Parser", "Error");
+                            Log.e("Aptoide-Parser", "Error");
+                        }finally {
+
+                            if(Aptoide.getDb().inTransaction()){
+                                Aptoide.getDb().endTransaction();
+                            }
+
                         }
 
-                        Aptoide.getDb().endTransaction();
-                        Log.d("Aptoide-Parser", "Deleting file");
+                        //Log.d("Aptoide-Parser", "Deleting file");
                         file.delete();
-                        Log.d("Aptoide-Parser", "Deleting file");
 
                         i--;
-//                        Log.d("Aptoide-Parser", url + " Took : " + (System.currentTimeMillis() - startTime) + " ms" + " i=" + i);
+//                        //Log.d("Aptoide-Parser", url + " Took : " + (System.currentTimeMillis() - startTime) + " ms" + " i=" + i);
                         if(threadPoolIsIdle() && poolEndedCallback!=null){
                             poolEndedCallback.onEnd();
                         }

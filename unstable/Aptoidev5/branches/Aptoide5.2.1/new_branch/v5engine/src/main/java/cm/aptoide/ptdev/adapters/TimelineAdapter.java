@@ -41,7 +41,6 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-
         final View v;
         final ViewHolder holder;
 
@@ -136,11 +135,12 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         final long id = entry.getInfo().getId().longValue();
         ChangeLikeButtonText(isLiked,holder.likeButtonText);
 
+        final View myCv = convertView;
+
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             boolean selfIsLiked = isLiked;
             int selfLikes = likes;
-            final TextView likeButtonText = holder.likeButtonText;
-            final TextView holderlikes = holder.likes;
+
             @Override
             public void onClick(View v) {
                 if(selfIsLiked) {
@@ -154,8 +154,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
                     entry.getInfo().setUserliked("like");
                     entry.getInfo().setLikes(++selfLikes);
                 }
-                holderlikes.setText(String.valueOf(selfLikes)+ getContext().getString(R.string.likes));
-                ChangeLikeButtonText(selfIsLiked,likeButtonText);
+                getView(position,myCv,parent);
             }
         });
         holder.commentButton.setOnClickListener(new View.OnClickListener() {

@@ -11,10 +11,10 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class ListUserFriendsJson extends GenericResponse {
     public List<Friend> getFriends() {
-        return friends;
+        return userfriends;
     }
     @Key
-    List<Friend> friends;
+    List<Friend> userfriends;
 
     public static class Friend {
         public String getUsername() {
