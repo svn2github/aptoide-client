@@ -106,7 +106,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
                 new AdultDialog().show(getFragmentManager(), "adultDialog");
             } else {
                 ((GetStartActivityCallback) getActivity()).matureLock();

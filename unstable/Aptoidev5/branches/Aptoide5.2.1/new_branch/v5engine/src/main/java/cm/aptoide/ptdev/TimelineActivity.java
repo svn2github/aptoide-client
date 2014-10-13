@@ -56,6 +56,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean mListShown = false;
     private View mProgressContainer;
+    private boolean showDialog;
 
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
@@ -209,6 +210,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
                         String name="";
+
                         try {
                             name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
                         } catch (Exception e) {
@@ -247,12 +249,22 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             lv.setAdapter(adapter);
             //force loading
             adapter.getView(0, null, null);
+        } else {
+           showDialog = true;
         }
-        else{
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        if(showDialog){
             TimeLineFriendsListDialog timelineFriendsList = new TimeLineFriendsListDialog();
             //timelineFriendsList.setArguments(args);
             timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
+            showDialog = false;
         }
+
     }
 
     @Override
