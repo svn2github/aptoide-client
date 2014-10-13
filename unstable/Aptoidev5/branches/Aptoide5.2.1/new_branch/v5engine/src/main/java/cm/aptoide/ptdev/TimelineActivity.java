@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -255,21 +256,13 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             //force loading
             adapter.getView(0, null, null);
         } else {
-           showDialog = true;
+
+           startActivity(new Intent(this, TimeLineFriendsList.class));
+
         }
     }
 
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
 
-        if(showDialog){
-            TimeLineFriendsList timelineFriendsList = new TimeLineFriendsList();
-            timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
-            showDialog = false;
-        }
-
-    }
 
     @Override
     protected void onResume() {
@@ -349,7 +342,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     public void openCommentsDialog(long id){
         Bundle args = new Bundle();
-        args.putLong(TimeLineCommentsDialog.POSTID,id);
+        args.putLong(TimeLineCommentsDialog.POSTID, id);
         TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
         commentsDialog.setArguments(args);
         commentsDialog.show(getSupportFragmentManager(), COMMENTSDIALOGTAG);
@@ -367,10 +360,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                     lv.setAdapter(adapter);
                     //force loading
                     adapter.getView(0, null, null);
-                }
-                else{
-                    TimeLineFriendsList timelineFriendsList = new TimeLineFriendsList();
-                    timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
                 }
             }
         }
