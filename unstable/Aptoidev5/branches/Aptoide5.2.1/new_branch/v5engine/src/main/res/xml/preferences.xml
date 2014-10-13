@@ -171,7 +171,12 @@
     <!--android:targetClass="cm.aptoide.pt.DeveloperMode"/>-->
     <!--</Preference>-->
     <!--</PreferenceCategory>-->
-
+    <PreferenceCategory android:title="@string/social_timeline"
+        android:key="socialtimeline">
+        <Preference
+            android:key="disablesocialtimeline"
+            android:title="@string/disable_social_timeline" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:key="about"
         android:title="@string/about_us">

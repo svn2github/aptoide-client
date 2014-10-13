@@ -2,13 +2,13 @@ package cm.aptoide.ptdev.webservices.timeline;
 
 import java.util.HashMap;
 
-import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
 
 /**
  * Created by asantos on 24-09-2014.
  */
-public class GetUserSettingsRequest extends TimelineRequest<GenericResponse> {
+public class GetUserSettingsRequest extends TimelineRequest<GetUserSettingsJson> {
     public static final String TIMELINE = "timeline";
     StringBuilder sb;
 
@@ -18,7 +18,7 @@ public class GetUserSettingsRequest extends TimelineRequest<GenericResponse> {
     }
 
     public GetUserSettingsRequest() {
-        super(GenericResponse.class);
+        super(GetUserSettingsJson.class);
         sb  = new StringBuilder();
     }
     @Override

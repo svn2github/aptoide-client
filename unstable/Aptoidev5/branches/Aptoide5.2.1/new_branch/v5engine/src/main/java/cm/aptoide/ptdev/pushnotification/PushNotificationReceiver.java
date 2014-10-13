@@ -46,7 +46,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     private static final String PUSH_NOTIFICATION_MSG = "MSG";
     private static final String PUSH_NOTIFICATION_EXTERNAL_URL = "url";
     private static final String PUSH_NOTIFICATION_IMG_URL = "img";
-    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;//
+    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY;//AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
 
     // same as Manifest
     public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationTrackUrl";

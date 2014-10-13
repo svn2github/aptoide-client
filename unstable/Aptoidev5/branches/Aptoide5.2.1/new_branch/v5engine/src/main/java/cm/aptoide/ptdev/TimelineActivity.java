@@ -24,21 +24,20 @@ import java.util.ArrayList;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
-import cm.aptoide.ptdev.dialogs.TimeLineFriendsListDialog;
+import cm.aptoide.ptdev.dialogs.TimeLineFriendsList;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
+import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
-import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
-import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -244,6 +243,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
+
+     /*   GetUserSettingsRequest request = new GetUserSettingsRequest();
+        request.addSetting(GetUserSettingsRequest.TIMELINE);
+        manager.execute(request, new GetUserSettingsRequestListener());*/
+
+
         if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
             ListView lv = (ListView) findViewById(R.id.timeline_list);
             lv.setAdapter(adapter);
@@ -259,8 +264,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         super.onResumeFragments();
 
         if(showDialog){
-            TimeLineFriendsListDialog timelineFriendsList = new TimeLineFriendsListDialog();
-            //timelineFriendsList.setArguments(args);
+            TimeLineFriendsList timelineFriendsList = new TimeLineFriendsList();
             timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
             showDialog = false;
         }
@@ -302,6 +306,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     public void acceptTimeLine(boolean accepted){
         if(accepted) {
+            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+            manager.execute(request, new TimelineRequestListener<GenericResponse>());
             Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
             init();
         }
@@ -309,17 +316,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             finish();
         }
     }
-    @Override
-    public void getFriends(){
-        ListUserFriendsRequest request = new ListUserFriendsRequest();
-        manager.execute(request, new TimelineRequestListener<ListUserFriendsJson>() {
-            @Override
-            protected void caseOK(ListUserFriendsJson response) {
-                ((TimeLineFriendsListDialog) getSupportFragmentManager().findFragmentByTag(TIMELINEFRIENDSLISTDIALOGTAG))
-                        .setFriends((response));
-            }
-        });
-    }
+
     @Override
     public void likePost(long id){
         likeRequestPost(id, AddUserApkInstallLikeRequest.LIKE);
@@ -332,14 +329,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         AddUserApkInstallLikeRequest request = new AddUserApkInstallLikeRequest();
         request.setLike(like);
         request.setPostId(id);
-        manager.execute(request, new NothingRequestListener<GenericResponse>());
+        manager.execute(request, new TimelineRequestListener<GenericResponse>());
     }
     @Override
     public void commentPost(long id,String comment){
         AddUserApkInstallCommentRequest request = new AddUserApkInstallCommentRequest();
         request.setPostId(id);
         request.setComment(comment);
-        manager.execute(request,new NothingRequestListener<GenericResponse>());
+        manager.execute(request,new TimelineRequestListener<GenericResponse>());
 
     }
     @Override
@@ -360,22 +357,27 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     /* *************** Methods of the TimeLineManager Interface *************** */
 
-    public class NothingRequestListener<E> extends TimelineRequestListener<E> {
-        @Override
-        protected void caseOK(E response) {
-
-        }
-    }
-    /**
-     * Listener to be used on ChangeUserSettingsRequest and GetUserSettingsRequest
-     */
     public class GetUserSettingsRequestListener extends TimelineRequestListener<GetUserSettingsJson> {
         @Override
         protected void caseOK(GetUserSettingsJson response) {
-            if (((GetUserSettingsJson)response).getResults() != null) {
-                boolean serverResponse = ((GetUserSettingsJson)response).getResults().getTimeline().equals("active");
-
+            if (response.getResults() != null) {
+                boolean serverResponse = response.getResults().getTimeline().equals("active");
+                if(serverResponse){
+                    ListView lv = (ListView) findViewById(R.id.timeline_list);
+                    lv.setAdapter(adapter);
+                    //force loading
+                    adapter.getView(0, null, null);
+                }
+                else{
+                    TimeLineFriendsList timelineFriendsList = new TimeLineFriendsList();
+                    timelineFriendsList.show(getSupportFragmentManager(),TIMELINEFRIENDSLISTDIALOGTAG);
+                }
             }
+        }
+
+        @Override
+        protected void caseFAIL() {
+            finish();
         }
     }
 

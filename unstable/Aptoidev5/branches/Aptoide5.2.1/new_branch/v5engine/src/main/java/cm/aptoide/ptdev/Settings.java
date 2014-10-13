@@ -18,27 +18,45 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.*;
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.HashMap;
 
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-
-import java.io.File;
-import java.text.DecimalFormat;
+import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -207,6 +225,33 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 		});
 
 
+        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
+            findPreference("disablesocialtimeline").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+
+                    HashMap<String, String> parameters = new HashMap<String, String>();
+                    parameters.put("timeline",ChangeUserSettingsRequest.TIMELINEINACTIVE);
+
+                    HttpContent content = new UrlEncodedContent(parameters);
+                    GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/changeUserSettings");
+
+                    try {
+                        final HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
+                        new UnsubscribeTimeline().execute(httpRequest);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                }
+            });
+        }
+        else{
+            ((PreferenceCategory)findPreference("root")).removePreference(findPreference("socialtimeline"));
+        }
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -225,11 +270,6 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 return true;
             }
         });
-
-
-
-
-
 
 		hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
@@ -353,6 +393,53 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
 
+    }
+
+    public class UnsubscribeTimeline extends AsyncTask<HttpRequest, Void, HttpResponse>{
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(mctx);
+            pd.setMessage(getString(R.string.please_wait));
+            pd.show();
+        }
+
+        @Override
+        protected HttpResponse doInBackground(HttpRequest... params) {
+
+            HttpRequest request = params[0];
+
+            HttpResponse response =  null;
+            try {
+                request.setParser(new JacksonFactory().createJsonObjectParser());
+                response = request.execute();
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(HttpResponse httpResponse) {
+            super.onPostExecute(httpResponse);
+
+            try {
+                GenericResponseV2 responseV2 = httpResponse.parseAs(GenericResponseV2.class);
+                if(responseV2.getStatus().equals("OK")){
+                    pd.dismiss();
+                    // remove Preference
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
 

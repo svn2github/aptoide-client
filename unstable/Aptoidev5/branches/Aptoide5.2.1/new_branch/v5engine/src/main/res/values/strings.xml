@@ -566,7 +566,8 @@
     <string name="Data_Usage_Message">You are about to make a download using a network not defined on Settings > General Download Rules</string>
     <string name="view_permissions">View Permissions</string>
     <string name="social_timeline">Social Timeline</string>
-    <string name="facebook_tos">Aptoide is better with Facebook!\n\n\u2022 Share instantly your apps and see what your friends are installing too!\n\n\u2022 We never post on Facebook. We only share if you tell us to.</string>
+    <string name="disable_social_timeline">Disable Social Timeline</string>
+    <string name="facebook_tos">\u2022Aptoide is better with Facebook!\n\n\u2022Share instantly your apps and see what your friends are installing too!\n\n\u2022We never post on Facebook. We only share if you tell us to.</string>
     <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
     <string name="facebook_timeline_feature">This feature only works with Facebook Login. Click on the button below to logout and login with Facebook!</string>
     <string name="facebook_timeline_preview">Timeline Preview:</string>
