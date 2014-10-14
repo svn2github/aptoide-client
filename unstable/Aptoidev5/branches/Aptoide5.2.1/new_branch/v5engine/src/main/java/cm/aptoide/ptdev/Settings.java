@@ -22,7 +22,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.InputType;
@@ -235,8 +234,9 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
 
                     HashMap<String, String> parameters = new HashMap<String, String>();
-                    parameters.put("timeline",ChangeUserSettingsRequest.TIMELINEINACTIVE);
-
+                    parameters.put("settings","timeline="+ChangeUserSettingsRequest.TIMELINEINACTIVE+";");
+                    parameters.put("mode" , "json");
+                    parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
                     HttpContent content = new UrlEncodedContent(parameters);
                     GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/changeUserSettings");
 
@@ -396,7 +396,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
     }
 
-    public class UnsubscribeTimeline extends AsyncTask<HttpRequest, Void, HttpResponse>{
+    public class UnsubscribeTimeline extends AsyncTask<HttpRequest, Void, GenericResponseV2>{
         ProgressDialog pd;
 
         @Override
@@ -408,38 +408,33 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         }
 
         @Override
-        protected HttpResponse doInBackground(HttpRequest... params) {
+        protected GenericResponseV2 doInBackground(HttpRequest... params) {
 
             HttpRequest request = params[0];
 
-            HttpResponse response =  null;
+            GenericResponseV2 genericResponseV2 =  null;
             try {
                 request.setParser(new JacksonFactory().createJsonObjectParser());
-                response = request.execute();
 
-
+                HttpResponse response = request.execute();
+                genericResponseV2 = response.parseAs(GenericResponseV2.class);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return response;
+            return genericResponseV2;
         }
 
         @Override
-        protected void onPostExecute(HttpResponse httpResponse) {
-            super.onPostExecute(httpResponse);
+        protected void onPostExecute(GenericResponseV2 responseV2) {
+            super.onPostExecute(responseV2);
 
-            try {
-                GenericResponseV2 responseV2 = httpResponse.parseAs(GenericResponseV2.class);
-                if(responseV2.getStatus().equals("OK")){
-                    pd.dismiss();
-                    // remove Preference
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(responseV2.getStatus().equals("OK")){
+                pd.dismiss();
+                Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL,false);
+                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
             }
-
         }
     }
 

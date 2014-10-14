@@ -33,6 +33,7 @@ import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
+import cm.aptoide.ptdev.webservices.timeline.GetUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
@@ -190,16 +191,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
-        Bundle addAccountOptions=new Bundle();
+        Bundle addAccountOptions = null;
         if(AptoideUtils.isLoggedIn(this)){
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))){
-                init();
+                GetUserSettingsRequest request = new GetUserSettingsRequest();
+                request.addSetting(GetUserSettingsRequest.TIMELINE);
+                manager.execute(request, new GetUserSettingsRequestListener());
                 return;
             }
             else{
+                addAccountOptions=new Bundle();
                 addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL,true);
             }
         }
+        if(addAccountOptions==null)
+            addAccountOptions=new Bundle();
         addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL, true);
         AccountManager.get(this).addAccount(
                 Aptoide.getConfiguration().getAccountType(),
@@ -244,29 +250,26 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
 
-     /*   GetUserSettingsRequest request = new GetUserSettingsRequest();
-        request.addSetting(GetUserSettingsRequest.TIMELINE);
-        manager.execute(request, new GetUserSettingsRequestListener());*/
-
-
-        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
-            ListView lv = (ListView) findViewById(R.id.timeline_list);
-
-
-            lv.setAdapter(adapter);
-            //force loading
-            adapter.getView(0, null, null);
-
-        } else {
-           startActivityForResult(new Intent(this, TimeLineFriendsListActivity.class), 0);
-        }
+        ListView lv = (ListView) findViewById(R.id.timeline_list);
+        lv.setAdapter(adapter);
+        //force loading
+        adapter.getView(0, null, null);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        init();
+        if(resultCode== RESULT_OK ){
+            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+            manager.execute(request, new TimelineRequestListener<GenericResponse>());
+            Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+            init();
+        }else{
+            finish();
+        }
+
     }
 
     @Override
@@ -301,19 +304,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     /* *************** Methods of the TimeLineManager Interface *************** */
-    @Override
-    public void acceptTimeLine(boolean accepted){
-        if(accepted) {
-            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-            manager.execute(request, new TimelineRequestListener<GenericResponse>());
-            Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
-            init();
-        }
-        else {
-            finish();
-        }
-    }
 
     @Override
     public void likePost(long id){
@@ -361,10 +351,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             if (response.getResults() != null) {
                 boolean serverResponse = response.getResults().getTimeline().equals("active");
                 if(serverResponse){
-                    ListView lv = (ListView) findViewById(R.id.timeline_list);
-                    lv.setAdapter(adapter);
-                    //force loading
-                    adapter.getView(0, null, null);
+                    init();
+                }else {
+                    startTimeLineFriendsListActivity();
                 }
             }
         }
@@ -373,6 +362,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         protected void caseFAIL() {
             finish();
         }
+    }
+
+    private void startTimeLineFriendsListActivity(){
+        startActivityForResult(new Intent(this, TimeLineFriendsListActivity.class), 0);
     }
 
     public class GetUserApkInstallCommentsRequestListener extends TimelineRequestListener<ApkInstallComments> {

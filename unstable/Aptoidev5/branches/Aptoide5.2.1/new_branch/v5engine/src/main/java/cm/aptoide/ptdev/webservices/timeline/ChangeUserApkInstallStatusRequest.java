@@ -17,7 +17,7 @@ public class ChangeUserApkInstallStatusRequest extends TimelineRequest<GenericRe
     public void setPostID(long id){this.postID = id;}
     private String status;
 
-    public void setPostID(String status){this.status = status;}
+    public void setPostStatus(String status){this.status = status;}
 
     public ChangeUserApkInstallStatusRequest() {  super(GenericResponse.class);  }
 

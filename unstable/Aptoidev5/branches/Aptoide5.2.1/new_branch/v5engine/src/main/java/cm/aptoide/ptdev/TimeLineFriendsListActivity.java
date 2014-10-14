@@ -7,16 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 
-import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
-import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
@@ -24,8 +21,6 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
  * Created by asantos on 29-09-2014.
  */
 public class TimeLineFriendsListActivity extends ActionBarActivity {
-    private TimeLineManager callback;
-    private ListView lv;
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private TextView friends_using_timeline;
     private LinearLayout friends_list;
@@ -33,24 +28,24 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
 
     public void setFriends(ListUserFriendsJson friends){
-
-
-        StringBuffer friendsString = new StringBuffer();
+        StringBuilder friendsString;
         int i = 0;
         if(!friends.getFriends().isEmpty()){
-            friendsString = new StringBuffer(friends.getFriends().get(0).getUsername());
+            friendsString = new StringBuilder(friends.getFriends().get(0).getUsername());
 
             for(i = 1; i!=friends.getFriends().size() && i < 3; i++){
                 friendsString.append(", ").append(friends.getFriends().get(i).getUsername());
             }
             String text;
+            text = getString(R.string.facebook_friends_list_using_timeline);
             if ( i == 0){
-                text = getString(R.string.facebook_friends_list_using_timeline_total_friends);
+                text= friendsString.toString() +text;
             }else{
-                text = getString(R.string.facebook_friends_list_using_timeline);
+                text=friendsString.toString()
+                        +" "+ getString(R.string.and)
+                        +" "+ String.valueOf(friends.getFriends().size() - i)
+                        +" "+ text;
             }
-            text = text.replace("{howmany}", String.valueOf(friends.getFriends().size() - i) ).replace("{friends}", friendsString.toString());
-
 
             friends_using_timeline.setText(text);
 
@@ -74,10 +69,6 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
     }
 
-    public void changeUserSetting() {
-        Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
@@ -87,8 +78,6 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
         getFriends();
 
-
-        changeUserSetting();
 //        lv = (ListView) findViewById(R.id.TimeLineListView);
         friends_list = (LinearLayout) findViewById(R.id.friends_list);
 
@@ -96,6 +85,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         start_timeline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(RESULT_OK);
                 finish();
             }
         });
