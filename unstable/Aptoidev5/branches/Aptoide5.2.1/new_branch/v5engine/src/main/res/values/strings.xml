@@ -577,5 +577,6 @@
     <string name="share_on_timeline">Share on TimeLine</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
     <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
+    <string name="and">and</string>
 
 </resources>

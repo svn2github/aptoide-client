@@ -79,6 +79,7 @@
         <item name="icDialogDrawable">@drawable/dialog_full_holo_light</item>
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
+        <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
     </style>
 
 
@@ -145,6 +146,7 @@
         <item name="icDialogDrawable">@drawable/dialog_background_dark</item>
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_dark</item>
+        <item name="timelineButtonsBackgroundColor">@color/dark_custom_gray</item>
     </style>
 
 

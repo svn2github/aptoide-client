@@ -1,11 +1,10 @@
 package cm.aptoide.ptdev;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 
-import cm.aptoide.ptdev.adapters.FriendsListAdapter;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
@@ -25,7 +23,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 /**
  * Created by asantos on 29-09-2014.
  */
-public class TimeLineFriendsListActivity extends Activity {
+public class TimeLineFriendsListActivity extends ActionBarActivity {
     private TimeLineManager callback;
     private ListView lv;
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
@@ -82,6 +80,7 @@ public class TimeLineFriendsListActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_timeline_logged_in);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
@@ -100,6 +99,12 @@ public class TimeLineFriendsListActivity extends Activity {
                 finish();
             }
         });
+
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.social_timeline);
+
     }
     @Override
     protected void onStart() {
