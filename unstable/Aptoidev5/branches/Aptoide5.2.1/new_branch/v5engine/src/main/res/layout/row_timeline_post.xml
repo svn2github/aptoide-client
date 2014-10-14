@@ -1,252 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?attr/backgroundCard"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/customRowForegroundHomeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
+        style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="10dp">
+        android:layout_margin="5dp"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/timeline_post_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/timeline_post_user_photo"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:contentDescription="fb_photo"
-                android:scaleType="fitXY"
-                android:src="@drawable/facebook_profile_pic" />
-
-            <TextView
-                android:id="@+id/timeline_post_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="5dp"
-                android:layout_toEndOf="@+id/timeline_post_user_photo"
-                android:layout_toRightOf="@+id/timeline_post_user_photo"
-                android:text="Rui installed WhatsApp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/timeline_post_user_action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/timeline_post_user_name"
-                android:layout_toRightOf="@+id/timeline_post_user_name"
-                android:text="installed"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/black"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/timeline_post_timestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/timeline_post_user_name"
-                android:layout_toEndOf="@+id/timeline_post_user_photo"
-                android:layout_toRightOf="@+id/timeline_post_user_photo"
-                android:drawableLeft="@drawable/ic_timestamp"
-                android:text="1h ago"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/medium_custom_gray" />
-
-            <ImageButton
-                android:id="@+id/timeline_post_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/timeline_post_user_photo"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/transparent_white"
-                android:contentDescription="Menu button"
-                android:minWidth="50dp"
-                android:src="@drawable/ic_action_comment_vote_down_light"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/timeline_post_center"
-            android:background="@drawable/timeline_post_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentStart="false"
-            android:layout_below="@+id/timeline_post_top"
-            android:layout_centerHorizontal="true"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp">
 
+            <RelativeLayout
+                android:id="@+id/timeline_post_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/timeline_post_app_icon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_weight="1"
-                android:maxHeight="90dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/icon_non_available" />
-
-            <LinearLayout
-                android:id="@+id/timeline_post_center_texts"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toEndOf="@+id/timeline_post_app_icon"
-                android:layout_toRightOf="@+id/timeline_post_app_icon"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/timeline_post_user_photo"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="fb_photo"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/facebook_profile_pic" />
 
                 <TextView
-                    android:id="@+id/timeline_post_app_name"
+                    android:id="@+id/timeline_post_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/timeline_post_app_icon"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="WhatsApp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@+id/timeline_post_user_photo"
+                    android:layout_toRightOf="@+id/timeline_post_user_photo"
+                    android:text="Rui installed WhatsApp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/timeline_post_app_version"
+                    android:id="@+id/timeline_post_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/timeline_post_app_name"
-                    android:layout_alignStart="@+id/timeline_post_app_name"
-                    android:layout_below="@+id/timeline_post_app_name"
-                    android:layout_toEndOf="@+id/timeline_post_app_icon"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Version: 1.23.456"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/dark_custom_gray" />
-
-                <TextView
-                    android:id="@+id/timeline_post_app_store"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/timeline_post_app_version"
-                    android:layout_alignStart="@+id/timeline_post_app_version"
-                    android:layout_below="@+id/timeline_post_app_version"
-                    android:layout_toEndOf="@+id/timeline_post_app_icon"
-                    android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="Store: apps"
+                    android:layout_below="@+id/timeline_post_user_name"
+                    android:layout_toEndOf="@+id/timeline_post_user_photo"
+                    android:layout_toRightOf="@+id/timeline_post_user_photo"
+                    android:drawableLeft="@drawable/ic_timestamp"
+                    android:text="1h ago"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/medium_custom_gray" />
 
+                <ImageButton
+                    android:id="@+id/timeline_post_options"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/timeline_post_user_photo"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/transparent_white"
+                    android:contentDescription="Menu button"
+                    android:minWidth="50dp"
+                    android:src="@drawable/ic_action_comment_vote_down_light"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/timeline_post_center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/timeline_post_top"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/timeline_post_app_icon"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_weight="1"
+                    android:maxHeight="90dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_non_available" />
+
+                <LinearLayout
+                    android:id="@+id/timeline_post_center_texts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/timeline_post_app_icon"
+                    android:layout_toRightOf="@+id/timeline_post_app_icon"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/timeline_post_app_icon"
+                        android:ellipsize="end"
+                        android:gravity="bottom"
+                        android:maxLines="1"
+                        android:text="WhatsApp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/timeline_post_app_name"
+                        android:layout_alignStart="@+id/timeline_post_app_name"
+                        android:layout_below="@+id/timeline_post_app_name"
+                        android:layout_toEndOf="@+id/timeline_post_app_icon"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="Version: 1.23.456"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/dark_custom_gray" />
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_store"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/timeline_post_app_version"
+                        android:layout_alignStart="@+id/timeline_post_app_version"
+                        android:layout_below="@+id/timeline_post_app_version"
+                        android:layout_toEndOf="@+id/timeline_post_app_icon"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="Store: apps"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/medium_custom_gray" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/timeline_post_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/timeline_post_center"
-            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/timeline_post_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/timeline_post_center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/dimgray" />
 
-            <TextView
-                android:id="@+id/timeline_post_and"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" and "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/dimgray" />
 
-            <TextView
-                android:id="@+id/timeline_post_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/dimgray" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/light_custom_gray"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/timeline_post_like_button"
+                style="?attr/customRowForegroundHomeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:clickable="true">
+
+                <TextView
+                    android:id="@+id/timeline_post_like_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="?attr/icLikeDrawable"
+                    android:gravity="center"
+                    android:text="@string/like"
+                    android:textColor="@color/dark_custom_gray" />
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/medium_custom_gray" />
+
+            <FrameLayout
+                android:id="@+id/timeline_post_comment"
+                style="?attr/customRowForegroundHomeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableLeft="?attr/icViewMoreComments"
+                    android:gravity="center"
+                    android:text="Comment"
+                    android:textColor="@color/dark_custom_gray" />
+
+            </FrameLayout>
+
+
         </LinearLayout>
 
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/light_custom_gray"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:id="@+id/timeline_post_like_button"
-            style="?attr/customRowForegroundHomeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true">
-
-            <TextView
-                android:id="@+id/timeline_post_like_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableLeft="?attr/icLikeDrawable"
-                android:gravity="center"
-                android:text="@string/like"
-                android:textColor="@color/dark_custom_gray" />
-
-        </FrameLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/medium_custom_gray" />
-
-        <FrameLayout
-            android:id="@+id/timeline_post_comment"
-            style="?attr/customRowForegroundHomeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableLeft="?attr/icViewMoreComments"
-                android:gravity="center"
-                android:text="Comment"
-                android:textColor="@color/dark_custom_gray" />
-
-        </FrameLayout>
-
-
     </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

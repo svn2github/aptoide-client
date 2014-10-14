@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
-import cm.aptoide.ptdev.dialogs.TimeLineFriendsList;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -252,17 +251,23 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
             ListView lv = (ListView) findViewById(R.id.timeline_list);
+
+
             lv.setAdapter(adapter);
             //force loading
             adapter.getView(0, null, null);
+
         } else {
-
-           startActivity(new Intent(this, TimeLineFriendsList.class));
-
+           startActivityForResult(new Intent(this, TimeLineFriendsListActivity.class), 0);
         }
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        init();
+    }
 
     @Override
     protected void onResume() {

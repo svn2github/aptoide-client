@@ -16,7 +16,6 @@ public class Preferences {
         return PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(key,defValue);
     }
     public static final void putBooleanAndCommit(String key, boolean Value){
-        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-                .edit().putBoolean(key, Value).commit();
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean(key, Value).commit();
     }
 }

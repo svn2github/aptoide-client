@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
             holder.userPhoto = (ImageView) convertView.findViewById(R.id.timeline_post_user_photo);
             holder.userName = (TextView) convertView.findViewById(R.id.timeline_post_user_name);
-            holder.action = (TextView) convertView.findViewById(R.id.timeline_post_user_action);
+//            holder.action = (TextView) convertView.findViewById(R.id.timeline_post_user_action);
             holder.time = (TextView) convertView.findViewById(R.id.timeline_post_timestamp);
             holder.popUpMenu = (ImageButton) convertView.findViewById(R.id.timeline_post_options);
 
@@ -61,10 +62,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.appVersion = (TextView) convertView.findViewById(R.id.timeline_post_app_version);
             holder.appRepo = (TextView) convertView.findViewById(R.id.timeline_post_app_store);
 
-            holder.bottomLayout = (LinearLayout) convertView.findViewById(R.id.timeline_post_bottom);
-            holder.likes = (TextView) convertView.findViewById(R.id.timeline_post_likes);
-            holder.and = (TextView) convertView.findViewById(R.id.timeline_post_and);
-            holder.comments = (TextView) convertView.findViewById(R.id.timeline_post_comments);
+//            holder.bottomLayout = (LinearLayout) convertView.findViewById(R.id.timeline_post_bottom);
+            holder.likesandscomments = (TextView) convertView.findViewById(R.id.timeline_post_likes);
+
 
             holder.likeButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_like_button) ;
             holder.likeButtonText = (TextView) convertView.findViewById(R.id.timeline_post_like_text);
@@ -86,9 +86,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
         holder.appName.setText(entry.getApk().getName());
         ImageLoader.getInstance().displayImage(entry.getApk().getIcon(), holder.appIcon);
-        holder.userName.setText(entry.getInfo().getUsername());
+        holder.userName.setText(entry.getInfo().getUsername() + " " + getContext().getString(R.string.installed_tab) + " " + entry.getApk().getName());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
-        holder.action.setText("installed:");
+//        holder.action.setText("installed:");
 
 //        if (AccountManager.get(ctx).getAccountsByType(
 //                Aptoide.getConfiguration().getAccountType())[0].name.equals(entry.getUserMail())) {
@@ -115,18 +115,24 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 //            holder.bottomLayout.setVisibility(View.GONE);
 //        }
 
+        StringBuilder sb= new StringBuilder();
         final int likes = entry.getInfo().getLikes().intValue();
         int comments = entry.getInfo().getComments().intValue();
-        if(likes > 0 && comments >0 ) {
-            holder.and.setVisibility(View.VISIBLE);
-        }else {
-            holder.and.setVisibility(View.INVISIBLE);
+
+        if(likes > 0 || comments > 0) {
+            if (likes > 0)
+                sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.likes));
+            if (likes > 0 && comments > 0) {
+                sb.append(" and ");
+            }
+            if (comments > 0)
+                sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
+
+            holder.likesandscomments.setText(sb.toString());
+            holder.likesandscomments.setVisibility(View.VISIBLE);
+        }else{
+            holder.likesandscomments.setVisibility(View.GONE);
         }
-
-        holder.likes.setText(likes>0?String.valueOf(likes)+ getContext().getString(R.string.likes):"");
-
-        holder.comments.setText(comments>0?String.valueOf(comments) + getContext().getString(R.string.comments):"");
-
         holder.time.setText(getTime(entry.getInfo().getTimestamp()));
         holder.appVersion.setText(entry.getApk().getVername());
         holder.appRepo.setText(getContext().getString(R.string.store)+": " + entry.getApk().getRepo());
@@ -185,7 +191,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         // TOP
         public ImageView userPhoto;
         public TextView userName;
-        public TextView action;
+//        public TextView action;
         public TextView time;
         public ImageButton popUpMenu;
 
@@ -198,9 +204,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
         // BOTTOM
         public LinearLayout bottomLayout;
-        public TextView likes;
-        public TextView and;
-        public TextView comments;
+        public TextView likesandscomments;
 
         // Buttons
         public FrameLayout likeButton;
@@ -208,4 +212,8 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         public TextView likeButtonText;
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
 }

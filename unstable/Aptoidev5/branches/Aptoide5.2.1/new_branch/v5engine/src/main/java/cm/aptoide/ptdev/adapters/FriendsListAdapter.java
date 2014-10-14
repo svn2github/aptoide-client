@@ -45,7 +45,7 @@ public class FriendsListAdapter extends BaseAdapter {
 
     class ViewHolder {
         public ImageView avatar;
-        public TextView personName;
+//        public TextView personName;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class FriendsListAdapter extends BaseAdapter {
 	    if(convertView == null){
 		    convertView = LayoutInflater.from(ctx).inflate(R.layout.row_facebook_friends_on_timeline, null);
 			holder = new ViewHolder();
-		    holder.personName = (TextView) convertView.findViewById(R.id.user_name);
+//		    holder.personName = (TextView) convertView.findViewById(R.id.user_name);
 			holder.avatar = (ImageView) convertView.findViewById(R.id.user_avatar);
 
 		    convertView.setTag(holder);
@@ -68,7 +68,7 @@ public class FriendsListAdapter extends BaseAdapter {
 
         ListUserFriendsJson.Friend friend = getItem(position);
 
-	    holder.personName.setText(friend.getUsername());
+//	    holder.personName.setText(friend.getUsername());
         ImageLoader.getInstance().displayImage(friend.getAvatar(), holder.avatar);
 
         return convertView;

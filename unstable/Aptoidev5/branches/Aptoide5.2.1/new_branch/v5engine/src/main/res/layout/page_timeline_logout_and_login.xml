@@ -17,8 +17,7 @@
             android:gravity="center"
             android:padding="20dp"
             android:text="@string/facebook_timeline_feature"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/facebook_tos"
@@ -28,9 +27,15 @@
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/facebook_tos"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20sp" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
+
+        <com.facebook.widget.LoginButton
+            xmlns:fb="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fb_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            fb:login_text="@string/facebook_logout_and_login" />
 
         <TextView
             android:id="@+id/textView4"
@@ -47,11 +52,5 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"></include>
 
-        <com.facebook.widget.LoginButton
-            xmlns:fb="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fb_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            fb:login_text="@string/facebook_logout_and_login" />
     </LinearLayout>
 </ScrollView>
