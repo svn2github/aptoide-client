@@ -24,6 +24,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -250,7 +251,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             });
         }
         else{
-            ((PreferenceCategory)findPreference("root")).removePreference(findPreference("socialtimeline"));
+            ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
         }
 
         SharedPreferences prefs = PreferenceManager
