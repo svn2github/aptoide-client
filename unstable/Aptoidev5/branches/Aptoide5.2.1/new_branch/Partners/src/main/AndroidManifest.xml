@@ -122,6 +122,8 @@
 
         <activity android:name="cm.aptoide.ptdev.RollbackActivity" />
 
+        <activity android:name="cm.aptoide.ptdev.TimeLineFriendsListActivity" />
+
         <activity
             android:name="com.aptoide.partners.SettingsPartner"
             android:label="@string/settings_title_bar"
