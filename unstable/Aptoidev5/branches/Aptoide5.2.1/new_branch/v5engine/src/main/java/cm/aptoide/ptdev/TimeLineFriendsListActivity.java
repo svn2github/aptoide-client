@@ -57,16 +57,9 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
                 friends_list.addView(v);
 
             }
-
-
-
         }else{
-
             friends_using_timeline.setVisibility(View.GONE);
-
         }
-
-
     }
 
     @Override

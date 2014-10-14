@@ -31,6 +31,7 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
+import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserSettingsRequest;
@@ -304,6 +305,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     /* *************** Methods of the TimeLineManager Interface *************** */
+
+    @Override
+    public void hidePost(long id){
+        changeUserApkInstallStatusPost(id, ChangeUserApkInstallStatusRequest.STATUSHIDDEN);
+    }
+    @Override
+    public void unHidePost(long id){
+        changeUserApkInstallStatusPost(id, ChangeUserApkInstallStatusRequest.STATUSACTIVE);
+    }
+    private void changeUserApkInstallStatusPost(long id, String status){
+        ChangeUserApkInstallStatusRequest request = new ChangeUserApkInstallStatusRequest();
+        request.setPostStatus(status);
+        request.setPostId(id);
+        manager.execute(request, new TimelineRequestListener<GenericResponse>());
+    }
 
     @Override
     public void likePost(long id){

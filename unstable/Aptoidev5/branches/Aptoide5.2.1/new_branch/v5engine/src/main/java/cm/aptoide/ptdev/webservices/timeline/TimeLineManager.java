@@ -5,6 +5,8 @@ package cm.aptoide.ptdev.webservices.timeline;
  */
 public interface TimeLineManager {
 
+    public void hidePost(long id);
+    public void unHidePost(long id);
     public void likePost(long id);
     public void unlikePost(long id);
     public void commentPost(long id,String comment);

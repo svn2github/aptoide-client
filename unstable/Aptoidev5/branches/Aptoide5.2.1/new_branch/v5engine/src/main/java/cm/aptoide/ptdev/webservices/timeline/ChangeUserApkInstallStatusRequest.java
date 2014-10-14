@@ -14,7 +14,7 @@ public class ChangeUserApkInstallStatusRequest extends TimelineRequest<GenericRe
     public static final String STATUSHIDDEN = "hidden";
 
     private long postID;
-    public void setPostID(long id){this.postID = id;}
+    public void setPostId(long id){this.postID = id;}
     private String status;
 
     public void setPostStatus(String status){this.status = status;}

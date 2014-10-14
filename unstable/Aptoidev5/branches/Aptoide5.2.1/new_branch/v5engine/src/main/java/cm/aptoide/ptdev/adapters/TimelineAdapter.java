@@ -77,6 +77,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         }
 
         final TimelineListAPKsJson.UserApk entry = getItem(position);
+        final long id = entry.getInfo().getId().longValue();
 
         //addAppListener(holder.centerLayout, entry.getApk_id().longValue());
         //addLikeListener(holder.likeButton, entry.getPostID().longValue());
@@ -87,6 +88,20 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         ImageLoader.getInstance().displayImage(entry.getApk().getIcon(), holder.appIcon);
         holder.userName.setText(entry.getInfo().getUsername());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
+
+        holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(entry.getInfo().getStatus().equals("active")) {
+                    mTimeLineManager.hidePost(id);
+                    entry.getInfo().setStatus("unactive");
+                }else{
+                    mTimeLineManager.unHidePost(id);
+                    entry.getInfo().setStatus("active");
+                }
+            }
+        });
+
 //        holder.action.setText("installed:");
 
 //        if (AccountManager.get(ctx).getAccountsByType(
@@ -137,7 +152,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.appRepo.setText(getContext().getString(R.string.store)+": " + entry.getApk().getRepo());
 
         final boolean isLiked = entry.getInfo().isUserliked().equals("like");
-        final long id = entry.getInfo().getId().longValue();
+
         ChangeLikeButtonText(isLiked,holder.likeButtonText);
 
         final View myCv = convertView;
