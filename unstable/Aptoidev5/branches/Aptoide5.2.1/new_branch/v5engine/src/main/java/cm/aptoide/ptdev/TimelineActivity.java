@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -237,7 +238,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new Handler(Looper.getMainLooper())
         );
     }
-
+    Class a = Aptoide.getConfiguration().getAppViewActivityClass();
     private void init() {
         adapter = new EndlessWrapperAdapter(this, apks);
         adapter.setRunInBackground(false);
@@ -255,10 +256,31 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
 
+
+
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TimelineListAPKsJson.UserApk.APK apk = ((TimelineListAPKsJson.UserApk) parent.getAdapter().getItem(position)).getApk();
+
+                Intent i = new Intent(TimelineActivity.this, a);
+
+                i.putExtra("fromRelated", true);
+                i.putExtra("appNameplusversion", apk.getName());
+
+                i.putExtra("repoName", apk.getRepo());
+                i.putExtra("md5sum", apk.getMd5sum());
+                i.putExtra("download_from", "timeline");
+                startActivity(i);
+
+            }
+        });
         //force loading
         adapter.getView(0, null, null);
+
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -280,9 +302,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 }
             }
         });
-
-
-
 
     }
 

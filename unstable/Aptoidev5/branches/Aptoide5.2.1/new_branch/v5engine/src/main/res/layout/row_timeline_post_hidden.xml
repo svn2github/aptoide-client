@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/timeline_post_options" />
 
