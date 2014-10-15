@@ -11,15 +11,22 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.gson.Gson;
+
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -148,7 +155,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
 
 
-    private void continueLoading(){
+    private void continueLoading() throws IOException {
 
 
 
@@ -196,6 +203,46 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
         }else if(uri.startsWith("https://play.google.com/store/apps/details?id=")){
             String param = uri.split("=")[1];
             startMarketIntent(param);
+
+        }else if(uri.contains("aptword://")){
+
+            String param = uri.substring("aptword://".length());
+
+            if(!TextUtils.isEmpty(param)){
+
+                param = param.replaceAll("\\*", "_").replaceAll("\\+", "/");
+
+                String json = new String(Base64.decode(param.getBytes(), 0));
+
+                Log.d("AptoideAptWord", json);
+
+                ApkSuggestionJson.Ads ad = new JacksonFactory().createJsonParser(json).parse(ApkSuggestionJson.Ads.class);
+
+                Intent i = new Intent(this, appViewClass);
+                long id = ad.getData().getId().longValue();
+                i.putExtra("id", id);
+                i.putExtra("packageName", ad.getData().getPackageName());
+                i.putExtra("repoName", ad.getData().getRepo());
+                i.putExtra("fromSponsored", true);
+                i.putExtra("location", "homepage");
+                i.putExtra("keyword", "__NULL__");
+                i.putExtra("cpc", ad.getInfo().getCpc_url());
+                i.putExtra("cpi", ad.getInfo().getCpi_url());
+                i.putExtra("whereFrom", "sponsored");
+                i.putExtra("download_from", "sponsored");
+
+                if(ad.getPartner() != null){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("partnerType", ad.getPartner().getPartnerInfo().getName());
+                    bundle.putString("partnerClickUrl", ad.getPartner().getPartnerData().getClick_url());
+                    i.putExtra("partnerExtra", bundle);
+                }
+
+                startActivity(i);
+                finish();
+
+            }
+
 
         }else if(uri.contains("imgs.aptoide.com")){
 

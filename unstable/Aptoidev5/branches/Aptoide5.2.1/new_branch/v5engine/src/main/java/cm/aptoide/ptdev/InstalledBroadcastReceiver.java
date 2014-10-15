@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
+import android.text.SpannableString;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,6 +18,8 @@ import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+
+import java.net.URLEncoder;
 import java.util.Locale;
 
 /**
@@ -58,6 +62,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
                     final String action = db.getNotConfirmedRollbackAction(pkg.packageName);
                     if(action != null) {
+
                         final String referrer = action.split("\\|")[1];
 
                         if(action.split("\\|")[0].equals(RollBackItem.Action.INSTALLING.toString())) {

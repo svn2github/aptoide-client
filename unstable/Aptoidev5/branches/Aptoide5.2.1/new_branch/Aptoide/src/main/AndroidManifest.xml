@@ -161,7 +161,7 @@
                 <data android:scheme="aptoidexml" />
                 <data android:scheme="aptoideinstall" />
                 <data android:scheme="aptoidesearch" />
-                <data android:scheme="aptwords" />
+                <data android:scheme="aptword" />
             </intent-filter>
 
             <intent-filter>

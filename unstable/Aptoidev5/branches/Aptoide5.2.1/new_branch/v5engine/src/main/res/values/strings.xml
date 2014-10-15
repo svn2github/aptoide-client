@@ -564,7 +564,6 @@
     <string name="downloadAnyWay">Download anyway</string>
     <string name="Data_Usage_warning">Warning: Network Data Usage</string>
     <string name="Data_Usage_Message">You are about to make a download using a network not defined on Settings > General Download Rules</string>
-    <string name="view_permissions">View Permissions</string>
     <string name="social_timeline">Social Timeline</string>
     <string name="disable_social_timeline">Disable Social Timeline</string>
     <string name="facebook_tos">\u2022Aptoide is better with Facebook!\n\n\u2022Share instantly your apps and see what your friends are installing too!\n\n\u2022We never post on Facebook. We only share if you tell us to.</string>
@@ -574,7 +573,7 @@
     <string name="facebook_start_timeline">Start Timeline</string>
 
     <string name="facebook_friends_list_using_timeline">are already using Aptoide Social Timeline!</string>
-    <string name="share_on_timeline">Share on Timeline</string>
+    <string name="share_on_timeline">Share on TimeLine</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
     <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
     <string name="and">and</string>

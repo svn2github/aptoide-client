@@ -86,8 +86,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
         if(autoUpdateInfo!=null){
             String packageName = activity.getPackageName();
             int vercode = autoUpdateInfo.vercode;
+            int minsdk = autoUpdateInfo.minsdk;
             try {
-                if(vercode > activity.getPackageManager().getPackageInfo(packageName,0).versionCode || Aptoide.getConfiguration().isAlwaysUpdate()){
+                if(vercode > activity.getPackageManager().getPackageInfo(packageName,0).versionCode && Build.VERSION.SDK_INT >= minsdk || Aptoide.getConfiguration().isAlwaysUpdate()){
                     requestUpdateSelf(autoUpdateInfo);
                 }
             } catch (PackageManager.NameNotFoundException e) {
@@ -161,6 +162,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                 info.path = sb.toString();
             }else if(localName.equals("md5")){
                 info.md5 = sb.toString();
+            }else if(localName.equals("minSdk")){
+                info.minsdk = Integer.parseInt(sb.toString());
             }
 
         }
@@ -170,6 +173,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
         String md5;
         int vercode;
         String path;
+        int minsdk = 0;
     }
 
     private class DownloadSelfUpdate extends AsyncTask<AutoUpdateInfo, Void, Void> {

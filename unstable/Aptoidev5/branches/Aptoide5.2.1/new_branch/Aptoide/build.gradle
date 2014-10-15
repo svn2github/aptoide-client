@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
 
 def signingExists = false
+def signingFile = new File('signing.gradle')
 
-if(new File("./signing.gradle").exists()){
     apply from: 'signing.gradle'
     signingExists = true
-}
+
 
 
 repositories{
@@ -38,9 +38,9 @@ android {
 
 
         release {
-            if(signingExists){
+
                 signingConfig signingConfigs.release
-            }
+
         }
     }
 }

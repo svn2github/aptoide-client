@@ -180,6 +180,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     boolean showBadgeLayout = false;
 
     private static GetApkInfoJson.Malware.Reason reason;
+    private boolean isSponsored = false;
     private RequestListener<GetApkInfoJson> requestListener = new RequestListener<GetApkInfoJson>() {
 
         @Override
@@ -302,7 +303,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                     versionCode = json.getApk().getVercode().intValue();
-                    loadGetLatest(showLatestString);
+
+                    if(!isSponsored){
+                        loadGetLatest(showLatestString);
+                    }
 
                     if (getIntent().getBooleanExtra("fromMyapp", false)) {
                         getIntent().removeExtra("fromMyapp");
@@ -1229,6 +1233,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
+                isSponsored = true;
 
 
                 final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -1267,6 +1272,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                             } else {
                                                 Log.d("CENAAS", "Cenas was epmty");
                                             }
+                                        }else if(exception.getStatusCode() == HttpStatusCodes.STATUS_CODE_OK && exception.getHeaders().containsKey("Refresh")){
+
+
+
                                         }
 
                                     }
@@ -1434,10 +1443,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
                     loadMoPub();
-
-
-
-                } else {
+                } else if(apkSuggestionJson != null ) {
 
                     HashMap<String, String> adTypeArgs = new HashMap<String, String>();
 
@@ -1511,6 +1517,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                         }
                                     }
                                     i.setClassName("com.android.vending", activityToOpen);
+
+
+
                                     startActivity(i);
                                 }catch(ActivityNotFoundException e){
                                     e.printStackTrace();
@@ -1520,6 +1529,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                     i.putExtra(android.app.SearchManager.QUERY, param);
                                     startActivity(i);
                                 }
+
+                                try {
+                                    GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
+                                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         });
 
@@ -1538,6 +1555,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             public void onClick(View v) {
                                 if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Banner_Link");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
+
+                                try {
+                                    GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
+                                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                                 startActivity(intent);
                             }
                         });

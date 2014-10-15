@@ -16,11 +16,14 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
@@ -255,6 +258,26 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lv.setAdapter(adapter);
         //force loading
         adapter.getView(0, null, null);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+
+
+                try {
+                    request.loadDataFromNetwork();
+                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
+
     }
 
 
@@ -262,10 +285,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode== RESULT_OK ){
-            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-            manager.execute(request, new TimelineRequestListener<GenericResponse>());
-            Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+
             init();
         }else{
             finish();

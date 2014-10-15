@@ -285,6 +285,7 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                     intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_ITEM_ALREADY_OWNED);
                     setResult(RESULT_OK, intent);
                     finish();
+                    return;
                 }
 
                 //token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0], "Full access", true);
