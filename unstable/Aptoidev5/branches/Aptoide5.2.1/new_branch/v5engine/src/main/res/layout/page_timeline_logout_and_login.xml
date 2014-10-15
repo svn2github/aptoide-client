@@ -17,7 +17,7 @@
             android:gravity="center"
             android:padding="20dp"
             android:text="@string/facebook_timeline_feature"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.FontPath" />
 
         <TextView
             android:id="@+id/facebook_tos"
@@ -27,7 +27,7 @@
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/facebook_tos"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.FontPath" />
 
 
         <com.facebook.widget.LoginButton

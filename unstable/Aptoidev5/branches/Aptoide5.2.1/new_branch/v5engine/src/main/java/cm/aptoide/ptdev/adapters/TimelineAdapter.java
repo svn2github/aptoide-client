@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
@@ -53,9 +55,8 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.userName = (TextView) convertView.findViewById(R.id.timeline_post_user_name);
 //            holder.action = (TextView) convertView.findViewById(R.id.timeline_post_user_action);
             holder.time = (TextView) convertView.findViewById(R.id.timeline_post_timestamp);
-            holder.popUpMenu = (ImageButton) convertView.findViewById(R.id.timeline_post_options);
+            holder.popUpMenu = (Button) convertView.findViewById(R.id.timeline_post_options);
 
-            holder.centerLayout = (LinearLayout) convertView.findViewById(R.id.timeline_post_center);
             holder.appIcon = (ImageView) convertView.findViewById(R.id.timeline_post_app_icon);
             holder.appName = (TextView) convertView.findViewById(R.id.timeline_post_app_name);
             holder.appVersion = (TextView) convertView.findViewById(R.id.timeline_post_app_version);
@@ -85,17 +86,27 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         //addOptionsListener(holder.popUpMenu, entry.getPostID().longValue());
 
         holder.appName.setText(entry.getApk().getName());
-        ImageLoader.getInstance().displayImage(entry.getApk().getIcon(), holder.appIcon);
+
+        String icon;
+        if (entry.getApk().getIcon_hd() != null) {
+            icon = entry.getApk().getIcon_hd();
+            String sizeString = IconSizes.generateSizeString(getContext());
+            String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+            icon = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+        } else {
+            icon = entry.getApk().getIcon();
+        }
+        ImageLoader.getInstance().displayImage(icon, holder.appIcon);
         holder.userName.setText(entry.getInfo().getUsername());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
 
         holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(entry.getInfo().getStatus().equals("active")) {
+                if (entry.getInfo().getStatus().equals("active")) {
                     mTimeLineManager.hidePost(id);
                     entry.getInfo().setStatus("unactive");
-                }else{
+                } else {
                     mTimeLineManager.unHidePost(id);
                     entry.getInfo().setStatus("active");
                 }
@@ -137,7 +148,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             if (likes > 0)
                 sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.likes));
             if (likes > 0 && comments > 0) {
-                sb.append(getContext().getString(R.string.and));
+                sb.append(" " + getContext().getString(R.string.and) + " " );
             }
             if (comments > 0)
                 sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
@@ -207,10 +218,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         public TextView userName;
 //        public TextView action;
         public TextView time;
-        public ImageButton popUpMenu;
+        public Button popUpMenu;
 
         // CENTER
-        public LinearLayout centerLayout;
         public TextView appName;
         public ImageView appIcon;
         public TextView appVersion;

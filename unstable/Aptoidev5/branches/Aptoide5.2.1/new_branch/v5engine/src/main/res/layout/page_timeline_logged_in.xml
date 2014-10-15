@@ -16,7 +16,7 @@
             android:fontFamily="sans-serif-thin"
             android:gravity="center"
             android:padding="20dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.FontPath" />
 
         <LinearLayout
             android:id="@+id/friends_list"

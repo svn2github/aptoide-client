@@ -18,7 +18,7 @@
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/facebook_tos"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.FontPath" />
 
         <com.facebook.widget.LoginButton
             android:id="@+id/fb_login_button"

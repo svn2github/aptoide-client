@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by asantos on 29-09-2014.
@@ -66,6 +69,9 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
+
         setContentView(R.layout.page_timeline_logged_in);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
 
@@ -89,6 +95,12 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(R.string.social_timeline);
 
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

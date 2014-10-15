@@ -376,6 +376,9 @@
         <item name="windowActionBar">false</item>
     </style>
 
-
+    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/RobotoCondensed-Regular.ttf</item>
+    </style>
 
 </resources>

@@ -111,4 +111,5 @@
     <attr name="icTimelineDrawable" format="reference"/>
     <attr name="timelineButtonsBackgroundColor" format="reference"/>
 
+    <attr name="fontPath" format="string"/>
 </resources>

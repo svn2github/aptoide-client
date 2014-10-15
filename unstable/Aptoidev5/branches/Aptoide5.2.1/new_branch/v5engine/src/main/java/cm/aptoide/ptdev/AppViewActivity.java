@@ -44,6 +44,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -559,9 +561,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 supportInvalidateOptionsMenu();
             }
         }
-        findViewById(R.id.btinstallshare)
-                .setVisibility( setShareButtonVisible ?
-                        View.VISIBLE:View.INVISIBLE);
+
+        final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
+        btinstallshare.setVisibility(setShareButtonVisible ? View.VISIBLE : View.GONE);
+        btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean share = btinstallshare.isChecked();
+                Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, share);
+            }
+        });
 
     }
     public void showPopup(View v) {
@@ -1831,7 +1840,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             findViewById(R.id.download_progress).setVisibility(View.VISIBLE);
             findViewById(R.id.btinstall).setVisibility(View.GONE);
-            findViewById(R.id.badge_layout).setVisibility(View.GONE);
+//            findViewById(R.id.badge_layout).setVisibility(View.GONE);
+            findViewById(R.id.extra_info_layout).setVisibility(View.GONE);
 
             switch (download.getDownloadState()) {
                 case ACTIVE:
@@ -1846,6 +1856,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     findViewById(R.id.ic_action_resume).setVisibility(View.GONE);
                     findViewById(R.id.download_progress).setVisibility(View.GONE);
                     findViewById(R.id.btinstall).setVisibility(View.VISIBLE);
+                    findViewById(R.id.extra_info_layout).setVisibility(View.VISIBLE);
 
                     if(showBadgeLayout){
                         findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
