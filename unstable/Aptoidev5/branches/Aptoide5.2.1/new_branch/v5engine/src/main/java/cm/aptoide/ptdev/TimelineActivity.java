@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -269,6 +270,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 try {
                     request.loadDataFromNetwork();
                     Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+
+                    if(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)){
+                        Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -315,11 +321,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         refreshRequest();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_timeline, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             finish();
+        }
+        if (i == R.id.menu_invite_friends){
+
         }
         return super.onOptionsItemSelected(item);
     }

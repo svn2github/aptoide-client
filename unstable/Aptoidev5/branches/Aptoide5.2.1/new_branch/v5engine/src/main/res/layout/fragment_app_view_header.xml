@@ -154,6 +154,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:layout_alignBottom="@+id/badge_layout"
             android:layout_toRightOf="@+id/badge_layout"
             android:checked="true"
+            android:visibility="gone"
             android:text="@string/share_on_timeline" />
     </RelativeLayout>
 

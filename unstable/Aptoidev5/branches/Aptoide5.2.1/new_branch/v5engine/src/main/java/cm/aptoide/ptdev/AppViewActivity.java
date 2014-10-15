@@ -568,11 +568,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
         btinstallshare.setVisibility(setShareButtonVisible ? View.VISIBLE : View.GONE);
+
         btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean share = btinstallshare.isChecked();
-                Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, share);
+
+                Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, isChecked);
             }
         });
 
@@ -1865,7 +1866,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             findViewById(R.id.download_progress).setVisibility(View.VISIBLE);
             findViewById(R.id.btinstall).setVisibility(View.GONE);
-//            findViewById(R.id.badge_layout).setVisibility(View.GONE);
+            findViewById(R.id.badge_layout).setVisibility(View.GONE);
             findViewById(R.id.extra_info_layout).setVisibility(View.GONE);
 
             switch (download.getDownloadState()) {

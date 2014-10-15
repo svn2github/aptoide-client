@@ -573,11 +573,13 @@
     <string name="facebook_start_timeline">Start Timeline</string>
 
     <string name="facebook_friends_list_using_timeline">are already using Aptoide Social Timeline!</string>
-    <string name="share_on_timeline">Share on TimeLine</string>
+    <string name="share_on_timeline">Share on Timeline</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
     <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
     <string name="and">and</string>
     <string name="hide_post">HIDE</string>
+    <string name="invite_friends">Invite Friends</string>
+    <string name="more_friends">more</string>
     <string name="unhide_post">UNHIDE</string>
 
 </resources>

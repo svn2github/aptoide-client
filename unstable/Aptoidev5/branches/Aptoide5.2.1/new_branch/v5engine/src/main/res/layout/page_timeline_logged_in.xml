@@ -48,11 +48,13 @@
             android:text="@string/facebook_timeline_preview"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <include
-            layout="@layout/row_timeline_post"
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"></include>
+            android:layout_height="match_parent"
+            android:src="@drawable/preview_post"
+            android:adjustViewBounds="true"
+            android:layout_margin="5dp"
+            android:layout_gravity="center_horizontal" />
 
 
     </LinearLayout>

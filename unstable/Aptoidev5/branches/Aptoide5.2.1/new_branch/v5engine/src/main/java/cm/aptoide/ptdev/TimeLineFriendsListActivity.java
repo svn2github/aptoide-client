@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,19 +35,21 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         StringBuilder friendsString;
         int i = 0;
         if(!friends.getFriends().isEmpty()){
-            friendsString = new StringBuilder(friends.getFriends().get(0).getUsername());
-
+            friendsString = new StringBuilder(friends.getFriends().get(i).getUsername());
             for(i = 1; i!=friends.getFriends().size() && i < 3; i++){
                 friendsString.append(", ").append(friends.getFriends().get(i).getUsername());
             }
             String text;
             text = getString(R.string.facebook_friends_list_using_timeline);
-            if ( i == 0){
-                text= friendsString.toString() +text;
+
+            if ( friends.getFriends().size() - i == 0 ){
+                text = friendsString.toString() + " " +text;
+
             }else{
                 text=friendsString.toString()
                         +" "+ getString(R.string.and)
                         +" "+ String.valueOf(friends.getFriends().size() - i)
+                        +" "+  getString(R.string.more_friends)
                         +" "+ text;
             }
 
