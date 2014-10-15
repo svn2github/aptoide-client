@@ -14,7 +14,6 @@
 
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
 
         <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
 
@@ -85,7 +84,6 @@
 
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
 
         <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
 
@@ -149,11 +147,6 @@
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_dark</item>
         <item name="timelineButtonsBackgroundColor">@color/dark_custom_gray</item>
-    </style>
-
-
-    <style name="AppTheme.Widget.TextView" parent="AppTheme.Widget.TextView">
-        <item name="fontPath">fonts/Roboto-ThinItalic.ttf</item>
     </style>
 
     <style name="AptoideThemeDefault" parent="AppBaseTheme">
