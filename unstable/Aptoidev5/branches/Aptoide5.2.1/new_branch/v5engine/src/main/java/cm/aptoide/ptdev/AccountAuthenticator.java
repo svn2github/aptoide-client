@@ -19,6 +19,7 @@ import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
 import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.Configs;
@@ -163,6 +164,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
                 .remove("username")
                 .remove("useravatar")
                 .remove("userRepo")
+                .remove(Preferences.TIMELINE_ACEPTED_BOOL)
+                .remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)
          .commit();
         SecurePreferences.getInstance().edit().remove("access_token").commit();
         mContext.stopService(new Intent(mContext, RabbitMqService.class));
