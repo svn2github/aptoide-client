@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +28,8 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
  * Created by rmateus on 25-09-2014.
  */
 public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> {
+    private static final int ACTIVE = 0;
+    private static final int HIDDEN = 1;
 
 
     private TimeLineManager mTimeLineManager;
@@ -40,9 +41,58 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         mTimeLineManager = (TimeLineManager)context;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return getItem(position).getInfo().isStatusActive()?ACTIVE:HIDDEN;
+    }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
+        switch (getItemViewType(position)){
+            case ACTIVE:
+                return getViewActive(position,convertView,parent);
+            case HIDDEN:
+                return getViewHidden(position, convertView, parent);
+            default:
+                return null;
+        }
+    }
+
+    public View getViewHidden(final int position, View convertView, final ViewGroup parent) {
+        final View v;
+        final ViewHolderHidden holder;
+
+        if(convertView == null) {
+            convertView = mInflater.inflate(R.layout.row_timeline_post_hidden, parent, false);
+            holder = new ViewHolderHidden();
+            holder.text = (TextView) convertView.findViewById(R.id.timeline_post_text);
+            holder.popUpMenu = (Button) convertView.findViewById(R.id.timeline_post_options);
+
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolderHidden)convertView.getTag();
+        }
+        v = convertView;
+        final TimelineListAPKsJson.UserApk entry = getItem(position);
+        final long id = entry.getInfo().getId().longValue();
+
+
+        holder.text.setText(entry.getApk().getName());
+        holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    mTimeLineManager.unHidePost(id);
+                    entry.getInfo().setStatus("active");
+                    notifyDataSetChanged();
+            }
+        });
+
+
+        return v;
+    }
+
+
+    public View getViewActive(final int position, View convertView, final ViewGroup parent) {
         final View v;
         final ViewHolder holder;
 
@@ -71,12 +121,10 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.commentButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_comment) ;
 
             convertView.setTag(holder);
-            v = convertView;
         }else{
             holder = (ViewHolder)convertView.getTag();
-            v = convertView;
         }
-
+        v = convertView;
         final TimelineListAPKsJson.UserApk entry = getItem(position);
         final long id = entry.getInfo().getId().longValue();
 
@@ -100,18 +148,21 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.userName.setText(entry.getInfo().getUsername());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
 
-        holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (entry.getInfo().getStatus().equals("active")) {
+        if(entry.getInfo().isOwned()){
+            holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     mTimeLineManager.hidePost(id);
-                    entry.getInfo().setStatus("unactive");
-                } else {
-                    mTimeLineManager.unHidePost(id);
-                    entry.getInfo().setStatus("active");
+                    entry.getInfo().setStatus("hidden");
+                    notifyDataSetChanged();
                 }
-            }
-        });
+            });
+            holder.popUpMenu.setVisibility(View.VISIBLE);
+        }else{
+            holder.popUpMenu.setVisibility(View.GONE);
+        }
+
+
 
 //        holder.action.setText("installed:");
 
@@ -162,7 +213,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.appVersion.setText(entry.getApk().getVername());
         holder.appRepo.setText(getContext().getString(R.string.store)+": " + entry.getApk().getRepo());
 
-        final boolean isLiked = entry.getInfo().isUserliked().equals("like");
+        final boolean isLiked = entry.getInfo().getUserliked().equals("like");
 
         ChangeLikeButtonText(isLiked,holder.likeButtonText);
 
@@ -234,6 +285,11 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         public FrameLayout likeButton;
         public FrameLayout commentButton;
         public TextView likeButtonText;
+    }
+
+    static class ViewHolderHidden {
+        public TextView text;
+        public Button popUpMenu;
     }
 
     @Override

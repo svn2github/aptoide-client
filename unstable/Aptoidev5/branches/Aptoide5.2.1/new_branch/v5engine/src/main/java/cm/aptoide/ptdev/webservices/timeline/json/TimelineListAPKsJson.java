@@ -45,10 +45,18 @@ public class TimelineListAPKsJson extends GenericResponse {
                 public String getStatus() {
                     return status;
                 }
+                public boolean isStatusActive() {
+                    return status.equals("active");
+                }
                 public void setStatus(String status) {
                     this.status=status;
                 }
-
+                public boolean isOwned() {
+                    return owned;
+                }
+                public void setLikes(Number likes) {
+                    this.likes = likes;
+                }
                 public Number getLikes() {
                     return likes;
                 }
@@ -65,7 +73,7 @@ public class TimelineListAPKsJson extends GenericResponse {
                     return timestamp;
                 }
 
-                public String isUserliked() {
+                public String getUserliked() {
                     return userliked;
                 }
                 public void setUserliked(String userliked) {
@@ -78,9 +86,9 @@ public class TimelineListAPKsJson extends GenericResponse {
                 @Key
                 String status;
 
-                public void setLikes(Number likes) {
-                    this.likes = likes;
-                }
+
+                @Key boolean owned;
+
 
                 @Key
                 Number likes;

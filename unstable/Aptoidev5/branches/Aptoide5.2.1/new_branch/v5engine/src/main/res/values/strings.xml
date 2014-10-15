@@ -578,5 +578,6 @@
     <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
     <string name="and">and</string>
     <string name="hide_post">HIDE</string>
+    <string name="unhide_post">UNHIDE</string>
 
 </resources>
