@@ -629,23 +629,34 @@ public class LoginActivity extends AccountAuthenticatorActivity implements
         }
 
 
-
         if (requestCode == 105) {
 
-            //if (resultCode == RESULT_OK) {
+//            if (resultCode == RESULT_OK) {
 
-                String token = data.getExtras().getString("token");
-//                Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_LONG).show();
+            if(data != null && data.hasExtra("token")) {
 
-                if (token != null) {
+                final String token = data.getExtras().getString("token");
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(Aptoide.getContext(), "Token is: " + token, Toast.LENGTH_LONG).show();
+//                    }
+//                });
+                if (!TextUtils.isEmpty(token)) {
                     submit(Mode.INNCLOUD, null, token, null);
                 } else {
-                    //finish();
+                    finish();
                 }
 
-            //} else {
-               // finish();
-            //}
+            }else{
+                finish();
+            }
+
+
+//            }else{
+//                finish();
+//            }
+
         }
 
     }
@@ -878,6 +889,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, oAuth.getRefreshToken());
                     data.putString(PARAM_USER_PASS, passwordOrToken);
+
 
 
                     final Intent res = new Intent();
