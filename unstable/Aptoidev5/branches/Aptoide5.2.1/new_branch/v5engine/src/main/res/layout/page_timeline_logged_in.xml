@@ -25,6 +25,15 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal" />
 
+        <TextView
+            android:id="@+id/facebook_tos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="left"
+            android:padding="10dp"
+            android:text="@string/facebook_tos"
+            android:textAppearance="@style/TextAppearance.FontPath" />
 
         <Button
             android:id="@+id/start_timeline"
