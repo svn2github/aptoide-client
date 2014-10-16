@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         return v;
     }
 
+    Class appViewActivityClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     public View getViewActive(final int position, View convertView, final ViewGroup parent) {
         final View v;
@@ -119,7 +121,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.likeButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_like_button) ;
             holder.likeButtonText = (TextView) convertView.findViewById(R.id.timeline_post_like_text);
             holder.commentButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_comment) ;
-
+            holder.frameLayout = (FrameLayout) convertView.findViewById(R.id.timeline_post_framelayout) ;
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder)convertView.getTag();
@@ -161,6 +163,21 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         }else{
             holder.popUpMenu.setVisibility(View.GONE);
         }
+
+        holder.frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent((Context) mTimeLineManager, appViewActivityClass);
+                TimelineListAPKsJson.UserApk.APK apk = entry.getApk();
+                i.putExtra("fromRelated", true);
+                i.putExtra("appNameplusversion", apk.getName());
+
+                i.putExtra("repoName", apk.getRepo());
+                i.putExtra("md5sum", apk.getMd5sum());
+                i.putExtra("download_from", "timeline");
+                ((Context) mTimeLineManager).startActivity(i);
+            }
+        });
 
 
 
@@ -285,6 +302,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         public FrameLayout likeButton;
         public FrameLayout commentButton;
         public TextView likeButtonText;
+
+        //Frame
+        public FrameLayout frameLayout;
     }
 
     static class ViewHolderHidden {

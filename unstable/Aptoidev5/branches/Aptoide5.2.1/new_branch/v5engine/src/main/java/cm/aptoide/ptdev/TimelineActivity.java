@@ -68,21 +68,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         if (data.isEmpty()) {
             adapter.stopAppending();
         } else {
-            if(firstId == null){
-                firstId =  data.get(0).getInfo().getId();
+            if (firstId == null) {
+                firstId = data.get(0).getInfo().getId();
             }
             apks.addAll(data);
-            lastId = apks.get(apks.size()-1).getInfo().getId();
+            lastId = apks.get(apks.size() - 1).getInfo().getId();
             adapter.onDataReady();
         }   // Tell the EndlessAdapter to
-            // remove it's pending
-            // view and call
-            // notifyDataSetChanged()
+        // remove it's pending
+        // view and call
+        // notifyDataSetChanged()
     }
 
     public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
         apks.addAll(0, data);
-        if(apks.size()>0) {
+        if (apks.size() > 0) {
             firstId = apks.get(0).getInfo().getId();
             adapter.notifyDataSetChanged();
         }
@@ -90,7 +90,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         // view and call
         // notifyDataSetChanged()
     }
-
 
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
@@ -136,7 +135,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     public void runRequest() {
         listAPKsInstallsRequest = new ListApksInstallsRequest();
 
-        if(lastId!=null) {
+        if (lastId != null) {
             listAPKsInstallsRequest.setOffset_id(String.valueOf(lastId.intValue()));
             listAPKsInstallsRequest.setDownwardsDirection();
         }
@@ -180,7 +179,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         } else {
             if (animate) {
                 mProgressContainer.startAnimation(AnimationUtils.loadAnimation(
-                       this, android.R.anim.fade_in));
+                        this, android.R.anim.fade_in));
                 swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(
                         this, android.R.anim.fade_out));
             } else {
@@ -198,20 +197,19 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         Bundle addAccountOptions = null;
-        if(AptoideUtils.isLoggedIn(this)){
-            if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))){
+        if (AptoideUtils.isLoggedIn(this)) {
+            if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))) {
                 GetUserSettingsRequest request = new GetUserSettingsRequest();
                 request.addSetting(GetUserSettingsRequest.TIMELINE);
                 manager.execute(request, new GetUserSettingsRequestListener());
                 return;
-            }
-            else{
-                addAccountOptions=new Bundle();
-                addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL,true);
+            } else {
+                addAccountOptions = new Bundle();
+                addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL, true);
             }
         }
-        if(addAccountOptions==null)
-            addAccountOptions=new Bundle();
+        if (addAccountOptions == null)
+            addAccountOptions = new Bundle();
         addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL, true);
         AccountManager.get(this).addAccount(
                 Aptoide.getConfiguration().getAccountType(),
@@ -220,7 +218,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
-                        String name="";
+                        String name = "";
 
                         try {
                             name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
@@ -228,9 +226,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                             finish();
                         }
 
-                        if(TextUtils.isEmpty(name)){
+                        if (TextUtils.isEmpty(name)) {
                             finish();
-                        }else{
+                        } else {
                             init();
                         }
                     }
@@ -238,7 +236,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new Handler(Looper.getMainLooper())
         );
     }
-    Class a = Aptoide.getConfiguration().getAppViewActivityClass();
+
     private void init() {
         adapter = new EndlessWrapperAdapter(this, apks);
         adapter.setRunInBackground(false);
@@ -257,51 +255,38 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         getSupportActionBar().setTitle(R.string.social_timeline);
 
 
-
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setAdapter(adapter);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TimelineListAPKsJson.UserApk.APK apk = ((TimelineListAPKsJson.UserApk) parent.getAdapter().getItem(position)).getApk();
 
-                Intent i = new Intent(TimelineActivity.this, a);
-
-                i.putExtra("fromRelated", true);
-                i.putExtra("appNameplusversion", apk.getName());
-
-                i.putExtra("repoName", apk.getRepo());
-                i.putExtra("md5sum", apk.getMd5sum());
-                i.putExtra("download_from", "timeline");
-                startActivity(i);
-
-            }
-        });
         //force loading
         adapter.getView(0, null, null);
-
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-                request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+        if (!Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
 
 
-                try {
-                    request.loadDataFromNetwork();
-                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                    request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
 
-                    if(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)){
-                        Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
+
+                    try {
+                        request.loadDataFromNetwork();
+                        Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+
+                        if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {
+                            Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
 
     }
 
@@ -309,10 +294,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode== RESULT_OK ){
+        if (resultCode == RESULT_OK) {
 
             init();
-        }else{
+        } else {
             finish();
         }
 
@@ -353,7 +338,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         if (i == android.R.id.home) {
             finish();
         }
-        if (i == R.id.menu_invite_friends){
+        if (i == R.id.menu_invite_friends) {
 
         }
         return super.onOptionsItemSelected(item);
@@ -362,14 +347,16 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     /* *************** Methods of the TimeLineManager Interface *************** */
 
     @Override
-    public void hidePost(long id){
+    public void hidePost(long id) {
         changeUserApkInstallStatusPost(id, ChangeUserApkInstallStatusRequest.STATUSHIDDEN);
     }
+
     @Override
-    public void unHidePost(long id){
+    public void unHidePost(long id) {
         changeUserApkInstallStatusPost(id, ChangeUserApkInstallStatusRequest.STATUSACTIVE);
     }
-    private void changeUserApkInstallStatusPost(long id, String status){
+
+    private void changeUserApkInstallStatusPost(long id, String status) {
         ChangeUserApkInstallStatusRequest request = new ChangeUserApkInstallStatusRequest();
         request.setPostStatus(status);
         request.setPostId(id);
@@ -377,36 +364,41 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     @Override
-    public void likePost(long id){
+    public void likePost(long id) {
         likeRequestPost(id, AddUserApkInstallLikeRequest.LIKE);
     }
+
     @Override
-    public void unlikePost(long id){
-        likeRequestPost(id,AddUserApkInstallLikeRequest.UNLIKE);
+    public void unlikePost(long id) {
+        likeRequestPost(id, AddUserApkInstallLikeRequest.UNLIKE);
     }
-    private void likeRequestPost(long id,String like){
+
+    private void likeRequestPost(long id, String like) {
         AddUserApkInstallLikeRequest request = new AddUserApkInstallLikeRequest();
         request.setLike(like);
         request.setPostId(id);
         manager.execute(request, new TimelineRequestListener<GenericResponse>());
     }
+
     @Override
-    public void commentPost(long id,String comment){
+    public void commentPost(long id, String comment) {
         AddUserApkInstallCommentRequest request = new AddUserApkInstallCommentRequest();
         request.setPostId(id);
         request.setComment(comment);
-        manager.execute(request,new TimelineRequestListener<GenericResponse>());
+        manager.execute(request, new TimelineRequestListener<GenericResponse>());
 
     }
+
     @Override
     public void getComments(long id) {
         GetUserApkInstallCommentsRequest request = new GetUserApkInstallCommentsRequest();
         request.setPostID(id);
         request.setPostLimit(COMMENTSLIMIT);
-        manager.execute(request,new GetUserApkInstallCommentsRequestListener());
+        manager.execute(request, new GetUserApkInstallCommentsRequestListener());
     }
+
     @Override
-    public void openCommentsDialog(long id){
+    public void openCommentsDialog(long id) {
         Bundle args = new Bundle();
         args.putLong(TimeLineCommentsDialog.POSTID, id);
         TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
@@ -421,9 +413,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         protected void caseOK(GetUserSettingsJson response) {
             if (response.getResults() != null) {
                 boolean serverResponse = response.getResults().getTimeline().equals("active");
-                if(serverResponse){
+                if (serverResponse) {
                     init();
-                }else {
+                } else {
                     startTimeLineFriendsListActivity();
                 }
             }
@@ -435,14 +427,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         }
     }
 
-    private void startTimeLineFriendsListActivity(){
+    private void startTimeLineFriendsListActivity() {
         startActivityForResult(new Intent(this, TimeLineFriendsListActivity.class), 0);
     }
 
     public class GetUserApkInstallCommentsRequestListener extends TimelineRequestListener<ApkInstallComments> {
         @Override
         protected void caseOK(ApkInstallComments response) {
-            if ((response).getComments()!=null) {
+            if ((response).getComments() != null) {
                 ((TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG))
                         .SetComments((response).getComments());
             }

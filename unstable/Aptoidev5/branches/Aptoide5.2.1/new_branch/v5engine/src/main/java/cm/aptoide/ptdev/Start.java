@@ -33,6 +33,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -109,9 +111,11 @@ import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.views.BadgeView;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import roboguice.util.temp.Ln;
@@ -522,7 +526,8 @@ public class Start extends ActionBarActivity implements
                         store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                         startParse(store);
                         pager.setCurrentItem(1);
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
+                        if (Build.VERSION.SDK_INT >= 10)
+                            FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
                     }
 
                 }
@@ -530,64 +535,98 @@ public class Start extends ActionBarActivity implements
             } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
                 pager.setCurrentItem(3);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Updates_Notification");
+                if (Build.VERSION.SDK_INT >= 10)
+                    FlurryAgent.logEvent("Opened_Updates_Notification");
             }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             queueName = sharedPreferences.getString("queueName", null);
 
 
-
-
-
             new AutoUpdate(this).execute();
             executeWizard();
 
+            {
+                try {
+                    InputStream is = getAssets().open("actionsOnBoot.properties");
+                    Properties properties = new Properties();
+                    properties.load(is);
+                    Intent intent = null;
+                    if (properties.containsKey("downloadId")) {
+                        intent = new Intent(this, appViewClass);
 
-            try {
-                InputStream is = getAssets().open("actionsOnBoot.properties");
-                Properties properties = new Properties();
-                properties.load(is);
+                        String id = properties.getProperty("downloadId");
+                        long savedId = sharedPreferences.getLong("downloadId", 0);
+
+                        if (Long.valueOf(id) != savedId) {
+                            sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
+
+                            intent.putExtra("fromApkInstaller", true);
+                            intent.putExtra("id", Long.valueOf(id));
 
 
-                if(properties.containsKey("downloadId")) {
+                            if (properties.containsKey("cpi_url")) {
 
-                    String id = properties.getProperty("downloadId");
-                    long savedId = sharedPreferences.getLong("downloadId", 0);
+                                String cpi = properties.getProperty("cpi_url");
 
-                    if (Long.valueOf(id) != savedId) {
-                        sharedPreferences.edit().putLong("downloadId", Long.valueOf(id)).commit();
-                        Intent intent = new Intent(this, appViewClass);
+                                try {
+                                    cpi = URLDecoder.decode(cpi, "UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
 
-                        intent.putExtra("fromApkInstaller", true);
-                        intent.putExtra("id", Long.valueOf(id));
-
-
-                        if(properties.containsKey("cpi_url")){
-
-                            String cpi = properties.getProperty("cpi_url");
-
-                            try {
-                                cpi = URLDecoder.decode(cpi, "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                                intent.putExtra("cpi", cpi);
                             }
 
-                            intent.putExtra("cpi",  cpi);
+                            if (Build.VERSION.SDK_INT >= 10)
+                                FlurryAgent.logEvent("Started_From_Apkfy");
+
                         }
 
-                        startActivityForResult(intent, 50);
-                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Started_From_Apkfy");
+                    } else if (properties.containsKey("aptword")) {
+                        String param = properties.getProperty("aptword");
 
+                        if (!TextUtils.isEmpty(param)) {
+
+                            param = param.replaceAll("\\*", "_").replaceAll("\\+", "/");
+
+                            String json = new String(Base64.decode(param.getBytes(), 0));
+
+                            Log.d("AptoideAptWord", json);
+
+                            ApkSuggestionJson.Ads ad = new JacksonFactory().createJsonParser(json).parse(ApkSuggestionJson.Ads.class);
+
+                            intent = new Intent(this, appViewClass);
+                            long id = ad.getData().getId().longValue();
+                            intent.putExtra("id", id);
+                            intent.putExtra("packageName", ad.getData().getPackageName());
+                            intent.putExtra("repoName", ad.getData().getRepo());
+                            intent.putExtra("fromSponsored", true);
+                            intent.putExtra("location", "homepage");
+                            intent.putExtra("keyword", "__NULL__");
+                            intent.putExtra("cpc", ad.getInfo().getCpc_url());
+                            intent.putExtra("cpi", ad.getInfo().getCpi_url());
+                            intent.putExtra("whereFrom", "sponsored");
+                            intent.putExtra("download_from", "sponsored");
+
+                            if (ad.getPartner() != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("partnerType", ad.getPartner().getPartnerInfo().getName());
+                                bundle.putString("partnerClickUrl", ad.getPartner().getPartnerData().getClick_url());
+                                intent.putExtra("partnerExtra", bundle);
+                            }
+                        }
                     }
+
+                    startActivityForResult(intent, 50);
+
+
+                } catch (IOException e) {
+                    Log.e("MYTAG", "");
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (IOException e) {
-                Log.e("MYTAG", "");
-                e.printStackTrace();
-            } catch (NullPointerException e){
-                e.printStackTrace();
             }
-
 
             loadEditorsAndTopApps();
 

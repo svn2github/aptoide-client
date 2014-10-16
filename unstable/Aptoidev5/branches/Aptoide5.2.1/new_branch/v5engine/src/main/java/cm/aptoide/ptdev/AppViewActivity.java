@@ -1097,6 +1097,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onResume() {
         super.onResume();
         paused = false;
+
         if(!spiceManager.isStarted()){
             spiceManager.start(this);
         }
@@ -1235,6 +1236,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 
                 isSponsored = true;
+
+                if(getIntent().getBooleanExtra("autoinstall", false)){
+                    autoDownload = true;
+                }
 
 
                 final ExecutorService executorService = Executors.newSingleThreadExecutor();
