@@ -163,8 +163,9 @@ public abstract class FragmentAppView extends Fragment {
             //Log.d("Aptoide-AppView", "Setting description");
             if(event == null) return;
 
-            if (event.getDescription()!=null)
-                description.setText(event.getDescription());
+            if (event.getDescription()!=null){
+                description.setText(Html.fromHtml(event.getDescription().replace("\n", "<br/>")));
+            }
 
 //            //Log.d("Aptoide-description", "lines "+ description.getLineCount() );
             if (event.getDescription()!=null && event.getDescription().length() > 250) {

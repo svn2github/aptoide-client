@@ -63,6 +63,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     private boolean mListShown = false;
     private View mProgressContainer;
     private boolean showDialog;
+    private boolean serverTimelineActive;
 
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
@@ -84,7 +85,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         apks.addAll(0, data);
         if (apks.size() > 0) {
             firstId = apks.get(0).getInfo().getId();
-            adapter.notifyDataSetChanged();
+            lastId = apks.get(apks.size()-1).getInfo().getId();
+            adapter.onDataReady();
         }
         // remove it's pending
         // view and call
@@ -202,6 +204,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 GetUserSettingsRequest request = new GetUserSettingsRequest();
                 request.addSetting(GetUserSettingsRequest.TIMELINE);
                 manager.execute(request, new GetUserSettingsRequestListener());
+
                 return;
             } else {
                 addAccountOptions = new Bundle();
@@ -266,19 +269,21 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 @Override
                 public void run() {
 
-
-                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-                    request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-
-
                     try {
-                        request.loadDataFromNetwork();
+
+                        if(!serverTimelineActive){
+                            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                            request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                            request.loadDataFromNetwork();
+                        }
+
                         Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
 
                         if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {
                             Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
                         }
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -412,8 +417,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         @Override
         protected void caseOK(GetUserSettingsJson response) {
             if (response.getResults() != null) {
-                boolean serverResponse = response.getResults().getTimeline().equals("active");
-                if (serverResponse) {
+                serverTimelineActive = response.getResults().getTimeline().equals("active");
+                if (serverTimelineActive) {
                     init();
                 } else {
                     startTimeLineFriendsListActivity();
