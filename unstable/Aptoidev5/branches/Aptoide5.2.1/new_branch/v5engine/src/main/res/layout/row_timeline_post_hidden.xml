@@ -29,8 +29,7 @@
             android:layout_alignParentRight="true"
             android:text="@string/unhide_post"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:textColor="@color/link" />
 
     </RelativeLayout>
 

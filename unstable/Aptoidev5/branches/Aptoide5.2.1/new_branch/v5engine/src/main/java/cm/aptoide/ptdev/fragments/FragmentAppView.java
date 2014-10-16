@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -898,7 +899,7 @@ public abstract class FragmentAppView extends Fragment {
         private LinearLayout commentsContainer;
         private Button seeAllButton;
         private EditText editText;
-        private Button addComment;
+        private ImageButton addComment;
         private Button dontLikeBtn;
         private Button likeBtn;
         private View loadingPb;
@@ -1119,7 +1120,7 @@ public abstract class FragmentAppView extends Fragment {
             commentsContainer = (LinearLayout) v.findViewById(R.id.commentContainer);
             seeAllButton = (Button) v.findViewById(R.id.more_comments);
             editText = (EditText) v.findViewById(R.id.editText_addcomment);
-            addComment = (Button) v.findViewById(R.id.button_add_comment);
+            addComment = (ImageButton) v.findViewById(R.id.button_add_comment);
             dontLikeBtn = (Button) v.findViewById(R.id.button_dont_like);
             dontLikeBtn.setOnClickListener(new AddLikeListener(false));
             likeBtn = (Button) v.findViewById(R.id.button_like);

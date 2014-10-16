@@ -122,6 +122,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btinstall"
+        android:visibility="gone"
         android:gravity="center"
         android:padding="2dp">
 

@@ -80,6 +80,8 @@
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_light</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
         <item name="timelineButtonsBackgroundColor">@color/light_custom_gray</item>
+        <item name="timelineSendDrawable">@drawable/ic_action_send_now_light</item>
+        <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
     </style>
 
 
@@ -147,6 +149,8 @@
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_dark</item>
         <item name="timelineButtonsBackgroundColor">@color/dark_custom_gray</item>
+        <item name="timelineSendDrawable">@drawable/ic_action_send_now_dark</item>
+        <item name="timelinePostBackground">@drawable/timeline_post_background_dark</item>
     </style>
 
     <style name="AptoideThemeDefault" parent="AppBaseTheme">

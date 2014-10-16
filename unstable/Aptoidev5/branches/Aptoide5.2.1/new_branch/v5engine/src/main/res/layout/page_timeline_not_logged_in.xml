@@ -27,6 +27,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginTop="10dp"
+            facebook:login_text="@string/facebook_start_timeline"
             android:layout_marginBottom="10dp"
             facebook:confirm_logout="false"
             facebook:fetch_user_info="true" />

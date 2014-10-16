@@ -2,6 +2,8 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +79,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         final TimelineListAPKsJson.UserApk entry = getItem(position);
         final long id = entry.getInfo().getId().longValue();
 
+        SpannableString unhidePost = new SpannableString(getContext().getString(R.string.unhide_post));
+        unhidePost.setSpan(new UnderlineSpan(), 0, unhidePost.length(), 0);
+        holder.popUpMenu.setText(unhidePost);
 
         holder.text.setText(entry.getApk().getName());
         holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +155,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.userName.setText(entry.getInfo().getUsername());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
 
+
         if(entry.getInfo().isOwned()){
             holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,13 +219,23 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         int comments = entry.getInfo().getComments().intValue();
 
         if(likes > 0 || comments > 0) {
-            if (likes > 0)
-                sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.likes));
-            if (likes > 0 && comments > 0) {
-                sb.append(" " + getContext().getString(R.string.and) + " " );
+            if (likes > 0) {
+                if (likes == 1) {
+                    sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.like));
+                }else{
+                    sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.likes));
+                }
             }
-            if (comments > 0)
-                sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
+            if (likes > 0 && comments > 0) {
+                sb.append("  ");
+            }
+            if (comments > 0) {
+                if(comments == 1) {
+                    sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
+                }else{
+                    sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comment));
+                }
+            }
 
             holder.likesandcomments.setText(sb.toString());
             holder.likesandcomments.setVisibility(View.VISIBLE);
@@ -259,7 +275,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTimeLineManager.openCommentsDialog(id);
+                mTimeLineManager.openCommentsDialog(id, position);
             }
         });
         return v;

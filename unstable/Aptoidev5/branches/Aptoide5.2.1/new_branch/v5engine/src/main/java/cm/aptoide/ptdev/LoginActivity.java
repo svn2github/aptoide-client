@@ -292,8 +292,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         super.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
-
+        String activityTitle = getString(R.string.login_or_register);
         if(b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
+            activityTitle = getString(R.string.social_timeline);
 
             if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
                 setContentView(R.layout.page_timeline_logout_and_login);
@@ -328,11 +329,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         if (mAuthTokenType == null)
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-        getSupportActionBar().setTitle(getString(R.string.setcredentials));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.login_or_register));
+        getSupportActionBar().setTitle(activityTitle);
     }
 
     private void initLogin(Bundle savedInstanceState) {

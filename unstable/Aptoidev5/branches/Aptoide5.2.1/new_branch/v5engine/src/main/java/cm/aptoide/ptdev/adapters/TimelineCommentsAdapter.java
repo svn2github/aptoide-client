@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,7 @@ public class TimelineCommentsAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent)
     {
 		class ViewHolder {
+            public ImageView avatar;
 			public TextView personName;
 			public TextView comment;
 			public TextView timestamp;
@@ -53,13 +57,13 @@ public class TimelineCommentsAdapter extends BaseAdapter {
 	    ViewHolder holder;
 
 	    if(convertView == null){
-		    convertView = LayoutInflater.from(ctx).inflate(R.layout.row_latest_comments, null);
-			convertView.findViewById(R.id.comment_app_name).setVisibility(View.GONE);
+		    convertView = LayoutInflater.from(ctx).inflate(R.layout.row_timeline_comments, null);
 
 			holder = new ViewHolder();
-		    holder.personName = (TextView) convertView.findViewById(R.id.user_comment);
-			holder.comment = (TextView) convertView.findViewById(R.id.comment);
-		    holder.timestamp = (TextView) convertView.findViewById(R.id.comment_time);
+            holder.avatar = (ImageView) convertView.findViewById(R.id.timeline_user_avatar);
+		    holder.personName = (TextView) convertView.findViewById(R.id.timeline_user_comment);
+			holder.comment = (TextView) convertView.findViewById(R.id.timeline_comment);
+		    holder.timestamp = (TextView) convertView.findViewById(R.id.timeline_comment_time);
 
 		    convertView.setTag(holder);
 	    }else{
@@ -69,6 +73,7 @@ public class TimelineCommentsAdapter extends BaseAdapter {
 
         ApkInstallComments.Comment comment = getItem(position);
 
+//        ImageLoader.getInstance().displayImage(comment.getAvatar(), holder.avatar);
 	    holder.personName.setText(comment.getUsername());
 		holder.comment.setText(comment.getText());
 	    holder.timestamp.setText(getTime(comment.getTimestamp()));

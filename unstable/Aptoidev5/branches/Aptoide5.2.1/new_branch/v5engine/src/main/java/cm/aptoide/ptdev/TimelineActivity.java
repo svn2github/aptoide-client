@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.octo.android.robospice.SpiceManager;
@@ -259,6 +260,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
 
         ListView lv = (ListView) findViewById(R.id.timeline_list);
+        lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
 
 
@@ -390,8 +392,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         AddUserApkInstallCommentRequest request = new AddUserApkInstallCommentRequest();
         request.setPostId(id);
         request.setComment(comment);
-        manager.execute(request, new TimelineRequestListener<GenericResponse>());
-
+        manager.execute(request, new SetUserApkInstallCommentsRequestListener());
     }
 
     @Override
@@ -403,8 +404,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     @Override
-    public void openCommentsDialog(long id) {
+    public void openCommentsDialog(long id, int position){
         Bundle args = new Bundle();
+
+        args.putString(TimeLineCommentsDialog.LIKES, String.valueOf(((TimelineListAPKsJson.UserApk)adapter.getItem(position)).getInfo().getLikes()));
+
         args.putLong(TimeLineCommentsDialog.POSTID, id);
         TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
         commentsDialog.setArguments(args);
@@ -434,6 +438,24 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     private void startTimeLineFriendsListActivity() {
         startActivityForResult(new Intent(this, TimeLineFriendsListActivity.class), 0);
+    }
+
+    public class SetUserApkInstallCommentsRequestListener extends TimelineRequestListener<GenericResponse> {
+        @Override
+        protected void caseOK(GenericResponse response) {
+
+            if(response.getStatus().equals("OK")){
+                refreshRequest();
+                TimeLineCommentsDialog fragmentByTag = (TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
+                if(fragmentByTag!=null){
+                    fragmentByTag.dismiss();
+                }
+            }else{
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            }
+
+
+        }
     }
 
     public class GetUserApkInstallCommentsRequestListener extends TimelineRequestListener<ApkInstallComments> {

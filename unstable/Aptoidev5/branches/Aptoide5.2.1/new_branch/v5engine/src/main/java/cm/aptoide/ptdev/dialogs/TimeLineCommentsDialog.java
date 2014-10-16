@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,6 +28,8 @@ import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 public class TimeLineCommentsDialog extends DialogFragment {
 
     public static final String POSTID = "ID";
+    public static final String LIKES = "LIKES";
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -40,6 +45,9 @@ public class TimeLineCommentsDialog extends DialogFragment {
     private TimeLineManager callback;
     private long id;
     private ListView lv;
+    private TextView likes;
+    private ImageButton send_button;
+    private int likesNumber;
 
     public void SetComments(List<ApkInstallComments.Comment> entry){
         this.lv.setAdapter(new TimelineCommentsAdapter(getActivity(), entry));
@@ -47,29 +55,41 @@ public class TimeLineCommentsDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        setStyle( DialogFragment.STYLE_NORMAL, R.style.TimelineCommentsDialog );
         final Context c = getActivity();
-        final View v = LayoutInflater.from(c).inflate(R.layout.dialog_timelinecomments, null);
+        final View dialogView = LayoutInflater.from(c).inflate(R.layout.dialog_timelinecomments, null);
         id=getArguments().getLong(POSTID);
-        lv = (ListView) v.findViewById(R.id.TimeLineListView);
-        return new AlertDialog.Builder(c)
-                .setView(v)
-                .setPositiveButton(R.string.add_comment,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (callback != null) {
-                            String s = ((EditText) v.findViewById(R.id.TimeLineCommentEditText))
-                                    .getText().toString();
-                            callback.commentPost(id,s);
-                            callback = null;
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
+        likesNumber = Integer.valueOf(getArguments().getString(LIKES));
+
+        lv = (ListView) dialogView.findViewById(R.id.TimeLineListView);
+        likes = (TextView) dialogView.findViewById(R.id.likes);
+
+        if(likesNumber > 1) {
+            likes.setVisibility(View.VISIBLE);
+            if(likesNumber == 1) {
+                likes.setText(likesNumber + " " + getString(R.string.like));
+            }else{
+                likes.setText(likesNumber + " " + getString(R.string.likes));
+            }
+        }else{
+            likes.setVisibility(View.GONE);
+        }
+
+        send_button = (ImageButton) dialogView.findViewById(R.id.send_button);
+        send_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    String s = ((EditText) dialogView.findViewById(R.id.TimeLineCommentEditText)).getText().toString();
+                    callback.commentPost(id, s);
+                    callback = null;
+                }
+            }
+        });
+
+        return new AlertDialog.Builder(c)
+                .setView(dialogView)
                 .create();
     }
 

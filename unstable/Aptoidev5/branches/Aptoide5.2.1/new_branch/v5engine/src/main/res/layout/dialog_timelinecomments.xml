@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   Copyright (c) 2013 tdeus.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the GNU Public License v2.0
@@ -10,7 +9,19 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="bottom"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="?attr/icLikeDrawable"
+        android:gravity="center"
+        android:padding="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/TimeLineListView"
@@ -18,13 +29,34 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        </ListView>
-    <EditText
-        android:id="@+id/TimeLineCommentEditText"
+    </ListView>
+
+
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/write_your_comment"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/TimeLineCommentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_toLeftOf="@+id/send_button"
+            android:gravity="top|left"
+            android:hint="@string/write_your_comment"
+            android:inputType="textMultiLine"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageButton
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right"
+            android:background="?attr/selectableItemBackground"
+            android:src="?attr/timelineSendDrawable" />
+    </RelativeLayout>
 
 </LinearLayout>

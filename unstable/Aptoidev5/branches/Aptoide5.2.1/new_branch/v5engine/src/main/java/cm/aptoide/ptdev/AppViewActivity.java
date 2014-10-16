@@ -286,6 +286,14 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                         reason = getApkInfoJson.getMalware().getReason();
 
+
+                        if(showBadgeLayout || Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+                            findViewById(R.id.extra_info_layout).setVisibility(View.VISIBLE);
+                        }else{
+                            findViewById(R.id.extra_info_layout).setVisibility(View.GONE);
+                        }
+
+
                         if (showBadgeLayout) {
                             View badge_layout = findViewById(R.id.badge_layout);
                             badge_layout.setVisibility(View.VISIBLE);

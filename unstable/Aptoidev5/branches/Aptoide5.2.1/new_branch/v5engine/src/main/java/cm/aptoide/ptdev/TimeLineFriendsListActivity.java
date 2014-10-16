@@ -64,7 +64,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
             }
         }else{
-            friends_using_timeline.setVisibility(View.GONE);
+            friends_using_timeline.setText(getString(R.string.facebook_friends_list_using_timeline_empty));
         }
     }
 

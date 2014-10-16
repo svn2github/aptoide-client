@@ -11,5 +11,5 @@ public interface TimeLineManager {
     public void unlikePost(long id);
     public void commentPost(long id,String comment);
     public void getComments(long id);
-    public void openCommentsDialog(long id);
+    public void openCommentsDialog(long id, int position);
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (c) 2013 tdeus.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Public License v2.0
@@ -7,101 +6,116 @@ which accompanies this distribution, and is available at
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/app_info_scroller"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/advertisement"
-            android:layout_below="@+id/apkinfoheader">
+    android:id="@+id/app_info_scroller"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/advertisement"
+    android:layout_below="@+id/apkinfoheader">
 
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
 
         <TextView
-                style="@style/titleLabel"
-                android:text="@string/review"/>
+            style="@style/titleLabel"
+            android:text="@string/review" />
 
 
         <LinearLayout
-                style="?attr/backgroundCard"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:clickable="true"
-                android:orientation="vertical">
+            style="?attr/backgroundCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:orientation="vertical">
 
-            <EditText
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
                     android:id="@+id/editText_addcomment"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
+                    android:gravity="top|left"
                     android:hint="@string/write_your_comment"
                     android:inputType="textMultiLine"
-                    android:minLines="3"
                     android:lines="3"
-                    android:gravity="top|left"/>
+                    android:minLines="3"
+                    android:layout_toLeftOf="@+id/button_add_comment" />
 
-            <Button android:id="@+id/button_add_comment"
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/button_add_comment"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="?attr/customButtonColor"
-                    android:text="@string/add_comment"
-                    android:layout_margin="10dp"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="right"
+                    android:background="?attr/selectableItemBackground"
+                    android:src="?attr/timelineSendDrawable"/>
+            </RelativeLayout>
 
             <LinearLayout
-                    android:orientation="horizontal"
+                android:id="@+id/layout_likes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_like"
+                    style="@style/WidgetButtonCustomGray"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_gravity="center"
-                    android:id="@+id/layout_likes">
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="?attr/icRatingGoodDrawable"
+                    android:text="@string/like" />
 
-                <Button android:id="@+id/button_like"
-                        style="@style/WidgetButtonCustomGray"
-                        android:layout_width="fill_parent"
-                        android:text="@string/like"
-                        android:layout_weight="1"
-                        android:drawableLeft="?attr/icRatingGoodDrawable"
-                        android:layout_margin="10dp"
-                        android:layout_height="wrap_content"/>
-
-                <Button android:id="@+id/button_dont_like"
-                        style="@style/WidgetButtonCustomGray"
-                        android:layout_width="fill_parent"
-                        android:text="@string/dont_like"
-                        android:drawableLeft="?attr/icRatingBadDrawable"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"/>
+                <Button
+                    android:id="@+id/button_dont_like"
+                    style="@style/WidgetButtonCustomGray"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="?attr/icRatingBadDrawable"
+                    android:text="@string/dont_like" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <TextView android:id="@+id/title_comments"
-                  style="@style/titleLabel"
-                  android:text="@string/comments"/>
+        <TextView
+            android:id="@+id/title_comments"
+            style="@style/titleLabel"
+            android:text="@string/comments" />
 
-        <ProgressBar android:id="@+id/loadingPb" android:layout_width="wrap_content"
-                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        <LinearLayout android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:gravity="center_horizontal"
-                      android:orientation="vertical"
-                      android:layout_margin="5dp"
-                      android:visibility="gone"
-                      android:id="@+id/layout_comments">
+        <LinearLayout
+            android:id="@+id/layout_comments"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
-                    android:id="@+id/commentContainer"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-            </LinearLayout>
+                android:id="@+id/commentContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical"></LinearLayout>
 
             <Button
                 android:id="@+id/more_comments"
@@ -113,54 +127,59 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
                 android:paddingLeft="5.0sp"
                 android:paddingRight="5.0sp"
                 android:text="@string/comment_see_all"
-                android:visibility="gone"
-                android:textColor="@android:color/darker_gray"/>
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <TextView
-                android:id="@+id/no_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5.0dp"
-                android:visibility="gone"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/no_comments"/>
+            android:id="@+id/no_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5.0dp"
+            android:text="@string/no_comments"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
 
 
         <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="?attr/customColor"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="10dp"
-                android:gravity="left"
-                android:text="@string/flags"/>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:text="@string/flags"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="?attr/customColor" />
 
-        <ProgressBar android:id="@+id/loading_flags" android:layout_width="wrap_content"
-                     android:layout_height="wrap_content" style="?android:attr/progressBarStyleLarge"/>
+        <ProgressBar
+            android:id="@+id/loading_flags"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
-                android:id="@+id/flags_container"
-                style="?attr/backgroundCard"
+            android:id="@+id/flags_container"
+            style="?attr/backgroundCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/button_flag"
+                style="?attr/customButtonColor"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:layout_margin="10dp"
+                android:text="@string/flag_this_app" />
 
-            <Button android:id="@+id/button_flag"
-                    style="?attr/customButtonColor"
-                    android:layout_width="fill_parent"
-                    android:text="@string/flag_this_app"
-                    android:layout_margin="10dp"/>
-
-            <include android:id="@+id/flag_layout"
-                     layout="@layout/fragment_flag_app"/>
+            <include
+                android:id="@+id/flag_layout"
+                layout="@layout/fragment_flag_app" />
 
         </LinearLayout>
 
