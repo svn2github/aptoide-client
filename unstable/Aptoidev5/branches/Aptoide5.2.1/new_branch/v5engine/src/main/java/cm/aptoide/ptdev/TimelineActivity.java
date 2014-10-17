@@ -66,7 +66,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
-
             adapter.stopAppending();
 
         } else {
@@ -89,11 +88,12 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
 
             lastId = apks.get(apks.size() - 1).getInfo().getId();
-            adapter.onDataReady();
         }   // Tell the EndlessAdapter to
         // remove it's pending
         // view and call
         // notifyDataSetChanged()
+        adapter.onDataReady();
+
     }
 
     public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
@@ -288,9 +288,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
 
         ListView lv = (ListView) findViewById(R.id.timeline_list);
+        lv.setEmptyView(findViewById(R.id.empty));
+
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
-        lv.setEmptyView(getLayoutInflater().inflate(R.layout.row_timeline_empty,null));
+
 
 
         //force loading
