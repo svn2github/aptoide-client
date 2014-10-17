@@ -76,7 +76,20 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 firstId = data.get(0).getInfo().getId();
             }
             data.get(0).animate = true;
-            apks.addAll(data);
+
+            if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
+
+                for(TimelineListAPKsJson.UserApk apk : data){
+                    if(!apk.getApk().getAge().equals("Mature")){
+                        apks.add(apk);
+                    }
+                }
+
+            }else{
+                apks.addAll(data);
+            }
+
+
             lastId = apks.get(apks.size() - 1).getInfo().getId();
             adapter.onDataReady();
         }   // Tell the EndlessAdapter to
@@ -86,7 +99,20 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
-        apks.addAll(0, data);
+
+        if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
+
+            for(TimelineListAPKsJson.UserApk apk : data){
+                if(!apk.getApk().getAge().equals("Mature")){
+                    apks.add(apk);
+                }
+            }
+
+        }else{
+            apks.addAll(0, data);
+        }
+
+
         if (apks.size() > 0) {
             firstId = apks.get(0).getInfo().getId();
             lastId = apks.get(apks.size()-1).getInfo().getId();

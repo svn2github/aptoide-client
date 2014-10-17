@@ -20,6 +20,8 @@ import android.util.Log;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.UrlEncodedContent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -42,6 +44,8 @@ import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.webservices.OAuthAccessTokenHandler;
+import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 import cm.aptoide.ptdev.webservices.RegisterAdRequest;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
@@ -161,7 +165,10 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             parameters.put("appid", String.valueOf(apk.getId()));
             HttpContent content = new UrlEncodedContent(parameters);
             try {
-                AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content).executeAsync(Executors.newSingleThreadExecutor());
+                HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
+                HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
+                httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
+                httpRequest.executeAsync(Executors.newSingleThreadExecutor());
             } catch (IOException e) {
                 e.printStackTrace();
             }
