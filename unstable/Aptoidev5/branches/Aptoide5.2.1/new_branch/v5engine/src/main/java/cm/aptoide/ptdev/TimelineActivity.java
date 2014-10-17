@@ -73,6 +73,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             if (firstId == null) {
                 firstId = data.get(0).getInfo().getId();
             }
+            data.get(0).animate = true;
             apks.addAll(data);
             lastId = apks.get(apks.size() - 1).getInfo().getId();
             adapter.onDataReady();
@@ -221,7 +222,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
-                        String name = "";
+                        String name ;
 
                         try {
                             name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);

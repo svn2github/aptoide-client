@@ -7,6 +7,8 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -38,12 +40,14 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
 
     private TimeLineManager mTimeLineManager;
+
     private final LayoutInflater mInflater;
 
     public TimelineAdapter(Context context, ArrayList<TimelineListAPKsJson.UserApk> apks) {
         super(context,0,apks);
         mInflater = LayoutInflater.from(context);
         mTimeLineManager = (TimeLineManager)context;
+
     }
 
     @Override
@@ -72,11 +76,11 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder = new ViewHolderHidden();
             holder.text = (TextView) convertView.findViewById(R.id.timeline_post_text);
             holder.popUpMenu = (Button) convertView.findViewById(R.id.timeline_post_options);
-
             convertView.setTag(holder);
-        }else{
+        }else {
             holder = (ViewHolderHidden)convertView.getTag();
         }
+
         v = convertView;
         final TimelineListAPKsJson.UserApk entry = getItem(position);
         final long id = entry.getInfo().getId().longValue();
@@ -85,16 +89,22 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         unhidePost.setSpan(new UnderlineSpan(), 0, unhidePost.length(), 0);
         holder.popUpMenu.setText(unhidePost);
 
+        if(entry.animate){
+            v.startAnimation(AnimationUtils.loadAnimation((Context)mTimeLineManager, android.R.anim.fade_in));
+            entry.animate = false;
+        }
+
+
         holder.text.setText(entry.getApk().getName());
         holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     mTimeLineManager.unHidePost(id);
                     entry.getInfo().setStatus("active");
+                    entry.animate = true;
                     notifyDataSetChanged();
             }
         });
-
 
         return v;
     }
@@ -153,6 +163,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         } else {
             icon = entry.getApk().getIcon();
         }
+
+
+
         ImageLoader.getInstance().displayImage(icon, holder.appIcon);
         holder.userName.setText(entry.getInfo().getUsername());
         ImageLoader.getInstance().displayImage(entry.getInfo().getAvatar(), holder.userPhoto);
@@ -161,16 +174,22 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         if(entry.getInfo().isOwned()){
             holder.popUpMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     mTimeLineManager.hidePost(id);
                     entry.getInfo().setStatus("hidden");
                     Toast.makeText(getContext(), getContext().getString(R.string.hide_post_info), Toast.LENGTH_LONG).show();
+                    entry.animate = true;
                     notifyDataSetChanged();
                 }
             });
             holder.popUpMenu.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.popUpMenu.setVisibility(View.GONE);
+        }
+
+        if(entry.animate){
+            v.startAnimation(AnimationUtils.loadAnimation((Context)mTimeLineManager, android.R.anim.fade_in));
+            entry.animate = false;
         }
 
         holder.openAppViewLayout.setOnClickListener(new View.OnClickListener() {

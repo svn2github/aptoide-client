@@ -22,6 +22,8 @@ public class TimelineListAPKsJson extends GenericResponse {
 
 
         public static class UserApk {
+            public boolean animate;
+
             public Info getInfo() {
                 return info;
             }
