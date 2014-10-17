@@ -43,6 +43,9 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +53,12 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.dialogs.AdultDialog;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
+import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
@@ -230,22 +236,30 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    final ProgressDialog pd;
+
+                    pd = new ProgressDialog(mctx);
+                    pd.setMessage(getString(R.string.please_wait));
+                    pd.show();
+
                     ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEINACTIVE   );
 
-                    HashMap<String, String> parameters = new HashMap<String, String>();
-                    parameters.put("settings","timeline="+ChangeUserSettingsRequest.TIMELINEINACTIVE+";");
-                    parameters.put("mode" , "json");
-                    parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
-                    HttpContent content = new UrlEncodedContent(parameters);
-                    GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/changeUserSettings");
+                     manager.execute(request, new RequestListener<GenericResponseV2>() {
+                       @Override
+                       public void onRequestFailure(SpiceException spiceException) {
+                           pd.dismiss();
+                       }
 
-                    try {
-                        final HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
-                        new UnsubscribeTimeline().execute(httpRequest);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                       @Override
+                       public void onRequestSuccess(GenericResponseV2 responseV2) {
+                           if(responseV2.getStatus().equals("OK")){
+                               pd.dismiss();
+                               Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL,false);
+                               ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
+                           }
+                       }
+                   });
                     return false;
                 }
             });
@@ -396,47 +410,6 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
     }
 
-    public class UnsubscribeTimeline extends AsyncTask<HttpRequest, Void, GenericResponseV2>{
-        ProgressDialog pd;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = new ProgressDialog(mctx);
-            pd.setMessage(getString(R.string.please_wait));
-            pd.show();
-        }
-
-        @Override
-        protected GenericResponseV2 doInBackground(HttpRequest... params) {
-
-            HttpRequest request = params[0];
-
-            GenericResponseV2 genericResponseV2 =  null;
-            try {
-                request.setParser(new JacksonFactory().createJsonObjectParser());
-
-                HttpResponse response = request.execute();
-                genericResponseV2 = response.parseAs(GenericResponseV2.class);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return genericResponseV2;
-        }
-
-        @Override
-        protected void onPostExecute(GenericResponseV2 responseV2) {
-            super.onPostExecute(responseV2);
-
-            if(responseV2.getStatus().equals("OK")){
-                pd.dismiss();
-                Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL,false);
-                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
-            }
-        }
-    }
 
 
     public class DeleteDir extends AsyncTask<File, Void, Void> {
@@ -561,16 +534,20 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         return super.onOptionsItemSelected(item);
     }
 
+    SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+
 
     @Override
     protected void onStart() {
         super.onStart();
+        manager.start(this);
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        manager.shouldStop();
         if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
     }
 }

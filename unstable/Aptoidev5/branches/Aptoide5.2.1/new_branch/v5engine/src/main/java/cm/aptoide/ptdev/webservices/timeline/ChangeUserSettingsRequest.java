@@ -4,11 +4,12 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 
 /**
  * Created by asantos on 24-09-2014.
  */
-public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponse> {
+public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponseV2> {
     public static final String TIMELINEACTIVE = "active";
     public static final String TIMELINEINACTIVE = "inactive ";
 
@@ -20,7 +21,7 @@ public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponse> 
     }
 
     public ChangeUserSettingsRequest() {
-        super(GenericResponse.class);
+        super(GenericResponseV2.class);
         sb  = new StringBuilder();
     }
     @Override

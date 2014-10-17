@@ -68,7 +68,9 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
+
             adapter.stopAppending();
+
         } else {
             if (firstId == null) {
                 firstId = data.get(0).getInfo().getId();
@@ -264,6 +266,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
+
 
 
         //force loading
