@@ -576,7 +576,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
         btinstallshare.setVisibility(setShareButtonVisible ? View.VISIBLE : View.GONE);
-
+        btinstallshare.setChecked(Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
         btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
