@@ -586,7 +586,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         });
 
     }
-    public void showPopup(View v) {
+/*    public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -606,7 +606,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         popup.getMenu().findItem(R.id.menu_share_install).setChecked(
                 Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
         popup.show();
-    }
+    }*/
 
     DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
         @Override

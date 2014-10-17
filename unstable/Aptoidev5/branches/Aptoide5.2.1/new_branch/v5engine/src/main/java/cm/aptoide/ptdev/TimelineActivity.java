@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
@@ -292,7 +290,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
-
+        lv.setEmptyView(getLayoutInflater().inflate(R.layout.row_timeline_empty,null));
 
 
         //force loading
@@ -333,12 +331,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-
             init();
         } else {
             finish();
         }
-
     }
 
     @Override
