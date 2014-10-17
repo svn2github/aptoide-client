@@ -255,7 +255,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                        public void onRequestSuccess(GenericResponseV2 responseV2) {
                            if(responseV2.getStatus().equals("OK")){
                                pd.dismiss();
-                               Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL,false);
+                               PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove(Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
                                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
                            }
                        }
