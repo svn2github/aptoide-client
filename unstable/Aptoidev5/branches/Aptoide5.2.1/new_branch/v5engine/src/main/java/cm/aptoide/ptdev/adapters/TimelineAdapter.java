@@ -177,7 +177,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
                 public void onClick(View view) {
                     mTimeLineManager.hidePost(id);
                     entry.getInfo().setStatus("hidden");
-                    Toast.makeText(getContext(), getContext().getString(R.string.hide_post_info), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getContext().getString(R.string.hide_post_info), Toast.LENGTH_SHORT).show();
                     entry.animate = true;
                     notifyDataSetChanged();
                 }
@@ -253,9 +253,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             }
             if (comments > 0) {
                 if(comments == 1) {
-                    sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
-                }else{
                     sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comment));
+                }else{
+                    sb.append(String.valueOf(comments) + " " + getContext().getString(R.string.comments));
                 }
             }
 

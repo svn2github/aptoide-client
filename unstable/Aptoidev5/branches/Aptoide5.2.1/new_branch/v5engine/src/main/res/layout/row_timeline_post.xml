@@ -68,14 +68,14 @@
                 android:id="@+id/timeline_post_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/timeline_post_user_photo"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:background="?attr/selectableItemBackground"
                 android:drawableLeft="?attr/icCancelDrawable"
                 android:text="@string/hide_post"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:paddingRight="6dp"
+                android:layout_alignTop="@+id/timeline_post_user_name"
+                android:layout_alignRight="@+id/timeline_post_open" />
 
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/timeline_post_open"
