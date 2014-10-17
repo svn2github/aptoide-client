@@ -32,6 +32,7 @@
     </ListView>
 
 
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -39,24 +40,25 @@
         <EditText
             android:id="@+id/TimeLineCommentEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_toLeftOf="@+id/send_button"
+            android:layout_height="80dp"
             android:gravity="top|left"
             android:hint="@string/write_your_comment"
             android:inputType="textMultiLine"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:lines="3"
+            android:minLines="3"
+            android:layout_toLeftOf="@+id/send_button" />
 
         <ImageButton
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:layout_gravity="right"
+            android:padding="5dp"
             android:background="?attr/selectableItemBackground"
-            android:src="?attr/timelineSendDrawable" />
+            android:src="?attr/timelineSendDrawable"
+            android:layout_alignBottom="@+id/TimeLineCommentEditText"
+            android:layout_alignParentRight="true" />
+
     </RelativeLayout>
 
 </LinearLayout>

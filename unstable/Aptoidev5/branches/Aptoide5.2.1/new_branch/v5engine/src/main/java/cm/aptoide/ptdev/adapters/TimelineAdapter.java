@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -126,7 +128,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.likeButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_like_button) ;
             holder.likeButtonText = (TextView) convertView.findViewById(R.id.timeline_post_like_text);
             holder.commentButton = (FrameLayout) convertView.findViewById(R.id.timeline_post_comment) ;
-            holder.frameLayout = (FrameLayout) convertView.findViewById(R.id.timeline_post_framelayout) ;
+            holder.openAppViewLayout = (FrameLayout) convertView.findViewById(R.id.timeline_post_open) ;
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder)convertView.getTag();
@@ -162,6 +164,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
                 public void onClick(View v) {
                     mTimeLineManager.hidePost(id);
                     entry.getInfo().setStatus("hidden");
+                    Toast.makeText(getContext(), getContext().getString(R.string.hide_post_info), Toast.LENGTH_LONG).show();
                     notifyDataSetChanged();
                 }
             });
@@ -170,7 +173,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
             holder.popUpMenu.setVisibility(View.GONE);
         }
 
-        holder.frameLayout.setOnClickListener(new View.OnClickListener() {
+        holder.openAppViewLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent((Context) mTimeLineManager, appViewActivityClass);
@@ -239,6 +242,12 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
             holder.likesandcomments.setText(sb.toString());
             holder.likesandcomments.setVisibility(View.VISIBLE);
+            holder.likesandcomments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTimeLineManager.openCommentsDialog(id, position);
+                }
+            });
         }else{
             holder.likesandcomments.setVisibility(View.GONE);
         }
@@ -320,7 +329,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         public TextView likeButtonText;
 
         //Frame
-        public FrameLayout frameLayout;
+        public FrameLayout openAppViewLayout;
     }
 
     static class ViewHolderHidden {

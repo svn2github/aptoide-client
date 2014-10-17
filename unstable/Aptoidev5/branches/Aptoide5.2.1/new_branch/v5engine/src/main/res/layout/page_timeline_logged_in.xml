@@ -15,8 +15,7 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-thin"
             android:gravity="center"
-            android:padding="20dp"
-            android:textAppearance="@style/TextAppearance.FontPath" />
+            android:padding="10dp"  />
 
         <LinearLayout
             android:id="@+id/friends_list"
@@ -26,27 +25,38 @@
             android:orientation="horizontal" />
 
         <TextView
+            android:id="@+id/join_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/facebook_join_friends" />
+
+        <TextView
             android:id="@+id/facebook_tos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-thin"
             android:gravity="left"
             android:padding="10dp"
-            android:text="@string/facebook_tos"
-            android:textAppearance="@style/TextAppearance.FontPath" />
+            android:text="@string/facebook_tos"  />
 
         <Button
             android:id="@+id/start_timeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/facebook_btn_default_holo_light"
             android:drawableLeft="@drawable/ic_drawable_left_facebook"
             android:text="@string/facebook_start_timeline"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:id="@+id/textView4"

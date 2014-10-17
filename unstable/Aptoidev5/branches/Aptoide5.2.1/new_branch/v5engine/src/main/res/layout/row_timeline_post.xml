@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/timeline_post_framelayout"
-    style="?attr/customRowForegroundHomeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -22,8 +20,9 @@
                 android:id="@+id/timeline_post_likes_and_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/timeline_post_center_layout"
-                android:layout_below="@+id/timeline_post_center_layout"
+                android:layout_alignLeft="@+id/timeline_post_open"
+                android:layout_below="@+id/timeline_post_open"
+                android:background="?attr/selectableItemBackground"
                 android:paddingTop="4dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:visibility="gone" />
@@ -78,61 +77,69 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/darker_gray" />
 
-            <RelativeLayout
-                android:id="@+id/timeline_post_center_layout"
-                android:layout_width="wrap_content"
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/timeline_post_open"
+                style="?attr/customRowForegroundHomeLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/timeline_post_user_photo"
-                android:layout_margin="5dp"
-                android:padding="2dp"
-                android:background="?attr/timelinePostBackground">
+                android:layout_margin="5dp">
 
 
-                <ImageView
-                    android:id="@+id/timeline_post_app_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/icon_non_available" />
-
-                <TextView
-                    android:id="@+id/timeline_post_app_name"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/timeline_post_app_icon"
-                    android:ellipsize="end"
-                    android:gravity="bottom"
-                    android:maxLines="1"
-                    android:text="AppName"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/timeline_post_app_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/timeline_post_app_name"
-                    android:layout_below="@+id/timeline_post_app_name"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="2.2.2."
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:background="?attr/timelinePostBackground"
+                    android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/timeline_post_app_store"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/timeline_post_app_version"
-                    android:layout_below="@+id/timeline_post_app_version"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="store: apps"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/timeline_post_app_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_non_available" />
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@+id/timeline_post_app_icon"
+                        android:ellipsize="end"
+                        android:gravity="bottom"
+                        android:maxLines="1"
+                        android:text="AppName"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/timeline_post_app_name"
+                        android:layout_below="@+id/timeline_post_app_name"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="2.2.2."
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/timeline_post_app_store"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/timeline_post_app_version"
+                        android:layout_below="@+id/timeline_post_app_version"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="store: apps"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </RelativeLayout>
+            </FrameLayout>
         </RelativeLayout>
 
 
@@ -192,4 +199,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </FrameLayout>

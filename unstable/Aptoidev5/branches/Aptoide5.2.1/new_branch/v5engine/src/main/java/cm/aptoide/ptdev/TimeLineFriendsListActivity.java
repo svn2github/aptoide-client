@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,7 +27,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class TimeLineFriendsListActivity extends ActionBarActivity {
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
-    private TextView friends_using_timeline;
+    private TextView friends_using_timeline, join_friends;
     private LinearLayout friends_list;
     private Button start_timeline;
 
@@ -49,7 +50,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
                 text=friendsString.toString()
                         +" "+ getString(R.string.and)
                         +" "+ String.valueOf(friends.getFriends().size() - i)
-                        +" "+  getString(R.string.more_friends)
+                        +" "+ getString(R.string.more_friends)
                         +" "+ text;
             }
 
@@ -63,8 +64,12 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
                 friends_list.addView(v);
 
             }
+
+            join_friends.setVisibility(View.VISIBLE);
         }else{
             friends_using_timeline.setText(getString(R.string.facebook_friends_list_using_timeline_empty));
+            join_friends.setVisibility(View.GONE);
+
         }
     }
 
@@ -77,7 +82,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
         setContentView(R.layout.page_timeline_logged_in);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
-
+        join_friends = (TextView) findViewById(R.id.join_friends);
         getFriends();
 
 //        lv = (ListView) findViewById(R.id.TimeLineListView);
@@ -97,6 +102,15 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.social_timeline);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -11,22 +11,31 @@
 
 
         <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/whats_timeline"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-thin"
             android:gravity="left"
             android:padding="10dp"
-            android:text="@string/facebook_tos"
-            android:textAppearance="@style/TextAppearance.FontPath" />
+            android:text="@string/facebook_tos"  />
 
         <com.facebook.widget.LoginButton
             android:id="@+id/fb_login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
             facebook:login_text="@string/facebook_start_timeline"
             android:layout_marginBottom="10dp"
             facebook:confirm_logout="false"

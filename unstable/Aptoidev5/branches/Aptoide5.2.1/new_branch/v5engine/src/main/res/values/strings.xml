@@ -566,26 +566,30 @@
     <string name="Data_Usage_Message">You are about to make a download using a network not defined on Settings > General Download Rules</string>
     <string name="social_timeline">Social Timeline</string>
     <string name="disable_social_timeline">Disable Social Timeline</string>
+    <string name="whats_timeline">What is Aptoide Social Timeline?</string>
     <string name="facebook_tos">
-        \u2022 Share the apps you install with your Facebook friends
-        \n\n\u2022 See what Android Apps your friends are playing and comment
-        \n\n\u2022 We never, never, never post anything to your Facebook wall
-        \n\n\u2022 We only share inside Aptoide App, only with your friends and what you allow us to share. We respect your privacy.
+        \u2022 Share the apps you install with your Facebook friends in a Timeline inside Aptoide
+        \n\n\u2022 See, like and comment in the Timeline
+        \n\n\u2022 We never, never, never post on your Facebook wall. We respect your privacy
     </string>
     <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
-    <string name="facebook_timeline_feature">This feature only works with Facebook Login. Click on the button below to logout and login with Facebook!</string>
+    <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication.
+    \n\n Do you want to Login with Facebook and try the Social Timeline?
+    </string>
     <string name="facebook_timeline_preview">Timeline Preview:</string>
     <string name="facebook_start_timeline">Join Social Timeline</string>
-    <string name="facebook_friends_list_using_timeline">are in Aptoide. Do you want to join the network?</string>
+    <string name="facebook_join_friends">Do you want to join them in the Social Timeline?</string>
+    <string name="facebook_friends_list_using_timeline">are in Aptoide</string>
     <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share you applications with your Facebook friends. Do you want to join the nework?</string>
     <string name="share_on_timeline">Share on Timeline</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
     <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
     <string name="and">and</string>
+    <string name="more_friends">more</string>
     <string name="hide_post">HIDE</string>
     <string name="invite_friends">Invite Friends</string>
-    <string name="more_friends">more</string>
     <string name="unhide_post">UNHIDE</string>
     <string name="comment">Comment</string>
+    <string name="hide_post_info">Your friends won\'t see this post</string>
 
 </resources>

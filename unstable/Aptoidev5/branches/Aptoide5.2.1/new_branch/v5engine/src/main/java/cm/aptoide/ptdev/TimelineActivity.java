@@ -205,7 +205,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                 GetUserSettingsRequest request = new GetUserSettingsRequest();
                 request.addSetting(GetUserSettingsRequest.TIMELINE);
                 manager.execute(request, new GetUserSettingsRequestListener());
-
                 return;
             } else {
                 addAccountOptions = new Bundle();
@@ -226,15 +225,17 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
                         try {
                             name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
+
+                            if (TextUtils.isEmpty(name)) {
+                                finish();
+                            } else {
+                                init();
+                            }
                         } catch (Exception e) {
                             finish();
                         }
 
-                        if (TextUtils.isEmpty(name)) {
-                            finish();
-                        } else {
-                            init();
-                        }
+
                     }
                 },
                 new Handler(Looper.getMainLooper())
@@ -344,9 +345,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         int i = item.getItemId();
         if (i == android.R.id.home) {
             finish();
-        }
-        if (i == R.id.menu_invite_friends) {
+        } else if (i == R.id.menu_invite_friends) {
 
+        } else if( i == R.id.menu_SendFeedBack){
+            FeedBackActivity.screenshot(this);
+            startActivity(new Intent(this,FeedBackActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -462,8 +465,10 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         @Override
         protected void caseOK(ApkInstallComments response) {
             if ((response).getComments() != null) {
-                ((TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG))
-                        .SetComments((response).getComments());
+                TimeLineCommentsDialog timeLineCommentsDialog = (TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
+                if(timeLineCommentsDialog != null){
+                    timeLineCommentsDialog.SetComments((response).getComments());
+                }
             }
         }
     }
