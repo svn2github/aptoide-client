@@ -591,5 +591,6 @@
     <string name="unhide_post">UNHIDE</string>
     <string name="comment">Comment</string>
     <string name="hide_post_info">Your friends won\'t see this post</string>
+    <string name="timeline_is_empty">Ooops, your Timeline is empty, invite some friends and start downloading!</string>
 
 </resources>
