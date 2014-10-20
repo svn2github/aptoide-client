@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -292,6 +294,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lv.setEmptyView(findViewById(R.id.empty));
 
         View inviteFriends = LayoutInflater.from(this).inflate(R.layout.separator_invite_friends, null);
+        Button invite = (Button) inviteFriends.findViewById(R.id.timeline_invite);
+        final Context c = this;
+        invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(c, TimeLineFriendsInviteActivity.class));
+            }
+        });
         lv.addHeaderView(inviteFriends);
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
@@ -376,8 +386,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         int i = item.getItemId();
         if (i == android.R.id.home) {
             finish();
-//        } else if (i == R.id.menu_invite_friends) {
-
         } else if( i == R.id.menu_SendFeedBack){
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));

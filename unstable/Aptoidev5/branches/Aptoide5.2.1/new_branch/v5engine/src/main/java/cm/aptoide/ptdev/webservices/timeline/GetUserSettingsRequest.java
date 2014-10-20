@@ -1,5 +1,8 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
+import android.text.TextUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
@@ -10,16 +13,15 @@ import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
  */
 public class GetUserSettingsRequest extends TimelineRequest<GetUserSettingsJson> {
     public static final String TIMELINE = "timeline";
-    StringBuilder sb;
+    ArrayList<String> list;
 
     public void addSetting(String setting) {
-        sb.append(setting);
-        sb.append(',');
+        list.add(setting);
     }
 
     public GetUserSettingsRequest() {
         super(GetUserSettingsJson.class);
-        sb  = new StringBuilder();
+        list = new ArrayList<String>();
     }
     @Override
     protected String getUrl() {
@@ -28,10 +30,7 @@ public class GetUserSettingsRequest extends TimelineRequest<GetUserSettingsJson>
 
     @Override
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
-        if(sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
-            parameters.put("settings",sb.toString());
-        }
+        parameters.put("settings", TextUtils.join(",", list));
         return parameters;
     }
 }

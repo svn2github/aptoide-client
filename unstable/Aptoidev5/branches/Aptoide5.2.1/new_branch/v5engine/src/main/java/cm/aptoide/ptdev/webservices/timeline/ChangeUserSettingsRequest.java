@@ -1,8 +1,10 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
+import android.text.TextUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 
@@ -13,16 +15,14 @@ public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponseV2
     public static final String TIMELINEACTIVE = "active";
     public static final String TIMELINEINACTIVE = "inactive ";
 
-    StringBuilder sb;
-
+    ArrayList<String> list;
     public void addTimeLineSetting(String value) {
-        sb.append("timeline="+value);
-        sb.append(',');
+        list.add("timeline=" + value);
     }
 
     public ChangeUserSettingsRequest() {
         super(GenericResponseV2.class);
-        sb  = new StringBuilder();
+        list = new ArrayList<String>();
     }
     @Override
     protected String getUrl() {
@@ -31,10 +31,7 @@ public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponseV2
 
     @Override
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
-        if(sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
-            parameters.put("settings",sb.toString());
-        }
+        parameters.put("settings", TextUtils.join(",", list));
         return parameters;
     }
 }
