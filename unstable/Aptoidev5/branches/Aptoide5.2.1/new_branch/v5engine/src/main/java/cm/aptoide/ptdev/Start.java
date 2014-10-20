@@ -101,6 +101,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.services.DownloadService;
@@ -786,7 +787,13 @@ public class Start extends ActionBarActivity implements
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
 
         int timelineRes = typedArray.getResourceId(4, R.drawable.ic_action_timeline_dark);
-        mItems.add(new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8));
+        MenuListAdapter.Item socialTimelineItem = new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8);
+        if( !Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false) ) {
+            socialTimelineItem.setNew(true);
+        }else{
+            socialTimelineItem.setNew(false);
+        }
+        mItems.add(socialTimelineItem);
 
         int settingsRes = typedArray.getResourceId(5, R.drawable.ic_action_settings_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.settings), settingsRes, 7));

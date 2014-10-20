@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -290,6 +291,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         ListView lv = (ListView) findViewById(R.id.timeline_list);
         lv.setEmptyView(findViewById(R.id.empty));
 
+        View inviteFriends = LayoutInflater.from(this).inflate(R.layout.separator_invite_friends, null);
+        lv.addHeaderView(inviteFriends);
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
 
@@ -373,7 +376,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         int i = item.getItemId();
         if (i == android.R.id.home) {
             finish();
-        } else if (i == R.id.menu_invite_friends) {
+//        } else if (i == R.id.menu_invite_friends) {
 
         } else if( i == R.id.menu_SendFeedBack){
             FeedBackActivity.screenshot(this);

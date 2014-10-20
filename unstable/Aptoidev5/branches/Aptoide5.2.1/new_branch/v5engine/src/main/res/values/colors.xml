@@ -4,6 +4,7 @@
     <color name="transparent_black">#99000000</color>
     <color name="transparent_white">#CCFFFFFF</color>
     <color name="link">#2070DE</color>
+    <color name="facebook">#3b5998</color>
     <color name="custom_color">#ea7117</color>
     <color name="overlay_black">#77000000</color>
 
@@ -52,5 +53,6 @@
     <color name="lighter_custom_gray">#cccccc</color>
     <color name="dark_custom_gray">#4c4c4c</color>
     <color name="medium_custom_gray">#c6c7c6</color>
+    <color name="dark_gray">#262626</color>
 
 </resources>

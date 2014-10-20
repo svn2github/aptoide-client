@@ -539,11 +539,10 @@
     <string name="feedback_send_button">Send FeedBack</string>
     <string name="feedback_subject">Subject</string>
     <string name="feedback_to_write">Write here to send us your feedback</string>
-    <string name="feedback_to_write2">Write here to send us your feedback...
-        \n
-        \n Please give us all the details you can get:
-        \n - Steps you have done
-        \n - Errors you are seeing</string>
+    <string name="feedback_to_write2">Write here to send us your feedback…\n\n
+        Please give us all the details you can get:
+        \n\u2022 Steps you have done
+        \n\u2022 Errors you are seeing</string>
     <string name="feedback_include_logs">Include ScreenShot and Logs</string>
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
     <string name="feedback_no_email">No email client installed!</string>
@@ -589,8 +588,18 @@
     <string name="hide_post">HIDE</string>
     <string name="invite_friends">Invite Friends</string>
     <string name="unhide_post">UNHIDE</string>
+    <string name="unlike">Unlike</string>
     <string name="comment">Comment</string>
     <string name="hide_post_info">Your friends won\'t see this post</string>
-    <string name="timeline_is_empty">Ooops, your Timeline is empty, invite some friends and start downloading!</string>
+    <string name="timeline_is_empty">Ohh… none of your Facebook friends has joined the Social Timeline yet. Invite them!</string>
+    <string name="timeline_is_empty_send_email">We’ll send an email to those you choose:</string>
+
+    <string name="wizard_new_timeline">1 - Social Timeline</string>
+    <string name="wizard_new_timeline_description">New on this version! Join Social Timeline</string>
+    <string name="wizard_new_timeline_join">2 - Join Social Timeline</string>
+    <string name="wizard_new_timeline_join_description">You can choose what to share inside Aptoide</string>
+    <string name="wizard_new_timeline_privacy">3 - We respect your privacy</string>
+    <string name="wizard_new_timeline_privacy_description">We never post on Facebook wall</string>
+    <string name="new_string">New!</string>
 
 </resources>

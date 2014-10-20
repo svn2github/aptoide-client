@@ -207,11 +207,11 @@ public class Wizard {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_webinstall));
+            title.setText(getString(R.string.wizard_new_timeline));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_webinstall);
+            image.setImageResource(R.drawable.wizard_social_timeline);
             TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_webinstall_description));
+            description.setText(getString(R.string.wizard_new_timeline_description));
 
         }
 
@@ -242,11 +242,11 @@ public class Wizard {
             super.onViewCreated(view, savedInstanceState);
 
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_flags));
+            title.setText(getString(R.string.wizard_new_timeline_join));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_flags);
+            image.setImageResource(R.drawable.wizard_preview_post);
             TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_flags_description));
+            description.setText(getString(R.string.wizard_new_timeline_join_description));
         }
 
         @Override
@@ -276,11 +276,11 @@ public class Wizard {
             super.onViewCreated(view, savedInstanceState);
 
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_pin));
+            title.setText(getString(R.string.wizard_new_timeline_privacy));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_pin);
+            image.setImageResource(R.drawable.wizard_share_on_timeline);
             TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_pin_description));
+            description.setText(getString(R.string.wizard_new_timeline_privacy_description));
 //            ImageView arrow = (ImageView) view.findViewById(R.id.arrow);
 //            arrow.setVisibility(View.VISIBLE);
         }

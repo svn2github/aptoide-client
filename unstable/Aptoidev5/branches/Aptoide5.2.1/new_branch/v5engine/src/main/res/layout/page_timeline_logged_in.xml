@@ -13,7 +13,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif-thin"
             android:gravity="center"
             android:padding="10dp"  />
 
@@ -28,7 +27,6 @@
             android:id="@+id/join_friends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
             android:visibility="gone"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
@@ -39,7 +37,6 @@
             android:id="@+id/facebook_tos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/facebook_tos"  />
@@ -70,7 +67,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/preview_post"
+            android:src="@drawable/wizard_preview_post"
             android:adjustViewBounds="true"
             android:layout_margin="5dp"
             android:layout_gravity="center_horizontal" />

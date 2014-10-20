@@ -148,7 +148,7 @@
         <item name="icDialogDrawable">@drawable/dialog_background_dark</item>
         <item name="icNextItemDrawable">@drawable/ic_action_next_item_dark</item>
         <item name="icTimelineDrawable">@drawable/ic_action_timeline_dark</item>
-        <item name="timelineButtonsBackgroundColor">@color/dark_custom_gray</item>
+        <item name="timelineButtonsBackgroundColor">@color/dark_gray</item>
         <item name="timelineSendDrawable">@drawable/ic_action_send_now_dark</item>
         <item name="timelinePostBackground">@drawable/timeline_post_background_dark</item>
     </style>

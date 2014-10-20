@@ -2,19 +2,20 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -275,10 +276,24 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.appRepo.setText(getContext().getString(R.string.store)+": " + entry.getApk().getRepo());
 
         final boolean isLiked = entry.getInfo().getUserliked().equals("like");
+        if(isLiked){
+            holder.likeButtonText.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(R.drawable.ic_action_facebook_like), null, null, null);
+            holder.likeButtonText.setTextColor(getContext().getResources().getColor(R.color.facebook));
+        }else{
+            TypedValue typedV = new TypedValue();
+            getContext().getTheme().resolveAttribute( R.attr.icRatingGoodDrawable, typedV, true);
+            holder.likeButtonText.setCompoundDrawablesWithIntrinsicBounds(typedV.resourceId, 0, 0, 0);
 
-        ChangeLikeButtonText(isLiked,holder.likeButtonText);
+            getContext().getTheme().resolveAttribute(android.R.attr.textColorSecondary, typedV, true);
+            int textColor = getContext().getResources().getColor(typedV.resourceId);
+            holder.likeButtonText.setTextColor(textColor);
+        }
+
+        changeLikeButtonText(isLiked, holder.likeButtonText);
 
         final View myCv = convertView;
+
+
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             boolean selfIsLiked = isLiked;
@@ -308,8 +323,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         });
         return v;
     }
-    private static void ChangeLikeButtonText(boolean isLiked, TextView likeButtonText){
-        likeButtonText.setText(isLiked ? "Unlike" : "Like");
+    private static void changeLikeButtonText(boolean isLiked, TextView likeButtonText){
+        int textId = isLiked ?  R.string.unlike : R.string.like;
+        likeButtonText.setText(likeButtonText.getContext().getString(textId));
     }
 
 
