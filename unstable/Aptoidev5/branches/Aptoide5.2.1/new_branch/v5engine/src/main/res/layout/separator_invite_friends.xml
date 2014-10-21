@@ -22,13 +22,14 @@
         android:text="@string/new_post"
         android:layout_toLeftOf="@+id/timeline_invite" />
 
-    <Button
+
+    <TextView
+        style="?attr/headerSeparatorButton"
+        android:text="@string/invite_friends"
         android:id="@+id/timeline_invite"
-        style="?attr/customButtonColor"
         android:layout_gravity="right"
         android:background="@drawable/facebook_btn_default_holo_light"
-        android:text="@string/invite_friends"
-        android:layout_alignParentRight="true" />
+        android:layout_centerVertical="true" />
 
 
 </RelativeLayout>
