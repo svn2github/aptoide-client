@@ -5,24 +5,30 @@
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+
+    <TextView
+        android:id="@+id/timeline_new_posts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center|left"
+        android:padding="5dp"
+        android:text="@string/new_post"
+        android:layout_toLeftOf="@+id/timeline_invite" />
+
     <Button
         android:id="@+id/timeline_invite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="10dp"
+        style="?attr/customButtonColor"
+        android:layout_gravity="right"
         android:background="@drawable/facebook_btn_default_holo_light"
-        android:drawableLeft="@drawable/ic_drawable_left_facebook"
         android:text="@string/invite_friends"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        android:layout_alignParentRight="true" />
 
 
-</LinearLayout>
+</RelativeLayout>

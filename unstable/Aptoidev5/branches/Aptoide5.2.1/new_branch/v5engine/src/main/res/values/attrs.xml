@@ -112,6 +112,7 @@
     <attr name="timelineButtonsBackgroundColor" format="reference"/>
     <attr name="timelineSendDrawable" format="reference"/>
     <attr name="timelinePostBackground" format="reference"/>
+    <attr name="icTimelineAccessSecure" format="reference"/>
 
     <attr name="fontPath" format="string"/>
 </resources>

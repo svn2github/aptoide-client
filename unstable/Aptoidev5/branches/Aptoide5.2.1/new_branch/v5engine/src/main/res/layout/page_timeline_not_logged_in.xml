@@ -17,6 +17,7 @@
             android:gravity="center"
             android:padding="15dp"
             android:text="@string/whats_timeline"
+            android:textAppearance="?android:textAppearanceMedium"
             android:layout_gravity="center_horizontal" />
 
         <TextView
@@ -25,7 +26,17 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:padding="10dp"
+            android:textAppearance="?android:textAppearanceSmall"
             android:text="@string/facebook_tos"  />
+
+        <TextView
+            android:id="@+id/facebook_private_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="?attr/icTimelineAccessSecure"
+            android:gravity="center"
+            android:text="@string/facebook_private_actions" />
 
         <com.facebook.widget.LoginButton
             android:id="@+id/fb_login_button"

@@ -572,9 +572,8 @@
         \n\n\u2022 We never, never, never post on your Facebook wall. We respect your privacy
     </string>
     <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
-    <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication.
-    \n\n Do you want to Login with Facebook and try the Social Timeline?
-    </string>
+    <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication</string>
+    <string name="facebook_timeline_login"> Do you want to Login with Facebook and try the Social Timeline?</string>
     <string name="facebook_timeline_preview">Timeline Preview:</string>
     <string name="facebook_start_timeline">Join Social Timeline</string>
     <string name="facebook_join_friends">Do you want to join them in the Social Timeline?</string>
@@ -601,5 +600,7 @@
     <string name="wizard_new_timeline_privacy">3 - We respect your privacy</string>
     <string name="wizard_new_timeline_privacy_description">We never post on Facebook wall</string>
     <string name="new_string">New!</string>
+    <string name="facebook_private_actions">This does not let the app post to Facebook</string>
+    <string name="new_post">New Posts (%s)</string>
 
 </resources>
