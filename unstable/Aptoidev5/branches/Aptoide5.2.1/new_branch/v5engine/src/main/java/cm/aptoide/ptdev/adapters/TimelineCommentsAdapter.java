@@ -73,7 +73,7 @@ public class TimelineCommentsAdapter extends BaseAdapter {
 
         ApkInstallComments.Comment comment = getItem(position);
 
-//        ImageLoader.getInstance().displayImage(comment.getAvatar(), holder.avatar);
+        ImageLoader.getInstance().displayImage(comment.getAvatar(), holder.avatar);
 	    holder.personName.setText(comment.getUsername());
 		holder.comment.setText(comment.getText());
 	    holder.timestamp.setText(getTime(comment.getTimestamp()));

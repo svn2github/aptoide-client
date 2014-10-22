@@ -68,6 +68,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.retry.RetryPolicy;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
@@ -355,6 +356,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setIcon(icon);
                         download.setPackageName(package_name);
                         download.setMd5(md5);
+
+                        if( payment != null ) {
+                            download.setPaid(payment.getStatus().equals("OK") && payment.getAmount().floatValue() > 0);
+                        }
 
                         if(!isUpdate){
                             download.setCpiUrl(getIntent().getStringExtra("cpi"));
@@ -1271,6 +1276,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                                     try{
                                         response = httpRequest.execute();
+
                                     } catch (HttpResponseException exception){
 
                                         if(exception.getStatusCode() == 302) {
@@ -1288,7 +1294,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                             }
                                         }else if(exception.getStatusCode() == HttpStatusCodes.STATUS_CODE_OK && exception.getHeaders().containsKey("Refresh")){
 
+                                            String refresh = exception.getHeaders().getFirstHeaderStringValue("Refresh");
 
+                                            if(refresh.contains("url=")){
+                                                clickUrl = refresh.split("=")[1];
+                                            }
 
                                         }
 
@@ -1444,6 +1454,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getAdsRequest.setRepo(repoName);
         getAdsRequest.setPackage_name(package_name);
         getAdsRequest.setLimit(1);
+        getAdsRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getRetryCount() {
+                return 0;
+            }
+
+            @Override
+            public void retry(SpiceException e) {
+
+            }
+
+            @Override
+            public long getDelayBeforeRetry() {
+                return 0;
+            }
+        });
         getAdsRequest.setTimeout(2000);
 
         spiceManager.execute(getAdsRequest, new RequestListener<ApkSuggestionJson>() {

@@ -63,6 +63,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
+import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -253,8 +254,9 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
                        @Override
                        public void onRequestSuccess(GenericResponseV2 responseV2) {
-                           if(responseV2.getStatus().equals("OK")){
+                           if( responseV2.getStatus().equals("OK") ) {
                                pd.dismiss();
+                               manager.removeDataFromCache(GetUserSettingsJson.class, "timeline-status");
                                PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove(Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
                                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
                            }

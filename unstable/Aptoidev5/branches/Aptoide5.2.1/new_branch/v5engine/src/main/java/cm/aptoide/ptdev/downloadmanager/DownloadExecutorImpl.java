@@ -111,14 +111,14 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
     public void execute() {
 
         final Context context = Aptoide.getContext();
-
+        boolean isUpdate = false;
         Database db = new Database(Aptoide.getDb());
         RollBackItem rollBackItem = null;
 
         try {
 
             PackageInfo pkgInfo = context.getPackageManager().getPackageInfo(apk.getApkid(), 0);
-
+            isUpdate = true;
             // Update
             File apkFile = new File(pkgInfo.applicationInfo.sourceDir);
             String md5_sum = AptoideUtils.Algorithms.md5Calc(apkFile);
@@ -156,7 +156,9 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
         }
 
-        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0){
+
+
+        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0 && !isUpdate){
             GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
 
             HashMap<String, String> parameters = new HashMap<String, String>();
@@ -172,7 +174,12 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
+
+
+
+
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
 

@@ -29,12 +29,18 @@ public class TimeLineCommentsDialog extends DialogFragment {
 
     public static final String POSTID = "ID";
     public static final String LIKES = "LIKES";
+    public static final String POSITION = "position";
+    private int position;
 
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.callback = (TimeLineManager) activity;
+    }
+
+
+    public void setCallback(TimeLineManager callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -50,16 +56,19 @@ public class TimeLineCommentsDialog extends DialogFragment {
     private int likesNumber;
 
     public void SetComments(List<ApkInstallComments.Comment> entry){
-        this.lv.setAdapter(new TimelineCommentsAdapter(getActivity(), entry));
+        lv.setAdapter(new TimelineCommentsAdapter(getActivity(), entry));
+        lv.setVisibility(View.VISIBLE);
+
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         setStyle( DialogFragment.STYLE_NORMAL, R.style.TimelineCommentsDialog );
         final Context c = getActivity();
         final View dialogView = LayoutInflater.from(c).inflate(R.layout.dialog_timelinecomments, null);
         id=getArguments().getLong(POSTID);
-
+        position = getArguments().getInt(POSITION);
         likesNumber = Integer.valueOf(getArguments().getString(LIKES));
 
         lv = (ListView) dialogView.findViewById(R.id.TimeLineListView);
@@ -82,7 +91,7 @@ public class TimeLineCommentsDialog extends DialogFragment {
             public void onClick(View v) {
                 if (callback != null) {
                     String s = ((EditText) dialogView.findViewById(R.id.TimeLineCommentEditText)).getText().toString();
-                    callback.commentPost(id, s);
+                    callback.commentPost(id, s, position);
                     callback = null;
                 }
             }
@@ -96,6 +105,7 @@ public class TimeLineCommentsDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        callback.getComments(id);
+        TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
+        parentFragment.getComments(id);
     }
 }

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -83,6 +84,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import cm.aptoide.ptdev.adapters.AptoidePagerAdapter;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
+import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
@@ -146,7 +148,6 @@ public class Start extends ActionBarActivity implements
     private Condition boundCondition = lock.newCondition();
     public ViewPager pager;
     private BadgeView badge;
-    private RepositoryChangeRequest request;
     private HashMap<String, Long> storesIds;
     private int checkServerCacheString;
     private boolean isResumed;
@@ -154,7 +155,9 @@ public class Start extends ActionBarActivity implements
 
     private boolean rabbitMqConnBound;
     RabbitMqService rabbitMqService;
+
     private ServiceConnection rabbitMqConn = new ServiceConnection() {
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             rabbitMqConnBound = true;
@@ -165,6 +168,7 @@ public class Start extends ActionBarActivity implements
         @Override
         public void onServiceDisconnected(ComponentName name) {
             rabbitMqConnBound = false;
+
 
         }
     };
@@ -664,7 +668,7 @@ public class Start extends ActionBarActivity implements
                 }
             }
 
-            request = new RepositoryChangeRequest();
+            RepositoryChangeRequest request = new RepositoryChangeRequest();
             request.setRepos(repos.toString());
             request.setHashes(hashes.toString());
 
@@ -917,6 +921,7 @@ public class Start extends ActionBarActivity implements
 
         final AccountManager manager = AccountManager.get(this);
         final Account[] accountsByType = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
+
         if(accountsByType.length > 0 || "APTOIDE".equals(sharedPreferences.getString("loginType", null))){
 
             new Thread(new Runnable() {
@@ -1320,7 +1325,14 @@ public class Start extends ActionBarActivity implements
             mDrawerList.addHeaderView(header, null, false);
 
             login_email = (TextView) header.findViewById(R.id.login_email);
-            login_email.setText(accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0].name);
+
+            String login_email_text = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", null);
+
+            if(login_email_text == null || login_email_text.equals("NOT_SIGNED_UP")){
+                login_email_text = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0].name;
+            }
+
+            login_email.setText(login_email_text);
 
             user_avatar = (ImageView) header.findViewById(R.id.user_avatar);
             String avatarUrl = PreferenceManager.getDefaultSharedPreferences(mContext).getString("useravatar",null);

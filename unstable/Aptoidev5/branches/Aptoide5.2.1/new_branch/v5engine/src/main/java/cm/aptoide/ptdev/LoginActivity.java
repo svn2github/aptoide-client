@@ -303,7 +303,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 setContentView(R.layout.page_timeline_not_logged_in);
             }
 
-        }else{
+        } else {
             initLogin(savedInstanceState);
         }
 
@@ -712,6 +712,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
     private void finishLogin(Intent intent) {
+
         Log.d("aptoide", TAG + "> finishLogin");
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -728,6 +729,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
+
 
         } else {
             Log.d("aptoide", TAG + "> finishLogin > setPassword");

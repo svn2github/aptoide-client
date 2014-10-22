@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimelineActivity;
+import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -24,8 +25,15 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 public class EndlessWrapperAdapter extends EndlessAdapter {
 
-    public EndlessWrapperAdapter(Context context, ArrayList<TimelineListAPKsJson.UserApk> list) {
-        super(context, new TimelineAdapter(context, list), 0);
+    private final Callback callback;
+
+    public interface Callback{
+        public void runRequest();
+    }
+
+    public EndlessWrapperAdapter(FragmentSocialTimeline.SubFragmentSocialTimeline callback, Context context, ArrayList<TimelineListAPKsJson.UserApk> list) {
+        super(context, new TimelineAdapter(callback, context, list), 0);
+        this.callback = callback;
     }
 
     @Override
@@ -35,7 +43,7 @@ public class EndlessWrapperAdapter extends EndlessAdapter {
 
     @Override
     protected boolean cacheInBackground() throws Exception {
-        ((TimelineActivity)getContext()).runRequest();
+        callback.runRequest();
         return true;
     }
 

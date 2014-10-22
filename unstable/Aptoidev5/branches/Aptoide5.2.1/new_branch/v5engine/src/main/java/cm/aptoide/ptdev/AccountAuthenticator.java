@@ -26,6 +26,10 @@ import cm.aptoide.ptdev.utils.Configs;
 import com.facebook.Session;
 import com.facebook.TokenCachingStrategy;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Arrays;
+
 /**
  * Created by brutus on 09-12-2013.
  */
@@ -53,8 +57,25 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         intent.putExtra(LoginActivity.ARG_OPTIONS_BUNDLE, options);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
+
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+
+        if(!ArrayUtils.isEmpty(requiredFeatures) && ArrayUtils.contains(requiredFeatures, "timelineLogin")){
+
+            String username = options.getString(AccountManager.KEY_ACCOUNT_NAME);
+            String password = options.getString(AccountManager.KEY_PASSWORD);
+            Account account = new Account(username, accountType);
+            AccountManager.get(mContext).addAccountExplicitly(account, password, null);
+            AccountManager.get(mContext).setAuthToken(account, authTokenType, "authtooooken");
+            Bundle data = new Bundle();
+            data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
+            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+
+            response.onResult(data);
+
+        }else{
+            bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        }
 
         return bundle;
     }

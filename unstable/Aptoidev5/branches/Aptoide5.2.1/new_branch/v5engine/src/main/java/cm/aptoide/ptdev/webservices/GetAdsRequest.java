@@ -84,7 +84,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         String oemid = Aptoide.getConfiguration().getExtraId();
 
-        if(!TextUtils.isEmpty(oemid)){
+        if( !TextUtils.isEmpty(oemid) ){
             parameters.put("oemid", oemid);
         }
 

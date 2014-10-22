@@ -18,13 +18,7 @@ import cm.aptoide.ptdev.adapters.CategoryAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import com.commonsware.cwac.merge.MergeAdapter;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 /**
  * Created with IntelliJ IDEA.

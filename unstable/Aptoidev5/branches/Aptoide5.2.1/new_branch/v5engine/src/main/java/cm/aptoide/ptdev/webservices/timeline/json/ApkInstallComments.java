@@ -41,5 +41,12 @@ public class ApkInstallComments extends GenericResponse {
         String timestamp;
         @Key
         boolean owned;
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        @Key
+        String avatar;
     }
 }

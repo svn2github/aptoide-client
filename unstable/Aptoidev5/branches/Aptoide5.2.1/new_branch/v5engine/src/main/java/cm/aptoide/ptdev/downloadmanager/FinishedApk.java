@@ -30,6 +30,7 @@ public class FinishedApk implements Parcelable, Serializable{
     private String referrer;
 
 
+
     public FinishedApk(String name, String apkid, String version, long appHashId, String iconpath, String path, ArrayList<String> permissions) {
         this.name = name;
         this.apkid = apkid;
@@ -94,6 +95,8 @@ public class FinishedApk implements Parcelable, Serializable{
         dest.writeStringList(permissionsList);
         dest.writeString(repoName);
         dest.writeLong(id);
+        dest.writeString(referrer);
+
         Log.d("Aptoide-FinishedApkParcel", "" + path);
 
     }
@@ -119,6 +122,8 @@ public class FinishedApk implements Parcelable, Serializable{
         in.readStringList(permissionsList);
         repoName = in.readString();
         id = in.readLong();
+        referrer = in.readString();
+
 
         Log.d("Aptoide-FinishedApkParceOut", "Path" + path);
 
@@ -168,4 +173,6 @@ public class FinishedApk implements Parcelable, Serializable{
     public void setReferrer(String referrer) {
         this.referrer = referrer;
     }
+
+
 }

@@ -24,7 +24,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
     public AptoidePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
+        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
     }
 
     @Override
@@ -64,6 +64,8 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 return new FragmentUpdates();
             case 3:
+                return new FragmentSocialTimeline();
+            case 4:
                 return new FragmentDownloadManager();
         }
 

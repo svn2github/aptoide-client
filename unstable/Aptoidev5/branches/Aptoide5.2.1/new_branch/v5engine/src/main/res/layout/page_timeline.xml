@@ -60,6 +60,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/timeline_PullToRefresh"
         android:layout_width="fill_parent"
+        android:visibility="gone"
         android:layout_height="fill_parent">
 
         <ListView

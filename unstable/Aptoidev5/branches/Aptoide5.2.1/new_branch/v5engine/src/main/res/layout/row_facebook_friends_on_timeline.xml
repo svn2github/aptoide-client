@@ -17,8 +17,8 @@
         android:layout_margin="3dp"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_centerVertical="true"
-        android:layout_gravity="left|center"
+        android:scaleType="centerInside"
+        android:layout_gravity="center"
         android:src="@drawable/user_default" />
 
 </LinearLayout>

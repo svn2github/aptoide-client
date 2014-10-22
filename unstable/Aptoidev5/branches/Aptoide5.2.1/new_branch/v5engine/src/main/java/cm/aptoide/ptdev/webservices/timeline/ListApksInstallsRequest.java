@@ -12,6 +12,7 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
     private String limit;
     private String offset_id;
     private boolean upwards = false;
+    private long postId;
 
     public void setLimit(String limit) {
         this.limit = limit;
@@ -33,6 +34,9 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
         parameters.put("limit", limit);
         parameters.put("offset_id", offset_id);
         parameters.put("offset_dir", upwards ? "up":"");
+        if(postId>0){
+            parameters.put("post_id", String.valueOf(postId));
+        }
         return parameters;
     }
 
@@ -42,5 +46,9 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
 
     public void setDownwardsDirection() {
         upwards = false;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
     }
 }

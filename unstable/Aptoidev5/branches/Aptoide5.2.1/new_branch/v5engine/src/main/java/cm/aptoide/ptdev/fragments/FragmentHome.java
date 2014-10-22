@@ -233,7 +233,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
 //        Log.d("FragmentHome", "refreshSponsoredList");
 
 
-        manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR,new RequestListener<ApkSuggestionJson>() {
+        manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + recomendedAdapter.getBucketSize(), DurationInMillis.ONE_HOUR, new RequestListener<ApkSuggestionJson>() {
             int nativeAd, googlePlayAd, bannerAd;
 
             @Override

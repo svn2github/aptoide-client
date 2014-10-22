@@ -44,10 +44,10 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
     private final LayoutInflater mInflater;
 
-    public TimelineAdapter(Context context, ArrayList<TimelineListAPKsJson.UserApk> apks) {
+    public TimelineAdapter(TimeLineManager callback, Context context, ArrayList<TimelineListAPKsJson.UserApk> apks) {
         super(context,0,apks);
         mInflater = LayoutInflater.from(context);
-        mTimeLineManager = (TimeLineManager)context;
+        mTimeLineManager = callback;
 
     }
 
@@ -91,7 +91,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         holder.popUpMenu.setText(unhidePost);
 
         if(entry.animate){
-            v.startAnimation(AnimationUtils.loadAnimation((Context)mTimeLineManager, android.R.anim.fade_in));
+            v.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
             entry.animate = false;
         }
 
@@ -189,14 +189,14 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         }
 
         if(entry.animate){
-            v.startAnimation(AnimationUtils.loadAnimation((Context)mTimeLineManager, android.R.anim.fade_in));
+            v.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
             entry.animate = false;
         }
 
         holder.openAppViewLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent((Context) mTimeLineManager, appViewActivityClass);
+                Intent i = new Intent(getContext(), appViewActivityClass);
                 TimelineListAPKsJson.UserApk.APK apk = entry.getApk();
                 i.putExtra("fromRelated", true);
                 i.putExtra("appNameplusversion", apk.getName());
@@ -204,7 +204,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
                 i.putExtra("repoName", apk.getRepo());
                 i.putExtra("md5sum", apk.getMd5sum());
                 i.putExtra("download_from", "timeline");
-                ((Context) mTimeLineManager).startActivity(i);
+                (getContext()).startActivity(i);
             }
         });
 

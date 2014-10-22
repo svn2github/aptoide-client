@@ -3,16 +3,20 @@ package cm.aptoide.ptdev;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.octo.android.robospice.SpiceManager;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -29,17 +33,29 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private TextView friends_using_timeline, join_friends;
     private LinearLayout friends_list;
-    private Button start_timeline;
 
 
     public void setFriends(ListUserFriendsJson friends){
         StringBuilder friendsString;
         int i = 0;
         if(!friends.getFriends().isEmpty()){
-            friendsString = new StringBuilder(friends.getFriends().get(i).getUsername());
-            for(i = 1; i!=friends.getFriends().size() && i < 3; i++){
-                friendsString.append(", ").append(friends.getFriends().get(i).getUsername());
+
+            int j = i;
+
+
+            do {
+                friendsString = new StringBuilder(friends.getFriends().get(j).getUsername());
+                j++;
+            }while (friendsString.length() == 0);
+
+
+            for(i = 1 + j; i!=friends.getFriends().size() && i < 3 + j; i++){
+                String friendName = friends.getFriends().get(i).getUsername();
+                if(!TextUtils.isEmpty(friendName)){
+                    friendsString.append(", ").append(friendName);
+                }
             }
+
             String text;
             text = getString(R.string.facebook_friends_list_using_timeline);
 
@@ -56,21 +72,28 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
             friends_using_timeline.setText(text);
 
+            DisplayImageOptions options = new DisplayImageOptions.Builder().build();
+
             for(ListUserFriendsJson.Friend friend : friends.getFriends()){
                 String avatar = friend.getAvatar();
-                View v = LayoutInflater.from(this).inflate(R.layout.row_facebook_friends_on_timeline, null);
-                ImageView avatarIv = (ImageView) v.findViewById(R.id.user_avatar);
-                ImageLoader.getInstance().displayImage(avatar, avatarIv);
+                final View v = LayoutInflater.from(this).inflate(R.layout.row_facebook_friends_on_timeline, friends_list, false);
+                final ImageView avatarIv = (ImageView) v.findViewById(R.id.user_avatar);
+                ImageLoader.getInstance().displayImage(avatar, avatarIv, options );
                 friends_list.addView(v);
 
             }
+
+            friends_list.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            friends_using_timeline.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            join_friends.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
 
             join_friends.setVisibility(View.VISIBLE);
         }else{
             friends_using_timeline.setText(getString(R.string.facebook_friends_list_using_timeline_empty));
             join_friends.setVisibility(View.GONE);
-
         }
+
+
     }
 
     @Override
@@ -88,7 +111,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 //        lv = (ListView) findViewById(R.id.TimeLineListView);
         friends_list = (LinearLayout) findViewById(R.id.friends_list);
 
-        start_timeline = (Button) findViewById(R.id.start_timeline);
+        Button start_timeline = (Button) findViewById(R.id.start_timeline);
         start_timeline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

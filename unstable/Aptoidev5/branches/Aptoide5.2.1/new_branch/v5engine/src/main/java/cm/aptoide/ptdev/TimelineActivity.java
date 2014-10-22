@@ -24,10 +24,12 @@ import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
@@ -71,7 +73,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
         if (data.isEmpty()) {
             adapter.stopAppending();
-
         } else {
             if (firstId == null) {
                 firstId = data.get(0).getInfo().getId();
@@ -174,7 +175,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
             listAPKsInstallsRequest.setDownwardsDirection();
         }
 
-        manager.execute(listAPKsInstallsRequest, listener);
+        manager.execute(listAPKsInstallsRequest,"timeline-posts-id" + (lastId != null ? lastId.intValue() : ""),DurationInMillis.ONE_HOUR / 2, listener);
     }
 
     public void refreshRequest() {
@@ -185,7 +186,14 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         adapter.notifyDataSetChanged();
         adapter.restartAppending();
 
-        manager.execute(listAPKsInstallsRequest, listenerRefresh);
+        try {
+            manager.removeDataFromCache(TimelineListAPKsJson.class, "timeline-posts-id").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        manager.execute(listAPKsInstallsRequest, "timeline-posts-id" , DurationInMillis.ONE_HOUR / 2, listenerRefresh);
     }
 
 
@@ -230,18 +238,20 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.page_timeline);
         Bundle addAccountOptions = null;
         if (AptoideUtils.isLoggedIn(this)) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))) {
                 GetUserSettingsRequest request = new GetUserSettingsRequest();
                 request.addSetting(GetUserSettingsRequest.TIMELINE);
-                manager.execute(request, new GetUserSettingsRequestListener());
+                manager.execute(request, "timeline-status", DurationInMillis.ONE_HOUR / 2, new GetUserSettingsRequestListener());
                 return;
             } else {
                 addAccountOptions = new Bundle();
                 addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL, true);
             }
         }
+
         if (addAccountOptions == null)
             addAccountOptions = new Bundle();
         addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL, true);
@@ -266,7 +276,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
                             finish();
                         }
 
-
                     }
                 },
                 new Handler(Looper.getMainLooper())
@@ -274,9 +283,13 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     private void init() {
-        adapter = new EndlessWrapperAdapter(this, apks);
+//        adapter = new EndlessWrapperAdapter(new EndlessWrapperAdapter.Callback() {
+//            @Override
+//            public void runRequest() {
+//
+//            }
+//        },this, apks);
         adapter.setRunInBackground(false);
-        setContentView(R.layout.page_timeline);
         mProgressContainer = findViewById(android.R.id.empty);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.timeline_PullToRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -284,7 +297,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
-        setListShown(false, false);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -307,8 +319,6 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lv.addHeaderView(inviteFriends);
         lv.setItemsCanFocus(true);
         lv.setAdapter(adapter);
-
-
 
         //force loading
         adapter.getView(0, null, null);
@@ -432,11 +442,11 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     @Override
-    public void commentPost(long id, String comment) {
+    public void commentPost(long id, String comment, int position) {
         AddUserApkInstallCommentRequest request = new AddUserApkInstallCommentRequest();
         request.setPostId(id);
         request.setComment(comment);
-        manager.execute(request, new SetUserApkInstallCommentsRequestListener());
+        manager.execute(request, new SetUserApkInstallCommentsRequestListener(id, position));
     }
 
     @Override
@@ -454,6 +464,8 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         args.putString(TimeLineCommentsDialog.LIKES, String.valueOf(((TimelineListAPKsJson.UserApk)adapter.getItem(position)).getInfo().getLikes()));
 
         args.putLong(TimeLineCommentsDialog.POSTID, id);
+        args.putInt(TimeLineCommentsDialog.POSITION, position);
+
         TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
         commentsDialog.setArguments(args);
         commentsDialog.show(getSupportFragmentManager(), COMMENTSDIALOGTAG);
@@ -485,12 +497,30 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
     }
 
     public class SetUserApkInstallCommentsRequestListener extends TimelineRequestListener<GenericResponse> {
+        private final long postid;
+        private final int position;
+
+        public SetUserApkInstallCommentsRequestListener(long postid, int position) {
+            this.postid = postid;
+            this.position = position;
+        }
+
         @Override
         protected void caseOK(GenericResponse response) {
 
             if(response.getStatus().equals("OK")){
                 refreshRequest();
                 TimeLineCommentsDialog fragmentByTag = (TimeLineCommentsDialog) getSupportFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
+                listAPKsInstallsRequest = new ListApksInstallsRequest();
+                listAPKsInstallsRequest.setPostId(postid);
+                manager.execute(listAPKsInstallsRequest, new TimelineRequestListener<TimelineListAPKsJson>(){
+                    @Override
+                    protected void caseOK(TimelineListAPKsJson response) {
+                        TimelineListAPKsJson.UserApk apk = response.getUsersapks().get(0);
+                        apks.set(position,apk);
+                        adapter.onDataReady();
+                    }
+                });
                 if(fragmentByTag!=null){
                     fragmentByTag.dismiss();
                 }
