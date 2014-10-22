@@ -105,7 +105,7 @@ import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.pushnotification.CheckTimelineActivityNotification;
+
 import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -1295,6 +1295,8 @@ public class Start extends ActionBarActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         queueName = savedInstanceState.getString("queueName");
     }
+
+
 
     @Override
     protected void onResume() {

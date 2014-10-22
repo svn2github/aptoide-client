@@ -14,8 +14,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
@@ -91,6 +96,10 @@ public class FragmentSignIn extends Fragment {
         spiceManager.shouldStop();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.page_signing_in, container, false);
+    }
 
     public void submit(final LoginActivity.Mode mode, final String username, final String passwordOrToken, final String nameForGoogle) {
 
@@ -127,6 +136,7 @@ public class FragmentSignIn extends Fragment {
                 }
 
                 Toast.makeText(Aptoide.getContext(), error, Toast.LENGTH_SHORT).show();
+                onError();
 
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (pd != null) {
@@ -174,6 +184,7 @@ public class FragmentSignIn extends Fragment {
                 }
 
                 Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                onError();
 
                 android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getFragmentManager().findFragmentByTag("pleaseWaitDialog");
                 if (pd != null) {
@@ -241,6 +252,7 @@ public class FragmentSignIn extends Fragment {
                         } else {
                             message = error.getMsg();
                         }
+                        onError();
 
                         Toast.makeText(Aptoide.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
@@ -249,8 +261,10 @@ public class FragmentSignIn extends Fragment {
         });
     }
 
-
-
+    private void onError() {
+        callback = (Callback) getParentFragment();
+        callback.loginError();
+    }
 
 
     private void finishLogin(Intent intent) {
@@ -294,5 +308,6 @@ public class FragmentSignIn extends Fragment {
 
     public interface Callback{
         public void loginEnded();
+        public void loginError();
     }
 }
