@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -307,7 +306,7 @@ public class TimelineActivity extends ActionBarActivity implements SwipeRefreshL
         lv.setEmptyView(findViewById(R.id.empty));
 
         View inviteFriends = LayoutInflater.from(this).inflate(R.layout.separator_invite_friends, null);
-        TextView invite = (TextView) inviteFriends.findViewById(R.id.timeline_invite);
+        View invite = inviteFriends.findViewById(R.id.timeline_invite);
         TextView new_posts = (TextView) inviteFriends.findViewById(R.id.timeline_new_posts);
         final Context c = this;
         invite.setOnClickListener(new View.OnClickListener() {

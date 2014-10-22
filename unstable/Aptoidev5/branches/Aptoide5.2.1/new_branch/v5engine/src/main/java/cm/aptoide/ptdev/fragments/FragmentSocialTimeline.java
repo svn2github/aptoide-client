@@ -38,6 +38,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.FeedBackActivity;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.TimeLineFriendsInviteActivity;
 import cm.aptoide.ptdev.TimeLineFriendsListActivity;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
@@ -50,7 +51,6 @@ import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
-import cm.aptoide.ptdev.webservices.timeline.GetUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
@@ -523,6 +523,14 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             View inviteFriends = LayoutInflater.from(getActivity()).inflate(R.layout.separator_invite_friends, null);
             getListView().addHeaderView(inviteFriends);
+            View invite = inviteFriends.findViewById(R.id.timeline_invite);
+            final Context c = getActivity();
+            invite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(c, TimeLineFriendsInviteActivity.class));
+                }
+            });
             getListView().setItemsCanFocus(true);
             setListAdapter(adapter);
             setListShown(false);
