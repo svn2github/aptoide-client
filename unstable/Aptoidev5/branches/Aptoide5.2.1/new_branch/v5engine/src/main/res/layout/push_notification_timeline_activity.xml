@@ -17,7 +17,7 @@
         android:layout_marginRight="5dp"
         android:autoLink="all"
         android:scrollbars="vertical"
-        android:text="Your friends installed new apps. Check it now!"
+        android:text="@string/notification_timeline_activity"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white" />
 

@@ -581,27 +581,31 @@
     <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
     <string name="share_on_timeline">Share on Timeline</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
-    <string name="friends_that_use_timeline">Friends Who use Aptoide Timeline</string>
     <string name="and">and</string>
     <string name="more_friends">more</string>
     <string name="hide_post">HIDE</string>
-    <string name="invite_friends">Invite Friends</string>
     <string name="unhide_post">UNHIDE</string>
     <string name="unlike">Unlike</string>
     <string name="comment">Comment</string>
     <string name="hide_post_info">Your friends won\'t see this post</string>
-    <string name="timeline_is_empty">Ohh… none of your Facebook friends has joined the Social Timeline yet. Invite them!</string>
-    <string name="timeline_is_empty_send_email">We’ll send an email to those you choose:</string>
 
-    <string name="wizard_new_timeline">1 - Social Timeline</string>
-    <string name="wizard_new_timeline_description">New on this version! Join Social Timeline</string>
-    <string name="wizard_new_timeline_join">2 - Join Social Timeline</string>
-    <string name="wizard_new_timeline_join_description">You can choose what to share inside Aptoide</string>
-    <string name="wizard_new_timeline_privacy">3 - We respect your privacy</string>
-    <string name="wizard_new_timeline_privacy_description">We never post on Facebook wall</string>
-    <string name="new_string">New!</string>
+    <string name="wizard_new_timeline">1 - New Social Timeline</string>
+    <string name="wizard_new_timeline_description">Share the apps you install with your Facebook friends</string>
+    <string name="wizard_new_timeline_join">2 - How to join Social Timeline</string>
+    <string name="wizard_new_timeline_join_description">Go to tab "Social Timeline" and Login</string>
+    <string name="wizard_new_timeline_privacy">3 - You choose what to share in the Social Timeline</string>
+    <string name="wizard_new_timeline_privacy_description">We respect your privacy</string>
+    <string name="new_feature">New!</string>
     <string name="facebook_private_actions">This app will not post to Facebook</string>
-    <string name="facebook_timeline_new_posts">Your friends are interacting with you: %s new comments and likes</string>
-    <string name="facebook_timeline_activity">Your friends installed new apps. Check it now!</string>
+    <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
+    <string name="notification_timeline_new_posts">You have %s new comments and likes. Check in Social Timeline!</string>
+    <string name="notification_timeline_activity">Your friends installed new apps!</string>
+
+    <string name="timeline_is_empty">Ohh… no friends on Aptoide Social Timeline? Invite them!</string>
+    <string name="invite_friends">Invite Friends</string>
+    <string name="timeline_is_empty_send_email">We’ll send an email to those you choose</string>
+    <string name="facebook_timeline_friends_invited">Friends invited!</string>
+    <string name="friends_that_use_timeline">Friends who already use Aptoide Social Timeline</string>
+    <string name="friends_to_invite">All Facebook friends</string>
 
 </resources>

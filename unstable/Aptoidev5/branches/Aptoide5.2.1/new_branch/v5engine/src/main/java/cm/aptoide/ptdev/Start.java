@@ -102,6 +102,7 @@ import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.pushnotification.CheckTimelineActivityNotification;
 import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -769,8 +770,7 @@ public class Start extends ActionBarActivity implements
                 R.attr.icRollbackDrawable /* index 1 */,
                 R.attr.icScheduledDrawable /* index 2 */,
                 R.attr.icExcludedUpdatesDrawable /* index 3 */,
-                R.attr.icTimelineDrawable /* index 4 */,
-                R.attr.icSettingsDrawable /* index 5 */
+                R.attr.icSettingsDrawable /* index 4 */
         };
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(attrs);
@@ -787,16 +787,16 @@ public class Start extends ActionBarActivity implements
         int excludedUpdatesRes = typedArray.getResourceId(3, R.drawable.ic_action_cancel_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.excluded_updates), excludedUpdatesRes, 3));
 
-        int timelineRes = typedArray.getResourceId(4, R.drawable.ic_action_timeline_dark);
-        MenuListAdapter.Item socialTimelineItem = new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8);
-        if( !Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false) ) {
-            socialTimelineItem.setNew(true);
-        }else{
-            socialTimelineItem.setNew(false);
-        }
-        mItems.add(socialTimelineItem);
+//        int timelineRes = typedArray.getResourceId(4, R.drawable.ic_action_timeline_dark);
+//        MenuListAdapter.Item socialTimelineItem = new MenuListAdapter.Item(getString(R.string.social_timeline), timelineRes, 8);
+//        if( !Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false) ) {
+//            socialTimelineItem.setNew(true);
+//        }else{
+//            socialTimelineItem.setNew(false);
+//        }
+//        mItems.add(socialTimelineItem);
 
-        int settingsRes = typedArray.getResourceId(5, R.drawable.ic_action_settings_dark);
+        int settingsRes = typedArray.getResourceId(4, R.drawable.ic_action_settings_dark);
         mItems.add(new MenuListAdapter.Item(getString(R.string.settings), settingsRes, 7));
 
         mItems.add(new MenuListAdapter.Category(getString(R.string.social_networks)));
@@ -871,8 +871,8 @@ public class Start extends ActionBarActivity implements
         Intent i = new Intent(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
         sendBroadcast(i);
 
-//        Intent timelineActivityNotification = new Intent(CheckTimelineActivityNotification.PUSH_NOTIFICATION_Action_FIRST_TIME);
-//        sendBroadcast(timelineActivityNotification);
+        Intent timelineActivityNotification = new Intent(CheckTimelineActivityNotification.PUSH_NOTIFICATION_Action_FIRST_TIME);
+        sendBroadcast(timelineActivityNotification);
 
         if (sPref.getBoolean("firstrun", true)) {
 
@@ -1240,11 +1240,11 @@ public class Start extends ActionBarActivity implements
                     startActivityForResult(settingsIntent, Settings_REQ_CODE);
                     if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Settings_Drawer_Button");
                     break;
-                case 8:
-                    Intent timelineIntent = new Intent(mContext, TimelineActivity.class);
-                    startActivity(timelineIntent);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Timeline_Drawer_Button");
-                    break;
+//                case 8:
+//                    Intent timelineIntent = new Intent(mContext, TimelineActivity.class);
+//                    startActivity(timelineIntent);
+//                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Timeline_Drawer_Button");
+//                    break;
                 default:
                     break;
             }

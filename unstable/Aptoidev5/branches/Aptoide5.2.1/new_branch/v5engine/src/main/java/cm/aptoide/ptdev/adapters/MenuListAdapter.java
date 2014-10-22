@@ -1,18 +1,13 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.ptdev.Aptoide;
+
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.views.BadgeView;
 
@@ -91,15 +86,15 @@ public class MenuListAdapter extends BaseAdapter {
             tv.setText(((Item) item).mTitle);
             tv.setCompoundDrawablesWithIntrinsicBounds(((Item) item).mIconRes, 0, 0, 0);
 
-            BadgeView badgeView = new BadgeView(context, tv);
-            badgeView.setText(context.getString(R.string.new_string));
-            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-            badgeView.setBadgeBackgroundColor(Color.parseColor("#A4C639"));
-            if(((Item) item).isNew) {
-                badgeView.show(false);
-            }else{
-                badgeView.hide(false);
-            }
+//            BadgeView badgeView = new BadgeView(context, tv);
+//            badgeView.setText(context.getString(R.string.new_feature));
+//            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//            badgeView.setBadgeBackgroundColor(Color.parseColor("#A4C639"));
+//            if(((Item) item).isNew) {
+//                badgeView.show(false);
+//            }else{
+//                badgeView.hide(false);
+//            }
 
         }
 
@@ -121,15 +116,15 @@ public class MenuListAdapter extends BaseAdapter {
         long id;
 
 
-        public void setNew(boolean isNew) {
-            this.isNew = isNew;
-        }
+//        public void setNew(boolean isNew) {
+//            this.isNew = isNew;
+//        }
 
-        public boolean isNew() {
-            return isNew;
-        }
+//        public boolean isNew() {
+//            return isNew;
+//        }
 
-        boolean isNew;
+//        boolean isNew;
 
         public Item(String title, int iconRes, long id) {
             mTitle = title;

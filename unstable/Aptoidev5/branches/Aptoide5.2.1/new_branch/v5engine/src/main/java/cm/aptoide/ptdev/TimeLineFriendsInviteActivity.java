@@ -46,7 +46,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                 manager.execute(request,new TimelineRequestListener<GenericResponse>(){
                     @Override
                     protected void caseOK(GenericResponse response) {
-                        Toast.makeText(c, "Friends invited", Toast.LENGTH_LONG).show();
+                        Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
