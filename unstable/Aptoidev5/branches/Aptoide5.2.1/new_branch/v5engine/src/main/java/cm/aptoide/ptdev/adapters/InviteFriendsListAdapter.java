@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.manuelpeinado.multichoiceadapter.ItemClickInActionModePolicy;
 import com.manuelpeinado.multichoiceadapter.extras.actionbarcompat.MultiChoiceArrayAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -29,6 +30,8 @@ public class InviteFriendsListAdapter extends MultiChoiceArrayAdapter<Friend> {
     public InviteFriendsListAdapter(Bundle savedInstanceState, Context context, ArrayList<Friend> items) {
         super(savedInstanceState, context, 0, items);
         this.ctx = context;
+        setItemClickInActionModePolicy(ItemClickInActionModePolicy.SELECT);
+
     }
 
     boolean allSelected;
@@ -41,8 +44,9 @@ public class InviteFriendsListAdapter extends MultiChoiceArrayAdapter<Friend> {
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-        return false;
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+
+        return true;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class InviteFriendsListAdapter extends MultiChoiceArrayAdapter<Friend> {
 
     @Override
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-        return false;
+        return true;
     }
 
     @Override
