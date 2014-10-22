@@ -15,19 +15,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="15dp"
+            android:padding="10dp"
             android:text="@string/whats_timeline"
             android:textAppearance="?android:textAppearanceMedium"
             android:layout_gravity="center_horizontal" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/facebook_tos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
             android:padding="10dp"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:text="@string/facebook_tos"  />
+            android:text="@string/facebook_tos"
+            android:textAppearance="?android:textAppearanceSmall" />
 
         <TextView
             android:id="@+id/facebook_private_actions"

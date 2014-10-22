@@ -22,9 +22,9 @@
             android:id="@+id/facebook_tos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/facebook_tos"
             android:gravity="left"
-            android:padding="10dp"
-            android:text="@string/facebook_tos" />
+            android:padding="10dp" />
 
         <TextView
             android:id="@+id/facebook_private_actions"

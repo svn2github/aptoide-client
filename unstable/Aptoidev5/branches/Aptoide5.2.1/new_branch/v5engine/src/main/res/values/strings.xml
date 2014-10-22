@@ -600,7 +600,8 @@
     <string name="wizard_new_timeline_privacy">3 - We respect your privacy</string>
     <string name="wizard_new_timeline_privacy_description">We never post on Facebook wall</string>
     <string name="new_string">New!</string>
-    <string name="facebook_private_actions">This does not let the app post to Facebook</string>
-    <string name="new_post">New Posts (%s)</string>
+    <string name="facebook_private_actions">This app will not post to Facebook</string>
+    <string name="facebook_timeline_new_posts">Your friends are interacting with you: %s new comments and likes</string>
+    <string name="facebook_timeline_activity">Your friends installed new apps. Check it now!</string>
 
 </resources>
