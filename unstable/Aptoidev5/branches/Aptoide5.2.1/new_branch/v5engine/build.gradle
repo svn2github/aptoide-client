@@ -53,7 +53,7 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:20.0.0'
 
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.6'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
     compile('com.octo.android.robospice:robospice-google-http-client:1.4.12') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
