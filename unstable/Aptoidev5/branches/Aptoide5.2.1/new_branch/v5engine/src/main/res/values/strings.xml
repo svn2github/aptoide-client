@@ -598,7 +598,7 @@
     <string name="new_feature">New!</string>
     <string name="facebook_private_actions">This app will not post to Facebook</string>
     <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
-    <string name="notification_timeline_new_posts">You have %s new comments and %s likes. Check in Social Timeline!</string>
+    <string name="notification_timeline_new_posts">You have %1$s new comments and %2$s likes. Check in Social Timeline!</string>
     <string name="notification_timeline_activity">Your friends installed new apps!</string>
 
     <string name="timeline_is_empty">Ohh… no friends on Aptoide Social Timeline? Invite them!</string>
