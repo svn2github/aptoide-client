@@ -21,6 +21,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 
+import java.util.List;
+
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.R;
@@ -65,21 +67,23 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
 
     public void setFriends(ListUserFriendsJson friends){
+        List<ListUserFriendsJson.Friend> friendsList = friends.getActiveFriends() ; 
+        
         StringBuilder friendsString;
         int i = 0;
-        if(!friends.getFriends().isEmpty()){
+        if(!friendsList.isEmpty()){
 
             int j = i;
 
 
             do {
-                friendsString = new StringBuilder(friends.getFriends().get(j).getUsername());
+                friendsString = new StringBuilder(friendsList.get(j).getUsername());
                 j++;
             }while (friendsString.length() == 0);
 
 
-            for(i = 1 + j; i!=friends.getFriends().size() && i < 3 + j; i++){
-                String friendName = friends.getFriends().get(i).getUsername();
+            for(i = 1 + j; i!=friendsList.size() && i < 3 + j; i++){
+                String friendName = friendsList.get(i).getUsername();
                 if(!TextUtils.isEmpty(friendName)){
                     friendsString.append(", ").append(friendName);
                 }
@@ -88,13 +92,13 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             String text;
             text = getString(R.string.facebook_friends_list_using_timeline);
 
-            if ( friends.getFriends().size() - i == 0 ){
+            if ( friendsList.size() - i == 0 ){
                 text = friendsString.toString() + " " +text;
 
             }else{
                 text=friendsString.toString()
                         +" "+ getString(R.string.and)
-                        +" "+ String.valueOf(friends.getFriends().size() - i)
+                        +" "+ String.valueOf(friendsList.size() - i)
                         +" "+ getString(R.string.more_friends)
                         +" "+ text;
             }
@@ -103,7 +107,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().build();
 
-            for(ListUserFriendsJson.Friend friend : friends.getFriends()){
+            for(ListUserFriendsJson.Friend friend : friendsList){
                 String avatar = friend.getAvatar();
                 final View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_facebook_friends_on_timeline, friends_list, false);
                 final ImageView avatarIv = (ImageView) v.findViewById(R.id.user_avatar);

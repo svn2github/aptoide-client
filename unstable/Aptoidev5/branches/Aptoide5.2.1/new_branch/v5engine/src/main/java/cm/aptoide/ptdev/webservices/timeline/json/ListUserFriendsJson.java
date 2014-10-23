@@ -10,11 +10,22 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  * Created by asantos on 08-10-2014.
  */
 public class ListUserFriendsJson extends GenericResponse {
-    public ArrayList<Friend> getFriends() {
-        return userfriends;
+    public ArrayList<Friend> getInactiveFriends() {
+        return userfriends.timeline_inactive;
+    }
+    public ArrayList<Friend> getActiveFriends() {
+        return userfriends.timeline_active;
     }
     @Key
-    ArrayList<Friend> userfriends;
+    Friends userfriends;
+
+    public static class Friends{
+        @Key
+        ArrayList<Friend> timeline_inactive;
+        @Key
+        ArrayList<Friend> timeline_active;
+    }
+
 
     public static class Friend {
         public String getUsername() {

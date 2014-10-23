@@ -241,9 +241,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 //            fragment.setTargetFragment(this, 0);
 //            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
 //        }
-
-
-
     }
 
     @Override

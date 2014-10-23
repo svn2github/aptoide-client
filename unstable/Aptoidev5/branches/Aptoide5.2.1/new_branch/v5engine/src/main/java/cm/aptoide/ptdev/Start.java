@@ -100,9 +100,7 @@ import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
-import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-
 import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -870,8 +868,6 @@ public class Start extends ActionBarActivity implements
 
         Intent i = new Intent(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
         sendBroadcast(i);
-
-
 
         if (sPref.getBoolean("firstrun", true)) {
 

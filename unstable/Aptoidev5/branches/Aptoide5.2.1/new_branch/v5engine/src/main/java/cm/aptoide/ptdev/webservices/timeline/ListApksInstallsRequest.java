@@ -5,14 +5,10 @@ import android.preference.PreferenceManager;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
-import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -43,7 +39,7 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
         parameters.put("limit", limit);
         parameters.put("offset_id", offset_id);
-        parameters.put("offset_dir", upwards ? "up":"");
+        //parameters.put("offset_dir", upwards ? "up":"");
         if(postId>0){
             parameters.put("post_id", String.valueOf(postId));
         }

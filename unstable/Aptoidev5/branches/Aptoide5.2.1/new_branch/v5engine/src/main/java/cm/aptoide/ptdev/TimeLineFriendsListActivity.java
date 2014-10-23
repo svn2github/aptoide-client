@@ -3,20 +3,12 @@ package cm.aptoide.ptdev;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.octo.android.robospice.SpiceManager;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -36,7 +28,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
 
 
     public void setFriends(ListUserFriendsJson friends){
-        StringBuilder friendsString;
+/*        StringBuilder friendsString;
         int i = 0;
         if(!friends.getFriends().isEmpty()){
 
@@ -93,7 +85,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
             join_friends.setVisibility(View.GONE);
         }
 
-
+*/
     }
 
     @Override
