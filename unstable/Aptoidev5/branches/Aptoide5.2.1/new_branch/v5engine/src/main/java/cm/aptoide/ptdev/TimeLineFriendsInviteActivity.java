@@ -161,7 +161,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 //            }
 
             String text;
-            text = getString(R.string.facebook_friends_list_using_timeline);
+            text = getString(R.string.friends_that_use_timeline);
 
 //            if ( activeFriendsList.size() - i <= 0 ){
 //                text = friendsString.toString() + " " +text;
