@@ -38,6 +38,7 @@ import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
@@ -220,6 +221,13 @@ public class FragmentSignIn extends Fragment {
                     if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
                         preferences.putString("username", checkUserCredentialsJson.getUsername());
                     }
+
+
+                    if(checkUserCredentialsJson.getSettings() != null ){
+                        boolean timeline = checkUserCredentialsJson.getSettings().getTimeline().equals("active");
+                        preferences.putBoolean(Preferences.TIMELINE_ACEPTED_BOOL, timeline);
+                    }
+
 
                     preferences.putString(Configs.LOGIN_USER_LOGIN, username);
 

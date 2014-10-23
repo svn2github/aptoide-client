@@ -20,7 +20,7 @@
         <FrameLayout
             android:id="@+id/fl_central"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="1dp"
 
             android:layout_weight="1" android:clickable="true"
@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/app_icon_central"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
@@ -38,7 +38,7 @@
         <FrameLayout
             android:id="@+id/fl_row1_left"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
             android:padding="1dp"
@@ -47,8 +47,8 @@
 
         <ImageView
             android:id="@+id/app_icon_row1_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="fitCenter" />
@@ -69,14 +69,14 @@
             android:layout_width="match_parent"
             android:padding="1dp"
 
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" android:clickable="true"
             style="?attr/customRowForegroundHomeLayout">
 
         <ImageView
             android:id="@+id/app_icon_row1_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:background="@drawable/highlight_overlay"
             android:contentDescription="@null"
@@ -85,7 +85,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/fl_row2_left"
             android:padding="1dp"
 
@@ -93,8 +93,8 @@
             style="?attr/customRowForegroundHomeLayout">
         <ImageView
             android:id="@+id/app_icon_row2_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:background="@drawable/highlight_overlay"
             android:contentDescription="@null"
@@ -106,15 +106,14 @@
             android:id="@+id/fl_row2_right"
             android:layout_width="match_parent"
             android:padding="1dp"
-
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" android:clickable="true"
-            style="?attr/customRowForegroundHomeLayout">
+            style="?attr/customRowForegroundHomeLayout" >
 
         <ImageView
             android:id="@+id/app_icon_row2_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/highlight_overlay"
             android:adjustViewBounds="true"
             android:contentDescription="@null"

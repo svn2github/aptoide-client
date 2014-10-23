@@ -1,8 +1,18 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
-import java.util.HashMap;
+import android.preference.PreferenceManager;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimeZone;
+
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -42,6 +52,15 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
 
     public void setUpwardsDirection() {
         upwards = true;
+    }
+
+    @Override
+    public TimelineListAPKsJson loadDataFromNetwork() throws Exception {
+        TimelineListAPKsJson returnJson = super.loadDataFromNetwork();
+
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putLong("timelineTimestamp", DateTime.now(DateTimeZone.forID("UTC")).toDate().getTime()/1000).commit();
+
+        return returnJson;
     }
 
     public void setDownwardsDirection() {

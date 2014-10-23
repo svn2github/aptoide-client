@@ -1,8 +1,16 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -65,18 +73,45 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.Callback, FragmentSocialTimelineLayouts.Callback {
 
 
+    private boolean loginMode;
+    private boolean removeAccount;
+
     public void loginError() {
+        Session session = Session.getActiveSession();
+
+        if (session != null && session.isOpened()) {
+            session.closeAndClearTokenInformation();
+        }
+
         init();
     }
 
     public void loginEnded() {
+
+        if(removeAccount){
+            removeAccount = false;
+        }
+
         startTimeline();
     }
 
     private void startTimeline() {
-        SubFragmentSocialTimeline fragment = new SubFragmentSocialTimeline();
-        //fragment.setTargetFragment(this, 0);
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+
+        if (Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+
+
+
+            SubFragmentSocialTimeline fragment = new SubFragmentSocialTimeline();
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+
+        } else {
+            Fragment fragment = new FragmentSocialTimelineLayouts();
+            Bundle args = new Bundle();
+            args.putBoolean(FragmentSocialTimelineLayouts.LOGGED_IN_ARG, true);
+            fragment.setArguments(args);
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        }
+
     }
 
 
@@ -87,67 +122,46 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         startTimeline();
     }
 
-    public class GetUserSettingsRequestListener extends TimelineRequestListener<GetUserSettingsJson> {
-        @Override
-        protected void caseOK(GetUserSettingsJson response) {
-            if (response.getResults() != null) {
-                boolean serverTimelineActive = response.getResults().getTimeline().equals("active");
-                if (serverTimelineActive) {
-                    startTimeline();
-                } else {
-                    Fragment fragment = new FragmentSocialTimelineLayouts();
-                    Bundle args = new Bundle();
-                    args.putBoolean(FragmentSocialTimelineLayouts.LOGGED_IN_ARG, true);
-                    fragment.setArguments(args);
-                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                }
-            }
-        }
-
-        @Override
-        protected void caseFAIL() {
-            //finish();
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         if(savedInstanceState == null || !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
-            Fragment fragment = null;
             init();
+        }else{
+            loginMode = savedInstanceState.getBoolean("loginMode");
         }
-
-
 
         fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-                if (!AptoideUtils.isLoggedIn(Aptoide.getContext())) {
-                    if (session.isOpened()) {
-                        Toast.makeText(Aptoide.getContext(), "New me request " + state.name(), Toast.LENGTH_LONG).show();
-                        Request.newMeRequest(session, new Request.GraphUserCallback() {
+                if (!AptoideUtils.isLoggedIn(Aptoide.getContext()) || removeAccount ) {
+                    try {
+                        final AccountManager mAccountManager = AccountManager.get(getActivity());
 
-                            @Override
-                            public void onCompleted(GraphUser user, Response response) {
-
-                                try {
-
-                                    Fragment fragment = new FragmentSignIn();
-                                    Bundle args = new Bundle();
-                                    args.putInt(FragmentSignIn.LOGIN_MODE_ARG, LoginActivity.Mode.FACEBOOK.ordinal());
-                                    args.putString(FragmentSignIn.LOGIN_PASSWORD_OR_TOKEN_ARG, session.getAccessToken());
-                                    args.putString(FragmentSignIn.LOGIN_USERNAME_ARG, (String) user.getProperty("email"));
-                                    fragment.setArguments(args);
-                                    //fragment.setTargetFragment(FragmentSocialTimeline.this, 0);
-                                    getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                        if (session.isOpened()) {
+                            Toast.makeText(Aptoide.getContext(), "New me request " + state.name(), Toast.LENGTH_LONG).show();
+                            Request.newMeRequest(session, new Request.GraphUserCallback() {
+                                @Override
+                                public void onCompleted(final GraphUser user, Response response) {
+                                    if (removeAccount && mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                                        mAccountManager.removeAccount(mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], new AccountManagerCallback<Boolean>() {
+                                            @Override
+                                            public void run(AccountManagerFuture<Boolean> future) {
+                                                startLogin(user, session);
+                                            }
+                                        }, new Handler(Looper.getMainLooper()));
+                                    } else {
+                                        startLogin(user, session);
+                                    }
                                 }
-                            }
-                        }).executeAsync();
+                            }).executeAsync();
+
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                        loginError();
                     }
                 }
             }
@@ -158,22 +172,38 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     }
 
+    private void startLogin(GraphUser user, Session session) {
+        try {
+
+            Fragment fragment = new FragmentSignIn();
+            Bundle args = new Bundle();
+            args.putInt(FragmentSignIn.LOGIN_MODE_ARG, LoginActivity.Mode.FACEBOOK.ordinal());
+            args.putString(FragmentSignIn.LOGIN_PASSWORD_OR_TOKEN_ARG, session.getAccessToken());
+            args.putString(FragmentSignIn.LOGIN_USERNAME_ARG, (String) user.getProperty("email"));
+            fragment.setArguments(args);
+            //fragment.setTargetFragment(FragmentSocialTimeline.this, 0);
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void init() {
         Fragment fragment;
         if (AptoideUtils.isLoggedIn(Aptoide.getContext())) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("loginType", null))) {
-                GetUserSettingsRequest request = new GetUserSettingsRequest();
-                request.addSetting(GetUserSettingsRequest.TIMELINE);
-                ((GetStartActivityCallback)getActivity()).getSpiceManager().execute(request, "timeline-status", DurationInMillis.ONE_HOUR / 2, new GetUserSettingsRequestListener());
+                startTimeline();
             } else {
+                loginMode = true;
                 fragment = new FragmentSocialTimelineLayouts();
                 Bundle args = new Bundle();
                 args.putBoolean(FragmentSocialTimelineLayouts.LOGOUT_FIRST_ARG, true);
                 fragment.setArguments(args);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
+                removeAccount = true;
             }
         } else {
+            loginMode = true;
             fragment = new FragmentSocialTimelineLayouts();
             Bundle args = new Bundle();
             args.putBoolean(FragmentSocialTimelineLayouts.LOGOUT_FIRST_ARG, false);
@@ -191,7 +221,15 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onResume() {
         super.onResume();
         fbhelper.onResume();
+
+        if (!loginMode && !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+            init();
+        }
+
+
     }
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -236,6 +274,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         fbhelper.onSaveInstanceState(outState);
+        outState.putBoolean("loginMode", loginMode);
     }
 
     public static class SubFragmentSocialTimeline extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, TimeLineManager, EndlessWrapperAdapter.Callback {
@@ -545,11 +584,13 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                         try {
 
 
-                            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-                            request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-                            request.loadDataFromNetwork();
+                            Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
 
+                            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 30);
+
+                            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
+                            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 30);
 
                             Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
 
@@ -699,8 +740,10 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                     manager.execute(listAPKsInstallsRequest, new TimelineRequestListener<TimelineListAPKsJson>(){
                         @Override
                         protected void caseOK(TimelineListAPKsJson response) {
-                            TimelineListAPKsJson.UserApk apk = response.getUsersapks().get(0);
-                            apks.set(position,apk);
+                            if(!response.getUsersapks().isEmpty()){
+                                TimelineListAPKsJson.UserApk apk = response.getUsersapks().get(0);
+                                apks.set(position,apk);
+                            }
                             adapter.onDataReady();
                         }
                     });

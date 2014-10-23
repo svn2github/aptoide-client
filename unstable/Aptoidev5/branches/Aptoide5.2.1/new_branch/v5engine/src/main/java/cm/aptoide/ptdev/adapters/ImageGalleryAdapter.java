@@ -21,7 +21,8 @@ import cm.aptoide.ptdev.utils.IconSizes;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +186,7 @@ public class ImageGalleryAdapter extends BaseAdapter {
             icon = screenshotToThumb(url.get(position));
         }
 
-		imageLoader.displayImage(icon,(ImageView) v.findViewById(R.id.screenshot_image_item), options, new ImageLoadingListener() {
+		imageLoader.displayImage(icon,(ImageView) v.findViewById(R.id.screenshot_image_item), options, new SimpleImageLoadingListener() {
 
 			@Override
 			public void onLoadingStarted(String uri, View v) {

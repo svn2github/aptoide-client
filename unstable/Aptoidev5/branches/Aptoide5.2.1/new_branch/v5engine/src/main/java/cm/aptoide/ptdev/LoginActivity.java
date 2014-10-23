@@ -60,6 +60,7 @@ import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.RabbitMqService;
@@ -673,6 +674,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     }
 
                     preferences.putString(Configs.LOGIN_USER_LOGIN, username);
+                    if(checkUserCredentialsJson.getSettings() != null ){
+                        boolean timeline = checkUserCredentialsJson.getSettings().getTimeline().equals("active");
+                        preferences.putBoolean(Preferences.TIMELINE_ACEPTED_BOOL, timeline);
+                    }
 
                     preferences.putString("loginType", mode.name());
                     preferences.commit();
@@ -764,6 +769,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
         if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
         ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration(). getAutoUpdatesSyncAdapterAuthority(), true);
+
+
 
     }
 

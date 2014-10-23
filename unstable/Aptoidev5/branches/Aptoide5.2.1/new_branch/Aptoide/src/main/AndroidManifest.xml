@@ -309,6 +309,18 @@
             android:exported="false"
             android:label="Auto-Update Apps" />
 
+        <provider
+            android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline1"
+            android:authorities="cm.aptoide.pt.TimelineActivity"
+            android:exported="false"
+            android:label="Timeline Activity" />
+
+        <provider
+            android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline2"
+            android:authorities="cm.aptoide.pt.TimelinePosts"
+            android:exported="false"
+            android:label="Timeline Posts" />
+
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -328,6 +340,29 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
+
+        <service
+            android:name="cm.aptoide.ptdev.services.TimelinePostsSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/timeline_posts_sync_adapter" />
+        </service>
+
+        <service
+            android:name="cm.aptoide.ptdev.services.TimelineActivitySyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/timeline_activity_sync_adapter" />
+        </service>
+
 
         <service
             android:name="cm.aptoide.ptdev.services.UpdatesSyncService"

@@ -23,8 +23,9 @@ import cm.aptoide.ptdev.ScreenshotsViewer;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -73,7 +74,7 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
         }
 
 
-		imageLoader.displayImage(icon, (ImageView) v.findViewById(R.id.screenshot_image_big), options, new ImageLoadingListener() {
+		imageLoader.displayImage(icon, (ImageView) v.findViewById(R.id.screenshot_image_big), options, new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingStarted(String uri, View view) {

@@ -33,6 +33,11 @@ public class CheckUserCredentialsJson {
     @Key
     private List<Error> errors;
 
+    @Key private Settings settings;
+
+    public Settings getSettings() {
+        return settings;
+    }
 
     public String getStatus() {
         return status;
@@ -71,5 +76,13 @@ public class CheckUserCredentialsJson {
     public void setUsername(String username) { this.username = username; }
 
     public String getRepo() { return repo; }
+
+    public static class Settings {
+        @Key private String timeline;
+
+        public String getTimeline() {
+            return timeline;
+        }
+    }
 
 }

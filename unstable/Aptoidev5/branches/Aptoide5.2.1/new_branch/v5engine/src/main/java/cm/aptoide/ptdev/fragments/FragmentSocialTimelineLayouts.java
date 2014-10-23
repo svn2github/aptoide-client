@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,12 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.LoginButton;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 
+import java.util.concurrent.Executors;
+
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
@@ -151,7 +158,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             join_friends = (TextView) view.findViewById(R.id.join_friends);
             getFriends();
 
-//        lv = (ListView) findViewById(R.id.TimeLineListView);
+//          lv = (ListView) findViewById(R.id.TimeLineListView);
             friends_list = (LinearLayout) view.findViewById(R.id.friends_list);
 
             Button start_timeline = (Button) view.findViewById(R.id.start_timeline);
@@ -159,7 +166,26 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             start_timeline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((Callback)getParentFragment()).onStartTimeline();
+                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                            request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                            try {
+                                request.loadDataFromNetwork();
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((Callback) getParentFragment()).onStartTimeline();
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             });
 

@@ -49,7 +49,8 @@ import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -387,7 +388,7 @@ public abstract class FragmentAppView extends Fragment {
                     }
 
                     mainLayout.addView(cell);
-                    ImageLoader.getInstance().displayImage(imagePath, imageView, options, new ImageLoadingListener() {
+                    ImageLoader.getInstance().displayImage(imagePath, imageView, options, new SimpleImageLoadingListener() {
 
                         @Override
                         public void onLoadingStarted(String uri, View v) {
