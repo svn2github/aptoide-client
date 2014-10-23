@@ -82,7 +82,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             }while (friendsString.length() == 0);
 
 
-            for(i = 1 + j; i!=friendsList.size() && i < 3 + j; i++){
+            for(i = 1 + j; i<friendsList.size() && i < 3 + j; i++){
                 String friendName = friendsList.get(i).getUsername();
                 if(!TextUtils.isEmpty(friendName)){
                     friendsString.append(", ").append(friendName);
@@ -92,7 +92,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             String text;
             text = getString(R.string.facebook_friends_list_using_timeline);
 
-            if ( friendsList.size() - i == 0 ){
+            if ( friendsList.size() - i <= 0 ){
                 text = friendsString.toString() + " " +text;
 
             }else{
