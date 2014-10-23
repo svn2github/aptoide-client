@@ -130,7 +130,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                 j++;
             }while (friendsString.length() == 0);
 
-            for(i = 1 + j; i<activeFriendsList.size() && i < 3 + j; i++){
+            for(i = j; i<activeFriendsList.size() && i < 3 + j; i++){
                 String friendName = activeFriendsList.get(i).getUsername();
                 if(!TextUtils.isEmpty(friendName)){
                     friendsString.append(", ").append(friendName);
