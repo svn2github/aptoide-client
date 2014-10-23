@@ -509,6 +509,18 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             //setContentView(R.layout.page_timeline);
             Bundle addAccountOptions = null;
 
+            if(savedInstanceState == null){
+
+                Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
+
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 30);
+
+                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 30);
+
+
+            }
 
 //            if (AptoideUtils.isLoggedIn(getActivity())) {
 //                if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))) {
@@ -576,6 +588,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             setListShown(false);
             //force loading
             adapter.getView(0, null, null);
+
             if (!Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                     @Override
@@ -584,13 +597,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                         try {
 
 
-                            Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
 
-                            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 30);
-
-                            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
-                            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 30);
 
                             Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
 
