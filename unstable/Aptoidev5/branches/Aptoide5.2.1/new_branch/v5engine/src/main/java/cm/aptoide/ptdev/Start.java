@@ -2,6 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -57,6 +59,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -91,6 +94,7 @@ import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
@@ -173,6 +177,8 @@ public class Start extends ActionBarActivity implements
     private String queueName;
     private boolean refresh;
     private String sponsoredCache;
+    private boolean timelineRefresh;
+    private OnAccountsUpdateListener onAccountsUpdateListener;
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -253,7 +259,9 @@ public class Start extends ActionBarActivity implements
             executorService.shutdownNow();
         }
 
-        if (isFinishing()) stopService(new Intent(this, RabbitMqService.class));
+        AccountManager.get(mContext).removeOnAccountsUpdatedListener(onAccountsUpdateListener);
+
+        if(isFinishing()) stopService(new Intent(this, RabbitMqService.class));
 
 
     }
@@ -484,6 +492,19 @@ public class Start extends ActionBarActivity implements
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
+
+        onAccountsUpdateListener = new OnAccountsUpdateListener() {
+            @Override
+            public void onAccountsUpdated(Account[] accounts) {
+
+                for (int i = 0; i < accounts.length; i++) {
+                    if (Aptoide.getConfiguration().getAccountType().equals(accounts[i].type)) {
+                        initDrawerHeader();
+                    }
+                }
+            }
+        };
+        AccountManager.get(mContext).addOnAccountsUpdatedListener(onAccountsUpdateListener, new Handler(Looper.getMainLooper()), true);
         if (savedInstanceState == null) {
             sponsoredCache = UUID.randomUUID().toString();
 
@@ -537,9 +558,13 @@ public class Start extends ActionBarActivity implements
                 getIntent().removeExtra("newrepo");
             } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
-                pager.setCurrentItem(3);
+                pager.setCurrentItem(4);
                 if (Build.VERSION.SDK_INT >= 10)
                     FlurryAgent.logEvent("Opened_Updates_Notification");
+            }else if(getIntent().hasExtra("fromTimeline")){
+                timelineRefresh = true;
+                pager.setCurrentItem(3);
+                getIntent().removeExtra("fromTimeline");
             }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             queueName = sharedPreferences.getString("queueName", null);
@@ -829,7 +854,6 @@ public class Start extends ActionBarActivity implements
         service.parseEditorsChoice(database, url);
     }
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -853,17 +877,28 @@ public class Start extends ActionBarActivity implements
                     pager.setCurrentItem(1);
 
                 }
-
             }
-
-        } else if (intent.hasExtra("new_updates") && pager != null) {
+        }else if (intent.hasExtra("new_updates") && pager != null) {
             pager.setCurrentItem(2);
-        } else if (intent.hasExtra("fromDownloadNotification") && pager != null) {
+        }else if(intent.hasExtra("fromDownloadNotification") && pager != null){
+            pager.setCurrentItem(4);
+        }else if(intent.hasExtra("fromTimeline") && pager != null){
+            timelineRefresh = true;
             pager.setCurrentItem(3);
         }
 
 
     }
+
+    @Produce
+    public SocialTimelineEvent produceTimelineEvent(){
+        Log.d("ProducingAptoideEvent", "" + timelineRefresh);
+        SocialTimelineEvent socialTimelineEvent = new SocialTimelineEvent(timelineRefresh);
+        timelineRefresh = false;
+        return socialTimelineEvent;
+    }
+
+
 
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -882,7 +917,6 @@ public class Start extends ActionBarActivity implements
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-
 
         } else {
 
@@ -980,7 +1014,6 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public boolean onSearchRequested() {
-
         return super.onSearchRequested();
     }
 
@@ -1032,6 +1065,8 @@ public class Start extends ActionBarActivity implements
             lock.unlock();
         }
     }
+
+
 
     @Override
     protected void onStart() {
@@ -1317,6 +1352,16 @@ public class Start extends ActionBarActivity implements
         }
 
         isResumed = true;
+        initDrawerHeader();
+
+        if(refresh){
+            BusProvider.getInstance().post(new RepoCompleteEvent(0));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-2));
+        }
+    }
+
+    private void initDrawerHeader() {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.setItemsCanFocus(true);
@@ -1362,7 +1407,7 @@ public class Start extends ActionBarActivity implements
         }
         mDrawerList.setAdapter(mMenuAdapter);
 
-        if (refresh) {
+        if(refresh){
             BusProvider.getInstance().post(new RepoCompleteEvent(0));
             BusProvider.getInstance().post(new RepoCompleteEvent(-1));
             BusProvider.getInstance().post(new RepoCompleteEvent(-2));

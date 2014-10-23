@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.webservices.TimelineCheckRequestSync;
@@ -64,18 +65,21 @@ public class TimelinePostsSyncService extends Service  {
 
                 TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("new_installs");
 
-                int total = timelineActivityJson.getNew_installs().getTotal().intValue();
-
                 Intent intent = new Intent(getContext(), Start.class);
+                intent.putExtra("fromTimeline", true);
 
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+                intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 
                 Notification notification = new NotificationCompat.Builder(getContext())
                         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
                         .setContentIntent(resultPendingIntent)
                         .setOngoing(false)
-                        .setContentTitle(getString(R.string.notification_timeline_posts, total))
+                        .setContentTitle(getString(R.string.notification_timeline_posts))
                         .setContentText(getString(R.string.notification_social_timeline)).build();
                 ArrayList<String> avatarLinks = new ArrayList<String>();
 
@@ -85,7 +89,7 @@ public class TimelinePostsSyncService extends Service  {
 
                     if (Build.VERSION.SDK_INT >= 16) {
                         RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
-                        expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_posts, total));
+                        expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_posts));
                         expandedView.removeAllViews(R.id.linearLayout2);
                         for(String avatar: avatarLinks){
                             Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
@@ -98,8 +102,11 @@ public class TimelinePostsSyncService extends Service  {
                     }
 
 
-                    final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    managerNotification.notify(86458, notification);
+                    if(!avatarLinks.isEmpty()){
+                        final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                        managerNotification.notify(86459, notification);
+                    }
+
 
                 }catch (NullPointerException ignored) {}
 

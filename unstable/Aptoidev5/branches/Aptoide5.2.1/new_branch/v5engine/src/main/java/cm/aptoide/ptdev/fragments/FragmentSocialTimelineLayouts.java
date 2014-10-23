@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,11 +21,13 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.List;
 
 import java.util.concurrent.Executors;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -144,7 +147,8 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
     public void getFriends(){
         ListUserFriendsRequest request = new ListUserFriendsRequest();
-        manager.execute(request, new TimelineRequestListener<ListUserFriendsJson>() {
+        String username = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "");
+        manager.execute(request, "facebook-friends-" + username, DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
             @Override
             protected void caseOK(ListUserFriendsJson response) {
                 setFriends((response));
@@ -171,7 +175,6 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             start_timeline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
                     Executors.newSingleThreadExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -180,17 +183,14 @@ public class FragmentSocialTimelineLayouts extends Fragment {
                             request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
                             try {
                                 request.loadDataFromNetwork();
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ((Callback) getParentFragment()).onStartTimeline();
-                                    }
-                                });
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
+                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+                    ((Callback) getParentFragment()).onStartTimeline();
                 }
             });
 

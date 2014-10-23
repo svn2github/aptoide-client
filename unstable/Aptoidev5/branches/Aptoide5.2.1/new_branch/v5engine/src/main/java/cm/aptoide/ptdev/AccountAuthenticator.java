@@ -64,9 +64,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
             String username = options.getString(AccountManager.KEY_ACCOUNT_NAME);
             String password = options.getString(AccountManager.KEY_PASSWORD);
+            String authToken = options.getString(AccountManager.KEY_AUTHTOKEN);
             Account account = new Account(username, accountType);
             AccountManager.get(mContext).addAccountExplicitly(account, password, null);
-            AccountManager.get(mContext).setAuthToken(account, authTokenType, "authtooooken");
+            AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);
             Bundle data = new Bundle();
             data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
             data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);

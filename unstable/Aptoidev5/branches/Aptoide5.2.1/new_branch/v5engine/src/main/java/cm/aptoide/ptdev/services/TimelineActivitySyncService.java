@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
@@ -89,9 +90,13 @@ public class TimelineActivitySyncService extends Service  {
 
 
                 Intent intent = new Intent(getContext(), Start.class);
+                intent.putExtra("fromTimeline", true);
 
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+                intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
 
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(getContext())
                         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
@@ -103,13 +108,14 @@ public class TimelineActivitySyncService extends Service  {
 
                 try {
 
-                    setAvatares(avatarLinks, timelineActivityJson.getOwned_activity().getFriends());
-                    setAvatares(avatarLinks, timelineActivityJson.getRelated_activity().getFriends());
+                    if ( timelineActivityJson.getOwned_activity().getFriends() != null) setAvatares(avatarLinks, timelineActivityJson.getOwned_activity().getFriends());
+                    if ( timelineActivityJson.getRelated_activity().getFriends() != null) setAvatares(avatarLinks, timelineActivityJson.getRelated_activity().getFriends());
 
                     if (Build.VERSION.SDK_INT >= 16) {
                         RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
                         expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_activity, total_comments, total_likes));
                         expandedView.removeAllViews(R.id.linearLayout2);
+
                         for(String avatar: avatarLinks){
                             Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
                             RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
@@ -122,14 +128,13 @@ public class TimelineActivitySyncService extends Service  {
 
 
                     final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    managerNotification.notify(86457, notification);
+                    managerNotification.notify(86458, notification);
 
-                }catch (NullPointerException ignored) {}
+                }catch (NullPointerException ignored) {ignored.printStackTrace();}
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
         }
 

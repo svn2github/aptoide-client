@@ -148,7 +148,21 @@ public class FragmentSignIn extends Fragment {
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
 
-                getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
+
+                if(oAuth.getStatus() != null && oAuth.getStatus().equals("FAIL")){
+
+                    AptoideUtils.toastError(oAuth.getError());
+                    Session session = Session.getActiveSession();
+
+                    if (session != null && session.isOpened()) {
+                        session.closeAndClearTokenInformation();
+                    }
+
+                    onError();
+
+                }else{
+                    getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
+                }
 
             }
         });
@@ -279,6 +293,8 @@ public class FragmentSignIn extends Fragment {
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(AccountManager.KEY_PASSWORD);
+        String token = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         String accountType = Aptoide.getConfiguration().getAccountType();
@@ -287,30 +303,16 @@ public class FragmentSignIn extends Fragment {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
 
+                getActivity().startService(new Intent(getActivity(), RabbitMqService.class));
+                ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
+                ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration(). getAutoUpdatesSyncAdapterAuthority(), true);
+                callback = (Callback) getParentFragment();
+                if(callback!=null) callback.loginEnded();
+
             }
         }, new Handler(Looper.getMainLooper()));
 
-
-
-
-
-        /*
-        ContentResolver wiResolver = getContentResolver();
-        wiResolver.setIsSyncable(account, STUB_PROVIDER_AUTHORITY, 1);
-        wiResolver.setSyncAutomatically(account, STUB_PROVIDER_AUTHORITY, true);
-
-        if(Build.VERSION.SDK_INT >= 8) {
-            wiResolver.addPeriodicSync(account, STUB_PROVIDER_AUTHORITY, new Bundle(), WEB_INSTALL_POLL_FREQUENCY);
-        }
-        */
-
-
-        getActivity().startService(new Intent(getActivity(), RabbitMqService.class));
-        ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), true);
-        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, Aptoide.getConfiguration().getUpdatesSyncAdapterAuthority(), new Bundle(), 43200);
-        ContentResolver.setSyncAutomatically(account, Aptoide.getConfiguration(). getAutoUpdatesSyncAdapterAuthority(), true);
-        callback = (Callback) getParentFragment();
-        if(callback!=null) callback.loginEnded();
 
     }
 

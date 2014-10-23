@@ -594,7 +594,22 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             @Override
             public void onRequestSuccess(final OAuth oAuth) {
 
-                getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
+                if(oAuth.getStatus() != null && oAuth.getStatus().equals("FAIL")){
+
+                    AptoideUtils.toastError(oAuth.getError());
+                    Session session = Session.getActiveSession();
+
+                    if (session != null && session.isOpened()) {
+                        session.closeAndClearTokenInformation();
+                    }
+
+                    if (mPlusClient != null && mPlusClient.isConnected()) {
+                        mPlusClient.clearDefaultAccount();
+                        mPlusClient.disconnect();
+                    }
+                }else{
+                    getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
+                }
 
             }
         });

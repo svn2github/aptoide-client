@@ -2,6 +2,10 @@ package cm.aptoide.ptdev.webservices.json;
 
 import com.google.api.client.util.Key;
 
+import java.util.List;
+
+import cm.aptoide.ptdev.model.Error;
+
 /**
  * Created by rmateus on 01-07-2014.
  */
@@ -17,7 +21,14 @@ public class OAuth {
     private String error_description;
 
     @Key
-    private String error;
+    private List<Error> errors;
+
+    @Key
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
 
     public String getAccess_token() {
         return access_token;
@@ -31,13 +42,11 @@ public class OAuth {
         this.refresh_token = refreshToken;
     }
 
-    public String getError() {
-        return error;
+    public List<Error> getError() {
+        return errors;
     }
 
-    public void setError(String error) {
-        this.error = error;
-    }
+
 
     public String getError_description() {
         return error_description;
