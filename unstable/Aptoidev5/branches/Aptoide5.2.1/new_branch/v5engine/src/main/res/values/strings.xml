@@ -598,7 +598,7 @@
     <string name="new_feature">New!</string>
     <string name="facebook_private_actions">This app will not post to Facebook</string>
     <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
-    <string name="notification_timeline_new_posts">You have %s new comments and likes. Check in Social Timeline!</string>
+    <string name="notification_timeline_new_posts">You have %s new comments and %s likes. Check in Social Timeline!</string>
     <string name="notification_timeline_activity">Your friends installed new apps!</string>
 
     <string name="timeline_is_empty">Ohh… no friends on Aptoide Social Timeline? Invite them!</string>
@@ -606,6 +606,6 @@
     <string name="timeline_is_empty_send_email">We’ll send an email to those you choose</string>
     <string name="facebook_timeline_friends_invited">Friends invited!</string>
     <string name="friends_that_use_timeline">Friends who already use Aptoide Social Timeline</string>
-    <string name="friends_to_invite">All Facebook friends</string>
+    <string name="friends_to_invite">All Facebook friends in Aptoide</string>
 
 </resources>
