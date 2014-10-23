@@ -106,7 +106,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
             protected void caseOK(ListUserFriendsJson response) {
                 adapter = new InviteFriendsListAdapter(savedInstanceState, c, response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
-                final GridView listView = c.getGridView();
+                final ListView listView = c.getListView();
                 adapter.setAdapterView(listView);
                 setFriends(response.getActiveFriends());
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -123,18 +123,8 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         });
 
     }
-//    private ListView getListView() {
-//        return (ListView) findViewById(android.R.id.list);
-//    }
-
-    private GridView getGridView() {
-        return (GridView) findViewById(android.R.id.list);
-    }
-
-    private void selectAll() {
-        for (int i = 0; i < adapter.getCount(); ++i) {
-            adapter.setItemChecked(i, true);
-        }
+    private ListView getListView() {
+        return (ListView) findViewById(android.R.id.list);
     }
 
     @Override
