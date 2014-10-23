@@ -71,7 +71,8 @@ public class FragmentSocialTimelineLayouts extends Fragment {
         
         StringBuilder friendsString;
         int i = 0;
-        if(!friendsList.isEmpty()){
+
+        if(friendsList !=null && !friendsList.isEmpty()){
 
             int j = i;
 

@@ -6,9 +6,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,18 +38,19 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
  */
 public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     private InviteFriendsListAdapter adapter;
-
     private TextView friends_using_timeline;
+    private TextView friends_to_invite;
     private LinearLayout friends_list;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_timeline_invite_friends);
 
-
         friends_list = (LinearLayout) findViewById(R.id.friends_list);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
+        friends_to_invite = (TextView) findViewById(R.id.friends_to_invite);
 
         rebuildList(savedInstanceState);
         View invite =findViewById(R.id.timeline_invite);
@@ -70,6 +74,12 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
             }
         });
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.invite_friends);
+
     }
 
     @Override
@@ -83,7 +93,9 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         super.onStop();
         manager.shouldStop();
     }
+
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+
     private void rebuildList(final Bundle savedInstanceState) {
         final TimeLineFriendsInviteActivity c = this;
         ListUserFriendsRequest request = new ListUserFriendsRequest();
@@ -94,7 +106,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
             protected void caseOK(ListUserFriendsJson response) {
                 adapter = new InviteFriendsListAdapter(savedInstanceState, c, response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
-                final ListView listView = c.getListView();
+                final GridView listView = c.getGridView();
                 adapter.setAdapterView(listView);
                 setFriends(response.getActiveFriends());
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,9 +123,20 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         });
 
     }
-    private ListView getListView() {
-        return (ListView) findViewById(android.R.id.list);
+//    private ListView getListView() {
+//        return (ListView) findViewById(android.R.id.list);
+//    }
+
+    private GridView getGridView() {
+        return (GridView) findViewById(android.R.id.list);
     }
+
+    private void selectAll() {
+        for (int i = 0; i < adapter.getCount(); ++i) {
+            adapter.setItemChecked(i, true);
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         adapter.save(outState);
@@ -123,33 +146,41 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         StringBuilder friendsString;
         int i = 0;
         if(activeFriendsList !=null && !activeFriendsList.isEmpty() ){
-            int j = i;
-
-            do {
-                friendsString = new StringBuilder(activeFriendsList.get(j).getUsername());
-                j++;
-            }while (friendsString.length() == 0);
-
-            for(i = j; i<activeFriendsList.size() && i < 3 + j; i++){
-                String friendName = activeFriendsList.get(i).getUsername();
-                if(!TextUtils.isEmpty(friendName)){
-                    friendsString.append(", ").append(friendName);
-                }
-            }
+//            int j = i;
+//
+//            do {
+//                friendsString = new StringBuilder(activeFriendsList.get(j).getUsername());
+//                j++;
+//            }while (friendsString.length() == 0);
+//
+//           for(i = j; i<activeFriendsList.size() && i < 3 + j; i++){
+//                String friendName = activeFriendsList.get(i).getUsername();
+//                if(!TextUtils.isEmpty(friendName)){
+//                    friendsString.append(", ").append(friendName);
+//                }
+//            }
 
             String text;
             text = getString(R.string.facebook_friends_list_using_timeline);
 
-            if ( activeFriendsList.size() - i <= 0 ){
-                text = friendsString.toString() + " " +text;
-
-            }else{
-                text=friendsString.toString()
-                        +" "+ getString(R.string.and)
-                        +" "+ String.valueOf(activeFriendsList.size() - i)
-                        +" "+ getString(R.string.more_friends)
-                        +" "+ text;
-            }
+//            if ( activeFriendsList.size() - i <= 0 ){
+//                text = friendsString.toString() + " " +text;
+//
+//            }else{
+//                text=friendsString.toString()
+//                        +" "+ getString(R.string.and)
+//                        +" "+ String.valueOf(activeFriendsList.size() - i)
+//                        +" "+ getString(R.string.more_friends)
+//                        +" "+ text;
+//            }
+//
+//            }else{
+//                text=friendsString.toString()
+//                        +" "+ getString(R.string.and)
+//                        +" "+ String.valueOf(activeFriendsList.size() - i)
+//                        +" "+ getString(R.string.more_friends)
+//                        +" "+ text;
+//            }
 
             friends_using_timeline.setText(text);
 
@@ -170,6 +201,21 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
             friends_using_timeline.setText(getString(R.string.facebook_friends_list_using_timeline_empty));
         }
 
-
+        if(adapter.isEmpty()){
+            friends_to_invite.setVisibility(View.GONE);
+        }else{
+            friends_to_invite.setVisibility(View.VISIBLE);
+        }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -209,7 +209,7 @@ public class Wizard {
             TextView title = (TextView) view.findViewById(R.id.title);
             title.setText(getString(R.string.wizard_new_timeline));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_social_timeline);
+            image.setImageResource(R.drawable.wizard_preview_post);
             TextView description = (TextView) view.findViewById(R.id.description);
             description.setText(getString(R.string.wizard_new_timeline_description));
 
@@ -244,7 +244,7 @@ public class Wizard {
             TextView title = (TextView) view.findViewById(R.id.title);
             title.setText(getString(R.string.wizard_new_timeline_join));
             ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_preview_post);
+            image.setImageResource(R.drawable.wizard_social_timeline);
             TextView description = (TextView) view.findViewById(R.id.description);
             description.setText(getString(R.string.wizard_new_timeline_join_description));
         }

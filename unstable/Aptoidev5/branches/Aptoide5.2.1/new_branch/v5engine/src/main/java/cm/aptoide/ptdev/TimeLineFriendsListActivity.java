@@ -93,8 +93,6 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-        CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
-
         setContentView(R.layout.page_timeline_logged_in);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
         join_friends = (TextView) findViewById(R.id.join_friends);

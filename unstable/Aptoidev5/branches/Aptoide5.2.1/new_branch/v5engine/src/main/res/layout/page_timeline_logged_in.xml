@@ -13,16 +13,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             style="?attr/backgroundCard"
-            android:layout_margin="5dp"
-            android:padding="5dp">
+            android:layout_margin="5dp" >
 
             <TextView
                 android:id="@+id/friends_using_timeline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="10dp" />
+                android:gravity="center"  />
 
             <LinearLayout
                 android:id="@+id/friends_list"
@@ -37,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:padding="10dp"
                 android:text="@string/facebook_join_friends"
                 android:visibility="gone" />
         </LinearLayout>

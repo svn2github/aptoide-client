@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,6 +9,7 @@
         android:id="@+id/friends_using_timeline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:padding="10dp" />
@@ -17,25 +18,49 @@
         android:id="@+id/friends_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/friends_using_timeline"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal" />
 
     <TextView
-        android:gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_width="match_parent"
+        android:id="@+id/friends_to_invite"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/invite_friends"
-        android:id="@+id/timeline_invite"
-        android:layout_gravity="right"
-        android:background="@drawable/facebook_btn_default_holo_light"/>
+        android:layout_below="@+id/friends_list"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/friends_to_invite" />
 
-    <ListView
+
+    <GridView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:dividerHeight="1dp"
-        android:fadingEdge="none" />
+        android:layout_height="200dp"
+        android:horizontalSpacing="2dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="2dp"
+        android:layout_below="@+id/friends_to_invite"
+        android:layout_above="@+id/timeline_invite" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/timeline_invite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/facebook_btn_default_holo_light"
+        android:drawableLeft="@drawable/ic_drawable_left_facebook"
+        android:text="@string/invite_friends"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+</RelativeLayout>
