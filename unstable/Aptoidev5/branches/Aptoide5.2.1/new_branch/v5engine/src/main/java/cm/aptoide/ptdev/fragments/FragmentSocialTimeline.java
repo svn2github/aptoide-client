@@ -408,8 +408,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 if(apks.isEmpty()){
                     getListView().removeHeaderView(inviteFriends);
 
-                    //View inviteFriendsEmpty = LayoutInflater.from(getActivity()).inflate(R.layout.page_timeline_no_posts, null);
-                    //getListView().addHeaderView(inviteFriendsEmpty);
+                    View inviteFriendsEmpty = LayoutInflater.from(getActivity()).inflate(R.layout.page_timeline_no_posts, null);
+                    getListView().addHeaderView(inviteFriendsEmpty);
 
                 }
 
