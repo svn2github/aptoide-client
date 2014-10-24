@@ -103,6 +103,7 @@
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsListActivity" />
 
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
+        <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
 
         <activity
             android:name="cm.aptoide.ptdev.Settings"

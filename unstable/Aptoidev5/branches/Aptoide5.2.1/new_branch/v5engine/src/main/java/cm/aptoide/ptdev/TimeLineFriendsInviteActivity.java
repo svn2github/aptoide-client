@@ -1,79 +1,39 @@
 package cm.aptoide.ptdev;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.octo.android.robospice.SpiceManager;
+
+import java.util.List;
+
+import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
+import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
+import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
+import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
+import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
 /**
  * Created by asantos on 20-10-2014.
  */
-
-public class TimeLineFriendsInviteActivity extends ActionBarActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Aptoide.getThemePicker().setAptoideTheme(this);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.page_timeline_no_activity);
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.invite_friends));
-
-
-    }
-
-    public void SendMail(View view) {
-        String subject = getString(R.string.aptoide_timeline);
-        String text;
-
-        String username = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", null);
-        String Invitation= getString(R.string.timeline_email_invitation);
-        String whatIs= getString(R.string.whats_timeline);
-        String TOS= getString(R.string.facebook_tos);
-
-        String howTo= getString(R.string.timeline_email_how_to_join);
-        String step1= getString(R.string.timeline_email_step1) +
-                "<a href=\"http://m.aptoide.com/install.\">"+getString(R.string.install) +" Aptoide</a>";
-        String step2= getString(R.string.timeline_email_step2);
-
-        Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-        emailIntent.setType("message/rfc822");
-
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT,
-                username+"\n"+
-                Invitation+"\n"+
-                whatIs+"\n"+
-                TOS+"\n"+
-                howTo+"\n"+
-                step1+"\n"+
-                step2);
-
-        try {
-            startActivity(emailIntent);
-            finish();
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, R.string.feedback_no_email, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home || i == R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-}
-
-/*
-
 public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     private InviteFriendsListAdapter adapter;
     private TextView friends_using_timeline;
@@ -180,8 +140,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     }
 
     public void setFriends(List<ListUserFriendsJson.Friend> activeFriendsList){
-        Log.d("pois","setF");
-        if(activeFriendsList !=null && !activeFriendsList.isEmpty() ){
+         if(activeFriendsList !=null && !activeFriendsList.isEmpty() ){
             friends_using_timeline.setText(getString(R.string.friends_that_use_timeline));
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().build();
@@ -198,12 +157,10 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
             friends_using_timeline.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
             friends_to_invite.setVisibility(View.VISIBLE);
         }else{
-            Log.d("pois","setF Empty");
             friends_using_timeline.setText(getString(R.string.facebook_friends_list_using_timeline_empty));
             friends_to_invite.setVisibility(View.GONE);
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
@@ -213,6 +170,4 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         }
         return false;
     }
-
 }
-*/
