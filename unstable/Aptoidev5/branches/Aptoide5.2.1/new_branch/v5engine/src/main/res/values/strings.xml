@@ -607,5 +607,10 @@
     <string name="facebook_timeline_friends_invited">Friends invited!</string>
     <string name="friends_that_use_timeline">Friends who already use Aptoide Social Timeline</string>
     <string name="friends_to_invite">All Facebook friends in Aptoide</string>
+    <string name="timeline_is_empty_no_friends">Your Timeline is empty. That's probably because you don't have friends on Aptoide yet or they don't have any posts.</string>
+    <string name="timeline_is_empty_start_invite">Let's start by invite some friends:</string>
 
+    <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account</string>
+    <string name="timeline_empty_send_email">Send them an email to login with their Facebook Account</string>
+    <string name="timeline_empty_send_email_to_friends">Email Friends</string>
 </resources>
