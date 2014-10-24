@@ -17,13 +17,14 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true" />
 
-    <Button android:id="@+id/button_top_stores"
+    <Button
         android:layout_height="wrap_content"
         style="?attr/customButtonColor"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:layout_width="match_parent"
         android:text="@string/timeline_empty_send_email_to_friends"
+        android:onClick="SendMail"
         android:layout_below="@+id/timeline_empty"/>
 
 </RelativeLayout>
