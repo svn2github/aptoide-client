@@ -1,0 +1,37 @@
+
+apply plugin: 'com.android.application'
+
+
+repositories {
+    mavenCentral()
+    maven { url 'http://download.crashlytics.com/maven' }
+
+}
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "20.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+    }
+
+    buildTypes {
+
+    }
+
+
+}
+
+dependencies {
+    compile project (':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+}

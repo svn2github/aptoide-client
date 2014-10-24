@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright (c) 2012 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <View
+            android:id="@+id/view_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/black" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_launcher"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/app_name"
+                android:layout_toEndOf="@+id/app_name" />
+
+            <TextView
+                android:id="@+id/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-thin"
+                android:padding="20dp"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="30dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_search"
+            style="@style/WidgetSearchButton"
+            android:layout_gravity="left|center_vertical"
+            android:drawableRight="@drawable/ic_search"
+            android:gravity="center"
+            android:padding="20dp" />
+
+
+    </FrameLayout>
+
+</FrameLayout>

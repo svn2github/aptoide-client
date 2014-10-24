@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bootconf>
+    <storeconf>
+        <theme>default</theme>
+        <avatar>https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description></description>
+        <view>list</view>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+    </storeconf>
+    <aptoideconf>
+        <partnertype>premium</partnertype>
+        <partnerid>7e27fd6a41b3f8474ff9a6546c8eaf73</partnerid>
+        <marketname>WIT Market</marketname>
+        <defaultstorename>wit-software</defaultstorename>
+        <aptoidetheme>happyblue_dark</aptoidetheme>
+        <splashscreen>http://mirror.apk12.aptoide.com/apks/12/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/wit-software/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk12.aptoide.com/apks/12/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/wit-software/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_wit_software</brand>
+        <searchstores>true</searchstores>
+        <maturecontentswitch>false</maturecontentswitch>
+        <multiplestores>false</multiplestores>
+        <customeditorschoice>true</customeditorschoice>
+        <createshortcut>true</createshortcut>
+        <linkedcomments>true</linkedcomments>
+        <adunitid>1e95aa0e4f8e603d3b46eeac8d2ceef9</adunitid>
+        <splashcolor>#FFFFFFFF</splashcolor>
+    </aptoideconf>
+</bootconf>
