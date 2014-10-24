@@ -130,7 +130,6 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             join_friends.setVisibility(View.GONE);
         }
 
-
     }
 
     @Override

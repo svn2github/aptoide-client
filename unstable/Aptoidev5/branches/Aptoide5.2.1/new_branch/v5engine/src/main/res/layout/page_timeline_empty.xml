@@ -47,7 +47,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true" />
 
-        <Button android:id="@+id/button_top_stores"
+        <Button android:id="@+id/email_friends"
             android:layout_height="wrap_content"
             style="?attr/customButtonColor"
             android:layout_marginRight="30dp"

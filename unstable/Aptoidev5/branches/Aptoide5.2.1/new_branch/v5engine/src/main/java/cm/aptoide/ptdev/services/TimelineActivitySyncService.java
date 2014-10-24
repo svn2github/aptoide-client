@@ -126,9 +126,10 @@ public class TimelineActivitySyncService extends Service  {
                         notification.bigContentView = expandedView;
                     }
 
-
-                    final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    managerNotification.notify(86458, notification);
+                    if(!avatarLinks.isEmpty()) {
+                        final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                        managerNotification.notify(86458, notification);
+                    }
 
                 }catch (NullPointerException ignored) {ignored.printStackTrace();}
 

@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,9 @@ import java.util.List;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
 import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
@@ -49,6 +52,7 @@ public class FragmentFriendsInvite extends Fragment {
     private View layout;
     private View timeline_empty_start_invite;
     private View timeline_empty;
+    private View email_friends;
 
 
     @Override
@@ -61,6 +65,7 @@ public class FragmentFriendsInvite extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         timeline_empty_start_invite = view.findViewById(R.id.timeline_empty_start_invite);
+        email_friends = view.findViewById(R.id.email_friends);
         timeline_empty = view.findViewById(R.id.timeline_empty);
         listView = (ListView) view.findViewById(android.R.id.list);
         layout = view.findViewById(R.id.layout);
@@ -94,7 +99,6 @@ public class FragmentFriendsInvite extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
 
     @Override
@@ -116,7 +120,9 @@ public class FragmentFriendsInvite extends Fragment {
         ListUserFriendsRequest request = new ListUserFriendsRequest();
         request.setOffset(0);
         request.setLimit(150);
-        manager.execute(request, "friendslist" , DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
+
+
+        manager.execute(request, "friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
             @Override
             protected void caseOK(ListUserFriendsJson response) {
 
@@ -129,6 +135,12 @@ public class FragmentFriendsInvite extends Fragment {
 
                 if(response.getInactiveFriends().isEmpty()){
                     layout.setVisibility(View.VISIBLE);
+                    email_friends.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(getActivity(), TimeLineNoFriendsInviteActivity.class));
+                        }
+                    });
                     timeline_empty_start_invite.setVisibility(View.GONE);
                     timeline_empty.setVisibility(View.GONE);
                 }else{
