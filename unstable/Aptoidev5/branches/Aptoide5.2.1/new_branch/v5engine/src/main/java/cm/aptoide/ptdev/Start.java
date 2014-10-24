@@ -95,6 +95,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
+import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
@@ -500,10 +501,13 @@ public class Start extends ActionBarActivity implements
                 for (int i = 0; i < accounts.length; i++) {
                     if (Aptoide.getConfiguration().getAccountType().equals(accounts[i].type)) {
                         initDrawerHeader();
+                        BusProvider.getInstance().post(new SocialTimelineInitEvent(true));
+                        refresh = true;
                     }
                 }
             }
         };
+
         AccountManager.get(mContext).addOnAccountsUpdatedListener(onAccountsUpdateListener, new Handler(Looper.getMainLooper()), true);
         if (savedInstanceState == null) {
             sponsoredCache = UUID.randomUUID().toString();
@@ -1012,6 +1016,13 @@ public class Start extends ActionBarActivity implements
         }
     }
 
+    @Produce
+    public SocialTimelineInitEvent produceInitEvent(){
+        SocialTimelineInitEvent socialTimelineInitEvent = new SocialTimelineInitEvent(refresh);
+        refresh = false;
+        return socialTimelineInitEvent;
+    }
+
     @Override
     public boolean onSearchRequested() {
         return super.onSearchRequested();
@@ -1359,6 +1370,7 @@ public class Start extends ActionBarActivity implements
             BusProvider.getInstance().post(new RepoCompleteEvent(-1));
             BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         }
+
     }
 
     private void initDrawerHeader() {

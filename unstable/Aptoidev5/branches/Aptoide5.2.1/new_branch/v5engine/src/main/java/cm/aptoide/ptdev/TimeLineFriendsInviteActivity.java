@@ -85,14 +85,17 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.page_timeline_invite_friends);
         listView = getListView();
 
         friends_list = (LinearLayout) findViewById(R.id.friends_list);
         friends_using_timeline = (TextView) findViewById(R.id.friends_using_timeline);
         friends_to_invite = (TextView) findViewById(R.id.friends_to_invite);
+
         View footer_friends_to_invite = LayoutInflater.from(this).inflate(R.layout.footer_invite_friends, null);
         listView.addFooterView(footer_friends_to_invite);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);

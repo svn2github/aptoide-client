@@ -610,7 +610,7 @@
     <string name="timeline_is_empty_no_friends">Your Timeline is empty. That\'s probably because you don\'t have friends on Aptoide yet or they don\'t have any posts.</string>
     <string name="timeline_is_empty_start_invite">Let\'s start by invite some friends:</string>
 
-    <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. \n\nSend them an email to login with their Facebook Account </string>
+    <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. Send them an email to login with their Facebook Account </string>
     <string name="timeline_empty_send_email_to_friends">Email Friends</string>
 
     <string name="aptoide_timeline">Aptoide Timeline</string>
