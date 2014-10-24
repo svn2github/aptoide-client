@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,6 +80,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void forceRefresh(SocialTimelineEvent event){
 
         if(event.isRefresh()){
+
+            Toast.makeText(Aptoide.getContext(), "GetChildFragment", Toast.LENGTH_LONG).show();
             Fragment fragmentById = getChildFragmentManager().findFragmentByTag("tag");
             if(fragmentById!=null && fragmentById instanceof SubFragmentSocialTimeline){
                 ((SubFragmentSocialTimeline) fragmentById).forceRefresh();
@@ -150,7 +153,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if(savedInstanceState == null || !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
             init();
         }else{
@@ -216,6 +218,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if (AptoideUtils.isLoggedIn(Aptoide.getContext())) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("loginType", null))) {
                 startTimeline();
+                loginMode = false;
             } else {
                 loginMode = true;
                 fragment = new FragmentSocialTimelineLayouts();
@@ -244,8 +247,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onResume() {
         super.onResume();
         fbhelper.onResume();
-
-
 
         if (!loginMode && !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
             init();
@@ -321,6 +322,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         private boolean serverTimelineActive;
 
         private boolean forceRefresh;
+        private View inviteFriends;
 
         public void forceRefresh() {
             forceRefresh = true;
@@ -390,6 +392,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             // Now return the SwipeRefreshLayout as this fragment's content view
             return mSwipeRefreshLayout;
+
         }
 
         @Override
@@ -397,11 +400,19 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             super.onViewCreated(view, savedInstanceState);
             init();
 
-
         }
 
         public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
             if (data.isEmpty()) {
+
+                if(apks.isEmpty()){
+                    getListView().removeHeaderView(inviteFriends);
+
+                    //View inviteFriendsEmpty = LayoutInflater.from(getActivity()).inflate(R.layout.page_timeline_no_posts, null);
+                    //getListView().addHeaderView(inviteFriendsEmpty);
+
+                }
+
                 adapter.stopAppending();
             } else {
                 if (firstId == null) {
@@ -519,17 +530,30 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             //listAPKsInstallsRequest.setOffset(String.valueOf(firstId.intValue()));
             //listAPKsInstallsRequest.setUpwardsDirection();
+            Log.d("Aptoide", "notifydatasetchanged");
             adapter.notifyDataSetChanged();
+            Log.d("Aptoide", "restartAppending");
             adapter.restartAppending();
 
-            try {
-                manager.removeDataFromCache(TimelineListAPKsJson.class, "timeline-posts-id" + username).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            manager.execute(listAPKsInstallsRequest, "timeline-posts-id" + username , DurationInMillis.ONE_HOUR / 2, listenerRefresh);
+
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        Log.d("Aptoide", "RemovingData from Cache");
+                        manager.removeDataFromCache(TimelineListAPKsJson.class, "timeline-posts-id" + username).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("Aptoide", "Executing request");
+                    manager.execute(listAPKsInstallsRequest, "timeline-posts-id" + username , DurationInMillis.ONE_HOUR / 2, listenerRefresh);
+                }
+            });
+
         }
 
 
@@ -595,8 +619,9 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             adapter.setRunInBackground(false);
             username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "");
 
-            View inviteFriends = LayoutInflater.from(getActivity()).inflate(R.layout.separator_invite_friends, null);
+            inviteFriends = LayoutInflater.from(getActivity()).inflate(R.layout.separator_invite_friends, null);
             getListView().addHeaderView(inviteFriends);
+
             View invite = inviteFriends.findViewById(R.id.timeline_invite);
             final Context c = getActivity();
             invite.setOnClickListener(new View.OnClickListener() {

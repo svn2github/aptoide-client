@@ -96,7 +96,7 @@ public class TimelineActivitySyncService extends Service  {
                 intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_VIEW);
 
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(getContext())
                         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)

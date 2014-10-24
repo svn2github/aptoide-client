@@ -23,11 +23,13 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
@@ -58,13 +60,22 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
                 for(long id : adapter.getCheckedItems()){
-                    Log.d("pois","id:"+id);
-                    Log.d("pois","id:"+adapter.getItem((int)id).getEmail());
                     request.addEmail(adapter.getItem((int)id).getEmail());
                 }
+
+
                 manager.execute(request,new TimelineRequestListener<GenericResponse>(){
+
+                    @Override
+                    protected void caseFAIL() {
+
+                    }
+
                     @Override
                     protected void caseOK(GenericResponse response) {
                         Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
@@ -96,16 +107,19 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
+    ArrayList<ListUserFriendsJson.Friend> friends = new ArrayList<ListUserFriendsJson.Friend>();
     private void rebuildList(final Bundle savedInstanceState) {
         final TimeLineFriendsInviteActivity c = this;
+        adapter = new InviteFriendsListAdapter(savedInstanceState, c, friends);
         ListUserFriendsRequest request = new ListUserFriendsRequest();
         request.setOffset(0);
         request.setLimit(150);
         manager.execute(request, new TimelineRequestListener<ListUserFriendsJson>(){
             @Override
             protected void caseOK(ListUserFriendsJson response) {
-                adapter = new InviteFriendsListAdapter(savedInstanceState, c, response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
+                friends.clear();
+                friends.addAll(response.getInactiveFriends());
                 final ListView listView = c.getListView();
                 adapter.setAdapterView(listView);
                 setFriends(response.getActiveFriends());
