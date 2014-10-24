@@ -20,15 +20,6 @@
             android:layout_gravity="center" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/friends_using_timeline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:padding="10dp" />
-
     <LinearLayout
         style="?attr/backgroundCard"
         android:layout_width="match_parent"

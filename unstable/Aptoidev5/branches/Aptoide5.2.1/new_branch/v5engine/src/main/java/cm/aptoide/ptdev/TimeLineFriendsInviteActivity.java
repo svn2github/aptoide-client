@@ -3,6 +3,7 @@ package cm.aptoide.ptdev;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -140,8 +141,43 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     }
 
     public void setFriends(List<ListUserFriendsJson.Friend> activeFriendsList){
-         if(activeFriendsList !=null && !activeFriendsList.isEmpty() ){
-            friends_using_timeline.setText(getString(R.string.friends_that_use_timeline));
+
+        StringBuilder friendsString;
+        int i = 0;
+
+        if(activeFriendsList !=null && !activeFriendsList.isEmpty()){
+
+            int j = i;
+
+
+            do {
+                friendsString = new StringBuilder(activeFriendsList.get(j).getUsername());
+                j++;
+            }while (friendsString.length() == 0);
+
+
+            for(i = j; i<activeFriendsList.size() && i < 3 + j; i++){
+                String friendName = activeFriendsList.get(i).getUsername();
+                if(!TextUtils.isEmpty(friendName)){
+                    friendsString.append(", ").append(friendName);
+                }
+            }
+
+            String text;
+            text = getString(R.string.facebook_friends_list_using_timeline);
+
+            if ( activeFriendsList.size() - i <= 0 ){
+                text = friendsString.toString() + " " +text;
+
+            }else{
+                text=friendsString.toString()
+                        +" "+ getString(R.string.and)
+                        +" "+ String.valueOf(activeFriendsList.size() - i)
+                        +" "+ getString(R.string.more_friends)
+                        +" "+ text;
+            }
+
+            friends_using_timeline.setText(text);
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().build();
 
