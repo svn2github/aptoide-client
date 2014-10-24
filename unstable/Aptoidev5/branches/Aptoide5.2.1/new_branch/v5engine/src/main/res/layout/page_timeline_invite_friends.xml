@@ -5,62 +5,53 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/friends_using_timeline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:padding="10dp" />
-
     <LinearLayout
-        android:id="@+id/friends_list"
-        android:layout_width="wrap_content"
+        style="?attr/backgroundCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/friends_using_timeline"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal" />
+        android:layout_margin="5dp"
+        android:id="@+id/friends"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/friends_using_timeline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="10dp" />
+        <LinearLayout
+            android:id="@+id/friends_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" />
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/friends_to_invite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/friends_list"
+        android:layout_below="@+id/friends"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/friends_to_invite" />
+        android:text="@string/friends_to_invite"
+        android:visibility="invisible" />
 
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friends_to_invite"
         android:horizontalSpacing="2dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp"
-        android:layout_below="@+id/friends_to_invite"
-        android:layout_above="@+id/timeline_invite" />
+        android:verticalSpacing="2dp" />
 
-    <Button
-        android:id="@+id/timeline_invite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/facebook_btn_default_holo_light"
-        android:drawableLeft="@drawable/ic_drawable_left_facebook"
-        android:text="@string/invite_friends"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
 
 </RelativeLayout>

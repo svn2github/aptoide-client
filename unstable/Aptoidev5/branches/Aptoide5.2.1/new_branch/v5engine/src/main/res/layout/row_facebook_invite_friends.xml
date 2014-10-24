@@ -6,10 +6,11 @@
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 -->
 <com.manuelpeinado.multichoiceadapter.CheckableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:orientation="horizontal">
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:weightSum="1">
 
     <cm.aptoide.ptdev.views.RoundedImageView
         android:id="@+id/user_avatar"
@@ -19,15 +20,18 @@
         android:layout_margin="3dp"
         android:src="@drawable/user_default" />
 
-    <TextView
+    <CheckedTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/username"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:paddingTop="10dip"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:paddingBottom="10dip"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:ellipsize="end"
-        android:gravity="center|left"
-        android:maxLines="1"
-        android:paddingLeft="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:gravity="center_vertical"/>
 
-</com.manuelpeinado.multichoiceadapter.CheckableLinearLayout>
+
+</com.manuelpeinado.multichoiceadapter.CheckableLinearLayout >
