@@ -76,7 +76,7 @@ public class TimelinePostsSyncService extends Service  {
 
 
                 Notification notification = new NotificationCompat.Builder(getContext())
-                        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+                        .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
                         .setContentIntent(resultPendingIntent)
                         .setOngoing(false)
                         .setContentTitle(getString(R.string.notification_timeline_posts))

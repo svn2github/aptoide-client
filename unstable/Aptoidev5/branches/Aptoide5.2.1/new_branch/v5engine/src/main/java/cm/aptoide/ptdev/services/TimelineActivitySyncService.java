@@ -99,7 +99,7 @@ public class TimelineActivitySyncService extends Service  {
                 PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(getContext())
-                        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+                        .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
                         .setContentIntent(resultPendingIntent)
                         .setOngoing(false)
                         .setContentTitle(getString(R.string.notification_timeline_activity, total_comments, total_likes))
