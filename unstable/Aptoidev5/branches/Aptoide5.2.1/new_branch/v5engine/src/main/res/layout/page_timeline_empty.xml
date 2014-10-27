@@ -2,8 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@android:id/empty"
@@ -25,7 +24,7 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"  android:id="@+id/layout_no_friends" android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" android:layout_centerInParent="true">
 
 
         <TextView
@@ -35,9 +34,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/timeline_empty_no_friends_send_email"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true" />
+            android:text="@string/timeline_empty_no_friends_send_email" />
 
         <Button android:id="@+id/email_friends"
             android:layout_height="wrap_content"

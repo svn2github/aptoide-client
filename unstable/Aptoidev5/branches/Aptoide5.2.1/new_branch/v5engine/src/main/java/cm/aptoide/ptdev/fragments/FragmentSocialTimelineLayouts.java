@@ -61,6 +61,8 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     private View timeline_empty;
     private InviteFriendsListAdapter adapter;
     private View layout;
+    private View layout_with_friends;
+    private View loading;
 
 
     public enum State{
@@ -217,12 +219,11 @@ public class FragmentSocialTimelineLayouts extends Fragment {
         request.setOffset(0);
         request.setLimit(150);
 
-
         manager.execute(request, "friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
             @Override
             protected void caseOK(ListUserFriendsJson response) {
 
-
+                loading.setVisibility(View.GONE);
                 adapter = new InviteFriendsListAdapter(getActivity(), response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
@@ -236,11 +237,8 @@ public class FragmentSocialTimelineLayouts extends Fragment {
                             startActivity(new Intent(getActivity(), TimeLineNoFriendsInviteActivity.class));
                         }
                     });
-                    timeline_empty_start_invite.setVisibility(View.GONE);
-                    timeline_empty.setVisibility(View.GONE);
                 }else{
-                    timeline_empty_start_invite.setVisibility(View.VISIBLE);
-                    timeline_empty.setVisibility(View.VISIBLE);
+                    layout_with_friends.setVisibility(View.VISIBLE);
                     listView.setAdapter(adapter);
                 }
 
@@ -250,17 +248,18 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     }
 
     private void showInviteFriends(View view) {
-        timeline_empty_start_invite = view.findViewById(R.id.timeline_empty_start_invite);
+        loading = view.findViewById(android.R.id.empty);
         email_friends = view.findViewById(R.id.email_friends);
-        timeline_empty = view.findViewById(R.id.timeline_empty);
         listView = (ListView) view.findViewById(android.R.id.list);
         layout = view.findViewById(R.id.layout_no_friends);
+        layout_with_friends = view.findViewById(R.id.layout_with_friends);
         View footer_friends_to_invite = LayoutInflater.from(getActivity()).inflate(R.layout.footer_invite_friends, null);
         listView.addFooterView(footer_friends_to_invite);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         rebuildList();
         Button invite = (Button) footer_friends_to_invite.findViewById(R.id.timeline_invite);
         final Context c = getActivity();
+
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,12 +272,12 @@ public class FragmentSocialTimelineLayouts extends Fragment {
                     @Override
                     protected void caseOK(GenericResponse response) {
                         Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
-
                     }
                 });
-
             }
         });
+
+
     }
 
     public interface Callback {

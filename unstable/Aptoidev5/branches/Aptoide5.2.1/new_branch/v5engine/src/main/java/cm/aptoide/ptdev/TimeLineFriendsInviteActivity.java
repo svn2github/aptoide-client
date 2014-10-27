@@ -21,11 +21,13 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.List;
 
 import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
 import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
@@ -109,10 +111,10 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         ListUserFriendsRequest request = new ListUserFriendsRequest();
         request.setOffset(0);
         request.setLimit(150);
-        manager.execute(request, new TimelineRequestListener<ListUserFriendsJson>(){
+        manager.execute(request,"friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR / 2, new TimelineRequestListener<ListUserFriendsJson>(){
             @Override
             protected void caseFAIL() {
-                Toast.makeText(c,R.string.error_occured,Toast.LENGTH_LONG);
+                Toast.makeText(c,R.string.error_occured,Toast.LENGTH_LONG).show();
                 finish();
             }
 

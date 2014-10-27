@@ -50,6 +50,7 @@ import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineFriendsInviteActivity;
 import cm.aptoide.ptdev.TimeLineFriendsListActivity;
+import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -57,6 +58,7 @@ import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.preferences.Preferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
@@ -64,9 +66,11 @@ import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
+import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
+import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -234,6 +238,13 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     private void init() {
         Fragment fragment;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            fragment = new FragmentSdkNotCompatible();
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
+            return;
+        }
+
         if (AptoideUtils.isLoggedIn(Aptoide.getContext())) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("loginType", null))) {
                 startTimeline();
@@ -634,14 +645,45 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             inviteFriends = LayoutInflater.from(getActivity()).inflate(R.layout.separator_invite_friends, null);
             getListView().addHeaderView(inviteFriends);
 
-            View invite = inviteFriends.findViewById(R.id.timeline_invite);
+            final View invite = inviteFriends.findViewById(R.id.timeline_invite);
             final Context c = getActivity();
-            invite.setOnClickListener(new View.OnClickListener() {
+            ListUserFriendsRequest request = new ListUserFriendsRequest();
+            request.setOffset(0);
+            request.setLimit(150);
+            manager.execute(request, "friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR / 2, new RequestListener<ListUserFriendsJson>() {
+
                 @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(c, TimeLineFriendsInviteActivity.class));
+                public void onRequestFailure(SpiceException spiceException) {
+
+                }
+
+                @Override
+                public void onRequestSuccess(ListUserFriendsJson listUserFriendsJson) {
+                    View.OnClickListener onClickListener;
+
+                    if(listUserFriendsJson.getInactiveFriends().isEmpty()){
+                        onClickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(c, TimeLineNoFriendsInviteActivity.class));
+                            }
+                        };
+
+                    }else{
+                        onClickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(c, TimeLineFriendsInviteActivity.class));
+                            }
+                        };
+                    }
+
+                    invite.setOnClickListener(onClickListener);
+
                 }
             });
+
+
             getListView().setItemsCanFocus(true);
             setListAdapter(adapter);
             setListShown(false);

@@ -87,7 +87,6 @@ public class FragmentFriendsInvite extends Fragment {
                     @Override
                     protected void caseOK(GenericResponse response) {
                         Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
-
                     }
                 });
 
