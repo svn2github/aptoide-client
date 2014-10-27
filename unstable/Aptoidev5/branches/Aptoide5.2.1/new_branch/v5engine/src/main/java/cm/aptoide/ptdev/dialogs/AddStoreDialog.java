@@ -340,7 +340,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_dialog_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_Add_Store");
+                FlurryAgent.logEvent("Store_View_Dialog_Clicked_Add_Store");
                 String url = ((EditText)view.findViewById(R.id.edit_store_uri)).getText().toString();
                 if(url!=null&&url.length()>0){
                     get(url, null);
@@ -352,7 +352,7 @@ public class AddStoreDialog extends DialogFragment {
         view.findViewById(R.id.button_top_stores).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Dialog_Clicked_See_Top_Stores");
+                FlurryAgent.logEvent("Store_View_Dialog_Clicked_See_Top_Stores");
                 Uri uri = Uri.parse("http://m.aptoide.com/more/toprepos/q=" + Utils.filters(getActivity()));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 if(isAdded())dismiss();

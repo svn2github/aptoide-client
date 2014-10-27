@@ -63,14 +63,14 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
 
@@ -259,7 +259,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                                     download.setMd5(schDown.getMd5());
                                     downloadService.startDownloadFromJson(getApkInfoJson, schDown.getId(), download);
                                     Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Installed_Apps");
+                                    FlurryAgent.logEvent("Scheduled_Downloads_Installed_Apps");
                                 }
 
 
@@ -278,7 +278,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                     if (scheduledDownloadsHashMap.get(scheduledDownload).checked) {
                         db.deleteScheduledDownload(scheduledDownloadsHashMap.get(scheduledDownload).md5);
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Removed_Apps");
+                        FlurryAgent.logEvent("Scheduled_Downloads_Removed_Apps");
                     }
                 }
                 getSupportLoaderManager().restartLoader(0, null, this);
@@ -287,7 +287,7 @@ public class ScheduledDownloadsActivity extends ActionBarActivity implements Loa
                 toast.show();
             }
         } else if (i == R.id.menu_invert) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Scheduled_Downloads_Inverted_Apps");
+            FlurryAgent.logEvent("Scheduled_Downloads_Inverted_Apps");
             for (Long scheduledDownload : scheduledDownloadsHashMap.keySet()) {
                 scheduledDownloadsHashMap.get(scheduledDownload).checked =
                         !scheduledDownloadsHashMap.get(scheduledDownload).checked;

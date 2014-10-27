@@ -117,7 +117,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                             //Toast.makeText(Aptoide.getContext(), token, Toast.LENGTH_SHORT).show();
                         }
                     });
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Logged_In_With_Google_Plus");
+                    FlurryAgent.logEvent("Logged_In_With_Google_Plus");
 
                 }catch (UserRecoverableAuthException e) {
                     startActivityForResult(e.getIntent(), 90);
@@ -318,7 +318,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         fbButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
+                FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
             }
         });
         fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
@@ -397,12 +397,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     }
                     if (event.getX() > password_box.getWidth() - password_box.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
                         if(showPassword){
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Show_Password");
+                            FlurryAgent.logEvent("Login_Page_Clicked_On_Show_Password");
                             showPassword=false;
                             password_box.setTransformationMethod(null);
                             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
                         }else{
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Hide_Password");
+                            FlurryAgent.logEvent("Login_Page_Clicked_On_Hide_Password");
                             showPassword=true;
                             password_box.setTransformationMethod(new PasswordTransformationMethod());
                             password_box.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
@@ -416,7 +416,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Login_Button");
+                    FlurryAgent.logEvent("Login_Page_Clicked_On_Login_Button");
 
                     String username = ((EditText) findViewById(R.id.username)).getText().toString();
                     String password = ((EditText) findViewById(R.id.password)).getText().toString();
@@ -438,7 +438,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             new_to_aptoide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_New_To_Aptoide_Button");
+                    FlurryAgent.logEvent("Login_Page_Clicked_On_New_To_Aptoide_Button");
                     Intent signup = new Intent(LoginActivity.this, signupClass);
                     startActivityForResult(signup, REQ_SIGNUP);
                 }
@@ -454,7 +454,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Forgot_Password");
+                    FlurryAgent.logEvent("Login_Page_Clicked_On_Forgot_Password");
                     Intent passwordRecovery = new Intent(Intent.ACTION_VIEW, Uri.parse("http://m.aptoide.com/account/password-recovery"));
                     startActivity(passwordRecovery);
                 }
@@ -509,7 +509,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     protected void onStart() {
         super.onStart();
         spiceManager.start(getBaseContext());
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
     }
 
@@ -537,7 +537,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mPlusClient.disconnect();
         }
         spiceManager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override

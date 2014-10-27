@@ -123,7 +123,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
             String ad_type = suggestionJson.getInfo().getAd_type();
             adsParams.put("type", ad_type);
 
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Get_Sponsored_Ad", adsParams);
+            FlurryAgent.logEvent("Get_Sponsored_Ad", adsParams);
 
             if(suggestionJson.getPartner() != null){
 

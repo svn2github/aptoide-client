@@ -63,7 +63,7 @@ public class SignUpActivity extends ActionBarActivity{
             @Override
             public void onClick(View v) {
                 createAccount();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("My_Account_Clicked_On_Sign_Up_Button");
+                FlurryAgent.logEvent("My_Account_Clicked_On_Sign_Up_Button");
             }
         });
 
@@ -90,12 +90,12 @@ public class SignUpActivity extends ActionBarActivity{
                 }
                 if (event.getX() > passBox.getWidth() - passBox.getPaddingRight() - hidePasswordRes.getIntrinsicWidth()) {
                     if(showPassword){
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("My_Account_Clicked_On_Show_Password");
+                        FlurryAgent.logEvent("My_Account_Clicked_On_Show_Password");
                         showPassword=false;
                         passBox.setTransformationMethod(null);
                         passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordRes, null);
                     }else{
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("My_Account_Clicked_On_Hide_Password");
+                        FlurryAgent.logEvent("My_Account_Clicked_On_Hide_Password");
                         showPassword=true;
                         passBox.setTransformationMethod(new PasswordTransformationMethod());
                         passBox.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordRes, null);
@@ -130,14 +130,14 @@ public class SignUpActivity extends ActionBarActivity{
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     public final static String PARAM_USER_PASS = "USER_PASS";

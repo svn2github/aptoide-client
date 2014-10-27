@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -105,6 +106,7 @@ public class TimeLineFriendsListActivity extends ActionBarActivity {
         start_timeline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Join_Social_Timeline");
                 setResult(RESULT_OK);
                 finish();
             }

@@ -78,7 +78,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
 //        holder.overFlow.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Result_Clicked_On_Popup_Install");
+//                FlurryAgent.logEvent("Search_Result_Clicked_On_Popup_Install");
 //                showPopup(v, id);
 //            }
 //        });
@@ -175,7 +175,7 @@ public class SearchAdapter2 extends ArrayAdapter<SearchJson.Results.Apks> {
             if (i == R.id.menu_install) {
                 ((SearchManager)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Result_Installed_From_Popup");
+                FlurryAgent.logEvent("Search_Result_Installed_From_Popup");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

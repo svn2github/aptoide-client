@@ -150,7 +150,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         view.findViewById(R.id.button_add_store).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_Add_Store");
+                FlurryAgent.logEvent("Store_View_Clicked_Add_Store");
                 callback.showAddStoreDialog();
             }
         });
@@ -284,8 +284,8 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         int id = item.getItemId();
 
         if (id == R.id.menu_reload) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Reload_Button");
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(getActivity());
+            FlurryAgent.logEvent("Store_View_Clicked_On_Reload_Button");
+            FlurryAgent.onEndSession(getActivity());
 
             HashSet<Long> longs = new HashSet<Long>();
             for(Long aLong : storeAdapter.getCheckedItems()){
@@ -296,7 +296,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
             return true;
         } else if (id == R.id.menu_discard) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Discard_Button");
+            FlurryAgent.logEvent("Store_View_Clicked_On_Discard_Button");
             HashSet<Long> longs = new HashSet<Long>();
             for(Long aLong : storeAdapter.getCheckedItems()){
                 longs.add(storeAdapter.getItemId(aLong.intValue()));
@@ -305,7 +305,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             removeStores(longs);
             return true;
         } else if( id == R.id.menu_select_all){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Select_All_Button");
+            FlurryAgent.logEvent("Store_View_Clicked_On_Select_All_Button");
             storeAdapter.selectAll();
             return true;
         }
@@ -339,9 +339,9 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             refreshStoresEvent(null);
         }
         if(isMergeStore){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Merged_Stores");
+            FlurryAgent.logEvent("Store_View_Merged_Stores");
         }else{
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Splited_Stores");
+            FlurryAgent.logEvent("Store_View_Splited_Stores");
         }
         getActivity().supportInvalidateOptionsMenu();
     }

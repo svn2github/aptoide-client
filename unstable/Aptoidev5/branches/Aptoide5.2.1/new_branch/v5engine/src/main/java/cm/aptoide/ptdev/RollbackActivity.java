@@ -73,7 +73,7 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
         } else if (i == R.id.home) {
             finish();
         } else if(i == R.id.menu_clear_rollback){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Cleared_Rollback_List");
+            FlurryAgent.logEvent("Rollback_Cleared_Rollback_List");
             new Database(Aptoide.getDb()).deleteRollbackItems();
             getSupportLoaderManager().restartLoader(17, null, this);
         } else if( i == R.id.menu_SendFeedBack){
@@ -139,12 +139,12 @@ public class RollbackActivity extends ActionBarActivity implements LoaderManager
     @Override
     protected void onStart() {
         super.onStart();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 }

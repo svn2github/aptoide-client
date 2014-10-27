@@ -96,7 +96,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
             findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("My_Account_Clicked_On_Logout_Button");
+                    FlurryAgent.logEvent("My_Account_Clicked_On_Logout_Button");
 
                     if (Build.VERSION.SDK_INT >= 8) {
                         Session session = new Session(MyAccountActivity.this);
@@ -146,14 +146,14 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     protected void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= 8) mPlusClient.connect();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (Build.VERSION.SDK_INT >= 8) mPlusClient.disconnect();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     private void addAccount() {

@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -68,6 +70,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Registered_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
                 for(long id : listView.getCheckItemIds()){
                     Log.d("pois","id:"+id);
@@ -95,12 +98,14 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
         manager.start(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        FlurryAgent.onEndSession(this);
         manager.shouldStop();
     }
 

@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
+
 /**
  * Created by asantos on 24-10-2014.
  */
@@ -30,6 +32,8 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
     }
 
     public static void sendMail(Context c){
+        FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends_By_Email");
+
         String subject = c.getString(R.string.aptoide_timeline);
         String html =
                         "   <p><strong>%s</strong></p>\n" +
@@ -76,5 +80,17 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
     }
 }

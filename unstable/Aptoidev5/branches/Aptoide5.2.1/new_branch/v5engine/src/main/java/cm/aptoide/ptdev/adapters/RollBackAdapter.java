@@ -118,7 +118,7 @@ public class RollBackAdapter extends CursorAdapter {
                         args.putString( "icon", icon );
                         fragment.setArguments( args );
                         activity.getSupportFragmentManager().beginTransaction().add(fragment, "uninstall").commit();
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Clicked_On_Uninstall_Button");
+                        FlurryAgent.logEvent("Rollback_Clicked_On_Uninstall_Button");
                         break;
 
                     default:

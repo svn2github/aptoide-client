@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -204,6 +206,12 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             case LOGOUT_FIRST:
                 LoginButton fb_login_button = (LoginButton) view.findViewById(R.id.fb_login_button);
                 fb_login_button.setFragment(getParentFragment());
+                fb_login_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FlurryAgent.logEvent("Social_Timeline_Clicked_On_Login_With_Facebook");
+                    }
+                });
                 break;
         }
 
@@ -259,7 +267,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
                 for(long id : listView.getCheckItemIds()){
                     request.addEmail(adapter.getItem((int) id).getEmail());
@@ -296,6 +304,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
         start_timeline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Join_Social_Timeline");
                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                     @Override
                     public void run() {

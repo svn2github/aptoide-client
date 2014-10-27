@@ -181,9 +181,9 @@ public class Adapter extends BaseAdapter {
                         if(item.getParentId() > -2){
                             i = new Intent(Aptoide.getContext(), Aptoide.getConfiguration().getMoreEditorsChoiceActivityClass());
                             i.putExtra("parentId", item.getParentId());
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Editors_Choice_Button");
+                            FlurryAgent.logEvent("Home_Page_Clicked_On_More_Editors_Choice_Button");
                         }else{
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Top_Apps_Button");
+                            FlurryAgent.logEvent("Home_Page_Clicked_On_More_Top_Apps_Button");
                             i = new Intent(Aptoide.getContext(), MoreTopAppsActivity.class);
                         }
 

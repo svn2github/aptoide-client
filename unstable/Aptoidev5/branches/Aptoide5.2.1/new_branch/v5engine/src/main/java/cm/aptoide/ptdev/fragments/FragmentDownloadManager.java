@@ -184,7 +184,7 @@ public class FragmentDownloadManager extends ListFragment {
                 public void onClick(DialogInterface dialog, int which) {
                     boolean clearApks = ((CheckBox)view.findViewById(R.id.checkbox_clear)).isChecked();
                     service.removeNonActiveDownloads(clearApks);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Cleared_Apks");
+                    FlurryAgent.logEvent("Download_Manager_Cleared_Apks");
                 }
             });
 

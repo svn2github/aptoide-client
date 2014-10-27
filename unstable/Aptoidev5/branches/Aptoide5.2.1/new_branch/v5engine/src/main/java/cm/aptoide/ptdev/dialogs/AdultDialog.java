@@ -106,7 +106,7 @@ public class AdultDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
+                        FlurryAgent.logEvent("Dialog_Adult_Content_Confirmed_More_Than_21_Years_Old");
                         positiveButtonlistener.onClick(dialog,which);
                     }
                 })
@@ -124,7 +124,7 @@ public class AdultDialog extends DialogFragment {
             return dialogAsk21(c, positiveButtonlistener);
         }
         else{
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Adult_Content_Requested_Mature_Content_Pin");
+            FlurryAgent.logEvent("Dialog_Adult_Content_Requested_Mature_Content_Pin");
             return dialogRequestMaturepin(c, positiveButtonlistener);
         }
 

@@ -45,7 +45,7 @@ public class PasswordDialog extends DialogFragment {
                         i.putExtra("password", password);
 
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Added_Private_Store");
+                        FlurryAgent.logEvent("Added_Private_Store");
 
                     }
                 }).create();

@@ -289,7 +289,7 @@ public class Start extends ActionBarActivity implements
 //        } else if ( i == R.id.menu_filter_mature_content){
 //
 //            if (item.isChecked()) {
-//                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
+//                FlurryAgent.logEvent("Menu_Settings_Clicked_On_Show_Adult_Content");
 //                new AdultDialog().show(getSupportFragmentManager(), "adultDialog");
 //            } else {
 //                matureLock();
@@ -1309,7 +1309,7 @@ public class Start extends ActionBarActivity implements
 //                case 8:
 //                    Intent timelineIntent = new Intent(mContext, TimelineActivity.class);
 //                    startActivity(timelineIntent);
-//                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Timeline_Drawer_Button");
+//                    FlurryAgent.logEvent("Clicked_On_Timeline_Drawer_Button");
 //                    break;
                 default:
                     break;

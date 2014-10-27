@@ -106,7 +106,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
+                FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
                 new AdultDialog().show(getFragmentManager(), "adultDialog");
             } else {
                 ((GetStartActivityCallback) getActivity()).matureLock();
@@ -283,7 +283,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                 v.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                        FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                         Intent i = new Intent(getActivity(), appViewClass);
                                         long id = apkSuggestion.getData().getId().longValue();
                                         i.putExtra("id", id);
@@ -853,7 +853,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
             fls[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
+                    FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
                     Intent i = new Intent(getActivity(), appViewClass);
                     long id = ((HomeItem)item).getId();
                     i.putExtra("id", id);

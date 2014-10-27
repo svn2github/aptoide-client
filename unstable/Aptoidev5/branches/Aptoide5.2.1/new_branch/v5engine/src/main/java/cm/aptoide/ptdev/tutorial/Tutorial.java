@@ -113,13 +113,13 @@ public class Tutorial extends ActionBarActivity {
     public void finish() {
 
         if(addDefaultRepo){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Added_Apps_As_Default_Store");
+            FlurryAgent.logEvent("Wizard_Added_Apps_As_Default_Store");
             Intent data = new Intent();
             data.putExtra("addDefaultRepo", true);
             setResult(RESULT_OK, data);
             Log.d("Tutorial-addDefaultRepo","true");
         }else{
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Did_Not_Add_Apps_As_Default_Store");
+            FlurryAgent.logEvent("Wizard_Did_Not_Add_Apps_As_Default_Store");
         }
 
         super.finish();
@@ -134,7 +134,7 @@ public class Tutorial extends ActionBarActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Clicked_On_Back_Button");
+                FlurryAgent.logEvent("Wizard_Clicked_On_Back_Button");
                 if (currentFragment != 0) {
                     changeFragment(--currentFragment);
                 }
@@ -146,7 +146,7 @@ public class Tutorial extends ActionBarActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Clicked_On_Next_Button");
+                FlurryAgent.logEvent("Wizard_Clicked_On_Next_Button");
                 if (currentFragment != lastFragment) {
                     changeFragment(++currentFragment);
                 }else{
@@ -230,7 +230,7 @@ public class Tutorial extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.menu_skip) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Wizard_Skipped_Initial_Wizard");
+            FlurryAgent.logEvent("Wizard_Skipped_Initial_Wizard");
 
             if (currentFragment == lastFragment) {
                 getFragmentsActions();

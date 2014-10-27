@@ -178,7 +178,7 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         int id = item.getItemId();
 
         if (id == R.id.menu_rollback) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Rollback_Button");
+            FlurryAgent.logEvent("Updates_Page_Clicked_On_Rollback_Button");
             Intent i = new Intent(getActivity(), RollbackActivity.class);
             startActivity(i);
         }
@@ -281,13 +281,13 @@ public class FragmentUpdates extends ListFragment implements LoaderManager.Loade
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int i = item.getItemId();
         if (i == R.id.menu_ignore_update) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Ignore_Update_Context_Menu");
+            FlurryAgent.logEvent("Updates_Page_Clicked_On_Ignore_Update_Context_Menu");
             db.addToExcludeUpdate(info.id);
             //Toast.makeText(getActivity(), "Ignoring update...", Toast.LENGTH_LONG).show();
             refreshStoresEvent(null);
             return true;
         } else if (i == R.id.menu_discard) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Uninstall_Context_Menu");
+            FlurryAgent.logEvent("Updates_Page_Clicked_On_Uninstall_Context_Menu");
             UninstallRetainFragment uninstallRetainFragment = new UninstallRetainFragment();
             Bundle arg = new Bundle(  );
             arg.putLong( "id", info.id );

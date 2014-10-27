@@ -121,7 +121,7 @@ public class CategoryAdapter extends CursorAdapter {
                 holder.overFlow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_Category_List_View_Opened_Popup_Install");
+                        FlurryAgent.logEvent("Store_Category_List_View_Opened_Popup_Install");
                         showPopup(v, id);
                     }
                 });
@@ -247,7 +247,7 @@ public class CategoryAdapter extends CursorAdapter {
             if (i == R.id.menu_install) {
                 ((CategoryCallback)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_Category_List_View_Installed_App");
+                FlurryAgent.logEvent("Store_Category_List_View_Installed_App");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

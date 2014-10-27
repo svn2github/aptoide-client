@@ -26,7 +26,7 @@ public class UninstallHelper {
         if (!package_name.equals(context.getPackageName())) {
             if (isDowngrade) {
                 context.startActivityForResult(intent, AppViewActivity.DOWGRADE_REQUEST_CODE);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Rollback_Downgraded_App");
+                FlurryAgent.logEvent("Rollback_Downgraded_App");
 
             } else {
                 context.startActivity(intent);

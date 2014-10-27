@@ -168,7 +168,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     protected void onStart() {
         super.onStart();
         BusProvider.getInstance().register(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
     }
 
@@ -176,7 +176,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     protected void onStop() {
         super.onStop();
         BusProvider.getInstance().unregister(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -234,39 +234,39 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             finish();
         } else if( i == R.id.refresh_store){
             refreshList();
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Refresh_Button");
+            FlurryAgent.logEvent("Store_View_Clicked_On_Refresh_Button");
         }else if( i == R.id.menu_SendFeedBack){
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Clicked_On_Feedback_Button");
+            FlurryAgent.logEvent("Store_View_Clicked_On_Feedback_Button");
         }
         else {
             if (i == R.id.nameAZ) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_AZ");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_AZ");
                 sort = Sort.NAMEAZ;
                 setSort(item);
             } else if (i == R.id.nameZA) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_ZA");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Name_ZA");
                 sort = Sort.NAMEZA;
                 setSort(item);
             } else if (i == R.id.date) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Date");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Date");
                 sort = Sort.DATE;
                 setSort(item);
             } else if (i == R.id.download) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Downloads");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Downloads");
                 sort = Sort.DOWNLOADS;
                 setSort(item);
             } else if (i == R.id.rating) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Rating");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Rating");
                 sort = Sort.RATING;
                 setSort(item);
             } else if (i == R.id.price) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Price");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Price");
                 sort = Sort.PRICE;
                 setSort(item);
             } else if (i == R.id.show_all) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Store_View_Sorted_Apps_By_All_Applications");
+                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_All_Applications");
                 categories = !categories;
                 getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 setSort(item);

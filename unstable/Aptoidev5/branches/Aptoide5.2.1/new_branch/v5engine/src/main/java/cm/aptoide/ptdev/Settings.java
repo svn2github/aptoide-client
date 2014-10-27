@@ -199,7 +199,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             public boolean onPreferenceClick(Preference preference) {
                 SettingsResult();
                 if(!((CheckBoxPreference)preference).isChecked()){
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
+                    FlurryAgent.logEvent("Setting_Do_Not_Filter_Incompatible_Updates");
                 }
                 return true;
             }
@@ -212,7 +212,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
 					new DeleteDir().execute(new File(icon_path));
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Cleared_Cache");
+                    FlurryAgent.logEvent("Setting_Cleared_Cache");
                 }
 
 				return false;
@@ -224,7 +224,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
                     new DeleteDir().execute(new File(aptoide_path));
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Removed_Data_And_Configurations");
+                    FlurryAgent.logEvent("Setting_Removed_Data_And_Configurations");
                 }
 
 				return false;
@@ -237,6 +237,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    FlurryAgent.logEvent("Settings_Disabled_Social_Timeline");
                     final ProgressDialog pd;
 
                     pd = new ProgressDialog(mctx);
@@ -282,7 +283,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         findPreference("theme").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Changed_Application_Theme");
+                FlurryAgent.logEvent("Setting_Changed_Application_Theme");
                 Toast.makeText(Settings.this, getString(R.string.restart_aptoide), Toast.LENGTH_LONG).show();
                 return true;
             }
@@ -305,7 +306,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 					.setCancelable(false)
 					.setNeutralButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_Dialog_Hardware_Filters");
+                            FlurryAgent.logEvent("Setting_Opened_Dialog_Hardware_Filters");
                         }
                     });
 				AlertDialog alertDialog = alertDialogBuilder.create();
@@ -332,7 +333,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				((EditTextPreference) preference).getEditText().setText(PreferenceManager.getDefaultSharedPreferences(mctx).getString("maxFileCache","200"));
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Added_Max_File_Cache");
+                FlurryAgent.logEvent("Setting_Added_Max_File_Cache");
                 return false;
 			}
 		});
@@ -360,7 +361,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 aboutDialog.setCancelable(false);
                 aboutDialog.setButton(Dialog.BUTTON_NEUTRAL, getString(android.R.string.ok), new Dialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
+                        FlurryAgent.logEvent("Setting_Opened_About_Us_Dialog");
                         dialog.cancel();
                     }
                 });
@@ -396,7 +397,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(isSetingPIN) {
-            Log.d("PINTEST","is Setting adult pin");
+//            Log.d("PINTEST","is Setting adult pin");
             DialogSetAdultpin(mp).show();
         }
 
@@ -543,13 +544,13 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     protected void onStart() {
         super.onStart();
         manager.start(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         manager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 }

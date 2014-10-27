@@ -256,7 +256,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             overflow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Opened_Popup_Menu");
+                    FlurryAgent.logEvent("Home_Page_Opened_Popup_Menu");
                     showPopup(v, item.getId());
                 }
             });
@@ -382,7 +382,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     context.getTheme().resolveAttribute( R.attr.icCollapseDrawable, outValue, true );
                     iv.setImageResource(outValue.resourceId);
                     collection.setExpanded2(true);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("More_Editors_Choice_Expanded_Apps");
+                    FlurryAgent.logEvent("More_Editors_Choice_Expanded_Apps");
                 }else{
                     mMarginEnd = (int) ((190)*density) - maxMargin;
                     mMarginStart = 0;
@@ -390,7 +390,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
                     context.getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
                     iv.setImageResource(outValue.resourceId);
                     collection.setExpanded2(false);
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("More_Editors_Choice_Collapsed_Apps");
+                    FlurryAgent.logEvent("More_Editors_Choice_Collapsed_Apps");
                 }
 
                 mWasEndedAlready = false;
@@ -467,7 +467,7 @@ public class HomeLayoutAdapter extends BaseAdapter {
             if (i == R.id.menu_install) {
                 ((DownloadInterface)context).installApp(id);
                 Toast.makeText(context, context.getString(R.string.starting_download), Toast.LENGTH_LONG).show();
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
+                FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
                 return true;
             } else if (i == R.id.menu_schedule) {
                 return true;

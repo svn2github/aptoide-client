@@ -250,7 +250,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         public void onClick(View v) {
 
                             if (service != null) {
-                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Canceled_Download");
+                                FlurryAgent.logEvent("App_View_Canceled_Download");
                                 service.stopDownload(downloadId);
                             }
 
@@ -302,7 +302,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             badge_layout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Badge_Dialog");
+                                    FlurryAgent.logEvent("App_View_Clicked_On_Badge_Dialog");
                                     AptoideDialog.badgeDialog(name, getApkInfoJson.getMalware().getStatus()).show(getSupportFragmentManager(), "badgeDialog");
 
                                 }
@@ -422,7 +422,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             latestVersion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Get_Latest");
+                    FlurryAgent.logEvent("App_View_Clicked_On_Get_Latest");
                     String url = json.getLatest();
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     url = url.replaceAll(" ", "%20");
@@ -582,10 +582,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
         btinstallshare.setVisibility(setShareButtonVisible ? View.VISIBLE : View.GONE);
         btinstallshare.setChecked(Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
+        final Map<String, String> shareTimelineParams = new HashMap<String, String>();
         btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                shareTimelineParams.put("Share_Timeline", ""+isChecked);
+                FlurryAgent.logEvent("App_View_Shared_On_Social_Timeline", shareTimelineParams);
                 Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, isChecked);
             }
         });
@@ -647,7 +649,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     public DialogInterface.OnClickListener getMyAppListener() {
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_From_My_App");
+        FlurryAgent.logEvent("App_View_Opened_From_My_App");
         return new InstallListener(icon, name, versionName, package_name, md5);
     }
 
@@ -921,7 +923,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             installParams.put("Package_Name", package_name);
             installParams.put("Name", name);
             installParams.put("Version_Name", versionName);
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
+            FlurryAgent.logEvent("Clicked_On_Downgrade_Button", installParams);
         }
     }
 
@@ -1102,7 +1104,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onStart() {
         super.onStart();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
     }
 
@@ -1144,7 +1146,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onStop() {
         super.onStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -1191,7 +1193,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if(downloadFrom!=null){
                 Map<String, String> downloadParams = new HashMap<String, String>();
                 downloadParams.put("App_Opened_From", downloadFrom);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
+                FlurryAgent.logEvent("App_View_Opened_From", downloadParams);
             }
 
         }
@@ -1491,7 +1493,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
                         adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+                        FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         customAdBannerView.setVisibility(View.VISIBLE);
                         ImageView iconbackground = (ImageView) customAdBannerView.findViewById(R.id.app_icon_background);
@@ -1506,7 +1508,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         customAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                 Intent i = new Intent(AppViewActivity.this, appViewClass);
                                 long id = appSuggested.getData().getId().longValue();
                                 i.putExtra("id", id);
@@ -1538,7 +1540,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:googleplay")) {
                         adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+                        FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         urlAdBannerView.setVisibility(View.VISIBLE);
                         ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
@@ -1584,7 +1586,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:banner")) {
                         adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+                        FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
 
                         urlAdBannerView.setVisibility(View.VISIBLE);
                         ImageView banner = (ImageView) urlAdBannerView.findViewById(R.id.app_ad_banner);
@@ -1620,22 +1622,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("type", "mopub");
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Load_Publicity", map);
+        FlurryAgent.logEvent("AppView_Load_Publicity", map);
 
         ((MoPubView) publicityView).setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
             public void onBannerLoaded(MoPubView banner) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
+                FlurryAgent.logEvent("AppView_Loaded_MoPub_Ad");
             }
 
             @Override
             public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Failed_MoPub_Ad");
+                FlurryAgent.logEvent("AppView_Failed_MoPub_Ad");
             }
 
             @Override
             public void onBannerClicked(MoPubView banner) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_MoPub_Ad");
+                FlurryAgent.logEvent("AppView_Clicked_MoPub_Ad");
             }
 
             @Override
@@ -1675,12 +1677,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         if (i == android.R.id.home || i == R.id.home) {
             finish();
         } else if (i == R.id.menu_schedule) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Schedule_Download_Button");
+            FlurryAgent.logEvent("App_View_Clicked_On_Schedule_Download_Button");
 
             new Database(Aptoide.getDb()).scheduledDownloadIfMd5(package_name, md5, versionName, repoName, name, icon);
 
         } else if (i == R.id.menu_uninstall) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Uninstall_Button");
+            FlurryAgent.logEvent("App_View_Clicked_On_Uninstall_Button");
 
             Fragment uninstallFragment = new UninstallRetainFragment();
             Bundle args = new Bundle(  );
@@ -1693,7 +1695,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             getSupportFragmentManager().beginTransaction().add(uninstallFragment, "uninstallFrag").commit();
 
         } else if (i == R.id.menu_search_other) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Search_Other_Market_Button");
+            FlurryAgent.logEvent("App_View_Clicked_On_Search_Other_Market_Button");
             Intent intent = new Intent();
             intent.setAction(android.content.Intent.ACTION_VIEW);
             intent.setData(Uri.parse("market://details?id=" + package_name));
@@ -1707,7 +1709,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
         } else if (i == R.id.menu_share) {
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Share_Button");
+            FlurryAgent.logEvent("App_View_Clicked_On_Share_Button");
 
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
@@ -1718,7 +1720,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
             }
         } else if( i == R.id.menu_SendFeedBack){
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Send_Feedback_Button");
+            FlurryAgent.logEvent("App_View_Clicked_On_Send_Feedback_Button");
 
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this,FeedBackActivity.class));

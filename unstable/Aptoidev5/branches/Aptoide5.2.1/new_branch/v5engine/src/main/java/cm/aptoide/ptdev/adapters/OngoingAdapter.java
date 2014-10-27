@@ -84,7 +84,7 @@ public class OngoingAdapter extends ArrayAdapter<Download> {
         v.findViewById(R.id.manage_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Download_Manager_Clicked_On_Stop_Button");
+                FlurryAgent.logEvent("Download_Manager_Clicked_On_Stop_Button");
                 download.getParent().remove(false);
             }
         });

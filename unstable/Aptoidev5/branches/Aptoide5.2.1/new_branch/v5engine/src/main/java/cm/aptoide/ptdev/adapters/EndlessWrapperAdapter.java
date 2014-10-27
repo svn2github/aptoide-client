@@ -4,18 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 
 import com.commonsware.cwac.endless.EndlessAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.TimelineActivity;
 import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 

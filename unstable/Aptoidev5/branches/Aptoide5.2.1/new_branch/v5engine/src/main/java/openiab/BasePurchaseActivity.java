@@ -98,14 +98,14 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     protected void onStart() {
         super.onStart();
         spiceManager.start(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         spiceManager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
 
@@ -453,7 +453,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
             intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
 
             startActivityForResult(intent, REQUEST_CODE_PAYMENT);
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Purchase_Page_Clicked_On_Paypal_Button");
+            FlurryAgent.logEvent("Purchase_Page_Clicked_On_Paypal_Button");
         }
 
         public void setTax(double tax) {

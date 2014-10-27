@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -78,7 +79,7 @@ public class FragmentFriendsInvite extends Fragment {
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
                 for(long id : listView.getCheckItemIds()){
                     request.addEmail(adapter.getItem((int) id).getEmail());

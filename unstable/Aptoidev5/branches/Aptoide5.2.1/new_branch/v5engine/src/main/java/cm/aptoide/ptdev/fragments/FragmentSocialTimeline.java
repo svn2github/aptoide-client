@@ -34,6 +34,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -666,6 +667,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                         onClickListener = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                                 startActivity(new Intent(c, TimeLineNoFriendsInviteActivity.class));
                             }
                         };
@@ -674,6 +676,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                         onClickListener = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                                 startActivity(new Intent(c, TimeLineFriendsInviteActivity.class));
                             }
                         };

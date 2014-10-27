@@ -110,7 +110,7 @@ public class UpdatesSectionAdapter extends BaseAdapter {
                     sectionHolder.more.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All");
+                            FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_All");
                             ArrayList<Long> ids = ((UpdatesAdapter)mListAdapter).getUpdateIds();
                             if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(mContext)){
                                 ((Start)mContext).updateAll(ids);

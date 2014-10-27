@@ -114,7 +114,7 @@ public  class HomeFeaturedAdapter extends BaseAdapter {
                 moreTopTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_More_Featured_Editors_Choice_Button");
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More_Featured_Editors_Choice_Button");
                         context.startActivity(new Intent(context, MoreFeaturedGraphicActivity.class));
                     }
                 });

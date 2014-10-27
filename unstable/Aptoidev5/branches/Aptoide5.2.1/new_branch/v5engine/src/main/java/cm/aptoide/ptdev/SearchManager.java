@@ -262,14 +262,14 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         public void onStart() {
             super.onStart();
             manager.start(getActivity());
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(getActivity(), "X89WPPSKWQB2FT6B8F3X");
+            FlurryAgent.onStartSession(getActivity(), "X89WPPSKWQB2FT6B8F3X");
         }
 
         @Override
         public void onStop() {
             super.onStop();
             if(manager.isStarted()) manager.shouldStop();
-            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(getActivity());
+            FlurryAgent.onEndSession(getActivity());
         }
 
         private MergeAdapter adapter;
@@ -409,7 +409,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                 Map<String, String> searchParams = new HashMap<String, String>();
                 searchParams.put("Search_Query", query);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Searched_For", searchParams);
+                FlurryAgent.logEvent("Search_Results_Searched_For", searchParams);
 
                 Handler handler = new Handler();
                 handler.post(new Runnable() {
@@ -515,7 +515,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                             sponsoredApp.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                    FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                     Intent i = new Intent(getActivity(), appViewClass);
                                     long id = appSuggested.getData().getId().longValue();
                                     i.putExtra("id", id);
@@ -588,7 +588,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                             banner.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_Banner_Link");
+                                    FlurryAgent.logEvent("Search_Results_Clicked_On_Sponsored_Banner_Link");
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                     startActivity(intent);
                                 }
@@ -688,7 +688,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
                         tv.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Did_You_Mean_Recommendation");
+                                FlurryAgent.logEvent("Search_Results_Clicked_On_Did_You_Mean_Recommendation");
 
                                 Bundle args = new Bundle();
 
@@ -907,7 +907,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             @Override
             public void onClick(View v) {
                 try{
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Search_Results_Clicked_On_Search_More_Button");
+                    FlurryAgent.logEvent("Search_Results_Clicked_On_Search_More_Button");
                     String url = Aptoide.getConfiguration().getUriSearch() + query + "&q=" + Utils.filters(SearchManager.this);
                     //Log.d("TAG", "Searching for:" + url);
                     Intent i = new Intent(Intent.ACTION_VIEW);

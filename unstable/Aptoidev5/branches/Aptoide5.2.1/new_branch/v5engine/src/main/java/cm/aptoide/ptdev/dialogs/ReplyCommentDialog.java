@@ -55,7 +55,7 @@ public class ReplyCommentDialog extends DialogFragment {
 
                         if (addCommentCallback != null) {
                             addCommentCallback.addComment(replyText, Integer.toString(commentId));
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Replied_Comment");
+                            FlurryAgent.logEvent("App_View_Replied_Comment");
 
                         }
                     }

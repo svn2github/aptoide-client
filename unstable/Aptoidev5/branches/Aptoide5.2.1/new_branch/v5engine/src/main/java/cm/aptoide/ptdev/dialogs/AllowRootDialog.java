@@ -26,7 +26,7 @@ public class AllowRootDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dialog_Root_Allowed_Access");
+                        FlurryAgent.logEvent("Dialog_Root_Allowed_Access");
                         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("allowRoot", true).commit();
                     }
                 })

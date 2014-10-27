@@ -104,7 +104,7 @@ public class UpdatesAdapter extends BaseAdapter implements UpdatesSectionAdapter
                 holder.manageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_Right_Icon");
+                        FlurryAgent.logEvent("Updates_Page_Clicked_On_Update_Right_Icon");
 
                         if(AptoideUtils.NetworkUtils.isGeneral_DownloadPermitted(context)){
                             ((Start) context).installApp(id);
