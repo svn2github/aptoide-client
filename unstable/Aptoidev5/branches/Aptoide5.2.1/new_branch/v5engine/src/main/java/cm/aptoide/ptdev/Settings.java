@@ -265,12 +265,16 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
                                Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
-                               ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", false);
-                               if (Build.VERSION.SDK_INT >= 8)
-                                   ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle());
+                               String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
 
-                               ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", false);
-                               if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle());
+                               String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
+
+                               ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
+                               if (Build.VERSION.SDK_INT >= 8)
+                                   ContentResolver.removePeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle());
+
+                               ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
+                               if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
 
                            }
                        }

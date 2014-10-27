@@ -154,7 +154,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
                 if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
 
-
             }
 
             if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {

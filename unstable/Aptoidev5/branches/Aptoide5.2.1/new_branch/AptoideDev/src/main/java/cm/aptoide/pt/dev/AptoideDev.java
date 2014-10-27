@@ -34,9 +34,4 @@ public class AptoideDev extends Aptoide {
     public AptoideConfigurationDev getAptoideConfiguration() {
         return new AptoideConfigurationDev();
     }
-
-    @Override
-    public AptoideThemePicker getNewThemePicker() {
-        return super.getNewThemePicker();
-    }
 }
