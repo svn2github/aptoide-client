@@ -182,43 +182,45 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             init();
         }
 
-        fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
-            @Override
-            public void call(final Session session, SessionState state, Exception exception) {
-                if (!AptoideUtils.isLoggedIn(Aptoide.getContext()) || removeAccount ) {
-                    try {
-                        final AccountManager mAccountManager = AccountManager.get(getActivity());
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
 
-                        if (session.isOpened()) {
-                            Request.newMeRequest(session, new Request.GraphUserCallback() {
-                                @Override
-                                public void onCompleted(final GraphUser user, Response response) {
+            fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
+                @Override
+                public void call(final Session session, SessionState state, Exception exception) {
+                    if (!AptoideUtils.isLoggedIn(Aptoide.getContext()) || removeAccount) {
+                        try {
+                            final AccountManager mAccountManager = AccountManager.get(getActivity());
 
-                                    if (removeAccount && mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
-                                        mAccountManager.removeAccount(mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], new AccountManagerCallback<Boolean>() {
-                                            @Override
-                                            public void run(AccountManagerFuture<Boolean> future) {
-                                                startLogin(user, session);
-                                            }
-                                        }, new Handler(Looper.getMainLooper()));
-                                    } else {
+                            if (session.isOpened()) {
+                                Request.newMeRequest(session, new Request.GraphUserCallback() {
+                                    @Override
+                                    public void onCompleted(final GraphUser user, Response response) {
 
-                                        startLogin(user, session);
+                                        if (removeAccount && mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
+                                            mAccountManager.removeAccount(mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], new AccountManagerCallback<Boolean>() {
+                                                @Override
+                                                public void run(AccountManagerFuture<Boolean> future) {
+                                                    startLogin(user, session);
+                                                }
+                                            }, new Handler(Looper.getMainLooper()));
+                                        } else {
+
+                                            startLogin(user, session);
+                                        }
                                     }
-                                }
-                            }).executeAsync();
+                                }).executeAsync();
 
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                            loginError();
                         }
-                    }catch (Exception e){
-                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                        loginError();
                     }
                 }
-            }
-        });
+            });
 
-        fbhelper.onCreate(savedInstanceState);
-
+            fbhelper.onCreate(savedInstanceState);
+        }
     }
 
     private void startLogin(GraphUser user, Session session) {
@@ -273,7 +275,9 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onResume() {
         super.onResume();
-        fbhelper.onResume();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onResume();
+        }
         BusProvider.getInstance().register(this);
 
     }
@@ -295,32 +299,42 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        fbhelper.onDestroy();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onDestroy();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        fbhelper.onPause();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onPause();
+        }
         BusProvider.getInstance().unregister(this);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        fbhelper.onActivityResult(requestCode, resultCode, data);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        fbhelper.onStop();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onStop();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        fbhelper.onSaveInstanceState(outState);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            fbhelper.onSaveInstanceState(outState);
+        }
         outState.putBoolean("loginMode", loginMode);
     }
 
