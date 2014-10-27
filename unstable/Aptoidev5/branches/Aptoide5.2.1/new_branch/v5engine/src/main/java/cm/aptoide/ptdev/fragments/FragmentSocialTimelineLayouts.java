@@ -234,7 +234,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
                     email_friends.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startActivity(new Intent(getActivity(), TimeLineNoFriendsInviteActivity.class));
+                            TimeLineNoFriendsInviteActivity.SendMail(getActivity());
                         }
                     });
                 }else{

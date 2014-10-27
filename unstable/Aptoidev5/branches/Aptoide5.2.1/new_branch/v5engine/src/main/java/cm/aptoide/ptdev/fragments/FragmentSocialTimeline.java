@@ -101,7 +101,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Subscribe
     public void forceInit(SocialTimelineInitEvent event){
 
-        if(event.isRefresh()){
+        if(event.isRefresh() && !loginMode){
             init();
             callback.timelineCallback();
         }
@@ -117,7 +117,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if (session != null && session.isOpened()) {
             session.closeAndClearTokenInformation();
         }
-
+        loginMode = false;
         init();
     }
 
@@ -126,7 +126,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if(removeAccount){
             removeAccount = false;
         }
-
+        loginMode = false;
         startTimeline();
     }
 
@@ -222,7 +222,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     private void startLogin(GraphUser user, Session session) {
         try {
-
+            loginMode = true;
+            BusProvider.getInstance().unregister(this);
             Fragment fragment = new FragmentSignIn();
             Bundle args = new Bundle();
             args.putInt(FragmentSignIn.LOGIN_MODE_ARG, LoginActivity.Mode.FACEBOOK.ordinal());
