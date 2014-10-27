@@ -29,7 +29,7 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
 
     }
 
-    public static void SendMail(Context c){
+    public static void sendMail(Context c){
         String subject = c.getString(R.string.aptoide_timeline);
         String html =
                         "   <p><strong>%s</strong></p>\n" +
@@ -65,7 +65,7 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
     }
 
     public void SendMail(View view) {
-        SendMail(this);
+        sendMail(this);
         finish();
     }
 
