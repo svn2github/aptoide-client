@@ -587,7 +587,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 shareTimelineParams.put("Share_Timeline", ""+isChecked);
-                FlurryAgent.logEvent("App_View_Shared_On_Social_Timeline", shareTimelineParams);
+                FlurryAgent.logEvent("App_View_Clicked_On_Share_Timeline_Checkbox", shareTimelineParams);
                 Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, isChecked);
             }
         });
@@ -842,6 +842,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 }
                 service.startDownloadFromJson(json, downloadId, download);
                 FlurryIt("App_View_Clicked_On_Install_Button");
+
+                if(Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false)) {
+                    FlurryAgent.logEvent("App_View_Shared_On_Timeline");
+                }
             }
         }
 
