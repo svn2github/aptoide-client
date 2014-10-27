@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
 
-def signingExists = false
-def signingFile = new File('signing.gradle')
+//def signingExists = false
+//def signingFile = new File('signing.gradle')
 
-    apply from: 'signing.gradle'
-    signingExists = true
+//    apply from: 'signing.gradle'
+//    signingExists = true
 
 
 
@@ -46,11 +46,11 @@ android {
         }
 
 
-        release {
+        //release {
 
-                signingConfig signingConfigs.release
+        //        signingConfig signingConfigs.release
 
-        }
+        //}
     }
 }
 

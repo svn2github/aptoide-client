@@ -32,32 +32,13 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
     public static void SendMail(Context c){
         String subject = c.getString(R.string.aptoide_timeline);
         String html =
-                "<body style=\"margin:0; background-color:#e8e8e8; font-family: 'Open Sans', sans-serif;\">\n" +
-                        "\n" +
-                        "\n" +
-                        "<table width=\"600\" bgcolor=\"#FFFFFF\" align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
-                        "    <tr>\n" +
-                        "    <td align=\"center\"><p style=\"font-size:19px; color:#343434; margin-top:8px;\">%s</p>\n" +
-                        "    <p style=\"font-size:16px; color:#888888; font-weight:200; margin-top:-10px;\">%s</p>\n" +
-                        "    </td>\n" +
-                        "    </tr>\n" +
-                        "   </tr>\n" +
-                        "    <tr>\n" +
-                        "    <td align=\"left\" style=\"padding:15px;\">\n" +
-                        "    <p>%s</p>\n" +
-                        "    <p style=\"font-size:13px; color:#888888; line-height:22px; margin-top:-5px;\">%s</p>\n" +
-                        "    </td>\n" +
-                        "    </tr>\n" +
-                        "   <tr>\n" +
-                        "    <td align=\"left\" style=\"padding:15px;\"><p>%s</p>\n" +
-                        "    <p style=\"font-size:13px; color:#888888; line-height:22px; margin-top:-5px;\">\n" +
-                        " %s <a href=\"http://m.aptoide.com/install\">.<br>\n" +
-                        " %s</p>\n" +
-                        "    </td>\n" +
-                        "     </tr>\n" +
-                        "       </tr>\n" +
-                        "</table>\n" +
-                        "</body>\n";
+                        "   <p><strong>%s</strong></p>\n" +
+                        "   <p>%s</p>\n" +
+                        "   <p>%s</p>\n" +
+                        "   <p>%s</p>\n" +
+                        "   <p>%s</p>\n" +
+                        "   <p>%s<a href=\"http://m.aptoide.com/install\">%s</a></p>\n" +
+                        "   <p>%s</p>\n";
 
         String username = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", null);
         String Invitation= c.getString(R.string.timeline_email_invitation);
@@ -67,13 +48,14 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
         String howTo= c.getString(R.string.timeline_email_how_to_join);
         String step1= c.getString(R.string.timeline_email_step1);
         String step2= c.getString(R.string.timeline_email_step2);
+        String install= c.getString(R.string.install) + " Aptoide";
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/html");
 
         emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT,
-                Html.fromHtml(String.format(html,username,Invitation,whatIs,TOS,howTo,step1,step2)));
+                Html.fromHtml(String.format(html,username,Invitation,whatIs,TOS,howTo,step1,install,step2)));
         try {
             c.startActivity(emailIntent);
 
