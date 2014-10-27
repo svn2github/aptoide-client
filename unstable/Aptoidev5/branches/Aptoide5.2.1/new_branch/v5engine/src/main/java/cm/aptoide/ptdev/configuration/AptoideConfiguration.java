@@ -57,6 +57,16 @@ public class AptoideConfiguration {
         return Aptoide.getContext().getPackageName() + ".AutoUpdateProvider";
     }
 
+
+    public String getTimelineActivitySyncAdapterAuthority(){
+        return "cm.aptoide.pt.TimelineActivity";
+    }
+
+
+    public String getTimeLinePostsSyncAdapterAuthority(){
+        return "cm.aptoide.pt.TimelinePosts";
+    }
+
     public String getAccountType() { return AccountGeneral.ACCOUNT_TYPE;
     };
 

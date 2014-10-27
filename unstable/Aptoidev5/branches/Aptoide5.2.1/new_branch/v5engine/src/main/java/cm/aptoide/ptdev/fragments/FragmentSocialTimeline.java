@@ -142,13 +142,17 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
 
+
             if(Preferences.getBoolean("socialtimelinenotifications", true)){
 
-                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
-                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
+                String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
+                String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
 
-                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
-                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
+                ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
+
+                ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
 
 
             }

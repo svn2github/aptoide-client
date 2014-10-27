@@ -282,23 +282,29 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                    String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
+
+                    String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
 
                     if (!((CheckBoxPreference) preference).isChecked()) {
 
-                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", false);
+                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
                         if (Build.VERSION.SDK_INT >= 8)
-                            ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle());
+                            ContentResolver.removePeriodicSync(account,timelineActivitySyncAdapterAuthority, new Bundle());
 
-                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", false);
-                        if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle());
+                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
 
-                    }else{
+                    } else {
 
-                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
-                        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
+                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, true);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
 
-                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
-                        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
+                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
 
 
                     }

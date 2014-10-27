@@ -412,6 +412,16 @@ public class AptoideConfigurationDev extends AptoideConfiguration {
     }
 
     @Override
+    public String getTimelineActivitySyncAdapterAuthority(){
+        return "cm.aptoide.pt.dev.TimelineActivity";
+    }
+
+    @Override
+    public String getTimeLinePostsSyncAdapterAuthority(){
+        return "cm.aptoide.pt.dev.TimelinePosts";
+    }
+
+    @Override
     public String getSearchAuthority() {
         return "cm.aptoide.pt.dev.SuggestionProvider";
     }
