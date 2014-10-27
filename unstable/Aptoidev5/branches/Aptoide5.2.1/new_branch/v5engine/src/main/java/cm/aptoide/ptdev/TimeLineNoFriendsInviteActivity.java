@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,39 +29,62 @@ public class TimeLineNoFriendsInviteActivity extends ActionBarActivity {
 
     }
 
-    public void SendMail(View view) {
-        String subject = getString(R.string.aptoide_timeline);
-        String text;
+    public static void SendMail(Context c){
+        String subject = c.getString(R.string.aptoide_timeline);
+        String html =
+                "<body style=\"margin:0; background-color:#e8e8e8; font-family: 'Open Sans', sans-serif;\">\n" +
+                        "\n" +
+                        "\n" +
+                        "<table width=\"600\" bgcolor=\"#FFFFFF\" align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+                        "    <tr>\n" +
+                        "    <td align=\"center\"><p style=\"font-size:19px; color:#343434; margin-top:8px;\">%s</p>\n" +
+                        "    <p style=\"font-size:16px; color:#888888; font-weight:200; margin-top:-10px;\">%s</p>\n" +
+                        "    </td>\n" +
+                        "    </tr>\n" +
+                        "   </tr>\n" +
+                        "    <tr>\n" +
+                        "    <td align=\"left\" style=\"padding:15px;\">\n" +
+                        "    <p>%s</p>\n" +
+                        "    <p style=\"font-size:13px; color:#888888; line-height:22px; margin-top:-5px;\">%s</p>\n" +
+                        "    </td>\n" +
+                        "    </tr>\n" +
+                        "   <tr>\n" +
+                        "    <td align=\"left\" style=\"padding:15px;\"><p>%s</p>\n" +
+                        "    <p style=\"font-size:13px; color:#888888; line-height:22px; margin-top:-5px;\">\n" +
+                        " %s <a href=\"http://m.aptoide.com/install\">.<br>\n" +
+                        " %s</p>\n" +
+                        "    </td>\n" +
+                        "     </tr>\n" +
+                        "       </tr>\n" +
+                        "</table>\n" +
+                        "</body>\n";
 
         String username = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", null);
-        String Invitation= getString(R.string.timeline_email_invitation);
-        String whatIs= getString(R.string.whats_timeline);
-        String TOS= getString(R.string.facebook_tos);
+        String Invitation= c.getString(R.string.timeline_email_invitation);
+        String whatIs= c.getString(R.string.whats_timeline);
+        String TOS= c.getString(R.string.facebook_tos).replace("\n\n","<br>");
 
-        String howTo= getString(R.string.timeline_email_how_to_join);
-        String step1= getString(R.string.timeline_email_step1) +
-                "<a href=\"http://m.aptoide.com/install.\">"+getString(R.string.install) +" Aptoide</a>";
-        String step2= getString(R.string.timeline_email_step2);
+        String howTo= c.getString(R.string.timeline_email_how_to_join);
+        String step1= c.getString(R.string.timeline_email_step1);
+        String step2= c.getString(R.string.timeline_email_step2);
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("text/html");
 
         emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT,
-                Html.fromHtml(
-                    username+"<br>"+
-                    Invitation+"<br>"+
-                    whatIs+"<br>"+
-                    TOS+"<br>"+
-                    howTo+"<br>"+
-                    step1+"<br>"+
-                    step2));
+                Html.fromHtml(String.format(html,username,Invitation,whatIs,TOS,howTo,step1,step2)));
         try {
-            startActivity(emailIntent);
-            finish();
+            c.startActivity(emailIntent);
+
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, R.string.feedback_no_email, Toast.LENGTH_LONG).show();
+            Toast.makeText(c, R.string.feedback_no_email, Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void SendMail(View view) {
+        SendMail(this);
+        finish();
     }
 
     @Override
