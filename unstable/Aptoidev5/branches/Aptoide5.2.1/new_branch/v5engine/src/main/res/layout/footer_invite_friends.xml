@@ -15,21 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/timeline_send_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
-            android:text="@string/timeline_is_empty_send_email"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/email_preview"
-            android:src="@drawable/email_preview"
-            android:layout_gravity="center_horizontal" />
-
         <Button
             android:id="@+id/timeline_invite"
             android:layout_width="match_parent"
@@ -43,6 +28,22 @@
             android:text="@string/invite_friends"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/timeline_send_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:text="@string/timeline_is_empty_send_email"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ImageView
+            android:id="@+id/email_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/email_preview" />
+
 
     </LinearLayout>
 </FrameLayout>

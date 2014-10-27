@@ -315,7 +315,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
         fbButton.setReadPermissions(Arrays.asList("email"));
-
+        fbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
+            }
+        });
         fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
             @Override
             public void onError(FacebookException error) {

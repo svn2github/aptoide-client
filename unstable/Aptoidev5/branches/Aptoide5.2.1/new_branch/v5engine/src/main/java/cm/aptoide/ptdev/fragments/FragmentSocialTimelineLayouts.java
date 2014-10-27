@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -198,6 +200,12 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
             LoginButton fb_login_button = (LoginButton) view.findViewById(R.id.fb_login_button);
             fb_login_button.setFragment(getParentFragment());
+            fb_login_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Social_Timeline_Clicked_On_Login_With_Facebook");
+                }
+            });
         }
     }
 

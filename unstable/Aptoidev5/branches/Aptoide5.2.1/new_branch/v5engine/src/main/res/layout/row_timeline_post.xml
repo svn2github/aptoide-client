@@ -7,7 +7,7 @@
         style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="6dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -23,7 +23,6 @@
                 android:layout_alignLeft="@+id/timeline_post_open"
                 android:layout_below="@+id/timeline_post_open"
                 android:background="?attr/selectableItemBackground"
-                android:paddingTop="4dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:visibility="gone" />
 
@@ -83,13 +82,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/timeline_post_user_photo"
-                android:layout_margin="5dp">
+                android:layout_margin="10dp">
 
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:background="?attr/timelinePostBackground"
                     android:padding="5dp">
 

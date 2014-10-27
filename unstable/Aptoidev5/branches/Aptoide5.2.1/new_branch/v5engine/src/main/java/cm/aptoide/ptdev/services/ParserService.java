@@ -391,7 +391,7 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
         }*/
         //Log.d("Aptoide-ParserService", "Notification for "+string);
         Notification notification =new NotificationCompat.Builder(this)
-                .setSmallIcon(getApplicationInfo().icon)
+                .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
                 .setContentTitle(getString(R.string.is_working, Aptoide.getConfiguration().getMarketName()))
                 .setAutoCancel(true)
                 .setContentText(string).build();

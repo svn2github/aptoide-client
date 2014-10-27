@@ -87,6 +87,15 @@ public class TimelineActivitySyncService extends Service  {
                 int total_likes = timelineActivityJson.getOwned_activity().getTotal_likes().intValue();
                 int total_comments = timelineActivityJson.getRelated_activity().getTotal_comments().intValue() + timelineActivityJson.getOwned_activity().getTotal_comments().intValue();
 
+                String notificationText;
+
+                if(total_comments == 0){
+                    notificationText = getString(R.string.notification_timeline_new_likes, total_likes);
+                }else if(total_likes == 0){
+                    notificationText = getString(R.string.notification_timeline_new_comments, total_comments);
+                }else {
+                    notificationText = getString(R.string.notification_timeline_activity, total_comments, total_likes);
+                }
 
 
                 Intent intent = new Intent(getContext(), Start.class);
@@ -102,7 +111,7 @@ public class TimelineActivitySyncService extends Service  {
                         .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
                         .setContentIntent(resultPendingIntent)
                         .setOngoing(false)
-                        .setContentTitle(getString(R.string.notification_timeline_activity, total_comments, total_likes))
+                        .setContentTitle(notificationText)
                         .setContentText(getString(R.string.notification_social_timeline)).build();
                 ArrayList<String> avatarLinks = new ArrayList<String>();
 

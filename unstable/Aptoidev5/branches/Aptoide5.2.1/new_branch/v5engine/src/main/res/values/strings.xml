@@ -599,6 +599,8 @@
     <string name="facebook_private_actions">This app will not post to Facebook</string>
     <string name="notification_social_timeline">Aptoide Social Timeline. Check it now!</string>
     <string name="notification_timeline_activity">You have %1$s new comments and %2$s likes. Check in Social Timeline!</string>
+    <string name="notification_timeline_new_comments">You have %s new comments. Check in Social Timeline!</string>
+    <string name="notification_timeline_new_likes">You have %s new likes. Check in Social Timeline!</string>
     <string name="notification_timeline_posts">Your friends installed new apps!</string>
 
     <string name="timeline_is_empty">Ohh… no friends on Aptoide Social Timeline? Invite them!</string>
@@ -617,7 +619,8 @@
     <string name="timeline_email_invitation">Invited you to join his Aptoide Social Timeline. Be connected!</string>
     <string name="timeline_email_how_to_join">How can you join the Social Timeline?</string>
     <string name="timeline_email_step1">1- Download the latest version of Aptoide:</string>
-    <string name="timeline_email_step2">2- Go to “Social Timeline” in the menu and join the network</string>
+    <string name="timeline_email_step2">2- Go to tab “Social Timeline” and join the network</string>
+    <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
 
 
 </resources>

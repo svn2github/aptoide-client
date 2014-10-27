@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,52 +15,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/facebook_timeline_feature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/facebook_timeline_feature"  />
-
 
         <TextView
-            android:id="@+id/facebook_tos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/facebook_tos"
-            android:gravity="left"
-            android:padding="10dp" />
-
-        <TextView
-            android:id="@+id/facebook_private_actions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:drawableLeft="?attr/icTimelineAccessSecure"
-            android:gravity="center"
-            android:text="@string/facebook_private_actions" />
-
-        <TextView
-            android:id="@+id/facebook_timeline_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/facebook_timeline_login"
-            android:textAppearance="?android:textAppearanceMedium" />
-
-        <com.facebook.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fb_login_button"
+            android:id="@+id/timeline_not_compatible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="5dp"
-            fb:login_text="@string/facebook_logout_and_login" />
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/timeline_not_compatible"
+            android:textAppearance="?android:textAppearanceMedium"  />
 
         <TextView
             android:id="@+id/textView4"

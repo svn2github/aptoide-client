@@ -373,6 +373,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             // Now create a SwipeRefreshLayout to wrap the fragment's content view
             mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
 
+
             mSwipeRefreshLayout.setOnRefreshListener(this);
 
             // Add the list fragment's content view to the SwipeRefreshLayout, making sure that it fills
@@ -395,7 +396,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             init();
-
+            mSwipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+                    R.color.custom_color, R.color.default_progress_bar_color, R.color.custom_color);
         }
 
         public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
