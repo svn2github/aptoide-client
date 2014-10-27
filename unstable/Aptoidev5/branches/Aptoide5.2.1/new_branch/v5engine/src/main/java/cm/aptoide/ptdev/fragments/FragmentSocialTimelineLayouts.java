@@ -1,7 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -28,7 +27,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.List;
-
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -251,7 +249,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
     }
 
-    private void showInviteFriends(View view) {
+    private void showInviteFriends(final View view) {
         loading = view.findViewById(android.R.id.empty);
         email_friends = view.findViewById(R.id.email_friends);
         listView = (ListView) view.findViewById(android.R.id.list);
@@ -269,15 +267,33 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             public void onClick(View v) {
                 FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
-                for(long id : listView.getCheckItemIds()){
-                    request.addEmail(adapter.getItem((int) id).getEmail());
-                }
-                manager.execute(request,new TimelineRequestListener<GenericResponse>(){
-                    @Override
-                    protected void caseOK(GenericResponse response) {
-                        Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
+                long[] ids = listView.getCheckItemIds();
+                if(ids.length>0) {
+                    for (long id : ids) {
+                        request.addEmail(adapter.getItem((int) id).getEmail());
                     }
-                });
+                    manager.execute(request, new TimelineRequestListener<GenericResponse>() {
+                        private void cleanUI(){
+                            view.findViewById(R.id.layout_with_friends).setVisibility(View.VISIBLE);
+                            view.findViewById(android.R.id.empty).setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        protected void caseFAIL() {
+                            cleanUI();
+                        }
+                        @Override
+                        protected void caseOK(GenericResponse response) {
+                            cleanUI();
+                            Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    view.findViewById(R.id.layout_with_friends).setVisibility(View.GONE);
+                    view.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+                }
+                else{
+                    Toast.makeText(c, c.getString(R.string.select_friends_to_invite), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

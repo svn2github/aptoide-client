@@ -1,7 +1,6 @@
 package cm.aptoide.ptdev;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -67,7 +66,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Registered_Friends");
+                FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
                 long[] ids = listView.getCheckItemIds();
                 if(ids.length>0) {
@@ -75,14 +74,11 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                         request.addEmail(adapter.getItem((int) id).getEmail());
                     }
                     manager.execute(request, new TimelineRequestListener<GenericResponse>() {
-
                         @Override
                         protected void caseFAIL() {
-                            super.caseFAIL();
                             c.findViewById(R.id.friends_to_invite_layout).setVisibility(View.VISIBLE);
-                            c.findViewById(R.id.friends_to_invite_loading).setVisibility(View.GONE);
+                            c.findViewById(android.R.id.empty).setVisibility(View.GONE);
                         }
-
                         @Override
                         protected void caseOK(GenericResponse response) {
                             Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
@@ -90,7 +86,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                         }
                     });
                     c.findViewById(R.id.friends_to_invite_layout).setVisibility(View.GONE);
-                    c.findViewById(R.id.friends_to_invite_loading).setVisibility(View.VISIBLE);
+                    c.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
                 }
                 else{
                     Toast.makeText(c, c.getString(R.string.select_friends_to_invite), Toast.LENGTH_LONG).show();
