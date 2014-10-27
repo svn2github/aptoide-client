@@ -33,14 +33,12 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.PopupMenu;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -528,10 +526,28 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         app_version_installed.setText(getString(R.string.installed_tab) + ": " + versionName);
     }
 
+    private void setShareButton(){
+        final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
+        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+            btinstallshare.setVisibility( View.VISIBLE );
+            btinstallshare.setChecked(Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
+            btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    final Map<String, String> shareTimelineParams = new HashMap<String, String>();
+                    shareTimelineParams.put("Share_Timeline", String.valueOf(isChecked));
+                    FlurryAgent.logEvent("App_View_Clicked_On_Share_Timeline_Checkbox", shareTimelineParams);
+                    Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, isChecked);
+                }
+            });
+        }else{
+            btinstallshare.setVisibility(View.GONE);
+        }
+    }
+
     private void checkInstallation(GetApkInfoJson getApkInfoJson) {
         final TextView btinstall = (TextView) findViewById(R.id.btinstall);
         btinstall.setEnabled(true);
-        boolean setShareButtonVisible=Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false);
 
         if ( payment.getAmount().doubleValue() > 0) {
             String path = getApkInfoJson.getApk().getPath();
@@ -544,6 +560,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 installListener.setPaid(true);
                 btinstall.setOnClickListener(installListener);
+                setShareButton();
             } else {
                 changebtInstalltoBuy(btinstall);
             }
@@ -553,6 +570,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             if (info == null) {
                 btinstall.setText(getString(R.string.install));
                 btinstall.setOnClickListener(new InstallListener(icon, name, versionName, package_name, md5));
+                setShareButton();
             } else {
                 isInstalled = true;
                 try {
@@ -578,20 +596,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 supportInvalidateOptionsMenu();
             }
         }
-
-        final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
-        btinstallshare.setVisibility(setShareButtonVisible ? View.VISIBLE : View.GONE);
-        btinstallshare.setChecked(Preferences.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true));
-        final Map<String, String> shareTimelineParams = new HashMap<String, String>();
-        btinstallshare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                shareTimelineParams.put("Share_Timeline", ""+isChecked);
-                FlurryAgent.logEvent("App_View_Clicked_On_Share_Timeline_Checkbox", shareTimelineParams);
-                Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, isChecked);
-            }
-        });
-
     }
 /*    public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);

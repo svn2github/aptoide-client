@@ -1,11 +1,10 @@
 package cm.aptoide.ptdev;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,8 +45,6 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
     private LinearLayout friends_list;
     private ListView listView;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,26 +62,31 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         listView.addFooterView(footer_friends_to_invite);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         rebuildList(savedInstanceState);
-        Button invite = (Button) footer_friends_to_invite.findViewById(R.id.timeline_invite);
-        final Context c = this;
+        final Button invite = (Button) footer_friends_to_invite.findViewById(R.id.timeline_invite);
+        final Activity c = this;
         invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FlurryAgent.logEvent("Social_Timeline_Clicked_On_Invite_Registered_Friends");
                 RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
-                for(long id : listView.getCheckItemIds()){
-                    Log.d("pois","id:"+id);
-                    Log.d("pois","id:"+adapter.getItem((int) id).getEmail());
-                    request.addEmail(adapter.getItem((int) id).getEmail());
-                }
-                manager.execute(request,new TimelineRequestListener<GenericResponse>(){
-                    @Override
-                    protected void caseOK(GenericResponse response) {
-                        Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
-                        finish();
+                long[] ids = listView.getCheckItemIds();
+                if(ids.length>0) {
+                    for (long id : ids) {
+                        request.addEmail(adapter.getItem((int) id).getEmail());
                     }
-                });
-
+                    manager.execute(request, new TimelineRequestListener<GenericResponse>() {
+                        @Override
+                        protected void caseOK(GenericResponse response) {
+                            Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
+                    c.findViewById(R.id.friends_to_invite_layout).setVisibility(View.GONE);
+                    c.findViewById(R.id.friends_to_invite_loading).setVisibility(View.VISIBLE);
+                }
+                else{
+                    Toast.makeText(c, c.getString(R.string.select_friends_to_invite), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

@@ -614,6 +614,7 @@
 
     <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. Send them an email to login with their Facebook Account </string>
     <string name="timeline_empty_send_email_to_friends">Email Friends</string>
+    <string name="select_friends_to_invite">Please select your friends to invite them!</string>
 
     <string name="aptoide_timeline">Aptoide Timeline</string>
     <string name="timeline_email_invitation">Invited you to join his Aptoide Social Timeline. Be connected!</string>
