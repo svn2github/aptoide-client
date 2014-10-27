@@ -194,7 +194,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             init();
         }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 
             fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
                 @Override
@@ -289,7 +289,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onResume();
         }
         try{
@@ -308,7 +308,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onDestroy();
         }
     }
@@ -316,7 +316,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onPause();
         }
         try{
@@ -329,7 +329,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -337,7 +337,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onStop() {
         super.onStop();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onStop();
         }
     }
@@ -347,7 +347,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onSaveInstanceState(outState);
         }
         outState.putBoolean("loginMode", loginMode);

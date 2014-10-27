@@ -292,42 +292,48 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-        Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
         String activityTitle = getString(R.string.login_or_register);
-        if(b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
-            activityTitle = getString(R.string.social_timeline);
 
-            if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
-                setContentView(R.layout.page_timeline_logout_and_login);
-                removeAccount = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
+
+            if (b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
+                activityTitle = getString(R.string.social_timeline);
+
+                if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
+                    setContentView(R.layout.page_timeline_logout_and_login);
+                    removeAccount = true;
+                } else {
+                    setContentView(R.layout.page_timeline_not_logged_in);
+                }
+
             } else {
-                setContentView(R.layout.page_timeline_not_logged_in);
+                initLogin(savedInstanceState);
             }
 
-        } else {
+            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+            uiLifecycleHelper.onCreate(savedInstanceState);
+
+            mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+            LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
+            fbButton.setReadPermissions(Arrays.asList("email"));
+            fbButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
+                }
+            });
+            fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
+                @Override
+                public void onError(FacebookException error) {
+                    error.printStackTrace();
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
             initLogin(savedInstanceState);
         }
-
-        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-        uiLifecycleHelper.onCreate(savedInstanceState);
-
-        mPlusClient = new PlusClient.Builder(this, this, this).build();
-
-        LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
-        fbButton.setReadPermissions(Arrays.asList("email"));
-        fbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
-            }
-        });
-        fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
-            @Override
-            public void onError(FacebookException error) {
-                error.printStackTrace();
-                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-            }
-        });
 
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -467,7 +473,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             if(uiLifecycleHelper!=null) uiLifecycleHelper.onDestroy();
         }
     }
@@ -475,7 +481,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(Build.VERSION.SDK_INT>=8){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -492,11 +498,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mPlusClient.connect();
             }
         }
-
-        if (uiLifecycleHelper != null) {
-            uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            if (uiLifecycleHelper != null) {
+                uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+            }
         }
-
         // The sign up activity returned that the user has successfully created an account
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
             hasQueue = true;
@@ -516,7 +522,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onResume();
         }
     }
@@ -524,7 +530,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onPause();
         }
     }

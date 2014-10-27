@@ -46,8 +46,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= 8) {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onResume();
         }
     }
@@ -55,7 +54,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onPause();
         }
     }
@@ -63,7 +62,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onDestroy();
         }
     }
@@ -71,7 +70,7 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT >= 8) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -81,8 +80,10 @@ public class MyAccountActivity extends ActionBarActivity implements GooglePlaySe
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-        uiLifecycleHelper.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+            uiLifecycleHelper.onCreate(savedInstanceState);
+        }
         mPlusClient = new PlusClient.Builder(this, this, this).build();
         mAccountManager = AccountManager.get(this);
 
