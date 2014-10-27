@@ -62,6 +62,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
@@ -143,8 +144,7 @@ public class Start extends ActionBarActivity implements
 
     private static final int Settings_REQ_CODE = 21;
     private static final int WIZARD_REQ_CODE = 50;
-    static Toast toast;
-    private ArrayList<Server> server;
+
     public ParserService service;
     private boolean parserServiceIsBound;
     private ReentrantLock lock = new ReentrantLock();
@@ -179,7 +179,7 @@ public class Start extends ActionBarActivity implements
     private boolean refresh;
     private String sponsoredCache;
     private boolean timelineRefresh;
-    private OnAccountsUpdateListener onAccountsUpdateListener;
+
 
     public DownloadService getDownloadService() {
         return downloadService;
@@ -459,6 +459,17 @@ public class Start extends ActionBarActivity implements
         return sponsoredCache;
     }
 
+    OnAccountsUpdateListener onAccountsUpdateListener = new OnAccountsUpdateListener() {
+        @Override
+        public void onAccountsUpdated(Account[] accounts) {
+
+            initDrawerHeader();
+            BusProvider.getInstance().post(new SocialTimelineInitEvent(true));
+            refresh = true;
+
+            Toast.makeText(Aptoide.getContext(), "OnAccountUpdated " + ArrayUtils.toString(accounts), Toast.LENGTH_LONG).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -494,21 +505,9 @@ public class Start extends ActionBarActivity implements
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
 
-        onAccountsUpdateListener = new OnAccountsUpdateListener() {
-            @Override
-            public void onAccountsUpdated(Account[] accounts) {
 
-                for (int i = 0; i < accounts.length; i++) {
-                    if (Aptoide.getConfiguration().getAccountType().equals(accounts[i].type)) {
-                        initDrawerHeader();
-                        BusProvider.getInstance().post(new SocialTimelineInitEvent(true));
-                        refresh = true;
-                    }
-                }
-            }
-        };
 
-        AccountManager.get(mContext).addOnAccountsUpdatedListener(onAccountsUpdateListener, new Handler(Looper.getMainLooper()), true);
+
         if (savedInstanceState == null) {
             sponsoredCache = UUID.randomUUID().toString();
 
@@ -721,6 +720,9 @@ public class Start extends ActionBarActivity implements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mMenuAdapter = new MenuListAdapter(mContext, getDrawerList());
+
+        initDrawerHeader();
+        AccountManager.get(mContext).addOnAccountsUpdatedListener(onAccountsUpdateListener, new Handler(Looper.getMainLooper()), false);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -1018,9 +1020,7 @@ public class Start extends ActionBarActivity implements
 
     @Produce
     public SocialTimelineInitEvent produceInitEvent(){
-        SocialTimelineInitEvent socialTimelineInitEvent = new SocialTimelineInitEvent(refresh);
-        refresh = false;
-        return socialTimelineInitEvent;
+        return new SocialTimelineInitEvent(refresh);
     }
 
     @Override
@@ -1229,6 +1229,11 @@ public class Start extends ActionBarActivity implements
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
     }
 
+    @Override
+    public void timelineCallback() {
+        refresh = false;
+    }
+
     public PagerAdapter getViewPagerAdapter() {
         return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
     }
@@ -1363,7 +1368,6 @@ public class Start extends ActionBarActivity implements
         }
 
         isResumed = true;
-        initDrawerHeader();
 
         if(refresh){
             BusProvider.getInstance().post(new RepoCompleteEvent(0));

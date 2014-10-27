@@ -9,4 +9,6 @@ public interface GetStartActivityCallback {
     public void matureUnlock();
     public void matureLock();
 
+    public void timelineCallback();
+
 }

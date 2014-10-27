@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +55,7 @@ import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
+import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -72,6 +74,8 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
  */
 public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.Callback, FragmentSocialTimelineLayouts.Callback {
 
+    private GetStartActivityCallback callback;
+
     @Subscribe
     public void forceRefresh(SocialTimelineEvent event){
 
@@ -84,11 +88,18 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        callback = (GetStartActivityCallback) activity;
+    }
+
     @Subscribe
     public void forceInit(SocialTimelineInitEvent event){
 
         if(event.isRefresh()){
             init();
+            callback.timelineCallback();
         }
 
     }
@@ -120,26 +131,31 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if (Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
 
             Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
 
+
+            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
             if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
 
             ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
             if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
 
+
             if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {
                 Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
             }
+
 
             SubFragmentSocialTimeline fragment = new SubFragmentSocialTimeline();
             getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 
         } else {
+
             Fragment fragment = new FragmentSocialTimelineLayouts();
             Bundle args = new Bundle();
-            args.putBoolean(FragmentSocialTimelineLayouts.LOGGED_IN_ARG, true);
+            args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.LOGGED_IN.ordinal());
             fragment.setArguments(args);
             getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
+
         }
 
     }
@@ -156,10 +172,9 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null || !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+
+        if(savedInstanceState == null ) {
             init();
-        }else{
-            loginMode = savedInstanceState.getBoolean("loginMode");
         }
 
         fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
@@ -173,6 +188,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                             Request.newMeRequest(session, new Request.GraphUserCallback() {
                                 @Override
                                 public void onCompleted(final GraphUser user, Response response) {
+
                                     if (removeAccount && mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType()).length > 0) {
                                         mAccountManager.removeAccount(mAccountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0], new AccountManagerCallback<Boolean>() {
                                             @Override
@@ -181,6 +197,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                                             }
                                         }, new Handler(Looper.getMainLooper()));
                                     } else {
+
                                         startLogin(user, session);
                                     }
                                 }
@@ -196,7 +213,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         });
 
         fbhelper.onCreate(savedInstanceState);
-
 
     }
 
@@ -221,22 +237,17 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if (AptoideUtils.isLoggedIn(Aptoide.getContext())) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("loginType", null))) {
                 startTimeline();
-                loginMode = false;
             } else {
-                loginMode = true;
                 fragment = new FragmentSocialTimelineLayouts();
                 Bundle args = new Bundle();
-                args.putBoolean(FragmentSocialTimelineLayouts.LOGOUT_FIRST_ARG, true);
+                args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.LOGOUT_FIRST.ordinal());
                 fragment.setArguments(args);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
                 removeAccount = true;
             }
+
         } else {
-            loginMode = true;
             fragment = new FragmentSocialTimelineLayouts();
-            Bundle args = new Bundle();
-            args.putBoolean(FragmentSocialTimelineLayouts.LOGOUT_FIRST_ARG, false);
-            fragment.setArguments(args);
             getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
         }
     }
@@ -368,6 +379,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                                  Bundle savedInstanceState) {
 
             // Create the list fragment's content view by calling the super method
+
             final FrameLayout listFragmentView = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
 
             // Now create a SwipeRefreshLayout to wrap the fragment's content view
@@ -402,11 +414,15 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
         public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
             if (data.isEmpty()) {
-
                 if(apks.isEmpty()){
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentFriendsInvite()).commit();
-                }
 
+                    FragmentSocialTimelineLayouts fragmentSocialTimelineLayouts = new FragmentSocialTimelineLayouts();
+                    Bundle args = new Bundle();
+                    args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.FRIENDS_INVITE.ordinal());
+                    fragmentSocialTimelineLayouts.setArguments(args);
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentSocialTimelineLayouts).commit();
+
+                }
                 adapter.stopAppending();
             } else {
                 if (firstId == null) {
@@ -426,8 +442,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                     apks.addAll(data);
                 }
 
-
                 lastId = apks.get(apks.size() - 1).getInfo().getId();
+
             }   // Tell the EndlessAdapter to
             // remove it's pending
             // view and call
@@ -529,10 +545,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             Log.d("Aptoide", "restartAppending");
             adapter.restartAppending();
 
-            if(inviteFriendsEmpty!=null){
-                getListView().removeHeaderView(inviteFriendsEmpty);
-                getListView().addHeaderView(inviteFriends);
-            }
+
 
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
@@ -617,6 +630,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             adapter.setRunInBackground(false);
             username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "");
 
+            mSwipeRefreshLayout.setRefreshing(true);
             inviteFriends = LayoutInflater.from(getActivity()).inflate(R.layout.separator_invite_friends, null);
             getListView().addHeaderView(inviteFriends);
 

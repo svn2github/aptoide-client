@@ -5,34 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-
-    <TextView
-        android:id="@+id/timeline_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:gravity="center"
-        android:visibility="gone"
-        android:padding="10dp"
-        android:text="@string/timeline_is_empty_no_friends" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/timeline_empty_start_invite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/timeline_empty"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:padding="10dp"
-        android:visibility="gone"
-        android:text="@string/timeline_is_empty_start_invite" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="@string/start_loading"/>
 
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"  android:id="@+id/layout"
+        android:layout_width="match_parent"  android:id="@+id/layout_no_friends" android:visibility="gone"
         android:layout_height="wrap_content">
 
 
@@ -59,15 +51,45 @@
     </RelativeLayout>
 
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:horizontalSpacing="2dp"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp"
-        android:layout_below="@+id/timeline_empty_start_invite" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:id="@+id/layout_with_friends" android:visibility="gone">
+
+        <TextView
+            android:id="@+id/timeline_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="10dp"
+            android:text="@string/timeline_is_empty_no_friends" />
+
+        <TextView
+            android:id="@+id/timeline_empty_start_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeline_empty"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:text="@string/timeline_is_empty_start_invite" />
+
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="2dp"
+            android:numColumns="2"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="2dp"
+            android:layout_below="@+id/timeline_empty_start_invite" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

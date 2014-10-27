@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.fragments;
 
-import android.os.Build;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,13 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.widget.LoginButton;
-import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,10 +35,14 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
+import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
 import cm.aptoide.ptdev.preferences.Preferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
+import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
@@ -46,23 +54,42 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
     public static final String LOGOUT_FIRST_ARG = "logoutFirst";
     public static final String LOGGED_IN_ARG = "loggedIn";
+    public static final java.lang.String STATE_ARG = "state";
+    private View timeline_empty_start_invite;
+    private View email_friends;
+    private ListView listView;
+    private View timeline_empty;
+    private InviteFriendsListAdapter adapter;
+    private View layout;
+
+
+    public enum State{
+        NONE, LOGGED_IN, LOGOUT_FIRST, FRIENDS_INVITE
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        boolean loggedin = getArguments().getBoolean(LOGGED_IN_ARG, false);
-        if (loggedin) {
-            return inflater.inflate(R.layout.page_timeline_logged_in, container, false);
-        } else {
+        State state;
+        if(getArguments()!=null){
+            state = State.values()[getArguments().getInt(STATE_ARG, 0)];
+        }else{
+            state = State.NONE;
+        }
 
-            boolean logoutFirst = getArguments().getBoolean(LOGOUT_FIRST_ARG, false);
 
-            if (logoutFirst) {
+        switch (state){
+            case LOGGED_IN:
+                return inflater.inflate(R.layout.page_timeline_logged_in, container, false);
+            case LOGOUT_FIRST:
                 return inflater.inflate(R.layout.page_timeline_logout_and_login, container, false);
-            } else {
+            case FRIENDS_INVITE:
+                return inflater.inflate(R.layout.page_timeline_empty, container, false);
+            default:
                 return inflater.inflate(R.layout.page_timeline_not_logged_in, container, false);
-            }
+
         }
     }
 
@@ -161,57 +188,135 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(getArguments().getBoolean(LOGGED_IN_ARG, false)){
+        State state;
+        if(getArguments()!=null){
+            state = State.values()[getArguments().getInt(STATE_ARG, 0)];
+        }else{
+            state = State.NONE;
+        }
+
+        switch (state){
+            case LOGGED_IN:
+                showFriends(view);
+                break;
+            case FRIENDS_INVITE:
+                showInviteFriends(view);
+                break;
+            default:
+            case LOGOUT_FIRST:
+                LoginButton fb_login_button = (LoginButton) view.findViewById(R.id.fb_login_button);
+                fb_login_button.setFragment(getParentFragment());
+                break;
+        }
+
+    }
+
+    private void rebuildList() {
+
+        ListUserFriendsRequest request = new ListUserFriendsRequest();
+        request.setOffset(0);
+        request.setLimit(150);
 
 
-            friends_using_timeline = (TextView) view.findViewById(R.id.friends_using_timeline);
-            join_friends = (TextView) view.findViewById(R.id.join_friends);
-            getFriends();
+        manager.execute(request, "friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
+            @Override
+            protected void caseOK(ListUserFriendsJson response) {
 
-//          lv = (ListView) findViewById(R.id.TimeLineListView);
-            friends_list = (LinearLayout) view.findViewById(R.id.friends_list);
 
-            Button start_timeline = (Button) view.findViewById(R.id.start_timeline);
+                adapter = new InviteFriendsListAdapter(getActivity(), response.getInactiveFriends());
+                //adapter.setOnItemClickListener(this);
+                //adapter.setAdapterView(listView);
 
-            start_timeline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+
+                if(response.getInactiveFriends().isEmpty()){
+                    layout.setVisibility(View.VISIBLE);
+                    email_friends.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void run() {
-                            ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                            request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-                            request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-                            try {
-                                request.loadDataFromNetwork();
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        public void onClick(View v) {
+                            startActivity(new Intent(getActivity(), TimeLineNoFriendsInviteActivity.class));
                         }
                     });
-                    Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
-                    ((Callback) getParentFragment()).onStartTimeline();
+                    timeline_empty_start_invite.setVisibility(View.GONE);
+                    timeline_empty.setVisibility(View.GONE);
+                }else{
+                    timeline_empty_start_invite.setVisibility(View.VISIBLE);
+                    timeline_empty.setVisibility(View.VISIBLE);
+                    listView.setAdapter(adapter);
                 }
-            });
 
+            }
+        });
 
-        } else {
+    }
 
-            LoginButton fb_login_button = (LoginButton) view.findViewById(R.id.fb_login_button);
-            fb_login_button.setFragment(getParentFragment());
-            fb_login_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Social_Timeline_Clicked_On_Login_With_Facebook");
+    private void showInviteFriends(View view) {
+        timeline_empty_start_invite = view.findViewById(R.id.timeline_empty_start_invite);
+        email_friends = view.findViewById(R.id.email_friends);
+        timeline_empty = view.findViewById(R.id.timeline_empty);
+        listView = (ListView) view.findViewById(android.R.id.list);
+        layout = view.findViewById(R.id.layout_no_friends);
+        View footer_friends_to_invite = LayoutInflater.from(getActivity()).inflate(R.layout.footer_invite_friends, null);
+        listView.addFooterView(footer_friends_to_invite);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        rebuildList();
+        Button invite = (Button) footer_friends_to_invite.findViewById(R.id.timeline_invite);
+        final Context c = getActivity();
+        invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                RegisterUserFriendsInviteRequest request = new RegisterUserFriendsInviteRequest();
+                for(long id : listView.getCheckItemIds()){
+                    request.addEmail(adapter.getItem((int) id).getEmail());
                 }
-            });
-        }
+                manager.execute(request,new TimelineRequestListener<GenericResponse>(){
+                    @Override
+                    protected void caseOK(GenericResponse response) {
+                        Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+            }
+        });
     }
 
     public interface Callback {
 
         public void onStartTimeline();
 
+    }
+
+
+    public void showFriends(View view){
+        friends_using_timeline = (TextView) view.findViewById(R.id.friends_using_timeline);
+        join_friends = (TextView) view.findViewById(R.id.join_friends);
+        getFriends();
+
+//          lv = (ListView) findViewById(R.id.TimeLineListView);
+        friends_list = (LinearLayout) view.findViewById(R.id.friends_list);
+
+        Button start_timeline = (Button) view.findViewById(R.id.start_timeline);
+
+        start_timeline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                        request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                        request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                        try {
+                            request.loadDataFromNetwork();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+                ((Callback) getParentFragment()).onStartTimeline();
+            }
+        });
     }
 }

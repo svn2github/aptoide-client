@@ -57,7 +57,7 @@ public class FragmentFriendsInvite extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.page_timeline_empty, null);
+        return inflater.inflate(R.layout.page_timeline_empty, container, false);
     }
 
 
@@ -68,7 +68,7 @@ public class FragmentFriendsInvite extends Fragment {
         email_friends = view.findViewById(R.id.email_friends);
         timeline_empty = view.findViewById(R.id.timeline_empty);
         listView = (ListView) view.findViewById(android.R.id.list);
-        layout = view.findViewById(R.id.layout);
+        layout = view.findViewById(R.id.layout_no_friends);
         View footer_friends_to_invite = LayoutInflater.from(getActivity()).inflate(R.layout.footer_invite_friends, null);
         listView.addFooterView(footer_friends_to_invite);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -155,9 +155,6 @@ public class FragmentFriendsInvite extends Fragment {
                         }
                     });
                 }
-
-
-
 
             }
         });
