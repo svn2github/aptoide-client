@@ -7,9 +7,12 @@
  ******************************************************************************/
 package cm.aptoide.ptdev;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -260,9 +263,46 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                                manager.removeDataFromCache(GetUserSettingsJson.class, "timeline-status");
                                PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove(Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
                                ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
+                               Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+
+                               ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", false);
+                               if (Build.VERSION.SDK_INT >= 8)
+                                   ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle());
+
+                               ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", false);
+                               if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle());
+
                            }
                        }
                    });
+                    return false;
+                }
+            });
+            findPreference("socialtimelinenotifications").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+
+                    if (!((CheckBoxPreference) preference).isChecked()) {
+
+                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", false);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle());
+
+                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", false);
+                        if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle());
+
+                    }else{
+
+                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
+                        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
+
+                        ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
+                        if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
+
+
+                    }
+
                     return false;
                 }
             });

@@ -75,6 +75,14 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                         request.addEmail(adapter.getItem((int) id).getEmail());
                     }
                     manager.execute(request, new TimelineRequestListener<GenericResponse>() {
+
+                        @Override
+                        protected void caseFAIL() {
+                            super.caseFAIL();
+                            c.findViewById(R.id.friends_to_invite_layout).setVisibility(View.VISIBLE);
+                            c.findViewById(R.id.friends_to_invite_loading).setVisibility(View.GONE);
+                        }
+
                         @Override
                         protected void caseOK(GenericResponse response) {
                             Toast.makeText(c, c.getString(R.string.facebook_timeline_friends_invited), Toast.LENGTH_LONG).show();

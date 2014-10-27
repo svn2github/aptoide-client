@@ -622,6 +622,7 @@
     <string name="timeline_email_step1">1- Download the latest version of Aptoide:</string>
     <string name="timeline_email_step2">2- Go to tab “Social Timeline” and join the network</string>
     <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
+    <string name="social_timeline_notifications">Timeline Notifications</string>
 
 
 </resources>

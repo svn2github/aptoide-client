@@ -42,6 +42,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -55,6 +56,7 @@ import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
 import cm.aptoide.ptdev.events.BusProvider;
+
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
@@ -62,6 +64,7 @@ import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
@@ -97,6 +100,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         callback = (GetStartActivityCallback) activity;
+
     }
 
     @Subscribe
@@ -138,12 +142,16 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
 
-            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
-            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
+            if(Preferences.getBoolean("socialtimelinenotifications", true)){
 
-            ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
-            if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
+                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelineActivity", true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelineActivity", new Bundle(), 7200);
 
+                ContentResolver.setSyncAutomatically(account, "cm.aptoide.pt.TimelinePosts", true);
+                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, "cm.aptoide.pt.TimelinePosts", new Bundle(), 86400);
+
+
+            }
 
             if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {
                 Preferences.putBooleanAndCommit(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, true);
@@ -166,6 +174,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     }
 
 
+
     private UiLifecycleHelper fbhelper;
 
     @Override
@@ -176,7 +185,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         if(savedInstanceState == null ) {
             init();
@@ -272,28 +280,25 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         return inflater.inflate(R.layout.page_store, container, false);
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
             fbhelper.onResume();
         }
-        BusProvider.getInstance().register(this);
+        try{
+            BusProvider.getInstance().register(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
-
-
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-//        if(savedInstanceState == null){
-//            Fragment fragment = new SubFragmentSocialTimeline();
-//            fragment.setTargetFragment(this, 0);
-//            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
-//        }
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Override
@@ -310,7 +315,11 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
             fbhelper.onPause();
         }
-        BusProvider.getInstance().unregister(this);
+        try{
+            BusProvider.getInstance().unregister(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -328,6 +337,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             fbhelper.onStop();
         }
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

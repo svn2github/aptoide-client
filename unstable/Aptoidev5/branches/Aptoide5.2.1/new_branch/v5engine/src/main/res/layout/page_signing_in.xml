@@ -13,6 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+
         android:layout_centerInParent="true" />
 
     <TextView android:id="@+id/signing_in_label"
@@ -21,7 +23,8 @@
               android:layout_above="@id/progressBar"
               android:layout_centerHorizontal="true"
               android:text="@string/signing_in"
-              android:padding="15dp" />
+
+        android:padding="15dp" />
 
 
 

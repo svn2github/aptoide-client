@@ -467,7 +467,6 @@ public class Start extends ActionBarActivity implements
             BusProvider.getInstance().post(new SocialTimelineInitEvent(true));
             refresh = true;
 
-            Toast.makeText(Aptoide.getContext(), "OnAccountUpdated " + ArrayUtils.toString(accounts), Toast.LENGTH_LONG).show();
         }
     };
 
