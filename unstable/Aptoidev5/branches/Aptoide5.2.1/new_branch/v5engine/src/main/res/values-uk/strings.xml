@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Невірна відповідь на коментар</string>
   <string name="error_IARG_200">Недопустимий маркер входу</string>
   <string name="error_IARG_201">Невірний режим входу</string>
-  <string name="error_IARG_202">Невірне завантаження</string>
   <string name="error_IARG_300">Невірна категорія клієнта</string>
   <string name="error_IARG_301">Невірна категорія</string>
   <string name="error_IARG_302">Запропонований додаток вже існує в цій категорії</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Не вдалося ввійти через Google. Будь ласка, спробуйте ще раз.</string>
   <string name="error_AUTH_102">"Не вдалося ввійти через Facebook. Перевірте ваш акаунт на Facebook,  можливо Вам потрібно підтвердити вашу електронну адресу."</string>
   <string name="error_AUTH_103">Не вдалося ввійти через Facebook. Будь ласка, спробуйте ще раз.</string>
-  <string name="error_WOP_1">Ваш обліковий запис вже має магазин. Ви не можете створити інший під тим же обліковим записом.</string>
-  <string name="error_WOP_2">Невірна назва надана вашому магазину. Назва магазину може складатися тільки з літер і цифр (A-Z, 0-9) або дефісів, і вона не може ні починатися, ні закінчуватися дефісом.</string>
-  <string name="error_WOP_3">Магазин з такою назвою вже існує. Будь ласка, виберіть іншу назву для вашого магазину.</string>
-  <string name="error_WOP_4">Неможливо створити магазин. Будь ласка, спробуйте ще раз.</string>
-  <string name="error_WOP_5">Вам потрібно назвати ваш магазин.</string>
   <string name="error_WOP_6">Введіть своє ім\'я для того, щоб додати коментар.</string>
   <string name="error_WOP_7">Помилка коментування.</string>
   <string name="error_WOP_8">Помилка голосування за коментар.</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Перевірте, будь ласка, вашу електронну адресу і пароль</string>
   <string name="password_validation_text">Пароль повинен мати хоча б 8 знаків і хоча б одну літеру і одну цифру, або особливий знак (!\@#$%*)</string>
   <string name="jolla_not_supported">"Ця функція ще не підтримується платформою Jolla "</string>
-  <string name="carrier_billing">Рахунок оператора</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Майбутні платежі Paypal</string>
-  <string name="paypal_single_payment">Одиничний платіж Paypal</string>
   <string name="flags">Позначки</string>
   <string name="flag_good">Хороший</string>
   <string name="flag_license">Потребує ліцензії</string>

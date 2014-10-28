@@ -387,7 +387,6 @@
   <string name="error_IARG_110">Geçersiz cevap yorumu</string>
   <string name="error_IARG_200">Geçersiz giriş jetonu</string>
   <string name="error_IARG_201">Geçersiz giriş kipi</string>
-  <string name="error_IARG_202">Geçersiz yükleme</string>
   <string name="error_IARG_300">Geçersiz özel kategori</string>
   <string name="error_IARG_301">Geçersiz kategori</string>
   <string name="error_IARG_302">Sağlanan uygulama bu kategoride zaten mevcuttur</string>
@@ -399,11 +398,6 @@
   <string name="error_AUTH_101">Google ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
   <string name="error_AUTH_102">Facebook ile giriş yapılamadı. Facebook hesabınızı kontrol ediniz (e-posta adresinizi teyit etmeniz gerekebilir).</string>
   <string name="error_AUTH_103">Facebook ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
-  <string name="error_WOP_1">Hesabınızın zaten bir mağazası var. Aynı hesapla başka bir mağaza oluşturamazsınız.</string>
-  <string name="error_WOP_2">Mağazanız için verilen isim geçersizdir. Mağaza ismi sadece alfanümerik karakterler (A\'dan Z\'ye ve 0 ilâ 9 arası) ya da tireler (-) içerebilir, ayrıca tire ile başlayamaz ve sona eremez.</string>
-  <string name="error_WOP_3">Bu ismi taşıyan bir mağaza zaten mevcuttur. Mağazanız için başka bir isim giriniz.</string>
-  <string name="error_WOP_4">Mağaza oluşturulamadı. Lütfen tekrar deneyiniz.</string>
-  <string name="error_WOP_5">Mağazanız için bir isim girmelisiniz.</string>
   <string name="error_WOP_6">Bir yorum eklemek için isminizi ilave etmeniz gerekir (başkaları görebilecektir)</string>
   <string name="error_WOP_7">Yorum hatası</string>
   <string name="error_WOP_8">Yorum oylama hatası</string>
@@ -469,10 +463,6 @@
   <string name="fields_cannot_empty">Lütfen e-postanızı ve parolanızı kontrol ediniz.</string>
   <string name="password_validation_text">Parolanın en az 8 karakter uzunluğunda olması ve asgari bir harf ve bir sayı ya da özel karakter (!\@#$%*) içermesi gerekir</string>
   <string name="jolla_not_supported">Bu işlev henüz Jolla platformu tarafından desteklenmemektedir.</string>
-  <string name="carrier_billing">Telefon faturasıyla ödeme</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Paypal gelecekteki ödemeler</string>
-  <string name="paypal_single_payment">Paypal tek ödeme</string>
   <string name="flags">Bayraklar</string>
   <string name="flag_good">İyi</string>
   <string name="flag_license">Lisans lazım</string>

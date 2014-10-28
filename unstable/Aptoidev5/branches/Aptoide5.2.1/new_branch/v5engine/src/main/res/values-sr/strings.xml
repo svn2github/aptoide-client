@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Pogrešan odgovor komentarom</string>
   <string name="error_IARG_200">Pogrešan token za prijavu</string>
   <string name="error_IARG_201">Pogrešan način rada za prijavu</string>
-  <string name="error_IARG_202">Pogrešno ubacivanje</string>
   <string name="error_IARG_300">Pogrešna podešena kategorija</string>
   <string name="error_IARG_301">Pogrešna kategorija</string>
   <string name="error_IARG_302">Prikazana aplikacija već postoji u ovoj kategoriji</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Ne može se prijaviti sa Gugla. Molimo pokušaj ponovo.</string>
   <string name="error_AUTH_102">Ne može se prijaviti sa Fejsbukom. Molimo proveri svoj Fejsbuk profil (možda treba da potvrdiš svoju mejl adresu).</string>
   <string name="error_AUTH_103">Ne može se prijaviti sa Fejsbukom. Molimo pokušaj ponovo.</string>
-  <string name="error_WOP_1">Tvoj profil već ima prodavnicu. Ne možeš da napraviš još jednu sa istog profila.</string>
-  <string name="error_WOP_2">Pogrešan naziv je dat za tvoju prodavnicu. Naziv prodavnice može da ima samo alfanumerčke karaktere (od A do Z i od 0 do 9) ili povlake (-), i ne može da započne niti se završi povlakom.</string>
-  <string name="error_WOP_3">Prodavnica već postoji sa istim nazivom. Molimo nazovi prodavnicu drugačije.</string>
-  <string name="error_WOP_4">Prodavnica nije mogla da bude napravljena. Pokušaj ponovo.</string>
-  <string name="error_WOP_5">Treba da daš naziv svojoj prodavnici.</string>
   <string name="error_WOP_6">Treba da uneseš svoje ime (biće vidljivo) da dodaš komentar</string>
   <string name="error_WOP_7">Greška u komentaru</string>
   <string name="error_WOP_8">Greška u komentaru za glasanje</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Molimo proveri svoj mejl i lozinku.</string>
   <string name="password_validation_text">Lozinka mora da ima najmanje 8 karaktera i treba da ima najmanje jedno slovo i jedan broj ili specijalni karakter (!\@#$%*)</string>
   <string name="jolla_not_supported">Karakteristika se još uvek ne podržava na Jolla platformi.</string>
-  <string name="carrier_billing">Naplata nosiocu</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Buduće isplate Paypalom</string>
-  <string name="paypal_single_payment">Jedna isplata Paypalom</string>
   <string name="flags">Zastavice</string>
   <string name="flag_good">Dobro</string>
   <string name="flag_license">Potrebna je licenca</string>

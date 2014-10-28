@@ -294,13 +294,8 @@
   <string name="wizard_search_local">ローカルストアでアプリが利用できます。</string>
   <string name="wizard_search_online">Aptoide（アプトイド）ウェブサイトの他のストアで検索する。</string>
   <string name="wizard_new_layout">1- 新しいレイアウト</string>
-  <string name="wizard_rollback">2- ロールバック</string>
-  <string name="wizard_widget">3- ウィジェット</string>
   <string name="wizard_new_account">4- アカウント管理</string>
   <string name="wizard_add_more_stores">新しいアンドロイドストアを追加する事ができます。</string>
-  <string name="wizard_rollback_description">アプリを再インストールまたは、もとに戻す事ができます。</string>
-  <string name="wizard_widget_description">アプリケーションを素早く検索する。</string>
-  <string name="wizard_account_description">Aptoide（アプトイド）アプリで同じログインが使えます。</string>
   <string name="wizard_secure_fast_reliable">安全。迅速。信頼性がある。</string>
   <string name="wizard_next">次</string>
   <string name="wizard_prev">前</string>

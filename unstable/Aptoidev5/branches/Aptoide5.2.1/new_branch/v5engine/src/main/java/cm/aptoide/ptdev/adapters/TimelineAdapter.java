@@ -244,7 +244,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         if(likes > 0 || comments > 0) {
             if (likes > 0) {
                 if (likes == 1) {
-                    sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.like));
+                    sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.timeline_like));
                 }else{
                     sb.append(String.valueOf(likes) + " " + getContext().getString(R.string.likes));
                 }

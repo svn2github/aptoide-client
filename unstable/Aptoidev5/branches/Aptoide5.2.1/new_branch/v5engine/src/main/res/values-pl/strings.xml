@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Nieprawidłowy komentarz odpowiedzi</string>
   <string name="error_IARG_200">Nieprawidłowy login/token</string>
   <string name="error_IARG_201">"Nieprawidłowy  tryb loginu"</string>
-  <string name="error_IARG_202">Nieprawidłowe dodawanie</string>
   <string name="error_IARG_300">Nieprawidłowe niestandardowe kategorie</string>
   <string name="error_IARG_301">Nieprawidłowe kategorie</string>
   <string name="error_IARG_302">Podana aplikacja już istnieje w tej kategorii</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Nie można połączyć się z Google. Proszę spróbować ponownie.</string>
   <string name="error_AUTH_102">"Nie można połączyć się z Facebook. Proszę sprawdzić swoje konto na Facebooku (być może trzeba potwierdzić swój adres e-mail). "</string>
   <string name="error_AUTH_103">Nie można połączyć się z Facebook. Proszę spróbować ponownie.</string>
-  <string name="error_WOP_1">"Twoje konto posiada  już sklep. Nie można utworzyć innego pod tym samym kontem."</string>
-  <string name="error_WOP_2">"Niepoprawna nazwa dla Twojego sklepu.Nazwa sklepu może mieć tylko alfanumeryczne znaki  (od A do Z i 0 do 9)  oraz  łączniki (-),  nie może rozpocząć ani kończyć myślnikiem."</string>
-  <string name="error_WOP_3">"Sklep o podanej nazwie już  istnieje. Proszę podać inną nazwę dla Twojego sklepu."</string>
-  <string name="error_WOP_4">Sklep nie może zostać utworzony. Proszę spróbować ponownie.</string>
-  <string name="error_WOP_5">Musisz podać nazwę sklepu.</string>
   <string name="error_WOP_6">Aby dodać komentarz, musisz wstawić nazwę (będzie widoczna)</string>
   <string name="error_WOP_7">Skomentuj błąd</string>
   <string name="error_WOP_8">Skomentuj błąd głosu</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Prosimy sprawdzić e-mail i hasło.</string>
   <string name="password_validation_text">Hasło musi mieć co najmniej 8 znaków i powinno mieć co najmniej jedną literę i jedną cyfrę lub znak specjalny (! \@ # $% *)</string>
   <string name="jolla_not_supported">Ta funkcja nie jest jeszcze obsługiwany przez platformę Jolla.</string>
-  <string name="carrier_billing">Rozliczenie dostawcy</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Przyszłe płatności PayPal</string>
-  <string name="paypal_single_payment">Jednorazowe płatności PayPal</string>
   <string name="flags">Oznaczenie</string>
   <string name="flag_good">"Dobre - something  Dobra - app Dobry someone"</string>
   <string name="flag_license">Potrzebuje Licencji</string>

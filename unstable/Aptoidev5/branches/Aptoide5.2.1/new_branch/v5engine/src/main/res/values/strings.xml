@@ -577,7 +577,7 @@
     <string name="facebook_timeline_preview">Timeline Preview:</string>
     <string name="facebook_start_timeline">Join Social Timeline</string>
     <string name="facebook_join_friends">Do you want to join them in the Social Timeline?</string>
-    <string name="facebook_friends_list_using_timeline">are in Aptoide</string>
+    <string name="facebook_friends_list_using_timeline">are already using Aptoide Social Timeline</string>
     <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
     <string name="share_on_timeline">Share on Timeline</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
@@ -585,6 +585,7 @@
     <string name="more_friends">more</string>
     <string name="hide_post">HIDE</string>
     <string name="unhide_post">UNHIDE</string>
+    <string name="timeline_like">Like</string>
     <string name="unlike">Unlike</string>
     <string name="comment">Comment</string>
     <string name="hide_post_info">Your friends won\'t see this post</string>
@@ -607,8 +608,7 @@
     <string name="invite_friends">Invite Friends</string>
     <string name="timeline_is_empty_send_email">We’ll send an email to those you choose</string>
     <string name="facebook_timeline_friends_invited">Friends invited!</string>
-    <string name="friends_that_use_timeline">Friends who already use Aptoide Social Timeline</string>
-    <string name="friends_to_invite">All Facebook friends in Aptoide</string>
+    <string name="friends_to_invite">All other Facebook friends in Aptoide</string>
     <string name="timeline_is_empty_no_friends">Your Timeline is empty. That\'s probably because you don\'t have friends on Aptoide yet or they don\'t have any posts.</string>
     <string name="timeline_is_empty_start_invite">Let\'s start by invite some friends:</string>
 
@@ -623,6 +623,6 @@
     <string name="timeline_email_step2">2- Go to tab “Social Timeline” and join the network</string>
     <string name="timeline_not_compatible">Ooohhh… This feature is not compatible with your Android version</string>
     <string name="social_timeline_notifications">Timeline Notifications</string>
-
+    <string name="social_timeline_notifications_sum">Disable Aptoide Social Timeline Notifications. You will not receive the latest news on the notification bar.</string>
 
 </resources>

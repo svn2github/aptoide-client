@@ -312,13 +312,8 @@
   <string name="wizard_search_local">Дэлгүүрээс апп татах боломжтой байна</string>
   <string name="wizard_search_online">Юнител маркетаас өөр дэлгүүрээс хайх</string>
   <string name="wizard_new_layout">1- Шинэ бүтэц</string>
-  <string name="wizard_rollback">2- Роллбак</string>
-  <string name="wizard_widget">3- Widget</string>
   <string name="wizard_new_account">4- Account Manager</string>
   <string name="wizard_add_more_stores">Шинээр андройд дэлгүүр үүсгэх боломжтой</string>
-  <string name="wizard_rollback_description">Апп-ийг дахин татах боломжтой</string>
-  <string name="wizard_widget_description">Хайлт</string>
-  <string name="wizard_account_description">Юнитэл апп-ийг ижил бүртгэлээр ашиглах боломжтой</string>
   <string name="wizard_secure_fast_reliable">Найдвартай. Хурдан. Баталгаатай</string>
   <string name="wizard_next">Дараах</string>
   <string name="wizard_prev">Өмнөх</string>

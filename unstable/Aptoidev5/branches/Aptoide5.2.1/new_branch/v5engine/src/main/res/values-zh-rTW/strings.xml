@@ -388,7 +388,6 @@
   <string name="error_IARG_110">無效的回複評論</string>
   <string name="error_IARG_200">無效的登錄</string>
   <string name="error_IARG_201">無效的登錄模式</string>
-  <string name="error_IARG_202">無效的上傳</string>
   <string name="error_IARG_300">無效的自定義分類</string>
   <string name="error_IARG_301">無效的分類</string>
   <string name="error_IARG_302">此應用已經在分類中</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">無法登錄谷歌。請重新嘗試。</string>
   <string name="error_AUTH_102">無法登錄facebook。請檢查你的facebook帳戶（您可能需要驗證您的電子郵件地址）。</string>
   <string name="error_AUTH_103">無法登錄facebook。請重新嘗試。</string>
-  <string name="error_WOP_1">您的帳號已經注冊了一個商店。您不能使用同一個帳號再注冊另一個商店。</string>
-  <string name="error_WOP_2">商店名稱無效。一個商店的名稱只能有字母（A到Z和0至9）或連字號（-），如果沒有連字號，它無法啓動，也無法結束。</string>
-  <string name="error_WOP_3">具有相同名稱的商店已經存在。請爲您的商店起另一個名稱。</string>
-  <string name="error_WOP_4">商店不能被創建。請重新嘗試。</string>
-  <string name="error_WOP_5">你需要爲你的商店起一個名稱。</string>
   <string name="error_WOP_6">添加評論，您需要輸入您的姓名（可見）</string>
   <string name="error_WOP_7">評論錯誤</string>
   <string name="error_WOP_8">評論投票錯誤</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">請檢查您的郵件和密碼。</string>
   <string name="password_validation_text">密碼需要8個字母，並且需要至少一個字母和一個數字或者特殊符號(!\@#$%*)</string>
   <string name="jolla_not_supported">此功能尚未被Jolla平台支持。</string>
-  <string name="carrier_billing">運營商計費</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Paypal未來支付</string>
-  <string name="paypal_single_payment">Paypal單次支付</string>
   <string name="flags">標示</string>
   <string name="flag_good">好</string>
   <string name="flag_license">需要授權</string>

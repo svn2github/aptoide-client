@@ -116,29 +116,29 @@
     </PreferenceCategory>
 
     <!--<PreferenceCategory android:title="@string/crash_reports">-->
-        <!--<PreferenceScreen-->
-            <!--android:key="second_preferencescreen"-->
-            <!--android:title="@string/crash_reports_settings">-->
-            <!--<CheckBoxPreference-->
-                <!--android:defaultValue="true"-->
-                <!--android:key="acra.enable"-->
-                <!--android:summary="@string/pref_acra_enabled"-->
-                <!--android:title="@string/pref_enable_acra" />-->
-            <!--<CheckBoxPreference-->
-                <!--android:defaultValue="true"-->
-                <!--android:key="acra.syslog.enable"-->
-                <!--android:summary="@string/pref_acra_syslog_enabled"-->
-                <!--android:title="@string/pref_acra_syslog" />-->
-            <!--<EditTextPreference-->
-                <!--android:key="acra.user.email"-->
-                <!--android:summary="@string/pref_acra_user_email_summary"-->
-                <!--android:title="@string/pref_acra_user_email" />-->
-            <!--<CheckBoxPreference-->
-                <!--android:defaultValue="false"-->
-                <!--android:key="acra.alwaysaccept"-->
-                <!--android:summary="@string/pref_acra_alwaysaccept_enabled"-->
-                <!--android:title="@string/pref_acra_alwaysaccept" />-->
-        <!--</PreferenceScreen>-->
+    <!--<PreferenceScreen-->
+    <!--android:key="second_preferencescreen"-->
+    <!--android:title="@string/crash_reports_settings">-->
+    <!--<CheckBoxPreference-->
+    <!--android:defaultValue="true"-->
+    <!--android:key="acra.enable"-->
+    <!--android:summary="@string/pref_acra_enabled"-->
+    <!--android:title="@string/pref_enable_acra" />-->
+    <!--<CheckBoxPreference-->
+    <!--android:defaultValue="true"-->
+    <!--android:key="acra.syslog.enable"-->
+    <!--android:summary="@string/pref_acra_syslog_enabled"-->
+    <!--android:title="@string/pref_acra_syslog" />-->
+    <!--<EditTextPreference-->
+    <!--android:key="acra.user.email"-->
+    <!--android:summary="@string/pref_acra_user_email_summary"-->
+    <!--android:title="@string/pref_acra_user_email" />-->
+    <!--<CheckBoxPreference-->
+    <!--android:defaultValue="false"-->
+    <!--android:key="acra.alwaysaccept"-->
+    <!--android:summary="@string/pref_acra_alwaysaccept_enabled"-->
+    <!--android:title="@string/pref_acra_alwaysaccept" />-->
+    <!--</PreferenceScreen>-->
     <!--</PreferenceCategory>-->
 
     <PreferenceCategory
@@ -171,14 +171,17 @@
     <!--android:targetClass="cm.aptoide.pt.DeveloperMode"/>-->
     <!--</Preference>-->
     <!--</PreferenceCategory>-->
-    <PreferenceCategory android:title="@string/social_timeline"
-        android:key="socialtimeline">
+    <PreferenceCategory
+        android:key="socialtimeline"
+        android:title="@string/social_timeline">
         <Preference
             android:key="disablesocialtimeline"
             android:title="@string/disable_social_timeline" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:summary="@string/social_timeline_notifications_sum"
             android:key="socialtimelinenotifications"
-            android:title="@string/social_timeline_notifications" android:defaultValue="true" />
+            android:title="@string/social_timeline_notifications" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="about"

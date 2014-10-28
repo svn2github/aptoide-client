@@ -388,7 +388,6 @@
   <string name="error_IARG_110">การตอบความคิดเห็นไม่ถูกต้อง</string>
   <string name="error_IARG_200">โทเคนลงชื่อเข้าใช้งานไม่ถูกต้อง</string>
   <string name="error_IARG_201">โหมดลงชื่อเข้าใช้งานไม่ถูกต้อง</string>
-  <string name="error_IARG_202">การอัปโหลดไม่ถูกต้อง</string>
   <string name="error_IARG_300">การปรับแต่งหมวดหมู่ไม่ถูกต้อง</string>
   <string name="error_IARG_301">หมวดหมู่ไม่ถูกต้อง</string>
   <string name="error_IARG_302">แอปพลิเคชันที่ได้รับมามีอยู่แล้วในหมวดหมู่นี้</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">ไม่สามารถลงชื่อเข้าใช้งาน Google โปรดลองอีกครั้ง</string>
   <string name="error_AUTH_102">ไม่สามารถลงชื่อเข้าใช้งาน Facebook โปรดตรวจสอบบัญชี Facebook ของคุณ (คุณอาจต้องยืนยันที่อยู่อีเมลของคุณ)</string>
   <string name="error_AUTH_103">ไม่สามารถลงชื่อเข้าใช้งาน Facebook โปรดลองอีกครั้ง</string>
-  <string name="error_WOP_1">บัญชีของคุณได้รับการจัดเก็บเรียบร้อยแล้ว คุณไม่สามารถสร้างบัญชีอื่นภายใต้บัญชีเดียวกัน</string>
-  <string name="error_WOP_2">ชื่อที่ให้มาสำหรับร้านค้าของคุณไม่ถูกต้อง ชื่อของร้านค้าต้องมีตัวอักษร (A ถึง Z และ 0 ถึง 9) หรือขีดกลาง (-) และไม่สามารถเริ่มหรือสิ้นสุดด้วยขีดกลาง</string>
-  <string name="error_WOP_3">ร้านค้าชื่อเดียวกันนี้มีอยู่แล้ว โปรดใช้ชื่ออื่นสำหรับร้านค้าของคุณ</string>
-  <string name="error_WOP_4">ไม่สามารถสร้างร้านค้าได้ โปรดลองอีกครั้ง</string>
-  <string name="error_WOP_5">คุณต้องตั้งชื่อร้านค้าของคุณ</string>
   <string name="error_WOP_6">ในการเพิ่มความคิดเห็น คุณต้องใส่ชื่อของคุณ (ไม่เปิดเผยให้เห็น)</string>
   <string name="error_WOP_7">ความคิดเห็นผิดพลาด</string>
   <string name="error_WOP_8">การโหวตความคิดเห็นผิดพลาด</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">โปรดตรวจสอบอีเมลและรหัสผ่านของคุณ</string>
   <string name="password_validation_text">รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร และควรมีอย่างน้อย 1 ตัวอักษร และ 1 ตัวเลขหรือสัญลักษณ์พิเศษ (!\@#$%*)</string>
   <string name="jolla_not_supported">ลักษณะพิเศษนี้ไม่รองรับโดยแพลตฟอร์ม Jolla</string>
-  <string name="carrier_billing">ที่อยู่ส่งใบเรียกเก็บ</string>
-  <string name="visa">วีซ่า</string>
-  <string name="paypal_future_payments">การชำระในอนาคตด้วย Paypal</string>
-  <string name="paypal_single_payment">การชำระครั้งเดียวด้วย Paypal</string>
   <string name="flags">ธง</string>
   <string name="flag_good">ดี</string>
   <string name="flag_license">ต้องการใบรับรอง</string>

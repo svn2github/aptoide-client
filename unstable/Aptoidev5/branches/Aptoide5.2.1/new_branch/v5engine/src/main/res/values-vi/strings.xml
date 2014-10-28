@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Nhận xét trả lời không hợp lệ</string>
   <string name="error_IARG_200">Token đăng nhập không hợp lệ</string>
   <string name="error_IARG_201">Chế độ đăng nhập không hợp lệ</string>
-  <string name="error_IARG_202">Tải lên không hợp lệ</string>
   <string name="error_IARG_300">Danh mục tùy chỉnh không hợp lệ</string>
   <string name="error_IARG_301">Danh mục không hợp lệ</string>
   <string name="error_IARG_302">Ứng dụng được cung cấp đã tồn tại trong danh mục này</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Không thể đăng nhập với Google. Xin thử lại.</string>
   <string name="error_AUTH_102">Không thể đăng nhập với Facebook. Xin kiểm tra tài khoản Facebook của bạn (bạn có thể cần xác nhận địa chỉ email của bạn).</string>
   <string name="error_AUTH_103">Không thể đăng nhập với Facebook. Xin thử lại.</string>
-  <string name="error_WOP_1">Tài khoản của bạn đã có một cửa hàng. Bạn không thể tạo thêm một cửa hàng trên cùng tài khoản.</string>
-  <string name="error_WOP_2">Tên vừa đặt cho cửa hàng của bạn không hợp lệ. Tên của một cửa hàng chỉ có thể có các ký tự abc và số (A đến Z và 0 đến 9) hoặc dấu gạch nối (-), và không thể bắt đầu hoặc kết thúc với một dấu gạch nối.</string>
-  <string name="error_WOP_3">Một cửa hàng đã tồn tại với cùng tên. Xin cho một tên khác cho cửa hàng của bạn.</string>
-  <string name="error_WOP_4">Không thể tạo cửa hàng. Xin thử lại.</string>
-  <string name="error_WOP_5">Bạn cần đặt một cái tên cho cửa hàng của bạn.</string>
   <string name="error_WOP_6">Để thêm một nhận xét bạn cần nhập tên của bạn (nó sẽ được nhìn thấy)</string>
   <string name="error_WOP_7">Lỗi nhận xét</string>
   <string name="error_WOP_8">Lỗi bình chọn nhận xét</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Xin kiểm tra email và mật khẩu của bạn.</string>
   <string name="password_validation_text">Mật khẩu phải có ít nhất 8 ký tự và nên có ít nhất một ký tự và một số hoặc ký tự đặc biệt (!\@#$%*)</string>
   <string name="jolla_not_supported">Chức năng này chưa được hỗ trợ bởi nền tảng Jolla.</string>
-  <string name="carrier_billing">Thanh toán nhà mạng</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Các thanh toán tương lai của Paypal</string>
-  <string name="paypal_single_payment">Thanh toán đơn Paypal</string>
   <string name="flags">Cờ</string>
   <string name="flag_good">Tốt</string>
   <string name="flag_license">Cần Giấy Phép</string>

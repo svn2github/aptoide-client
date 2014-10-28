@@ -541,7 +541,6 @@
   <string name="facebook_timeline_preview">Vista previa de tu timeline</string>
   <string name="facebook_start_timeline">Unete al Social Timeline</string>
   <string name="facebook_join_friends">Quieres unirte a ellos en el Social Timeline??</string>
-  <string name="facebook_friends_list_using_timeline">Estan en Aptoide</string>
   <string name="facebook_friends_list_using_timeline_empty">Social Timeline te permite compartir tus aplicaciones con tus amigos de Facebook .Quieres unirte a esa red??</string>
   <string name="share_on_timeline">Comparte en Timeline</string>
   <string name="do_you_accept_timeline">¿Aceptas el Timeline de Aptoide?</string>
@@ -569,8 +568,6 @@
   <string name="invite_friends">Invita a Amigos</string>
   <string name="timeline_is_empty_send_email">Te enviaremos un email al que elijas</string>
   <string name="facebook_timeline_friends_invited">¡Amigos invitados!</string>
-  <string name="friends_that_use_timeline">Amigos que ya utilizan Aptoide Social Timeline</string>
-  <string name="friends_to_invite">Todos los amigos de Facebook en Aptoide</string>
   <string name="timeline_is_empty_no_friends">Tu muro está vacío. Esto es probablemente porque no tienes amigos o porque no tienen ninguna publicación.</string>
   <string name="timeline_is_empty_start_invite">Empecemos invitando algunos amigos:</string>
   <string name="timeline_empty_no_friends_send_email">Parece que tus amigos no han entrado aún en Aptoide con sus cuentas de Facebook. Envíales un email para que accedan con su cuenta de Facebook.</string>

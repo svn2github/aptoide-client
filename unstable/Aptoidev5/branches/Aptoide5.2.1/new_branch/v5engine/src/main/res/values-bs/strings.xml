@@ -383,7 +383,6 @@
   <string name="error_IARG_110">Netačan odgovor na komentar</string>
   <string name="error_IARG_200">Netačan token za prijavu</string>
   <string name="error_IARG_201">Netačan mod za prijavu</string>
-  <string name="error_IARG_202">Netačan upload</string>
   <string name="error_IARG_300">Netačna custom kategorija</string>
   <string name="error_IARG_301">Netačna kategorija</string>
   <string name="error_IARG_302">Prosljeđena aplikacija već postoji u kategoriji</string>
@@ -395,11 +394,6 @@
   <string name="error_AUTH_101">Neuspješna prijava sa Google-om. Molimo pokušajte ponovno.</string>
   <string name="error_AUTH_102">Neuspješna prijava sa facebook-om. Molimo provjerite vaš Facebook account (možda ćete morati provjeriti vašu mail adresu).</string>
   <string name="error_AUTH_103">Neuspješna prijava sa Facebook-om. Molimo pokušajte ponovno.</string>
-  <string name="error_WOP_1">Vaš račun već ima skladište. Ne možete napraviti novo pod istim računom.</string>
-  <string name="error_WOP_2">Neispravno ime dato za vaše skladište. Ime može sadržati samo slova brojeve i znak (-), nemože početi niti završiti sa znakom.</string>
-  <string name="error_WOP_3">Skladište već postoji sa istim imenom. Molimo probajte sa drugim imenom.</string>
-  <string name="error_WOP_4">Skladište ne može biti kreirano. Molimo pokušajte ponovno.</string>
-  <string name="error_WOP_5">Trebate dati ime vašem skladištu.</string>
   <string name="error_WOP_6">Da dodate komentar, morate ubaciti vaše ime (Drugi mogu vidjeti vaše ime)</string>
   <string name="error_WOP_7">Komentar greška</string>
   <string name="error_WOP_8">Komentar glas greška</string>
@@ -465,10 +459,6 @@
   <string name="fields_cannot_empty">Molimo provjerite vaš email i šifru.</string>
   <string name="password_validation_text">Šifra mora biti bar 8 karaktera i treba imati bar po jedno slovo broj ili specijalni karakter (!\@#$%*)</string>
   <string name="jolla_not_supported">Ovo svojstvo jos uvjek nije podrzano od strane Jolla platforme.</string>
-  <string name="carrier_billing">Carrier naplaćivanje</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Paypal buduće uplate</string>
-  <string name="paypal_single_payment">Paypal jedna naplata</string>
   <string name="flags">Ozanke</string>
   <string name="flag_good">Dobro</string>
   <string name="flag_license">Treba licenca</string>

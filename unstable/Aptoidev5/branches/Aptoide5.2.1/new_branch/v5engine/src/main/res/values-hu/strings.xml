@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Érvénytelen válasz</string>
   <string name="error_IARG_200">Érvénytelen bejelentkezési token</string>
   <string name="error_IARG_201">Érvénytelen bejelentkezési mód</string>
-  <string name="error_IARG_202">Érvénytelen feltöltés</string>
   <string name="error_IARG_300">Érvénytelen egyéni kategória</string>
   <string name="error_IARG_301">Érvénytelen kategória</string>
   <string name="error_IARG_302">Az adott app már megtalálható ebben a kategóriában</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Nem tudott bejelentkezni a Google fiókjával.</string>
   <string name="error_AUTH_102">Nem tudott bejelentkezni a Facebook fiókjával. Kérjük ellenőrizze a fiókját (előfordulhat, hogy meg kell erősítenie az e-mail címét).</string>
   <string name="error_AUTH_103">"Nem tudott bejelentkezni a Facebook fiókjával. "</string>
-  <string name="error_WOP_1">Az Ön felhasználóneve alatt már regisztrálva van egy áruház. Egynél több áruház nem tartozhat egy felhasználónévhez.</string>
-  <string name="error_WOP_2">Érvénytelen áruház név. Az áruház neve kizárólag alfanumerikus karaktereket (A-tól Z-ig és 0-tól 9-ig) és kötőjeleket tartalmazhat, azonban nem kezdődhet vagy végződhet kötőjellel.</string>
-  <string name="error_WOP_3">Az áruház neve már foglalt. Kérjük válasszon másikat.</string>
-  <string name="error_WOP_4">Az áruházat nem tudtuk létrehozni. Kérjük próbálja újra.</string>
-  <string name="error_WOP_5">Kérjük adjon nevet az áruházának.</string>
   <string name="error_WOP_6">A hozzászólás elküldéséhez Önnek meg kell adnia a nevét (látható lesz).</string>
   <string name="error_WOP_7">Hiba a hozzászólásban</string>
   <string name="error_WOP_8">Hiba a hozzászólás szavazásában</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Kérjük ellenőrizze az e-mail címét és a jelszavát</string>
   <string name="password_validation_text">A jelszónak legalább 8 karakter hosszúnak kell lennie és rendelkeznie kell legalább egy betűvel és egy számmal, vagy speciális karakterrel (!\@#$%*)</string>
   <string name="jolla_not_supported">Ez a tulajdonság jelenleg nem elérhető a Jolla felületén.</string>
-  <string name="carrier_billing">Szolgáltatói számlázás</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Jövőbeli PayPal fizetés</string>
-  <string name="paypal_single_payment">Egyszeri PayPal fizetés</string>
   <string name="flags">Megjelölések</string>
   <string name="flag_good">Jó</string>
   <string name="flag_license">Hiányos engedélyű</string>

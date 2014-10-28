@@ -388,7 +388,6 @@
   <string name="error_IARG_110">유효하지 않은 회신 댓글</string>
   <string name="error_IARG_200">유효하지 않은 로그인 토큰</string>
   <string name="error_IARG_201">유효하지 않은 로그인 모드</string>
-  <string name="error_IARG_202">유효하지 않은 업로드</string>
   <string name="error_IARG_300">유효하지 않은 커스텀 카테고리</string>
   <string name="error_IARG_301">유효하지 않은 카테고리</string>
   <string name="error_IARG_302">이 제공된 어플리케이션은 이 카테고리에 이미 존재합니다.</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">구글로 로그인 할 수 없습니다. 다시 시도하십시오</string>
   <string name="error_AUTH_102">페이스북으로 로그인 할 수 없습니다. 페이스북 계정을 확인하세요 (아마도 이메일 주소를 입증해야 할 것입니다.)</string>
   <string name="error_AUTH_103">페이스북ㅇ로 로그인 할 수 없습니다. 다시 시도하십시오</string>
-  <string name="error_WOP_1">당신의 계정은 이미 스토어가 있습니다. 동일 계정에 다른 스토어를 또 생성할 수 없습니다.</string>
-  <string name="error_WOP_2">당신의 스토어에 유효하지 않은 이름이 주어졌습니다. 스토어의 이름은 알파벳 숫자 (A -Z 와 0 - 9)와 대쉬 (-)만 허용이 되며, 대쉬로 시작하거나 끝날 수 없습니다.</string>
-  <string name="error_WOP_3">같은 이름의 스토어가 존재합니다. 다른 이름을 지어주세요.</string>
-  <string name="error_WOP_4">이 스토어가 생성될 수 없습니다. 다시 시도하십시오.</string>
-  <string name="error_WOP_5">당신의 스토어에 이름을 지어주어야 합니다.</string>
   <string name="error_WOP_6">댓글을 달기위해서, 당신의 이름을 넣어야 합니다 (보여짐)</string>
   <string name="error_WOP_7">댓글 오류</string>
   <string name="error_WOP_8">댓글 투표 오류</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">이메일과 비밀번호를 확인하십시오</string>
   <string name="password_validation_text">비밀번호는 적어도 8글자여야 하며, 적어도 하나의 글자와 하나의 숫자, 혹은 특수문자 (!\@#$%*)가 있어야 합니다.</string>
   <string name="jolla_not_supported">이 기능은 Jolla 플랫폼에서 아직 지원되지 않습니다.</string>
-  <string name="carrier_billing">서비스 공급자 비용</string>
-  <string name="visa">비자</string>
-  <string name="paypal_future_payments">페이팔 미래 결제 방법</string>
-  <string name="paypal_single_payment">페이팔 단일 결제 방법</string>
   <string name="flags">플래그</string>
   <string name="flag_good">좋음</string>
   <string name="flag_license">자격증이 필요함</string>

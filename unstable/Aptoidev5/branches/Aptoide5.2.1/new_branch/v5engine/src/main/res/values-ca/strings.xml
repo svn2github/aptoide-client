@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Comentari de resposta no vàlid</string>
   <string name="error_IARG_200">Tóken d\'inici de sessió no vàlid</string>
   <string name="error_IARG_201">Mode d\'inici de sessió no vàlid</string>
-  <string name="error_IARG_202">Càrrega no vàlida</string>
   <string name="error_IARG_300">Categoria personalitzada no vàlida</string>
   <string name="error_IARG_301">Categoria no vàlida</string>
   <string name="error_IARG_302">L\'aplicació introduïda ja existeix en aquesta categoria</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">No s\'ha pogut iniciar sessió amb Google. Sisplau, intenta-ho de nou.</string>
   <string name="error_AUTH_102">No s\'ha pogut iniciar sessió amb Facebook. Sisplau, comprova el teu compte de Facebook (pot ser que necessitis validar la teva direcció d\'email).</string>
   <string name="error_AUTH_103">No s\'ha pogut iniciar sessió amb Facebook. Sisplau, intenta-ho de nou.</string>
-  <string name="error_WOP_1">El teu compte ja té una botiga. No pots crear una altra botiga des del mateix compte.</string>
-  <string name="error_WOP_2">La teva botiga té un nom no vàlid. El nom d\'una botiga només pot tenir caràcters alfanumèrics (A a Z i 0 a 9) o guions (-), i no pot començar ni acabar amb un guió.</string>
-  <string name="error_WOP_3">Ja existeix una botiga amb el mateix nom. Sisplau, dóna-li un altre nom a la teva botiga.</string>
-  <string name="error_WOP_4">La botiga no ha pogut ser creada. Sisplau, intenta-ho de nou.</string>
-  <string name="error_WOP_5">Necessites donar-li un nom a la teva botiga.</string>
   <string name="error_WOP_6">Per afegir un comentari necessites inserir el teu nom (serà visible)</string>
   <string name="error_WOP_7">Error en els comentaris</string>
   <string name="error_WOP_8">Error en els comentaris del vot</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Sisplau, comprova el teu email i contrassenya.</string>
   <string name="password_validation_text">La contrassenya ha de tenir almenys 8 caràcters i hauria de tenir almenys una lletra i un número o caràcter especial (!\@#$%*)</string>
   <string name="jolla_not_supported">Aquesta característica encara no està disponible per a la plataforma Jolla.</string>
-  <string name="carrier_billing">Facturació per telefonia mòbil</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Futurs pagaments amb Paypal</string>
-  <string name="paypal_single_payment">Pagament únic amb Paypal</string>
   <string name="flags">Marques</string>
   <string name="flag_good">Bona</string>
   <string name="flag_license">Necessita Llicència</string>

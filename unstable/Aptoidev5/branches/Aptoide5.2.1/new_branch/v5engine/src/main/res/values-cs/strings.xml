@@ -388,7 +388,6 @@
   <string name="error_IARG_110">Neplatná odpověď ke komentáři</string>
   <string name="error_IARG_200">Neplatný přihlašovací token</string>
   <string name="error_IARG_201">Neplatný přihlašovací mód</string>
-  <string name="error_IARG_202">Neplatný soubor pro nahrání</string>
   <string name="error_IARG_300">Neplatná vlastní kategorie</string>
   <string name="error_IARG_301">Neplatná kategorie</string>
   <string name="error_IARG_302">Poskytovaná aplikace již existuje v této kategorii</string>
@@ -400,11 +399,6 @@
   <string name="error_AUTH_101">Nepodařilo se přihlásit pomocí Google. Prosím zkuste to znovu.</string>
   <string name="error_AUTH_102">Nepodařilo se přihlásit pomocí Facebooku. Zkontrolujte prosím svůj Facebook účet (možná budete muset potvrdit svou e-mailovou adresu).</string>
   <string name="error_AUTH_103">Nepodařilo se přihlásit pomocí Facebooku. Prosím zkuste to znovu.</string>
-  <string name="error_WOP_1">Váš účet již obchod má. Nemůžete vytvořit další pod stejným účtem.</string>
-  <string name="error_WOP_2">Zadané jméno pro obchod je neplatné. Jméno obchodu může mít pouze alfanumerické znaky (od A do Z a od 0 až 9) nebo pomlčky (-), nesmí začínat, ani končit pomlčkou.</string>
-  <string name="error_WOP_3">Obchod s tímto jménem již existuje. Prosím zadejte jiné jméno pro Váš obchod.</string>
-  <string name="error_WOP_4">Obchod nemohl být vytvořen. Zkuste to prosím znovu.</string>
-  <string name="error_WOP_5">Potřebujete zadat jméno pro Váš obchod.</string>
   <string name="error_WOP_6">Pro přidání komentáře musíte zadat vaše jméno (bude viditelné)</string>
   <string name="error_WOP_7">Chyba komentáře</string>
   <string name="error_WOP_8">Chyba při hlasování u komentáře</string>
@@ -470,10 +464,6 @@
   <string name="fields_cannot_empty">Zkontrolujte prosím svůj e-mail a heslo.</string>
   <string name="password_validation_text">Heslo musí mít alespoň 8 znaků a měl by mít alespoň jedno písmeno a jedno číslo nebo speciální znak (!\@#$%*)</string>
   <string name="jolla_not_supported">Tato funkce zatím není podporována na Jolla platformě.</string>
-  <string name="carrier_billing">Bilance účtu</string>
-  <string name="visa">Visa</string>
-  <string name="paypal_future_payments">Budoucí platby Paypalu</string>
-  <string name="paypal_single_payment">Paypal jednotná platba</string>
   <string name="flags">Označení</string>
   <string name="flag_good">Dobré</string>
   <string name="flag_license">Potřebné licence</string>
