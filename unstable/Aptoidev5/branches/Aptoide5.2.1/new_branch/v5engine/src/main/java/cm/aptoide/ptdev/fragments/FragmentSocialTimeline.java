@@ -851,29 +851,31 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             }
 
             @Override
-            protected void caseOK(GenericResponse response) {
-
-                if(response.getStatus().equals("OK")){
-                    TimeLineCommentsDialog fragmentByTag = (TimeLineCommentsDialog) getChildFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
-                    listAPKsInstallsRequest = new ListApksInstallsRequest();
-                    listAPKsInstallsRequest.setPostId(postid);
-                    manager.execute(listAPKsInstallsRequest, new TimelineRequestListener<TimelineListAPKsJson>(){
-                        @Override
-                        protected void caseOK(TimelineListAPKsJson response) {
-                            if(!response.getUsersapks().isEmpty()){
-                                TimelineListAPKsJson.UserApk apk = response.getUsersapks().get(0);
-                                apks.set(position,apk);
-                            }
-                            adapter.onDataReady();
-                        }
-                    });
-                    if(fragmentByTag!=null){
-                        fragmentByTag.dismiss();
-                    }
-                }else{
-                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            protected void caseFAIL() {
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                dismissFrag();
+            }
+            private void dismissFrag(){
+                TimeLineCommentsDialog fragmentByTag = (TimeLineCommentsDialog) getChildFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
+                if(fragmentByTag!=null){
+                    fragmentByTag.dismiss();
                 }
-
+            }
+            @Override
+            protected void caseOK(GenericResponse response) {
+                listAPKsInstallsRequest = new ListApksInstallsRequest();
+                listAPKsInstallsRequest.setPostId(postid);
+                manager.execute(listAPKsInstallsRequest, new TimelineRequestListener<TimelineListAPKsJson>(){
+                    @Override
+                    protected void caseOK(TimelineListAPKsJson response) {
+                        if(!response.getUsersapks().isEmpty()){
+                            TimelineListAPKsJson.UserApk apk = response.getUsersapks().get(0);
+                            apks.set(position,apk);
+                        }
+                        adapter.onDataReady();
+                    }
+                });
+                dismissFrag();
             }
         }
 
