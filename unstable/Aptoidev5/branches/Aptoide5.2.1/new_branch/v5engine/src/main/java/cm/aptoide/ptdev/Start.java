@@ -3,8 +3,10 @@ package cm.aptoide.ptdev;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -29,6 +31,7 @@ import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -122,9 +125,11 @@ import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.views.BadgeView;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
 import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
+import cm.aptoide.ptdev.webservices.TimelineCheckRequestSync;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
+import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
 import roboguice.util.temp.Ln;
 
 public class Start extends ActionBarActivity implements
@@ -238,10 +243,13 @@ public class Start extends ActionBarActivity implements
     private boolean isDisconnect;
     private AccountManager accountManager;
 
+
+
     @Override
     protected void onStop() {
-        super.onStop();
         BusProvider.getInstance().unregister(this);
+        super.onStop();
+
         if (spiceManager.isStarted()) {
             spiceManager.shouldStop();
         }
@@ -568,7 +576,7 @@ public class Start extends ActionBarActivity implements
                 pager.setCurrentItem(3);
                 getIntent().removeExtra("fromTimeline");
             }
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             queueName = sharedPreferences.getString("queueName", null);
 
 
@@ -660,6 +668,8 @@ public class Start extends ActionBarActivity implements
 
             loadEditorsAndTopApps();
 
+
+
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -711,6 +721,41 @@ public class Start extends ActionBarActivity implements
 
             updateBadge(PreferenceManager.getDefaultSharedPreferences(this));
             updateNewFeature(PreferenceManager.getDefaultSharedPreferences(this));
+            if(sharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)){
+
+                executorService.execute(new Runnable() {
+
+
+                    @Override
+                    public void run() {
+
+
+                        try {
+
+                            TimelineActivityJson json = TimelineCheckRequestSync.getRequest("new_installs,owned_ativity,related_activity");
+
+                            int total = 0;
+
+                            total += json.getOwned_activity().getTotal_likes().intValue();
+                            total += json.getOwned_activity().getTotal_comments().intValue();
+
+                            total += json.getNew_installs().getTotal().intValue();
+
+                            total += json.getRelated_activity().getTotal_comments().intValue();
+                            total += json.getRelated_activity().getTotal_likes().intValue();
+
+                            if (total > 0) {
+                                badgeNew.setText(total);
+                                badgeNew.setBadgeBackgroundColor(Color.RED);
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
         } else {
             sponsoredCache = savedInstanceState.getString("sponsoredCache");
         }
@@ -747,6 +792,7 @@ public class Start extends ActionBarActivity implements
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
     }
+
 
     private void getNoSpaceDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -908,8 +954,11 @@ public class Start extends ActionBarActivity implements
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        Intent i = new Intent(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
-        sendBroadcast(i);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(this, PushNotificationReceiver.class);
+        i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
 
         if (sPref.getBoolean("firstrun", true)) {
 

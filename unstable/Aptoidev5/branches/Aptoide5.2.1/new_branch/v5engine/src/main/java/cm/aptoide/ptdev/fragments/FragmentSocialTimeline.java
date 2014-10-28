@@ -237,7 +237,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     private void startLogin(GraphUser user, Session session) {
         try {
             loginMode = true;
-            BusProvider.getInstance().unregister(this);
             Fragment fragment = new FragmentSignIn();
             Bundle args = new Bundle();
             args.putInt(FragmentSignIn.LOGIN_MODE_ARG, LoginActivity.Mode.FACEBOOK.ordinal());
@@ -288,14 +287,11 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onResume() {
         super.onResume();
+        BusProvider.getInstance().register(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onResume();
         }
-        try{
-            BusProvider.getInstance().register(this);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
 
     }
 
@@ -314,15 +310,12 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     @Override
     public void onPause() {
+        BusProvider.getInstance().unregister(this);
         super.onPause();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onPause();
         }
-        try{
-            BusProvider.getInstance().unregister(this);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
     @Override
@@ -615,51 +608,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onCreate(Bundle savedInstanceState) {
             //Aptoide.getThemePicker().setAptoideTheme(this);
             super.onCreate(savedInstanceState);
-            //setContentView(R.layout.page_timeline);
-            Bundle addAccountOptions = null;
 
-
-
-//            if (AptoideUtils.isLoggedIn(getActivity())) {
-//                if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(this).getString("loginType", null))) {
-//                    GetUserSettingsRequest request = new GetUserSettingsRequest();
-//                    request.addSetting(GetUserSettingsRequest.TIMELINE);
-//                    spiceManager.execute(request, "timeline-status", DurationInMillis.ONE_HOUR / 2, new GetUserSettingsRequestListener());
-//                    return;
-//                } else {
-//                    addAccountOptions = new Bundle();
-//                    addAccountOptions.putBoolean(LoginActivity.OPTIONS_LOGOUT_BOOL, true);
-//                }
-//            }
-//
-//            if (addAccountOptions == null)
-//                addAccountOptions = new Bundle();
-//            addAccountOptions.putBoolean(LoginActivity.OPTIONS_FASTBOOK_BOOL, true);
-//            AccountManager.get(this).addAccount(
-//                    Aptoide.getConfiguration().getAccountType(),
-//                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
-//                    null, addAccountOptions, this,
-//                    new AccountManagerCallback<Bundle>() {
-//                        @Override
-//                        public void run(AccountManagerFuture<Bundle> future) {
-//                            String name ;
-//
-//                            try {
-//                                name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
-//
-//                                if (TextUtils.isEmpty(name)) {
-//                                    //finish();
-//                                } else {
-//                                    init();
-//                                }
-//                            } catch (Exception e) {
-//                               // finish();
-//                            }
-//
-//                        }
-//                    },
-//                    new Handler(Looper.getMainLooper())
-//            );
         }
 
         String username = "";

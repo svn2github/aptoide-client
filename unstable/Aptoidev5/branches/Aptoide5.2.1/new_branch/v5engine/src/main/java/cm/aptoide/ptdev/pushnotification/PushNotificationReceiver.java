@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 /**
  * Created by asantos on 01-09-2014.
@@ -48,7 +49,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     private static final String PUSH_NOTIFICATION_MSG = "MSG";
     private static final String PUSH_NOTIFICATION_EXTERNAL_URL = "url";
     private static final String PUSH_NOTIFICATION_IMG_URL = "img";
-    private static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY;//AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
+    public static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY;//AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
 
     // same as Manifest
     public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationTrackUrl";
@@ -95,11 +96,11 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         if (action != null) {
-            if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(PUSH_NOTIFICATION_Action_FIRST_TIME)) {
+            if (action.equals(Intent.ACTION_BOOT_COMPLETED) ) {
                 AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent i = new Intent(context, PushNotificationReceiver.class);
                 i.setAction(PUSH_NOTIFICATION_Action);
-                PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PUSH_NOTIFICATION_TIME_INTERVAL, pi);
                 Log.i("PushNotificationReceiver", "Alarm Registed Received");
             } else if (action.equals(PUSH_NOTIFICATION_Action)) {
@@ -112,11 +113,11 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                     public void run() {
                         try {
 
-                            GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getPushNotifications");
+                            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "/3/getPushNotifications");
 
                             HashMap<String, String> parameters = new HashMap<String, String>();
 
-                            parameters.put("oem_id", "2dae2cd9fa7b328bffe4570327dd4e3c");
+                            //parameters.put("oem_id", "2dae2cd9fa7b328bffe4570327dd4e3c");
                             parameters.put("mode", "json");
                             parameters.put("limit", "1");
 
@@ -200,13 +201,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         return banner_url;
     }
 
-    private Intent fillintentStuffFortest(Intent i) {
-        return i
-                .putExtra(PUSH_NOTIFICATION_TITLE, "TwinTAB Android Tablet")
-                .putExtra(PUSH_NOTIFICATION_MSG, "Calling Tablet! Reveals an immersive device. Know more information here!")
-                .putExtra(PUSH_NOTIFICATION_IMG_URL, "http://dl.dropboxusercontent.com/u/4804935/twinmos.jpg")
-                .putExtra(PUSH_NOTIFICATION_EXTERNAL_URL, "http://www.twinmos.com/");
-    }
+
 
     private void loadNotification(Bundle extra, Context context) {
         loadNotification(extra, context, null);

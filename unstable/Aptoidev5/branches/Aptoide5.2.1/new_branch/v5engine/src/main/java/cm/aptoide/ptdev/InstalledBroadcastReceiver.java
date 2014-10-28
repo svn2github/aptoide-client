@@ -68,8 +68,6 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                         if(action.split("\\|")[0].equals(RollBackItem.Action.INSTALLING.toString())) {
 
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.INSTALLED.toString());
-
-                            //Toast.makeText(Aptoide.getContext(), "sending broadcast " + intent.getData().getEncodedSchemeSpecificPart() + " " +  referrer, Toast.LENGTH_LONG).show();
                             Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
                             i.setPackage(intent.getData().getEncodedSchemeSpecificPart());
                             i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

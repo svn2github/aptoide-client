@@ -317,7 +317,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mPlusClient = new PlusClient.Builder(this, this, this).build();
 
             LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
-            fbButton.setReadPermissions(Arrays.asList("email"));
+            fbButton.setReadPermissions(Arrays.asList("email", "user_friends"));
             fbButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

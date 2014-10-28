@@ -4,8 +4,8 @@ apply plugin: 'crashlytics'
 //def signingExists = false
 //def signingFile = new File('signing.gradle')
 
-//    apply from: 'signing.gradle'
-//    signingExists = true
+    apply from: 'signing.gradle'
+
 
 
 
@@ -40,17 +40,18 @@ android {
     buildTypes {
 
         debug {
-            runProguard false
+            runProguard true
             proguardFile 'proguard-aptoide.txt'
             zipAlign true
         }
 
 
-        //release {
+        release {
+            runProguard true
+            proguardFile 'proguard-aptoide.txt'
+                signingConfig signingConfigs.release
 
-        //        signingConfig signingConfigs.release
-
-        //}
+        }
     }
 }
 

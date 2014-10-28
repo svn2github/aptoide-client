@@ -1,7 +1,7 @@
 include 'v5engine',
         'Aptoide',
         'hanselandgretel',
-        'Partners',
+        //'Partners',
         //'AptoideHelper',
         'AptoideDev',
         'android-websockets',

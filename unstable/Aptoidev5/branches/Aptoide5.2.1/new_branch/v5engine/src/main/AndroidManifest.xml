@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk tools:overrideLibrary = "com.facebook.android,com.astuetz.pagerslidingtabstrip,com.mopub.mobileads" />
+    <uses-sdk tools:overrideLibrary = "com.google.android.gms, com.facebook.android,com.astuetz.pagerslidingtabstrip,com.mopub.mobileads" />
     <application />
 
 </manifest>
