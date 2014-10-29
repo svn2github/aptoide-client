@@ -1,22 +1,15 @@
 package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.manuelpeinado.multichoiceadapter.MultiChoiceAdapter;
-import com.manuelpeinado.multichoiceadapter.extras.actionbarcompat.MultiChoiceArrayAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -42,21 +35,23 @@ public class InviteFriendsListAdapter extends ArrayAdapter<Friend> {
 	    ViewHolder holder;
 
 	    if(convertView == null){
-		    convertView = LayoutInflater.from(ctx).inflate(R.layout.row_facebook_invite_friends, null);
+		    v = LayoutInflater.from(ctx).inflate(R.layout.row_facebook_invite_friends, parent, false);
 			holder = new ViewHolder();
-		    holder.name = (CheckedTextView) convertView.findViewById(R.id.username);
-			holder.avatarImage = (ImageView) convertView.findViewById(R.id.user_avatar);
+		    holder.name = (CheckedTextView) v.findViewById(R.id.username);
+			holder.avatarImage = (ImageView) v.findViewById(R.id.user_avatar);
 
-		    convertView.setTag(holder);
-	    }else{
+		    v.setTag(holder);
+	    } else {
 		    holder = (ViewHolder)convertView.getTag();
+            v = convertView;
 	    }
-        v = convertView;
+
 
         Friend friend = getItem(position);
 
         holder.name.setChecked(((ListView)parent).isItemChecked(position));
 	    holder.name.setText(friend.getUsername());
+        Log.d("AptoideDebug", friend.getUsername());
         ImageLoader.getInstance().displayImage(friend.getAvatar(), holder.avatarImage);
         return v;
     }

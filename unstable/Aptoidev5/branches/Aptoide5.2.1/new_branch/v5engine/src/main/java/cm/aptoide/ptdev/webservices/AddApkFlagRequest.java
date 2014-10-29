@@ -45,13 +45,11 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        token = SecurePreferences.getInstance().getString("access_token", null);
+        token = SecurePreferences.getInstance().getString("access_token", "empty");
 
+        parameters.put("access_token", token);
+        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
 
-        if ( token != null) {
-            parameters.put("access_token", token);
-            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-        }
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

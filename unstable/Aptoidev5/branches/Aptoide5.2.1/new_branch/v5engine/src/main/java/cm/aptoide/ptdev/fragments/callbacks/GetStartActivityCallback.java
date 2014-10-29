@@ -10,5 +10,6 @@ public interface GetStartActivityCallback {
     public void matureLock();
 
     public void timelineCallback();
+    public void updateTimelineBadge();
 
 }

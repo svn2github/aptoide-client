@@ -138,12 +138,6 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
                 listView.setAdapter(adapter);
                 setFriends(response.getActiveFriends());
                 c.findViewById(android.R.id.empty).setVisibility(View.GONE);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    }
-                });
 
             }
         });

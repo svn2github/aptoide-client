@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
@@ -63,52 +64,58 @@ public class TimelinePostsSyncService extends Service  {
         public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
             try {
 
-                TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("new_installs");
-
-                Intent intent = new Intent(getContext(), Start.class);
-                intent.putExtra("fromTimeline", true);
-
-                intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
-                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(Intent.ACTION_VIEW);
-
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains("timelineTimestamp")) {
 
 
-                Notification notification = new NotificationCompat.Builder(getContext())
-                        .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
-                        .setContentIntent(resultPendingIntent)
-                        .setOngoing(false)
-                        .setContentTitle(getString(R.string.notification_timeline_posts))
-                        .setContentText(getString(R.string.notification_social_timeline)).build();
-                ArrayList<String> avatarLinks = new ArrayList<String>();
+                    TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("new_installs");
 
-                try {
+                    Intent intent = new Intent(getContext(), Start.class);
+                    intent.putExtra("fromTimeline", true);
 
-                    setAvatares(avatarLinks, timelineActivityJson.getNew_installs().getFriends());
+                    intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setAction(Intent.ACTION_VIEW);
 
-                    if (Build.VERSION.SDK_INT >= 16) {
-                        RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
-                        expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_posts));
-                        expandedView.removeAllViews(R.id.linearLayout2);
-                        for(String avatar: avatarLinks){
-                            Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
-                            RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
-                            imageView.setImageViewBitmap(R.id.friend_avatar, loadedImage);
-                            expandedView.addView(R.id.linearLayout2, imageView);
+                    PendingIntent resultPendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                    Notification notification = new NotificationCompat.Builder(getContext())
+                            .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
+                            .setContentIntent(resultPendingIntent)
+                            .setOngoing(false)
+                            .setContentTitle(getString(R.string.notification_timeline_posts))
+                            .setContentText(getString(R.string.notification_social_timeline)).build();
+                    ArrayList<String> avatarLinks = new ArrayList<String>();
+
+                    try {
+
+                        setAvatares(avatarLinks, timelineActivityJson.getNew_installs().getFriends());
+
+                        if (Build.VERSION.SDK_INT >= 16) {
+                            RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
+                            expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_posts));
+                            expandedView.removeAllViews(R.id.linearLayout2);
+                            for (String avatar : avatarLinks) {
+                                Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
+                                RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
+                                imageView.setImageViewBitmap(R.id.friend_avatar, loadedImage);
+                                expandedView.addView(R.id.linearLayout2, imageView);
+                            }
+
+                            notification.bigContentView = expandedView;
                         }
 
-                        notification.bigContentView = expandedView;
+
+                        if (!avatarLinks.isEmpty()) {
+                            final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                            managerNotification.notify(86459, notification);
+                        }
+
+
+                    } catch (NullPointerException ignored) {
                     }
 
-
-                    if(!avatarLinks.isEmpty()){
-                        final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                        managerNotification.notify(86459, notification);
-                    }
-
-
-                }catch (NullPointerException ignored) {}
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

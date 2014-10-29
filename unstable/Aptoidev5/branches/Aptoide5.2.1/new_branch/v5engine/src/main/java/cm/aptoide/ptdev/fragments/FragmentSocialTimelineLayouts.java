@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookException;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -26,6 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -173,7 +175,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
     public void getFriends(){
         ListUserFriendsRequest request = new ListUserFriendsRequest();
-        String username = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("username", "");
+        String username = SecurePreferences.getInstance().getString("access_token", "");
         manager.execute(request, "facebook-friends-" + username, DurationInMillis.ONE_HOUR ,new TimelineRequestListener<ListUserFriendsJson>() {
             @Override
             protected void caseOK(ListUserFriendsJson response) {
@@ -203,6 +205,14 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             default:
             case LOGOUT_FIRST:
                 LoginButton fb_login_button = (LoginButton) view.findViewById(R.id.fb_login_button);
+                fb_login_button.setReadPermissions(Arrays.asList("email", "user_friends"));
+                fb_login_button.setOnErrorListener(new LoginButton.OnErrorListener() {
+                    @Override
+                    public void onError(FacebookException error) {
+                        error.printStackTrace();
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                    }
+                });
                 fb_login_button.setFragment(getParentFragment());
                 fb_login_button.setOnClickListener(new View.OnClickListener() {
                     @Override

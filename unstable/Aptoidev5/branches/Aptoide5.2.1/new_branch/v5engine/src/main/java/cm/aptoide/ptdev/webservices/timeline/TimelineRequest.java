@@ -27,15 +27,14 @@ public abstract class TimelineRequest<E> extends GoogleHttpClientSpiceRequest<E>
         parameters.put("mode" , "json");
         fillWithExtraOptions(parameters);
 
-        String token = SecurePreferences.getInstance().getString("access_token", null);
+        String token = SecurePreferences.getInstance().getString("access_token", "empty");
 
         HttpContent content = new UrlEncodedContent(parameters);
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        if (token!=null) {
-            parameters.put("access_token", token);
-            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-        }
+        parameters.put("access_token", token);
+        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+
 
         request.setConnectTimeout(20000);
         request.setReadTimeout(20000);

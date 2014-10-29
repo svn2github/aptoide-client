@@ -34,7 +34,6 @@ public class Errors {
         errors.put("IARG-110", R.string.error_IARG_110);
         errors.put("IARG-200", R.string.error_IARG_200);
         errors.put("IARG-201", R.string.error_IARG_201);
-        errors.put("IARG-202", R.string.error_IARG_202);
         errors.put("IARG-300", R.string.error_IARG_300);
         errors.put("IARG-301", R.string.error_IARG_301);
         errors.put("IARG-302", R.string.error_IARG_302);
@@ -77,11 +76,7 @@ public class Errors {
         errors.put("AUTH-102", R.string.error_AUTH_102);
         errors.put("AUTH-103", R.string.error_AUTH_103);
 
-        errors.put("WOP-1", R.string.error_WOP_1);
-        errors.put("WOP-2", R.string.error_WOP_2);
-        errors.put("WOP-3", R.string.error_WOP_3);
-        errors.put("WOP-4", R.string.error_WOP_4);
-        errors.put("WOP-5", R.string.error_WOP_5);
+
         errors.put("WOP-6", R.string.error_WOP_6);
         errors.put("WOP-7", R.string.error_WOP_7);
         errors.put("WOP-8", R.string.error_WOP_8);

@@ -551,7 +551,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 apks.clear();
                 onItemsReadyRefresh(new ArrayList<TimelineListAPKsJson.UserApk>(timelineListAPKsJson.getUsersapks()));
                 mSwipeRefreshLayout.setRefreshing(false);
-
+                ((GetStartActivityCallback)getActivity()).updateTimelineBadge();
                 if (!mListShown) setListShown(true);
 
             }

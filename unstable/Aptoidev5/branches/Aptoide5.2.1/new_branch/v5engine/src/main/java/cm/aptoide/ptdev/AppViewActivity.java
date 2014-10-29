@@ -1276,7 +1276,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                                 String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
                                 Log.d("Aptoide", "InSponsoredExtras");
-                                clickUrl = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), clickUrl);
+                                String partnerType = getIntent().getBundleExtra("partnerExtra").getString("partnerType");
+
+                                clickUrl = AptoideAdNetworks.parseString(partnerType, Aptoide.getContext(), clickUrl);
                                 HttpResponse response;
                                 boolean repeat;
                                 do  {

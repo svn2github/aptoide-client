@@ -72,13 +72,8 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        token = SecurePreferences.getInstance().getString("access_token", null);
+        token = SecurePreferences.getInstance().getString("access_token", "empty");
 
-
-        if (token!=null) {
-            parameters.put("access_token", token);
-            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-        }
         request.setParser(new JacksonFactory().createJsonObjectParser());
 
         return request.execute().parseAs( getResultType() );

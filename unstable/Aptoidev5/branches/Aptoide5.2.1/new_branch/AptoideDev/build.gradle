@@ -1,5 +1,7 @@
 apply plugin: 'android'
 apply plugin: 'crashlytics'
+apply from: 'signing.gradle'
+
 
 repositories{
 
@@ -24,6 +26,14 @@ android {
 
     }
 
+   buildTypes{
+       release {
+           runProguard true
+           proguardFile 'proguard-aptoide.txt'
+           signingConfig signingConfigs.release
+       }
+
+   }
 }
 
 dependencies {

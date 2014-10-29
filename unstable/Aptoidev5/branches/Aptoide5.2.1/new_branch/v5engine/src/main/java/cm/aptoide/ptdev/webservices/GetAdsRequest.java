@@ -1,16 +1,9 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
-import android.os.Build;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
-import com.flurry.android.impl.analytics.FlurryAnalyticsModule;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -18,10 +11,7 @@ import com.google.api.client.http.UrlEncodedContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
-import org.apache.http.params.HttpParams;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +21,6 @@ import cm.aptoide.ptdev.ads.AptoideAdNetworks;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
 /**
  * Created by rmateus on 29-07-2014.
@@ -93,7 +82,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("get_mature", mature);
 
-        parameters.put("partners", "1");
+        parameters.put("partners", "1-2");
 
 
         parameters.put("app_pkg", package_name);
@@ -131,7 +120,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
                     String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
 
-                    impressionUrlString = AptoideAdNetworks.parseAppiaString(Aptoide.getContext(), impressionUrlString);
+                    impressionUrlString = AptoideAdNetworks.parseString(suggestionJson.getPartner().getPartnerInfo().getName(), Aptoide.getContext(), impressionUrlString);
 
                     GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
                     getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).executeAsync(executor);

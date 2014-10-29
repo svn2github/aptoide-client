@@ -70,12 +70,9 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        token = SecurePreferences.getInstance().getString("access_token", null);
-
-        if (token!=null) {
-            parameters.put("access_token", token);
-            request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-        }
+        token = SecurePreferences.getInstance().getString("access_token", "empty");
+        parameters.put("access_token", token);
+        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
 
         Log.d("Aptoide-ApkUserBased", url.toString());
         request.setParser(new JacksonFactory().createJsonObjectParser());

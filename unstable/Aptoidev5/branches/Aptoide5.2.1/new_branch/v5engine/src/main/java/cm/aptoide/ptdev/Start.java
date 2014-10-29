@@ -728,27 +728,26 @@ public class Start extends ActionBarActivity implements
 
                     @Override
                     public void run() {
-
-
                         try {
 
-                            TimelineActivityJson json = TimelineCheckRequestSync.getRequest("new_installs,owned_ativity,related_activity");
+                            TimelineActivityJson json = TimelineCheckRequestSync.getRequest("new_installs");
 
                             int total = 0;
 
-                            total += json.getOwned_activity().getTotal_likes().intValue();
-                            total += json.getOwned_activity().getTotal_comments().intValue();
+                            total += getFriendsTotal(json.getNew_installs().getTotal());
 
-                            total += json.getNew_installs().getTotal().intValue();
-
-                            total += json.getRelated_activity().getTotal_comments().intValue();
-                            total += json.getRelated_activity().getTotal_likes().intValue();
-
+                            final int finalTotal = total;
                             if (total > 0) {
-                                badgeNew.setText(total);
-                                badgeNew.setBadgeBackgroundColor(Color.RED);
-                            }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        badgeNew.setText(String.valueOf(finalTotal));
+                                        badgeNew.setBadgeBackgroundColor(Color.RED);
+                                        badgeNew.show();
+                                    }
+                                });
 
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -790,6 +789,15 @@ public class Start extends ActionBarActivity implements
 
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+    }
+
+    public int getFriendsTotal(Number number){
+        try{
+            return number.intValue();
+        } catch (Exception ignored) {}
+
+        return 0;
 
     }
 
@@ -1051,6 +1059,10 @@ public class Start extends ActionBarActivity implements
         } else {
             if (badgeUpdates.isShown()) badgeUpdates.hide(true);
         }
+    }
+
+    public void updateTimelineBadge() {
+        badgeNew.hide();
     }
 
     public void updateNewFeature(SharedPreferences sPref) {

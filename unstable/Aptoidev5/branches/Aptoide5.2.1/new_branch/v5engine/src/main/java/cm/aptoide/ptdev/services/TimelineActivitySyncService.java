@@ -15,6 +15,8 @@ import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -83,64 +85,71 @@ public class TimelineActivitySyncService extends Service  {
 
             try {
 
-                TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("owned_activity, related_activity");
-                int total_likes = timelineActivityJson.getOwned_activity().getTotal_likes().intValue();
-                int total_comments = timelineActivityJson.getRelated_activity().getTotal_comments().intValue() + timelineActivityJson.getOwned_activity().getTotal_comments().intValue();
+                if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains("timelineTimestamp")) {
 
-                String notificationText;
+                    TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("owned_activity, related_activity");
+                    int total_likes = timelineActivityJson.getOwned_activity().getTotal_likes().intValue();
+                    int total_comments = timelineActivityJson.getRelated_activity().getTotal_comments().intValue() + timelineActivityJson.getOwned_activity().getTotal_comments().intValue();
 
-                if(total_comments == 0){
-                    notificationText = getString(R.string.notification_timeline_new_likes, total_likes);
-                }else if(total_likes == 0){
-                    notificationText = getString(R.string.notification_timeline_new_comments, total_comments);
-                }else {
-                    notificationText = getString(R.string.notification_timeline_activity, total_comments, total_likes);
-                }
+                    String notificationText;
+
+                    if (total_comments == 0) {
+                        notificationText = getString(R.string.notification_timeline_new_likes, total_likes);
+                    } else if (total_likes == 0) {
+                        notificationText = getString(R.string.notification_timeline_new_comments, total_comments);
+                    } else {
+                        notificationText = getString(R.string.notification_timeline_activity, total_comments, total_likes);
+                    }
 
 
-                Intent intent = new Intent(getContext(), Start.class);
-                intent.putExtra("fromTimeline", true);
+                    Intent intent = new Intent(getContext(), Start.class);
+                    intent.putExtra("fromTimeline", true);
 
-                intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
-                intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(Intent.ACTION_VIEW);
+                    intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setAction(Intent.ACTION_VIEW);
 
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Notification notification = new NotificationCompat.Builder(getContext())
-                        .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
-                        .setContentIntent(resultPendingIntent)
-                        .setOngoing(false)
-                        .setContentTitle(notificationText)
-                        .setContentText(getString(R.string.notification_social_timeline)).build();
-                ArrayList<String> avatarLinks = new ArrayList<String>();
+                    Notification notification = new NotificationCompat.Builder(getContext())
+                            .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
+                            .setContentIntent(resultPendingIntent)
+                            .setOngoing(false)
+                            .setContentTitle(notificationText)
+                            .setContentText(getString(R.string.notification_social_timeline)).build();
+                    ArrayList<String> avatarLinks = new ArrayList<String>();
 
-                try {
+                    try {
 
-                    if ( timelineActivityJson.getOwned_activity().getFriends() != null) setAvatares(avatarLinks, timelineActivityJson.getOwned_activity().getFriends());
-                    if ( timelineActivityJson.getRelated_activity().getFriends() != null) setAvatares(avatarLinks, timelineActivityJson.getRelated_activity().getFriends());
+                        if (timelineActivityJson.getOwned_activity().getFriends() != null)
+                            setAvatares(avatarLinks, timelineActivityJson.getOwned_activity().getFriends());
+                        if (timelineActivityJson.getRelated_activity().getFriends() != null)
+                            setAvatares(avatarLinks, timelineActivityJson.getRelated_activity().getFriends());
 
-                    if (Build.VERSION.SDK_INT >= 16) {
-                        RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
-                        expandedView.setTextViewText(R.id.description, getString(R.string.notification_timeline_activity, total_comments, total_likes));
-                        expandedView.removeAllViews(R.id.linearLayout2);
+                        if (Build.VERSION.SDK_INT >= 16) {
+                            RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
+                            expandedView.setTextViewText(R.id.description, notificationText);
+                            expandedView.removeAllViews(R.id.linearLayout2);
 
-                        for(String avatar: avatarLinks){
-                            Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
-                            RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
-                            imageView.setImageViewBitmap(R.id.friend_avatar, loadedImage);
-                            expandedView.addView(R.id.linearLayout2, imageView);
+                            for (String avatar : avatarLinks) {
+                                Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
+                                RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
+                                imageView.setImageViewBitmap(R.id.friend_avatar, loadedImage);
+                                expandedView.addView(R.id.linearLayout2, imageView);
+                            }
+
+                            notification.bigContentView = expandedView;
                         }
 
-                        notification.bigContentView = expandedView;
-                    }
+                        if (!avatarLinks.isEmpty()) {
+                            final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                            managerNotification.notify(86458, notification);
+                        }
 
-                    if(!avatarLinks.isEmpty()) {
-                        final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                        managerNotification.notify(86458, notification);
+                    } catch (NullPointerException ignored) {
+                        ignored.printStackTrace();
                     }
-
-                }catch (NullPointerException ignored) {ignored.printStackTrace();}
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
