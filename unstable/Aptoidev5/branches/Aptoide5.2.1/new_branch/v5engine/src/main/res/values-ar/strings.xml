@@ -511,8 +511,9 @@
   <string name="feedback_send_button">ارسال تقرير</string>
   <string name="feedback_subject">الموضوع</string>
   <string name="feedback_to_write">"اكتب هنا لارسال تقريرك لنا "</string>
-  <string name="feedback_include_logs">اضافة لقطات شاشة وسجلات</string>
-  <string name="feedback_not_valid">من فضلك ادخل موضوع صالح</string>
+  <string name="feedback_to_write2">اكتب هنا لترسل لنا ملاحظاتك... /n/n• المرجو اعطائنا كل التفاصيل التي يمكن تحصل عليها• الخطوات التي اجريتها• الأخطاء التي تراها</string>
+  <string name="feedback_include_logs">يتضمن لقطات شاشة وسجلات</string>
+  <string name="feedback_not_valid">من فضلك ادخل موضوع صالح!</string>
   <string name="feedback_no_email">لايوجد بريد الالتكتروني</string>
   <string name="search_result_looking_for">هل هذا ماتبحث عنه ؟</string>
   <string name="search_result_did_you_mean">هل تقصد ؟</string>
@@ -540,6 +541,7 @@
   <string name="facebook_timeline_preview">عرض اليوميات</string>
   <string name="facebook_start_timeline">الانضمام الى اليوميات الاجتماعية</string>
   <string name="facebook_join_friends">هل تريد الانضمام اليهم في اليوميات الاجتماعية؟</string>
+  <string name="facebook_friends_list_using_timeline">تستخدم بالفعل أبتويد اليوميات الاجتماعي</string>
   <string name="facebook_friends_list_using_timeline_empty">اليوميات الاجتماعية تسمح لك لتبادل التطبيقات الخاصة بك مع أصدقائك على الفيسبوك . هل ترغب في الانضمام إلى الشبكة؟</string>
   <string name="share_on_timeline">مشاركة على الصفحة</string>
   <string name="do_you_accept_timeline">هل توافق على صفحة أبتويد؟</string>
@@ -561,12 +563,24 @@
   <string name="facebook_private_actions">هذا التطبيق لن ينشر على فيس بوك</string>
   <string name="notification_social_timeline">الصفحة الاجتماعية لـ أبتويد. جربها الآن!</string>
   <string name="notification_timeline_activity">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
-  <string name="notification_timeline_new_comments">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
-  <string name="notification_timeline_new_likes">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
+  <string name="notification_timeline_new_comments">"لديك %s  تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
+  <string name="notification_timeline_new_likes">"لديك %s تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
   <string name="notification_timeline_posts">أصدقاؤك قاموا بتنصيب تطبيقات جديدة!</string>
   <string name="timeline_is_empty">لااا... لا يوجد اصدقاء على صفحة أبتويد الاجتماعية؟ قم بدعوتهم!</string>
   <string name="invite_friends">إدع أصدقائك</string>
   <string name="timeline_is_empty_send_email">سوف نقوم بإرسال بريد الكتروني للذين تقوم بإختيارهم</string>
   <string name="facebook_timeline_friends_invited">تمت دعوة الاصدقاء!</string>
-  <string name="friends_to_invite">كل اصدقاء الفيس بوك في أبتويد</string>
+  <string name="friends_to_invite">جميع أصدقاء الفيسبوك الآخرين في أبتويد</string>
+  <string name="timeline_is_empty_no_friends">يومياتك خالية. وهذا ربما لأنك لم يكن لديك أصدقاء على أبتويد بعد أو لم يكن لديهم أي منشورات.</string>
+  <string name="timeline_is_empty_start_invite">دعونا نبدأ من خلال دعوة بعض الأصدقاء:</string>
+  <string name="timeline_empty_no_friends_send_email">يبدو أن أصدقائك لم يسجلو الدخول لابتويد من خلال حساب الفيسبوك الخاصة بهم. ارسل لهم بريدا إلكترونيا لتسجيل الدخول مع حساب الفيسبوك الخاصة بهم</string>
+  <string name="timeline_empty_send_email_to_friends">البريد الإلكتروني للأصدقاء</string>
+  <string name="select_friends_to_invite">الرجاء اختيار أصدقائك لدعوتهم!</string>
+  <string name="aptoide_timeline">يوميات أبتويد</string>
+  <string name="timeline_email_invitation">دعاك للانضمام ليوميات ابتويد الاجتماعية. كن متصلاً!</string>
+  <string name="timeline_email_how_to_join">كيف يمكنك الانضمام إلى اليوميات الاجتماعية؟</string>
+  <string name="timeline_email_step1">1- حمل آخر نسخة من أبتويد:</string>
+  <string name="timeline_email_step2">2- اذهب الي التبويب \"اليوميات الاجتماعية\" وانضم للشبكة</string>
+  <string name="timeline_not_compatible">"ووه ... هذه الميزة غير متوافقة مع إصدار الأندرويد  الخاص بك"</string>
+  <string name="social_timeline_notifications">اشعارات اليوميات</string>
 </resources>

@@ -140,7 +140,7 @@
   <string name="no_sch_downloads">Ei ajastettuja latauksia!</string>
   <string name="schDown_installselected">Asenna valitut</string>
   <string name="stores">Kaupat</string>
-  <string name="insert_store_name">Lisää kaupan nimi:</string>
+  <string name="insert_store_name">Syötä kaupan nimi:</string>
   <string name="store_name">Kaupan nimi</string>
   <string name="search_other_stores">Tai hae toisia...</string>
   <string name="see_top_stores">Näytä huippukaupat</string>
@@ -540,7 +540,6 @@
   <string name="facebook_timeline_preview">Aikajanan esikatselu:</string>
   <string name="facebook_start_timeline">Liity sosiaaliseen aikajanaan</string>
   <string name="facebook_join_friends">Haluatko liittää heidät sosiaaliseen aikajanaan?</string>
-  <string name="facebook_friends_list_using_timeline">ovat Aptoidessa</string>
   <string name="facebook_friends_list_using_timeline_empty">Sosiaalinen aikajana sallii sinun jakaa sovelluksesi Facebook-kavereittesi kanssa. Haluatko liittyä verkkoon?</string>
   <string name="share_on_timeline">Jaa aikajanalla</string>
   <string name="do_you_accept_timeline">Hyväksytkö Aptoiden aikajanan?</string>
@@ -548,6 +547,7 @@
   <string name="more_friends">lisää</string>
   <string name="hide_post">PIILOTA</string>
   <string name="unhide_post">NÄYTÄ</string>
+  <string name="timeline_like">Tykkää</string>
   <string name="unlike">Älä tykkää</string>
   <string name="comment">Kommentti</string>
   <string name="hide_post_info">Kaverisi eivät näe tätä viestiä</string>
@@ -560,10 +560,13 @@
   <string name="new_feature">Uusi!</string>
   <string name="facebook_private_actions">Tämä sovellus ei lähetä mitään Facebookiin</string>
   <string name="notification_social_timeline">Aptoiden sosiaalinen aikajana. Tutustu siihen nyt!</string>
+  <string name="notification_timeline_activity">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
+  <string name="notification_timeline_new_comments">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
+  <string name="notification_timeline_new_likes">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
+  <string name="notification_timeline_posts">Kaverisi asensivat uusia sovelluksia!</string>
   <string name="timeline_is_empty">Hupsista... ei kavereita Aptoiden sosiaalisessa aikajanassa? Kutsu heidät!</string>
   <string name="invite_friends">Kutsu kavereita</string>
   <string name="timeline_is_empty_send_email">Lähetämme sähköpostia heille, jotka valitset</string>
   <string name="facebook_timeline_friends_invited">Kaverit kutsuttu!</string>
-  <string name="friends_that_use_timeline">Kaverit, jotka jo käyttävät Aptoiden sosiaalista aikajanaa</string>
   <string name="friends_to_invite">Kaikki Facebook-kaverit Aptoidessa</string>
 </resources>
