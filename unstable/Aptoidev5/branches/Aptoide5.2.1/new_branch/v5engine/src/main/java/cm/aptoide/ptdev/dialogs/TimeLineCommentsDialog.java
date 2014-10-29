@@ -77,7 +77,7 @@ public class TimeLineCommentsDialog extends DialogFragment {
         if(likesNumber >= 1) {
             likes.setVisibility(View.VISIBLE);
             if(likesNumber == 1) {
-                likes.setText(likesNumber + " " + getString(R.string.like));
+                likes.setText(likesNumber + " " + getString(R.string.timeline_like));
             }else{
                 likes.setText(likesNumber + " " + getString(R.string.likes));
             }
