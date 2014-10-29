@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>5</version>
+        <groupId>com.mopub.mobileads</groupId>
+        <artifactId>mopub-android</artifactId>
+        <version>1.0</version>
     </parent>
 
-    <groupId>com.mopub.mobileads</groupId>
     <artifactId>mopub-sdk</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -24,11 +23,10 @@
 
         <!--main-->
         <dependency>
-            <groupId>com.google.android</groupId>
+            <groupId>com.android.support</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r7</version>
+            <version>19.1.0</version>
         </dependency>
-
 
         <!--test-->
         <dependency>
@@ -39,38 +37,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.0.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>fest-android</artifactId>
-            <version>1.0.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- this needs to come above fest-reflect or we pick up the wrong org.fest.util.Strings -->
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert-core</artifactId>
-            <version>2.0M9</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-reflect</artifactId>
-            <version>1.4</version>
+            <version>1.0.7</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <artifactId>junit-dep</artifactId>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
 
@@ -92,7 +68,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.1.2</version>
+            <version>4.4.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -112,11 +88,11 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.8.2</version>
                 <configuration>
                     <sdk>
                         <!-- platform or api level (api level 4 = platform 1.6)-->
-                        <platform>16</platform>
+                        <platform>19</platform>
                     </sdk>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
@@ -127,9 +103,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
+                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=256m</argLine>
                     <excludes>
                         <exclude>**/Test*.java</exclude>
                     </excludes>
+                    <parallel>classesAndMethods</parallel>
                 </configuration>
             </plugin>
         </plugins>

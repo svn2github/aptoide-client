@@ -1284,21 +1284,21 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 do  {
                                     repeat = false;
                                     GenericUrl url = new GenericUrl(clickUrl);
-                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, null).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
+                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
 
                                     try{
                                         response = httpRequest.execute();
 
                                     } catch (HttpResponseException exception){
 
-                                        if(exception.getStatusCode() == 302) {
+                                        if(exception.getStatusCode() / 100 == 3 ) {
                                             repeat = true;
                                             final String location = exception.getHeaders().getLocation();
                                             Log.d("CENAAS", "Response was: " + exception.getStatusCode());
 
                                             if (!TextUtils.isEmpty(location)) {
                                                 clickUrl = location;
-                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com"))) {
+                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com"))) {
                                                     referrer = getReferrer(clickUrl);
                                                 }
                                             } else {
@@ -1319,8 +1319,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                                 } while ( repeat );
-
-
 
 
                             } catch (Exception e) {

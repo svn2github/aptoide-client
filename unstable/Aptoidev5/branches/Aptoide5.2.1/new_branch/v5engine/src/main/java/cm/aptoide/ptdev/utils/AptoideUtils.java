@@ -77,10 +77,7 @@ import static android.net.ConnectivityManager.TYPE_MOBILE_HIPRI;
 import static android.net.ConnectivityManager.TYPE_MOBILE_MMS;
 import static android.net.ConnectivityManager.TYPE_MOBILE_SUPL;
 import static android.net.ConnectivityManager.TYPE_WIFI;
-import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.ETHERNET;
-import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.MOBILE;
-import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.UNKNOWN;
-import static com.mopub.mobileads.AdUrlGenerator.MoPubNetworkType.WIFI;
+
 
 /**
  * Created with IntelliJ IDEA.
