@@ -742,6 +742,7 @@ public class Start extends ActionBarActivity implements
                                     @Override
                                     public void run() {
                                         badgeNew.setText(String.valueOf(finalTotal));
+                                        badgeNew.setTextSize(11);
                                         badgeNew.setBadgeBackgroundColor(Color.RED);
                                         badgeNew.show();
                                     }
