@@ -8,7 +8,6 @@
 -dontobfuscate
 -dontpreverify
 -dontwarn **
--printusage /home/rmateus/usage.txt
 
 -keepattributes
 -keepparameternames
