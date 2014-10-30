@@ -60,9 +60,10 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
+        token = SecurePreferences.getInstance().getString("access_token", "empty");
 
         parameters.put("mode", "json");
-        parameters.put("token", token);
+        parameters.put("access_token", token);
         parameters.put("repo", repo);
         parameters.put("like", isLike?"like":"dontLike");
         parameters.put("apkid", packageName);
@@ -72,7 +73,6 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
         HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        token = SecurePreferences.getInstance().getString("access_token", "empty");
 
         request.setParser(new JacksonFactory().createJsonObjectParser());
 

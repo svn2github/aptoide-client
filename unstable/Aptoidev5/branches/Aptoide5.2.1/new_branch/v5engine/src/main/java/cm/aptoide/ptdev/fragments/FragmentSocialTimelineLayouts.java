@@ -94,7 +94,8 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     }
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
-    private TextView friends_using_timeline, join_friends;
+    private TextView friends_using_timeline;
+    private View join_friends;
     private LinearLayout friends_list;
 
 
@@ -319,7 +320,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
     public void showFriends(View view){
         friends_using_timeline = (TextView) view.findViewById(R.id.friends_using_timeline);
-        join_friends = (TextView) view.findViewById(R.id.join_friends);
+        join_friends = view.findViewById(R.id.join_friends);
         getFriends();
 
 //          lv = (ListView) findViewById(R.id.TimeLineListView);

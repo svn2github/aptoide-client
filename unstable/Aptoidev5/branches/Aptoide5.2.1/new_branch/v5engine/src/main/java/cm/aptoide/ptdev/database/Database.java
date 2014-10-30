@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -1100,7 +1101,15 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_PREVIOUS_VERSION, rollBackItem.getPreviousVersion());
         values.put(Schema.RollbackTbl.COLUMN_ICONPATH, rollBackItem.getIconPath());
         values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
-        values.put(Schema.RollbackTbl.COLUMN_ACTION, (rollBackItem.getAction() == null ? "" : rollBackItem.getAction().toString() + "|" + rollBackItem.getAction().getReferrer()));
+
+        String action = "";
+        if(!TextUtils.isEmpty(rollBackItem.getAction().getReferrer())){
+            action = rollBackItem.getAction().toString() + "|" + rollBackItem.getAction().getReferrer();
+        }else{
+            action = rollBackItem.getAction().toString();
+        }
+
+        values.put(Schema.RollbackTbl.COLUMN_ACTION, action);
         values.put(Schema.RollbackTbl.COLUMN_CONFIRMED, 0);
         values.put(Schema.RollbackTbl.COLUMN_REPO, rollBackItem.getRepoName());
 

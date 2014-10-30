@@ -49,7 +49,7 @@ android {
         release {
             runProguard true
             proguardFile 'proguard-aptoide.txt'
-                signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
 
         }
     }

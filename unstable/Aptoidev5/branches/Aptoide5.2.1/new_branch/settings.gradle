@@ -3,10 +3,10 @@ include 'v5engine',
         'hanselandgretel',
         //'Partners',
         //'AptoideHelper',
-        'AptoideDev',
+        //'AptoideDev',
         'android-websockets',
         'facebook',
-        'google-play-services',
+        //'google-play-services',
         'mopub-sdk'
 
 

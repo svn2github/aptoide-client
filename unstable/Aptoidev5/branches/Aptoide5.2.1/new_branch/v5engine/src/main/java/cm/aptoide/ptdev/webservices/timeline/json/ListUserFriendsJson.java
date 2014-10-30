@@ -11,10 +11,22 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class ListUserFriendsJson extends GenericResponse {
     public ArrayList<Friend> getInactiveFriends() {
-        return userfriends.timeline_inactive;
+
+        if(userfriends!=null){
+            return userfriends.timeline_inactive;
+        }else{
+            return new ArrayList<Friend>();
+        }
+
+
     }
     public ArrayList<Friend> getActiveFriends() {
-        return userfriends.timeline_active;
+
+        if(userfriends!=null){
+            return userfriends.timeline_active;
+        }else{
+            return new ArrayList<Friend>();
+        }
     }
     @Key
     Friends userfriends;

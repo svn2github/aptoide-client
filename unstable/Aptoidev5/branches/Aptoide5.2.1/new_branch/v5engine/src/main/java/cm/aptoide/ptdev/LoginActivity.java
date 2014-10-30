@@ -618,6 +618,12 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                         mPlusClient.clearDefaultAccount();
                         mPlusClient.disconnect();
                     }
+                    android.support.v4.app.DialogFragment pd = (android.support.v4.app.DialogFragment) getSupportFragmentManager().findFragmentByTag("pleaseWaitDialog");
+
+                    if(pd!=null){
+                        pd.dismissAllowingStateLoss();
+                    }
+
                 }else{
                     getUserInfo(oAuth, username, mode, accountType, passwordOrToken);
                 }

@@ -162,7 +162,10 @@ public class AptoideUtils {
 
     public static void toastError(List<Error> errors) {
         for (Error error: errors){
-            String localizedError = Aptoide.getContext().getString(Errors.getErrorsMap().get(error.getCode()));
+            String localizedError = null;
+            try{
+                localizedError = Aptoide.getContext().getString(Errors.getErrorsMap().get(error.getCode()));
+            }catch (NullPointerException ignored){}
             if(localizedError==null){
                 localizedError = error.getMsg();
             }

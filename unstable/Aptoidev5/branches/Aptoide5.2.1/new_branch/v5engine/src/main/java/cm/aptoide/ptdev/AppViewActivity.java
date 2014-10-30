@@ -1268,6 +1268,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
                 executorService.submit(new Runnable() {
+
                     @Override
                     public void run() {
                         if(getIntent().hasExtra("partnerExtra")){

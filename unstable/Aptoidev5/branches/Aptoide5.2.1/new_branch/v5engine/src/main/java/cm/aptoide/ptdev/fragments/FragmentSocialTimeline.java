@@ -35,6 +35,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.flurry.android.FlurryAgent;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -68,6 +69,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
+import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
@@ -83,6 +85,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.Callback, FragmentSocialTimelineLayouts.Callback {
 
     private GetStartActivityCallback callback;
+
 
     @Subscribe
     public void forceRefresh(SocialTimelineEvent event){
@@ -132,12 +135,30 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             removeAccount = false;
         }
         loginMode = false;
-        startTimeline();
+        startTimeline(true);
     }
 
-    private void startTimeline() {
+    private void startTimeline(boolean force) {
 
-        if (Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+
+        if(force) {
+            Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+                    request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    try {
+                        request.loadDataFromNetwork();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        if (Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false) || force) {
 
             Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
@@ -182,7 +203,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     @Override
     public void onStartTimeline() {
-        startTimeline();
+        startTimeline(false);
     }
 
     @Override
@@ -261,7 +282,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
         if (AptoideUtils.isLoggedIn(Aptoide.getContext())) {
             if ("FACEBOOK".equals(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getString("loginType", null))) {
-                startTimeline();
+                startTimeline(false);
             } else {
                 fragment = new FragmentSocialTimelineLayouts();
                 Bundle args = new Bundle();
@@ -288,6 +309,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
+        forceRefresh(callback.produceTimelineEvent());
+        forceInit(callback.produceInitEvent());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             fbhelper.onResume();
         }
@@ -543,7 +566,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                //swipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

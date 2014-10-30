@@ -950,7 +950,7 @@ public class Start extends ActionBarActivity implements
 
     }
 
-    @Produce
+
     public SocialTimelineEvent produceTimelineEvent(){
         Log.d("ProducingAptoideEvent", "" + timelineRefresh);
         SocialTimelineEvent socialTimelineEvent = new SocialTimelineEvent(timelineRefresh);
@@ -1079,7 +1079,7 @@ public class Start extends ActionBarActivity implements
         }
     }
 
-    @Produce
+
     public SocialTimelineInitEvent produceInitEvent(){
         return new SocialTimelineInitEvent(refresh);
     }
