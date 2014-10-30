@@ -317,7 +317,16 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     if (getIntent().getBooleanExtra("fromMyapp", false)) {
                         getIntent().removeExtra("fromMyapp");
-                        AptoideDialog.myappInstall(name).show(getSupportFragmentManager(), "myApp");
+                        if( payment != null ) {
+                            isPaidApp = payment.getAmount().floatValue() > 0;
+                            if(!isPaidApp){
+                                AptoideDialog.myappInstall(name).show(getSupportFragmentManager(), "myApp");
+                            }
+                        }else{
+                            AptoideDialog.myappInstall(name).show(getSupportFragmentManager(), "myApp");
+                        }
+
+
                     }
                     md5 = json.getApk().getMd5sum();
                     publishEvents();
@@ -356,7 +365,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         download.setMd5(md5);
 
                         if( payment != null ) {
-                            download.setPaid(payment.getStatus().equals("OK") && payment.getAmount().floatValue() > 0);
+                            isPaidApp = payment.getAmount().floatValue() > 0;
+                            download.setPaid(payment.getStatus().equals("OK") && isPaidApp);
                         }
 
                         if(!isUpdate){

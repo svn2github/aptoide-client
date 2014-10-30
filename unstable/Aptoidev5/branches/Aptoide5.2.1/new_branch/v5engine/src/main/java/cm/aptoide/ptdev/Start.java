@@ -962,12 +962,20 @@ public class Start extends ActionBarActivity implements
 
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, PushNotificationReceiver.class);
         i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_NO_CREATE) != null);
+
+
+        if(!alarmUp){
+
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
+
+        }
+
+
 
         if (sPref.getBoolean("firstrun", true)) {
 

@@ -162,8 +162,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             Account account = AccountManager.get(getActivity()).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
 
-
-
             if(Preferences.getBoolean("socialtimelinenotifications", true)){
 
                 String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
@@ -556,8 +554,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                     if (!mListShown) setListShown(true);
                 }
 
-
-
             }
 
         };
@@ -650,8 +646,10 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             final View invite = inviteFriends.findViewById(R.id.timeline_invite);
             final Context c = getActivity();
             ListUserFriendsRequest request = new ListUserFriendsRequest();
+
             request.setOffset(0);
             request.setLimit(150);
+
             manager.execute(request, "friendslist" + SecurePreferences.getInstance().getString("access_token", "") , DurationInMillis.ONE_HOUR / 2, new RequestListener<ListUserFriendsJson>() {
 
                 @Override
@@ -664,6 +662,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                     View.OnClickListener onClickListener;
 
                     if(listUserFriendsJson.getInactiveFriends().isEmpty()){
+
                         onClickListener = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -672,7 +671,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                             }
                         };
 
-                    }else{
+                    } else {
+
                         onClickListener = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -686,7 +686,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
                 }
             });
-
 
             getListView().setItemsCanFocus(true);
             setListAdapter(adapter);
@@ -704,9 +703,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 refreshRequest();
                 forceRefresh = false;
             }
-
         }
-
 
         @Override
         public void onStart() {
@@ -754,6 +751,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             ChangeUserApkInstallStatusRequest request = new ChangeUserApkInstallStatusRequest();
             request.setPostStatus(status);
             request.setPostId(id);
+            manager.removeDataFromCache(TimelineListAPKsJson.class);
             manager.execute(request, new TimelineRequestListener<GenericResponse>());
         }
 
@@ -771,6 +769,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             AddUserApkInstallLikeRequest request = new AddUserApkInstallLikeRequest();
             request.setLike(like);
             request.setPostId(id);
+
             manager.execute(request, new TimelineRequestListener<GenericResponse>());
         }
 
@@ -800,7 +799,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             args.putInt(TimeLineCommentsDialog.POSITION, position);
 
             TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
-            commentsDialog.setCallback(this);
             commentsDialog.setArguments(args);
             commentsDialog.show(getChildFragmentManager(), COMMENTSDIALOGTAG);
         }

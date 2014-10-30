@@ -89,10 +89,11 @@ public class TimeLineCommentsDialog extends DialogFragment {
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (callback != null) {
+                TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
+
+                if (parentFragment != null) {
                     String s = ((EditText) dialogView.findViewById(R.id.TimeLineCommentEditText)).getText().toString();
-                    callback.commentPost(id, s, position);
-                    callback = null;
+                    parentFragment.commentPost(id, s, position);
                 }
             }
         });
