@@ -117,7 +117,7 @@
   <string name="setting_auto_update_sum">Ativa a atualização automática de aplicativos</string>
   <string name="setting_auto_update_title">Ativar auto atualização</string>
   <string name="setting_updates">Atualizações</string>
-  <string name="setting_updates_notification_title">Notificações de Atualizações</string>
+  <string name="setting_updates_notification_title">Notificação de Atualizações</string>
   <string name="setting_updates_notification_sum">Mostra novas notificações de atualizações</string>
   <string name="clear_dwn_title">Ícones</string>
   <string name="description">Descrição</string>
@@ -205,8 +205,8 @@
   <string name="x_app">%d app</string>
   <string name="x_apps">%d apps</string>
   <string name="aptoide_downloading">%s está baixando</string>
-  <string name="min_sdk">SDK Mínimo</string>
-  <string name="min_screen">Tela Mínima</string>
+  <string name="min_sdk">SDK Mín.</string>
+  <string name="min_screen">Tela Mín.</string>
   <string name="found_results">Encontrado %s resultado(s)</string>
   <string name="no_search_result">Você não tem ‘%s’ em suas lojas adicionadas.</string>
   <string name="error_occured">Ocorreu um erro. Por favor, tente novamente</string>
@@ -216,7 +216,7 @@
   <string name="downloads">Downloads</string>
   <string name="size">Tamanho</string>
   <string name="likes">Curtidas</string>
-  <string name="dont_likes">Não curtidas</string>
+  <string name="dont_likes">Curtidas negativas</string>
   <string name="split_stores">Dividir Lojas</string>
   <string name="change_theme">Alterar tema</string>
   <string name="theme">Temas</string>
@@ -423,7 +423,7 @@
   <string name="flag_review_fake">Este aplicativo foi manualmente analisado pelo Aptoide como Falso</string>
   <string name="flag_review_freeze">Este aplicativo foi manualmente analisado pelo Aptoide como Congelado</string>
   <string name="flag_review_virus">Este aplicativo foi manualmente analisado pelo Aptoide como Vírus</string>
-  <string name="X_download_number">%s baixados.</string>
+  <string name="X_download_number">%s down.</string>
   <string name="search_more">Procurar Mais</string>
   <string name="more_editors_choice">Mais Escolha dos Editores</string>
   <string name="more_top_apps">Mais Top Apps</string>
@@ -550,7 +550,7 @@
   <string name="hide_post">ESCONDER</string>
   <string name="unhide_post">MOSTRAR</string>
   <string name="timeline_like">Curtir</string>
-  <string name="unlike">Não curtir</string>
+  <string name="unlike">Descurtir</string>
   <string name="comment">Comentar</string>
   <string name="hide_post_info">Seus amigos não vão ver este post</string>
   <string name="wizard_new_timeline">1 - Nova Linha do Tempo Social</string>

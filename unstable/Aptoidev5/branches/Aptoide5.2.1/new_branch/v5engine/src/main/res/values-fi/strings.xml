@@ -511,6 +511,7 @@
   <string name="feedback_send_button">Lähetä palautetta</string>
   <string name="feedback_subject">Aihe</string>
   <string name="feedback_to_write">Kirjoita tähän lähettääksesi meille palautetta</string>
+  <string name="feedback_to_write2">Kirjoita tähän lähettääksesi meille palautetta…\n\n• Anna meille kaikki mahdollinen tieto \n• Mitä teit ennen ongelmia \n• Millaisia virheilmoituksia sait</string>
   <string name="feedback_include_logs">Sisällytä kuvaruutukopio ja lokit</string>
   <string name="feedback_not_valid">Syötä kunnollinen aihe!</string>
   <string name="feedback_no_email">Sähköpostiohjelmaa ei ole asennettuna!</string>
@@ -540,6 +541,7 @@
   <string name="facebook_timeline_preview">Aikajanan esikatselu:</string>
   <string name="facebook_start_timeline">Liity sosiaaliseen aikajanaan</string>
   <string name="facebook_join_friends">Haluatko liittää heidät sosiaaliseen aikajanaan?</string>
+  <string name="facebook_friends_list_using_timeline">käyttävät jo Aptoiden sosiaalista aikajanaa</string>
   <string name="facebook_friends_list_using_timeline_empty">Sosiaalinen aikajana sallii sinun jakaa sovelluksesi Facebook-kavereittesi kanssa. Haluatko liittyä verkkoon?</string>
   <string name="share_on_timeline">Jaa aikajanalla</string>
   <string name="do_you_accept_timeline">Hyväksytkö Aptoiden aikajanan?</string>
@@ -561,12 +563,25 @@
   <string name="facebook_private_actions">Tämä sovellus ei lähetä mitään Facebookiin</string>
   <string name="notification_social_timeline">Aptoiden sosiaalinen aikajana. Tutustu siihen nyt!</string>
   <string name="notification_timeline_activity">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
-  <string name="notification_timeline_new_comments">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
-  <string name="notification_timeline_new_likes">Sinulla on %1$s kpl uusia kommentteja ja %2$s kpl tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
+  <string name="notification_timeline_new_comments">Sinulla on %s kpl uusia kommentteja. Tarkista ne sosiaalisessa aikajanassa!</string>
+  <string name="notification_timeline_new_likes">Sinulla on %s kpl uusia tykkäyksiä. Tarkista ne sosiaalisessa aikajanassa!</string>
   <string name="notification_timeline_posts">Kaverisi asensivat uusia sovelluksia!</string>
   <string name="timeline_is_empty">Hupsista... ei kavereita Aptoiden sosiaalisessa aikajanassa? Kutsu heidät!</string>
   <string name="invite_friends">Kutsu kavereita</string>
   <string name="timeline_is_empty_send_email">Lähetämme sähköpostia heille, jotka valitset</string>
   <string name="facebook_timeline_friends_invited">Kaverit kutsuttu!</string>
-  <string name="friends_to_invite">Kaikki Facebook-kaverit Aptoidessa</string>
+  <string name="friends_to_invite">Kaikki muut Facebook-kaverit Aptoidessa</string>
+  <string name="timeline_is_empty_no_friends">Aikajanasi on tyhjä. Tämä johtunee siitä, että joko sinulla ole kavereita Aptoidessa tai he eivät ole vielä julkaisseet mitään.</string>
+  <string name="timeline_is_empty_start_invite">Aloitetaan kutsumalla joitakin kavereita:</string>
+  <string name="timeline_empty_no_friends_send_email">Näyttää siltä, että kaverisi eivät ole kirjautuneet Aptoideen Facebook-tileillään. Lähetä heille sähköpostilla pyyntö kirjautua sisään Facebook-tilillään.</string>
+  <string name="timeline_empty_send_email_to_friends">Sähköpostia kavereille</string>
+  <string name="select_friends_to_invite">Valitse kaverisi kutsuaksesi heidät!</string>
+  <string name="aptoide_timeline">Aptoiden aikajana</string>
+  <string name="timeline_email_invitation">kutsui sinut liittymään hänen Aptoiden sosiaaliseen aikajanaansa. Ole yhteydessä!</string>
+  <string name="timeline_email_how_to_join">Miten voit liittyä Aptoiden sosiaaliseen aikajanaan?</string>
+  <string name="timeline_email_step1">1 - Lataa uusin versio Aptoidesta</string>
+  <string name="timeline_email_step2">2 - Siirry “Sosiaalinen aikajana” -välilehdelle ja liity verkkoon</string>
+  <string name="timeline_not_compatible">Hupsista... Tämä toiminto ei ole yhteensopiva Android-versiosi kanssa</string>
+  <string name="social_timeline_notifications">Aikajanan ilmoitukset</string>
+  <string name="social_timeline_notifications_sum">Poista Aptoiden sosiaalisen aikajanan ilmoitukset käytöstä. Et saa uusimpia uutisia ilmoituspalkkiin.</string>
 </resources>
