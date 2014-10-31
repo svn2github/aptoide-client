@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -138,6 +139,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         startTimeline(true);
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     private void startTimeline(boolean force) {
 
 
@@ -168,11 +170,10 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
 
                 ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, true);
-                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
+                ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
 
                 ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
-                if(Build.VERSION.SDK_INT >= 8) ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
-
+                ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
             }
 
             if (!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL)) {
