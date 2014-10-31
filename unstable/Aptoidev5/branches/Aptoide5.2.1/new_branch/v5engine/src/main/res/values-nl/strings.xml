@@ -27,7 +27,7 @@
   <string name="show_less">Toon minder</string>
   <string name="like">Leuk</string>
   <string name="dont_like">Niet leuk</string>
-  <string name="comments">Commentaren</string>
+  <string name="comments">Reacties</string>
   <string name="write_your_comment">Type je commentaar</string>
   <string name="add_comment">Voeg commentaar toe</string>
   <string name="opinion_success">Je aanvraag is succesvol ingediend</string>
@@ -64,8 +64,8 @@
   <string name="settings_dwn_network_rules">Mobiel Netwerk Opties</string>
   <string name="setting_icon_download_rules">Iconen download regels</string>
   <string name="setting_sum_icon_download_rules">Download iconen over een toegestaan mobiel netwerk</string>
-  <string name="setting_general_download_rules">Algemene Download Regels</string>
-  <string name="setting_sum_general_download_rules">Download Apps, Editors Keuze; Top Apps en Winkels over een toegestaan mobiel netwerk</string>
+  <string name="setting_general_download_rules">Algemene download regels</string>
+  <string name="setting_sum_general_download_rules">Download Apps, Editors Keuze, Top Apps en Winkels over een toegestaan mobiel netwerk</string>
   <string name="setting_wifi">WiFi</string>
   <string name="setting_3g">3G</string>
   <string name="setting_4g">4G</string>
@@ -152,7 +152,7 @@
   <string name="rollback_updated">Geupdate</string>
   <string name="rollback_downgraded">Gedegradeerd</string>
   <string name="install">Installeren</string>
-  <string name="get_latest_version">Haal de allernieuwste binnen</string>
+  <string name="get_latest_version">Verkrijg de nieuwste versie</string>
   <string name="get_latest_version_and_trusted">Haal laatste &amp; vertrouwde binnen</string>
   <string name="review">Recentie</string>
   <string name="rate_this_app">Geef deze app je waardering</string>
@@ -184,8 +184,8 @@
   <string name="sign_out">Uitloggen</string>
   <string name="please_wait">Wachten aub...</string>
   <string name="excluded_updates">Uitgesloten Updates</string>
-  <string name="no_excluded_updates">Geen Uitgesloten Updates</string>
-  <string name="no_excluded_updates_selected">Geen Uitgesloten Updates geselecteerd</string>
+  <string name="no_excluded_updates">Geen uitgesloten updates!</string>
+  <string name="no_excluded_updates_selected">Geen uitgesloten updates geselecteerd</string>
   <string name="restore_updates">Herstel Updates</string>
   <string name="start_loading">Laden…</string>
   <string name="one_account_allowed">Alleen één account toegestaan</string>
@@ -241,7 +241,7 @@
   <string name="scanned_verified_by_tester">Deze applicatie is handmatig beoordeeld door een tester van Aptoide Team welke de veiligheid van de applicatie zeker stelt.</string>
   <string name="schDown_nodownloadselect">Geen downloads geselecteerd</string>
   <string name="addSchDown">Toegevoegd aan geplande downloads</string>
-  <string name="added_to_scheduled">Toegevoegd aan Menu %gt; Geplande Downloads</string>
+  <string name="added_to_scheduled">Toegevoegd aan Menu: Geplande Downloads</string>
   <string name="error_no_market">Je hebt geen Google Play Store geïnstalleerd!</string>
   <string name="schDown_invertselection">Selectie omkeren</string>
   <string name="schDown_removeselected">Geselecteerde verwijderen</string>
@@ -511,6 +511,7 @@
   <string name="feedback_send_button">Verzend Feedback</string>
   <string name="feedback_subject">Onderwerp</string>
   <string name="feedback_to_write">Schrijf hier om je feedback ter versturen</string>
+  <string name="feedback_to_write2">Schrijf hier om je feedback te sturen…\n\n• Geef ons alle details die je hebt \n• Stappen die je hebt ondernomen \n• Fouten die je bent tegen gekomen</string>
   <string name="feedback_include_logs">Voeg schermafbeelding en loggegevens toe</string>
   <string name="feedback_not_valid">Vul aub een geldig onderwerp in!</string>
   <string name="feedback_no_email">Geen email programma geïnstalleerd!</string>
@@ -518,8 +519,8 @@
   <string name="search_result_did_you_mean">Bedoelde je:</string>
   <string name="device_not_allowed">Deze app is niet toegestaan op dit apparaat!</string>
   <string name="maybe_in_other_stores">Misschien in andere winkels?</string>
-  <string name="suggested_app">Voorgestelde app</string>
-  <string name="suggested_apps">Voorgestelde app\'s</string>
+  <string name="suggested_app">Aanbevolen App</string>
+  <string name="suggested_apps">Aanbevolen Apps</string>
   <string name="sponsored">Gesponsord</string>
   <string name="btn_search_other_stores">Zoek in andere Winkels</string>
   <string name="results">Zoek resultaten:</string>
@@ -540,7 +541,7 @@
   <string name="facebook_timeline_preview">Tijdlijn Voorbeeld:</string>
   <string name="facebook_start_timeline">Start Sociale Tijdlijn</string>
   <string name="facebook_join_friends">Wil je met hun mee doen in de Sociale Tijdlijn?</string>
-  <string name="facebook_friends_list_using_timeline">zijn in Aptoide</string>
+  <string name="facebook_friends_list_using_timeline">zijn Aptoide Sociale Tijdlijn al aan het gebruiken</string>
   <string name="facebook_friends_list_using_timeline_empty">Sociale Tijdlijn staat toe om je apps te delen met je Facebook vrienden. Wil je mee doen met het netwerk?</string>
   <string name="share_on_timeline">Deel op Tijdlijn</string>
   <string name="do_you_accept_timeline">Accepteer je de Aptoide Tijdlijn?</string>
@@ -548,6 +549,7 @@
   <string name="more_friends">meer</string>
   <string name="hide_post">VERBERGEN</string>
   <string name="unhide_post">ZICHTBAAR MAKEN</string>
+  <string name="timeline_like">Leuk</string>
   <string name="unlike">Vind ik niet meer leuk</string>
   <string name="comment">Reactie</string>
   <string name="hide_post_info">Je vrienden zullen dit bericht niet zien</string>
@@ -560,10 +562,26 @@
   <string name="new_feature">Nieuw!</string>
   <string name="facebook_private_actions">Deze app zal geen berichten versturen via Facebook</string>
   <string name="notification_social_timeline">Aptoide Sociale Tijdlijn. Bekijk het nu!</string>
+  <string name="notification_timeline_activity">Je hebt %1$s nieuwe berichten en %2$s vind ik leuk\'s. Bekijk de Tijdlijn!</string>
+  <string name="notification_timeline_new_comments">Je hebt %s nieuwe berichten. Bekijk ze in Sociale Tijdlijn!</string>
+  <string name="notification_timeline_new_likes">Je hebt %s vind ik leuk\'s. Bekijk ze in Sociale Tijdlijn!</string>
+  <string name="notification_timeline_posts">Je vrienden hebben nieuwe apps geïnstalleerd!</string>
   <string name="timeline_is_empty">Ohh… Geen vrienden op Aptoide Sociale Tijdlijn? Nodig nu je vrienden uit!</string>
   <string name="invite_friends">Vrienden uitnodigen</string>
   <string name="timeline_is_empty_send_email">We sturen een email naar de geselecteerden</string>
   <string name="facebook_timeline_friends_invited">Vrienden uitgenodigd!</string>
-  <string name="friends_that_use_timeline">Vrienden die Aptoide Sociale Tijdlijn al gebruiken</string>
-  <string name="friends_to_invite">Alle Facebook vrienden in Aptoide</string>
+  <string name="friends_to_invite">Alle andere Facebook vrienden in Aptoide</string>
+  <string name="timeline_is_empty_no_friends">Je Tijdlijn is leeg. Dat is waarschijnlijk omdat je nog geen vrienden op Aptoide hebt, of omdat ze geen berichten hebben.</string>
+  <string name="timeline_is_empty_start_invite">Laten we beginnen bij wat vrienden uit te nodigen:</string>
+  <string name="timeline_empty_no_friends_send_email">Het lijkt erop dat je vrienden niet zijn ingelogd op Aptoide met hun Facebook account. Stuur ze een email om ze te laten inloggen met hun Facebook account</string>
+  <string name="timeline_empty_send_email_to_friends">Vrienden emailen</string>
+  <string name="select_friends_to_invite">Selecteer je vrienden om ze uit te nodigen!</string>
+  <string name="aptoide_timeline">Aptoide Tijdlijn</string>
+  <string name="timeline_email_invitation">Heeft je uitgenodigd om zijn Aptoide Sociale Tijdlijn te gebruiken.</string>
+  <string name="timeline_email_how_to_join">Hoe kun je je aansluiten bij Sociale Tijdlijn?</string>
+  <string name="timeline_email_step1">1- Download de laatste versie van Aptoide:</string>
+  <string name="timeline_email_step2">2- Ga naar het tabblad \'\'Sociale Tijdlijn\'\' en sluit je aan bij het netwerk</string>
+  <string name="timeline_not_compatible">Ooohhh… Deze functie is niet beschikbaar met jou Android versie</string>
+  <string name="social_timeline_notifications">Tijdlijn Notificaties</string>
+  <string name="social_timeline_notifications_sum">Aptoide Sociale Tijdlijn Notificaties Uitschakelen. Je zal niet het laatste nieuws ontvangen in je notificatie balk.</string>
 </resources>
