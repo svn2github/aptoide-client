@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -62,20 +63,32 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
                     final String action = db.getNotConfirmedRollbackAction(pkg.packageName);
                     if(action != null) {
+                        final String referrer;
 
-                        final String referrer = action.split("\\|")[1];
+                        if(action.contains("|")){
+                            referrer = action.split("\\|")[1];
+                        } else {
+                            referrer = "";
+                        }
+
 
                         if(action.split("\\|")[0].equals(RollBackItem.Action.INSTALLING.toString())) {
 
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.INSTALLED.toString());
-                            Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
-                            i.setPackage(intent.getData().getEncodedSchemeSpecificPart());
-                            i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                            i.putExtra("referrer", referrer);
-                            context.sendBroadcast(i);
+
+                            if(!TextUtils.isEmpty(referrer)) {
+
+                                Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
+                                i.setPackage(intent.getData().getEncodedSchemeSpecificPart());
+                                i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                i.putExtra("referrer", referrer);
+                                context.sendBroadcast(i);
+                                Log.d("InstalledBroadcastReceiver", "Sent broadcast with referrer " + referrer);
+
+                            }
 
                             Log.d("InstalledBroadcastReceiver", "Installed rollback action");
-                        } else if(action.split("|")[0].equals(RollBackItem.Action.DOWNGRADING.toString())) {
+                        } else if(action.split("\\|")[0].equals(RollBackItem.Action.DOWNGRADING.toString())) {
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.DOWNGRADED.toString());
                             Log.d("InstalledBroadcastReceiver", "Downgraded rollback action");
                         }

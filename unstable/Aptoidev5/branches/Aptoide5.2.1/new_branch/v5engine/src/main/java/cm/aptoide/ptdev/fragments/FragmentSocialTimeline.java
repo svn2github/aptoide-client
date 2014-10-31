@@ -468,42 +468,48 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         }
 
         public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
-            if (data.isEmpty()) {
-                if(apks.isEmpty()){
 
-                    FragmentSocialTimelineLayouts fragmentSocialTimelineLayouts = new FragmentSocialTimelineLayouts();
-                    Bundle args = new Bundle();
-                    args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.FRIENDS_INVITE.ordinal());
-                    fragmentSocialTimelineLayouts.setArguments(args);
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentSocialTimelineLayouts).commit();
+            try {
 
-                }
-                adapter.stopAppending();
-            } else {
-                if (firstId == null) {
-                    firstId = data.get(0).getInfo().getId();
-                }
-                data.get(0).animate = true;
+                if (data.isEmpty()) {
+                    if (apks.isEmpty()) {
 
-                if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
+                        FragmentSocialTimelineLayouts fragmentSocialTimelineLayouts = new FragmentSocialTimelineLayouts();
+                        Bundle args = new Bundle();
+                        args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.FRIENDS_INVITE.ordinal());
+                        fragmentSocialTimelineLayouts.setArguments(args);
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentSocialTimelineLayouts).commitAllowingStateLoss();
 
-                    for(TimelineListAPKsJson.UserApk apk : data){
-                        if(!apk.getApk().getAge().equals("Mature")){
-                            apks.add(apk);
+                    }
+                    adapter.stopAppending();
+                } else {
+                    if (firstId == null) {
+                        firstId = data.get(0).getInfo().getId();
+                    }
+                    data.get(0).animate = true;
+
+                    if (AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)) {
+
+                        for (TimelineListAPKsJson.UserApk apk : data) {
+                            if (!apk.getApk().getAge().equals("Mature")) {
+                                apks.add(apk);
+                            }
                         }
+
+                    } else {
+                        apks.addAll(data);
                     }
 
-                }else{
-                    apks.addAll(data);
-                }
+                    lastId = apks.get(apks.size() - 1).getInfo().getId();
 
-                lastId = apks.get(apks.size() - 1).getInfo().getId();
-
-            }   // Tell the EndlessAdapter to
-            // remove it's pending
-            // view and call
-            // notifyDataSetChanged()
-            adapter.onDataReady();
+                }   // Tell the EndlessAdapter to
+                // remove it's pending
+                // view and call
+                // notifyDataSetChanged()
+                adapter.onDataReady();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
 

@@ -1103,10 +1103,15 @@ public class Database {
         values.put(Schema.RollbackTbl.COLUMN_MD5, rollBackItem.getMd5());
 
         String action = "";
-        if(!TextUtils.isEmpty(rollBackItem.getAction().getReferrer())){
-            action = rollBackItem.getAction().toString() + "|" + rollBackItem.getAction().getReferrer();
-        }else{
-            action = rollBackItem.getAction().toString();
+
+        if(rollBackItem.getAction()!=null) {
+
+            if (!TextUtils.isEmpty(rollBackItem.getAction().getReferrer())) {
+                action = rollBackItem.getAction().toString() + "|" + rollBackItem.getAction().getReferrer();
+            } else {
+                action = rollBackItem.getAction().toString();
+            }
+
         }
 
         values.put(Schema.RollbackTbl.COLUMN_ACTION, action);

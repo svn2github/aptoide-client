@@ -113,6 +113,7 @@ public class UninstallRetainFragment extends Fragment {
                         apkMd5 = calcApkMd5(packageName);
 
                         rollBackItem = new RollBackItem(appName, packageName, versionToDowngrade, versionName, iconPath, null, apkMd5, null, "");
+
                         break;
 
                     default:
