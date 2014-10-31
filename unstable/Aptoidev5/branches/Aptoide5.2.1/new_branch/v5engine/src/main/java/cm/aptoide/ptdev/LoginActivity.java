@@ -294,7 +294,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         String activityTitle = getString(R.string.login_or_register);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
 
             if (b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
@@ -473,7 +473,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             if(uiLifecycleHelper!=null) uiLifecycleHelper.onDestroy();
         }
     }
@@ -481,7 +481,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             uiLifecycleHelper.onSaveInstanceState(outState);
         }
     }
@@ -498,7 +498,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 mPlusClient.connect();
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             if (uiLifecycleHelper != null) {
                 uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
             }
@@ -522,7 +522,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             uiLifecycleHelper.onResume();
         }
     }
@@ -530,7 +530,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     @Override
     protected void onPause() {
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             uiLifecycleHelper.onPause();
         }
     }

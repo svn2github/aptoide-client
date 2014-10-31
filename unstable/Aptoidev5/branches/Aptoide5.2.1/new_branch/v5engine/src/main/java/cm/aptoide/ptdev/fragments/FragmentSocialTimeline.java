@@ -212,7 +212,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             init();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 
             fbhelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
                 @Override
@@ -272,7 +272,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     private void init() {
         Fragment fragment;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
             fragment = new FragmentSdkNotCompatible();
             getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, "tag").commit();
             return;
@@ -309,7 +309,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         BusProvider.getInstance().register(this);
         forceRefresh(callback.produceTimelineEvent());
         forceInit(callback.produceInitEvent());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onResume();
         }
 
@@ -324,7 +324,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onDestroy();
         }
     }
@@ -333,7 +333,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     public void onPause() {
         BusProvider.getInstance().unregister(this);
         super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onPause();
         }
 
@@ -342,7 +342,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -350,7 +350,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onStop() {
         super.onStop();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onStop();
         }
     }
@@ -360,7 +360,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             fbhelper.onSaveInstanceState(outState);
         }
         outState.putBoolean("loginMode", loginMode);
