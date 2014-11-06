@@ -82,7 +82,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("get_mature", mature);
 
-        parameters.put("partners", "1-2");
+        parameters.put("partners", "1-3");
 
 
         parameters.put("app_pkg", package_name);

@@ -2,7 +2,6 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -34,7 +33,7 @@ import java.util.concurrent.Executors;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
-import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -42,6 +41,7 @@ import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
+import cm.aptoide.ptdev.webservices.timeline.json.Friend;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
 /**
@@ -57,7 +57,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     private View email_friends;
     private ListView listView;
     private View timeline_empty;
-    private InviteFriendsListAdapter adapter;
+    private TimeLineFriendsListAdapter adapter;
     private View layout;
     private View layout_with_friends;
     private View loading;
@@ -100,7 +100,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
 
     public void setFriends(ListUserFriendsJson friends){
-        List<ListUserFriendsJson.Friend> friendsList = friends.getActiveFriends() ; 
+        List<Friend> friendsList = friends.getActiveFriends() ;
         
         StringBuilder friendsString;
         int i = 0;
@@ -141,7 +141,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().build();
 
-            for(ListUserFriendsJson.Friend friend : friendsList){
+            for(Friend friend : friendsList){
                 String avatar = friend.getAvatar();
                 final View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_facebook_friends_on_timeline, friends_list, false);
                 final ImageView avatarIv = (ImageView) v.findViewById(R.id.user_avatar);
@@ -237,7 +237,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             protected void caseOK(ListUserFriendsJson response) {
 
                 loading.setVisibility(View.GONE);
-                adapter = new InviteFriendsListAdapter(getActivity(), response.getInactiveFriends());
+                adapter = new TimeLineFriendsListAdapter(getActivity(), response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 

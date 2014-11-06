@@ -31,7 +31,6 @@ import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -62,10 +61,8 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
@@ -106,7 +103,6 @@ import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.Server;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
@@ -387,7 +383,7 @@ public class Start extends ActionBarActivity implements
             public void onClick(View v) {
                 isDisconnect = false;
 
-                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Clicked_On_Search_Button");
+                FlurryAgent.logEvent("Clicked_On_Search_Button");
 
                 if (Build.VERSION.SDK_INT > 7) {
                     WebSocketSingleton.getInstance().connect();
@@ -816,7 +812,7 @@ public class Start extends ActionBarActivity implements
             message = "" + getText(R.string.remote_in_noSD_jolla);
         }
         noSpaceDialog.setMessage(message);
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
+        FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
         noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
@@ -1286,7 +1282,7 @@ public class Start extends ActionBarActivity implements
         //Log.d("Mature","Unlocked");
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Unlocked_Mature_Content");
+        FlurryAgent.logEvent("Unlocked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
     }
 
@@ -1294,7 +1290,7 @@ public class Start extends ActionBarActivity implements
         //Log.d("Mature","locked");
         matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Locked_Mature_Content");
+        FlurryAgent.logEvent("Locked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
     }
 
@@ -1317,7 +1313,7 @@ public class Start extends ActionBarActivity implements
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Drawer");
+            FlurryAgent.logEvent("Opened_Drawer");
 
             int switchId = (int) id;
 
@@ -1326,53 +1322,53 @@ public class Start extends ActionBarActivity implements
                     //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                     startActivity(loginIntent);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_My_Account_Drawer_Button");
                     break;
                 case 1:
                     //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                     startActivity(rollbackIntent);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Rollback_Drawer_Button");
                     break;
                 case 2:
                     //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
                     startActivity(scheduledIntent);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Scheduled_Downloads_Drawer_Button");
                     break;
                 case 3:
                     //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
                     startActivity(excludedIntent);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Excluded_Updates_Drawer_Button");
                     break;
                 case 4:
                     //Log.d("MenuDrawer-position", "pos: " + position);
 //                    Log.d("MenuDrawer-position", "pos: " + position);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Facebook_Drawer_Button");
                     showFacebook();
                     break;
                 case 5:
                     //Log.d("MenuDrawer-position", "pos: " + position);
 //                    Log.d("MenuDrawer-position", "pos: " + position);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Twitter_Drawer_Button");
                     showTwitter();
                     break;
                 case 6:
                     initBackupApps();
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_BackupApps_Drawer_Button");
                     break;
                 case 7:
                     Intent settingsIntent = new Intent(mContext, settingsClass);
                     startActivityForResult(settingsIntent, Settings_REQ_CODE);
-                    if (Build.VERSION.SDK_INT >= 10)
+
                         FlurryAgent.logEvent("Clicked_On_Settings_Drawer_Button");
                     break;
 //                case 8:
@@ -1398,7 +1394,7 @@ public class Start extends ActionBarActivity implements
 
             if (intent != null) {
                 startActivity(intent);
-                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Launched_BackupApps");
+                FlurryAgent.logEvent("Launched_BackupApps");
             }
 
 
@@ -1533,7 +1529,7 @@ public class Start extends ActionBarActivity implements
         } else {
             Intent intent = new Intent(mContext, WebViewFacebook.class);
             startActivity(intent);
-            if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Facebook_Webview");
+            FlurryAgent.logEvent("Opened_Facebook_Webview");
         }
     }
 
@@ -1542,11 +1538,11 @@ public class Start extends ActionBarActivity implements
             String url = "http://www.twitter.com/aptoide";
             Intent twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(twitterIntent);
-            if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Twitter_App");
+            FlurryAgent.logEvent("Opened_Twitter_App");
         } else {
             Intent intent = new Intent(mContext, WebViewTwitter.class);
             startActivity(intent);
-            if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Opened_Twitter_Webview");
+            FlurryAgent.logEvent("Opened_Twitter_Webview");
         }
     }
 

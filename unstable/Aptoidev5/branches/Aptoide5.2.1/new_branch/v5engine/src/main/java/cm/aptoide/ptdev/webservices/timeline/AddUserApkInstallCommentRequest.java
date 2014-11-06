@@ -12,7 +12,7 @@ public class AddUserApkInstallCommentRequest extends TimelineRequest<GenericResp
         private long postID;
         private String comment;
 
-        public void setPostId(long id){		this.postID = id;	}
+        public void setPostID(long id){		this.postID = id;	}
         public void setComment(String comment) {    this.comment = comment; }
 
         public AddUserApkInstallCommentRequest() {     super(GenericResponse.class);   }

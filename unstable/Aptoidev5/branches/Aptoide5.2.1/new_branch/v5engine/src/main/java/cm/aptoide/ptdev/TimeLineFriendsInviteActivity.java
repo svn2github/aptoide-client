@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,20 +24,21 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.List;
 
-import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
 import cm.aptoide.ptdev.webservices.timeline.RegisterUserFriendsInviteRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
+import cm.aptoide.ptdev.webservices.timeline.json.Friend;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
 /**
  * Created by asantos on 20-10-2014.
  */
 public class TimeLineFriendsInviteActivity extends ActionBarActivity {
-    private InviteFriendsListAdapter adapter;
+    private TimeLineFriendsListAdapter adapter;
     private TextView friends_using_timeline;
     private TextView friends_to_invite;
     private LinearLayout friends_list;
@@ -131,7 +131,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
             @Override
             protected void caseOK(ListUserFriendsJson response) {
-                adapter = new InviteFriendsListAdapter(c, response.getInactiveFriends());
+                adapter = new TimeLineFriendsListAdapter(c, response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 
@@ -147,7 +147,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
         return (ListView) findViewById(android.R.id.list);
     }
 
-    public void setFriends(List<ListUserFriendsJson.Friend> activeFriendsList){
+    public void setFriends(List<Friend> activeFriendsList){
 
         StringBuilder friendsString;
         int i = 0;
@@ -188,7 +188,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().build();
 
-            for(ListUserFriendsJson.Friend friend : activeFriendsList){
+            for(Friend friend : activeFriendsList){
                 String avatar = friend.getAvatar();
                 final View v = LayoutInflater.from(this).inflate(R.layout.row_facebook_friends_on_timeline, friends_list, false);
                 final ImageView avatarIv = (ImageView) v.findViewById(R.id.user_avatar);

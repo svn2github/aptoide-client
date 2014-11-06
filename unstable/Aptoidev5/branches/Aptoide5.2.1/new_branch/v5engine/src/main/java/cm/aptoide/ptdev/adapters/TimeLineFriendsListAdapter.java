@@ -12,18 +12,18 @@ import android.widget.ListView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson.Friend;
+import cm.aptoide.ptdev.webservices.timeline.json.Friend;
 
 /**
  * Created by asantos   on 09-10-2014.
  */
-public class InviteFriendsListAdapter extends ArrayAdapter<Friend> {
+public class TimeLineFriendsListAdapter extends ArrayAdapter<Friend> {
     private Context ctx;
 
-    public InviteFriendsListAdapter(Context context, ArrayList<Friend> items) {
+    public TimeLineFriendsListAdapter(Context context, List<Friend> items) {
         super(context, 0, items);
         this.ctx = context;
 

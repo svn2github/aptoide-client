@@ -11,17 +11,13 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class ListUserFriendsJson extends GenericResponse {
     public ArrayList<Friend> getInactiveFriends() {
-
         if(userfriends!=null){
             return userfriends.timeline_inactive;
         }else{
             return new ArrayList<Friend>();
         }
-
-
     }
     public ArrayList<Friend> getActiveFriends() {
-
         if(userfriends!=null){
             return userfriends.timeline_active;
         }else{
@@ -36,24 +32,5 @@ public class ListUserFriendsJson extends GenericResponse {
         ArrayList<Friend> timeline_inactive;
         @Key
         ArrayList<Friend> timeline_active;
-    }
-
-
-    public static class Friend {
-        public String getUsername() {
-            return username;
-        }
-        public String getAvatar() {
-            return avatar;
-        }
-        public String getEmail() {
-            return email;
-        }
-        @Key
-        String username;
-        @Key
-        String avatar;
-        @Key
-        String email;
     }
 }

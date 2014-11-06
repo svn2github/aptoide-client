@@ -1,6 +1,7 @@
-package com.mopub.simpleadsdemo;
+package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
+
 import com.inmobi.commons.InMobi;
 import com.inmobi.commons.InMobi.LOG_LEVEL;
 import com.inmobi.monetization.IMBanner;
@@ -8,9 +9,9 @@ import com.inmobi.monetization.IMBannerListener;
 import com.inmobi.monetization.IMErrorCode;
 import com.mopub.common.MoPub;
 import com.mopub.common.util.Views;
-import com.mopub.mobileads.CustomEventBanner;
-import com.mopub.mobileads.MoPubErrorCode;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
 /*
 * Tested with InMobi SDK 4.4.1
 */

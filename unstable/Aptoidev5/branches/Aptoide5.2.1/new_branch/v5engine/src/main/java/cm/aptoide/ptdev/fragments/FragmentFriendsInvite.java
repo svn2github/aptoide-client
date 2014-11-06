@@ -5,33 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 
-import java.util.List;
-
-import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
-import cm.aptoide.ptdev.adapters.InviteFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
@@ -45,7 +36,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 public class FragmentFriendsInvite extends Fragment {
 
 
-    private InviteFriendsListAdapter adapter;
+    private TimeLineFriendsListAdapter adapter;
     private TextView friends_using_timeline;
     private TextView friends_to_invite;
     private LinearLayout friends_list;
@@ -128,7 +119,7 @@ public class FragmentFriendsInvite extends Fragment {
 
 
 
-                adapter = new InviteFriendsListAdapter(getActivity(), response.getInactiveFriends());
+                adapter = new TimeLineFriendsListAdapter(getActivity(), response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 

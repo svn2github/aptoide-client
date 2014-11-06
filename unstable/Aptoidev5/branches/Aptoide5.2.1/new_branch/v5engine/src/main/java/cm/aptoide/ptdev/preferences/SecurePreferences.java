@@ -16,6 +16,15 @@
 
 package cm.aptoide.ptdev.preferences;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -33,15 +42,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.utils.Base64;
@@ -88,6 +88,15 @@ public class SecurePreferences implements SharedPreferences {
      */
 
     private static SharedPreferences singleton = null;
+
+/*    private static class SingletonHolder {
+        private static final SharedPreferences INSTANCE= new SecurePreferences(Aptoide.getContext());
+    }
+
+    public static SharedPreferences getInstance() {
+        return SingletonHolder.INSTANCE;
+    }*/
+
 
     public static synchronized SharedPreferences getInstance(){
         if(singleton==null) {

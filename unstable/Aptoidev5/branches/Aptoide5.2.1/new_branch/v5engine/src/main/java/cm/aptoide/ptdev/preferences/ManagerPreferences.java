@@ -27,11 +27,10 @@ import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.model.DownloadPermissions;
 
 import java.util.UUID;
+
+import cm.aptoide.ptdev.Aptoide;
 
 /**
  * ManagerPreferences, manages aptoide's preferences I/O
@@ -96,16 +95,6 @@ public class ManagerPreferences {
 
         context.sendBroadcast(intent, null);
     }
-
-
-    public SharedPreferences getPreferences() {
-        return getPreferences;
-    }
-
-    public SharedPreferences.Editor setPreferences() {
-        return setPreferences;
-    }
-
 
     public void setAptoideClientUUID(String uuid) {
         setPreferences.putString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), uuid);

@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -55,7 +53,7 @@ public class TimeLineCommentsDialog extends DialogFragment {
     private ImageButton send_button;
     private int likesNumber;
 
-    public void SetComments(List<ApkInstallComments.Comment> entry){
+    public void setComments(List<ApkInstallComments.Comment> entry){
         lv.setAdapter(new TimelineCommentsAdapter(getActivity(), entry));
         lv.setVisibility(View.VISIBLE);
 
@@ -84,7 +82,15 @@ public class TimeLineCommentsDialog extends DialogFragment {
         }else{
             likes.setVisibility(View.GONE);
         }
-
+        likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
+                if (parentFragment != null) {
+                    parentFragment.openWhoLikesDialog(id,likesNumber);
+                }
+            }
+        });
         send_button = (ImageButton) dialogView.findViewById(R.id.send_button);
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override

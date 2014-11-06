@@ -44,7 +44,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -53,12 +52,11 @@ import cm.aptoide.ptdev.FeedBackActivity;
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineFriendsInviteActivity;
-import cm.aptoide.ptdev.TimeLineFriendsListActivity;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
+import cm.aptoide.ptdev.dialogs.TimeLineWhoLikesDialog;
 import cm.aptoide.ptdev.events.BusProvider;
-
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
@@ -66,7 +64,6 @@ import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallCommentRequest;
 import cm.aptoide.ptdev.webservices.timeline.AddUserApkInstallLikeRequest;
 import cm.aptoide.ptdev.webservices.timeline.ChangeUserApkInstallStatusRequest;
@@ -74,10 +71,12 @@ import cm.aptoide.ptdev.webservices.timeline.ChangeUserSettingsRequest;
 import cm.aptoide.ptdev.webservices.timeline.GetUserApkInstallCommentsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
+import cm.aptoide.ptdev.webservices.timeline.ListUserapklikesRequest;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
 import cm.aptoide.ptdev.webservices.timeline.TimelineRequestListener;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
+import cm.aptoide.ptdev.webservices.timeline.json.ListapklikesJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -371,7 +370,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
         private static final int COMMENTSLIMIT = 10;
         private static final String COMMENTSDIALOGTAG = "CD";
-        private static final String TIMELINEFRIENDSLISTDIALOGTAG = "TLFLD";
+        private static final String LIKESDIALOGTAG = "LD";
 
         private ArrayList<TimelineListAPKsJson.UserApk> apks = new ArrayList<TimelineListAPKsJson.UserApk>();
         private EndlessWrapperAdapter adapter;
@@ -379,13 +378,9 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         private Number firstId;
         private SwipeRefreshLayout mSwipeRefreshLayout;
         private boolean mListShown = false;
-        private View mProgressContainer;
-        private boolean showDialog;
-        private boolean serverTimelineActive;
 
         private boolean forceRefresh;
         private View inviteFriends;
-        private View inviteFriendsEmpty;
 
         public void forceRefresh() {
             forceRefresh = true;
@@ -783,7 +778,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         @Override
         public void commentPost(long id, String comment, int position) {
             AddUserApkInstallCommentRequest request = new AddUserApkInstallCommentRequest();
-            request.setPostId(id);
+            request.setPostID(id);
             request.setComment(comment);
             manager.execute(request, new SetUserApkInstallCommentsRequestListener(id, position));
         }
@@ -794,6 +789,13 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             request.setPostID(id);
             request.setPostLimit(COMMENTSLIMIT);
             manager.execute(request, new GetUserApkInstallCommentsRequestListener());
+        }
+
+        @Override
+        public void getWhoLiked(long id) {
+            ListUserapklikesRequest request = new ListUserapklikesRequest();
+            request.setPostID(id);
+            manager.execute(request, new GetUserApklikesRequestListener());
         }
 
         @Override
@@ -810,13 +812,20 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             commentsDialog.show(getChildFragmentManager(), COMMENTSDIALOGTAG);
         }
 
-    /* *************** Methods of the TimeLineManager Interface *************** */
+        @Override
+        public void openWhoLikesDialog(long id,int likes){
+            Bundle args = new Bundle();
 
+            args.putString(TimeLineWhoLikesDialog.LIKES, String.valueOf(likes));
 
+            args.putLong(TimeLineWhoLikesDialog.POSTID, id);
 
-        private void startTimeLineFriendsListActivity() {
-            startActivityForResult(new Intent(getActivity(), TimeLineFriendsListActivity.class), 0);
+            TimeLineWhoLikesDialog wholikesDialog = new TimeLineWhoLikesDialog();
+            wholikesDialog.setArguments(args);
+            wholikesDialog.show(getChildFragmentManager(), LIKESDIALOGTAG);
         }
+
+    /* *************** End of Methods of the TimeLineManager Interface *************** */
 
         public class SetUserApkInstallCommentsRequestListener extends TimelineRequestListener<GenericResponse> {
             private final long postid;
@@ -862,7 +871,18 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 if ((response).getComments() != null) {
                     TimeLineCommentsDialog timeLineCommentsDialog = (TimeLineCommentsDialog) getChildFragmentManager().findFragmentByTag(COMMENTSDIALOGTAG);
                     if(timeLineCommentsDialog != null){
-                        timeLineCommentsDialog.SetComments((response).getComments());
+                        timeLineCommentsDialog.setComments((response).getComments());
+                    }
+                }
+            }
+        }
+        public class GetUserApklikesRequestListener extends TimelineRequestListener<ListapklikesJson> {
+            @Override
+            protected void caseOK(ListapklikesJson response) {
+                if ((response).getUsersapks_likes() != null) {
+                    TimeLineWhoLikesDialog timeLineWhoLikesDialog = (TimeLineWhoLikesDialog) getChildFragmentManager().findFragmentByTag(LIKESDIALOGTAG);
+                    if(timeLineWhoLikesDialog != null){
+                        timeLineWhoLikesDialog.setFriends((response).getUsersapks_likes());
                     }
                 }
             }

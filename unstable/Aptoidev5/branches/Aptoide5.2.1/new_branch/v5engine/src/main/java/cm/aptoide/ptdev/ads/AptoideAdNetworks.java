@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.ads;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -20,28 +21,29 @@ import cm.aptoide.ptdev.preferences.EnumPreferences;
 public class AptoideAdNetworks {
 
     public static String parseString(String type, Context context, String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
-
-
+        Log.d("pois","type: "+type);
+        Log.d("pois","clickUrl: "+clickUrl);
         if(type.equalsIgnoreCase("appia")){
             String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-
             String myid = PreferenceManager.getDefaultSharedPreferences(context).getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
-
             clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
             clickUrl = clickUrl.replace("[USER_UDID]", myid);
-            if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
-                String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
-                clickUrl = clickUrl.replace("[USER_AAID]", aaId);
-            }
+            clickUrl = ReplaceUSER_AAID(clickUrl);
             clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
         }else if(type.equalsIgnoreCase("glispa")){
             //do nothing;
+        }else if(type.equalsIgnoreCase("taptica")){
+            clickUrl = ReplaceUSER_AAID(clickUrl);
         }
-
-
+        Log.d("pois","URL: "+clickUrl);
         return clickUrl;
-
     }
 
+    private final static String ReplaceUSER_AAID(String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
+        if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
+            String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
+            clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+        }
+        return clickUrl;
+    }
 }
