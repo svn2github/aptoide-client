@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,7 +91,7 @@ public class FinishedApk implements Parcelable, Serializable{
         dest.writeLong(appHashId);
         dest.writeString(iconpath);
         dest.writeString(path);
-        dest.writeStringList(permissionsList);
+        dest.writeList(permissionsList);
         dest.writeString(repoName);
         dest.writeLong(id);
         dest.writeString(referrer);
@@ -119,7 +118,7 @@ public class FinishedApk implements Parcelable, Serializable{
         iconpath = in.readString();
         path = in.readString();
         permissionsList = new ArrayList<String>();
-        in.readStringList(permissionsList);
+        in.readList(permissionsList, null);
         repoName = in.readString();
         id = in.readLong();
         referrer = in.readString();
