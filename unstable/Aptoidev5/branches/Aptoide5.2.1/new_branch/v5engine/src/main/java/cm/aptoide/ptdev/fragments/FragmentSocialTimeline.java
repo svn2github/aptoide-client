@@ -801,9 +801,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         @Override
         public void openCommentsDialog(long id, int position){
             Bundle args = new Bundle();
-
             args.putString(TimeLineCommentsDialog.LIKES, String.valueOf(((TimelineListAPKsJson.UserApk)adapter.getItem(position)).getInfo().getLikes()));
-
             args.putLong(TimeLineCommentsDialog.POSTID, id);
             args.putInt(TimeLineCommentsDialog.POSITION, position);
 
@@ -813,12 +811,11 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         }
 
         @Override
-        public void openWhoLikesDialog(long id,int likes){
+        public void openWhoLikesDialog(long id,int likes,int position){
             Bundle args = new Bundle();
-
             args.putString(TimeLineWhoLikesDialog.LIKES, String.valueOf(likes));
-
             args.putLong(TimeLineWhoLikesDialog.POSTID, id);
+            args.putInt(TimeLineCommentsDialog.POSITION, position);
 
             TimeLineWhoLikesDialog wholikesDialog = new TimeLineWhoLikesDialog();
             wholikesDialog.setArguments(args);

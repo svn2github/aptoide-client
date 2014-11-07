@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class TimeLineWhoLikesDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle( DialogFragment.STYLE_NORMAL, R.style.TimelineCommentsDialog );
         final Context c = getActivity();
+
         final View dialogView = LayoutInflater.from(c).inflate(R.layout.dialog_wholikes, null);
         likesNumber = Integer.valueOf(getArguments().getString(LIKES));
         id=getArguments().getLong(POSTID);
@@ -73,6 +75,13 @@ public class TimeLineWhoLikesDialog extends DialogFragment {
         return new AlertDialog.Builder(c)
                 .setView(dialogView)
                 .create();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
+        parentFragment.openCommentsDialog(id,getArguments().getInt(TimeLineCommentsDialog.POSITION));
     }
 
     @Override

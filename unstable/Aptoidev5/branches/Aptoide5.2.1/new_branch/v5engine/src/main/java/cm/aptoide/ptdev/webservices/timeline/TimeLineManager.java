@@ -13,5 +13,5 @@ public interface TimeLineManager {
     public void getComments(long id);
     public void getWhoLiked(long id);
     public void openCommentsDialog(long id, int position);
-    public void openWhoLikesDialog(long id,int likes);
+    public void openWhoLikesDialog(long id,int likes, int position);
 }

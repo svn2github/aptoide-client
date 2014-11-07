@@ -27,7 +27,7 @@ public class ListUserapklikesRequest extends TimelineRequest<ListapklikesJson> {
 
     @Override
     protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
-        parameters.put("id", String.valueOf(postID));
+        parameters.put("post_id", String.valueOf(postID));
         parameters.put("limit", String.valueOf(limit));
         return parameters;
     }
