@@ -25,7 +25,8 @@
         <createshortcut>true</createshortcut>
         <linkedcomments>true</linkedcomments>
         <showsplash>true</showsplash>
-        <splashcolor>#FFE98023</splashcolor>
+        <splashcolor>#FFE8E8E8</splashcolor>
         <showads>true</showads>
+        <timeline>true</timeline>
     </aptoideconf>
 </bootconf>

@@ -35,7 +35,7 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
     }
 
@@ -194,7 +194,7 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
 }
