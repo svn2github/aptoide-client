@@ -57,7 +57,7 @@
   <string name="follow_twitter">Следите за нами в Twitter</string>
   <string name="loading_facebook">Загружаю Facebook...</string>
   <string name="loading_twitter">Загружаю Twitter...</string>
-  <string name="new_to_aptoide">Новичок в %s? Создайте бесплатную учетную запись</string>
+  <string name="new_to_aptoide">Впервые в %s? Создайте бесплатную учетную запись</string>
   <string name="forgot_passwd">Забыли пароль?</string>
   <string name="check_your_credentials">Проверьте учетные данные</string>
   <string name="settings_title_bar">Настройки</string>
@@ -79,7 +79,7 @@
   <string name="setting_mature_filtering">Фильтровать контент для взрослых</string>
   <string name="excluded_updates_sum">Восстановить исключенные обновления</string>
   <string name="setting_schdwntitle">Запланированные загрузки</string>
-  <string name="setting_schdwninstallsum">Установить запланированные загрузки автоматически, когда подключен к WiFi</string>
+  <string name="setting_schdwninstallsum">Установить запланированные загрузки автоматически, когда есть WiFi</string>
   <string name="setting_sdk_version">Векрсия SDK</string>
   <string name="setting_screen_size">Размер экрана</string>
   <string name="setting_esgl_version">Версия ESGL</string>
@@ -98,8 +98,8 @@
   <string name="about_mail">Контакты:</string>
   <string name="about_us">О нас</string>
   <string name="settings_maxFileCache_sum">Установите максимальный размер для хранения apk файлов</string>
-  <string name="settings_maxFileCache_title">Скачать кэш (MB)</string>
-  <string name="cache_using_X_mb">Используется %s MB</string>
+  <string name="settings_maxFileCache_title">Размер кэша (Мб)</string>
+  <string name="cache_using_X_mb">Используется %s Мб</string>
   <string name="crash_reports">Отчеты о сбоях</string>
   <string name="pref_enable_acra">Отправить отчеты</string>
   <string name="pref_acra_enabled">Разрешите отправлять отчеты для того, чтобы помочь нам улучшить Aptoide</string>
@@ -204,8 +204,8 @@
   <string name="restore">Установить</string>
   <string name="x_app">%d приложение</string>
   <string name="x_apps">%d приложения</string>
-  <string name="aptoide_downloading">%s загружается</string>
-  <string name="min_sdk">Мин SDK</string>
+  <string name="aptoide_downloading">%s скачивает</string>
+  <string name="min_sdk">Мин. SDK</string>
   <string name="min_screen">Мин. экран</string>
   <string name="found_results">Найдено %s результат(ов)</string>
   <string name="no_search_result">Магазин ‘%s’ отсутствует серди добавленных.</string>
@@ -215,7 +215,7 @@
   <string name="newrepo_alrt">Добавить этот магазин в избранные?\n\n</string>
   <string name="downloads">Загрузки</string>
   <string name="size">Размер</string>
-  <string name="likes">Лайки</string>
+  <string name="likes">Нравится</string>
   <string name="dont_likes">Не нравится</string>
   <string name="split_stores">Разделить магазины</string>
   <string name="change_theme">Сменить тему</string>
@@ -511,6 +511,7 @@
   <string name="feedback_send_button">Отправить отзыв</string>
   <string name="feedback_subject">Заголовок</string>
   <string name="feedback_to_write">Напишите здесь, чтобы отправить нам свой отзыв</string>
+  <string name="feedback_to_write2">Напишите здесь, чтобы отправить нам свой отзыв…\n\n• Пожалуйста, дайте нам всю информацию, которую вы можете получить \n• Выполненные действия \n• Ошибки, которые вы видите</string>
   <string name="feedback_include_logs">Включить снимок экрана и логи</string>
   <string name="feedback_not_valid">Пожалуйста, введите правильный заголовок!</string>
   <string name="feedback_no_email">Нет установленных email клиентов!</string>
@@ -540,7 +541,7 @@
   <string name="facebook_timeline_preview">Обзор ленты:</string>
   <string name="facebook_start_timeline">Присоединиться к социальной ленте</string>
   <string name="facebook_join_friends">Вы хотите присоединиться к ним в социальной ленте?</string>
-  <string name="facebook_friends_list_using_timeline">в Aptoide</string>
+  <string name="facebook_friends_list_using_timeline">уже используют социальную ленту Aptoide</string>
   <string name="facebook_friends_list_using_timeline_empty">Социальная лента позволяет делиться приложениями с друзьями на Facebook. Вы хотите присоединиться к сети?</string>
   <string name="share_on_timeline">Опубликовать в ленту</string>
   <string name="do_you_accept_timeline">Принимаете ли вы ленту Aptoide?</string>
@@ -548,7 +549,8 @@
   <string name="more_friends">больше</string>
   <string name="hide_post">СКРЫТЬ</string>
   <string name="unhide_post">ПОКАЗАТЬ</string>
-  <string name="unlike">В отличие от</string>
+  <string name="timeline_like">Нравится</string>
+  <string name="unlike">Не нравится</string>
   <string name="comment">Комментарий</string>
   <string name="hide_post_info">Ваши друзья не увидят этот пост</string>
   <string name="wizard_new_timeline">1 - Новая социальная лента</string>
@@ -560,10 +562,26 @@
   <string name="new_feature">Новое!</string>
   <string name="facebook_private_actions">Это приложение не будет размещать посты в Facebook</string>
   <string name="notification_social_timeline">Социальная лента Aptoide. Попробуйте сейчас!</string>
+  <string name="notification_timeline_activity">У вас %1$s новых комментариев и %2$s лайков. Проверьте в социальной ленте!</string>
+  <string name="notification_timeline_new_comments">У вас %s новых комментариев. Проверьте в социальной ленте!</string>
+  <string name="notification_timeline_new_likes">У вас %s новых лайков. Проверьте в социальной ленте!</string>
+  <string name="notification_timeline_posts">Ваши друзья установили новые приложения!</string>
   <string name="timeline_is_empty">Ооу... нет друзей в социальной ленте Aptoide? Пригласите их!</string>
   <string name="invite_friends">Пригласить друзей</string>
   <string name="timeline_is_empty_send_email">Мы отправим email тем, кого вы выберите</string>
   <string name="facebook_timeline_friends_invited">Друзья приглашены!</string>
-  <string name="friends_that_use_timeline">Друзья, которые уже используют социальную ленту Aptoide</string>
-  <string name="friends_to_invite">Все друзья из Facebook в Aptoide</string>
+  <string name="friends_to_invite">Все остальные друзья Facebook в Aptoide</string>
+  <string name="timeline_is_empty_no_friends">Ваша лента пуста. Это, наверное, потому, что у вас еще нет друзей в Aptoide, или у них нет постов.</string>
+  <string name="timeline_is_empty_start_invite">Давайте начнем с приглашения друзей:</string>
+  <string name="timeline_empty_no_friends_send_email">Похоже, что ваши друзья не зашли в Aptoide через Facebook. Отправьте им email, чтобы предложить им сделать это.</string>
+  <string name="timeline_empty_send_email_to_friends">Email друзьям</string>
+  <string name="select_friends_to_invite">Пожалуйста, выберите друзей, чтобы пригласить их!</string>
+  <string name="aptoide_timeline">Социальная лента Aptoide</string>
+  <string name="timeline_email_invitation">Приглашает Вас присоединиться к его социальной ленте Aptoide. Подключайтесь!</string>
+  <string name="timeline_email_how_to_join">Как можно присоединиться к социальной ленте?</string>
+  <string name="timeline_email_step1">1- Загрузите последнюю версию Aptoide:</string>
+  <string name="timeline_email_step2">2- Перейдите на вкладку \"социальная лента\" и присоединитесь к сети</string>
+  <string name="timeline_not_compatible">Оооу... Эта функция не совместима с вашей версией Android</string>
+  <string name="social_timeline_notifications">Уведомления ленты</string>
+  <string name="social_timeline_notifications_sum">Отключить уведомления социальной ленты. Вы не будете получать последние новости на панели уведомлений.</string>
 </resources>

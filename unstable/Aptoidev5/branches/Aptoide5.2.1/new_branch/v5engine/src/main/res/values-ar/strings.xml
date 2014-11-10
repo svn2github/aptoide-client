@@ -481,7 +481,7 @@
   <string name="vote_up">تصويت</string>
   <string name="view_one_more_comment">عرض %s تعليق اخر</string>
   <string name="view_more_comments">عرض %s تعليقات اخرى</string>
-  <string name="vote">تصويت %s</string>
+  <string name="vote">تصويت %S</string>
   <string name="votes">التصويتات</string>
   <string name="clear_downloaded_apks">حذف الملفات المحملة ( apk )</string>
   <string name="are_you_sure_clear_downloads">هل أنت متأكد من أنك تريد مسح قائمة التنزيلات ؟</string>
@@ -489,7 +489,7 @@
   <string name="setting_allUpdates_filtering">تحديد التحديثات</string>
   <string name="row_app_update_not_safe">غير متوافق ! التحديث يحتوي على توقيع مختلف .</string>
   <string name="not_compatible">غير متوافق</string>
-  <string name="reply_to">الرد على %s</string>
+  <string name="reply_to">الرد على %S</string>
   <string name="setpin">وضع مشبك</string>
   <string name="asksetadultpinmessage">هل ترغب في وضع مشبك لفتح محتوى الكبار ؟</string>
   <string name="requestAdultpin">ادخل المشبك للفتح</string>
@@ -505,7 +505,7 @@
   <string name="confirm_carrier_payment">هل ترغب في شراء \'{ عنوان }\' ل { قيمة } ؟ وستحمل لكم من الناقل الخاص بك .</string>
   <string name="featured_editors_choice">اختيار مميزات المحررين</string>
   <string name="set_mature_pin_title">تعيين مشبك لمحتوى البالغين</string>
-  <string name="set_mature_pin_summary">وضع مشبك لفتح محتوى الكبار ( الخوة النظيفة كانت هنا )</string>
+  <string name="set_mature_pin_summary">وضع رقم سري لفتح محتوى الكبار</string>
   <string name="remove_mature_pin_title">إزالة مشبك محتويات البالغين</string>
   <string name="remove_mature_pin_summary">إزالة المشبك المطلوب لفتح محتوى الكبار</string>
   <string name="feedback_send_button">ارسال تقرير</string>
@@ -563,6 +563,8 @@
   <string name="facebook_private_actions">هذا التطبيق لن ينشر على فيس بوك</string>
   <string name="notification_social_timeline">الصفحة الاجتماعية لـ أبتويد. جربها الآن!</string>
   <string name="notification_timeline_activity">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
+  <string name="notification_timeline_new_comments">"لديك %s  تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
+  <string name="notification_timeline_new_likes">"لديك %s تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
   <string name="notification_timeline_posts">أصدقاؤك قاموا بتنصيب تطبيقات جديدة!</string>
   <string name="timeline_is_empty">لااا... لا يوجد اصدقاء على صفحة أبتويد الاجتماعية؟ قم بدعوتهم!</string>
   <string name="invite_friends">إدع أصدقائك</string>
@@ -581,4 +583,5 @@
   <string name="timeline_email_step2">2- اذهب الي التبويب \"اليوميات الاجتماعية\" وانضم للشبكة</string>
   <string name="timeline_not_compatible">"ووه ... هذه الميزة غير متوافقة مع إصدار الأندرويد  الخاص بك"</string>
   <string name="social_timeline_notifications">اشعارات اليوميات</string>
+  <string name="social_timeline_notifications_sum">ايقاف تنبيهات يوميات ابتويد. لن تصلك اخر الاخبار على شريط التنبيهات.</string>
 </resources>

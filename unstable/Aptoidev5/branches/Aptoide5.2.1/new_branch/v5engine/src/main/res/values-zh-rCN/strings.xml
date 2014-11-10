@@ -511,6 +511,7 @@
   <string name="feedback_send_button">发送反馈</string>
   <string name="feedback_subject">标题</string>
   <string name="feedback_to_write">请在这里输入并发送您的反馈</string>
+  <string name="feedback_to_write2">写到这里向我们发送您的反馈...\n\n•请给我们所有的细节，你可以得到\n•您做过的步骤\n •您所看到的错误</string>
   <string name="feedback_include_logs">包括截屏和日志</string>
   <string name="feedback_not_valid">请输入有效的标题!</string>
   <string name="feedback_no_email">没有登记邮件的用户植入！</string>
@@ -540,7 +541,7 @@
   <string name="facebook_timeline_preview">时间轴回顾：</string>
   <string name="facebook_start_timeline">加入社会时间轴</string>
   <string name="facebook_join_friends">你想在社会时间轴加入他们吗？</string>
-  <string name="facebook_friends_list_using_timeline">在Aptoide</string>
+  <string name="facebook_friends_list_using_timeline">已经在使用Aptoide社交时间轴</string>
   <string name="facebook_friends_list_using_timeline_empty">社交时间轴可以让你与你的Facebook朋友分享你的应用程序。你想加入网络？</string>
   <string name="share_on_timeline">分享到时间轴</string>
   <string name="do_you_accept_timeline">您接受Aptoide时间轴吗？</string>
@@ -548,6 +549,7 @@
   <string name="more_friends">更多</string>
   <string name="hide_post">隐藏</string>
   <string name="unhide_post">取消隐藏</string>
+  <string name="timeline_like">喜欢</string>
   <string name="unlike">不像</string>
   <string name="comment">评论</string>
   <string name="hide_post_info">你的朋友将不会看到这个帖子</string>
@@ -560,10 +562,19 @@
   <string name="new_feature">新！</string>
   <string name="facebook_private_actions">此应用程序将不会上传到Facebook</string>
   <string name="notification_social_timeline">Aptoide社会时间轴。现在马上查看！</string>
+  <string name="notification_timeline_activity">您有％1 $ s的新的意见和％2$ s的赞。查看社交时间轴！</string>
+  <string name="notification_timeline_new_comments">您有％s的新的评论。查看社交时间轴！</string>
+  <string name="notification_timeline_new_likes">您有％ s的赞。查看社交时间轴！</string>
+  <string name="notification_timeline_posts">你的朋友安装了新的应用程序！</string>
   <string name="timeline_is_empty">Ohh...Aptoide社交时间轴上没有朋友？邀请他们！</string>
   <string name="invite_friends">邀请朋友</string>
   <string name="timeline_is_empty_send_email">我们会发邮件到你选择的那些</string>
   <string name="facebook_timeline_friends_invited">朋友已邀请！</string>
-  <string name="friends_that_use_timeline">已经在使用Aptoide社会时间轴的朋友</string>
   <string name="friends_to_invite">在Aptoide上的所有Facebook朋友</string>
+  <string name="timeline_is_empty_no_friends">你的时间轴是空的。这可能是因为你在Aptoide还没有朋友又或者他们没有任何发布。</string>
+  <string name="timeline_is_empty_start_invite">让我们开始邀请一些朋友：</string>
+  <string name="timeline_empty_no_friends_send_email">看来，你的朋友还没有用Facebook帐号登陆Aptoide。向他们发送一封电子邮件邀请</string>
+  <string name="timeline_empty_send_email_to_friends">电邮好友</string>
+  <string name="select_friends_to_invite">请选择您的朋友，邀请他们！</string>
+  <string name="aptoide_timeline">Aptoide社交时间轴</string>
 </resources>

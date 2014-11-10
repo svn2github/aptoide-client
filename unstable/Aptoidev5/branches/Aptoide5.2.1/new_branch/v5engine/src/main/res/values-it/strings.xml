@@ -535,7 +535,7 @@
   <string name="disable_social_timeline">Disabilita Timeline Sociale</string>
   <string name="whats_timeline">Che cos\'è la Timeline Sociale di Aptoide?</string>
   <string name="facebook_tos">• Condividi le app che installi con i tuoi amici di Facebook in una Timeline all\'interno di Aptoide \n• Guarda, commenta e fai mi piace nella Timeline \n• Non postiamo mai, mai e poi mai sulla tua bacheca Facebook. Rispettiamo la tua privacy</string>
-  <string name="facebook_logout_and_login">Entra ed esci da Facebook</string>
+  <string name="facebook_logout_and_login">Esci ed entra con Facebook</string>
   <string name="facebook_timeline_feature">Ooohhh... Questa funzione è disponibile solo con un login di Facebook e ti sei collegato con un\'altra autenticazione</string>
   <string name="facebook_timeline_login">Vuoi collegarti con Facebook e provare la Timeline Sociale?</string>
   <string name="facebook_timeline_preview">Anteprima della Timeline:</string>

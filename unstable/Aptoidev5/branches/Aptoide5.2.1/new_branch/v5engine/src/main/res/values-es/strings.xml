@@ -40,7 +40,7 @@
   <string name="more_from_publisher">Más de los Editores</string>
   <string name="preparing_to_load">Preparando para cargar, espera por favor…</string>
   <string name="vote_submitted">Tú voto se ha enviado correctamente</string>
-  <string name="sort">Corto</string>
+  <string name="sort">Orden</string>
   <string name="order_popup_lst1">Más reciente primero</string>
   <string name="order_popup_lst2">Alfabético</string>
   <string name="order_popup_lst2AZ">Alfabético A-Z</string>
@@ -548,6 +548,7 @@
   <string name="more_friends">mas</string>
   <string name="hide_post">Esconder</string>
   <string name="unhide_post">MOSTRAR</string>
+  <string name="timeline_like">Me gusta</string>
   <string name="unlike">Ya no me gusta</string>
   <string name="comment">Comentarios</string>
   <string name="hide_post_info">Tus amigos no veran el post</string>
@@ -568,6 +569,7 @@
   <string name="invite_friends">Invita a Amigos</string>
   <string name="timeline_is_empty_send_email">Te enviaremos un email al que elijas</string>
   <string name="facebook_timeline_friends_invited">¡Amigos invitados!</string>
+  <string name="friends_to_invite">Todos los amigos de Facebook en Aptoide</string>
   <string name="timeline_is_empty_no_friends">Tu muro está vacío. Esto es probablemente porque no tienes amigos o porque no tienen ninguna publicación.</string>
   <string name="timeline_is_empty_start_invite">Empecemos invitando algunos amigos:</string>
   <string name="timeline_empty_no_friends_send_email">Parece que tus amigos no han entrado aún en Aptoide con sus cuentas de Facebook. Envíales un email para que accedan con su cuenta de Facebook.</string>
