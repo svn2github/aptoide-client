@@ -179,7 +179,7 @@
             android:title="@string/disable_social_timeline" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:summary="@string/social_timeline_notifications_sum"
+            android:summary="@string/social_timeline_notifications_sum2"
             android:key="socialtimelinenotifications"
             android:title="@string/social_timeline_notifications" />
     </PreferenceCategory>
