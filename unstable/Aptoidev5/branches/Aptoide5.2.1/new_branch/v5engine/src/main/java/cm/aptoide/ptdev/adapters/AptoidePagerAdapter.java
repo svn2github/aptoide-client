@@ -20,11 +20,19 @@ import java.lang.reflect.Field;
 public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
 
+    private final boolean timeline;
     private String[] TITLES;
 
-    public AptoidePagerAdapter(FragmentManager fm, Context context) {
+    public AptoidePagerAdapter(FragmentManager fm, Context context, boolean timeline) {
         super(fm);
-        TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
+        this.timeline = timeline;
+
+        if(timeline){
+            TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
+        }else{
+            TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
+        }
+
     }
 
     @Override
@@ -56,17 +64,32 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        switch (position) {
-            case 0:
-                return new FragmentHome();
-            case 1:
-                return new FragmentStores();
-            case 2:
-                return new FragmentUpdates();
-            case 3:
-                return new FragmentSocialTimeline();
-            case 4:
-                return new FragmentDownloadManager();
+
+        if(timeline) {
+
+            switch (position) {
+                case 0:
+                    return new FragmentHome();
+                case 1:
+                    return new FragmentStores();
+                case 2:
+                    return new FragmentUpdates();
+                case 3:
+                    return new FragmentSocialTimeline();
+                case 4:
+                    return new FragmentDownloadManager();
+            }
+        }else{
+            switch (position) {
+                case 0:
+                    return new FragmentHome();
+                case 1:
+                    return new FragmentStores();
+                case 2:
+                    return new FragmentUpdates();
+                case 3:
+                    return new FragmentDownloadManager();
+            }
         }
 
         return null;

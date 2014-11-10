@@ -249,7 +249,7 @@ public class Start extends ActionBarActivity implements
         if (spiceManager.isStarted()) {
             spiceManager.shouldStop();
         }
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -300,8 +300,7 @@ public class Start extends ActionBarActivity implements
 //            }
 
         } else if (i == R.id.menu_SendFeedBack) {
-            if (Build.VERSION.SDK_INT >= 10)
-                FlurryAgent.logEvent("Menu_Settings_Clicked_On_Feedback_Button");
+            FlurryAgent.logEvent("Menu_Settings_Clicked_On_Feedback_Button");
 
             FeedBackActivity.screenshot(this);
             startActivity(new Intent(this, FeedBackActivity.class));
@@ -492,7 +491,7 @@ public class Start extends ActionBarActivity implements
 
         pager = (ViewPager) findViewById(R.id.pager);
 
-        pager.setAdapter(getViewPagerAdapter());
+        pager.setAdapter(getViewPagerAdapter(true));
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(pager);
@@ -556,8 +555,7 @@ public class Start extends ActionBarActivity implements
                         store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                         startParse(store);
                         pager.setCurrentItem(1);
-                        if (Build.VERSION.SDK_INT >= 10)
-                            FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
+                        FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
                     }
 
                 }
@@ -565,8 +563,7 @@ public class Start extends ActionBarActivity implements
             } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
                 pager.setCurrentItem(4);
-                if (Build.VERSION.SDK_INT >= 10)
-                    FlurryAgent.logEvent("Opened_Updates_Notification");
+                FlurryAgent.logEvent("Opened_Updates_Notification");
             }else if(getIntent().hasExtra("fromTimeline")){
                 timelineRefresh = true;
                 pager.setCurrentItem(3);
@@ -578,6 +575,7 @@ public class Start extends ActionBarActivity implements
 
             new AutoUpdate(this).execute();
             executeWizard();
+            startPushNotifications();
 
             {
                 try {
@@ -611,8 +609,7 @@ public class Start extends ActionBarActivity implements
                                 intent.putExtra("cpi", cpi);
                             }
 
-                            if (Build.VERSION.SDK_INT >= 10)
-                                FlurryAgent.logEvent("Started_From_Apkfy");
+                            FlurryAgent.logEvent("Started_From_Apkfy");
 
                         }
 
@@ -958,20 +955,6 @@ public class Start extends ActionBarActivity implements
 
     public void executeWizard() {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Intent i = new Intent(this, PushNotificationReceiver.class);
-        i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action);
-        boolean alarmUp = (PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_NO_CREATE) != null);
-
-
-        if(!alarmUp){
-
-            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
-
-        }
-
-
 
         if (sPref.getBoolean("firstrun", true)) {
 
@@ -1009,6 +992,21 @@ public class Start extends ActionBarActivity implements
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
+        }
+    }
+
+    public void startPushNotifications() {
+        Intent i = new Intent(this, Aptoide.getConfiguration().getNotificationsReceiver());
+        i.setAction(Aptoide.getConfiguration().getAction());
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_NO_CREATE) != null);
+
+
+        if(!alarmUp){
+
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
 
         }
     }
@@ -1154,7 +1152,7 @@ public class Start extends ActionBarActivity implements
 
         Ln.getConfig().setLoggingLevel(Log.ERROR);
         BusProvider.getInstance().register(this);
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
 
@@ -1299,8 +1297,8 @@ public class Start extends ActionBarActivity implements
         refresh = false;
     }
 
-    public PagerAdapter getViewPagerAdapter() {
-        return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
+    public PagerAdapter getViewPagerAdapter(boolean b) {
+        return new AptoidePagerAdapter(getSupportFragmentManager(), mContext, b);
     }
 
     @Override
@@ -1322,53 +1320,53 @@ public class Start extends ActionBarActivity implements
                     //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent loginIntent = new Intent(mContext, MyAccountActivity.class);
                     startActivity(loginIntent);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_My_Account_Drawer_Button");
                     break;
                 case 1:
                     //Log.d("MenuDrawer-position", "pos: " + position);
                     Intent rollbackIntent = new Intent(mContext, RollbackActivity.class);
                     startActivity(rollbackIntent);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Rollback_Drawer_Button");
                     break;
                 case 2:
                     //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent scheduledIntent = new Intent(mContext, ScheduledDownloadsActivity.class);
                     startActivity(scheduledIntent);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Scheduled_Downloads_Drawer_Button");
                     break;
                 case 3:
                     //Log.d("MenuDrawer-position", "pos: "+position);
                     Intent excludedIntent = new Intent(mContext, ExcludedUpdatesActivity.class);
                     startActivity(excludedIntent);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Excluded_Updates_Drawer_Button");
                     break;
                 case 4:
                     //Log.d("MenuDrawer-position", "pos: " + position);
 //                    Log.d("MenuDrawer-position", "pos: " + position);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Facebook_Drawer_Button");
                     showFacebook();
                     break;
                 case 5:
                     //Log.d("MenuDrawer-position", "pos: " + position);
 //                    Log.d("MenuDrawer-position", "pos: " + position);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Twitter_Drawer_Button");
                     showTwitter();
                     break;
                 case 6:
                     initBackupApps();
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_BackupApps_Drawer_Button");
                     break;
                 case 7:
                     Intent settingsIntent = new Intent(mContext, settingsClass);
                     startActivityForResult(settingsIntent, Settings_REQ_CODE);
-
+                    if (Build.VERSION.SDK_INT >= 10)
                         FlurryAgent.logEvent("Clicked_On_Settings_Drawer_Button");
                     break;
 //                case 8:
@@ -1403,8 +1401,7 @@ public class Start extends ActionBarActivity implements
             Intent i = new Intent(this, AppViewActivity.class);
             i.putExtra("getBackupApps", true);
             startActivity(i);
-            if (Build.VERSION.SDK_INT >= 10)
-                FlurryAgent.logEvent("Opened_App_View_To_Download_BackupApps");
+            FlurryAgent.logEvent("Opened_App_View_To_Download_BackupApps");
         }
     }
 

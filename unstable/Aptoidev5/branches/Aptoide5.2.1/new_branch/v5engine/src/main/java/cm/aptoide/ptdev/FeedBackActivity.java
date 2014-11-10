@@ -152,8 +152,7 @@ public class FeedBackActivity extends ActionBarActivity {
         try {
             startActivity(emailIntent);
             finish();
-            if (Build.VERSION.SDK_INT >= 10)
-                FlurryAgent.logEvent("Feedback_Sended_Clicked_On_Send_Feedback_Button");
+            FlurryAgent.logEvent("Feedback_Sended_Clicked_On_Send_Feedback_Button");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, R.string.feedback_no_email, Toast.LENGTH_LONG).show();
         }
@@ -162,13 +161,13 @@ public class FeedBackActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override

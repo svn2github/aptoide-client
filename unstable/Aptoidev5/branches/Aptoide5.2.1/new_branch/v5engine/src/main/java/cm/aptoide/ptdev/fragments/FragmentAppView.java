@@ -257,8 +257,7 @@ public abstract class FragmentAppView extends Fragment {
                                     spinner.setOnItemSelectedListener(null);
                                     MultiStoreItem item = (MultiStoreItem) parent.getAdapter().getItem(position);
                                     BusProvider.getInstance().post(new OnMultiVersionClick(item.getName(), item.getPackageName(), item.getVersion(), item.getVersionCode(), item.getDownloads()));
-                                    if (Build.VERSION.SDK_INT >= 10)
-                                        FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
+                                    FlurryAgent.logEvent("App_View_Opened_Store_From_Spinner");
                                 }
                             }
 

@@ -89,7 +89,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private View v2;
     private TextView moreReTv;
 
-    private MergeAdapter mergeAdapter;
+    protected MergeAdapter mergeAdapter;
     private int bucketSize;
     private View moreRecommended;
     private PullToRefreshCallback pullToRefreshCallback;
@@ -100,7 +100,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
     private View sponsoredHeader;
     private boolean fromRefresh;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private View adultSwitchView;
+    protected View adultSwitchView;
     private CompoundButton adultContent;
     private CompoundButton.OnCheckedChangeListener adultListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -330,8 +330,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                 gplayView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (Build.VERSION.SDK_INT >= 10)
-                                            FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Google_Play_Link");
+                                        FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Google_Play_Link");
                                         try {
                                             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
                                             List<ResolveInfo> resolveInfos = getActivity().getPackageManager().queryIntentActivities(i, 0);
@@ -376,7 +375,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
                                 customView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Banner_Link");
+                                        FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_Banner_Link");
                                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkSuggestion.getData().getUrl()));
                                         startActivity(intent);
                                     }
@@ -717,8 +716,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         moreReTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= 10)
-                    FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended_Button");
+                FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended_Button");
                 Intent i = new Intent(getActivity(), MoreUserBasedActivity.class);
                 startActivity(i);
             }
@@ -734,6 +732,7 @@ public class FragmentHome extends ListFragment implements LoaderManager.LoaderCa
         featGraphFooter.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FlurryAgent.logEvent("Home_Page_Clicked_On_More_Featured_Graphic");
                 Intent i = new Intent(getActivity(), MoreFeaturedGraphicActivity.class);
                 startActivity(i);
             }

@@ -294,6 +294,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
                         if (showBadgeLayout) {
+                            findViewById(R.id.extra_info_layout).setVisibility(View.VISIBLE);
+
                             View badge_layout = findViewById(R.id.badge_layout);
                             badge_layout.setVisibility(View.VISIBLE);
                             badge_layout.startAnimation(AnimationUtils.loadAnimation(AppViewActivity.this, android.R.anim.fade_in));
@@ -497,7 +499,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         btinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Buy_Button");
+                FlurryAgent.logEvent("App_View_Clicked_On_Buy_Button");
                 final AccountManager accountManager = AccountManager.get(thisActivity);
                 final Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
@@ -536,7 +538,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         app_version_installed.setText(getString(R.string.installed_tab) + ": " + versionName);
     }
 
-    private void setShareButton(){
+    public void setShareButton(){
         final CheckBox btinstallshare = (CheckBox) findViewById(R.id.btinstallshare);
         if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
             btinstallshare.setVisibility( View.VISIBLE );
@@ -1567,7 +1569,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         urlAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Google_Play_Link");
+                                FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Google_Play_Link");
                                 try {
                                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
                                     List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(i, 0);
@@ -1614,7 +1616,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         urlAdBannerView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Banner_Link");
+                                FlurryAgent.logEvent("AppView_Clicked_On_Sponsored_Banner_Link");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
 
                                 try {

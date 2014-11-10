@@ -56,8 +56,7 @@ public class CanDownloadDialog extends DialogFragment {
                         .setPositiveButton(R.string.downloadAnyWay, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (Build.VERSION.SDK_INT >= 10)
-                                    FlurryAgent.logEvent("Network_Data_Usage_Can_Download_Anyway");
+                                FlurryAgent.logEvent("Network_Data_Usage_Can_Download_Anyway");
                                 if (json != null) {
 //                                    Log.d("CanDownloadDialog", "Json != null");
                                     if( callback!=null ) callback.getService().startDownloadFromJson(json,
@@ -77,8 +76,7 @@ public class CanDownloadDialog extends DialogFragment {
 //                        .setNeutralButton(R.string.schDwnBtn, new DialogInterface.OnClickListener() {
 //                            @Override
 //                            public void onClick(DialogInterface dialog, int which) {
-//                                if (Build.VERSION.SDK_INT >= 10)
-//                                    FlurryAgent.logEvent("CanDownLoadDialog_Schedule");
+//                                FlurryAgent.logEvent("CanDownLoadDialog_Schedule");
 //                                new Database(Aptoide.getDb()).scheduledDownloadIfMd5(
 //                                        getArguments().getString("Package_Name"),
 //                                        getArguments().getString("md5"),
@@ -91,10 +89,10 @@ public class CanDownloadDialog extends DialogFragment {
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Network_Data_Usage_Canceled");
+                                FlurryAgent.logEvent("Network_Data_Usage_Canceled");
                                 boolean isSchedule = ((CheckBox)view.findViewById(R.id.checkbox_schedule)).isChecked();
                                 if(isSchedule){
-                                    if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Network_Data_Usage_Canceled_Scheduled_Download");
+                                    FlurryAgent.logEvent("Network_Data_Usage_Canceled_Scheduled_Download");
                                     new Database(Aptoide.getDb()).scheduledDownloadIfMd5(
                                             getArguments().getString("Package_Name"),
                                             getArguments().getString("md5"),

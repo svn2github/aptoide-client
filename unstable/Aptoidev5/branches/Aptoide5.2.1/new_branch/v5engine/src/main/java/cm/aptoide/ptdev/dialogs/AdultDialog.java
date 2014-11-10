@@ -41,12 +41,10 @@ public class AdultDialog extends DialogFragment {
                         int pin = SecurePreferences.getInstance().getInt(AdultDialog.MATUREPIN, -1);
                         String pintext = ((EditText) v.findViewById(R.id.pininput)).getText().toString();
                         if (pintext.length() > 0 && Integer.valueOf(pintext) == pin) {
-                            if (Build.VERSION.SDK_INT >= 10)
-                                FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Pin");
+                            FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Pin");
                             positiveButtonlistener.onClick(dialog, which);
                         } else {
-                            if (Build.VERSION.SDK_INT >= 10)
-                                FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Wrong_Pin");
+                            FlurryAgent.logEvent("Dialog_Adult_Content_Inserted_Wrong_Pin");
                             Toast.makeText(c, c.getString(R.string.adultpinwrong), Toast.LENGTH_SHORT).show();
                             dialogRequestMaturepin(c, positiveButtonlistener).show();
                         }

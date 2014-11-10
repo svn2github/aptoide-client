@@ -9,6 +9,7 @@ import java.io.File;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.SearchManager;
+import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import openiab.IABPurchaseActivity;
 import openiab.PaidAppPurchaseActivity;
 
@@ -89,6 +90,10 @@ public class AptoideConfiguration {
     public Class getShortcutClass() {
         return cm.aptoide.ptdev.Start.class;
     }
+    public Class getNotificationsReceiver() {
+        return PushNotificationReceiver.class;
+    }
+
 
     public String getTopAppsUrl(){
         return "http://apps.store.aptoide.com/top.xml";
@@ -244,4 +249,15 @@ public class AptoideConfiguration {
         return PaidAppPurchaseActivity.class;
     }
 
+    public String getTrackUrl() {
+        return "cm.aptoide.pt.PushNotificationTrackUrl";
+    }
+
+    public String getAction() {
+        return "cm.aptoide.pt.PushNotification";
+    }
+
+    public String getActionFirstTime() {
+        return "cm.aptoide.pt.PushNotificationFirstTime";
+    }
 }

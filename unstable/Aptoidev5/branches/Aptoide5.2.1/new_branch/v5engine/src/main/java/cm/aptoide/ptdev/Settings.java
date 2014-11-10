@@ -95,8 +95,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                                     .commit();
                             mp.setTitle(R.string.remove_mature_pin_title);
                             mp.setSummary(R.string.remove_mature_pin_summary);
-                            if (Build.VERSION.SDK_INT >= 10)
-                                FlurryAgent.logEvent("Settings_Added_Pin_To_Lock_Adult_Content");
+                            FlurryAgent.logEvent("Settings_Added_Pin_To_Lock_Adult_Content");
                             //mp.setOnPreferenceClickListener(removeclick);
                         }
                         isSetingPIN = false;
@@ -133,8 +132,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     final Preference mp = findPreference("Maturepin");
                     mp.setTitle(R.string.set_mature_pin_title);
                     mp.setSummary(R.string.set_mature_pin_summary);
-                    if (Build.VERSION.SDK_INT >= 10)
-                        FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
+                    FlurryAgent.logEvent("Settings_Removed_Pin_Adult_Content");
                 }
             }).show();
         }
@@ -235,91 +233,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 		});
 
 
-        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL,false)){
-            findPreference("disablesocialtimeline").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    FlurryAgent.logEvent("Settings_Disabled_Social_Timeline");
-                    final ProgressDialog pd;
-
-                    pd = new ProgressDialog(mctx);
-                    pd.setMessage(getString(R.string.please_wait));
-                    pd.show();
-
-                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
-                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEINACTIVE   );
-
-                     manager.execute(request, new RequestListener<GenericResponseV2>() {
-                       @Override
-                       public void onRequestFailure(SpiceException spiceException) {
-                           pd.dismiss();
-                       }
-
-                       @Override
-                       public void onRequestSuccess(GenericResponseV2 responseV2) {
-                           if( responseV2.getStatus().equals("OK") ) {
-                               pd.dismiss();
-                               manager.removeDataFromCache(GetUserSettingsJson.class, "timeline-status");
-                               PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove(Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
-                               ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
-                               Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-
-                               String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
-
-                               String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
-
-                               ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
-                               if (Build.VERSION.SDK_INT >= 8)
-                                   ContentResolver.removePeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle());
-
-                               ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
-                               if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
-
-                           }
-                       }
-                   });
-                    return false;
-                }
-            });
-            findPreference("socialtimelinenotifications").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                    String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
-
-                    String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
-
-                    if (!((CheckBoxPreference) preference).isChecked()) {
-
-                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
-                        if (Build.VERSION.SDK_INT >= 8)
-                            ContentResolver.removePeriodicSync(account,timelineActivitySyncAdapterAuthority, new Bundle());
-
-                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
-                        if (Build.VERSION.SDK_INT >= 8)
-                            ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
-
-                    } else {
-
-                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, true);
-                        if (Build.VERSION.SDK_INT >= 8)
-                            ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
-
-                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
-                        if (Build.VERSION.SDK_INT >= 8)
-                            ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
-
-
-                    }
-
-                    return false;
-                }
-            });
-        }
-        else{
-            ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
-        }
+        disableSocialTimeline();
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -451,6 +365,94 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             DialogSetAdultpin(mp).show();
         }
 
+    }
+
+    public void disableSocialTimeline() {
+        if(Preferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)){
+            findPreference("disablesocialtimeline").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    FlurryAgent.logEvent("Settings_Disabled_Social_Timeline");
+                    final ProgressDialog pd;
+
+                    pd = new ProgressDialog(mctx);
+                    pd.setMessage(getString(R.string.please_wait));
+                    pd.show();
+
+                    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+                    request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEINACTIVE   );
+
+                     manager.execute(request, new RequestListener<GenericResponseV2>() {
+                       @Override
+                       public void onRequestFailure(SpiceException spiceException) {
+                           pd.dismiss();
+                       }
+
+                       @Override
+                       public void onRequestSuccess(GenericResponseV2 responseV2) {
+                           if( responseV2.getStatus().equals("OK") ) {
+                               pd.dismiss();
+                               manager.removeDataFromCache(GetUserSettingsJson.class, "timeline-status");
+                               PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().remove(Preferences.TIMELINE_ACEPTED_BOOL).remove(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL).commit();
+                               ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
+                               Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+
+                               String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
+
+                               String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
+
+                               ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
+                               if (Build.VERSION.SDK_INT >= 8)
+                                   ContentResolver.removePeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle());
+
+                               ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
+                               if (Build.VERSION.SDK_INT >= 8) ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
+
+                           }
+                       }
+                   });
+                    return false;
+                }
+            });
+            findPreference("socialtimelinenotifications").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Account account = AccountManager.get(Settings.this).getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
+                    String timelineActivitySyncAdapterAuthority = Aptoide.getConfiguration().getTimelineActivitySyncAdapterAuthority();
+
+                    String timeLinePostsSyncAdapterAuthority = Aptoide.getConfiguration().getTimeLinePostsSyncAdapterAuthority();
+
+                    if (!((CheckBoxPreference) preference).isChecked()) {
+
+                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, false);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.removePeriodicSync(account,timelineActivitySyncAdapterAuthority, new Bundle());
+
+                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, false);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.removePeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle());
+
+                    } else {
+
+                        ContentResolver.setSyncAutomatically(account, timelineActivitySyncAdapterAuthority, true);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.addPeriodicSync(account, timelineActivitySyncAdapterAuthority, new Bundle(), 7200);
+
+                        ContentResolver.setSyncAutomatically(account, timeLinePostsSyncAdapterAuthority, true);
+                        if (Build.VERSION.SDK_INT >= 8)
+                            ContentResolver.addPeriodicSync(account, timeLinePostsSyncAdapterAuthority, new Bundle(), 86400);
+
+
+                    }
+
+                    return false;
+                }
+            });
+        }
+        else{
+            ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
+        }
     }
 
     private final void SettingsResult(){

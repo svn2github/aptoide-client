@@ -9,6 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +18,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
@@ -38,6 +42,8 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
@@ -49,12 +55,17 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     private static final String PUSH_NOTIFICATION_MSG = "MSG";
     private static final String PUSH_NOTIFICATION_EXTERNAL_URL = "url";
     private static final String PUSH_NOTIFICATION_IMG_URL = "img";
-    public static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY;//AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
+    public static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY; //AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
+
 
     // same as Manifest
-    public static final String PUSH_NOTIFICATION_Action_TRACK_URL = "cm.aptoide.pt.PushNotificationTrackUrl";
-    public static final String PUSH_NOTIFICATION_Action = "cm.aptoide.pt.PushNotification";
-    public static final String PUSH_NOTIFICATION_Action_FIRST_TIME = "cm.aptoide.pt.PushNotificationFirstTime";
+    public final String PUSH_NOTIFICATION_Action_TRACK_URL = Aptoide.getConfiguration().getTrackUrl();
+
+    public final String PUSH_NOTIFICATION_Action = Aptoide.getConfiguration().getAction();
+
+    public final String PUSH_NOTIFICATION_Action_FIRST_TIME = Aptoide.getConfiguration().getActionFirstTime();
+
+
     private static final String PUSH_NOTIFICATION_TRACK_URL = "trackUrl";
     public static final String SPREF_PNOTIFICATION_ID = "lastPNotificationId";
 
@@ -71,24 +82,24 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            Log.i("PushNotificationReceiver", "onLoadingStarted");
+//            Log.i("PushNotificationReceiver", "onLoadingStarted");
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            Log.i("PushNotificationReceiver", "onLoadingFailed");
+//            Log.i("PushNotificationReceiver", "onLoadingFailed");
             loadNotification(extra, context);
         }
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            Log.i("PushNotificationReceiver", "onLoadingComplete");
+//            Log.i("PushNotificationReceiver", "onLoadingComplete");
             loadNotification(extra, context, loadedImage);
         }
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-            Log.i("PushNotificationReceiver", "onLoadingCancelled");
+//            Log.i("PushNotificationReceiver", "onLoadingCancelled");
         }
     }
 
@@ -102,9 +113,9 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                 i.setAction(PUSH_NOTIFICATION_Action);
                 PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PUSH_NOTIFICATION_TIME_INTERVAL, pi);
-                Log.i("PushNotificationReceiver", "Alarm Registed Received");
+//                Log.i("PushNotificationReceiver", "Alarm Registed Received");
             } else if (action.equals(PUSH_NOTIFICATION_Action)) {
-                Log.i("PushNotificationReceiver", "PUSH_NOTIFICATION_Action");
+//                Log.i("PushNotificationReceiver", "PUSH_NOTIFICATION_Action");
 
                 final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -117,9 +128,13 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
                             HashMap<String, String> parameters = new HashMap<String, String>();
 
-                            //parameters.put("oem_id", "2dae2cd9fa7b328bffe4570327dd4e3c");
+                            String oemid = Aptoide.getConfiguration().getExtraId();
+                            if (!TextUtils.isEmpty(oemid)) {
+                                parameters.put("oem_id", oemid);
+                            }
                             parameters.put("mode", "json");
                             parameters.put("limit", "1");
+
 
                             int lastId = PreferenceManager.getDefaultSharedPreferences(context).getInt(SPREF_PNOTIFICATION_ID,0);
 
@@ -130,7 +145,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                             httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
 
                             PushNotificationJson response = httpRequest.execute().parseAs(PushNotificationJson.class);
-                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
+//                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
 
                             for (final PushNotificationJson.Notification notification : response.getResults()) {
                                 final Bundle extra = intent.getExtras();
@@ -140,7 +155,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                                 extra.putString(PUSH_NOTIFICATION_TRACK_URL, notification.getTrack_url());
                                 extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
 
-                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
+//                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
 
                                 handler.post(new Runnable() {
                                     @Override
@@ -208,10 +223,10 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     }
 
     private void loadNotification(Bundle extra, Context context, Bitmap o) {
-        Log.i("PushNotificationReceiver", o == null ? "Image was null" : "Image was good");
-        Log.i("PushNotificationReceiver", "Title: " + extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
-        Log.i("PushNotificationReceiver", "Msg: " + extra.getCharSequence(PUSH_NOTIFICATION_MSG));
-        Log.i("PushNotificationReceiver", "URL: " + extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
+//        Log.i("PushNotificationReceiver", o == null ? "Image was null" : "Image was good");
+//        Log.i("PushNotificationReceiver", "Title: " + extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
+//        Log.i("PushNotificationReceiver", "Msg: " + extra.getCharSequence(PUSH_NOTIFICATION_MSG));
+//        Log.i("PushNotificationReceiver", "URL: " + extra.getCharSequence(PUSH_NOTIFICATION_EXTERNAL_URL));
 
         Intent resultIntent = new Intent(PUSH_NOTIFICATION_Action_TRACK_URL);
 
@@ -222,27 +237,33 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, new Random().nextInt(), resultIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(cm.aptoide.ptdev.R.drawable.icon_brand_aptoide)
+                .setSmallIcon(getDrawableResource())
                 .setContentIntent(resultPendingIntent)
                 .setOngoing(false)
                 .setContentTitle(extra.getCharSequence(PUSH_NOTIFICATION_TITLE))
                 .setContentText(extra.getCharSequence(PUSH_NOTIFICATION_MSG)).build();
 
         if (Build.VERSION.SDK_INT >= 16) {
-            Log.d("PushNotificationReceiver", "is 16 or more, BIG!!!");
+//            Log.d("PushNotificationReceiver", "is 16 or more, BIG!!!");
             RemoteViews expandedView = new RemoteViews(context.getPackageName(),
                     cm.aptoide.ptdev.R.layout.pushnotificationlayout);
             expandedView.setBitmap(cm.aptoide.ptdev.R.id.PushNotificationImageView, "setImageBitmap", o);
+            expandedView.setImageViewBitmap(cm.aptoide.ptdev.R.id.icon, BitmapFactory.decodeResource(context.getResources(),getDrawableResource()));
             expandedView.setTextViewText(cm.aptoide.ptdev.R.id.text1, extra.getCharSequence(PUSH_NOTIFICATION_TITLE));
             expandedView.setTextViewText(cm.aptoide.ptdev.R.id.description, extra.getCharSequence(PUSH_NOTIFICATION_MSG));
             notification.bigContentView = expandedView;
         }
 
 
-        Log.i("PushNotificationReceiver", "notification built");
+//        Log.i("PushNotificationReceiver", "notification built");
+        FlurryAgent.logEvent("Push_Notification_Loaded");
         final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         managerNotification.notify(86456, notification);
 
+    }
+
+    public int getDrawableResource(){
+        return R.drawable.icon_brand_aptoide;
     }
 
 }

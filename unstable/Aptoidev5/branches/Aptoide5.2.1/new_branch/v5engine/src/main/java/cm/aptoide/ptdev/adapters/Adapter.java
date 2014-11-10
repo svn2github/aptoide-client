@@ -267,6 +267,7 @@ public class Adapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent i = new Intent(context, appViewClass);
                     long id = item.getId();
+
                     i.putExtra("id", id);
                     i.putExtra("whereFrom", "editorsChoice");
                     i.putExtra("download_from", "editors_choice");

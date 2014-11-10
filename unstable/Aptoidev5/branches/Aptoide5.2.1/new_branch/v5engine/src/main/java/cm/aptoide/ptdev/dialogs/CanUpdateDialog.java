@@ -41,8 +41,7 @@ public class CanUpdateDialog extends DialogFragment {
                 .setPositiveButton(R.string.downloadAnyWay, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (Build.VERSION.SDK_INT >= 10)
-                            FlurryAgent.logEvent("CanUpdateDialog_DownLoad_AnyWay");
+                        FlurryAgent.logEvent("CanUpdateDialog_DownLoad_AnyWay");
 
                         if (callback != null && getArguments().getLongArray(ARGKEYIDS)!=null) {
                             callback.updateAll(getArguments().getLongArray(ARGKEYIDS));
@@ -53,8 +52,7 @@ public class CanUpdateDialog extends DialogFragment {
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (Build.VERSION.SDK_INT >= 10)
-                            FlurryAgent.logEvent("CanUpdateDialog_Cancel");
+                        FlurryAgent.logEvent("CanUpdateDialog_Cancel");
                     }
                 })
                 .create();
