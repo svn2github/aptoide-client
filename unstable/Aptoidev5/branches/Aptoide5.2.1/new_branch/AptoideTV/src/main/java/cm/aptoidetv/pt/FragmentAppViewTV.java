@@ -4,7 +4,6 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +41,7 @@ import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -52,7 +50,6 @@ import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cm.aptoide.ptdev.AllCommentsActivity;
@@ -82,7 +79,6 @@ import cm.aptoide.ptdev.model.Screenshot;
 import cm.aptoide.ptdev.model.Video;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.AddLikeRequest;
 import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
@@ -236,7 +232,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                 intent.putStringArrayListExtra("url", urls);
                 intent.putExtra("position", position);
                 context.startActivity(intent);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
+                FlurryAgent.logEvent("App_View_Clicked_On_Screenshot");
             }
         }
 
@@ -254,7 +250,7 @@ public abstract class FragmentAppViewTV extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                 context.startActivity(intent);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Video");
+                FlurryAgent.logEvent("App_View_Clicked_On_Video");
             }
         }
     }
@@ -262,7 +258,7 @@ public abstract class FragmentAppViewTV extends Fragment {
     public static class FragmentAppViewDetails extends FragmentAppViewTV {
 
         private TextView description;
-        private TextView showAllDescription;
+//        private TextView showAllDescription;
         private LinearLayout descriptionContainer;
 //        private ScrollView scroller;
 
@@ -301,62 +297,62 @@ public abstract class FragmentAppViewTV extends Fragment {
                 description.setText(event.getDescription());
 
 //            //Log.d("Aptoide-description", "lines "+ description.getLineCount() );
-            if (event.getDescription()!=null && event.getDescription().length() > 250) {
-
-                description.setMaxLines(10);
-                showAllDescription.setVisibility(View.VISIBLE);
-                showAllDescription.setOnClickListener(new View.OnClickListener() {
-
-
-                    @Override
-                    public void onClick(View v) {
-
-                        if (collapsed) {
-                            collapsed = false;
-                            description.setMaxLines(Integer.MAX_VALUE);
-                            TypedValue outValue = new TypedValue();
-                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
-                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
-                            showAllDescription.setText(getString(R.string.show_less));
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Expanded_Description");
-                        } else {
-                            collapsed = true;
-                            TypedValue outValue = new TypedValue();
-                            getActivity().getTheme().resolveAttribute(R.attr.icExpandDrawable, outValue, true);
-                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
-                            description.setMaxLines(10);
-//                            scroller.scrollTo(0, scrollPosition);
-                            showAllDescription.setText(getString(R.string.show_more));
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Colapsed_Description");
-                        }
-                    }
-                });
-                descriptionContainer.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-
-                        if (collapsed) {
-                            collapsed = false;
-                            description.setMaxLines(Integer.MAX_VALUE);
-                            TypedValue outValue = new TypedValue();
-                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
-                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
-                            showAllDescription.setText(getString(R.string.show_less));
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
-                        } else {
-                            collapsed = true;
-                            TypedValue outValue = new TypedValue();
-                            getActivity().getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
-                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
-                            description.setMaxLines(10);
-                            showAllDescription.setText(getString(R.string.show_more));
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
-                        }
-                    }
-                });
-
-            }
+//            if (event.getDescription()!=null && event.getDescription().length() > 250) {
+//
+//                description.setMaxLines(10);
+//                showAllDescription.setVisibility(View.VISIBLE);
+//                showAllDescription.setOnClickListener(new View.OnClickListener() {
+//
+//
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (collapsed) {
+//                            collapsed = false;
+//                            description.setMaxLines(Integer.MAX_VALUE);
+//                            TypedValue outValue = new TypedValue();
+//                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
+//                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+//                            showAllDescription.setText(getString(R.string.show_less));
+//                            FlurryAgent.logEvent("App_View_Expanded_Description");
+//                        } else {
+//                            collapsed = true;
+//                            TypedValue outValue = new TypedValue();
+//                            getActivity().getTheme().resolveAttribute(R.attr.icExpandDrawable, outValue, true);
+//                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+//                            description.setMaxLines(10);
+////                            scroller.scrollTo(0, scrollPosition);
+//                            showAllDescription.setText(getString(R.string.show_more));
+//                            FlurryAgent.logEvent("App_View_Colapsed_Description");
+//                        }
+//                    }
+//                });
+//                descriptionContainer.setOnClickListener(new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (collapsed) {
+//                            collapsed = false;
+//                            description.setMaxLines(Integer.MAX_VALUE);
+//                            TypedValue outValue = new TypedValue();
+//                            getActivity().getTheme().resolveAttribute(R.attr.icCollapseDrawable, outValue, true);
+//                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+//                            showAllDescription.setText(getString(R.string.show_less));
+//                            FlurryAgent.logEvent("App_View_Clicked_On_Show_More_Description");
+//                        } else {
+//                            collapsed = true;
+//                            TypedValue outValue = new TypedValue();
+//                            getActivity().getTheme().resolveAttribute( R.attr.icExpandDrawable, outValue, true );
+//                            showAllDescription.setCompoundDrawablesWithIntrinsicBounds(outValue.resourceId, 0, 0, 0);
+//                            description.setMaxLines(10);
+//                            showAllDescription.setText(getString(R.string.show_more));
+//                            FlurryAgent.logEvent("App_View_Clicked_On_Show_Less_Description");
+//                        }
+//                    }
+//                });
+//
+//            }
 
             if(event.getDescription() != null){
                 row2.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
@@ -479,7 +475,7 @@ public abstract class FragmentAppViewTV extends Fragment {
             View v = inflater.inflate(R.layout.fragment_app_view_details, container, false);
 
             description = (TextView) v.findViewById(R.id.descript);
-            showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
+//            showAllDescription= (TextView) v.findViewById(R.id.show_all_description);
             descriptionContainer = (LinearLayout) v.findViewById(R.id.description_container);
             layoutInfoDetails = (RelativeLayout) v.findViewById(R.id.layout_info_details);
             store = (TextView) layoutInfoDetails.findViewById(R.id.store_label);
@@ -611,7 +607,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                         v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
+                                FlurryAgent.logEvent("App_View_Clicked_On_More_Related_Apps");
                                 Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                                 i.putExtra("item", true);
                                 i.putExtra("packageName", ((AppViewActivityTV) getActivity()).getPackage_name());
@@ -646,7 +642,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
+                            FlurryAgent.logEvent("App_View_Clicked_On_More_From_Publisher");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("developer", true);
                             i.putExtra("packageName", ((AppViewActivityTV)getActivity()).getPackage_name());
@@ -682,7 +678,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                     v.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
+                            FlurryAgent.logEvent("App_View_Clicked_On_More_Multiversion");
                             Intent i = new Intent(getActivity(), MoreRelatedActivity.class);
                             i.putExtra("version", true);
                             i.putExtra("packageName", ((AppViewActivityTV)getActivity()).getPackage_name());
@@ -976,7 +972,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                     seeAllButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Opened_See_All_Comments_Button");
+                            FlurryAgent.logEvent("App_View_Opened_See_All_Comments_Button");
                             Intent intent = new Intent(getActivity(), AllCommentsActivity.class);
                             intent.putExtra("repoName", ((AppViewActivityTV) getActivity()).getRepoName());
                             intent.putExtra("versionName", ((AppViewActivityTV) getActivity()).getVersionName());
@@ -1258,7 +1254,7 @@ public abstract class FragmentAppViewTV extends Fragment {
                 final AccountManager accountManager = AccountManager.get(getActivity());
 
                 if (accountManager.getAccountsByType(AptoideTV.getConfiguration().getAccountType()).length > 0) {
-                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("App_View_Added_A_Comment");
+                    FlurryAgent.logEvent("App_View_Added_A_Comment");
                     if(addCommentCallback != null) {
                         addCommentCallback.addComment(editText.getText().toString(), null);
                     }

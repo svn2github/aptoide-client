@@ -74,6 +74,8 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.events.SocialTimelineEvent;
+import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
@@ -192,7 +194,7 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
         super.onStop();
         BusProvider.getInstance().unregister(this);
         spiceManager.shouldStop();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onEndSession(this);
+        FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -472,7 +474,7 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
             message=""+getText(cm.aptoide.ptdev.R.string.remote_in_noSD_jolla);
         }
         noSpaceDialog.setMessage(message);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
+        FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
         noSpaceDialog.setButton(Dialog.BUTTON_NEUTRAL, getText(android.R.string.ok), new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
@@ -761,7 +763,7 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
         super.onStart();
         spiceManager.start(this);
         BusProvider.getInstance().register(this);
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
+        FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
     }
 
     public void startParse(final Store store) {
@@ -802,7 +804,7 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
         //Log.d("Mature","Unlocked");
         matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(AptoideTV.getContext()).edit().putBoolean("matureChkBox", false).commit();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Unlocked_Mature_Content");
+        FlurryAgent.logEvent("Unlocked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
         InvalidateAptoideMenu();
@@ -813,11 +815,31 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
 
     }
 
+    @Override
+    public void timelineCallback() {
+
+    }
+
+    @Override
+    public void updateTimelineBadge() {
+
+    }
+
+    @Override
+    public SocialTimelineEvent produceTimelineEvent() {
+        return null;
+    }
+
+    @Override
+    public SocialTimelineInitEvent produceInitEvent() {
+        return null;
+    }
+
     public void maturelock() {
         //Log.d("Mature","locked");
         matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(AptoideTV.getContext()).edit().putBoolean("matureChkBox", true).commit();
-        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Locked_Mature_Content");
+        FlurryAgent.logEvent("Locked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-2));
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
         InvalidateAptoideMenu();
@@ -830,7 +852,7 @@ public class StartTV extends ActionBarActivity implements PullToRefreshCallback,
     }
 
     public PagerAdapter getViewPagerAdapter() {
-        return new AptoidePagerAdapter(getSupportFragmentManager(), mContext);
+        return new AptoidePagerAdapter(getSupportFragmentManager(), mContext, false);
     }
 
     public void reload() {

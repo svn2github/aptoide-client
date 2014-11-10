@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -78,6 +79,7 @@ import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import cm.aptoidetv.pt.coverflow.CoverAdapterView;
 import cm.aptoidetv.pt.coverflow.CoverFlow;
 import cm.aptoidetv.pt.coverflow.EditorsChoiceImageAdapter;
+import cm.aptoidetv.pt.coverflow.FancyCoverFlow;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,7 +94,7 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
     private ArrayList<HomeItem> recommended = new ArrayList<HomeItem>();
     private AdapterHomeTV homeBucketAdapterHome;
 
-    private HomeBucketAdapter recomendedAdapter;
+    private HomeBucketAdapterTV recomendedAdapter;
     private View v2;
     private TextView moreReTv;
 
@@ -113,7 +115,7 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
+                FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
                 new AdultDialog().show(getFragmentManager(), "adultDialog");
             } else {
                 ((GetStartActivityCallback) getActivity()).matureLock();
@@ -288,7 +290,7 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
                                 v.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                        FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
                                         Intent i = new Intent(getActivity(), appViewClass);
                                         long id = apkSuggestion.getData().getId().longValue();
                                         i.putExtra("id", id);
@@ -692,7 +694,7 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
 
         bucketSize = (int) (screenWidth / 120);
         homeBucketAdapterHome = new AdapterHomeTV(getActivity());
-        recomendedAdapter = new HomeBucketAdapter(activity, recommended);
+        recomendedAdapter = new HomeBucketAdapterTV(activity, recommended);
         pullToRefreshCallback = (PullToRefreshCallback) activity;
 
     }
@@ -828,7 +830,6 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
 
     final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(1000)).build();
 
-//
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
 
     @Override
@@ -844,29 +845,51 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
 
         final ArrayList<Home> items = data.get("featuredGraphic");
 
-        CoverFlow coverFlow;
-        coverFlow = (CoverFlow) v.findViewById(cm.aptoidetv.pt.R.id.coverflow);
-        Collections.shuffle(items);
-        EditorsChoiceImageAdapter coverImageAdapter =  new EditorsChoiceImageAdapter(getActivity(), items);
+        FancyCoverFlow fancyCoverFlow = (FancyCoverFlow) v.findViewById(cm.aptoidetv.pt.R.id.fancyCoverFlow);
 
-        coverFlow.setOnItemClickListener(new CoverAdapterView.OnItemClickListener() {
+        fancyCoverFlow.setAdapter(new EditorsChoiceImageAdapter(getActivity(), items));
+        fancyCoverFlow.setUnselectedAlpha(1.0f);
+        fancyCoverFlow.setUnselectedSaturation(0.0f);
+        fancyCoverFlow.setUnselectedScale(0.5f);
+        fancyCoverFlow.setSpacing(50);
+        fancyCoverFlow.setMaxRotation(0);
+        fancyCoverFlow.setScaleDownGravity(0.2f);
+        fancyCoverFlow.setActionDistance(FancyCoverFlow.ACTION_DISTANCE_AUTO);
 
+        fancyCoverFlow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(CoverAdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
                 Intent i = new Intent(getActivity(), appViewClass);
                 i.putExtra("id", ((HomeItem)items.get(position)).getId());
                 i.putExtra("download_from", "feature_graphic");
                 startActivity(i);
             }
-
         });
-        coverFlow.setSpacing(-25);
-        coverFlow.setSelectionToCenterChild();
-        coverFlow.setFocusable(true);
-        coverFlow.setUnselectedAlpha(0.5f);
-        coverFlow.setAdapter(coverImageAdapter);
+
+//        CoverFlow coverFlow;
+//        coverFlow = (CoverFlow) v.findViewById(cm.aptoidetv.pt.R.id.coverflow);
+//        Collections.shuffle(items);
+//        EditorsChoiceImageAdapter coverImageAdapter =  new EditorsChoiceImageAdapter(getActivity(), items);
+//
+//        coverFlow.setOnItemClickListener(new CoverAdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(CoverAdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                if (Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
+//                Intent i = new Intent(getActivity(), appViewClass);
+//                i.putExtra("id", ((HomeItem)items.get(position)).getId());
+//                i.putExtra("download_from", "feature_graphic");
+//                startActivity(i);
+//            }
+//
+//        });
+//        coverFlow.setSpacing(-25);
+//        coverFlow.setSelectionToCenterChild();
+//        coverFlow.setFocusable(true);
+//        coverFlow.setUnselectedAlpha(0.5f);
+//        coverFlow.setAdapter(coverImageAdapter);
 
 //        ImageView ivCentral = (ImageView) v.findViewById(R.id.app_icon_central);
 //        ImageView ivRow1Left = (ImageView) v.findViewById(R.id.app_icon_row1_left);
@@ -892,7 +915,7 @@ public class FragmentHomeForTV extends ListFragment implements LoaderManager.Loa
 //            fls[i].setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//                    if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
+//                    FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_Graphic");
 //                    Intent i = new Intent(getActivity(), appViewClass);
 //                    long id = ((HomeItem)item).getId();
 //                    i.putExtra("id", id);

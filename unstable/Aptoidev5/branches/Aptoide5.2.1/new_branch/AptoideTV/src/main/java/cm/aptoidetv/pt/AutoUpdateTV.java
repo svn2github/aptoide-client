@@ -112,13 +112,13 @@ public class AutoUpdateTV extends AsyncTask<Void, Void, AutoUpdateTV.AutoUpdateI
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 new DownloadSelfUpdate().execute(autoUpdateInfo);
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button");
+                FlurryAgent.logEvent("Auto_Update_Clicked_On_Yes_Button");
             }
         });
         updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, activity.getString(android.R.string.no), new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int arg1) {
-                if(Build.VERSION.SDK_INT >= 10) FlurryAgent.logEvent("Auto_Update_Clicked_On_No_Button");
+                FlurryAgent.logEvent("Auto_Update_Clicked_On_No_Button");
                 dialog.dismiss();
             }
         });

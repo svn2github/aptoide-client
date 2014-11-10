@@ -26,7 +26,7 @@ import cm.aptoide.ptdev.fragments.Home;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoidetv.pt.R;
 
-public class EditorsChoiceImageAdapter extends BaseAdapter {
+public class EditorsChoiceImageAdapter extends FancyCoverFlowAdapter {
 	private Context mContext;
 
 	private FileInputStream fis;
@@ -151,32 +151,49 @@ public class EditorsChoiceImageAdapter extends BaseAdapter {
 		return mImageUrls.size();
 	}
 
-	public Object getItem(int position) {
-		return position;
-	}
+    @Override
+    public Integer getItem(int position) { return position; }
 
 	public long getItemId(int position) { return (((HomeItem)mImageUrls.get(position)).getId()); }
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+//	public View getView(int position, View convertView, ViewGroup parent) {
+//
+//		//Use this code if you want to load from resources
+//		//ImageView i = new ImageView(mContext);
+//		//i.setImageResource(mImageIds[position]);
+//		//i.setLayoutParams(new CoverFlow.LayoutParams(130, 130));
+//		//i.setScaleType(ImageView.ScaleType.MATRIX);
+//		//return i;
+//		convertView = new ImageView(mContext);
+//
+//        final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(1000)).build();
+//        convertView.setLayoutParams(new CoverFlow.LayoutParams(750, 350));
+////		((ImageView) convertView).setScaleType(ScaleType.MATRIX);
+//		((ImageView) convertView).setImageResource(R.drawable.icon_non_available);
+////		ImageLoader.getInstance().displayImage(mImageUrls.get(position).get("url"), (ImageView) convertView,options);
+//        ImageLoader.getInstance().displayImage(((HomeItem) mImageUrls.get(position)).getIcon(), (ImageView) convertView, options);
+//
+//		return convertView;
+//	}
 
-		//Use this code if you want to load from resources
-		//ImageView i = new ImageView(mContext);
-		//i.setImageResource(mImageIds[position]);
-		//i.setLayoutParams(new CoverFlow.LayoutParams(130, 130));
-		//i.setScaleType(ImageView.ScaleType.MATRIX);	        
-		//return i;
-		convertView = new ImageView(mContext);
+    @Override
+    public View getCoverFlowItem(int position, View reusableView, ViewGroup parent) {
+        ImageView imageView = null;
 
-        final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(1000)).build();
-        convertView.setLayoutParams(new CoverFlow.LayoutParams(750, 350));
-//		((ImageView) convertView).setScaleType(ScaleType.MATRIX);
-		((ImageView) convertView).setImageResource(R.drawable.icon_non_available);
-//		ImageLoader.getInstance().displayImage(mImageUrls.get(position).get("url"), (ImageView) convertView,options);
-        ImageLoader.getInstance().displayImage(((HomeItem) mImageUrls.get(position)).getIcon(), (ImageView) convertView, options);
+        if (reusableView != null) {
+            imageView = (ImageView) reusableView;
+        } else {
+            imageView = new ImageView(parent.getContext());
+            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+            imageView.setLayoutParams(new FancyCoverFlow.LayoutParams(750, 350));
 
-		return convertView;
-	}
-	/** Returns the size (0.0f to 1.0f) of the views 
+        }final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisc(true).displayer(new FadeInBitmapDisplayer(1000)).build();
+        ImageLoader.getInstance().displayImage(((HomeItem) mImageUrls.get(position)).getIcon(), imageView, options);
+//        imageView.setImageResource(this.getItem(position));
+        return imageView;
+    }
+
+    /** Returns the size (0.0f to 1.0f) of the views
 	 * depending on the 'offset' to the center. */ 
 	public float getScale(boolean focused, int offset) { 
 		/* Formula: 1 / (2 ^ offset) */ 
