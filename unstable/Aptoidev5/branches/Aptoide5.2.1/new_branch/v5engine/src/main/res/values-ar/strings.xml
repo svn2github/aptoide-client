@@ -563,8 +563,6 @@
   <string name="facebook_private_actions">هذا التطبيق لن ينشر على فيس بوك</string>
   <string name="notification_social_timeline">الصفحة الاجتماعية لـ أبتويد. جربها الآن!</string>
   <string name="notification_timeline_activity">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
-  <string name="notification_timeline_new_comments">"لديك %s  تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
-  <string name="notification_timeline_new_likes">"لديك %s تعليقات جديدة و %s  إعجابات جديدة. تفحّص اليوميات الاجتماعية!"</string>
   <string name="notification_timeline_posts">أصدقاؤك قاموا بتنصيب تطبيقات جديدة!</string>
   <string name="timeline_is_empty">لااا... لا يوجد اصدقاء على صفحة أبتويد الاجتماعية؟ قم بدعوتهم!</string>
   <string name="invite_friends">إدع أصدقائك</string>
