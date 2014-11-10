@@ -22,7 +22,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
-import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsCheckableListAdapter;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.timeline.ListUserFriendsRequest;
@@ -36,7 +36,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 public class FragmentFriendsInvite extends Fragment {
 
 
-    private TimeLineFriendsListAdapter adapter;
+    private TimeLineFriendsCheckableListAdapter adapter;
     private TextView friends_using_timeline;
     private TextView friends_to_invite;
     private LinearLayout friends_list;
@@ -119,7 +119,7 @@ public class FragmentFriendsInvite extends Fragment {
 
 
 
-                adapter = new TimeLineFriendsListAdapter(getActivity(), response.getInactiveFriends());
+                adapter = new TimeLineFriendsCheckableListAdapter(getActivity(), response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 

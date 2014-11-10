@@ -24,7 +24,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 
 import java.util.List;
 
-import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsCheckableListAdapter;
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -38,7 +38,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
  * Created by asantos on 20-10-2014.
  */
 public class TimeLineFriendsInviteActivity extends ActionBarActivity {
-    private TimeLineFriendsListAdapter adapter;
+    private TimeLineFriendsCheckableListAdapter adapter;
     private TextView friends_using_timeline;
     private TextView friends_to_invite;
     private LinearLayout friends_list;
@@ -131,7 +131,7 @@ public class TimeLineFriendsInviteActivity extends ActionBarActivity {
 
             @Override
             protected void caseOK(ListUserFriendsJson response) {
-                adapter = new TimeLineFriendsListAdapter(c, response.getInactiveFriends());
+                adapter = new TimeLineFriendsCheckableListAdapter(c, response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 

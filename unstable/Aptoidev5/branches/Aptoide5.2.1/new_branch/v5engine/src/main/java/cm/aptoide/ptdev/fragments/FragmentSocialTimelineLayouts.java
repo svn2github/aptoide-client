@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
-import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
+import cm.aptoide.ptdev.adapters.TimeLineFriendsCheckableListAdapter;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -57,7 +57,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
     private View email_friends;
     private ListView listView;
     private View timeline_empty;
-    private TimeLineFriendsListAdapter adapter;
+    private TimeLineFriendsCheckableListAdapter adapter;
     private View layout;
     private View layout_with_friends;
     private View loading;
@@ -237,7 +237,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             protected void caseOK(ListUserFriendsJson response) {
 
                 loading.setVisibility(View.GONE);
-                adapter = new TimeLineFriendsListAdapter(getActivity(), response.getInactiveFriends());
+                adapter = new TimeLineFriendsCheckableListAdapter(getActivity(), response.getInactiveFriends());
                 //adapter.setOnItemClickListener(this);
                 //adapter.setAdapterView(listView);
 
