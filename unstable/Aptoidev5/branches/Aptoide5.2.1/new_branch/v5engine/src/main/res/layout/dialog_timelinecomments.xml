@@ -35,6 +35,7 @@
         android:drawableRight="@drawable/ic_more_arrow_right"
         android:gravity="center|left"
         android:padding="3dp"
+        android:background="?attr/selectableItemBackground"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/darker_gray"
         android:visibility="gone" />
