@@ -584,4 +584,5 @@
   <string name="timeline_not_compatible">Ooohhh… Esta funcionalidade não é compatível com a sua versão de Android</string>
   <string name="social_timeline_notifications">Notificações da Cronologia Social</string>
   <string name="social_timeline_notifications_sum">Desactivar as Notificações da Cronologia Social. Deixará de receber as últimas novidades na barra de notificações.</string>
+  <string name="social_timeline_notifications_sum2">Activar as Notificações da Cronologia Social. Receberá as últimas novidades na barra de notificações.</string>
 </resources>
