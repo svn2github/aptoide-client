@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bootconf>
     <storeconf>
-        <theme>black</theme>
-        <avatar>http://pool.img.aptoide.com/imgs/0b06faaa8c638e324cf4f1ae3fd6b557_ravatar_34x34.png</avatar>
-        <description></description>
+        <theme>seagreen</theme>
+        <avatar>http://cdn3.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description />
         <view>list</view>
-        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,recommended</items>
+        <items>applications,games,top_apps,latest_apps,recommended</items>
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid></partnerid>
-        <marketname>Aptoide Appstore</marketname>
-        <defaultstorename>apps</defaultstorename>
-        <aptoidetheme>default</aptoidetheme>
-        <splashscreen>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk05.aptoide.com/apks/5/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/jolla/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_aptoide</brand>
-        <searchstores>true</searchstores>
+        <partnerid>2201e6f4bf1dbbe7072c2fb5badd5a24</partnerid>
+        <marketname>U Store</marketname>
+        <defaultstorename>unitel</defaultstorename>
+        <aptoidetheme>greenapple</aptoidetheme>
+        <splashscreen>http://mirror.apk06.aptoide.com/apks/6/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/unitel/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk06.aptoide.com/apks/6/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/unitel/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_unitel</brand>
+        <searchstores>false</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
         <maturecontentswitchvalue>true</maturecontentswitchvalue>
-        <multiplestores>true</multiplestores>
+        <multiplestores>false</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid>a58e7ba580726745c283b3119b0fd062</adunitid>
-        <createshortcut>true</createshortcut>
+        <adunitid>7d1571ed86cac197cc83e07b402a1714</adunitid>
+        <createshortcut>false</createshortcut>
         <linkedcomments>true</linkedcomments>
         <showsplash>true</showsplash>
-        <splashcolor>#FFE8E8E8</splashcolor>
-        <showads>true</showads>
-        <timeline>true</timeline>
+        <splashcolor>#FF9fb95f</splashcolor>
+        <showads>false</showads>
+        <timeline>false</timeline>
     </aptoideconf>
 </bootconf>

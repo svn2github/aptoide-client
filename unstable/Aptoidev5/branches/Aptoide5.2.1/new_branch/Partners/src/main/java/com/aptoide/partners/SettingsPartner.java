@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.preference.*;
 
 import android.util.Log;
+
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
@@ -59,4 +61,13 @@ public class SettingsPartner extends cm.aptoide.ptdev.Settings {
         screen.removePreference(findPreference("changetheme"));
         screen.removePreference(findPreference("about"));
     }
+
+    public void disableSocialTimeline() {
+        if(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getShowTimeline()){
+            super.disableSocialTimeline();
+        }else{
+            ((PreferenceScreen)findPreference("root")).removePreference(findPreference("socialtimeline"));
+        }
+    }
+
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-           xmlns:tools="http://schemas.android.com/tools"
-          package="com.aptoide.partners"
-          android:versionCode="433"
-          android:versionName="5.1.0" android:installLocation="auto" >
-
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.aptoide.partners"
+    android:installLocation="auto"
+    android:versionCode="433"
+    android:versionName="5.1.0">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,6 +22,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
+
 
     <application
         android:name="com.aptoide.partners.AptoidePartner"
@@ -100,13 +104,14 @@
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity"/>
+        <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity" />
 
 
         <activity android:name=".AppViewActivityPartner" />
 
-        <activity android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
-                  android:theme="@style/transparent" />
+        <activity
+            android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
+            android:theme="@style/transparent" />
 
         <activity android:name="cm.aptoide.ptdev.ScreenshotsViewer" />
 
@@ -122,7 +127,8 @@
 
         <activity android:name="cm.aptoide.ptdev.RollbackActivity" />
 
-        <activity android:name="cm.aptoide.ptdev.TimeLineFriendsListActivity" />
+        <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
+        <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
 
         <activity
             android:name="com.aptoide.partners.SettingsPartner"
@@ -170,7 +176,7 @@
                 <data android:scheme="aptoidexml" />
                 <data android:scheme="aptoideinstall" />
                 <data android:scheme="aptoidesearch" />
-                <data android:scheme="aptwords" />
+                <data android:scheme="aptword" />
                 <data android:scheme="aptoidevoicesearch" />
             </intent-filter>
 
@@ -236,31 +242,16 @@
 
         </activity>
 
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidBrowser"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
+        <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
+        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity" android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" android:hardwareAccelerated="true" android:theme="@style/NoActionBar" />
+
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        <activity
-            android:name="com.millennialmedia.android.MMActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <activity
-            android:name="com.inmobi.androidsdk.IMBrowserActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
-            android:hardwareAccelerated="true" />
-
 
 
         <activity
@@ -314,6 +305,19 @@
             android:exported="false"
             android:label="Auto-Update Apps" />
 
+        <provider
+            android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline1"
+            android:authorities="com.aptoide.partners.TimelineActivity"
+            android:exported="false"
+            android:label="Timeline Activity" />
+
+        <provider
+            android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline2"
+            android:authorities="com.aptoide.partners.TimelinePosts"
+            android:exported="false"
+            android:label="Timeline Posts" />
+
+
         <service android:name="cm.aptoide.ptdev.services.AccountAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -332,6 +336,28 @@
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/partners_sync_adapter" />
+        </service>
+
+        <service
+            android:name="cm.aptoide.ptdev.services.TimelinePostsSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/partners_timeline_posts_sync_adapter" />
+        </service>
+
+        <service
+            android:name="cm.aptoide.ptdev.services.TimelineActivitySyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/partners_timeline_activity_sync_adapter" />
         </service>
 
         <service
@@ -398,27 +424,28 @@
         </receiver>
 
 
-        <receiver android:name="com.aptoide.partners.pushnotification.PushNotificationReceiver" >
+        <receiver android:name=".PushNotificationReceiverPartner">
             <intent-filter>
-                <action android:name="com.aptoide.partners.PushNotificationtrackurl"/>
-                <action android:name="com.aptoide.partners.PushNotification"/>
-                <action android:name="com.aptoide.partners.PushNotificationFirstTime"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.aptoide.partners.PushNotification" />
+                <action android:name="com.aptoide.partners.PushNotificationTrackUrl" />
+
+                <action android:name="com.aptoide.partners.PushNotificationFirstTime" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="openiab.StoreService"
-            android:exported="true">
+            android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
             <intent-filter>
                 <action android:name="org.onepf.oms.openappstore.BIND" />
             </intent-filter>
-            />
+
         </service>
 
         <service
             android:name="openiab.BillingService"
-            android:exported="true">
+            android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
 
             <intent-filter>
                 <action android:name="org.onepf.oms.billing.BIND" />
@@ -429,8 +456,10 @@
             android:name="com.aptoide.openiab.IABPurchaseActivityPartners"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
             android:theme="@style/PurchaseDialog" />
-        <activity android:name="com.aptoide.openiab.PaidAppPurchaseActivityPartners" android:theme="@style/PurchaseDialog"
-            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" />
+        <activity
+            android:name="com.aptoide.openiab.PaidAppPurchaseActivityPartners"
+            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
+            android:theme="@style/PurchaseDialog" />
 
         <receiver android:name="openiab.PayPalReceiver">
             <intent-filter>

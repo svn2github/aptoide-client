@@ -1,5 +1,7 @@
 package com.aptoide.partners;
 
+import android.util.Log;
+
 import cm.aptoide.ptdev.fragments.FragmentHome;
 
 /**
@@ -13,6 +15,11 @@ public class FragmentHomePartners extends FragmentHome {
 
     @Override
     protected void getSwitchView() {
-
+        if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
+            mergeAdapter.setActive(adultSwitchView, true);
+        }else {
+            Log.d("FragmentHomePartners", "don't show adult content switch");
+            mergeAdapter.setActive(adultSwitchView, false);
+        }
     }
 }

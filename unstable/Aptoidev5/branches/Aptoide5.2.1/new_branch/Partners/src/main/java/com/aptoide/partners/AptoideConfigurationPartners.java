@@ -26,6 +26,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 
 /**
  * Created by tdeus on 12/23/13.
@@ -61,13 +62,13 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public static String SPLASHCOLOR;
     public static boolean SHOWSPLASH = true;
     public static boolean SHOWADS = true;
-    public static boolean SHOWTIMELINE = false;
+    public static boolean TIMELINE = false;
 
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
     }
 
-    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR, SHOWSPLASH, SHOWADS, SHOWTIMELINE,
+    static enum Elements { BOOTCONF, APTOIDECONF, PARTNERTYPE, PARTNERID, DEFAULTSTORENAME, BRAND, SPLASHSCREEN, MATURECONTENTSWITCH, MATURECONTENTSWITCHVALUE,SEARCHSTORES, MULTIPLESTORES, CUSTOMEDITORSCHOICE, APTOIDETHEME, SPLASHSCREENLAND, MARKETNAME, ADUNITID, CREATESHORTCUT, SPLASHCOLOR, SHOWSPLASH, SHOWADS, TIMELINE,
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
     }
 
@@ -161,8 +162,8 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public boolean getShowAds() { return SHOWADS; }
     public static void setShowAds(boolean showAds) { AptoideConfigurationPartners.SHOWADS = showAds; }
 
-    public boolean getShowTimeline() { return SHOWTIMELINE; }
-    public static void setShowTimeline(boolean showTimeline) { AptoideConfigurationPartners.SHOWTIMELINE = showTimeline; }
+    public boolean getShowTimeline() { return TIMELINE; }
+    public static void setShowTimeline(boolean showTimeline) { AptoideConfigurationPartners.TIMELINE = showTimeline; }
 
     @Override
     public String getExtraId(){
@@ -300,9 +301,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                             SHOWADS = Boolean.parseBoolean(sb.toString());
                             Log.d("Show ads", SHOWADS+ "");
                             break;
-                        case SHOWTIMELINE:
-                            SHOWTIMELINE = Boolean.parseBoolean(sb.toString());
-                            Log.d("Show timeline", SHOWTIMELINE+ "");
+                        case TIMELINE:
+                            TIMELINE = Boolean.parseBoolean(sb.toString());
+                            Log.d("Show timeline", TIMELINE+ "");
                             break;
 
                         case STORECONF:
@@ -366,7 +367,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
             map.put("SPLASHCOLOR", SPLASHCOLOR);
             map.put("SHOWSPLASH", SHOWSPLASH + "");
             map.put("SHOWADS", SHOWADS + "");
-            map.put("SHOWTIMELINE", SHOWTIMELINE + "");
+            map.put("TIMELINE", TIMELINE + "");
             map.put("CREATESHORTCUT", CREATESHORTCUT + "");
             map.put("STOREDESCRIPTION", DESCRIPTION);
             map.put("STORETHEME", THEME);
@@ -410,7 +411,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putBoolean("CREATESHORTCUT", CREATESHORTCUT)
                 .putBoolean("SHOWSPLASH", SHOWSPLASH)
                 .putBoolean("SHOWADS", SHOWADS)
-                .putBoolean("SHOWTIMELINE", SHOWTIMELINE)
+                .putBoolean("TIMELINE", TIMELINE)
                 .putString("STOREDESCRIPTION", DESCRIPTION)
                 .putString("STOREAVATAR", AVATAR)
                 .putString("STORETHEME", THEME)
@@ -482,5 +483,25 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     @Override
     public Class getPaidAppPurchaseActivityClass(){
         return PaidAppPurchaseActivityPartners.class;
+    }
+
+    @Override
+    public String getTrackUrl() {
+        return "com.aptoide.partners.PushNotificationTrackUrl";
+    }
+
+    @Override
+    public String getAction() {
+        return "com.aptoide.partners.PushNotification";
+    }
+
+    @Override
+    public String getActionFirstTime() {
+        return "com.aptoide.partners.PushNotificationFirstTime";
+    }
+
+    @Override
+    public Class getNotificationsReceiver() {
+        return PushNotificationReceiverPartner.class;
     }
 }

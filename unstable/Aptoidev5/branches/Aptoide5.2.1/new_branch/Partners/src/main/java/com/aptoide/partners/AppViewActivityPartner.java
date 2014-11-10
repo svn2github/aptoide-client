@@ -172,7 +172,7 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
             if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
                 super.destroyPublicity();
             } else {
-                mAdView.release();
+                if(mAdView!=null) mAdView.release();
             }
 
         }
@@ -190,8 +190,14 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
         return ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores();
     }
 
-
     @Override
+    public void setShareButton() {
+        if(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getShowTimeline()){
+            super.setShareButton();
+        }
+    }
+
+        @Override
     protected void onStop() {
         super.onStop();
         FlurryAgent.onEndSession(this);

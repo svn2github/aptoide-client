@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -19,7 +18,6 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.aptoide.partners.pushnotification.PushNotificationReceiver;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
@@ -41,12 +39,15 @@ import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
+import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
 import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentStores;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
@@ -167,6 +168,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+
+
     @Override
     public void executeWizard() {
         try {
@@ -198,9 +201,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
 
-                Intent i = new Intent();
-                i.setAction(PushNotificationReceiver.PUSH_NOTIFICATION_Action_FIRST_TIME);
-                this.sendBroadcast(i);
+
 
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -218,24 +219,18 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.partners_menu_main, menu);
-
-        boolean value = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch();
-        menu.findItem(R.id.menu_filter_mature_content).setVisible(value);
-
-
+//        getMenuInflater().inflate(R.menu.partners_menu_main, menu);
+//        boolean value = ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch();
+//        menu.findItem(R.id.menu_filter_mature_content).setVisible(value);
         return true;
     }
 
 
     @Override
-    public PagerAdapter getViewPagerAdapter(){
-
-        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()){
-            return super.getViewPagerAdapter();
-        }else{
-            return new PartnersPagerAdapter(getSupportFragmentManager(), this);
-        }
+    public PagerAdapter getViewPagerAdapter(boolean timeline){
+        boolean showTimeline = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getShowTimeline();
+        boolean multistores = ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getMultistores();
+        return new PartnersPagerAdapter(getSupportFragmentManager(), this, showTimeline, multistores);
 
     }
 
@@ -377,12 +372,19 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     public class PartnersPagerAdapter extends FragmentStatePagerAdapter {
         private String[] TITLES;
+        private boolean showTimeline;
+        private boolean multistore;
 
-
-        public PartnersPagerAdapter(FragmentManager fm, Context context) {
+        public PartnersPagerAdapter(FragmentManager fm, Context context, boolean showTimeline, boolean multistore) {
             super(fm);
-            TITLES = new String[] { context.getString(cm.aptoide.ptdev.R.string.home), context.getString(cm.aptoide.ptdev.R.string.store), context.getString(cm.aptoide.ptdev.R.string.updates_tab), context.getString(cm.aptoide.ptdev.R.string.download_manager)};
+            this.showTimeline = showTimeline;
+            this.multistore = multistore;
 
+            if(showTimeline){
+                TITLES = new String[]{context.getString(cm.aptoide.ptdev.R.string.home), context.getString(cm.aptoide.ptdev.R.string.store), context.getString(cm.aptoide.ptdev.R.string.updates_tab), context.getString(cm.aptoide.ptdev.R.string.social_timeline), context.getString(cm.aptoide.ptdev.R.string.download_manager)};
+            }else {
+                TITLES = new String[]{context.getString(cm.aptoide.ptdev.R.string.home), context.getString(cm.aptoide.ptdev.R.string.store), context.getString(cm.aptoide.ptdev.R.string.updates_tab), context.getString(cm.aptoide.ptdev.R.string.download_manager)};
+            }
         }
 
         @Override
@@ -415,16 +417,41 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
 
-            switch (position) {
-                case 0:
-                    return new FragmentHomePartners();
-                case 1:
-                    fragmentStore = new com.aptoide.partners.Fragment();
-                    return fragmentStore;
-                case 2:
-                    return new FragmentUpdates();
-                case 3:
-                    return new FragmentDownloadManager();
+            if(showTimeline) {
+
+                switch (position) {
+                    case 0:
+                        return new FragmentHomePartners();
+                    case 1:
+                        if(multistore){
+                            return new FragmentStores();
+                        }
+                        fragmentStore = new com.aptoide.partners.Fragment();
+                        return fragmentStore;
+                    case 2:
+                        return new FragmentUpdates();
+                    case 3:
+                        return new FragmentSocialTimeline();
+                    case 4:
+                        return new FragmentDownloadManager();
+                }
+
+            }else{
+
+                switch (position) {
+                    case 0:
+                        return new FragmentHomePartners();
+                    case 1:
+                        if(multistore){
+                            return new FragmentStores();
+                        }
+                        fragmentStore = new com.aptoide.partners.Fragment();
+                        return fragmentStore;
+                    case 2:
+                        return new FragmentUpdates();
+                    case 3:
+                        return new FragmentDownloadManager();
+                }
             }
 
             return null;
@@ -433,22 +460,28 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
-    @Override
-    public void matureLock() {
-        super.matureLock();
-        invalidateAptoideMenu();
-    }
+//    @Override
+//    public void matureLock() {
+//        super.matureLock();
+//        invalidateAptoideMenu();
+//    }
+//
+//    @Override
+//    public void matureUnlock() {
+//        super.matureUnlock();
+//        invalidateAptoideMenu();
+//    }
+//
+//    private void invalidateAptoideMenu() {
+//        if(!ActivityCompat.invalidateOptionsMenu(this)) {
+//            supportInvalidateOptionsMenu();
+//        }
+//    }
 
-    @Override
-    public void matureUnlock() {
-        super.matureUnlock();
-        invalidateAptoideMenu();
-    }
-
-    private void invalidateAptoideMenu() {
-        if(!ActivityCompat.invalidateOptionsMenu(this)) {
-            supportInvalidateOptionsMenu();
+    public void updateNewFeature(SharedPreferences sPref) {
+        if(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getShowTimeline()){
+            super.updateNewFeature(sPref);
         }
     }
-    //}
+
 }
