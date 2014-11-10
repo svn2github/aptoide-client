@@ -418,11 +418,11 @@
   <string name="error_SYS_2">لا توجد بيانات، يرجى المحاولة مرة أخرى في وقت لاحق</string>
   <string name="error_SYS_3">النظام قيد الصيانة الآن، يرجى المحاولة مرة أخرى في وقت لاحق</string>
   <string name="error_SYS_4">هذه الدعوة غير مدعومة بواسطة اصدار API الحالي</string>
-  <string name="flag_review_good">aptoid صنف هذا التطبيق على انه جيد</string>
-  <string name="flag_review_license">aptoid صنف هذا التطبيق على انه يحتاج الى رخصة</string>
-  <string name="flag_review_fake">aptoid صنف هذا التطبيق على انه مزيف</string>
-  <string name="flag_review_freeze">aptoid صنف هذا التطبيق على انه يتجمد</string>
-  <string name="flag_review_virus">aptoid صنف هذا التطبيق على انه فايروس</string>
+  <string name="flag_review_good">Aptoide صنف هذا التطبيق على انه جيد</string>
+  <string name="flag_review_license">Aptoide صنف هذا التطبيق على انه يحتاج الى رخصة</string>
+  <string name="flag_review_fake">Aptoide صنف هذا التطبيق على انه مزيف</string>
+  <string name="flag_review_freeze">Aptoide صنف هذا التطبيق على انه يتجمد</string>
+  <string name="flag_review_virus">Aptoide صنف هذا التطبيق على انه فايروس</string>
   <string name="X_download_number">%s أدنى</string>
   <string name="search_more">بحث أكثر</string>
   <string name="more_editors_choice">المذيد من اختيار المحررين</string>
