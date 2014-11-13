@@ -25,7 +25,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.delete_aptoide_cache).setOnClickListener(new Listeners.OnDeleteCacheClick(this));
+        findViewById(R.id.disable_debug_mode).setOnClickListener(new Listeners.DebugMode(false ,this));
+        findViewById(R.id.enable_debug_mode).setOnClickListener(new Listeners.DebugMode(true, this));
         findViewById(R.id.delete_aptoide_settings_cache).setOnClickListener(new Listeners.OnDeleteCacheClick(this));
+        findViewById(R.id.set_country).setOnClickListener(new Listeners.SetAptoideCountry((android.widget.EditText) findViewById(R.id.iso_field),this));
 
     }
 

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -16,6 +17,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +31,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 
 public class Aptoide extends Application {
 
-    public static final boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
+    public static boolean DEBUG_MODE = Log.isLoggable("APTOIDE", Log.DEBUG);
     private static Context context;
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
@@ -84,6 +87,15 @@ public class Aptoide extends Application {
         }
 
 
+        boolean debugmode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("debugmode", false);
+        DEBUG_MODE = DEBUG_MODE | debugmode;
+
+        if(DEBUG_MODE){
+            Toast.makeText(Aptoide.getContext(), "Debug mode is: " + Aptoide.DEBUG_MODE, Toast.LENGTH_LONG).show();
+        }
+
+        JodaTimeAndroid.init(this);
+
 
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectAll()  // or .detectAll() for all detectable problems
@@ -117,6 +129,7 @@ public class Aptoide extends Application {
         ManagerPreferences managerPreferences = new ManagerPreferences(this);
 
         bootImpl(managerPreferences);
+
 
         managerPreferences.init();
         setThemePicker(getNewThemePicker());

@@ -807,7 +807,9 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             TimeLineCommentsDialog commentsDialog = new TimeLineCommentsDialog();
             commentsDialog.setArguments(args);
-            commentsDialog.show(getChildFragmentManager(), COMMENTSDIALOGTAG);
+            FragmentTransaction backstack = getChildFragmentManager().beginTransaction().addToBackStack("1");
+
+            commentsDialog.show(backstack, COMMENTSDIALOGTAG);
         }
 
         @Override
@@ -819,7 +821,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
             TimeLineWhoLikesDialog wholikesDialog = new TimeLineWhoLikesDialog();
             wholikesDialog.setArguments(args);
-            wholikesDialog.show(getChildFragmentManager(), LIKESDIALOGTAG);
+            FragmentTransaction backstack = getChildFragmentManager().beginTransaction().addToBackStack("1");
+             wholikesDialog.show(backstack, LIKESDIALOGTAG);
         }
 
     /* *************** End of Methods of the TimeLineManager Interface *************** */

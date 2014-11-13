@@ -82,7 +82,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("get_mature", mature);
 
-        parameters.put("partners", "1-3");
+        parameters.put("partners", "1-4");
 
 
         parameters.put("app_pkg", package_name);
@@ -90,6 +90,9 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("conn_type", AptoideUtils.NetworkUtils.getConnectionType().toString());
 
+        if(Aptoide.DEBUG_MODE){
+            parameters.put("country", AptoideUtils.getSharedPreferences().getString("forcecountry", null));
+        }
 
         GenericUrl url = new GenericUrl(this.url);
 

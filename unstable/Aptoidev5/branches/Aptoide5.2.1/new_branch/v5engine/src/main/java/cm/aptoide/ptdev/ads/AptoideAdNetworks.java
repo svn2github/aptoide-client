@@ -28,18 +28,20 @@ public class AptoideAdNetworks {
             String myid = PreferenceManager.getDefaultSharedPreferences(context).getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
             clickUrl = clickUrl.replace("[USER_ANDROID_ID]", deviceId);
             clickUrl = clickUrl.replace("[USER_UDID]", myid);
-            clickUrl = ReplaceUSER_AAID(clickUrl);
+            clickUrl = replaceAdvertisementId(clickUrl);
             clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
         }else if(type.equalsIgnoreCase("glispa")){
             //do nothing;
         }else if(type.equalsIgnoreCase("taptica")){
-            clickUrl = ReplaceUSER_AAID(clickUrl);
+            clickUrl = replaceAdvertisementId(clickUrl);
+        }else if(type.equalsIgnoreCase("instal")){
+            clickUrl = replaceAdvertisementId(clickUrl);
         }
-        Log.d("pois","URL: "+clickUrl);
+
         return clickUrl;
     }
 
-    private final static String ReplaceUSER_AAID(String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
+    private static String replaceAdvertisementId(String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
         if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
             String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
             clickUrl = clickUrl.replace("[USER_AAID]", aaId);

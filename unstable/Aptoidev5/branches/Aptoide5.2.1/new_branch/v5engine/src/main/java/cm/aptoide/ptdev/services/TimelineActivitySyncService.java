@@ -115,6 +115,7 @@ public class TimelineActivitySyncService extends Service  {
                             .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
                             .setContentIntent(resultPendingIntent)
                             .setOngoing(false)
+                            .setAutoCancel(true)
                             .setContentTitle(notificationText)
                             .setContentText(getString(R.string.notification_social_timeline)).build();
                     ArrayList<String> avatarLinks = new ArrayList<String>();

@@ -26,5 +26,38 @@
                 android:text="Delete Aptoide OEM Settings"
                 android:id="@+id/delete_aptoide_settings_cache"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable Aptoide Debug Mode"
+            android:id="@+id/enable_debug_mode" android:layout_weight="1"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disable Aptoide Debug Mode"
+                android:id="@+id/disable_debug_mode" android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:text="Set" android:id="@+id/set_country" android:layout_centerInParent="true" android:gravity="center"/>
+            <EditText
+                android:hint="Country ISO"
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content" android:layout_toLeftOf="@id/set_country" android:id="@+id/iso_field"/>
+            </RelativeLayout>
+
     </LinearLayout>
 </RelativeLayout>

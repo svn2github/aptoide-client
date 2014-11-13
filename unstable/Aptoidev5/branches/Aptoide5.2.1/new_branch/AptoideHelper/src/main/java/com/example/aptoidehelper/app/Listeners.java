@@ -1,8 +1,11 @@
 package com.example.aptoidehelper.app;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
+import android.widget.EditText;
 
 import java.io.File;
 
@@ -36,5 +39,45 @@ public class Listeners {
     }
 
 
+    public static class SetAptoideCountry implements View.OnClickListener {
+        private final EditText editText;
+        private final Context context;
 
+        public SetAptoideCountry(EditText editText, Context context) {
+            this.editText = editText;
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String base_url = "content://cm.aptoide.pt.StubProvider";
+            Uri uri = Uri.parse(base_url + "/changePreference");
+
+            ContentValues values = new ContentValues();
+            values.put("forcecountry", editText.getText().toString());
+            context.getContentResolver().update(uri, values, null, null);
+
+
+        }
+    }
+
+    public static class DebugMode implements View.OnClickListener {
+        private final boolean b;
+        private final Context context;
+
+        public DebugMode(boolean b, Context context) {
+            this.b = b;
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String base_url = "content://cm.aptoide.pt.StubProvider";
+            Uri uri = Uri.parse(base_url + "/changePreference");
+
+            ContentValues values = new ContentValues();
+            values.put("debugmode", b);
+            context.getContentResolver().update(uri, values, null, null);
+        }
+    }
 }

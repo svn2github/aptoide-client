@@ -15,7 +15,7 @@
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
 
-        <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
+        <item name="asb_switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
 
         <item name="actionBarWidgetTheme">@style/AutoCompleteTextView</item>
         <item name="android:actionBarWidgetTheme">@style/AutoCompleteTextView</item>
@@ -88,7 +88,7 @@
 
     <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat">
 
-        <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
+        <item name="asb_switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
 
         <item name="customRowForeground">@style/customRowStyle</item>
         <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>

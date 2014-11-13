@@ -80,20 +80,13 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
     }
 
     @Override
-    public void connect(long downloaded) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
+    public void connect(long downloaded, boolean update) throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException {
         connection = (HttpURLConnection) this.mURL.openConnection();
-
-
 
         connection.setConnectTimeout(TIME_OUT);
         connection.setReadTimeout(TIME_OUT);
 
-
-
-
-
-
-        connection.setRequestProperty("User-Agent", AptoideUtils.NetworkUtils.getUserAgentString(Aptoide.getContext()));
+        connection.setRequestProperty("User-Agent", AptoideUtils.NetworkUtils.getUserAgentString(Aptoide.getContext(), update));
 
         if(paidApp){
             connection.setRequestMethod("POST");
@@ -118,7 +111,7 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
             os.close();
         }
 
-        Log.d("DownloadManager", "Downloading from: " + mURL.toString() + " with " + AptoideUtils.NetworkUtils.getUserAgentString(Aptoide.getContext()));
+        Log.d("DownloadManager", "Downloading from: " + mURL.toString() + " with " + AptoideUtils.NetworkUtils.getUserAgentString(Aptoide.getContext(), update));
         if (downloaded > 0L) {
             // server must support partial content for resume
             connection.addRequestProperty("Range", "bytes=" + downloaded + "-");

@@ -6,15 +6,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.TimeLineFriendsListAdapter;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
@@ -28,20 +31,11 @@ public class TimeLineWhoLikesDialog extends DialogFragment {
     public static final String POSTID = "ID";
     public static final String LIKES = "LIKES";
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
 
     public void setCallback(TimeLineManager callback) {
         this.callback = callback;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     private TimeLineManager callback;
     private long id;
@@ -55,6 +49,7 @@ public class TimeLineWhoLikesDialog extends DialogFragment {
         lv.setVisibility(View.VISIBLE);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle( DialogFragment.STYLE_NORMAL, R.style.TimelineCommentsDialog );
@@ -80,8 +75,11 @@ public class TimeLineWhoLikesDialog extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
-        parentFragment.openCommentsDialog(id,getArguments().getInt(TimeLineCommentsDialog.POSITION));
+
+        //TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
+        //parentFragment.openCommentsDialog(id,getArguments().getInt(TimeLineCommentsDialog.POSITION));
+
+
     }
 
     @Override

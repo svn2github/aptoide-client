@@ -11,14 +11,20 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import cm.aptoide.ptdev.configuration.Constants;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
@@ -35,6 +41,7 @@ public class StubProvider extends ContentProvider {
     private static final int PASSHASH = 3;
     private static final int LOGIN_TYPE = 4;
     private static final int LOGIN_NAME = 5;
+    private static final int CHANGE_PREFERENCE = 6;
 
     private static final String BACKUP_PACKAGE =  "pt.aptoide.backupapps";
     private static final String BACKUP_SIGNATURE = "308203643082024ca0030201020204503fc625300d06092a864886f70d01010505003073310b30090603550406130270743110300e06035504081307556e6b6e6f776e310f300d060355040713064c6973626f6e31153013060355040a130c4361697861204d61676963613110300e060355040b13074170746f696465311830160603550403130f4475617274652053696c76656972613020170d3132303833303139353933335a180f32303934313031393139353933335a3073310b30090603550406130270743110300e06035504081307556e6b6e6f776e310f300d060355040713064c6973626f6e31153013060355040a130c4361697861204d61676963613110300e060355040b13074170746f696465311830160603550403130f4475617274652053696c766569726130820122300d06092a864886f70d01010105000382010f003082010a0282010100a7032cb40819b62cd596bc1c121951724e9a7d6612222d63dab58a18970339f77911b8e2a0665aa15efb051d4dd710c99e1fcaea006a651b7c113a71649c315e27122b9e0a214a240f34559394cca116c609d5bbf670ed85c7b983f0026154278bffd2b53d8aea4735ed99c39ea45db004c16bee078bb0b40e38ae510cacd1955a4e3eb90347d344cdcce07bddb89d9cd2077558914179a8157a87eac86e1b1a07a3f697a5f3f6512e276741d76bcc0c4809117c279fbd55d8c2b3d70468fbe4869394d9f2740bcccdf727da10c06de5c6a0d2f893bce078e058604726d32ab17e3b113a3dcbe0c22f2532738cae8cc5fa98c6b8306680b07ef8f0fca5d5910b0203010001300d06092a864886f70d01010505000382010100361152e42ece11bfd72e5795c9e91079b39c5280e30e3394671ca108fd7de9c3cebef2fc2f5ba752664ba44fcddaf49e91a1d7683cafdc11275fa7c1487ae78a659a8dae5d696cd93de810c67f127568dfa60c1962ec5ad2a3ea0560f75ad4a2ea9d388d4497b561242f090de2d3347dd32494ba6305735fa21d82f037f4355583fdfb1f46a56c19526969ba5f7f556cca9b9069cd9a9e3cd566d2b8c33138609e8794fb0abb11d33ed2c507f7f7df9ce24b3b64713ccdf2450bb5ec4efedba541dce271c8b3759b340b0467c06624cd3881b769a1d4a1b1fc0bec97d6b8561b032089ab8ca108595759bbd9b95fd43a3d28f518fb9d193125c8fa9b224f831c";
@@ -51,6 +58,8 @@ public class StubProvider extends ContentProvider {
         uriMatcher.addURI(Constants.STUB_PROVIDER_AUTHORITY, "loginType", LOGIN_TYPE);
         uriMatcher.addURI(Constants.STUB_PROVIDER_AUTHORITY, "passHash", PASSHASH);
         uriMatcher.addURI(Constants.STUB_PROVIDER_AUTHORITY, "loginName", LOGIN_NAME);
+        uriMatcher.addURI(Constants.STUB_PROVIDER_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
+
     }
 
     @Override
@@ -172,6 +181,62 @@ public class StubProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+        int uid = Binder.getCallingUid();
+
+        PackageManager pm = getContext().getPackageManager();
+        String callerPackage = pm.getPackagesForUid(uid)[0];
+
+        Log.d("AptoideDebug", "Someone is trying to update preferences");
+
+        int result = pm.checkSignatures(callerPackage, getContext().getPackageName());
+
+        if(result ==PackageManager.SIGNATURE_MATCH) {
+            switch (uriMatcher.match(uri)) {
+                case CHANGE_PREFERENCE:
+
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor edit = preferences.edit();
+                    int changed = 0;
+                    for (final Map.Entry<String, Object> entry : values.valueSet()) {
+                        Object value = entry.getValue();
+                        if (value instanceof String) {
+                            edit.putString(entry.getKey(), (String) value);
+                        } else if (value instanceof Integer) {
+                            edit.putInt(entry.getKey(), (Integer) value);
+                        } else if (value instanceof Long) {
+                            edit.putLong(entry.getKey(), (Long) value);
+                        } else if (value instanceof Boolean) {
+
+                            if(entry.getKey().equals("debugmode")){
+                                Aptoide.DEBUG_MODE = (Boolean) entry.getValue();
+                            }
+
+                            edit.putBoolean(entry.getKey(), (Boolean) value);
+                        } else if (value instanceof Float) {
+                            edit.putFloat(entry.getKey(), (Float) value);
+                        }
+                        changed++;
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(Aptoide.getContext(), "Preference set: " +entry.getKey() + "=" + entry.getValue(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+
+
+                    Log.d("AptoideDebug", "Commited");
+
+                    edit.commit();
+                    return changed;
+                default:
+                    return 0;
+            }
+
+        }
         return 0;
     }
 }

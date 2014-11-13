@@ -10,13 +10,13 @@ repositories{
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "cm.aptoide.pt.dev"
         minSdkVersion 7
-        targetSdkVersion 19
+        targetSdkVersion 21
 
     }
 

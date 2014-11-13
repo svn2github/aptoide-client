@@ -9,6 +9,7 @@ import android.net.Uri;
  * Created by j-pac on 29-01-2014.
  */
 public class AutoUpdateProvider extends ContentProvider {
+
     @Override
     public boolean onCreate() {
         return true;

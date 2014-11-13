@@ -283,6 +283,16 @@ public class DownloadService extends Service{
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
+
+        boolean update;
+        try {
+            Aptoide.getContext().getPackageManager().getPackageInfo(download.getPackageName(), 0);
+            update = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            update = false;
+        }
+
+        info.setUpdate(update);
         downloads.put(info.getId(), info);
         NotificationCompat.Builder builder = setNotification(info.getId());
         info.setmBuilder(builder);

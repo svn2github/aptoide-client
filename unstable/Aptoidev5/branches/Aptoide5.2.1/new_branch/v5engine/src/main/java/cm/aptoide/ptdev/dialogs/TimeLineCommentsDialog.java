@@ -88,7 +88,6 @@ public class TimeLineCommentsDialog extends DialogFragment {
                 TimeLineManager parentFragment = (TimeLineManager) getParentFragment();
                 if (parentFragment != null) {
                     parentFragment.openWhoLikesDialog(id,likesNumber,position);
-                    dismiss();
                 }
             }
         });

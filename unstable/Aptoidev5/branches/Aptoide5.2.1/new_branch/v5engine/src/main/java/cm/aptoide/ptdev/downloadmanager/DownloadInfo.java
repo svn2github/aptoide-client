@@ -38,6 +38,7 @@ public class DownloadInfo implements Runnable, Serializable {
 
 
     private boolean paid;
+    private boolean update;
 
     public DownloadInfo(DownloadManager manager, long id) {
         this.id = id;
@@ -451,5 +452,13 @@ public class DownloadInfo implements Runnable, Serializable {
 
     public boolean isPaid() {
         return download.isPaid();
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public boolean isUpdate() {
+        return update;
     }
 }

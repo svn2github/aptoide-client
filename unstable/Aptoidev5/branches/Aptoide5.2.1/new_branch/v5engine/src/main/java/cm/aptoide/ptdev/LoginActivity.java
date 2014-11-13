@@ -356,7 +356,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
             setContentView(R.layout.form_login);
 
-            if (Build.VERSION.SDK_INT >= 8) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 
                 findViewById(R.id.g_sign_in_button).setOnClickListener(this);
                 mConnectionProgressDialog = new ProgressDialog(this);

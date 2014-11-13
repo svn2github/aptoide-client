@@ -11,8 +11,8 @@ group = 'com.mopub'
 description = '''MoPub SDK'''
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         versionCode 1
@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.+'
+    compile 'com.android.support:support-v4:20.0.0'
     compile fileTree(dir: 'libs', include: '*.jar')
 
 }

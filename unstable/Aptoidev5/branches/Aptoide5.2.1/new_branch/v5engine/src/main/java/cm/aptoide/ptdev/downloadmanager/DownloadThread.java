@@ -188,7 +188,7 @@ public class DownloadThread implements Runnable, Serializable {
     }
 
     private void download() throws IOException, CompletedDownloadException, NotFoundException, IPBlackListedException, ContentTypeNotApkException, Md5FailedException {
-        mConnection.connect(fileSize);
+        mConnection.connect(fileSize, parent.isUpdate());
 
         Log.d("DownloadManager", "Starting Download " + (parent.getStatusState() instanceof ActiveState) + " " + this.mDownloadedSize + fileSize + " " + this.mRemainingSize);
         byte[] bytes = new byte[1024];

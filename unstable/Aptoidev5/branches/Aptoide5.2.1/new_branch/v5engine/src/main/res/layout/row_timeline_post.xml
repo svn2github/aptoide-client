@@ -109,7 +109,7 @@
                         android:ellipsize="end"
                         android:gravity="bottom"
                         android:maxLines="1"
-                        android:text="AppName"
+
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold" />
 
@@ -122,7 +122,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:text="2.2.2."
+
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
@@ -134,7 +134,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:text="store: apps"
+
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </RelativeLayout>
             </FrameLayout>
@@ -189,7 +189,7 @@
                     android:layout_gravity="center"
                     android:drawableLeft="?attr/icViewMoreComments"
                     android:gravity="center"
-                    android:text="Comment" />
+                    android:text="@string/comment" />
 
             </FrameLayout>
 

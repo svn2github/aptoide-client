@@ -376,7 +376,7 @@ public class AptoideUtils {
             }
             connection.setConnectTimeout(TIME_OUT);
             connection.setReadTimeout(TIME_OUT);
-            connection.setRequestProperty("User-Agent", getUserAgentString(mctx));
+            connection.setRequestProperty("User-Agent", getUserAgentString(mctx, false));
             BufferedInputStream bis = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 
             return bis;
@@ -483,7 +483,7 @@ public class AptoideUtils {
 
         }
 
-        public static String getUserAgentString(Context mctx) {
+        public static String getUserAgentString(Context mctx, boolean update) {
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mctx);
             String myid = sPref.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
             String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
@@ -496,7 +496,7 @@ public class AptoideUtils {
 
             String extraId = Aptoide.getConfiguration().getExtraId();
 
-            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + extraId;
+            return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + sPref.getString(Configs.LOGIN_USER_LOGIN, "") + ";" + extraId ;
         }
 
 /*

@@ -44,6 +44,7 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 /**
  * Created by rmateus on 17-07-2014.
  */
+
 public class Adapter extends BaseAdapter {
 
     protected float getScreenWidthInDip() {
@@ -124,9 +125,9 @@ public class Adapter extends BaseAdapter {
         int result;
 
         if(getItem(position) instanceof HomeCategory){
-            result =0;
+            result = 0;
         }else if(getItem(position) instanceof HomeFooter){
-            result =1;
+            result = 1;
         }else {
             result= getItem(position).getItemsSize() + 1 ;
         }

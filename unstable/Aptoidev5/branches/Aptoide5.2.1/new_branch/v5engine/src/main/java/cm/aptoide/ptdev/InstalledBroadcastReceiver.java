@@ -1,14 +1,17 @@
 package cm.aptoide.ptdev;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -71,10 +74,10 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                             referrer = "";
                         }
 
-
                         if(action.split("\\|")[0].equals(RollBackItem.Action.INSTALLING.toString())) {
 
                             db.confirmRollBackAction(pkg.packageName, action, RollBackItem.Action.INSTALLED.toString());
+
 
                             if(!TextUtils.isEmpty(referrer)) {
 
