@@ -1,0 +1,42 @@
+apply plugin: 'android'
+apply plugin: 'crashlytics'
+apply from: 'signing.gradle'
+
+
+repositories{
+
+    maven { url 'http://download.crashlytics.com/maven' }
+
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+
+    defaultConfig {
+        applicationId "cm.aptoide.pt.dev"
+        minSdkVersion 7
+        targetSdkVersion 21
+
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+    }
+
+   buildTypes{
+       release {
+           runProguard true
+           proguardFile 'proguard-aptoide.txt'
+           signingConfig signingConfigs.release
+       }
+
+   }
+}
+
+dependencies {
+    compile project(':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+}

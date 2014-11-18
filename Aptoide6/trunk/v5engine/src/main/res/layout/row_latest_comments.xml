@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2013 tdeus.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             style="?attr/customRowForeground">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?attr/backgroundCard"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="5dp">
+
+        <ImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/user_default"
+                android:layout_gravity="left"
+                android:layout_centerVertical="true"/>
+
+        <TextView
+                android:id="@+id/user_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall" android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/user_avatar" android:text="User"/>
+
+        <TextView
+                android:id="@+id/comment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_toRightOf="@+id/user_avatar"
+                android:text="Comment Comment Comment Comment CommentComment Comment"
+                android:layout_below="@+id/user_comment"/>
+
+        <TextView
+                android:id="@+id/comment_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:layout_below="@+id/comment"
+                android:ellipsize="end"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_alignLeft="@+id/comment"
+                android:layout_alignStart="@+id/comment"
+                android:text="2 hours ago"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+        <TextView
+                android:id="@+id/comment_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:layout_below="@+id/comment"
+                android:ellipsize="end"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:layout_toRightOf="@+id/comment_time"
+                android:text="App Name"
+                android:singleLine="true"
+                android:textColor="?attr/customColor"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    </RelativeLayout>
+</FrameLayout>

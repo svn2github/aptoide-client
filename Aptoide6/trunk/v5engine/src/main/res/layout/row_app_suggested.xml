@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    style="?attr/customRowForegroundHomeLayout"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        style="?attr/backgroundCard"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_alignTop="@+id/app_name"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_below="@+id/app_suggested"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/app_icon"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/app_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="2dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_below="@+id/advertising"
+            android:layout_alignLeft="@+id/advertising" />
+
+        <RatingBar
+            android:id="@+id/app_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/app_description"
+            android:rating="4"
+            android:layout_below="@+id/app_description"
+            android:numStars="5" />
+
+        <TextView
+            android:id="@+id/app_downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/app_rating"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/app_rating"
+            android:textColor="@android:color/darker_gray"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+        <TextView
+            android:id="@+id/app_suggested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/suggested_app"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?attr/customColor"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/app_icon"
+            android:layout_alignStart="@+id/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/sponsored"
+            android:layout_below="@+id/app_name"
+            android:id="@+id/advertising"
+            android:textColor="#cecece"
+            android:layout_alignLeft="@+id/app_name" />
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

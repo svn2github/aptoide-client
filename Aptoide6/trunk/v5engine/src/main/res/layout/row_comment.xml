@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2013 tdeus.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Public License v2.0
+which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/backgroundCard">
+
+
+    <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingLeft="10dp" android:layout_toLeftOf="@+id/ic_action"/>
+
+    <ImageView android:id="@+id/ic_action"
+               style="@style/overflowHomeButton"
+               android:layout_alignParentRight="true"/>
+
+    <!--<TextView-->
+            <!--android:id="@+id/date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="left|center"-->
+            <!--android:ellipsize="end"-->
+            <!--android:maxLines="1"-->
+            <!--android:padding="2dp"-->
+            <!--android:layout_below="@+id/content"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:gravity="right" android:layout_toLeftOf="@+id/ic_action" android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"/>-->
+
+    <TextView
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/author"
+            android:paddingBottom="12dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_toLeftOf="@+id/ic_action"/>
+    <TextView
+        android:id="@+id/reply_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/content"
+        android:background="?attr/selectableItemBackground"
+        android:padding="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="@string/reply"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/darker_gray" />
+
+</RelativeLayout>

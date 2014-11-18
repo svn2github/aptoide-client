@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cm.aptoide.ptdev"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk tools:overrideLibrary = "net.danlew.android.joda,com.google.android.gms, com.facebook.android,com.astuetz.pagerslidingtabstrip,com.mopub.mobileads" />
+    <application />
+
+</manifest>

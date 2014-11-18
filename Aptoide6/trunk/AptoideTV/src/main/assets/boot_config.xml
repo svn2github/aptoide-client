@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bootconf>
+    <storeconf>
+        <theme>default</theme>
+        <avatar>http://cdn3.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description></description>
+        <view>list</view>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+    </storeconf>
+    <aptoideconf>
+        <partnertype>premium</partnertype>
+        <partnerid>5ad9e0c0c30cd37c36c1c48ec7e1199f</partnerid>
+        <marketname>TenGO! App Store</marketname>
+        <defaultstorename>tengo-tv</defaultstorename>
+        <aptoidetheme>lightsky_dark</aptoidetheme>
+        <splashscreen>http://mirror.apk08.aptoide.com/apks/8/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/tengo-tv/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk08.aptoide.com/apks/8/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/tengo-tv/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_tengo_tv</brand>
+        <searchstores>true</searchstores>
+        <maturecontentswitch>false</maturecontentswitch>
+        <multiplestores>false</multiplestores>
+        <customeditorschoice>true</customeditorschoice>
+        <createshortcut>true</createshortcut>
+        <linkedcomments>true</linkedcomments>
+        <gms_depends>all</gms_depends>
+        <adunitid>7e7b3d9631ffd905541222241b2a33e8</adunitid>
+    </aptoideconf>
+</bootconf>

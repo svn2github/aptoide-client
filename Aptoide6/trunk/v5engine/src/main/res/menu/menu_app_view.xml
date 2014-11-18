@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_schedule"
+          app:showAsAction="ifRoom"
+          android:title="@string/schDwnBtn"
+          android:icon="@drawable/ic_schedule"/>
+
+    <item android:id="@+id/menu_share"
+          app:showAsAction="ifRoom"
+          android:title="@string/share"
+          android:icon="@drawable/ic_action_share" />
+
+    <item android:id="@+id/menu_uninstall"
+          app:showAsAction="never"
+          android:visible="false"
+          android:title="@string/uninstall"
+          android:icon="@android:drawable/ic_delete"/>
+
+    <item android:id="@+id/menu_search_other"
+          app:showAsAction="never"
+          android:title="@string/search_other_market"
+          android:icon="@android:drawable/ic_menu_search"/>
+    <item android:id="@+id/menu_SendFeedBack"
+        app:showAsAction="never"
+        android:title="@string/feedback_send_button"/>
+</menu>

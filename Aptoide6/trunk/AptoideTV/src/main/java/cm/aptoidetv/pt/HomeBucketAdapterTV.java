@@ -1,0 +1,185 @@
+package cm.aptoidetv.pt;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.PopupMenu;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.List;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.DownloadInterface;
+import cm.aptoide.ptdev.adapters.BucketListAdapter;
+import cm.aptoide.ptdev.fragments.HomeItem;
+import cm.aptoide.ptdev.utils.IconSizes;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: rmateus
+ * Date: 27-11-2013
+ * Time: 15:26
+ * To change this template use File | Settings | File Templates.
+ */
+public class HomeBucketAdapterTV extends BucketListAdapter<HomeItem> {
+
+    private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
+
+    private final String sizeString;
+
+    public HomeBucketAdapterTV(Activity ctx, List<HomeItem> elements) {
+
+        super(ctx, elements);
+        enableAutoMeasure(120);
+        sizeString = IconSizes.generateSizeString(ctx);
+
+    }
+
+    @Override
+    public int getBucketSize() {
+        return super.getBucketSize();
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
+
+    @Override
+    protected View bindBucketElement(int position, HomeItem currentElement, View convertView, ViewGroup parent) {
+        final View v;
+
+
+        ViewHolder holder;
+
+        if (convertView == null) {
+            holder = new ViewHolder();
+            v = LayoutInflater.from(ctx).inflate(cm.aptoide.ptdev.R.layout.row_app_home, parent, false);
+
+            //holder.category= (TextView) v.findViewById(R.id.app_category);
+            holder.name = (TextView) v.findViewById(cm.aptoide.ptdev.R.id.app_name);
+            holder.icon = (ImageView) v.findViewById(cm.aptoide.ptdev.R.id.app_icon);
+            holder.category = (TextView) v.findViewById(cm.aptoide.ptdev.R.id.app_category);
+//            holder.overflow = (ImageView) v.findViewById(cm.aptoide.ptdev.R.id.ic_action);
+            //holder.downloads = (TextView) v.findViewById(R.id.app_downloads);
+            //holder.rating = (RatingBar) v.findViewById(R.id.app_rating);
+
+            v.setTag(holder);
+        } else {
+            v = convertView;
+            holder = (ViewHolder) v.getTag();
+        }
+
+        final HomeItem item = currentElement;
+
+        holder.name.setText(item.getName());
+        holder.category.setText(getContext().getString(cm.aptoide.ptdev.R.string.X_download_number, withSuffix(item.getDownloads())));
+        String icon = item.getIcon();
+
+        if(icon.contains("_icon")){
+            String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+            icon = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+        }
+
+        ImageLoader.getInstance().displayImage(icon, holder.icon);
+
+        //holder.downloads.setText(getContext().getString(R.string.X_download_number, withSuffix(item.getDownloads())));
+        if(item.getName().length()>10){
+        //    holder.downloads.setMaxLines(1);
+        }else{
+        //    holder.downloads.setMaxLines(2);
+        }
+        //holder.downloads.setVisibility(View.VISIBLE);
+
+        //holder.rating.setRating(item.getRating());
+        //holder.rating.setOnRatingBarChangeListener(null);
+
+        //ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
+//        holder.overflow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FlurryAgent.logEvent("Home_Page_Opened_Popup_Install");
+//                showPopup(v, item.getId());
+//            }
+//        });
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), appViewClass);
+
+                if(item.isRecommended()){
+                    i.putExtra("fromRelated", true);
+                    i.putExtra("md5sum", item.getMd5());
+                    i.putExtra("repoName", item.getRepoName());
+                    i.putExtra("download_from", "recommended_apps");
+                }else{
+                    long id = item.getId();
+                    i.putExtra("id", id);
+                }
+
+                getContext().startActivity(i);
+            }
+        });
+
+        return v;
+    }
+
+    public void showPopup(View v, long id) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.setOnMenuItemClickListener(new MenuListener(getContext(), id));
+        popup.inflate(cm.aptoide.ptdev.R.menu.menu_actions);
+        popup.show();
+    }
+
+    static class ViewHolder{
+        TextView name;
+        TextView category;
+        ImageView icon;
+//        ImageView overflow;
+        //TextView downloads;
+        //RatingBar rating;
+    }
+
+    static class MenuListener implements PopupMenu.OnMenuItemClickListener{
+
+        Context context;
+        long id;
+
+        MenuListener(Context context, long id) {
+            this.context = context;
+            this.id = id;
+
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+
+            if (i == cm.aptoide.ptdev.R.id.menu_install) {
+                ((DownloadInterface)context).installApp(id);
+                Toast.makeText(context, context.getString(cm.aptoide.ptdev.R.string.starting_download), Toast.LENGTH_LONG).show();
+                FlurryAgent.logEvent("Home_Page_Clicked_Install_From_Popup_Menu");
+                return true;
+            } else if (i == cm.aptoide.ptdev.R.id.menu_schedule) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+}
