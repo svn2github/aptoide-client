@@ -53,7 +53,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:text="App Name"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -61,7 +60,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Developer"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_below="@+id/app_name" />
 
@@ -82,7 +80,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/view_separator"
                     android:layout_toEndOf="@+id/view_separator"
-                    android:text="Version"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -103,7 +100,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/view_separator2"
                     android:layout_toEndOf="@+id/view_separator2"
-                    android:text="Downloads"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -134,7 +130,6 @@
                     android:layout_alignTop="@+id/app_downloads"
                     android:layout_marginLeft="10dp"
                     android:layout_toEndOf="@+id/rating_bar"
-                    android:text="Ratings"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </RelativeLayout>
@@ -148,15 +143,12 @@
                 android:text="Screenshots"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <LinearLayout
-                android:id="@+id/screenshots"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
+            <LinearLayout android:id="@+id/screenshots"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
-                android:orientation="vertical">
-
-
-            </LinearLayout>
+                android:orientation="horizontal"/>
 
             <TextView
                 android:id="@+id/description_label"
@@ -171,7 +163,6 @@
                 android:id="@+id/app_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView

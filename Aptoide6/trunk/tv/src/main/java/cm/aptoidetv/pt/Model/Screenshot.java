@@ -12,6 +12,7 @@ import cm.aptoidetv.pt.ScreenshotsViewer;
 public class Screenshot implements MediaObject {
 
     private String url;
+    private String orient;
 
     public Screenshot(String path){
         this.url=path;
@@ -19,6 +20,10 @@ public class Screenshot implements MediaObject {
 
     public String getImageUrl() {
         return url;
+    }
+
+    public String getOrient() {
+        return orient;
     }
 
     @Override

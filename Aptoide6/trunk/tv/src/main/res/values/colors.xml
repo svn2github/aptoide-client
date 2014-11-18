@@ -12,6 +12,7 @@
     <color name="white">#FFFFFF</color>
     <!--<color name="orange_transparent">#AAFADCA7</color>-->
     <color name="default_background">#3d3d3d</color>
+    <color name="overlay_black">#77000000</color>
 
     <color name="aptoide">#ea7117</color>
     <color name="green">#547c00</color>

@@ -31,7 +31,10 @@ import android.support.v17.leanback.widget.ListRow;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -48,6 +51,8 @@ import java.util.ArrayList;
 
 import cm.aptoidetv.pt.Model.GetApkInfoJson;
 import cm.aptoidetv.pt.Model.MediaObject;
+import cm.aptoidetv.pt.Model.Screenshot;
+import cm.aptoidetv.pt.Model.Video;
 
 /*
  * Details activity class that loads LeanbackDetailsFragment class
@@ -79,6 +84,7 @@ public class DetailsActivity extends Activity {
     private TextView app_ratings;
     private TextView app_description;
     private ProgressBar downloading_progress;
+    private LinearLayout screenshots;
 
     /**
      * Called when the activity is first created.
@@ -105,6 +111,7 @@ public class DetailsActivity extends Activity {
         rating_bar = (RatingBar) findViewById(R.id.rating_bar);
         app_ratings = (TextView) findViewById(R.id.app_ratings);
         app_description = (TextView) findViewById(R.id.app_description);
+        screenshots = (LinearLayout) findViewById(R.id.screenshots);
 
         new DetailRowBuilderTask().execute(md5sum);
 
@@ -166,12 +173,6 @@ public class DetailsActivity extends Activity {
 //                Log.d(TAG, "Loading icon " + ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
 
                 app_name.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-                app_developer.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDeveloper().getInfo().getName());
-                app_version.setText("Version: " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
-                app_downloads.setText("Downloads: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
-                rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
-                app_description.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
 
                 download.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -202,35 +203,126 @@ public class DetailsActivity extends Activity {
                     }
                 });
 
+                app_developer.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDeveloper().getInfo().getName());
+                app_version.setText("Version: " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
+                app_downloads.setText("Downloads: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
+                rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
+                app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
+                app_description.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
+                screenshots.removeAllViews();
+
+                View cell;
+
+                ArrayList<MediaObject> mediaObjects = ((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshotsAndThumbVideo();
+
+
+
+                String imagePath = "";
+
+                int screenshotIndexToAdd = 0;
+
+                for (int i = 0; i != mediaObjects.size(); i++) {
+                    cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
+                    final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
+                    final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
+                    final ImageView play = (ImageView) cell.findViewById(R.id.play_button);
+                    final FrameLayout mediaLayout = (FrameLayout) cell.findViewById(R.id.media_layout);
+
+                    if (mediaObjects.get(i) instanceof Video) {
+                        screenshotIndexToAdd++;
+                        imagePath = mediaObjects.get(i).getImageUrl();
+                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
+                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
+                        play.setVisibility(View.VISIBLE);
+                        imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        mediaLayout.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
+
+
+                    } else if (mediaObjects.get(i) instanceof Screenshot) {
+
+                        imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
+                        Log.d(TAG, "IMAGEPATH: " + imagePath);
+                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getSshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getSshots()), i - screenshotIndexToAdd));
+                    }
+
+                    screenshots.addView(cell);
+//                    ImageLoader.getInstance().displayImage(imagePath, imageView, options, new SimpleImageLoadingListener() {
+//
+//                        @Override
+//                        public void onLoadingStarted(String uri, View v) {
+//                            progress.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onLoadingFailed(String uri, View v, FailReason failReason) {
+//                            imageView.setImageResource(android.R.drawable.ic_delete);
+//                            progress.setVisibility(View.GONE);
+//                            //Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
+//                        }
+//
+//                        @Override
+//                        public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
+//                            progress.setVisibility(View.GONE);
+//                        }
+//
+//                        @Override
+//                        public void onLoadingCancelled(String uri, View v) {
+//                        }
+//                    });
+
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-
-            ClassPresenterSelector ps = new ClassPresenterSelector();
-
-            ArrayObjectAdapter adapter = new ArrayObjectAdapter(ps);
-            adapter.add(detailRow);
-
-            ArrayList<MediaObject> mediaObjects;
-            mediaObjects = ((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshotsAndThumbVideo();
-
-
-            Log.d(TAG, "mediaObjects size " + mediaObjects.size());
-
-
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new ScreenshotsPresenter());
-            for (MediaObject mediaObject : mediaObjects) {
-                listRowAdapter.add(mediaObject);
-            }
-
-            HeaderItem header = new HeaderItem(0, "Screenshots", null);
-            adapter.add(new ListRow(header, listRowAdapter));
-
         }
 
+
     }
-    private class updateDownLoadInfoTask extends AsyncTask<Void,Integer,Void>{
+
+    public static class ScreenShotsListener implements View.OnClickListener {
+
+        private Context context;
+        private final int position;
+        private ArrayList<String> urls;
+
+        public ScreenShotsListener(Context context, ArrayList<String> urls, int position) {
+            this.context = context;
+            this.position = position;
+            this.urls = urls;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, ScreenshotsViewer.class);
+            intent.putStringArrayListExtra("url", urls);
+            intent.putExtra("position", position);
+            context.startActivity(intent);
+        }
+    }
+
+    public static class VideoListener implements View.OnClickListener {
+
+        private Context context;
+        private String videoUrl;
+
+        public VideoListener(Context context, String videoUrl) {
+            this.context = context;
+            this.videoUrl = videoUrl;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+            context.startActivity(intent);
+        }
+    }
+
+    private class updateDownLoadInfoTask extends AsyncTask<Void, Integer, Void> {
         @Override
         protected void onPreExecute() {
             downloading_progress = (ProgressBar) findViewById(R.id.downloading_progress);
@@ -245,12 +337,12 @@ public class DetailsActivity extends Activity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            downloading_progress.setProgress (values[0]);
+            downloading_progress.setProgress(values[0]);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            boolean loopagain=true;
+            boolean loopagain = true;
             do {
                 DownloadManager.Query query = new DownloadManager.Query();
 
@@ -281,13 +373,15 @@ public class DetailsActivity extends Activity {
                                 e.printStackTrace();
                             }
                         case DownloadManager.STATUS_FAILED:
-                            loopagain=false;
+                            loopagain = false;
                             break;
                     }
                 }
-                try {Thread.sleep(1000);
-                } catch (InterruptedException e) {}
-            }while(loopagain);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+            } while (loopagain);
             return null;
         }
     }
