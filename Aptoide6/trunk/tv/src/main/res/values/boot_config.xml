@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--Store Config-->
+    <string name="theme">default</string>
+    <string name="avatar">https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</string>
+    <string name="description"></string>
+    <string name="view">list</string>
+    <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
+
+    <!--Partner Config-->
+    <string name="partnertype">premium</string>
+    <string name="partner_id">23a3c151dba9f4a5ac28a8293a088781</string>
+    <string name="marketname">Geniatech Market</string>
+    <string name="defaultstorename">geniatechapps</string>
+    <string name="aptoidetheme">red_dark</string>
+    <string name="splashscreen">http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen.png</string>
+    <string name="splashscreenland">http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen_land.png</string>
+    <bool name="searchstores">true</bool>
+    <bool name="maturecontentswitch">false</bool>
+    <bool name="multiplestores">false</bool>
+    <bool name="customeditorschoice">true</bool>
+    <bool name="createshortcut">true</bool>
+    <string name="adunitid">fc30c5e696baea9672e75997b63ef04a</string>
+    <bool name="showsplash">true</bool>
+    <string name="splashcolor">#FFFFFFFF</string>
+
+    <!--Project Config-->
+    <string name="search_authority">cm.aptoidetv.pt.geniatechapps.SearchAuthority</string>
+
+</resources>

@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+
+def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase()
+
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.0.0"
+    defaultConfig {
+        applicationId packageName
+        minSdkVersion 19
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:leanback-v17:+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile('com.google.http-client:google-http-client-gson:1.19.0') {
+        exclude(group: 'xpp3', module: 'xpp3') //by both name and group
+        exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+        exclude(group: 'junit', module: 'junit') //by both name and group
+    }
+
+    compile('com.google.http-client:google-http-client-android:1.19.0') {
+        exclude(group: 'xpp3', module: 'xpp3') //by both name and group
+        exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
+        exclude(group: 'junit', module: 'junit') //by both name and group
+    }
+}
