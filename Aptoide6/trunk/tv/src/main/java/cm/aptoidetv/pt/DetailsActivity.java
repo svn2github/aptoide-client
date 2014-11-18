@@ -17,24 +17,22 @@ package cm.aptoidetv.pt;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.IntentFilter;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v17.leanback.widget.Action;
+import android.os.Environment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.DetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
-import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -44,6 +42,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.json.gson.GsonFactory;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -54,6 +53,8 @@ import cm.aptoidetv.pt.Model.MediaObject;
  * Details activity class that loads LeanbackDetailsFragment class
  */
 public class DetailsActivity extends Activity {
+
+    private DownloadManager downloadmanager;
 
     public static final String PACKAGE_NAME = "packageName";
     public static final String FEATURED_GRAPHIC = "featuredGraphic";
@@ -77,7 +78,7 @@ public class DetailsActivity extends Activity {
     private RatingBar rating_bar;
     private TextView app_ratings;
     private TextView app_description;
-
+    private ProgressBar downloading_progress;
 
     /**
      * Called when the activity is first created.
@@ -172,7 +173,34 @@ public class DetailsActivity extends Activity {
                 app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
                 app_description.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
 
+                download.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String servicestring = Context.DOWNLOAD_SERVICE;
 
+                        downloadmanager = (DownloadManager) getSystemService(servicestring);
+
+                        Uri uri = Uri.parse(((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        new updateDownLoadInfoTask().execute();
+                        request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
+                        Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
+
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                        request.setAllowedOverRoaming(false);
+                        request.setTitle("Downloading " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+
+                        request.setDestinationInExternalPublicDir("apks", (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
+                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
+
+                        downloadmanager.enqueue(request);
+                        //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                        //isRegistered = true;
+                    }
+                });
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,5 +230,67 @@ public class DetailsActivity extends Activity {
         }
 
     }
+    private class updateDownLoadInfoTask extends AsyncTask<Void,Integer,Void>{
+        @Override
+        protected void onPreExecute() {
+            downloading_progress = (ProgressBar) findViewById(R.id.downloading_progress);
+            downloading_progress.setVisibility(View.VISIBLE);
+        }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            downloading_progress.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            downloading_progress.setProgress (values[0]);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            boolean loopagain=true;
+            do {
+                DownloadManager.Query query = new DownloadManager.Query();
+
+                Cursor c = downloadmanager.query(query);
+                if (c.moveToFirst()) {
+                    int bytes_downloaded = c.getInt(c
+                            .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int bytes_total = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                    final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+                    publishProgress(dl_progress);
+                    int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
+                    switch (status) {
+                        case DownloadManager.STATUS_PAUSED:
+                        case DownloadManager.STATUS_PENDING:
+                        case DownloadManager.STATUS_RUNNING:
+                            break;
+                        case DownloadManager.STATUS_SUCCESSFUL:
+                            try {
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(intent);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        case DownloadManager.STATUS_FAILED:
+                            loopagain=false;
+                            break;
+                    }
+                }
+                try {Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+            }while(loopagain);
+            return null;
+        }
+    }
 }
+
+

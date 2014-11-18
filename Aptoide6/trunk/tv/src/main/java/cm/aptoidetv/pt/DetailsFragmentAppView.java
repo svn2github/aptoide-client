@@ -1,17 +1,12 @@
 package cm.aptoidetv.pt;
 
-import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.widget.Action;
@@ -36,7 +31,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -51,7 +45,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
     private static final int ACTION_RENT = 2;
     private static final int ACTION_BUY = 3;
 
-
+    private static final String TAG = "DetailsFragmentAppView";
     public static final String PACKAGE_NAME = "packageName";
     public static final String FEATURED_GRAPHIC = "featuredGraphic";
     public static final String APP_NAME = "name";
@@ -65,9 +59,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
 
     private Target mBackgroundTarget;
     private DisplayMetrics mMetrics;
-    private DownloadManager downloadmanager;
     private boolean isRegistered = false;
-    private String TAG = "DetailsFragmentAppView";
     private String packageName, featuredGraphic, appName, download, vercode, md5sum, icon;
     private OnItemClickedListener defaultItemClickedListener;
 
@@ -83,7 +75,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
         md5sum = getActivity().getIntent().getStringExtra(MD5_SUM);
         icon = getActivity().getIntent().getStringExtra(APP_ICON);
 
-        initBackground();
+        //initBackground();
 
         setOnItemClickedListener(getDefaultItemClickedListener());
 
@@ -135,39 +127,10 @@ public class DetailsFragmentAppView extends DetailsFragment {
         }
     };
 
+
+
     private void queryDownloadStatus() {
-        DownloadManager.Query query = new DownloadManager.Query();
 
-        Cursor c = downloadmanager.query(query);
-        if (c.moveToFirst()) {
-            int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-            Log.d(TAG, "Status Check: " + status);
-            Log.d(TAG, "Download URL: " + download);
-            Log.d(TAG, "Name: " + appName);
-//                Log.d(TAG, "Path: " + mSelectedApp.getPackagename().getPath());
-
-            switch (status) {
-                case DownloadManager.STATUS_PAUSED:
-                case DownloadManager.STATUS_PENDING:
-                case DownloadManager.STATUS_RUNNING:
-                    break;
-                case DownloadManager.STATUS_SUCCESSFUL:
-                    try {
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(intent);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case DownloadManager.STATUS_FAILED:
-
-                    break;
-            }
-        }
     }
 
     @Override
@@ -258,7 +221,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
                 @Override
                 public void onActionClicked(Action action) {
                     if (action.getId() == ACTION_WATCH_TRAILER) {
-
+/*
                         String servicestring = Context.DOWNLOAD_SERVICE;
 
                         downloadmanager = (DownloadManager) getActivity().getSystemService(servicestring);
@@ -267,7 +230,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
                         Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
 
                         DownloadManager.Request request = new DownloadManager.Request(uri);
-
+                        new updateDownLoadInfoTask().execute();
                         request.addRequestHeader("User-Agent", Utils.getUserAgentString(getActivity()));
                         Log.d(TAG, "User-Agent" + Utils.getUserAgentString(getActivity()));
 
@@ -281,7 +244,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
 
                         downloadmanager.enqueue(request);
                         getActivity().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                        isRegistered = true;
+                        isRegistered = true;*/
                     }
                 }
             });
