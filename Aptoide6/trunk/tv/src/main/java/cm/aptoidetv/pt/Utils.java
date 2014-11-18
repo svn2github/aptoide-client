@@ -221,16 +221,16 @@ public class Utils {
         public static final String TERMINAL_INFO = getModel() + "("+ getProduct() + ")"+";v"+getRelease()+";"+System.getProperty("os.arch");
 
         public static String getProduct(){
-            return android.os.Build.PRODUCT.replace(";", " ");
+            return Build.PRODUCT.replace(";", " ");
         }
 
         public static String getModel(){
-            return android.os.Build.MODEL.replaceAll(";", " ");
+            return Build.MODEL.replaceAll(";", " ");
         }
 
 
         public static String getRelease(){
-            return android.os.Build.VERSION.RELEASE.replaceAll(";", " ");
+            return Build.VERSION.RELEASE.replaceAll(";", " ");
         }
 
     }
