@@ -52,7 +52,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
-                    android:id="@+id/app_category"
+                    android:id="@+id/app_developer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -64,11 +64,11 @@
                     android:id="@+id/view_separator"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/app_category"
-                    android:layout_alignTop="@+id/app_category"
+                    android:layout_alignBottom="@+id/app_developer"
+                    android:layout_alignTop="@+id/app_developer"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_toEndOf="@+id/app_category"
+                    android:layout_toEndOf="@+id/app_developer"
                     android:background="@android:color/darker_gray" />
 
                 <TextView
@@ -125,6 +125,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
+                    android:layout_alignBottom="@+id/app_downloads"
+                    android:layout_alignTop="@+id/app_downloads"
                     android:layout_marginLeft="10dp"
                     android:layout_toEndOf="@+id/rating_bar"
                     android:text="Ratings"

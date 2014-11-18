@@ -33,6 +33,10 @@ import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -62,7 +66,18 @@ public class DetailsActivity extends Activity {
     public static final String MOVIE = "";
     public static final String SHARED_ELEMENT_NAME = "";
 
-    private String packageName, featuredGraphic, appName, download, vercode, md5sum, icon;
+    private String packageName, featuredGraphic, appName, downloads, vercode, md5sum, icon;
+
+    private ImageView app_icon;
+    private Button download;
+    private TextView app_name;
+    private TextView app_developer;
+    private TextView app_version;
+    private TextView app_downloads;
+    private RatingBar rating_bar;
+    private TextView app_ratings;
+    private TextView app_description;
+
 
     /**
      * Called when the activity is first created.
@@ -75,10 +90,20 @@ public class DetailsActivity extends Activity {
         packageName = getIntent().getStringExtra(PACKAGE_NAME);
         featuredGraphic = getIntent().getStringExtra(FEATURED_GRAPHIC);
         appName = getIntent().getStringExtra(APP_NAME);
-        download = getIntent().getStringExtra(DOWNLOAD_URL);
+        downloads = getIntent().getStringExtra(DOWNLOAD_URL);
         vercode = getIntent().getStringExtra(VERCODE);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
+
+        app_icon = (ImageView) findViewById(R.id.app_icon);
+        download = (Button) findViewById(R.id.download);
+        app_name = (TextView) findViewById(R.id.app_name);
+        app_developer = (TextView) findViewById(R.id.app_developer);
+        app_version = (TextView) findViewById(R.id.app_version);
+        app_downloads = (TextView) findViewById(R.id.app_downloads);
+        rating_bar = (RatingBar) findViewById(R.id.rating_bar);
+        app_ratings = (TextView) findViewById(R.id.app_ratings);
+        app_description = (TextView) findViewById(R.id.app_description);
 
         new DetailRowBuilderTask().execute(md5sum);
 
@@ -102,27 +127,20 @@ public class DetailsActivity extends Activity {
 
                 GetApkInfoJson json = httpRequest.execute().parseAs(GetApkInfoJson.class);
 
-                Log.d(TAG, json.getMeta().getTitle());
-                Log.d(TAG, json.getApk().getIconHd());
-                Log.d(TAG, json.getMeta().getDeveloper().getInfo().getName());
-                Log.d(TAG, json.getApk().getVername());
-                Log.d(TAG, json.getMeta().getDownloads()+"");
-                Log.d(TAG, json.getMeta().getLikevotes().getLikes()+""+json.getMeta().getLikevotes().getDislikes());
+//                Log.d(TAG, json.getMeta().getTitle());
+//                Log.d(TAG, json.getApk().getIconHd());
+//                Log.d(TAG, json.getMeta().getDeveloper().getInfo().getName());
+//                Log.d(TAG, json.getApk().getVername());
+//                Log.d(TAG, json.getMeta().getDownloads()+"");
+//                Log.d(TAG, json.getMeta().getLikevotes().getLikes()+""+json.getMeta().getLikevotes().getDislikes());
+                Log.d(TAG, json.getMeta().getDescription());
 
 
-//                try {
-//                    row = new DetailsOverviewRow(json);
-//                    Bitmap poster = Picasso.with(this)
-//                            .load(json.getApk().getIconHd())
-//                            .resize(Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()),
-//                                    Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()))
-//                            .centerCrop()
-//                            .get();
-//                    row.setImageBitmap(getActivity(), poster);
-//
-//                } catch (IOException e) {
-//                } catch (NullPointerException e) {
-//                }
+                try {
+                    row = new DetailsOverviewRow(json);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
 
             } catch (IOException e) {
@@ -138,6 +156,48 @@ public class DetailsActivity extends Activity {
             if (detailRow == null)
                 return;
 
+            try {
+
+                Picasso.with(DetailsActivity.this)
+                        .load(((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd())
+                        .error(R.drawable.icon_non_available)
+                        .into(app_icon);
+//                Log.d(TAG, "Loading icon " + ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
+
+                app_name.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+                app_developer.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDeveloper().getInfo().getName());
+                app_version.setText("Version: " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
+                app_downloads.setText("Downloads: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
+                rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
+                app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
+                app_description.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            ClassPresenterSelector ps = new ClassPresenterSelector();
+
+            ArrayObjectAdapter adapter = new ArrayObjectAdapter(ps);
+            adapter.add(detailRow);
+
+            ArrayList<MediaObject> mediaObjects;
+            mediaObjects = ((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshotsAndThumbVideo();
+
+
+            Log.d(TAG, "mediaObjects size " + mediaObjects.size());
+
+
+            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new ScreenshotsPresenter());
+            for (MediaObject mediaObject : mediaObjects) {
+                listRowAdapter.add(mediaObject);
+            }
+
+            HeaderItem header = new HeaderItem(0, "Screenshots", null);
+            adapter.add(new ListRow(header, listRowAdapter));
 
         }
 
