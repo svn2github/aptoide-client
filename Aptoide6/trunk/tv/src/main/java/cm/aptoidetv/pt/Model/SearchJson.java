@@ -154,13 +154,13 @@ public class SearchJson {
             public void startActivity(Context context) {
 
                 Intent intent = new Intent(context, DetailsActivity.class);
-                intent.putExtra(DetailsFragmentAppView.PACKAGE_NAME, getPackage());
-                intent.putExtra(DetailsFragmentAppView.FEATURED_GRAPHIC, getImage());
-                intent.putExtra(DetailsFragmentAppView.APP_NAME, getName());
-                intent.putExtra(DetailsFragmentAppView.DOWNLOAD_URL, getDownloadUrl());
-                intent.putExtra(DetailsFragmentAppView.VERCODE, getVercode());
-                intent.putExtra(DetailsFragmentAppView.MD5_SUM, getMd5sum());
-                intent.putExtra(DetailsFragmentAppView.APP_ICON, getImage());
+                intent.putExtra(DetailsActivity.PACKAGE_NAME, getPackage());
+                intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, getImage());
+                intent.putExtra(DetailsActivity.APP_NAME, getName());
+                intent.putExtra(DetailsActivity.DOWNLOAD_URL, getDownloadUrl());
+                intent.putExtra(DetailsActivity.VERCODE, getVercode());
+                intent.putExtra(DetailsActivity.MD5_SUM, getMd5sum());
+                intent.putExtra(DetailsActivity.APP_ICON, getImage());
 
                 context.startActivity(intent);
 

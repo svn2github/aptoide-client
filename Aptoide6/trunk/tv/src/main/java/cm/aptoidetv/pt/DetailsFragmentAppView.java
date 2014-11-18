@@ -95,27 +95,30 @@ public class DetailsFragmentAppView extends DetailsFragment {
     private void initBackground() {
         BackgroundManager backgroundManager = BackgroundManager.getInstance(getActivity());
         backgroundManager.attach(getActivity().getWindow());
-        mBackgroundTarget = new PicassoBackgroundManagerTarget( backgroundManager );
+        mBackgroundTarget = new PicassoBackgroundManagerTarget(backgroundManager);
 
         mMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
 
-        if( featuredGraphic != null && !TextUtils.isEmpty(featuredGraphic)) {
+        if (featuredGraphic != null && !TextUtils.isEmpty(featuredGraphic)) {
             try {
                 updateBackground(new URI(featuredGraphic));
-            } catch (URISyntaxException e) { }
+            } catch (URISyntaxException e) {
+            }
         } else {
             try {
                 updateBackground(new URI(icon));
-            } catch (URISyntaxException e) { }
+            } catch (URISyntaxException e) {
+            }
         }
     }
 
     protected void updateBackground(URI uri) {
-        if( uri.toString() == null ) {
+        if (uri.toString() == null) {
             try {
                 uri = new URI("");
-            } catch( URISyntaxException e ) {}
+            } catch (URISyntaxException e) {
+            }
         }
 
         Picasso.with(getActivity())
@@ -136,14 +139,14 @@ public class DetailsFragmentAppView extends DetailsFragment {
         DownloadManager.Query query = new DownloadManager.Query();
 
         Cursor c = downloadmanager.query(query);
-        if(c.moveToFirst()) {
+        if (c.moveToFirst()) {
             int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                Log.d(TAG, "Status Check: " + status);
-                Log.d(TAG, "Download URL: " + download);
-                Log.d(TAG, "Name: " + appName);
+            Log.d(TAG, "Status Check: " + status);
+            Log.d(TAG, "Download URL: " + download);
+            Log.d(TAG, "Name: " + appName);
 //                Log.d(TAG, "Path: " + mSelectedApp.getPackagename().getPath());
 
-            switch(status) {
+            switch (status) {
                 case DownloadManager.STATUS_PAUSED:
                 case DownloadManager.STATUS_PENDING:
                 case DownloadManager.STATUS_RUNNING:
@@ -152,7 +155,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
                     try {
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + "/apks/"  + packageName+"-"+vercode+"-"+md5sum+".apk")), "application/vnd.android.package-archive");
+                        intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
                         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(intent);
 
@@ -182,7 +185,7 @@ public class DetailsFragmentAppView extends DetailsFragment {
             @Override
             public void onItemClicked(Object item, Row row) {
 
-                ((MediaObject)item).startActivity(getActivity());
+                ((MediaObject) item).startActivity(getActivity());
 
             }
         };
@@ -190,93 +193,90 @@ public class DetailsFragmentAppView extends DetailsFragment {
 
     private class DetailRowBuilderTask extends AsyncTask<String, Integer, DetailsOverviewRow> {
         @Override
-        protected DetailsOverviewRow doInBackground( String... application ) {
+        protected DetailsOverviewRow doInBackground(String... application) {
 
 //            mSelectedApp = application[0];
 
             DetailsOverviewRow row = null;
 
             try {
-                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/geniatechapps/md5sum:"+ application[0]+"/json");
+                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/geniatechapps/md5sum:" + application[0] + "/json");
 
                 Log.d(TAG, url.toString());
                 HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
 
-                httpRequest.setParser( new GsonFactory().createJsonObjectParser());
+                httpRequest.setParser(new GsonFactory().createJsonObjectParser());
 
                 GetApkInfoJson json = httpRequest.execute().parseAs(GetApkInfoJson.class);
 
 
+                try {
+                    row = new DetailsOverviewRow(json);
+                    Bitmap poster = Picasso.with(getActivity())
+                            .load(json.getApk().getIconHd())
+                            .resize(Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()),
+                                    Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()))
+                            .centerCrop()
+                            .get();
+                    row.setImageBitmap(getActivity(), poster);
 
+                } catch (IOException e) {
+                } catch (NullPointerException e) {
+                }
 
-            try {
-                row = new DetailsOverviewRow(json);
-                Bitmap poster = Picasso.with(getActivity())
-                        .load( json.getApk().getIconHd() )
-                        .resize(Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()),
-                                Utils.dpToPx(getActivity().getResources().getInteger(R.integer.detail_thumbnail_square_size), getActivity().getApplicationContext()))
-                        .centerCrop()
-                        .get();
-                row.setImageBitmap( getActivity(), poster );
+                if (row != null) {
+                    row.addAction(new Action(ACTION_WATCH_TRAILER, "DOWNLOAD"));
 
-            } catch ( IOException e ) {
-            } catch( NullPointerException e ) {
-            }
-
-            if (row != null) {
-                row.addAction(new Action(ACTION_WATCH_TRAILER, "DOWNLOAD"));
-
-            }
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
 
-
             return row;
         }
 
         @Override
-        protected void onPostExecute( final DetailsOverviewRow detailRow ) {
-            if( detailRow == null )
+        protected void onPostExecute(final DetailsOverviewRow detailRow) {
+            if (detailRow == null)
                 return;
 
             ClassPresenterSelector ps = new ClassPresenterSelector();
-            DetailsOverviewRowPresenter dorPresenter = new DetailsOverviewRowPresenter( new DetailsDescriptionPresenterAppView() );
+            DetailsOverviewRowPresenter dorPresenter = new DetailsOverviewRowPresenter(new DetailsDescriptionPresenterAppView());
 
             TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor});
             int brandColorResourceId = typedArray.getResourceId(0, 0);
             typedArray.recycle();
 
             // set detail background and style
-            dorPresenter.setBackgroundColor( getResources().getColor(brandColorResourceId) );
+            dorPresenter.setBackgroundColor(getResources().getColor(brandColorResourceId));
 
             dorPresenter.setStyleLarge(true);
 
-            dorPresenter.setOnActionClickedListener( new OnActionClickedListener() {
+            dorPresenter.setOnActionClickedListener(new OnActionClickedListener() {
                 @Override
-                public void onActionClicked( Action action ) {
-                    if (action.getId() == ACTION_WATCH_TRAILER ) {
+                public void onActionClicked(Action action) {
+                    if (action.getId() == ACTION_WATCH_TRAILER) {
 
                         String servicestring = Context.DOWNLOAD_SERVICE;
 
                         downloadmanager = (DownloadManager) getActivity().getSystemService(servicestring);
 
-                        Uri uri = Uri.parse(((GetApkInfoJson)detailRow.getItem()).getApk().getPath());
-                        Log.d(TAG, "getPath() " + ((GetApkInfoJson)detailRow.getItem()).getApk().getPath());
+                        Uri uri = Uri.parse(((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
 
                         DownloadManager.Request request = new DownloadManager.Request(uri);
 
                         request.addRequestHeader("User-Agent", Utils.getUserAgentString(getActivity()));
-                        Log.d(TAG, "User-Agent" +  Utils.getUserAgentString(getActivity()));
+                        Log.d(TAG, "User-Agent" + Utils.getUserAgentString(getActivity()));
 
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                         request.setAllowedOverRoaming(false);
                         request.setTitle("Downloading " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-                        Log.d(TAG, "getName() " + ((GetApkInfoJson)detailRow.getItem()).getMeta().getTitle());
+                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
-                        request.setDestinationInExternalPublicDir("apks", (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-"+(((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue())+"-"+(((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum())+".apk"));
+                        request.setDestinationInExternalPublicDir("apks", (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
                         Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
 
                         downloadmanager.enqueue(request);
@@ -286,23 +286,22 @@ public class DetailsFragmentAppView extends DetailsFragment {
                 }
             });
 
-            ps.addClassPresenter( DetailsOverviewRow.class, dorPresenter );
-            ps.addClassPresenter( ListRow.class, new ListRowPresenter() );
+            ps.addClassPresenter(DetailsOverviewRow.class, dorPresenter);
+            ps.addClassPresenter(ListRow.class, new ListRowPresenter());
 
-            ArrayObjectAdapter adapter = new ArrayObjectAdapter( ps );
-            adapter.add( detailRow );
+            ArrayObjectAdapter adapter = new ArrayObjectAdapter(ps);
+            adapter.add(detailRow);
 
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter( new DescriptionPresenter() );
-            listRowAdapter.add( ((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription() );
+            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new DescriptionPresenter());
+            listRowAdapter.add(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
 
-            HeaderItem header = new HeaderItem( 0, "Description", null );
-            adapter.add( new ListRow( header, listRowAdapter ) );
+            HeaderItem header = new HeaderItem(0, "Description", null);
+            adapter.add(new ListRow(header, listRowAdapter));
 
             loadScreenshots(adapter, detailRow);
 
-            setAdapter( adapter );
+            setAdapter(adapter);
         }
-
 
 
         private void loadScreenshots(ArrayObjectAdapter adapter, DetailsOverviewRow detailRow) {
@@ -324,13 +323,13 @@ public class DetailsFragmentAppView extends DetailsFragment {
 //            if( related.isEmpty() )
 //                return;
 
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter( new ScreenshotsPresenter() );
-            for( MediaObject mediaObject : mediaObjects ) {
-                listRowAdapter.add( mediaObject );
+            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new ScreenshotsPresenter());
+            for (MediaObject mediaObject : mediaObjects) {
+                listRowAdapter.add(mediaObject);
             }
 
-            HeaderItem header = new HeaderItem( 0, "Screenshots", null );
-            adapter.add( new ListRow( header, listRowAdapter ) );
+            HeaderItem header = new HeaderItem(0, "Screenshots", null);
+            adapter.add(new ListRow(header, listRowAdapter));
 
 
         }

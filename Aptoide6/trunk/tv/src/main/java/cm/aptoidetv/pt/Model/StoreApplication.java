@@ -246,13 +246,13 @@ public class StoreApplication implements Serializable {
         @Override
         public void startActivity(Context context) {
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra(DetailsFragmentAppView.PACKAGE_NAME, apkid);
-            intent.putExtra(DetailsFragmentAppView.FEATURED_GRAPHIC, icon_hd);
-            intent.putExtra(DetailsFragmentAppView.APP_NAME, name);
-            intent.putExtra(DetailsFragmentAppView.DOWNLOAD_URL, getDownloadUrl());
-            intent.putExtra(DetailsFragmentAppView.VERCODE, vercode);
-            intent.putExtra(DetailsFragmentAppView.MD5_SUM, md5h);
-            intent.putExtra(DetailsFragmentAppView.APP_ICON, getImage());
+            intent.putExtra(DetailsActivity.PACKAGE_NAME, apkid);
+            intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, icon_hd);
+            intent.putExtra(DetailsActivity.APP_NAME, name);
+            intent.putExtra(DetailsActivity.DOWNLOAD_URL, getDownloadUrl());
+            intent.putExtra(DetailsActivity.VERCODE, vercode);
+            intent.putExtra(DetailsActivity.MD5_SUM, md5h);
+            intent.putExtra(DetailsActivity.APP_ICON, getImage());
 
             context.startActivity(intent);
 //            Toast.makeText(context, "Start Activity", Toast.LENGTH_LONG).show();

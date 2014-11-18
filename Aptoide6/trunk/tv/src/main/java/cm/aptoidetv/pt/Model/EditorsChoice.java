@@ -47,12 +47,12 @@ public class EditorsChoice implements Serializable, BindInterface {
     @Override
     public void startActivity(Context context) {
         Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(DetailsFragmentAppView.PACKAGE_NAME, packagename.getApkid());
-        intent.putExtra(DetailsFragmentAppView.FEATURED_GRAPHIC, featuregraphicpath + packagename.featuregraphic);
-        intent.putExtra(DetailsFragmentAppView.APP_NAME, packagename.name);
-        intent.putExtra(DetailsFragmentAppView.DOWNLOAD_URL, apkpath+getPackagename().getPath());
-        intent.putExtra(DetailsFragmentAppView.VERCODE, getPackagename().getVercode());
-        intent.putExtra(DetailsFragmentAppView.MD5_SUM, getPackagename().getMd5h());
+        intent.putExtra(DetailsActivity.PACKAGE_NAME, packagename.getApkid());
+        intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, featuregraphicpath + packagename.featuregraphic);
+        intent.putExtra(DetailsActivity.APP_NAME, packagename.name);
+        intent.putExtra(DetailsActivity.DOWNLOAD_URL, apkpath+getPackagename().getPath());
+        intent.putExtra(DetailsActivity.VERCODE, getPackagename().getVercode());
+        intent.putExtra(DetailsActivity.MD5_SUM, getPackagename().getMd5h());
 
         context.startActivity(intent);
 
