@@ -36,6 +36,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbars="none"
         android:padding="10dp">
 
         <LinearLayout
@@ -141,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/description"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
             <TextView
@@ -158,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/comments"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
                 android:id="@+id/layout_comments"
@@ -178,15 +179,15 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/no_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5.0dp"
-                android:text="@string/no_comments"
-                android:visibility="gone"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <!--<TextView-->
+                <!--android:id="@+id/no_comments"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--android:padding="5.0dp"-->
+                <!--android:text="@string/no_comments"-->
+                <!--android:visibility="gone"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
 
         </LinearLayout>
     </ScrollView>

@@ -95,7 +95,7 @@ public class DetailsActivity extends Activity {
     private LinearLayout commentsContainer;
     private TextView comments_label;
     private LinearLayout commentsLayout;
-    private TextView noComments;
+//    private TextView noComments;
 
     /**
      * Called when the activity is first created.
@@ -125,7 +125,7 @@ public class DetailsActivity extends Activity {
         screenshots = (LinearLayout) findViewById(R.id.screenshots);
         comments_label = (TextView) findViewById(R.id.comments_label);
         commentsLayout = (LinearLayout) findViewById(R.id.layout_comments);
-        noComments = (TextView) findViewById(R.id.no_comments);
+//        noComments = (TextView) findViewById(R.id.no_comments);
         commentsContainer = (LinearLayout) findViewById(R.id.commentContainer);
 
         new DetailRowBuilderTask().execute(md5sum);
@@ -141,7 +141,7 @@ public class DetailsActivity extends Activity {
             DetailsOverviewRow row = null;
 
             try {
-                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/geniatechapps/md5sum:" + application[0] + "/json");
+                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/+"+getString(R.string.defaultstorename)+"/md5sum:" + application[0] + "/json");
 
                 Log.d(TAG, url.toString());
                 HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
@@ -288,12 +288,15 @@ public class DetailsActivity extends Activity {
                     Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
                 }
                 FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
+                commentsLayout.setVisibility(View.VISIBLE);
                 if (comments.size() == 0) {
                     commentsLayout.setVisibility(View.GONE);
+                    comments_label.setVisibility(View.GONE);
                     Log.d(TAG, getString(R.string.no_comments));
-                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
-                    noComments.setVisibility(View.VISIBLE);
+//                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
+//                    noComments.setVisibility(View.VISIBLE);
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
