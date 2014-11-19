@@ -91,6 +91,10 @@ public class DetailsActivity extends Activity {
     private LinearLayout commentsContainer;
     private TextView comments_label;
     private LinearLayout commentsLayout;
+    private View app_view_icon_layout;
+    private View app_view_details_layout;
+    private View loading_pb;
+
 //    private TextView noComments;
 
     /**
@@ -108,6 +112,11 @@ public class DetailsActivity extends Activity {
         vercode = getIntent().getStringExtra(VERCODE);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
+
+
+        app_view_icon_layout = findViewById(R.id.app_view_icon_layout);
+        app_view_details_layout = findViewById(R.id.app_view_details_layout);
+        loading_pb = findViewById(R.id.loading_pb);
 
         app_icon = (ImageView) findViewById(R.id.app_icon);
         download = (Button) findViewById(R.id.download);
@@ -175,6 +184,10 @@ public class DetailsActivity extends Activity {
                 return;
 
             try {
+                loading_pb.setVisibility(View.GONE);
+                app_view_icon_layout.setVisibility(View.VISIBLE);
+                app_view_details_layout.setVisibility(View.VISIBLE);
+
                 final GetApkInfoJson apkInfoJson = (GetApkInfoJson) detailRow.getItem();
 
                 boolean iconHdExistes = !Data.isNull(apkInfoJson.getApk().getIconHd());
@@ -320,6 +333,7 @@ public class DetailsActivity extends Activity {
                     request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
 //                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
+
                     request.setDestinationInExternalPublicDir("apks", ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk");
                     ;
 //                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
@@ -431,7 +445,11 @@ public class DetailsActivity extends Activity {
                             try {
 
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(new File("sdcard/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
+
+                                String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+                                intent.setDataAndType(Uri.fromFile(new File(absolutePath + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
+
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);
 
