@@ -16,27 +16,23 @@ package cm.aptoidetv.pt;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v17.leanback.widget.ArrayObjectAdapter;
-import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ListRow;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -135,7 +131,6 @@ public class DetailsActivity extends Activity {
     private class DetailRowBuilderTask extends AsyncTask<String, Integer, DetailsOverviewRow> {
         @Override
         protected DetailsOverviewRow doInBackground(String... application) {
-
 //            mSelectedApp = application[0];
 
             DetailsOverviewRow row = null;
@@ -180,17 +175,16 @@ public class DetailsActivity extends Activity {
                 return;
 
             try {
+                final GetApkInfoJson apkInfoJson = (GetApkInfoJson) detailRow.getItem();
 
-
-
-                boolean iconHdExistes = !Data.isNull(((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
+                boolean iconHdExistes = !Data.isNull(apkInfoJson.getApk().getIconHd());
 
                 String iconPath;
 
                 if(iconHdExistes){
-                    iconPath = ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd();
+                    iconPath = apkInfoJson.getApk().getIconHd();
                 }else{
-                    iconPath = ((GetApkInfoJson) detailRow.getItem()).getApk().getIcon();
+                    iconPath = apkInfoJson.getApk().getIcon();
                 }
 
                 Picasso.with(DetailsActivity.this)
@@ -199,48 +193,21 @@ public class DetailsActivity extends Activity {
                         .into(app_icon);
 //                Log.d(TAG, "Loading icon " + ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
 
-                app_name.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+                app_name.setText(apkInfoJson.getMeta().getTitle());
 
-                download.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String servicestring = Context.DOWNLOAD_SERVICE;
+                addDownloadButtonListener(apkInfoJson);
 
-                        downloadmanager = (DownloadManager) getSystemService(servicestring);
-
-                        Uri uri = Uri.parse(((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
-//                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
-
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        new updateDownLoadInfoTask().execute();
-                        request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
-                        Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
-
-                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                        request.setAllowedOverRoaming(false);
-                        request.setTitle("Downloading " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-//                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-
-                        request.setDestinationInExternalPublicDir("apks", (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
-//                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
-
-                        downloadmanager.enqueue(request);
-                        //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                        //isRegistered = true;
-                    }
-                });
-
-                app_developer.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDeveloper().getInfo().getName());
-                app_version.setText(getString(R.string.version)+": " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
-                app_downloads.setText(getString(R.string.downloads)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
-                rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText(getString(R.string.likes)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() +" "+ getString(R.string.dislikes)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
-                String description = ((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription();
+                app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
+                app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
+                app_downloads.setText(getString(R.string.downloads)+": " + apkInfoJson.getMeta().getDownloads());
+                rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+                app_ratings.setText(getString(R.string.likes)+": " + apkInfoJson.getMeta().getLikevotes().getLikes() +" "+ getString(R.string.dislikes)+": " + apkInfoJson.getMeta().getLikevotes().getDislikes());
+                String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
 
                 screenshots.removeAllViews();
                 View cell;
-                ArrayList<MediaObject> mediaObjects = ((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshotsAndThumbVideo();
+                ArrayList<MediaObject> mediaObjects = apkInfoJson.getMedia().getScreenshotsAndThumbVideo();
                 String imagePath = "";
                 int screenshotIndexToAdd = 0;
                 for (int i = 0; i != mediaObjects.size(); i++) {
@@ -265,8 +232,8 @@ public class DetailsActivity extends Activity {
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
 //                        Log.d(TAG, "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
-                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                     }
 
                     screenshots.addView(cell);
@@ -275,17 +242,13 @@ public class DetailsActivity extends Activity {
                             .load(imagePath)
                             .error(R.drawable.icon_non_available)
                             .into(imageView);
-
-
-
-
                 }
 
-                List<Comment> comments = ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments();
+                List<Comment> comments = apkInfoJson.getMeta().getComments();
                 Log.d(TAG, "comments size: " + comments.size());
 
                 for(int i=0; i < comments.size(); i++) {
-                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
+                    Log.d(TAG, "comments["+i+"]: " + apkInfoJson.getMeta().getComments().get(i).getText());
                 }
                 FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
                 commentsLayout.setVisibility(View.VISIBLE);
@@ -304,6 +267,71 @@ public class DetailsActivity extends Activity {
         }
 
 
+    }
+    private PackageInfo getPackageInfo(String package_name){
+        try {
+            return getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
+    }
+    private void changebtInstalltoOpen(String packageName){
+
+        final Intent i = getPackageManager().getLaunchIntentForPackage(packageName);
+
+        download.setText(getString(R.string.open));
+
+        if (i != null) {
+            download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        startActivity(i);
+                    } catch (ActivityNotFoundException e) {
+
+                    }
+                }
+            });
+        } else {
+            download.setEnabled(false);
+        }
+    }
+    private void addDownloadButtonListener(final GetApkInfoJson ApkInfoJson){
+        PackageInfo info = getPackageInfo(ApkInfoJson.getApk().getPackage());
+
+        if (info == null) {
+            download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String servicestring = Context.DOWNLOAD_SERVICE;
+
+                    downloadmanager = (DownloadManager) getSystemService(servicestring);
+
+                    Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
+//                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    new updateDownLoadInfoTask().execute();
+                    request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
+//                    Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
+
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setAllowedOverRoaming(false);
+                    request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
+//                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+
+                    request.setDestinationInExternalPublicDir("apks", ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk");
+                    ;
+//                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
+
+                    downloadmanager.enqueue(request);
+                    //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    //isRegistered = true;
+                }
+            });
+        } else {
+                changebtInstalltoOpen(ApkInfoJson.getApk().getPackage());
+        }
     }
 
     public static class FillComments{
@@ -363,11 +391,13 @@ public class DetailsActivity extends Activity {
         protected void onPreExecute() {
             downloading_progress = (ProgressBar) findViewById(R.id.downloading_progress);
             downloading_progress.setVisibility(View.VISIBLE);
+            download.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             downloading_progress.setVisibility(View.GONE);
+            download.setVisibility(View.VISIBLE);
         }
 
         @Override
