@@ -244,18 +244,18 @@ public class DetailsActivity extends Activity {
                             .into(imageView);
                 }
 
-                List<Comment> comments = apkInfoJson.getMeta().getComments();
-                Log.d(TAG, "comments size: " + comments.size());
+                List<Comment> comments = ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments();
+//                Log.d(TAG, "comments size: " + comments.size());
 
-                for(int i=0; i < comments.size(); i++) {
-                    Log.d(TAG, "comments["+i+"]: " + apkInfoJson.getMeta().getComments().get(i).getText());
-                }
+//                for(int i=0; i < comments.size(); i++) {
+//                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
+//                }
                 FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
                 commentsLayout.setVisibility(View.VISIBLE);
                 if (comments.size() == 0) {
                     commentsLayout.setVisibility(View.GONE);
                     comments_label.setVisibility(View.GONE);
-                    Log.d(TAG, getString(R.string.no_comments));
+//                    Log.d(TAG, getString(R.string.no_comments));
 //                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
 //                    noComments.setVisibility(View.VISIBLE);
                 }
@@ -431,7 +431,7 @@ public class DetailsActivity extends Activity {
                             try {
 
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
+                                intent.setDataAndType(Uri.fromFile(new File("sdcard/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);
 

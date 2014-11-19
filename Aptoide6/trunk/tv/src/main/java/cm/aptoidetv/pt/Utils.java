@@ -41,14 +41,24 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Locale;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * A collection of utility methods, all static.
@@ -359,6 +369,93 @@ public class Utils {
             } else {
                 return formatDateTime(mCtx, timedate, DateUtils.FORMAT_NUMERIC_DATE);
             }
+        }
+
+    }
+
+
+    public static class Algorithms {
+
+        public static String computeHmacSha1(String value, String keyString)
+                throws InvalidKeyException, IllegalStateException,
+                UnsupportedEncodingException, NoSuchAlgorithmException {
+            System.out.println(value);
+            System.out.println(keyString);
+            SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"),
+                    "HmacSHA1");
+            Mac mac = Mac.getInstance("HmacSHA1");
+            mac.init(key);
+
+            byte[] bytes = mac.doFinal(value.getBytes("UTF-8"));
+
+            return convToHex(bytes);
+
+        }
+
+        private static String convToHex(byte[] data) {
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < data.length; i++) {
+                int halfbyte = (data[i] >>> 4) & 0x0F;
+                int two_halfs = 0;
+                do {
+                    if ((0 <= halfbyte) && (halfbyte <= 9))
+                        buf.append((char) ('0' + halfbyte));
+                    else
+                        buf.append((char) ('a' + (halfbyte - 10)));
+                    halfbyte = data[i] & 0x0F;
+                } while (two_halfs++ < 1);
+            }
+            return buf.toString();
+        }
+
+        public static String computeSHA1sum(String text)
+                throws NoSuchAlgorithmException, UnsupportedEncodingException {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] sha1hash = new byte[40];
+            md.update(text.getBytes("iso-8859-1"), 0, text.length());
+            sha1hash = md.digest();
+            return convToHex(sha1hash);
+        }
+
+        public static String computeSHA1sumFromBytes(byte[] bytes)
+                throws NoSuchAlgorithmException, UnsupportedEncodingException {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] sha1hash;
+            md.update(bytes, 0, bytes.length);
+            sha1hash = md.digest();
+            return convToHex(sha1hash);
+        }
+
+        public static String md5Calc(File f) {
+            int i;
+
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            String md5hash;
+            try {
+                MessageDigest digest = MessageDigest.getInstance("MD5");
+                InputStream is = new FileInputStream(f);
+                while ((read = is.read(buffer)) > 0) {
+                    digest.update(buffer, 0, read);
+                }
+                byte[] md5sum = digest.digest();
+                BigInteger bigInt = new BigInteger(1, md5sum);
+                md5hash = bigInt.toString(16);
+                is.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            if (md5hash.length() != 33) {
+                String tmp = "";
+                for (i = 1; i < (33 - md5hash.length()); i++) {
+                    tmp = tmp.concat("0");
+                }
+                md5hash = tmp.concat(md5hash);
+            }
+
+            return md5hash;
         }
 
     }

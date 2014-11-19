@@ -22,10 +22,11 @@
     <string name="comments">Comments</string>
     <string name="install">Install</string>
     <string name="version">Version</string>
-    <string name="no_comments">No comments yet. Be the first!</string>
     <string name="votes">%s votes</string>
     <string name="view_more_comments">View more %s comments</string>
-
+    <string name="update_self_title">Update available</string>
+    <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
+    <string name="retrieving_update">Retrieving update...</string>
 
     <string name="WidgetProvider_timestamp_today">Today</string>
     <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>

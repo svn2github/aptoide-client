@@ -36,6 +36,9 @@ public class MainActivity extends Activity {
         if(getResources().getBoolean(R.bool.showsplash)) {
             new SplashDialogFragment().show(getFragmentManager(), SplashDialogFragment.TAG);
         }
+
+        new AutoUpdate(this).execute();
+
     }
 
     @Override
