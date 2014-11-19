@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bootconf>
     <storeconf>
-        <theme>seagreen</theme>
-        <avatar>http://cdn3.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <theme>springgreen</theme>
+        <avatar>http://pool.img.aptoide.com/imgs/1217bfb3d6f95d2a431d1c11b7634a36_ravatar_34x34.png</avatar>
         <description />
-        <view>list</view>
+        <view>grid</view>
         <items>applications,games,top_apps,latest_apps,recommended</items>
     </storeconf>
     <aptoideconf>
         <partnertype>premium</partnertype>
-        <partnerid>2201e6f4bf1dbbe7072c2fb5badd5a24</partnerid>
+        <partnerid>bcf8229cf793bbc351c634fb561cb6f9</partnerid>
         <marketname>U Store</marketname>
-        <defaultstorename>unitel</defaultstorename>
+        <defaultstorename>u-store</defaultstorename>
         <aptoidetheme>greenapple</aptoidetheme>
-        <splashscreen>http://mirror.apk06.aptoide.com/apks/6/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/unitel/app/splashscreens/splashscreen.png</splashscreen>
-        <splashscreenland>http://mirror.apk06.aptoide.com/apks/6/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/unitel/app/splashscreens/splashscreen_land.png</splashscreenland>
-        <brand>brand_unitel</brand>
+        <splashscreen>http://mirror.apk07.aptoide.com/apks/7/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/u-store/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk07.aptoide.com/apks/7/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/u-store/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_u_store</brand>
         <searchstores>false</searchstores>
         <maturecontentswitch>false</maturecontentswitch>
-        <maturecontentswitchvalue>true</maturecontentswitchvalue>
         <multiplestores>false</multiplestores>
         <customeditorschoice>true</customeditorschoice>
-        <adunitid>7d1571ed86cac197cc83e07b402a1714</adunitid>
-        <createshortcut>false</createshortcut>
-        <linkedcomments>true</linkedcomments>
+        <createshortcut>true</createshortcut>
+        <adunitid>c72e79bd2e005f090c50753e4d97ffb7</adunitid>
+        <linkedcomments>false</linkedcomments>
         <showsplash>true</showsplash>
         <splashcolor>#FF9fb95f</splashcolor>
-        <showads>false</showads>
+        <showads>true</showads>
         <timeline>false</timeline>
     </aptoideconf>
 </bootconf>

@@ -8,11 +8,14 @@ repositories{
 
 }
 
+def String packageName = "com.aptoide.partners.".concat(project.STORE_NAME).toLowerCase()
+
 android {
     compileSdkVersion 18
     buildToolsVersion "20.0.0"
 
     defaultConfig {
+        applicationId packageName
         minSdkVersion 7
         targetSdkVersion 19
     }

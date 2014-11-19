@@ -3,6 +3,7 @@ package com.aptoide.partners;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -137,6 +138,7 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
             if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
                 super.loadPublicity();
+//                Log.d("AppViewActivityPartner", "load mopub");
             } else {
                 RelativeLayout layout = (RelativeLayout) findViewById(R.id.advertisement);
                 layout.setVisibility(View.VISIBLE);
@@ -155,11 +157,11 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
                 layout.addView(mAdView, params);
 
+
                 HashMap<String, String> adTypeArgs = new HashMap<String, String>();
                 adTypeArgs.put("type", "mobfox");
-                if (Build.VERSION.SDK_INT >= 10)
-                    FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
-
+                FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+//                Log.d("AppViewActivityPartner", "load mobfox");
             }
         }
 
@@ -171,8 +173,10 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
             if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
                 super.destroyPublicity();
+//                Log.d("AppViewActivityPartner", "destroy mopub");
             } else {
                 if(mAdView!=null) mAdView.release();
+//                Log.d("AppViewActivityPartner", "destroy mobfox");
             }
 
         }

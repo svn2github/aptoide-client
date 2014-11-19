@@ -504,4 +504,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public Class getNotificationsReceiver() {
         return PushNotificationReceiverPartner.class;
     }
+
+    @Override
+    public int getIcon() { return R.drawable.ic_launcher; }
 }

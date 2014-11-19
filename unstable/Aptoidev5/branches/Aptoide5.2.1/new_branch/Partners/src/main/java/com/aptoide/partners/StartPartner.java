@@ -1,7 +1,6 @@
 package com.aptoide.partners;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -47,7 +46,6 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
@@ -484,4 +482,10 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         }
     }
 
+    @Override
+    public void updateTimelinePostsBadge(SharedPreferences sharedPreferences) {
+        if(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getShowTimeline()){
+            super.updateTimelinePostsBadge(sharedPreferences);
+        }
+    }
 }
