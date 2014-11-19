@@ -8,28 +8,60 @@
 package cm.aptoidetv.pt;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class ScreenshotsViewer extends Activity {
 
     public static final String SCREEN = "image";
+    private String[] images = new String[0];
+    Context context;
+    private int currentItem;
 
     @Override
 	protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.page_screenshots_viewer);
 
-        String imagepath = getIntent().getStringExtra(SCREEN);
+        if(arg0 == null){
+            currentItem = getIntent().getIntExtra("position", 0);
+        }else{
+            currentItem = arg0.getInt("position", 0);
+        }
 
-        ImageView screen = (ImageView) findViewById(R.id.screenshot);
+        getIntent().getIntExtra("position", 0);
+        context = this;
+        final ViewPager screenshots = (ViewPager) findViewById(R.id.screenShotsPager);
 
-        Picasso.with(this)
-                .load(imagepath)
-                .error(getResources().getDrawable(R.drawable.default_background))
-                .into(screen);
+        ArrayList<String> uri = getIntent().getStringArrayListExtra("url");
+        if (uri != null) {
+            images = uri.toArray(images);
+        }
+        if(images != null && images.length > 0){
+            screenshots.setAdapter(new ViewPagerAdapterScreenshots(context,uri,true));
+            screenshots.setCurrentItem(currentItem);
+        }
+
+//        String imagepath = getIntent().getStringExtra(SCREEN);
+//
+//        ImageView screen = (ImageView) findViewById(R.id.screenshot);
+//
+//        Picasso.with(this)
+//                .load(imagepath)
+//                .error(getResources().getDrawable(R.drawable.default_background))
+//                .into(screen);
 	}
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", currentItem);
+    }
 
 }

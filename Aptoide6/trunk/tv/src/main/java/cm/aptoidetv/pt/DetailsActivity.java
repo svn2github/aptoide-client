@@ -32,6 +32,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,8 +51,11 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
+import cm.aptoidetv.pt.Model.Comment;
 import cm.aptoidetv.pt.Model.GetApkInfoJson;
 import cm.aptoidetv.pt.Model.MediaObject;
 import cm.aptoidetv.pt.Model.Screenshot;
@@ -88,6 +92,10 @@ public class DetailsActivity extends Activity {
     private TextView app_description;
     private ProgressBar downloading_progress;
     private LinearLayout screenshots;
+    private LinearLayout commentsContainer;
+    private TextView comments_label;
+    private LinearLayout commentsLayout;
+    private TextView noComments;
 
     /**
      * Called when the activity is first created.
@@ -115,6 +123,10 @@ public class DetailsActivity extends Activity {
         app_ratings = (TextView) findViewById(R.id.app_ratings);
         app_description = (TextView) findViewById(R.id.app_description);
         screenshots = (LinearLayout) findViewById(R.id.screenshots);
+        comments_label = (TextView) findViewById(R.id.comments_label);
+        commentsLayout = (LinearLayout) findViewById(R.id.layout_comments);
+        noComments = (TextView) findViewById(R.id.no_comments);
+        commentsContainer = (LinearLayout) findViewById(R.id.commentContainer);
 
         new DetailRowBuilderTask().execute(md5sum);
 
@@ -197,7 +209,7 @@ public class DetailsActivity extends Activity {
                         downloadmanager = (DownloadManager) getSystemService(servicestring);
 
                         Uri uri = Uri.parse(((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
-                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+//                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
 
                         DownloadManager.Request request = new DownloadManager.Request(uri);
                         new updateDownLoadInfoTask().execute();
@@ -207,10 +219,10 @@ public class DetailsActivity extends Activity {
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                         request.setAllowedOverRoaming(false);
                         request.setTitle("Downloading " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+//                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
                         request.setDestinationInExternalPublicDir("apks", (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
-                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
+//                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
 
                         downloadmanager.enqueue(request);
                         //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -219,28 +231,20 @@ public class DetailsActivity extends Activity {
                 });
 
                 app_developer.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDeveloper().getInfo().getName());
-                app_version.setText("Version: " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
-                app_downloads.setText("Downloads: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
+                app_version.setText(getString(R.string.version)+": " + ((GetApkInfoJson) detailRow.getItem()).getApk().getVername());
+                app_downloads.setText(getString(R.string.downloads)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
                 rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
+                app_ratings.setText(getString(R.string.likes)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() +" "+ getString(R.string.dislikes)+": " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
                 String description = ((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
 
                 screenshots.removeAllViews();
-
                 View cell;
-
                 ArrayList<MediaObject> mediaObjects = ((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshotsAndThumbVideo();
-
-
-
                 String imagePath = "";
-
                 int screenshotIndexToAdd = 0;
-
                 for (int i = 0; i != mediaObjects.size(); i++) {
-                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
-
+//                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
                     cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
                     final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
                     final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
@@ -250,9 +254,9 @@ public class DetailsActivity extends Activity {
                     if (mediaObjects.get(i) instanceof Video) {
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
-                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
-                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
+//                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
                         play.setVisibility(View.VISIBLE);
+                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
                         mediaLayout.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
                         //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
@@ -260,10 +264,10 @@ public class DetailsActivity extends Activity {
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-                        Log.d(TAG, "IMAGEPATH: " + imagePath);
+//                        Log.d(TAG, "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
                         mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
-                                            }
+                    }
 
                     screenshots.addView(cell);
 
@@ -272,9 +276,24 @@ public class DetailsActivity extends Activity {
                             .error(R.drawable.icon_non_available)
                             .into(imageView);
 
+
+
+
                 }
 
+                List<Comment> comments = ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments();
+                Log.d(TAG, "comments size: " + comments.size());
 
+                for(int i=0; i < comments.size(); i++) {
+                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
+                }
+                FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
+                if (comments.size() == 0) {
+                    commentsLayout.setVisibility(View.GONE);
+                    Log.d(TAG, getString(R.string.no_comments));
+                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
+                    noComments.setVisibility(View.VISIBLE);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -282,6 +301,20 @@ public class DetailsActivity extends Activity {
         }
 
 
+    }
+
+    public static class FillComments{
+
+        public static void fillComments(Activity activity, LinearLayout commentsContainer, List<Comment> comments) {
+            final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            View view;
+
+            commentsContainer.removeAllViews();
+            for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
+                view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
+                commentsContainer.addView(view);
+            }
+        }
     }
 
     public static class ScreenShotsListener implements View.OnClickListener {

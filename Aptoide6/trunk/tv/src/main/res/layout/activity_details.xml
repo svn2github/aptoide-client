@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="10dp" >
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="256dp"
@@ -36,13 +36,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp" >
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
 
             <TextView
 
@@ -99,25 +99,30 @@
                     android:layout_marginRight="10dp"
                     android:background="@android:color/darker_gray" />
 
-                <RatingBar
-                    android:id="@+id/rating_bar"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/app_ratings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
 
             </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:padding="20dp">
+                android:padding="20dp"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/screenshots"
@@ -156,13 +161,32 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
-                android:id="@+id/comments"
-                android:layout_width="match_parent"
+                android:id="@+id/layout_comments"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical">
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/commentContainer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical"/>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/no_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5.0dp"
+                android:text="@string/no_comments"
+                android:visibility="gone"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
     </ScrollView>

@@ -21,6 +21,21 @@
     <string name="description">Description</string>
     <string name="comments">Comments</string>
     <string name="install">Install</string>
+    <string name="version">Version</string>
+    <string name="no_comments">No comments yet. Be the first!</string>
+    <string name="votes">%s votes</string>
+    <string name="view_more_comments">View more %s comments</string>
+
+
+    <string name="WidgetProvider_timestamp_today">Today</string>
+    <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s hour ago</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s hours ago</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
+    <string name="WidgetProvider_timestamp_just_now">Just now</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
+    <string name="WidgetProvider_timestamp_this_week">This week</string>
 
     <string name="browse_title"><![CDATA[Videos by Google]]></string>
     <string name="related_movies">Related Movies</string>
@@ -34,7 +49,7 @@
     <string name="play_pause_description">Play Pause Button</string>
     <string name="loading">Loading&#8230;</string>
     <string name="no_video_found">No video was found</string>
-    <string name="version">Version: %1$s</string>
+
     <string name="popular_header">Popular Videos</string>
     <string name="more_samples">More Samples</string>
     <string name="grid_view">Grid View</string>
@@ -119,6 +134,8 @@
         wings, Maleficent has an idyllic life growing up in a peaceable forest kingdom, until one
         day when an invading army of humans threatens the harmony of the land.
     </string>
+    <string name="likes">Likes</string>
+    <string name="dislikes">Dislikes</string>
 
 
 </resources>

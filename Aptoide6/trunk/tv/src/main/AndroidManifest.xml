@@ -71,6 +71,9 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity android:name=".ScreenshotsViewer"
+            android:screenOrientation="landscape" />
+
         <activity android:name=".PlaybackOverlayActivity"
             android:exported="true" />
 
@@ -103,10 +106,6 @@
             android:name=".UpdateRecommendationsService"
             android:enabled="true" />
 
-        <activity
-            android:name="ScreenshotsViewer"
-            android:screenOrientation="landscape"
-            android:exported="true" />
 
     </application>
 

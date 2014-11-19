@@ -74,6 +74,13 @@ public class CardPresenter extends Presenter {
                 ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
             }
 
+        } else if(application.getCategory().equals("Search Results")){
+            if (!TextUtils.isEmpty(application.getImage())) {
+                ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
+                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.version) +": " + application.getVersion());
+                ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_width), ((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_height));
+                ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
+            }
         } else {
             if (!TextUtils.isEmpty(application.getImage())) {
                 ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
