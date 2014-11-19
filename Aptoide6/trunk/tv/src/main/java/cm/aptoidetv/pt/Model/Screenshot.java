@@ -14,8 +14,9 @@ public class Screenshot implements MediaObject {
     private String url;
     private String orient;
 
-    public Screenshot(String path){
+    public Screenshot(String path, String orient){
         this.url=path;
+        this.orient = orient;
     }
 
     public String getImageUrl() {

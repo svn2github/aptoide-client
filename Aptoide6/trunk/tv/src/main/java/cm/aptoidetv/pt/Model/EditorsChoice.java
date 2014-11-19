@@ -35,6 +35,11 @@ public class EditorsChoice implements Serializable, BindInterface {
     }
 
     @Override
+    public String getDownloads() {
+        return packagename.getDwn();
+    }
+
+    @Override
     public String getImage() {
         return featuregraphicpath +""+ packagename.featuregraphic;
     }

@@ -135,6 +135,11 @@ public class SearchJson {
             }
 
             @Override
+            public String getDownloads() {
+                return "";
+            }
+
+            @Override
             public String getImage() {
                 String imagepath;
                 if(!TextUtils.isEmpty(iconhd)){

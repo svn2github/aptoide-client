@@ -57,7 +57,7 @@ public class CardPresenter extends Presenter {
         int brandColorResourceId = typedArray.getResourceId(0, 0);
         typedArray.recycle();
 
-        cardView.setBackgroundColor(mContext.getResources().getColor(brandColorResourceId));
+        cardView.setBackgroundColor(mContext.getResources().getColor(R.color.overlay_black));
         return new ViewHolder(cardView);
     }
 
@@ -69,7 +69,7 @@ public class CardPresenter extends Presenter {
 
             if (!TextUtils.isEmpty(application.getImage())) {
                 ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
-                ((ViewHolder) viewHolder).mCardView.setContentText("Version: "+application.getVersion());
+                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.downloads) +": "+application.getDownloads());
                 ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.card_presenter_width),((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.card_presenter_height));
                 ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
             }
@@ -77,7 +77,7 @@ public class CardPresenter extends Presenter {
         } else {
             if (!TextUtils.isEmpty(application.getImage())) {
                 ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
-                ((ViewHolder) viewHolder).mCardView.setContentText("Version: " + application.getVersion());
+                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.downloads) +": " + application.getDownloads());
                 ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_width), ((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_height));
                 ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
             }

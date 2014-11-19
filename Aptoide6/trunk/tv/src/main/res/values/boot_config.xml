@@ -4,7 +4,6 @@
     <!--Store Config-->
     <string name="theme">default</string>
     <string name="avatar">https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</string>
-    <string name="description"></string>
     <string name="view">list</string>
     <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
 

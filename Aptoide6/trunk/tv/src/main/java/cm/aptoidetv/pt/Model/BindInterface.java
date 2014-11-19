@@ -9,6 +9,7 @@ public interface BindInterface {
 
     public String getName();
     public String getVersion();
+    public String getDownloads();
     public String getImage();
     public String getCategory();
     public void startActivity(Context context);

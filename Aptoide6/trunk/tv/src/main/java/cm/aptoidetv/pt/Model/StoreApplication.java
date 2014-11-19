@@ -128,6 +128,11 @@ public class StoreApplication implements Serializable {
         }
 
         @Override
+        public String getDownloads() {
+            return dwn;
+        }
+
+        @Override
         public String getImage() {
             String imagepath;
             if(!TextUtils.isEmpty(icon_hd)){

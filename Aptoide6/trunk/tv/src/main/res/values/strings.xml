@@ -17,6 +17,11 @@
 
 <resources>
     <string name="app_name">@string/marketname</string>
+    <string name="downloads">Downloads</string>
+    <string name="description">Description</string>
+    <string name="comments">Comments</string>
+    <string name="install">Install</string>
+
     <string name="browse_title"><![CDATA[Videos by Google]]></string>
     <string name="related_movies">Related Movies</string>
     <string name="vertical_grid_title"><![CDATA[Vertical Video Grid]]></string>
@@ -114,5 +119,6 @@
         wings, Maleficent has an idyllic life growing up in a peaceable forest kingdom, until one
         day when an invading army of humans threatens the harmony of the land.
     </string>
+
 
 </resources>

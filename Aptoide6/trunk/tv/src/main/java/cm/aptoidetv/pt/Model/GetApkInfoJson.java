@@ -108,33 +108,33 @@ public class GetApkInfoJson {
 
             if (getSshots_hd() != null) {
                 for (GetApkInfoJson.Media.Screenshots screenshot : getSshots_hd()) {
-                    imagesPath.add(new Screenshot(screenshot.getPath()));
+
+                    imagesPath.add(new Screenshot(screenshot.getPath(), screenshot.getOrient()));
                 }
             } else if (getSshots() != null) {
                 for (String screenshot : getSshots()) {
-                    imagesPath.add(new Screenshot(screenshot));
+                    imagesPath.add(new Screenshot(screenshot, ""));
                 }
             }
 
             return imagesPath;
         }
 
-//        public List<Screenshot> getScreenshots() {
-//            List<Screenshot> screenshots = new ArrayList<Screenshot>();
-//
-//            if (getSshots_hd() != null) {
-//                for (GetApkInfoJson.Media.Screenshots screenshot : getSshots_hd()) {
-//                    screenshots.add(new Screenshot(screenshot.getPath()));
-//                }
-//            } else if (getSshots() != null) {
-//                for (String screenshot : getSshots()) {
-//
-//                    screenshots.add(new Screenshot(screenshot));
-//                }
-//            }
-//
-//            return screenshots;
-//        }
+        public List<String> getScreenshots() {
+
+            if (getSshots_hd() != null) {
+
+                ArrayList<String> screenshotsPath = new ArrayList<String>();
+
+                for (GetApkInfoJson.Media.Screenshots screenshot : getSshots_hd()) {
+                    screenshotsPath.add(screenshot.getOrient() + "|" + screenshot.getPath());
+                }
+
+                return screenshotsPath;
+            } else {
+                return getSshots();
+            }
+        }
 
         public static class Videos{
             @Key
@@ -185,6 +185,11 @@ public class GetApkInfoJson {
 
             @Override
             public String getVersion() {
+                return "";
+            }
+
+            @Override
+            public String getDownloads() {
                 return "";
             }
 

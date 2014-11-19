@@ -28,6 +28,8 @@ import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +45,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Data;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -141,7 +144,7 @@ public class DetailsActivity extends Activity {
 //                Log.d(TAG, json.getApk().getVername());
 //                Log.d(TAG, json.getMeta().getDownloads()+"");
 //                Log.d(TAG, json.getMeta().getLikevotes().getLikes()+""+json.getMeta().getLikevotes().getDislikes());
-                Log.d(TAG, json.getMeta().getDescription());
+//                Log.d(TAG, json.getMeta().getDescription());
 
 
                 try {
@@ -166,8 +169,20 @@ public class DetailsActivity extends Activity {
 
             try {
 
+
+
+                boolean iconHdExistes = !Data.isNull(((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
+
+                String iconPath;
+
+                if(iconHdExistes){
+                    iconPath = ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd();
+                }else{
+                    iconPath = ((GetApkInfoJson) detailRow.getItem()).getApk().getIcon();
+                }
+
                 Picasso.with(DetailsActivity.this)
-                        .load(((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd())
+                        .load(iconPath)
                         .error(R.drawable.icon_non_available)
                         .into(app_icon);
 //                Log.d(TAG, "Loading icon " + ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
@@ -208,7 +223,9 @@ public class DetailsActivity extends Activity {
                 app_downloads.setText("Downloads: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getDownloads());
                 rating_bar.setRating(((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getRating().floatValue());
                 app_ratings.setText("Likes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getLikes() + " Dislikes: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getLikevotes().getDislikes());
-                app_description.setText(((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription());
+                String description = ((GetApkInfoJson) detailRow.getItem()).getMeta().getDescription();
+                app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
+
                 screenshots.removeAllViews();
 
                 View cell;
@@ -222,6 +239,8 @@ public class DetailsActivity extends Activity {
                 int screenshotIndexToAdd = 0;
 
                 for (int i = 0; i != mediaObjects.size(); i++) {
+                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
+
                     cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
                     final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
                     final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
@@ -240,37 +259,18 @@ public class DetailsActivity extends Activity {
 
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
-
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
                         Log.d(TAG, "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getSshots()), i - screenshotIndexToAdd));
-                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getSshots()), i - screenshotIndexToAdd));
-                    }
+                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(((GetApkInfoJson) detailRow.getItem()).getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                                            }
 
                     screenshots.addView(cell);
-//                    ImageLoader.getInstance().displayImage(imagePath, imageView, options, new SimpleImageLoadingListener() {
-//
-//                        @Override
-//                        public void onLoadingStarted(String uri, View v) {
-//                            progress.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onLoadingFailed(String uri, View v, FailReason failReason) {
-//                            imageView.setImageResource(android.R.drawable.ic_delete);
-//                            progress.setVisibility(View.GONE);
-//                            //Log.d("onLoadingFailed", "Failed to load screenshot " + failReason.getCause());
-//                        }
-//
-//                        @Override
-//                        public void onLoadingComplete(String uri, View v, Bitmap loadedImage) {
-//                            progress.setVisibility(View.GONE);
-//                        }
-//
-//                        @Override
-//                        public void onLoadingCancelled(String uri, View v) {
-//                        }
-//                    });
+
+                    Picasso.with(DetailsActivity.this)
+                            .load(imagePath)
+                            .error(R.drawable.icon_non_available)
+                            .into(imageView);
 
                 }
 

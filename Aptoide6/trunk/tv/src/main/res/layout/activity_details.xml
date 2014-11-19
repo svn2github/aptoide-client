@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="10dp" >
 
     <LinearLayout
         android:layout_width="256dp"
@@ -21,65 +22,58 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Download"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:text="@string/install" />
 
         <ProgressBar
             android:id="@+id/downloading_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_margin="20dp">
 
-            <RelativeLayout
+            <TextView
+
+                android:id="@+id/app_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <TextView
-
-                    android:id="@+id/app_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/app_developer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_below="@+id/app_name" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
                     android:id="@+id/view_separator"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/app_developer"
-                    android:layout_alignTop="@+id/app_developer"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_toEndOf="@+id/app_developer"
                     android:background="@android:color/darker_gray" />
 
                 <TextView
                     android:id="@+id/app_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/view_separator"
-                    android:layout_toEndOf="@+id/view_separator"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -87,75 +81,61 @@
                     android:id="@+id/view_separator2"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/app_version"
-                    android:layout_alignTop="@+id/app_version"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_toEndOf="@+id/app_version"
                     android:background="@android:color/darker_gray" />
 
                 <TextView
                     android:id="@+id/app_downloads"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/view_separator2"
-                    android:layout_toEndOf="@+id/view_separator2"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
                     android:id="@+id/view_separator3"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/app_downloads"
-                    android:layout_alignTop="@+id/app_downloads"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_toEndOf="@+id/app_downloads"
                     android:background="@android:color/darker_gray" />
 
                 <RatingBar
                     android:id="@+id/rating_bar"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/view_separator3"
-                    android:layout_toEndOf="@+id/view_separator3" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/app_ratings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignBottom="@+id/app_downloads"
-                    android:layout_alignTop="@+id/app_downloads"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toEndOf="@+id/rating_bar"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
-
-            <TextView
-                android:id="@+id/screenshots_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Screenshots"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <LinearLayout android:id="@+id/screenshots"
+            <HorizontalScrollView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal"/>
+                android:scrollbars="none"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:id="@+id/screenshots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+
+            </HorizontalScrollView>
+
 
             <TextView
                 android:id="@+id/description_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Description"
+                android:layout_marginTop="10dp"
+                android:text="@string/description"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
@@ -163,6 +143,8 @@
                 android:id="@+id/app_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:autoLink="all"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
@@ -170,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Comments"
+                android:text="@string/comments"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
