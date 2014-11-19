@@ -54,6 +54,7 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -139,7 +140,6 @@ public class Start extends ActionBarActivity implements
         PullToRefreshCallback,
         GetStartActivityCallback {
 
-    private static final String TAG = "Start";
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
     private Class settingsClass = Aptoide.getConfiguration().getSettingsActivityClass();
 
@@ -155,7 +155,7 @@ public class Start extends ActionBarActivity implements
     private HashMap<String, Long> storesIds;
     private int checkServerCacheString;
     private boolean isResumed;
-    private boolean matureCheck;
+
 
     private boolean rabbitMqConnBound;
     RabbitMqService rabbitMqService;
@@ -208,7 +208,7 @@ public class Start extends ActionBarActivity implements
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
+            service = ((ParserService.MainServiceBinder) binder).getService();
             //Log.d("Aptoide-Start", "onServiceConnected");
             parserServiceIsBound = true;
 
@@ -314,7 +314,7 @@ public class Start extends ActionBarActivity implements
     public void onRepoErrorEvent(RepoErrorEvent event) {
 
         Exception e = event.getE();
-        long repoId = event.getRepoId();
+        //long repoId = event.getRepoId();
 
         if (e instanceof InvalidVersionException) {
             if (isResumed)
@@ -325,7 +325,7 @@ public class Start extends ActionBarActivity implements
 
     @Subscribe
     public void onRepoComplete(RepoCompleteEvent event) {
-        long repoId = event.getRepoId();
+        //long repoId = event.getRepoId();
         //Toast.makeText(getApplicationContext(), "Parse " + repoId + " Completed", Toast.LENGTH_LONG).show();
     }
 
@@ -487,7 +487,7 @@ public class Start extends ActionBarActivity implements
         mContext = this;
         setContentView(R.layout.activity_main);
 
-        matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+        //matureCheck = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
         pager = (ViewPager) findViewById(R.id.pager);
 
@@ -512,7 +512,10 @@ public class Start extends ActionBarActivity implements
 
         if (savedInstanceState == null) {
             sponsoredCache = UUID.randomUUID().toString();
-
+            Map<String, String> installParams = new HashMap<String, String>();
+            installParams.put("isGooglePlayServicesAvailable",
+                    String.valueOf(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0));
+            FlurryAgent.logEvent("Added_Store_From_My_App_Installation",installParams);
             File sdcard_file = new File(Environment.getExternalStorageDirectory().getPath());
             if (!sdcard_file.exists() || !sdcard_file.canWrite()) {
                 getNoSpaceDialog();
@@ -1278,7 +1281,7 @@ public class Start extends ActionBarActivity implements
     @Override
     public void matureUnlock() {
         //Log.d("Mature","Unlocked");
-        matureCheck = true;
+        //matureCheck = true;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
         FlurryAgent.logEvent("Unlocked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));
@@ -1286,7 +1289,7 @@ public class Start extends ActionBarActivity implements
 
     public void matureLock() {
         //Log.d("Mature","locked");
-        matureCheck = false;
+        //matureCheck = false;
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
         FlurryAgent.logEvent("Locked_Mature_Content");
         BusProvider.getInstance().post(new RepoCompleteEvent(-1));

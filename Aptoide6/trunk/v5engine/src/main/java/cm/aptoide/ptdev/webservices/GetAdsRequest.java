@@ -69,6 +69,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("location","native-aptoide:" + location);
         parameters.put("type", "1-3");
+        parameters.put("flag", "gms");
         parameters.put("keywords", keyword);
 
         String oemid = Aptoide.getConfiguration().getExtraId();
