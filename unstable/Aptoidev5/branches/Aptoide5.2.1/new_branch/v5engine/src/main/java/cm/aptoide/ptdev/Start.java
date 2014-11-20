@@ -714,41 +714,7 @@ public class Start extends ActionBarActivity implements
 
             updateBadge(PreferenceManager.getDefaultSharedPreferences(this));
             updateNewFeature(PreferenceManager.getDefaultSharedPreferences(this));
-            if(sharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)){
-
-                executorService.execute(new Runnable() {
-
-
-                    @Override
-                    public void run() {
-                        try {
-
-                            TimelineActivityJson json = TimelineCheckRequestSync.getRequest("new_installs");
-
-                            int total = 0;
-
-                            total += getFriendsTotal(json.getNew_installs().getTotal());
-
-                            final int finalTotal = total;
-                            if (total > 0) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        badgeNew.setText(String.valueOf(finalTotal));
-                                        badgeNew.setTextSize(11);
-                                        badgeNew.setBadgeBackgroundColor(Color.RED);
-                                        badgeNew.show();
-                                    }
-                                });
-
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
+            updateTimelinePostsBadge(sharedPreferences);
         } else {
             sponsoredCache = savedInstanceState.getString("sponsoredCache");
         }
@@ -786,6 +752,44 @@ public class Start extends ActionBarActivity implements
 
     }
 
+    public void updateTimelinePostsBadge(SharedPreferences sharedPreferences) {
+        if(sharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)){
+
+            executorService.execute(new Runnable() {
+
+
+                @Override
+                public void run() {
+                    try {
+
+                        TimelineActivityJson json = TimelineCheckRequestSync.getRequest("new_installs");
+
+                        int total = 0;
+
+                        total += getFriendsTotal(json.getNew_installs().getTotal());
+
+                        final int finalTotal = total;
+                        if (total > 0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    badgeNew.setText(String.valueOf(finalTotal));
+                                    badgeNew.setTextSize(11);
+                                    badgeNew.setBadgeBackgroundColor(Color.RED);
+                                    badgeNew.show();
+                                }
+                            });
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
     public int getFriendsTotal(Number number){
         try{
             return number.intValue();
@@ -806,7 +810,7 @@ public class Start extends ActionBarActivity implements
         if (!Build.DEVICE.equals("alien_jolla_bionic")) {
             message = "" + getText(R.string.remote_in_noSDspace);
         } else {
-            message = "" + getText(R.string.remote_in_noSD_jolla);
+            message = "" + getText(R.string.remote_in_noSDspace);
         }
         noSpaceDialog.setMessage(message);
         FlurryAgent.logEvent("Dont_Have_Enough_Space_On_SDCARD");
