@@ -71,11 +71,12 @@ public class DetailsActivity extends Activity {
     public static final String VERCODE = "vercode";
     public static final String MD5_SUM = "md5sum";
     public static final String APP_ICON = "icon";
+    public static final String APP_SIZE = "size";
     private static final String TAG = "DetailsActivity";
     public static final String MOVIE = "";
     public static final String SHARED_ELEMENT_NAME = "";
 
-    private String packageName, featuredGraphic, appName, downloads, vercode, md5sum, icon;
+    private String packageName, featuredGraphic, appName, downloads, vercode, md5sum, icon, size;
 
     private ImageView app_icon;
     private Button download;
@@ -85,8 +86,10 @@ public class DetailsActivity extends Activity {
     private TextView app_downloads;
     private RatingBar rating_bar;
     private TextView app_ratings;
+    private TextView app_size;
     private TextView app_description;
     private ProgressBar downloading_progress;
+    private TextView downloading_info;
     private LinearLayout screenshots;
     private LinearLayout commentsContainer;
     private TextView comments_label;
@@ -112,7 +115,7 @@ public class DetailsActivity extends Activity {
         vercode = getIntent().getStringExtra(VERCODE);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
-
+        size = getIntent().getStringExtra(APP_SIZE);
 
         app_view_icon_layout = findViewById(R.id.app_view_icon_layout);
         app_view_details_layout = findViewById(R.id.app_view_details_layout);
@@ -126,6 +129,7 @@ public class DetailsActivity extends Activity {
         app_downloads = (TextView) findViewById(R.id.app_downloads);
         rating_bar = (RatingBar) findViewById(R.id.rating_bar);
         app_ratings = (TextView) findViewById(R.id.app_ratings);
+        app_size = (TextView) findViewById(R.id.app_size);
         app_description = (TextView) findViewById(R.id.app_description);
         screenshots = (LinearLayout) findViewById(R.id.screenshots);
         comments_label = (TextView) findViewById(R.id.comments_label);
@@ -145,7 +149,7 @@ public class DetailsActivity extends Activity {
             DetailsOverviewRow row = null;
 
             try {
-                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/+"+getString(R.string.defaultstorename)+"/md5sum:" + application[0] + "/json");
+                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/"+getString(R.string.defaultstorename)+"/md5sum:" + application[0] + "/json");
 
                 Log.d(TAG, url.toString());
                 HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
@@ -210,11 +214,14 @@ public class DetailsActivity extends Activity {
 
                 addDownloadButtonListener(apkInfoJson);
 
+                int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
+
                 app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
                 app_downloads.setText(getString(R.string.downloads)+": " + apkInfoJson.getMeta().getDownloads());
                 rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText(getString(R.string.likes)+": " + apkInfoJson.getMeta().getLikevotes().getLikes() +" "+ getString(R.string.dislikes)+": " + apkInfoJson.getMeta().getLikevotes().getDislikes());
+                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
+                app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
                 String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
 
@@ -405,12 +412,15 @@ public class DetailsActivity extends Activity {
         protected void onPreExecute() {
             downloading_progress = (ProgressBar) findViewById(R.id.downloading_progress);
             downloading_progress.setVisibility(View.VISIBLE);
+            downloading_info = (TextView) findViewById(R.id.downloading_info);
+            downloading_info.setVisibility(View.VISIBLE);
             download.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             downloading_progress.setVisibility(View.GONE);
+            downloading_info.setVisibility(View.GONE);
             download.setVisibility(View.VISIBLE);
         }
 
@@ -418,6 +428,7 @@ public class DetailsActivity extends Activity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             downloading_progress.setProgress(values[0]);
+            downloading_info.setText(values[0]+"%");
         }
 
         @Override

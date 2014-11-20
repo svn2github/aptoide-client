@@ -27,6 +27,11 @@
     <string name="update_self_title">Update available</string>
     <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
     <string name="retrieving_update">Retrieving update...</string>
+    <string name="likes">Likes</string>
+    <string name="dislikes">Dislikes</string>
+    <string name="open">Open</string>
+    <string name="size">Size</string>
+    <string name="ratings">Ratings</string>
 
     <string name="WidgetProvider_timestamp_today">Today</string>
     <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
@@ -135,8 +140,5 @@
         wings, Maleficent has an idyllic life growing up in a peaceable forest kingdom, until one
         day when an invading army of humans threatens the harmony of the land.
     </string>
-    <string name="likes">Likes</string>
-    <string name="dislikes">Dislikes</string>
 
-    <string name="open">Open</string>
 </resources>

@@ -9,7 +9,6 @@ import com.google.api.client.util.Key;
 import java.util.List;
 
 import cm.aptoidetv.pt.DetailsActivity;
-import cm.aptoidetv.pt.DetailsFragmentAppView;
 
 /**
  * Created by rmateus on 08-07-2014.

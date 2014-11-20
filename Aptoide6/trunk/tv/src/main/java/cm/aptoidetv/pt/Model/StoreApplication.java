@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import cm.aptoidetv.pt.DetailsActivity;
-import cm.aptoidetv.pt.DetailsFragmentAppView;
 
 public class StoreApplication implements Serializable {
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
-    android:gravity="center"
+    android:gravity="center|top"
     android:orientation="horizontal"
     android:padding="10dp">
 
@@ -35,6 +35,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/downloading_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ScrollView
@@ -43,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/app_view_icon_layout"
         android:padding="10dp"
-        android:scrollbars="none"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,13 +70,17 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/app_developer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Multimedia Player"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -80,8 +93,12 @@
 
                 <TextView
                     android:id="@+id/app_version"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Version: 1.4.7.2"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -95,8 +112,12 @@
 
                 <TextView
                     android:id="@+id/app_downloads"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Downloads: 0"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -107,23 +128,45 @@
                     android:layout_marginRight="10dp"
                     android:background="@android:color/darker_gray" />
 
-
                 <TextView
-                    android:id="@+id/app_ratings"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/app_size"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Size: 9.8 MB"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <View
+                    android:id="@+id/view_separator4"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:background="@android:color/darker_gray" />
 
                 <RatingBar
                     android:id="@+id/rating_bar"
                     style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center" />
 
+                <TextView
+                    android:id="@+id/app_ratings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="(0 ratings)"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
             <HorizontalScrollView

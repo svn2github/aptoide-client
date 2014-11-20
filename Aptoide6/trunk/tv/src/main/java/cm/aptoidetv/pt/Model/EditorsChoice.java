@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import java.io.Serializable;
 
 import cm.aptoidetv.pt.DetailsActivity;
-import cm.aptoidetv.pt.DetailsFragmentAppView;
 
 public class EditorsChoice implements Serializable, BindInterface {
 
@@ -58,6 +57,7 @@ public class EditorsChoice implements Serializable, BindInterface {
         intent.putExtra(DetailsActivity.DOWNLOAD_URL, apkpath+getPackagename().getPath());
         intent.putExtra(DetailsActivity.VERCODE, getPackagename().getVercode());
         intent.putExtra(DetailsActivity.MD5_SUM, getPackagename().getMd5h());
+        intent.putExtra(DetailsActivity.APP_SIZE, getPackagename().getSz());
 
         context.startActivity(intent);
 
