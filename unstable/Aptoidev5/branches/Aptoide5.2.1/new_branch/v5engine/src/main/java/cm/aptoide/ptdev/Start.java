@@ -54,8 +54,11 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.nexage.android.internal.GooglePlayServiceManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -536,6 +539,15 @@ public class Start extends ActionBarActivity implements
                     getNoSpaceDialog();
                 }
             }
+
+
+            try{
+                HashMap<String, String> map = new HashMap<String, String>();
+                boolean hasPlay = GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext()) == 0;
+                map.put("has_gms", String.valueOf(hasPlay));
+                FlurryAgent.logEvent("GOOGLE_PLAY_PRESENCE", map);
+            }catch (Exception ignored){}
+
 
 
             if (getIntent().hasExtra("newrepo") && getIntent().getFlags() == 12345) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
@@ -80,9 +81,9 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         parameters.put("limit", String.valueOf(limit));
 
-        parameters.put("get_mature", mature);
+        parameters.put("get_mature", mature);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 
-        parameters.put("partners", "1-4");
+        parameters.put("partners", "5");
 
 
         parameters.put("app_pkg", package_name);
@@ -92,6 +93,10 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
 
         if(Aptoide.DEBUG_MODE){
             parameters.put("country", AptoideUtils.getSharedPreferences().getString("forcecountry", null));
+        }
+
+        if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0) {
+            parameters.put("flag", "gms");
         }
 
         GenericUrl url = new GenericUrl(this.url);

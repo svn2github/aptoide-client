@@ -42,6 +42,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -171,6 +173,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private boolean isPaidApp;
     private boolean isPaidToschedule;
     private String referrer;
+    private WebView webview;
 
 
     public GetApkInfoJson.Malware.Reason getReason() {
@@ -1051,6 +1054,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     protected void onDestroy() {
         if (service != null) unbindService(downloadConnection);
         destroyPublicity();
+
+        if(webview!=null){
+            webview.removeAllViews();
+            webview.destroy();
+        }
+
         super.onDestroy();
     }
 
@@ -1118,6 +1127,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         outState.putString("packageName", package_name);
         outState.putInt("downloadId", downloadId);
         outState.putInt("downloads", downloads);
+        outState.putString("referrer", referrer);
 
     }
 
@@ -1194,6 +1204,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         if (savedInstanceState != null) {
             package_name = savedInstanceState.getString("packageName");
+            referrer = savedInstanceState.getString("referrer");
             downloadId = savedInstanceState.getInt("downloadId");
             cacheKey = savedInstanceState.getString("cacheKey");
             downloads = savedInstanceState.getInt("downloads");
@@ -1292,47 +1303,30 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 String partnerType = getIntent().getBundleExtra("partnerExtra").getString("partnerType");
 
                                 clickUrl = AptoideAdNetworks.parseString(partnerType, Aptoide.getContext(), clickUrl);
-                                HttpResponse response;
-                                boolean repeat;
-                                do  {
-                                    repeat = false;
-                                    GenericUrl url = new GenericUrl(clickUrl);
-                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
 
-                                    try{
-                                        response = httpRequest.execute();
+                                final String url = clickUrl;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        webview = new WebView(AppViewActivity.this);
+                                        webview.getSettings().setJavaScriptEnabled(true);
+                                        webview.setWebViewClient(new WebViewClient() {
+                                            @Override
+                                            public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
 
-                                    } catch (HttpResponseException exception){
-
-                                        if(exception.getStatusCode() / 100 == 3 ) {
-                                            repeat = true;
-                                            final String location = exception.getHeaders().getLocation();
-                                            Log.d("CENAAS", "Response was: " + exception.getStatusCode());
-
-                                            if (!TextUtils.isEmpty(location)) {
-                                                clickUrl = location;
-                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com"))) {
+                                                if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com")) {
                                                     referrer = getReferrer(clickUrl);
+                                                } else {
+                                                    view.loadUrl(clickUrl);
                                                 }
-                                            } else {
-                                                Log.d("CENAAS", "Cenas was epmty");
+
+
+                                                return true;
                                             }
-                                        }else if(exception.getStatusCode() == HttpStatusCodes.STATUS_CODE_OK && exception.getHeaders().containsKey("Refresh")){
-
-                                            String refresh = exception.getHeaders().getFirstHeaderStringValue("Refresh");
-
-                                            if(refresh.contains("url=")){
-                                                clickUrl = refresh.split("=")[1];
-                                            }
-
-                                        }
-
+                                        });
+                                        webview.loadUrl(url);
                                     }
-
-
-
-                                } while ( repeat );
-
+                                });
 
                             } catch (Exception e) {
                                 e.printStackTrace();
