@@ -17,11 +17,11 @@
 
 <resources>
     <string name="app_name">@string/marketname</string>
-    <string name="downloads">Downloads</string>
+    <string name="downloads">Down.</string>
     <string name="description">Description</string>
     <string name="comments">Comments</string>
     <string name="install">Install</string>
-    <string name="version">Version</string>
+    <string name="version">Ver.</string>
     <string name="votes">%s votes</string>
     <string name="view_more_comments">View more %s comments</string>
     <string name="update_self_title">Update available</string>

@@ -86,10 +86,11 @@
                 <View
                     android:id="@+id/view_separator"
                     android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray"
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/app_version"
@@ -105,10 +106,11 @@
                 <View
                     android:id="@+id/view_separator2"
                     android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray"
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/app_downloads"
@@ -123,10 +125,11 @@
                 <View
                     android:id="@+id/view_separator3"
                     android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray"
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/app_size"
@@ -141,10 +144,11 @@
                 <View
                     android:id="@+id/view_separator4"
                     android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray"
+                    android:layout_gravity="center_vertical" />
 
                 <RatingBar
                     android:id="@+id/rating_bar"
