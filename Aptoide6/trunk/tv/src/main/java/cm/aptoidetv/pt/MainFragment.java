@@ -268,10 +268,6 @@ public class MainFragment extends BrowseFragment implements
         mBackgroundTimer.schedule(new UpdateBackgroundTask(), BACKGROUND_UPDATE_DELAY);
     }
 
-    private void updateRecommendations() {
-        Intent recommendationIntent = new Intent(getActivity(), UpdateRecommendationsService.class);
-        getActivity().startService(recommendationIntent);
-    }
 
     private class UpdateBackgroundTask extends TimerTask {
 

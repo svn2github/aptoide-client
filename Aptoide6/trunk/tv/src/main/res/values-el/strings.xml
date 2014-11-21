@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Σήμερα</string>
+  <string name="WidgetProvider_timestamp_yesterday">Εχθές</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s ώρα πρίν</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s ώρες πριν</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s λεπτά πρίν</string>
+  <string name="WidgetProvider_timestamp_just_now">Μόλις τώρα</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s εβδομάδες πριν</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s εβδομάδα πριν</string>
+  <string name="WidgetProvider_timestamp_this_week">Αυτή την εβδομάδα</string>
+
+  <string name="like">Μου αρέσει</string>
+  <string name="dont_like">Δεν μου αρέσει</string>
+  <string name="comments">Σχόλια</string>
+
+  <string name="description">Περιγραφή</string>
+
+  <string name="downloads">Λήψεις</string>
+  <string name="size">Μέγεθος</string>
+  <string name="likes">Μου αρέσει</string>
+  <string name="dont_likes">Δεν μου αρέσει</string>
+
+  <string name="open">Άνοιγμα</string>
+
+  <string name="update_self_title">Ενημέρωση διαθέσιμη</string>
+  <string name="update_self_msg">Υπάρχει νέα έκδοση της %s διαθέσιμη\nΘέλετε να ενημερώσετε?</string>
+  <string name="retrieving_update">Ανάκτηση ενημέρωσης...</string>
+
+  <string name="vote">%s ψήφος</string>
+  <string name="votes">%s ψήφοι</string>
+
+</resources>

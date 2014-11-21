@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Vandaag</string>
+  <string name="WidgetProvider_timestamp_yesterday">Gisteren</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s uur geleden</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s uren geleden</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s minuten geleden</string>
+  <string name="WidgetProvider_timestamp_just_now">Alleen nu</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s weken geleden</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s weken geleden</string>
+  <string name="WidgetProvider_timestamp_this_week">Deze week</string>
+
+  <string name="comments">Reacties</string>
+
+  <string name="description">Beschrijving</string>
+
+  <string name="install">Installeren</string>
+
+  <string name="downloads">Gedownload</string>
+  <string name="size">Grootte</string>
+  <string name="likes">Leuk</string>
+  <string name="dont_likes">Niet leuk</string>
+
+  <string name="open">Open</string>
+
+  <string name="update_self_title">Update beschikbaar</string>
+  <string name="update_self_msg">Er is een nieuwe versie van %s beschikbaar,\nWil je updaten?</string>
+  <string name="retrieving_update">Ontvangt update...</string>
+
+</resources>

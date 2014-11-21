@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Tänään</string>
+  <string name="WidgetProvider_timestamp_yesterday">Eilen</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s tunti sitten</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s tuntia sitten</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s minuuttia sitten</string>
+  <string name="WidgetProvider_timestamp_just_now">Juuri nyt</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s viikkoa sitten</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s viikko sitten</string>
+  <string name="WidgetProvider_timestamp_this_week">Tällä viikolla</string>
+
+  <string name="screenshots">Kuvaruutukopiot</string>
+  <string name="like">Tykkää</string>
+  <string name="dont_like">Älä tykkää</string>
+  <string name="comments">Kommentit</string>
+
+  <string name="downloads">Lataukset</string>
+  <string name="size">Koko</string>
+  <string name="likes">Tykkäykset</string>
+  <string name="dont_likes">Ei-tykkäykset</string>
+  <string name="open">Avaa</string>
+  <string name="update_self_title">Päivitys saatavissa</string>
+  <string name="update_self_msg">Uusi versio sovelluksesta %s löydetty\nHaluaisitko päivittää?</string>
+  <string name="retrieving_update">Noudetaan päivitystä...</string>
+  <string name="vote">%s ääni</string>
+  <string name="votes">%s ääntä</string>
+
+</resources>

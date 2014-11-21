@@ -23,6 +23,8 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.List;
 
+import cm.aptoidetv.pt.Model.StoreApplication;
+
 /*
  * This class asynchronously loads videos from a backend
  */

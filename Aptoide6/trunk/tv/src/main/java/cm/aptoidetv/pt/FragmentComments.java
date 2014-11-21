@@ -88,7 +88,7 @@ public class FragmentComments extends ListFragment {
 
     private static void fillViewSubcommentsFields(Activity activity, View view, final Comment comment, SimpleDateFormat dateFormater) {
         final LinearLayout subcommentsContainer = ((LinearLayout) view.findViewById(R.id.subcomments));
-        final TextView viewComments = (TextView) view.findViewById(R.id.hasComments);
+//        final TextView viewComments = (TextView) view.findViewById(R.id.hasComments);
 
         for (Comment subComment : comment.getSubComments()) {
             View subview = LayoutInflater.from(activity).inflate(R.layout.row_subcomment, subcommentsContainer, false);
@@ -96,9 +96,9 @@ public class FragmentComments extends ListFragment {
             subcommentsContainer.addView(subview);
         }
 
-        viewComments.setText(activity.getString(R.string.view_more_comments, comment.getSubComments().size()));
-        viewComments.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
-        view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
+//        viewComments.setText(activity.getString(R.string.view_more_comments, comment.getSubComments().size()));
+//        viewComments.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
+//        view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
     }
 
     private static View.OnClickListener getMoreCommentsListener(final Comment comment, final LinearLayout subcommentsContainer, final TextView viewComments) {

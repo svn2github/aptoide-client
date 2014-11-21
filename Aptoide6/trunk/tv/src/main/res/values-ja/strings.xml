@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">今日</string>
+  <string name="WidgetProvider_timestamp_yesterday">昨日</string>
+  <string name="WidgetProvider_timestamp_hour_ago">" %s　時間前"</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s　時間前</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s　分前</string>
+  <string name="WidgetProvider_timestamp_just_now">たった今</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s 週間前</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s 週間前</string>
+  <string name="WidgetProvider_timestamp_this_week">今週</string>
+
+  <string name="like">好き</string>
+  <string name="dont_like">好きじゃない</string>
+  <string name="comments">コメント</string>
+
+  <string name="install">インストールする</string>
+
+  <string name="downloads">ダウンロード</string>
+  <string name="size">サイズ</string>
+  <string name="likes">いいね。</string>
+  <string name="dont_likes">良くないね。</string>
+
+  <string name="open">開く</string>
+
+  <string name="update_self_title">更新がご利用できます。</string>
+  <string name="update_self_msg">%s の新しいバージョンがご利用になれます。更新しますか？</string>
+  <string name="retrieving_update">更新を取得中・・・</string>
+
+</resources>

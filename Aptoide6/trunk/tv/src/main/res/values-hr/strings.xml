@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">Danas</string>
+    <string name="WidgetProvider_timestamp_yesterday">Jučer</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s sati prije</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s sati prije</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minuta prije</string>
+    <string name="WidgetProvider_timestamp_just_now">Upravo</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s tjedana prije</string>
+    <string name="WidgetProvider_timestamp_week_ago">prije %s tjedan</string>
+    <string name="WidgetProvider_timestamp_this_week">Ovaj tjedan</string>
+
+    <string name="comments">Komentari</string>
+
+    <string name="description">Opis</string>
+
+    <string name="downloads">Preuzimanja</string>
+    <string name="size">Veličina</string>
+    <string name="likes">Sviđa se</string>
+    <string name="dont_likes">Nesviđa se</string>
+
+    <string name="open">Otvori</string>
+
+
+    <string name="update_self_title">Ažuriranje dostupno</string>
+    <string name="update_self_msg">Dostupna je nova verzija %s, želite li ju ažurirati?</string>
+    <string name="retrieving_update">Dohvaćanje ažuriranja...</string>
+
+    <string name="vote">%s glas</string>
+    <string name="votes">%s glasova</string>
+
+</resources>

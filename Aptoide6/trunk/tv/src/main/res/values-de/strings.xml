@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Heute</string>
+  <string name="WidgetProvider_timestamp_yesterday">Gestern</string>
+  <string name="WidgetProvider_timestamp_hour_ago">vor %s Stunde</string>
+  <string name="WidgetProvider_timestamp_hours_ago">vor %s Stunden</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">vor %s Minuten</string>
+  <string name="WidgetProvider_timestamp_just_now">Soeben</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">vor %s Wochen</string>
+  <string name="WidgetProvider_timestamp_week_ago">vor %s Woche</string>
+  <string name="WidgetProvider_timestamp_this_week">Diese Woche</string>
+
+  <string name="like">Gefällt mir</string>
+  <string name="dont_like">Gefällt mir nicht</string>
+  <string name="comments">Kommentare</string>
+
+  <string name="description">Beschreibung</string>
+
+  <string name="install">Installieren</string>
+
+  <string name="downloads">Heruntergeladen</string>
+  <string name="size">Größe</string>
+  <string name="likes">Likes</string>
+  <string name="dont_likes">Gefällt nicht</string>
+
+  <string name="open">Öffnen</string>
+
+  <string name="update_self_title">Update verfügbar</string>
+  <string name="update_self_msg">Es gibt eine neue Version von %s,\nmöchten Sie aktualisieren?</string>
+  <string name="retrieving_update">Empfange Update...</string>
+
+  <string name="vote">%s Abstimmen</string>
+  <string name="votes">%s Stimmen</string>
+
+</resources>

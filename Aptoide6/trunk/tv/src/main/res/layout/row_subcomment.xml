@@ -8,7 +8,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/background_card_dark"
     android:layout_marginLeft="40dp"
+    android:layout_marginTop="5dp"
     android:orientation="vertical"
     android:paddingLeft="10dp">
 
@@ -20,23 +22,8 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         android:layout_gravity="left"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-    <!--<TextView-->
-    <!--android:id="@+id/date"-->
-    <!--android:layout_alignTop="@+id/author"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:textColor="@android:color/white"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/darker_gray"-->
-    <!--android:layout_gravity="right"-->
-    <!--android:ellipsize="end"-->
-    <!--android:maxLines="1"-->
-    <!--android:padding="2dp"-->
-    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-    <!--android:gravity="right" android:text="February 27, 2009 at 9:30 am"-->
-    <!--android:layout_alignParentRight="true"/>-->
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"  />
 
     <TextView
         android:id="@+id/content"
@@ -44,7 +31,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         android:layout_height="wrap_content"
         android:layout_below="@+id/author"
         android:paddingBottom="12dp"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"  />
 
 
 </RelativeLayout>

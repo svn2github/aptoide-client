@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Hôm nay</string>
+  <string name="WidgetProvider_timestamp_yesterday">Hôm qua</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s giờ trước</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s giờ trước</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s phút trước</string>
+  <string name="WidgetProvider_timestamp_just_now">Ngay bây giờ</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s tuần trước</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s tuần trước</string>
+  <string name="WidgetProvider_timestamp_this_week">Tuần này</string>
+
+  <string name="description">Mô tả</string>
+
+  <string name="install">Cài đặt</string>
+
+  <string name="downloads">Tải về</string>
+  <string name="size">Kích thước</string>
+  <string name="likes">Thích</string>
+  <string name="dont_likes">Không thích</string>
+
+  <string name="open">Mở</string>
+
+  <string name="update_self_title">Cập nhật hiện có</string>
+  <string name="update_self_msg">Hiện có một phiên bản mới của %s,\nbạn có muốn cập nhật không?</string>
+  <string name="retrieving_update">Đang khôi phục cập nhật...</string>
+
+</resources>

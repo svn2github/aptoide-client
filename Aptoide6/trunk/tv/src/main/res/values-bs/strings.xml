@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">Danas</string>
+    <string name="WidgetProvider_timestamp_yesterday">Jučer</string>
+    <string name="WidgetProvider_timestamp_hour_ago">prije %s sata</string>
+    <string name="WidgetProvider_timestamp_hours_ago">prije %s sati</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">prije %s minuta</string>
+    <string name="WidgetProvider_timestamp_just_now">Upravo</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">prije %s sedmica</string>
+    <string name="WidgetProvider_timestamp_week_ago">prije %s sedmice</string>
+    <string name="WidgetProvider_timestamp_this_week">Ove sedmice</string>
+    <string name="like">Sviđa mi se</string>
+    <string name="dont_like">Ne sviđa mi se</string>
+    <string name="comments">Komentari</string>
+    <string name="description">Opis</string>
+    <string name="install">Instaliraj</string>
+    <string name="no_search_result">Nemate `%s´ u dodanim skladištima.</string>
+    <string name="downloads">Preuzimanja</string>
+    <string name="size">Veličina</string>
+    <string name="likes">Sviđanja</string>
+    <string name="dont_likes">Nesviđanja</string>
+    <string name="open">Otvori</string>
+    <string name="update_self_title">Ažuriranje dostupno</string>
+    <string name="update_self_msg">Dostupna je nova verzija %s\nŽelite li je ažurirati?</string>
+    <string name="retrieving_update">Dohvaćanje ažuriranja...</string>
+    <string name="vote">%s glas</string>
+    <string name="votes">%s glasovi</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">Avui</string>
+    <string name="WidgetProvider_timestamp_yesterday">Ahir</string>
+    <string name="WidgetProvider_timestamp_hour_ago">Fa %s hora</string>
+    <string name="WidgetProvider_timestamp_hours_ago">Fa %s hores</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">Fa %s minuts</string>
+    <string name="WidgetProvider_timestamp_just_now">Ara mateix</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">Fa %s setmanes</string>
+    <string name="WidgetProvider_timestamp_week_ago">Fa %s setmana</string>
+    <string name="WidgetProvider_timestamp_this_week">Aquesta setmana</string>
+
+    <string name="like">M\'agrada</string>
+    <string name="dont_like">No m\'agrada</string>
+    <string name="description">Descripció</string>
+    <string name="install">Instal·lar</string>
+    <string name="downloads">Descàrregues</string>
+    <string name="size">Tamany</string>
+    <string name="likes">M\'agrada</string>
+    <string name="dont_likes">No m\'agrada</string>
+    <string name="open">Obrir</string>
+    <string name="update_self_title">Actualització disponible</string>
+    <string name="update_self_msg">Hi ha una nova versió de %s disponible\nDesitges realitzar una actualització?</string>
+    <string name="retrieving_update">Recuperant actualització…</string>
+    <string name="vote">%s vot</string>
+    <string name="votes">%s vots</string>
+    <string name="comments">Comentaris</string>
+</resources>

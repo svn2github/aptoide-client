@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Сьогодні</string>
+  <string name="WidgetProvider_timestamp_yesterday">Вчора</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s годину тому</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s годин тому</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s хвилин тому</string>
+  <string name="WidgetProvider_timestamp_just_now">Щойно</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s тижнів тому</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s тиждень тому</string>
+  <string name="WidgetProvider_timestamp_this_week">Цього тижня</string>
+
+  <string name="comments">Коментарі</string>
+
+  <string name="install">Встановити</string>
+
+  <string name="downloads">Завантаження</string>
+  <string name="size">Розмір</string>
+  <string name="likes">Подобається</string>
+  <string name="dont_likes">Не подобається</string>
+
+  <string name="update_self_title">Доступне оновлення</string>
+  <string name="update_self_msg">Доступна нова версія %s\n Ви бажаєте оновити?</string>
+  <string name="retrieving_update">Отримання оновлень...</string>
+
+</resources>

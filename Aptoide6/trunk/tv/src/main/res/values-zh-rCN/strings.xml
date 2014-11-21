@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">今天</string>
+  <string name="WidgetProvider_timestamp_yesterday">昨天</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s小时前</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s小时前</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s分钟前</string>
+  <string name="WidgetProvider_timestamp_just_now">刚刚</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s周前</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s周前</string>
+  <string name="WidgetProvider_timestamp_this_week">本周</string>
+
+  <string name="comments">评论</string>
+
+  <string name="description">说明</string>
+
+  <string name="install">安装</string>
+
+  <string name="downloads">下载</string>
+  <string name="size">大小</string>
+  <string name="likes">赞</string>
+  <string name="dont_likes">踩</string>
+
+  <string name="open">打开</string>
+
+  <string name="update_self_title">有可用的更新</string>
+  <string name="update_self_msg">%s有新版本可用，\n您愿意更新吗？</string>
+  <string name="retrieving_update">正在取回更新...</string>
+
+</resources>

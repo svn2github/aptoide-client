@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Өнөөдөр</string>
+  <string name="WidgetProvider_timestamp_yesterday">Өчигдөр</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s цагийн өмнө</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s цагийн өмнө</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s минутын өмнө</string>
+  <string name="WidgetProvider_timestamp_just_now">Саяхан</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s долоо хоногийн өмнө</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s долоо хоногийн өмнө</string>
+  <string name="WidgetProvider_timestamp_this_week">Энэ долоо хоног</string>
+
+  <string name="comments">Сэтгэгдэл</string>
+
+  <string name="description">Тайлбар</string>
+
+  <string name="install">Install</string>
+
+  <string name="downloads">Татагдсан</string>
+  <string name="size">Хэмжээ</string>
+  <string name="likes">Таалдагдсан</string>
+  <string name="dont_likes">Таалагдаагүй</string>
+
+  <string name="open">Нээх</string>
+
+
+  <string name="update_self_title">Шинэчлэх боломжтой</string>
+  <string name="update_self_msg">Шинэ %s хувилбар байна.Шинэчлэх үү?</string>
+  <string name="retrieving_update">Шинэчлэлийг сэргээж байна...</string>
+
+</resources>

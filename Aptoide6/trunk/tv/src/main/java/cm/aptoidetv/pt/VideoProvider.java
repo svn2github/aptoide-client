@@ -153,7 +153,7 @@ public class VideoProvider {
         Log.d(TAG, "Parse URL: " + urlString);
         InputStream is = null;
 
-        sPrefixUrl = sContext.getResources().getString(R.string.prefix_url);
+        sPrefixUrl = "http://commondatastorage.googleapis.com/android-tv/Sample%20videos/";
 
         try {
             java.net.URL url = new java.net.URL(urlString);

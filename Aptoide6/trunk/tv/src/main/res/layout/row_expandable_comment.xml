@@ -8,18 +8,12 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:background="@drawable/background_card_dark"
         android:layout_height="wrap_content">
-
-
-        <!--<View android:id="@+id/view"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="2dp"-->
-        <!--android:background="@android:color/darker_gray"/>-->
 
 
         <TextView
@@ -37,29 +31,9 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/author"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
-
-        <TextView
-            android:id="@+id/hasComments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/content"
-            android:layout_gravity="right"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:drawablePadding="2dp"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:gravity="left"
-            android:maxLines="1"
-            android:paddingLeft="10dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray" />
 
 
     </RelativeLayout>
@@ -69,7 +43,6 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/hasComments"
-        android:orientation="vertical"
-        android:visibility="gone" />
+        android:orientation="vertical" />
 
 </LinearLayout>

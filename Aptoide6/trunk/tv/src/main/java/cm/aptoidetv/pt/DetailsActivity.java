@@ -135,7 +135,7 @@ public class DetailsActivity extends Activity {
         comments_label = (TextView) findViewById(R.id.comments_label);
         commentsLayout = (LinearLayout) findViewById(R.id.layout_comments);
 //        noComments = (TextView) findViewById(R.id.no_comments);
-        commentsContainer = (LinearLayout) findViewById(R.id.commentContainer);
+        commentsContainer = (LinearLayout) findViewById(R.id.comments_container);
 
         new DetailRowBuilderTask().execute(md5sum);
 
