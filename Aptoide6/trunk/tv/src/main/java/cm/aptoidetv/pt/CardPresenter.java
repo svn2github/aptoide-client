@@ -130,14 +130,6 @@ public class CardPresenter extends Presenter {
             return mCardView;
         }
 
-        protected void updateCardViewImage(URI uri) {
-            Picasso.with(mContext)
-                    .load(uri.toString())
-                    .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
-                            Utils.convertDpToPixel(mContext, CARD_HEIGHT))
-                    .error(mDefaultCardImage)
-                    .into(mImageCardViewTarget);
-        }
         protected void updateCardViewImage(String uri) {
             Picasso.with(mContext)
                     .load(uri)
@@ -149,6 +141,7 @@ public class CardPresenter extends Presenter {
                     .into(mImageCardViewTarget);
         }
     }
+
 
     public static class PicassoImageCardViewTarget implements Target {
         private ImageCardView mImageCardView;
