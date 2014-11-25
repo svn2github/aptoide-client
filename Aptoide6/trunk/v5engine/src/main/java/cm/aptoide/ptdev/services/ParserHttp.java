@@ -2,15 +2,13 @@ package cm.aptoide.ptdev.services;
 
 import android.app.Application;
 import android.util.Log;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpTransport;
+
 import com.octo.android.robospice.SpiceService;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.binary.InFileBigInputStreamObjectPersister;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 import com.octo.android.robospice.request.CachedSpiceRequest;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Set;
@@ -24,13 +22,13 @@ import java.util.Set;
  */
 public class ParserHttp extends SpiceService {
 
-    protected HttpRequestFactory httpRequestFactory;
+    //protected HttpRequestFactory httpRequestFactory;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-        httpRequestFactory = createRequestFactory();
+        //httpRequestFactory = createRequestFactory();
 
     }
 
@@ -45,19 +43,19 @@ public class ParserHttp extends SpiceService {
         return Thread.MIN_PRIORITY;
     }
 
-    public static HttpRequestFactory createRequestFactory() {
-        HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+//    public static HttpRequestFactory createRequestFactory() {
+//        HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+//
+//        return httpTransport.createRequestFactory();
+//    }
 
-        return httpTransport.createRequestFactory();
-    }
-
-    @Override
-    public void addRequest(CachedSpiceRequest<?> request, Set<RequestListener<?>> listRequestListener) {
-        if (request.getSpiceRequest() instanceof GoogleHttpClientSpiceRequest) {
-            ((GoogleHttpClientSpiceRequest<?>) request.getSpiceRequest()).setHttpRequestFactory(httpRequestFactory);
-        }
-        super.addRequest(request, listRequestListener);
-    }
+//    @Override
+//    public void addRequest(CachedSpiceRequest<?> request, Set<RequestListener<?>> listRequestListener) {
+//        if (request.getSpiceRequest() instanceof GoogleHttpClientSpiceRequest) {
+//            ((GoogleHttpClientSpiceRequest<?>) request.getSpiceRequest()).setHttpRequestFactory(httpRequestFactory);
+//        }
+//        super.addRequest(request, listRequestListener);
+//    }
 
     @Override
     public CacheManager createCacheManager(Application application) throws CacheCreationException {

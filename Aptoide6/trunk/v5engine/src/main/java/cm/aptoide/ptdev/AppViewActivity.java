@@ -52,13 +52,6 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpStatusCodes;
-import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -67,6 +60,10 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.retry.RetryPolicy;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
@@ -74,6 +71,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
@@ -1012,10 +1010,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 long size = json.getApk().getSize().longValue();
 
-                if (json.getObb() != null && !Data.isNull(json.getObb())) {
+                if (json.getObb() != null ) {
                     size += json.getObb().getMain().getFilesize().longValue();
 
-                    if (json.getObb().getPatch() != null && !Data.isNull(json.getObb().getPatch())) {
+                    if (json.getObb().getPatch() != null ) {
                         size += json.getObb().getPatch().getFilesize().longValue();
                     }
 
@@ -1342,14 +1340,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 });
 
 
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            OkHttpClient client = new OkHttpClient();
+                            Request cpcClick = new Request.Builder()
+                                    .url(getIntent().getStringExtra("cpc"))
+                                    .build();
+                            client.newCall(cpcClick).execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
 
-                try {
-                    GenericUrl url = new GenericUrl(getIntent().getStringExtra("cpc"));
-                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync(executorService);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
 
 
@@ -1452,6 +1458,19 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         }
         return referrer;
     }
+
+
+    Callback responseCallback = new Callback() {
+        @Override
+        public void onFailure(Request request, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Response response) throws IOException {
+
+        }
+    };
 
 
 
@@ -1594,8 +1613,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 }
 
                                 try {
-                                    GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
-                                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+
+                                    OkHttpClient client = new OkHttpClient();
+
+                                    Request cpc_click = new Request.Builder().url(appSuggested.getInfo().getCpc_url()).build();
+                                    //GenericUrl url = new GenericUrl();
+                                    //AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+
+
+                                    client.newCall(cpc_click).enqueue(responseCallback);
+
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -1620,8 +1648,17 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appSuggested.getData().getUrl()));
 
                                 try {
-                                    GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
-                                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+                                    OkHttpClient client = new OkHttpClient();
+
+                                    Request cpc_click = new Request.Builder().url(appSuggested.getInfo().getCpc_url()).build();
+                                    //GenericUrl url = new GenericUrl();
+                                    //AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
+
+
+                                    client.newCall(cpc_click).enqueue(responseCallback);
+
+                                    //GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
+                                    //AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setSuppressUserAgentSuffix(true).executeAsync();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

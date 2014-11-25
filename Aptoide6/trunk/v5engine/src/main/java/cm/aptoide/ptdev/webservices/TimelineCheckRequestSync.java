@@ -2,13 +2,10 @@ package cm.aptoide.ptdev.webservices;
 
 import android.preference.PreferenceManager;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,26 +22,30 @@ public class TimelineCheckRequestSync {
 
     public static TimelineActivityJson getRequest(String type) throws IOException {
 
-            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/checkUserApkInstallsActivity");
-            HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
+        RequestBody body = new FormEncodingBuilder()
 
-            HashMap<String, String> parameters = new HashMap<String, String>();
-
-            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", "empty"));
-
-
+//            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/checkUserApkInstallsActivity");
+//            HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
+            .add("access_token", SecurePreferences.getInstance().getString("access_token", "empty"))
             //new_installs, owned_activity, related_activity
-            parameters.put("type", type);
-            parameters.put("mode", "json");
-            parameters.put("timestamp", String.valueOf(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getLong("timelineTimestamp", 1)));
+            .add("type", type)
+            .add("mode", "json")
+            .add("timestamp", String.valueOf(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getLong("timelineTimestamp", 1)))
+            .build();
 
+            Request request = new Request.Builder().url(WebserviceOptions.WebServicesLink + "3/checkUserApkInstallsActivity").post(body).build();
 
-            HttpContent content = new UrlEncodedContent(parameters);
-            HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
-            httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
-            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//            HttpContent content = new UrlEncodedContent(parameters);
+//            HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
+//            httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
+//            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//            return httpRequest.execute().parseAs(TimelineActivityJson.class);
 
-            return httpRequest.execute().parseAs(TimelineActivityJson.class);
+        OkHttpClient client = new OkHttpClient();
+        Response execute = client.newCall(request).execute();
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(execute.body().charStream(), TimelineActivityJson.class);
 
     }
 

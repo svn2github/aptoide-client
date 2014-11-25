@@ -6,14 +6,14 @@ import android.util.Log;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+
+
+
+
+
+
+
 
 import java.io.EOFException;
 import java.net.URLEncoder;

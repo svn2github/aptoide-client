@@ -43,11 +43,11 @@ public class UpdatesSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        if (sharedPreferences.getBoolean("showUpdatesNotification", true)) {
-            Log.d("Aptoide-UpdateSync", "onPerformSync()");
-            ParserHelper helper = new ParserHelper();
-            helper.parse(getContext());
-        }
+//        if (sharedPreferences.getBoolean("showUpdatesNotification", true)) {
+//            Log.d("Aptoide-UpdateSync", "onPerformSync()");
+//            ParserHelper helper = new ParserHelper();
+//            helper.parse(getContext());
+//        }
 
 
 

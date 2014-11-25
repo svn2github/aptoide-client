@@ -33,7 +33,6 @@ import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 
 import com.flurry.android.FlurryAgent;
-import com.google.api.client.util.Data;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -219,19 +218,19 @@ public class SignUpActivity extends ActionBarActivity{
                             SharedPreferences.Editor editor =PreferenceManager
                                     .getDefaultSharedPreferences(SignUpActivity.this)
                                     .edit();
-                            if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
+                            if (null != checkUserCredentialsJson.getQueue()) {
                                 //hasQueue = true;
                                 editor.putString("queueName", checkUserCredentialsJson.getQueue());
                             }
-                            if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
+                            if (null != (checkUserCredentialsJson.getAvatar())) {
                                 editor.putString("useravatar", checkUserCredentialsJson.getAvatar());
                             }
 
-                            if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
+                            if (null != (checkUserCredentialsJson.getRepo())) {
                                 editor.putString("userRepo", checkUserCredentialsJson.getRepo());
                             }
 
-                            if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
+                            if (null != checkUserCredentialsJson.getUsername()) {
                                 editor.putString("username", checkUserCredentialsJson.getUsername());
                             }
 

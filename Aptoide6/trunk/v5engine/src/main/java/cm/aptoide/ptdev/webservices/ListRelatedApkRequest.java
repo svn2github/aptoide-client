@@ -5,12 +5,17 @@ import android.util.Log;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import retrofit.RestAdapter;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +28,22 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedApkJson> {
+public class ListRelatedApkRequest extends RetrofitSpiceRequest<RelatedApkJson, ListRelatedApkRequest.Webservice> {
 
+
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/2/listRelatedApks")
+        @FormUrlEncoded
+        RelatedApkJson getRelatedApkJson(@FieldMap HashMap<String, String> args);
+    }
+
+    protected Converter createConverter() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return new JacksonConverter(objectMapper);
+    }
 
     String baseUrl = WebserviceOptions.WebServicesLink + "2/listRelatedApks";
     private String repos;
@@ -35,7 +54,7 @@ public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedA
     private String mode;
 
     public ListRelatedApkRequest(Context context) {
-        super(RelatedApkJson.class);
+        super(RelatedApkJson.class, Webservice.class);
         this.context = context;
     }
 
@@ -51,7 +70,7 @@ public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedA
     public RelatedApkJson loadDataFromNetwork() throws Exception {
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
@@ -76,15 +95,23 @@ public class ListRelatedApkRequest extends GoogleHttpClientSpiceRequest<RelatedA
 
         parameters.put("options", sb.toString());
 
-        HttpContent content = new UrlEncodedContent(parameters);
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        RestAdapter adapter = new RestAdapter.Builder().setConverter(createConverter()).build();
 
-        Log.d("Aptoide-ApkRelated", url.toString());
+        setService(adapter.create(getRetrofitedInterfaceClass()));
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
 
-        return request.execute().parseAs( getResultType() );
+        return getService().getRelatedApkJson(parameters);
+//
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        Log.d("Aptoide-ApkRelated", url.toString());
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        return request.execute().parseAs( getResultType() );
     }
 
     public void setPackageName(String packageName) {

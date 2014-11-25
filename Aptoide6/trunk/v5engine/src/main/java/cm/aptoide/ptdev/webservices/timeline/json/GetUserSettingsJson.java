@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.timeline.json;
 
-import com.google.api.client.util.Key;
+
 
 import cm.aptoide.ptdev.fragments.GenericResponse;
 
@@ -9,11 +9,11 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
  */
 public class GetUserSettingsJson extends GenericResponse {
 
-    @Key
+
     private Setting settings;
 
     public static class Setting {
-        @Key
+
         private String timeline;
 
         public String getTimeline() {	return timeline;	}

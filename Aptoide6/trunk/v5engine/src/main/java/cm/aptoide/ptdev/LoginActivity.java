@@ -39,6 +39,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
+
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,7 +48,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.plus.PlusClient;
-import com.google.api.client.util.Data;
+
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -688,20 +689,20 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 if ("OK".equals(checkUserCredentialsJson.getStatus())) {
                     SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
 
-                    if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
+                    if (null != checkUserCredentialsJson.getQueue()) {
                         hasQueue = true;
 
                         preferences.putString("queueName", checkUserCredentialsJson.getQueue());
                     }
-                    if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
+                    if (null != (checkUserCredentialsJson.getAvatar())) {
                         preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
                     }
 
-                    if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
+                    if (null != (checkUserCredentialsJson.getRepo())) {
                         preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
                     }
 
-                    if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
+                    if (null != (checkUserCredentialsJson.getUsername())) {
                         preferences.putString("username", checkUserCredentialsJson.getUsername());
                     }
 

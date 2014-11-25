@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class GenericResponse {
 
-    @Key
+
     String status;
 
-    @Key
+
     List<String> errors;
 
     public String getStatus() {

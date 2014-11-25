@@ -3,17 +3,17 @@ package cm.aptoide.ptdev.webservices.json;
 
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
 public class RepositoryInfoJson{
-    @Key("listing")
+
    	private RepositoryInfoListing listing;
-    @Key
+
    	private String status;
 
-    @Key
+
     private List<Error> errors;
 
     public List<cm.aptoide.ptdev.model.Error> getErrors() {

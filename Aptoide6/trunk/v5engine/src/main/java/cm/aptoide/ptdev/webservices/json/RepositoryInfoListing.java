@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,16 +10,16 @@ import com.google.api.client.util.Key;
  * To change this template use File | Settings | File Templates.
  */
 public class RepositoryInfoListing{
-    @Key
+
     private String avatar_hd;
-    @Key
+
     private String avatar;
-    @Key private String description;
-    @Key private String downloads;
-    @Key private String items;
-    @Key private String name;
-    @Key private String theme;
-    @Key private String view;
+     private String description;
+     private String downloads;
+     private String items;
+     private String name;
+     private String theme;
+     private String view;
 
     public String getAvatar_hd(){
         return this.avatar_hd;

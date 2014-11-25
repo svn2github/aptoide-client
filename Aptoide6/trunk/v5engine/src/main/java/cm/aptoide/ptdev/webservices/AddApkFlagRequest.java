@@ -1,23 +1,28 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
 
 /**
  * Created by j-pac on 30-05-2014.
  */
-public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2> {
+public class AddApkFlagRequest extends RetrofitSpiceRequest<GenericResponseV2, AddApkFlagRequest.Webservice> {
 
-    String baseUrl = WebserviceOptions.WebServicesLink + "3/addApkFlag";
+    public interface Webservice {
+        @POST("webservices.aptoide.com/webservices/3/addApkFlag")
+        @FormUrlEncoded
+        GenericResponseV2 addApkFlag(@FieldMap HashMap<String, String> args);
+    }
+
 
     private String token;
     private String repo;
@@ -25,13 +30,13 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
     private String flag;
 
     public AddApkFlagRequest() {
-        super(GenericResponseV2.class);
+        super(GenericResponseV2.class, Webservice.class);
     }
 
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
@@ -41,19 +46,29 @@ public class AddApkFlagRequest extends GoogleHttpClientSpiceRequest<GenericRespo
         parameters.put("flag", flag);
         parameters.put("mode", "json");
 
-        HttpContent content = new UrlEncodedContent(parameters);
+        //HttpContent content = new UrlEncodedContent(parameters);
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        //HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
         token = SecurePreferences.getInstance().getString("access_token", "empty");
 
         parameters.put("access_token", token);
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+
+        GenericResponseV2 genericResponseV2 = null;
+
+        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(new JacksonConverter()).build();
+
+        setService(adapter.create(getRetrofitedInterfaceClass()));
+        try{
+            genericResponseV2 = getService().addApkFlag(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
+        }
+        //request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        //request.setParser(new JacksonFactory().createJsonObjectParser());
 
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        return request.execute().parseAs( getResultType() );
+        return genericResponseV2;
     }
 
     public void setToken(String token) {

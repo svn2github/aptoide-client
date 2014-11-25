@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class RepositoryChangeJson {
 
-    @Key
+
     public List<Listing> listing;
 
-    @Key
+
     String status;
 
     public String getStatus() {
@@ -30,13 +30,13 @@ public class RepositoryChangeJson {
 
     public static class Listing{
 
-        @Key
+
         private Number appscount;
 
-        @Key
+
         private String hasupdates;
 
-        @Key
+
         private String repo;
 
         public Number getAppscount(){

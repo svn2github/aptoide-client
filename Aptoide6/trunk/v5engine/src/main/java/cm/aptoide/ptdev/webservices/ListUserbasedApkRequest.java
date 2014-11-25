@@ -6,12 +6,12 @@ import android.util.Log;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+
+
+
+
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -53,10 +53,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -127,6 +127,7 @@ import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
+import retrofit.converter.JacksonConverter;
 import roboguice.util.temp.Ln;
 
 public class Start extends ActionBarActivity implements
@@ -446,7 +447,7 @@ public class Start extends ActionBarActivity implements
 
                                 //Log.d("Aptoide-RepositoryChage", "Parsing" + store.getId() + " " + store.getBaseUrl() );
                                 service.setShowNotification(!isLoggedin);
-                                service.startParse(database, store, false);
+                                //service.startParse(database, store, false);
                             }
 
                         }
@@ -627,7 +628,9 @@ public class Start extends ActionBarActivity implements
 
                             Log.d("AptoideAptWord", json);
 
-                            ApkSuggestionJson.Ads ad = new JacksonFactory().createJsonParser(json).parse(ApkSuggestionJson.Ads.class);
+                            ObjectMapper mapper = new ObjectMapper();
+
+                            ApkSuggestionJson.Ads ad = mapper.readValue(json, ApkSuggestionJson.Ads.class);
 
                             intent = new Intent(this, appViewClass);
                             long id = ad.getData().getId().longValue();
@@ -662,51 +665,51 @@ public class Start extends ActionBarActivity implements
                 }
             }
 
-            loadEditorsAndTopApps();
+            //loadEditorsAndTopApps();
 
 
 
-            executorService.execute(new Runnable() {
-                @Override
-                public void run() {
-                    AptoideUtils.syncInstalledApps(mContext, db);
-                }
-            });
-
-            Cursor c = database.getServers();
-
-            ArrayList<BasicNameValuePair> storesToCheck = new ArrayList<BasicNameValuePair>();
-            storesIds = new HashMap<String, Long>();
-            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                storesToCheck.add(new BasicNameValuePair(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("hash"))));
-                storesIds.put(c.getString(c.getColumnIndex("name")), c.getLong(c.getColumnIndex("id_repo")));
-            }
-
-            c.close();
-
-
-            StringBuilder repos = new StringBuilder();
-            StringBuilder hashes = new StringBuilder();
-            Iterator<?> it = storesToCheck.iterator();
-            while (it.hasNext()) {
-                BasicNameValuePair next = (BasicNameValuePair) it.next();
-                repos.append(next.getName());
-                hashes.append(next.getValue());
-
-                if (it.hasNext()) {
-                    repos.append(",");
-                    hashes.append(",");
-                }
-            }
-
-            RepositoryChangeRequest request = new RepositoryChangeRequest();
-            request.setRepos(repos.toString());
-            request.setHashes(hashes.toString());
-
-            checkServerCacheString = (repos.toString() + hashes.toString()).hashCode();
-            if (!storesToCheck.isEmpty()) {
-                spiceManager.execute(request, checkServerCacheString, DurationInMillis.ONE_HOUR, requestListener);
-            }
+//            executorService.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    AptoideUtils.syncInstalledApps(mContext, db);
+//                }
+//            });
+//
+//            Cursor c = database.getServers();
+//
+//            ArrayList<BasicNameValuePair> storesToCheck = new ArrayList<BasicNameValuePair>();
+//            storesIds = new HashMap<String, Long>();
+//            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+//                storesToCheck.add(new BasicNameValuePair(c.getString(c.getColumnIndex("name")), c.getString(c.getColumnIndex("hash"))));
+//                storesIds.put(c.getString(c.getColumnIndex("name")), c.getLong(c.getColumnIndex("id_repo")));
+//            }
+//
+//            c.close();
+//
+//
+//            StringBuilder repos = new StringBuilder();
+//            StringBuilder hashes = new StringBuilder();
+//            Iterator<?> it = storesToCheck.iterator();
+//            while (it.hasNext()) {
+//                BasicNameValuePair next = (BasicNameValuePair) it.next();
+//                repos.append(next.getName());
+//                hashes.append(next.getValue());
+//
+//                if (it.hasNext()) {
+//                    repos.append(",");
+//                    hashes.append(",");
+//                }
+//            }
+//
+//            RepositoryChangeRequest request = new RepositoryChangeRequest();
+//            request.setRepos(repos.toString());
+//            request.setHashes(hashes.toString());
+//
+//            checkServerCacheString = (repos.toString() + hashes.toString()).hashCode();
+//            if (!storesToCheck.isEmpty()) {
+//                spiceManager.execute(request, checkServerCacheString, DurationInMillis.ONE_HOUR, requestListener);
+//            }
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             DisplayMetrics dm = new DisplayMetrics();
@@ -1031,7 +1034,7 @@ public class Start extends ActionBarActivity implements
                     oAuth2AuthenticationRequest.setPassword(manager.getPassword(accountsByType[0]));
 
                     try {
-                        oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                        //oAuth2AuthenticationRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
 
                         OAuth oAuth = oAuth2AuthenticationRequest.loadDataFromNetwork();
 
@@ -1167,18 +1170,18 @@ public class Start extends ActionBarActivity implements
 
     @Override
     public void startParse(final Store store) {
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    waitForServiceToBeBound();
-                    service.setShowNotification(!isLoggedin);
-                    service.startParse(database, store, true);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        executorService.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    waitForServiceToBeBound();
+//                    service.setShowNotification(!isLoggedin);
+//                    service.startParse(database, store, true);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
 
@@ -1201,36 +1204,36 @@ public class Start extends ActionBarActivity implements
     public void reloadStores(Set<Long> checkedItems) {
 
 
-        for (final Long storeid : checkedItems) {
-
-            Runnable runnable = new Runnable() {
-                public void run() {
-                    final Database db = new Database(Aptoide.getDb());
-
-                    final Store store = new Store();
-                    //Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
-                    Cursor c = db.getStore(storeid);
-
-                    if (c.moveToFirst()) {
-                        store.setBaseUrl(c.getString(c.getColumnIndex("url")));
-                        store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
-                        store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
-                        store.setDelta(c.getString(c.getColumnIndex("hash")));
-                        store.setId(c.getLong(c.getColumnIndex("id_repo")));
-                        if (c.getString(c.getColumnIndex("username")) != null) {
-                            Login login = new Login();
-                            login.setUsername(c.getString(c.getColumnIndex("username")));
-                            login.setPassword(c.getString(c.getColumnIndex("password")));
-                            store.setLogin(login);
-                        }
-
-                    }
-                    service.setShowNotification(!isLoggedin);
-                    service.startParse(db, store, false);
-                }
-            };
-            executorService.submit(runnable);
-        }
+//        for (final Long storeid : checkedItems) {
+//
+//            Runnable runnable = new Runnable() {
+//                public void run() {
+//                    final Database db = new Database(Aptoide.getDb());
+//
+//                    final Store store = new Store();
+//                    //Log.d("Aptoide-Reloader", "Reloading storeid " + storeid);
+//                    Cursor c = db.getStore(storeid);
+//
+//                    if (c.moveToFirst()) {
+//                        store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+//                        store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+//                        store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+//                        store.setDelta(c.getString(c.getColumnIndex("hash")));
+//                        store.setId(c.getLong(c.getColumnIndex("id_repo")));
+//                        if (c.getString(c.getColumnIndex("username")) != null) {
+//                            Login login = new Login();
+//                            login.setUsername(c.getString(c.getColumnIndex("username")));
+//                            login.setPassword(c.getString(c.getColumnIndex("password")));
+//                            store.setLogin(login);
+//                        }
+//
+//                    }
+//                    service.setShowNotification(!isLoggedin);
+//                    service.startParse(db, store, false);
+//                }
+//            };
+//            executorService.submit(runnable);
+//        }
 
 
     }

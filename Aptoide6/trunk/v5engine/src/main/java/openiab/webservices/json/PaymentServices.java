@@ -3,7 +3,7 @@ package openiab.webservices.json;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class PaymentServices implements Parcelable {
 
-    @Key
+
     private int id;
-    @Key private String short_name;
-    @Key private String name;
-    @Key private ArrayList<PaymentType> types;
-    @Key private double price;
-    @Key private String currency;
-    @Key private double taxRate;
-    @Key private String sign;
+     private String short_name;
+     private String name;
+     private ArrayList<PaymentType> types;
+     private double price;
+     private String currency;
+     private double taxRate;
+     private String sign;
 
     public double getPrice() {
         return price;
@@ -114,8 +114,8 @@ public class PaymentServices implements Parcelable {
             return label;
         }
 
-        @Key String reqType;
-        @Key String label;
+         String reqType;
+         String label;
 
         public PaymentType(){
 

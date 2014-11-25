@@ -369,7 +369,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
                     }
                     c.close();
-                    service.startParse(db, store, false);
+                    //service.startParse(db, store, false);
                 }
             });
 

@@ -1,13 +1,15 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.util.Log;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import retrofit.RestAdapter;
+import retrofit.http.GET;
+import retrofit.http.Path;
+
+
 
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -15,7 +17,12 @@ import java.util.HashMap;
 /**
  * Created by rmateus on 27-12-2013.
  */
-public class AllCommentsRequest extends GoogleHttpClientSpiceRequest<AllCommentsJson>{
+public class AllCommentsRequest extends RetrofitSpiceRequest<AllCommentsJson, AllCommentsRequest.WebService> {
+
+    public interface WebService{
+        @GET("/webservices.aptoide.com/webservices/2/listApkComments/{repo}/{apkid}/{apkversion}/json")
+        AllCommentsJson getAllComments(@Path("repo") String repo, @Path("apkid") String apkid, @Path("apkversion") String apkversion );
+    }
 
     String baseUrl = WebserviceOptions.WebServicesLink + "2/listApkComments";
     private String repoName;
@@ -35,27 +42,27 @@ public class AllCommentsRequest extends GoogleHttpClientSpiceRequest<AllComments
     }
 
     public AllCommentsRequest() {
-        super(AllCommentsJson.class);
+        super(AllCommentsJson.class, WebService.class);
     }
 
     @Override
     public AllCommentsJson loadDataFromNetwork() throws Exception {
+        AllCommentsRequest.WebService adapter = new RestAdapter.Builder().setEndpoint("http://").build().create(getRetrofitedInterfaceClass());
+        setService(adapter);
+        //GenericUrl url = new GenericUrl(baseUrl);
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        HashMap<String, String > parameters = new HashMap<String, String>();
+//        parameters.put("repo", repoName);
+//        parameters.put("apkid", packageName);
+//        parameters.put("apkversion", versionName);
+//        parameters.put("mode", "json");
 
-        HashMap<String, String > parameters = new HashMap<String, String>();
-
-        parameters.put("repo", repoName);
-        parameters.put("apkid", packageName);
-        parameters.put("apkversion", versionName);
-        parameters.put("mode", "json");
-
-        HttpContent content = new UrlEncodedContent(parameters);
-
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        return request.execute().parseAs(getResultType());
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+        // return request.execute().parseAs(getResultType());
+        return getService().getAllComments(repoName, packageName, versionName);
     }
 }

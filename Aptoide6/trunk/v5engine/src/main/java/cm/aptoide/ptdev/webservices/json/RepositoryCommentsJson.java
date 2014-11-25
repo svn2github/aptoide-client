@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import java.util.List;
  * Created by rmateus on 18-02-2014.
  */
 public class RepositoryCommentsJson {
-    @Key
+
     private List<Listing> listing;
-    @Key
+
     private String status;
 
     public List<Listing> getListing() {
@@ -26,29 +26,29 @@ public class RepositoryCommentsJson {
     }
 
     public static class Listing {
-        @Key
+
         private Number answerto;
-        @Key
+
         private String apkid;
-        @Key
+
         private Number id;
-        @Key
+
         private String lang;
-        @Key
+
         private String name;
-        @Key
+
         private String text;
-        @Key
+
         private String timestamp;
-        @Key
+
         private String useridhash;
-        @Key
+
         private String username;
-        @Key
+
         private String ver;
-        @Key
+
         private Number vercode;
-        @Key
+
         private Number votes;
 
         public Number getAnswerto() {

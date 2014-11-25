@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import cm.aptoide.ptdev.model.Error;
  */
 public class SearchJson{
 
-    @Key private Results results;
-    @Key private String status;
-    @Key private List<Error> errors ;
+     private Results results;
+     private String status;
+     private List<Error> errors ;
 
     public Results getResults(){
         return this.results;
@@ -35,9 +35,9 @@ public class SearchJson{
 
 
     public static class Results{
-        @Key private List<Apks> apks;
-        @Key private List<Apks> u_apks;
-        @Key private List<String> didyoumean;
+         private List<Apks> apks;
+         private List<Apks> u_apks;
+         private List<String> didyoumean;
 
         public List<Apks> getApks(){
             return this.apks;
@@ -59,33 +59,33 @@ public class SearchJson{
         }
 
         public static class Apks {
-            @Key
+
             private String age;
-            @Key
+
             private String icon;
-            @Key("icon_hd")
+
             private String iconhd;
-            @Key
+
             private Number malrank;
-            @Key
+
             private String md5sum;
-            @Key
+
             private String name;
 
-            @Key("package")
+
             private String thePackage;
-            @Key
+
             private String repo;
-            @Key
+
             private String signature;
-            @Key
+
             private Number stars;
 
-            @Key
+
             private String timestamp;
-            @Key
+
             private Number vercode;
-            @Key
+
             private String vername;
 
 

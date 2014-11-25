@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.timeline.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.ArrayList;
 
@@ -24,13 +24,12 @@ public class ListUserFriendsJson extends GenericResponse {
             return new ArrayList<Friend>();
         }
     }
-    @Key
+
     Friends userfriends;
 
     public static class Friends{
-        @Key
-        ArrayList<Friend> timeline_inactive;
-        @Key
+             ArrayList<Friend> timeline_inactive;
+
         ArrayList<Friend> timeline_active;
     }
 }

@@ -4,13 +4,12 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.flurry.android.FlurryAgent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -21,11 +20,14 @@ import cm.aptoide.ptdev.ads.AptoideAdNetworks;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by rmateus on 29-07-2014.
  */
-public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJson> {
+public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAdsRequest.Webservice> {
 
     private int CONNECTION_TIMEOUT = 10000;
     private final Context context;
@@ -44,8 +46,14 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
     }
 
     public GetAdsRequest(Context context) {
-        super(ApkSuggestionJson.class);
+        super(ApkSuggestionJson.class, Webservice.class);
         this.context = context;
+    }
+
+    public interface Webservice{
+        @POST("/webservices.aptwords.net/api/2/getAds")
+        @FormUrlEncoded
+        ApkSuggestionJson getAds(@FieldMap HashMap<String, String> arg);
     }
 
     String url = "http://webservices.aptwords.net/api/2/getAds";
@@ -95,18 +103,20 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
             parameters.put("country", AptoideUtils.getSharedPreferences().getString("forcecountry", null));
         }
 
-        GenericUrl url = new GenericUrl(this.url);
+//        GenericUrl url = new GenericUrl(this.url);
+//
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//        request.setSuppressUserAgentSuffix(true);
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        request.setConnectTimeout(CONNECTION_TIMEOUT);
+//        request.setReadTimeout(CONNECTION_TIMEOUT);
 
-        HttpContent content = new UrlEncodedContent(parameters);
+//        ApkSuggestionJson result = request.execute().parseAs( getResultType() );
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-        request.setSuppressUserAgentSuffix(true);
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        request.setConnectTimeout(CONNECTION_TIMEOUT);
-        request.setReadTimeout(CONNECTION_TIMEOUT);
-
-        ApkSuggestionJson result = request.execute().parseAs( getResultType() );
+        ApkSuggestionJson result = getService().getAds(parameters);
 
         Map<String, String> adsParams = new HashMap<String, String>();
         adsParams.put("placement", location);
@@ -121,13 +131,26 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
             if(suggestionJson.getPartner() != null){
 
                 try{
-
                     String impressionUrlString = suggestionJson.getPartner().getPartnerData().getImpression_url();
 
                     impressionUrlString = AptoideAdNetworks.parseString(suggestionJson.getPartner().getPartnerInfo().getName(), Aptoide.getContext(), impressionUrlString);
 
-                    GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
-                    getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).executeAsync(executor);
+                    Request request = new Request.Builder().get().url(impressionUrlString).build();
+
+                    new OkHttpClient().newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Request request, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Response response) throws IOException {
+
+                        }
+                    });
+
+//                    GenericUrl impressionUrl = new GenericUrl(impressionUrlString);
+//                    getHttpRequestFactory().buildGetRequest(impressionUrl).setSuppressUserAgentSuffix(true).executeAsync(executor);
 
                 } catch (Exception ignored) {}
 

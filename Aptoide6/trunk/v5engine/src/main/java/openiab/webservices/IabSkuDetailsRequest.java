@@ -2,13 +2,8 @@ package openiab.webservices;
 
 import android.util.Log;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,11 +12,18 @@ import java.util.Locale;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import openiab.webservices.json.IabConsumeJson;
+import openiab.webservices.json.IabPurchasesJson;
 import openiab.webservices.json.IabSkuDetailsJson;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 
-public class IabSkuDetailsRequest extends GoogleHttpClientSpiceRequest<IabSkuDetailsJson> {
+public class IabSkuDetailsRequest extends RetrofitSpiceRequest<IabSkuDetailsJson, IabSkuDetailsRequest.Webservice> {
 
     private String apiVersion;
     private String token;
@@ -35,7 +37,16 @@ public class IabSkuDetailsRequest extends GoogleHttpClientSpiceRequest<IabSkuDet
     private String oemid;
 
     public IabSkuDetailsRequest() {
-        super(IabSkuDetailsJson.class);
+        super(IabSkuDetailsJson.class, Webservice.class);
+    }
+
+
+
+
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/3/processInAppBilling")
+        @FormUrlEncoded
+        IabSkuDetailsJson processInAppBilling(@FieldMap HashMap<String, String> args);
     }
 
 
@@ -90,19 +101,30 @@ public class IabSkuDetailsRequest extends GoogleHttpClientSpiceRequest<IabSkuDet
         if(mnc!=null)parameters.put("mnc",mnc);
         if(simcc!=null)parameters.put("simcc", simcc.toUpperCase(Locale.ENGLISH));
 
-        HttpContent content = new UrlEncodedContent(parameters);
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//
+//        GenericUrl url = new GenericUrl(baseUrl);
+//
+//        Log.e("Aptoide-InappBillingRequest", baseUrl);
+//        setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+//
+//        return request.execute().parseAs(getResultType());
 
+        IabSkuDetailsJson response = null;
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        try{
+            response = getService().processInAppBilling(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
+        }
 
-        Log.e("Aptoide-InappBillingRequest", baseUrl);
-        setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        return response;
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-
-        return request.execute().parseAs(getResultType());
     }
 
     public String getApiVersion() {

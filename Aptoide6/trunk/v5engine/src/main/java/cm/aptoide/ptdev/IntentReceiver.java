@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gson.Gson;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.Download;
@@ -216,7 +216,7 @@ public class IntentReceiver extends ActionBarActivity implements DialogInterface
 
                 Log.d("AptoideAptWord", json);
 
-                ApkSuggestionJson.Ads ad = new JacksonFactory().createJsonParser(json).parse(ApkSuggestionJson.Ads.class);
+                ApkSuggestionJson.Ads ad = new ObjectMapper().readValue(json,ApkSuggestionJson.Ads.class);
 
                 Intent i = new Intent(this, appViewClass);
                 long id = ad.getData().getId().longValue();

@@ -7,12 +7,12 @@ import android.accounts.OperationCanceledException;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
+
+
+
+
+
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;

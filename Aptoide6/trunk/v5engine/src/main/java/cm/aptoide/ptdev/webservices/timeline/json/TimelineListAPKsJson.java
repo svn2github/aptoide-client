@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.timeline.json;
 
-import com.google.api.client.util.Key;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class TimelineListAPKsJson extends GenericResponse {
         return usersapks;
     }
 
-    @Key
+    
     private List<UserApk> usersapks;
 
 
@@ -30,9 +30,9 @@ public class TimelineListAPKsJson extends GenericResponse {
             public APK getApk() {
                 return apk;
             }
-            @Key
+            
             Info info;
-            @Key
+            
             APK apk;
 
             public static class Info {
@@ -81,26 +81,26 @@ public class TimelineListAPKsJson extends GenericResponse {
                 public void setUserliked(String userliked) {
                     this.userliked=userliked;
                 }
-                @Key
+                
                 Number id;
-                @Key
+                
                 String username;
-                @Key
+                
                 String status;
 
 
-                @Key boolean owned;
+                 boolean owned;
 
 
-                @Key
+                
                 Number likes;
-                @Key
+                
                 Number comments;
-                @Key
+                
                 String avatar;
-                @Key
+                
                 String timestamp;
-                @Key
+                
                 String userliked;
             }
 
@@ -148,27 +148,27 @@ public class TimelineListAPKsJson extends GenericResponse {
                 public String getSignature() {
                     return signature;
                 }
-                @Key
+                
                 String name;
-                @Key
+                
                 String repo;
-                @Key("package")
+                @JsonProperty("package")
                 String packageName;
-                @Key
+                
                 String vername;
-                @Key
+                
                 Number vercode;
-                @Key
+                
                 String md5sum;
-                @Key
+                
                 String timestamp;
-                @Key
+                
                 String age;
-                @Key
+                
                 String icon;
-                @Key
+                
                 String icon_hd;
-                @Key
+                
                 String signature;
             }
         }

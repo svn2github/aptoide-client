@@ -13,9 +13,9 @@
 -keepattributes
 -keepparameternames
 -keeppackagenames
--keep class !com.google.android.gms.** , !org.**, !com.rabbitmq.**{ * ;}
--keepclassmembers class !com.google.android.gms.** , !org.**, !com.rabbitmq.** { * ;}
--keepclasseswithmembers class !com.google.android.gms.** , !org.**, !com.rabbitmq.** { * ;}
+-keep class !com.google.android.gms.** , !org.**, !com.rabbitmq.**, !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
+-keepclassmembers class !com.google.android.gms.** , !org.**, !com.rabbitmq.** , !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
+-keepclasseswithmembers class !com.google.android.gms.** , !org.**, !com.rabbitmq.** , !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
 
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;

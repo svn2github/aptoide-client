@@ -6,13 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
+
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.retry.RetryPolicy;
 
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
+import retrofit.RestAdapter;
 
 /**
  * Created by rmateus on 02-06-2014.
@@ -79,7 +80,9 @@ public class PayPalReceiver extends BroadcastReceiver {
             public void run() {
                 try {
 
-                    purchaseStatus.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    //purchaseStatus.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+
+                    purchaseStatus.setService(new RestAdapter.Builder().setEndpoint("http://").build().create(BasePurchaseStatusRequest.Webservice.class));
                     purchaseStatus.loadDataFromNetwork();
                     AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

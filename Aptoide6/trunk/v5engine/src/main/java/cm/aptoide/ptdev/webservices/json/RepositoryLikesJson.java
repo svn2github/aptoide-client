@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import java.util.List;
  * Created by rmateus on 18-02-2014.
  */
 public class RepositoryLikesJson{
-    @Key private List<Listing> listing;
-    @Key private String status;
+     private List<Listing> listing;
+     private String status;
 
     public List<Listing> getListing(){
         return this.listing;
@@ -23,13 +23,13 @@ public class RepositoryLikesJson{
     }
 
     public static class Listing{
-        @Key private String apkid;
-        @Key private String like;
-        @Key private String name;
-        @Key private String useridhash;
-        @Key private String username;
-        @Key private String ver;
-        @Key private Number vercode;
+         private String apkid;
+         private String like;
+         private String name;
+         private String useridhash;
+         private String username;
+         private String ver;
+         private Number vercode;
 
         public String getApkid(){
             return this.apkid;

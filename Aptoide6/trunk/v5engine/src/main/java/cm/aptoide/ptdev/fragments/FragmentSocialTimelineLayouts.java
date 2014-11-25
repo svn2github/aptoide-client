@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.facebook.FacebookException;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
-import com.google.api.client.extensions.android.http.AndroidHttp;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;

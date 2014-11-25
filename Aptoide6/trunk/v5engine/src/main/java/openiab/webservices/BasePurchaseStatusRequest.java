@@ -1,25 +1,19 @@
 package openiab.webservices;
 
 import android.text.TextUtils;
-
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-
-import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import openiab.webservices.json.IabConsumeJson;
 import openiab.webservices.json.IabPurchaseStatusJson;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
-public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseStatusJson> {
+public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseStatusJson, BasePurchaseStatusRequest.Webservice> {
     private int orderId;
     private int productId;
     private int payType;
@@ -31,11 +25,18 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
     private String simcc;
     private String repo;
 
-    public BasePurchaseStatusRequest() {
-        super(IabPurchaseStatusJson.class);
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/3/processInAppBilling")
+        @FormUrlEncoded
+        IabPurchaseStatusJson processInAppBilling(@FieldMap HashMap<String, String> args);
     }
 
-    protected abstract GenericUrl getURL();
+
+    public BasePurchaseStatusRequest() {
+        super(IabPurchaseStatusJson.class, Webservice.class);
+    }
+
+//    protected abstract GenericUrl getURL();
 
     @Override
     public IabPurchaseStatusJson loadDataFromNetwork() throws Exception {
@@ -91,27 +92,38 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
 
 
 
-        HttpContent content = new UrlEncodedContent(parameters);
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//
+//        GenericUrl url = getURL();
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        HttpResponse response;
+//        try{
+//            response = request.execute();
+//        } catch (EOFException e ){
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.put("Connection", "close");
+//            request.setHeaders(httpHeaders);
+//            response = request.execute();
+//        }
+//
+//        return response.parseAs(getResultType());
 
+        IabPurchaseStatusJson response = null;
 
-        GenericUrl url = getURL();
-
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        HttpResponse response;
         try{
-            response = request.execute();
-        } catch (EOFException e ){
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put("Connection", "close");
-            request.setHeaders(httpHeaders);
-            response = request.execute();
+            response = getService().processInAppBilling(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
         }
 
-        return response.parseAs(getResultType());
+        return response;
+
     }
 
     abstract String getReqType();

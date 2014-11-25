@@ -1,6 +1,6 @@
 package openiab.webservices.json;
 
-import com.google.api.client.util.Key;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashMap;
@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public class    IabPurchasesJson {
 
-    @Key
+
     private String status;
 
-    @Key
+
     private PublisherResponse publisher_response;
 
     public String getStatus() { return status; }
@@ -25,13 +25,13 @@ public class    IabPurchasesJson {
     }
 
     public static class PublisherResponse {
-        @Key("INAPP_PURCHASE_ITEM_LIST") private List<String> itemList;
+        @JsonProperty("INAPP_PURCHASE_ITEM_LIST") private List<String> itemList;
 
-        @Key("INAPP_PURCHASE_DATA_LIST") private List<PurchaseDataObject> purchaseDataList;
+        @JsonProperty("INAPP_PURCHASE_DATA_LIST") private List<PurchaseDataObject> purchaseDataList;
 
-        @Key("INAAP_DATA_SIGNATURE_LIST") private List<String> signatureList;
+        @JsonProperty("INAAP_DATA_SIGNATURE_LIST") private List<String> signatureList;
 
-        @Key("INAPP_CONTINUATION_TOKEN") private String inapp_continuation_token;
+        @JsonProperty("INAPP_CONTINUATION_TOKEN") private String inapp_continuation_token;
 
 
         public List<String> getItemList() {
@@ -49,14 +49,14 @@ public class    IabPurchasesJson {
         }
 
         public static class PurchaseDataObject {
-            @Key private int orderId;
-            @Key private String packageName;
-            @Key private String productId;
-            @Key private long purchaseTime;
-            @Key private String purchaseState;
-            @Key private String developerPayload;
-            @Key private String token;
-            @Key private String purchaseToken;
+             private int orderId;
+             private String packageName;
+             private String productId;
+             private long purchaseTime;
+             private String purchaseState;
+             private String developerPayload;
+             private String token;
+             private String purchaseToken;
 
             public int getOrderId() { return orderId; }
 

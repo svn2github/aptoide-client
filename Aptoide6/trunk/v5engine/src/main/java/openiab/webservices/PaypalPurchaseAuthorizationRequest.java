@@ -2,32 +2,40 @@ package openiab.webservices;
 
 import android.util.Log;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import openiab.webservices.json.IabSimpleResponseJson;
+import openiab.webservices.json.IabSkuDetailsJson;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 
-public class PaypalPurchaseAuthorizationRequest extends GoogleHttpClientSpiceRequest<IabSimpleResponseJson> {
+public class PaypalPurchaseAuthorizationRequest extends RetrofitSpiceRequest<IabSimpleResponseJson, PaypalPurchaseAuthorizationRequest.Webservice> {
 
     private String token;
     private String authToken;
 
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/3/productPurchaseAuthorization")
+        @FormUrlEncoded
+        IabSimpleResponseJson productPurchaseAuthorization(@FieldMap HashMap<String, String> args);
+    }
+
+
     public PaypalPurchaseAuthorizationRequest() {
-        super(IabSimpleResponseJson.class);
+        super(IabSimpleResponseJson.class, Webservice.class);
     }
 
     @Override
@@ -52,7 +60,7 @@ public class PaypalPurchaseAuthorizationRequest extends GoogleHttpClientSpiceReq
         //String baseUrl = "http://dev.aptoide.com/webservices/productPurchaseAuthorization/"+token+"/1/options="+sb.toString();
         String baseUrl = WebserviceOptions.WebServicesLink + "3/productPurchaseAuthorization";
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("mode","json");
@@ -64,27 +72,39 @@ public class PaypalPurchaseAuthorizationRequest extends GoogleHttpClientSpiceReq
 
         parameters.put("access_token",token);
 
-        HttpContent content = new UrlEncodedContent(parameters);
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        Log.e("Aptoide-InappBillingRequest", baseUrl);
+//        //setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        HttpResponse response;
+//        try{
+//            response = request.execute();
+//        } catch (EOFException e){
+//
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.put("Connection", "close");
+//            request.setHeaders(httpHeaders);
+//            response = request.execute();
+//        }
+//
+//        return response.parseAs(getResultType());
 
-        Log.e("Aptoide-InappBillingRequest", baseUrl);
-        //setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+        IabSimpleResponseJson response = null;
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        HttpResponse response;
         try{
-            response = request.execute();
-        } catch (EOFException e){
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put("Connection", "close");
-            request.setHeaders(httpHeaders);
-            response = request.execute();
+            response = getService().productPurchaseAuthorization(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
         }
 
-        return response.parseAs(getResultType());    }
+        return response;
+
+    }
 
   
 

@@ -4,7 +4,7 @@ package cm.aptoide.ptdev.webservices;
  * Created by rmateus on 08-07-2014.
  */
 public class WebserviceOptions {
-    public static String WebServicesLink ="https://webservices.aptoide.com/webservices/";
+    public final static String WebServicesLink ="/webservices.aptoide.com/webservices/";
 
     String key;
     String value;

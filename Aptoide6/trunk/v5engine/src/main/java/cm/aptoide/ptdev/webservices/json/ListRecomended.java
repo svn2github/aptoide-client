@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ public class ListRecomended{
 
 
     private Number productscount;
-    @Key
+
    	private List<Repository> repository;
 
-    @Key
+
    	private String status;
 
  	public Number getProductscount(){
@@ -36,20 +36,20 @@ public class ListRecomended{
 
     public static class Repository{
 
-        @Key
+
         private String apkpath;
         private Number appscount;
         private String basepath;
         private String featuregraphicpath;
         private String hash;
 
-        @Key
+
         private String iconspath;
 
-        @Key
+
         private String name;
 
-        @Key("package")
+
         private List<Package> thePackages;
         private String screenspath;
 
@@ -112,69 +112,69 @@ public class ListRecomended{
 
         public static class Package{
 
-            @Key
+
             private String age;
 
-            @Key
+
             private String apkid;
 
-            @Key
+
             private String catg;
 
-            @Key
+
             private String catg2;
 
-            @Key
+
             private Number catids;
 
-            @Key
+
             private String cpu;
 
-            @Key
+
             private Number dwn;
 
-            @Key
+
             private String icon;
 
-            @Key
+
             private String icon_hd;
 
-            @Key
+
             private String md5h;
 
-            @Key
+
             private String minGles;
 
-            @Key
+
             private String minScreen;
 
-            @Key
+
             private Number minSdk;
 
 
 
-            @Key
+
             private String name;
 
-            @Key
+
             private String path;
 
-            @Key
+
             private Number rat;
 
-            @Key
+
             private String signature;
 
-            @Key
+
             private Number sz;
 
-            @Key
+
             private String timestamp;
 
-            @Key
+
             private String ver;
 
-            @Key
+
             private Number vercode;
 
             public String getAge(){

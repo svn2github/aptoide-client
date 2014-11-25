@@ -28,7 +28,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
         this.timeline = timeline;
 
         if(timeline){
-            TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
+            TITLES = new String[] { context.getString(R.string.home), "Top" ,context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
         }else{
             TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
         }
@@ -66,17 +66,26 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
 
         if(timeline) {
+            Fragment fragmentListApps;
+            Bundle bundle = new Bundle();
 
             switch (position) {
                 case 0:
-                    return new FragmentHome();
+                    fragmentListApps = new FragmentListApps();
+
+                    return fragmentListApps;
+
                 case 1:
-                    return new FragmentStores();
+                    fragmentListApps = new FragmentListTopApps();
+
+                    return fragmentListApps;
                 case 2:
-                    return new FragmentUpdates();
+                    return new FragmentStores();
                 case 3:
-                    return new FragmentSocialTimeline();
+                    return new FragmentUpdates();
                 case 4:
+                    return new FragmentSocialTimeline();
+                case 5:
                     return new FragmentDownloadManager();
             }
         }else{

@@ -6,15 +6,15 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.SharedPreferences;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpStatusCodes;
-import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
+
+
+
+
+
+
+
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -69,7 +69,6 @@ public class OAuthRefreshAccessTokenHandler implements HttpUnsuccessfulResponseH
             HttpRequest oauth2RefresRequest = httpRequestFactory.buildPostRequest(url, content);
             oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
             OAuth responseJson = oauth2RefresRequest.execute().parseAs(OAuth.class);
-
 
             SharedPreferences preferences = SecurePreferences.getInstance();
 

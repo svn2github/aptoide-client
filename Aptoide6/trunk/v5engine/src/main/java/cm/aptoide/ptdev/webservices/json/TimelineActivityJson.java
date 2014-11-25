@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -8,13 +8,13 @@ import java.util.List;
  * Created by rmateus on 23-10-2014.
  */
 public class TimelineActivityJson {
-    @Key
+
     public String status;
-    @Key
+
     public ActivityGroup new_installs;
-    @Key
+
     public ActivityGroup owned_activity;
-    @Key
+
     public ActivityGroup related_activity;
 
     public String getStatus() {
@@ -35,13 +35,13 @@ public class TimelineActivityJson {
 
     public static class ActivityGroup{
 
-        @Key
+
         public List<Friend> friends;
-        @Key
+
         public Number total;
-        @Key
+
         public Number total_likes;
-        @Key
+
         public Number total_comments;
 
         public List<Friend> getFriends() {
@@ -63,7 +63,7 @@ public class TimelineActivityJson {
 
 
     public static class Friend{
-        @Key
+
         public String avatar;
 
         public String getAvatar() {

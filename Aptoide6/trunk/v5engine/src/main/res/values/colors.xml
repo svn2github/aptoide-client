@@ -56,4 +56,8 @@
     <color name="medium_custom_gray">#c6c7c6</color>
     <color name="dark_gray">#262626</color>
 
+    <color name="aptoide_color">#ff8800</color>
+    <color name="aptoide_color_pressed">#000000</color>
+    <color name="aptoide_color_focused">#e55c1b</color>
+
 </resources>

@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.timeline.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class ListapklikesJson extends GenericResponse {
         return usersapks_likes;
     }
 
-    @Key
+
         ArrayList<Friend> usersapks_likes;
 
 

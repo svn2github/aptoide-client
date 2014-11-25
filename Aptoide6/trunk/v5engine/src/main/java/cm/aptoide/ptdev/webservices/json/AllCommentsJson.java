@@ -1,7 +1,7 @@
 package cm.aptoide.ptdev.webservices.json;
 
 import cm.aptoide.ptdev.model.Comment;
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class AllCommentsJson {
         return listing;
     }
 
-    @Key
+
     List<Comment> listing;
 
 }

@@ -3,19 +3,18 @@ package openiab.webservices.json;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.api.client.util.Key;
 
 /**
  * Created by rmateus on 21-05-2014.
  */
 public class Metadata implements Parcelable {
 
-    @Key
+
     private int id;
-    @Key private String icon;
-    @Key private double price;
-    @Key private String currency;
-    @Key private double tax_rate;
+     private String icon;
+     private double price;
+     private String currency;
+     private double tax_rate;
 
 
 

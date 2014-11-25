@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import java.util.List;
 
@@ -9,8 +10,8 @@ import java.util.List;
  */
 public class ApkSuggestionJson {
 
-    @Key private List<Ads> ads;
-    @Key private String status;
+     private List<Ads> ads;
+     private String status;
 
     public List<Ads> getAds(){
         return this.ads;
@@ -26,21 +27,21 @@ public class ApkSuggestionJson {
     }
 
     public static class Data{
-        @Key private String description;
-        @Key private Number downloads;
-        @Key private String icon;
-        @Key private Number id;
-        @Key private String md5sum;
-        @Key private String name;
-        @Key("package") private String packageName;
-        @Key private String repo;
-        @Key private Number size;
-        @Key private Number stars;
-        @Key private Number vercode;
-        @Key private String vername;
+         private String description;
+         private Number downloads;
+         private String icon;
+         private Number id;
+         private String md5sum;
+         private String name;
+         @JsonProperty("package") private String packageName;
+         private String repo;
+         private Number size;
+         private Number stars;
+         private Number vercode;
+         private String vername;
 
-        @Key private String url;
-        @Key private String image;
+         private String url;
+         private String image;
 
         public String getDescription(){
             return this.description;
@@ -131,9 +132,9 @@ public class ApkSuggestionJson {
 
 
     public static class Ads{
-        @Key private Data data;
-        @Key private Info info;
-        @Key private Partner partner;
+         private Data data;
+         private Info info;
+         private Partner partner;
 
         public Data getData(){
             return this.data;
@@ -154,9 +155,9 @@ public class ApkSuggestionJson {
     }
 
     public static class Info{
-        @Key private String ad_type;
-        @Key private String cpc_url;
-        @Key private String cpi_url;
+         private String ad_type;
+         private String cpc_url;
+         private String cpi_url;
 
         public String getAd_type(){
             return this.ad_type;
@@ -188,8 +189,8 @@ public class ApkSuggestionJson {
             return partnerData;
         }
 
-        @Key("info") private Info partnerInfo;
-        @Key("data") private Data partnerData;
+        @JsonProperty("info") private Info partnerInfo;
+         private Data partnerData;
 
         public static class Info{
 
@@ -201,8 +202,8 @@ public class ApkSuggestionJson {
                 return name;
             }
 
-            @Key private Number id;
-            @Key private String name;
+             private Number id;
+             private String name;
         }
 
         public static class Data{
@@ -215,8 +216,8 @@ public class ApkSuggestionJson {
                 return impression_url;
             }
 
-            @Key private String click_url;
-            @Key private String impression_url;
+             private String click_url;
+             private String impression_url;
         }
 
 

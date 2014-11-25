@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="446"
-    android:versionName="5.4.2">
+    android:versionCode="448"
+    android:versionName="6.0.0a" >
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -246,6 +246,11 @@
             android:name="cm.aptoide.ptdev.services.ParserService"
             android:exported="false"
             android:label="ParserService" />
+
+        <service
+            android:name="cm.aptoide.ptdev.webservices.HttpService"
+            android:exported="false"
+            android:label="HttpService2" />
 
         <service
             android:name="cm.aptoide.ptdev.services.ParserHttp"

@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -12,18 +12,18 @@ import cm.aptoide.ptdev.model.Error;
 public class OAuth {
 
 
-    @Key
+
     private String access_token;
-    @Key
+
     private String refresh_token;
 
-    @Key
+
     private String error_description;
 
-    @Key
+
     private List<Error> errors;
 
-    @Key
+
     private String status;
 
     public String getStatus() {

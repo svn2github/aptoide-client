@@ -6,12 +6,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -26,13 +24,20 @@ import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
+import cm.aptoide.ptdev.webservices.json.RepositoryCommentsJson;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
+import retrofit.RestAdapter;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by rmateus on 08-07-2014.
  */
 
-public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJson> {
+public class ListSearchApkRequest extends RetrofitSpiceRequest<SearchJson, ListSearchApkRequest.Webservice> {
 
 
     private String searchString;
@@ -41,17 +46,29 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
     private int offset;
 
     public ListSearchApkRequest() {
-        super(SearchJson.class);
+        super(SearchJson.class, Webservice.class);
     }
 
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/2/listSearchApks")
+        @FormUrlEncoded
+        SearchJson listSearchApk(@FieldMap HashMap<String, String> args);
+    }
 
+    protected Converter createConverter() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return new JacksonConverter(objectMapper);
+    }
 
 
     @Override
     public SearchJson loadDataFromNetwork() throws Exception {
 
         StringBuilder repos = new StringBuilder();
-        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"2/listSearchApks");
+        //GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"2/listSearchApks");
 
         final ArrayList<String> stores = new ArrayList<String>();
 
@@ -99,13 +116,18 @@ public class ListSearchApkRequest extends GoogleHttpClientSpiceRequest<SearchJso
         parameters.put("search", searchString);
         parameters.put("options", sb.toString());
 
-        HttpContent content = new UrlEncodedContent(parameters);
+        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        setService(adapter.create(getRetrofitedInterfaceClass()));
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        return getService().listSearchApk(parameters);
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-
-        return request.execute().parseAs( getResultType() );
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        return request.execute().parseAs( getResultType() );
     }
 
     public void setSearchString(String searchString) {

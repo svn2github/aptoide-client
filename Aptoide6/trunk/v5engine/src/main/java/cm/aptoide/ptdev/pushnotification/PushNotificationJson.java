@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.pushnotification;
 
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
  */
 public class PushNotificationJson extends GenericResponseV2 {
 
-    @Key
+    
     List<Notification> results;
 
     public List<Notification> getResults() {
@@ -19,20 +19,20 @@ public class PushNotificationJson extends GenericResponseV2 {
     }
 
     public static class Notification {
-        @Key
+        
         Number id;
-        @Key
+        
         String title;
 
-        @Key
+        
         String message;
 
-        @Key
+        
         String target_url;
-        @Key
+        
         String track_url;
 
-        @Key Images images;
+         Images images;
 
         public String getMessage() {
             return message;
@@ -59,8 +59,8 @@ public class PushNotificationJson extends GenericResponseV2 {
         }
 
         public static class Images {
-            @Key String banner_url;
-            @Key String icon_url;
+             String banner_url;
+             String icon_url;
 
 
             public String getBanner_url() {

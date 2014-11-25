@@ -1,26 +1,37 @@
 package openiab.webservices;
 
-import com.google.api.client.http.GenericUrl;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
+import java.util.HashMap;
+
+import cm.aptoide.ptdev.webservices.ListRelatedApkRequest;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 15-09-2014.
  */
-public abstract class BaseRequest<E> extends GoogleHttpClientSpiceRequest<E> {
+public abstract class BaseRequest<E, Y> extends RetrofitSpiceRequest<E, Y> {
     protected String apiVersion;
     protected String token;
     protected String packageName;
 
-    protected GenericUrl getURL(){
-        String baseUrl = WebserviceOptions.WebServicesLink+"3/processInAppBilling";
-        return new GenericUrl(baseUrl);
+    public BaseRequest(Class<E> clazz, Class<Y> retrofitedInterfaceClass) {
+        super(clazz, retrofitedInterfaceClass);
     }
 
-    public BaseRequest(Class<E> clazz) {
-        super(clazz);
-    }
+
+
+
+
+//    protected GenericUrl getURL(){
+//        String baseUrl = WebserviceOptions.WebServicesLink+"3/processInAppBilling";
+//        return new GenericUrl(baseUrl);
+//    }
+
 
     public String getApiVersion() {
         return apiVersion;

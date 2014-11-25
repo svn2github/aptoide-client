@@ -2,23 +2,24 @@ package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
 
-import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
+import retrofit.http.POST;
 
 /**
  * Created by rmateus on 30-12-2013.
  */
-public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponseV2>{
+public class AddLikeRequest extends RetrofitSpiceRequest<GenericResponseV2, AddLikeRequest.Webservice> {
 
     private String token;
     private String repo;
@@ -31,8 +32,14 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
 
     private boolean isLike;
 
+    public interface Webservice {
+        @FormUrlEncoded
+        @POST("/webservices.aptoide.com/webservices/3/addApkLike")
+        GenericResponseV2 addApkLike(@FieldMap HashMap<String, String> apkversion );
+    }
+
     public AddLikeRequest(Context activity) {
-        super(GenericResponseV2.class);
+        super(GenericResponseV2.class, Webservice.class);
     }
 
     public void setToken(String token) {
@@ -55,9 +62,7 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
 
-
-
-        GenericUrl url = new GenericUrl(baseUrl);
+        //GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         token = SecurePreferences.getInstance().getString("access_token", "empty");
@@ -68,14 +73,27 @@ public class AddLikeRequest extends GoogleHttpClientSpiceRequest<GenericResponse
         parameters.put("like", isLike?"like":"dontLike");
         parameters.put("apkid", packageName);
         parameters.put("apkversion", apkversion);
+        GenericResponseV2 response = null;
 
-        HttpContent content = new UrlEncodedContent(parameters);
+        Webservice adapter = new RestAdapter.Builder().setEndpoint("http://").build().create(getRetrofitedInterfaceClass());
+        setService(adapter);
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        return request.execute().parseAs( getResultType() );
 
+        try{
+            response = getService().addApkLike(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
+        }
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
+        return response;
 
-        return request.execute().parseAs( getResultType() );
     }
 }

@@ -1,7 +1,8 @@
 
 package cm.aptoide.ptdev.webservices.json;
 
-import com.google.api.client.util.Key;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import java.util.List;
 
@@ -12,28 +13,28 @@ import openiab.webservices.json.PaymentServices;
 
 public class GetApkInfoJson {
 
-    @Key
+
     private Apk apk;
 
-    @Key
+
     private String latest;
-    @Key
+
     private Malware malware;
-    @Key
+
     private Media media;
-    @Key
+
     private Meta meta;
-    @Key
+
     private Payment payment;
-    @Key
+
     private Signature signature;
-    @Key
+
     private String status;
 
-    @Key("obb")
+
     private ObbObject obb;
 
-    @Key
+
     List<cm.aptoide.ptdev.model.Error> errors;
 
     public Apk getApk() {
@@ -77,9 +78,9 @@ public class GetApkInfoJson {
     }
 
     public static class Media{
-        @Key private List<String> sshots;
-        @Key private List<Screenshots> sshots_hd;
-        @Key private List<Videos> videos;
+         private List<String> sshots;
+         private List<Screenshots> sshots_hd;
+         private List<Videos> videos;
 
         public List<String> getSshots(){
 
@@ -97,9 +98,9 @@ public class GetApkInfoJson {
         public void setVideos(List<Videos> videos) { this.videos = videos; }
 
         public static class Videos{
-            @Key private String thumb;
-            @Key private String type;
-            @Key private String url;
+             private String thumb;
+             private String type;
+             private String url;
 
             public String getThumb(){
                 return this.thumb;
@@ -122,8 +123,8 @@ public class GetApkInfoJson {
         }
 
         public static class Screenshots {
-            @Key private String path;
-            @Key private String orient;
+             private String path;
+             private String orient;
 
             public String getOrient() {
                 return orient;
@@ -137,13 +138,13 @@ public class GetApkInfoJson {
 
     public static class Payment{
 
-        @Key private Number amount;
-        @Key("currency_symbol") private String symbol;
-        @Key private String error;
-        @Key private String apkpath;
-        @Key private Metadata metadata;
-        @Key private List<PaymentServices> payment_services;
-        @Key private String status;
+         private Number amount;
+         private String symbol;
+         private String error;
+         private String apkpath;
+         private Metadata metadata;
+         private List<PaymentServices> payment_services;
+         private String status;
 
         public Number getAmount(){
             return this.amount;
@@ -178,7 +179,7 @@ public class GetApkInfoJson {
         public Metadata getMetadata() { return metadata; }
 
         public static class Metadata{
-            @Key private int id;
+             private int id;
 
             public int getId(){
                 return id;
@@ -187,15 +188,15 @@ public class GetApkInfoJson {
     }
 
     public static class Meta{
-        @Key private List<Comment> comments;
-        @Key private String description;
-        @Key private Developer developer;
-        @Key private Likevotes likevotes;
-        @Key private String news;
-        @Key private String title;
-        @Key private String wurl;
-        @Key private Flags flags;
-        @Key private int downloads;
+         private List<Comment> comments;
+         private String description;
+         private Developer developer;
+         private Likevotes likevotes;
+         private String news;
+         private String title;
+         private String wurl;
+         private Flags flags;
+         private int downloads;
 
 
         public int getDownloads(){return this.downloads;}
@@ -240,10 +241,10 @@ public class GetApkInfoJson {
         public void setFlags(Flags flags) { this.flags = flags;}
 
         public static class Likevotes{
-            @Key private Number dislikes;
-            @Key private Number likes;
-            @Key private Number rating;
-            @Key private String uservote;
+             private Number dislikes;
+             private Number likes;
+             private Number rating;
+             private String uservote;
 
 
             public String getUservote() {
@@ -275,9 +276,9 @@ public class GetApkInfoJson {
         }
 
         public static class Flags{
-            @Key private Votes votes;
-            @Key private String uservote;
-            @Key private Veredict veredict;
+             private Votes votes;
+             private String uservote;
+             private Veredict veredict;
 
             public String getUservote() {
                 return uservote;
@@ -295,8 +296,8 @@ public class GetApkInfoJson {
         }
 
         public static class Veredict{
-            @Key private String flag;
-            @Key private String review;
+             private String flag;
+             private String review;
 
             public String getFlag(){
                 return this.flag;
@@ -313,11 +314,11 @@ public class GetApkInfoJson {
         }
 
         public static class Votes{
-            @Key private Number fake;
-            @Key private Number freeze;
-            @Key private Number good;
-            @Key private Number license;
-            @Key private Number virus;
+             private Number fake;
+             private Number freeze;
+             private Number good;
+             private Number license;
+             private Number virus;
 
             public Number getFake(){
                 return this.fake;
@@ -352,8 +353,8 @@ public class GetApkInfoJson {
         }
 
         public static class Developer{
-            @Key private Info info;
-            @Key private List<String> packages;
+             private Info info;
+             private List<String> packages;
 
             public Info getInfo(){
                 return this.info;
@@ -369,10 +370,10 @@ public class GetApkInfoJson {
             }
 
             public static class Info{
-                @Key private String email;
-                @Key private String name;
-                @Key private String privacy_policy;
-                @Key private String website;
+                 private String email;
+                 private String name;
+                 private String privacy_policy;
+                 private String website;
 
                 public String getEmail(){
                     return this.email;
@@ -403,8 +404,8 @@ public class GetApkInfoJson {
     }
 
     public static class Malware{
-        @Key private Reason reason;
-        @Key private String status;
+         private Reason reason;
+         private String status;
 
         public Reason getReason(){
             return this.reason;
@@ -420,9 +421,9 @@ public class GetApkInfoJson {
         }
 
         public static class Scanned{
-            @Key private List<Av_info> av_info;
-            @Key private String date;
-            @Key private String status;
+             private List<Av_info> av_info;
+             private String date;
+             private String status;
 
             public List<Av_info> getAv_info(){ return this.av_info; }
             public void setAv_info(List<Av_info> av_info){ this.av_info = av_info; }
@@ -433,10 +434,10 @@ public class GetApkInfoJson {
         }
 
         public static class Reason{
-            @Key private Scanned scanned;
-            @Key private Signature_validated signature_validated;
-            @Key private Thirdparty_validated thirdparty_validated;
-            @Key private Manual_qa manual_qa;
+             private Scanned scanned;
+             private Signature_validated signature_validated;
+             private Thirdparty_validated thirdparty_validated;
+             private Manual_qa manual_qa;
 
             public Scanned getScanned(){
                 return this.scanned;
@@ -460,9 +461,9 @@ public class GetApkInfoJson {
             public void setManual_qa(Manual_qa manual_qa) { this.manual_qa = manual_qa; }
 
             public static class Signature_validated{
-                @Key private String date;
-                @Key private String signature_from;
-                @Key private String status;
+                 private String date;
+                 private String signature_from;
+                 private String status;
 
                 public String getDate(){
                     return this.date;
@@ -485,8 +486,8 @@ public class GetApkInfoJson {
             }
 
             public static class Thirdparty_validated{
-                @Key private String date;
-                @Key private String store;
+                 private String date;
+                 private String store;
 
                 public String getDate(){
                     return this.date;
@@ -503,9 +504,9 @@ public class GetApkInfoJson {
             }
 
             public static class Manual_qa{
-                @Key private String date;
-                @Key private String tester;
-                @Key private String status;
+                 private String date;
+                 private String tester;
+                 private String status;
 
 
                 public String getDate(){
@@ -527,8 +528,8 @@ public class GetApkInfoJson {
     }
 
     public static class Av_info{
-        @Key private List<Infection> infections;
-        @Key private String name;
+         private List<Infection> infections;
+         private String name;
 
         public List getInfections(){ return this.infections; }
         public void setInfections(List<Infection> infections){ this.infections = infections; }
@@ -537,8 +538,8 @@ public class GetApkInfoJson {
     }
 
     public static class Infection{
-        @Key private String description;
-        @Key private String name;
+         private String description;
+         private String name;
 
         public String getDescription() { return description; }
         public void setDescription(String description) { this.description = description; }
@@ -547,83 +548,51 @@ public class GetApkInfoJson {
     }
 
     public static class Signature{
-        @Key private String c;
-        @Key private String cN;
-        @Key private String l;
-        @Key private String o;
-        @Key private String sT;
-        @Key private String SHA1;
 
-        public String getC(){
-            return this.c;
-        }
-        public void setC(String c){
-            this.c = c;
-        }
-        public String getCN(){
-            return this.cN;
-        }
-        public void setCN(String cN){
-            this.cN = cN;
-        }
-        public String getL(){
-            return this.l;
-        }
-        public void setL(String l){
-            this.l = l;
-        }
-        public String getO(){
-            return this.o;
-        }
-        public void setO(String o){
-            this.o = o;
-        }
+        @JsonProperty("SHA1") private String SHA1;
+
+
         public String getSHA1(){
             return this.SHA1;
         }
         public void setSHA1(String sHA1){
             this.SHA1 = sHA1;
         }
-        public String getST(){
-            return this.sT;
-        }
-        public void setST(String sT){
-            this.sT = sT;
-        }
+
     }
 
 
     public static class Apk{
 
-        @Key
+
         private String icon;
-        @Key
+
         private Number id;
-        @Key
+
         private String md5sum;
 
-        @Key
+
         private Number minSdk;
 
-        @Key
+
         private String minScreen;
-        @Key("package")
+
         private String packageName;
-        @Key
+
         private String path;
-        @Key
+
         private String altpath;
-        @Key
+
         private List<String> permissions;
-        @Key
+
         private String repo;
-        @Key
+
         private Number size;
-        @Key
+
         private Number vercode;
-        @Key
+
         private String vername;
-        @Key
+
         private String icon_hd;
 
         public String getIcon(){
@@ -708,7 +677,7 @@ public class GetApkInfoJson {
 
     public static class ObbObject {
 
-        @Key("main")
+
         private Obb main;
 
         public Obb getMain() {
@@ -719,7 +688,7 @@ public class GetApkInfoJson {
             return patch;
         }
 
-        @Key("patch")
+
         private Obb patch;
     }
 }

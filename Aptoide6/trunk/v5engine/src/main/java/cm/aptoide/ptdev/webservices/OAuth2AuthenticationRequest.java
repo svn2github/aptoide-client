@@ -1,13 +1,8 @@
 package cm.aptoide.ptdev.webservices;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.octo.android.robospice.retry.RetryPolicy;
 
 import java.io.IOException;
@@ -18,11 +13,15 @@ import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantException;
 import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.OAuth;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by rmateus on 03-07-2014.
  */
-public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OAuth> {
+public class OAuth2AuthenticationRequest extends RetrofitSpiceRequest<OAuth, OAuth2AuthenticationRequest.Webservice> {
 
     private String username;
     private String password;
@@ -30,9 +29,15 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
     private String nameForGoogle;
 
     public OAuth2AuthenticationRequest(){
-        super(OAuth.class);
+        super(OAuth.class, Webservice.class);
     }
 
+
+    public interface Webservice{
+        @POST(WebserviceOptions.WebServicesLink+"3/oauth2Authentication")
+        @FormUrlEncoded
+        OAuth oauth2Authentication(@FieldMap HashMap<String, String> args);
+    }
 
 
     @Override
@@ -63,32 +68,43 @@ public class OAuth2AuthenticationRequest extends GoogleHttpClientSpiceRequest<OA
             parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
         }
 
-        HttpContent content = new UrlEncodedContent(parameters);
-        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/oauth2Authentication");
-        HttpRequest oauth2RefresRequest = getHttpRequestFactory().buildPostRequest(url, content);
-        oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//        HttpContent content = new UrlEncodedContent(parameters);
+//        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"3/oauth2Authentication");
+//        HttpRequest oauth2RefresRequest = getHttpRequestFactory().buildPostRequest(url, content);
+//        oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//
+//        oauth2RefresRequest.setUnsuccessfulResponseHandler(new OAuthAccessTokenHandler());
+//
+//        HttpResponse response;
+//
+//        try{
+//            response = oauth2RefresRequest.execute();
+//        }catch (InvalidGrantException e){
+//                    setRetryPolicy(noRetry);
+//                throw new InvalidGrantSpiceException(e.getError_description());
+//        }catch (IOException e){
+//            if("No authentication challenges found".equals(e.getMessage())){
+//                setRetryPolicy(noRetry);
+//                throw new InvalidGrantSpiceException("Invalid username and password combination");
+//            }else{
+//                throw e;
+//            }
+//        }
 
 
-        oauth2RefresRequest.setUnsuccessfulResponseHandler(new OAuthAccessTokenHandler());
+//        return response.parseAs(OAuth.class);
 
-        HttpResponse response;
+        OAuth response = null;
 
         try{
-            response = oauth2RefresRequest.execute();
-        }catch (InvalidGrantException e){
-                    setRetryPolicy(noRetry);
-                throw new InvalidGrantSpiceException(e.getError_description());
-        }catch (IOException e){
-            if("No authentication challenges found".equals(e.getMessage())){
-                setRetryPolicy(noRetry);
-                throw new InvalidGrantSpiceException("Invalid username and password combination");
-            }else{
-                throw e;
-            }
+            response = getService().oauth2Authentication(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
         }
 
+        return response;
 
-        return response.parseAs(OAuth.class);
     }
 
     RetryPolicy noRetry = new RetryPolicy() {

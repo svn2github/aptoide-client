@@ -2,7 +2,7 @@ package cm.aptoide.ptdev.webservices.json;
 
 
 import cm.aptoide.ptdev.model.Error;
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class CreateUserJson {
 
-    @Key
+
     private String status;
 
-    @Key
+
     private List<Error> errors;
 
-   // @Key
+   //
     //private String queueName;
 
     public String getStatus() {

@@ -2,9 +2,11 @@ package openiab.webservices.json;
 
 import android.util.Log;
 
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -19,10 +21,10 @@ import java.util.Map;
  */
 public class IabPurchaseStatusJson {
 
-    @Key
+    
     private String status;
 
-    @Key
+    
     private PublisherResponse publisher_response;
 
     public String getStatus() {
@@ -35,16 +37,16 @@ public class IabPurchaseStatusJson {
 
     public static class PublisherResponse {
 
-        @Key("RESPONSE_CODE")
+        @JsonProperty("RESPONSE_CODE")
         private int response_code;
 
-        @Key("INAPP_PURCHASE_ITEM_LIST")
+        @JsonProperty("INAPP_PURCHASE_ITEM_LIST")
         private ArrayList<String> item;
 
-        @Key("INAPP_PURCHASE_DATA_LIST")
+        @JsonProperty("INAPP_PURCHASE_DATA_LIST")
         private ArrayList<PurchaseDataObject> data;
 
-        @Key("INAAP_DATA_SIGNATURE_LIST")
+        @JsonProperty("INAAP_DATA_SIGNATURE_LIST")
         private ArrayList<String> signature;
 
         public ArrayList<String> getItem() {
@@ -64,13 +66,13 @@ public class IabPurchaseStatusJson {
         }
 
         public static class PurchaseDataObject {
-            @Key private int orderId;
-            @Key private String packageName;
-            @Key private String productId;
-            @Key private long purchaseTime;
-            @Key private String purchaseState;
-            @Key private String purchaseToken;
-            @Key private String developerPayload;
+             private int orderId;
+             private String packageName;
+             private String productId;
+             private long purchaseTime;
+             private String purchaseState;
+             private String purchaseToken;
+             private String developerPayload;
 
             public int getOrderId() { return orderId; }
 
@@ -107,7 +109,14 @@ public class IabPurchaseStatusJson {
                 myJSon.put("developerPayload", developerPayload);
 
 
-                String json = new Gson().toJson(myJSon);
+                ObjectMapper mapper = new ObjectMapper();
+
+                String json = null;
+                try {
+                    json = mapper.writeValueAsString(myJSon);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
 
                 Log.d("AptoideJson", json);
 

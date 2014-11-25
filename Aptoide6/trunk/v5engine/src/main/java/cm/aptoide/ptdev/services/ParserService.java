@@ -36,7 +36,7 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService;
+
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.squareup.otto.Subscribe;
@@ -197,77 +197,77 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
     SparseArray<HandlerBundle> handlerBundleSparseArray = new SparseArray<HandlerBundle>();
 
     public synchronized void startParse(final Database db, final Store store, boolean newStore) {
-        if(handlerBundleSparseArray.get((int) store.getId())!=null){
-            return;
-        }
-
-        startService(new Intent(getApplicationContext(), ParserService.class));
-        startForeground(45, createDefaultNotification(getString(R.string.loading_stores)));
-        final long id;
-        if(newStore){
-            if(db.existsServer(store.getBaseUrl())){
-                return;
-            }
-            id = insertStoreDatabase(db, store);
-            store.setId(id);
-            BusProvider.getInstance().post(produceRepoAddedEvent());
-        }else{
-            id = store.getId();
-        }
-
-        if(store.getBaseUrl().contains("store.aptoide.com")){
-            store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));
-        }
-
-        GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
-
-        if (!spiceManager.isStarted()) {
-            //Log.d("Aptoide-ParserService", "Starting spice");
-            spiceManager.start(getApplicationContext());
-        }
-
-        RepositoryInfoJson repositoryInfoJson = null;
-        getRepoInfoRequest.setHttpRequestFactory(Jackson2GoogleHttpClientSpiceService.createRequestFactory());
-
-        try {
-            repositoryInfoJson = getRepoInfoRequest.loadDataFromNetwork();
-        } catch (Exception e) {
-            onError(e, id);
-            e.printStackTrace();
-        }
-
-        if (repositoryInfoJson != null) {
-            if (!"FAIL".equals(repositoryInfoJson.getStatus())) {
-                store.setName(repositoryInfoJson.getListing().getName());
-                store.setDownloads(repositoryInfoJson.getListing().getDownloads());
-
-                if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
-
-                    String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
-                    String avatar = repositoryInfoJson.getListing().getAvatar_hd();
-                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                    avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-                    store.setAvatar(avatar);
-
-                }else{
-                    store.setAvatar(repositoryInfoJson.getListing().getAvatar());
-                }
-
-                store.setDescription(repositoryInfoJson.getListing().getDescription());
-                store.setTheme(repositoryInfoJson.getListing().getTheme());
-                store.setView(repositoryInfoJson.getListing().getView());
-                store.setItems(repositoryInfoJson.getListing().getItems());
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        beginParse(db, store, id);
-                    }
-                }).start();
-            }else{
-                onError(new Exception("Failed repositoryInfo"), id);
-            }
-        }
+//        if(handlerBundleSparseArray.get((int) store.getId())!=null){
+//            return;
+//        }
+//
+//        startService(new Intent(getApplicationContext(), ParserService.class));
+//        startForeground(45, createDefaultNotification(getString(R.string.loading_stores)));
+//        final long id;
+//        if(newStore){
+//            if(db.existsServer(store.getBaseUrl())){
+//                return;
+//            }
+//            id = insertStoreDatabase(db, store);
+//            store.setId(id);
+//            BusProvider.getInstance().post(produceRepoAddedEvent());
+//        }else{
+//            id = store.getId();
+//        }
+//
+//        if(store.getBaseUrl().contains("store.aptoide.com")){
+//            store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));
+//        }
+//
+//        GetRepositoryInfoRequest getRepoInfoRequest = new GetRepositoryInfoRequest(store.getName());
+//
+//        if (!spiceManager.isStarted()) {
+//            //Log.d("Aptoide-ParserService", "Starting spice");
+//            spiceManager.start(getApplicationContext());
+//        }
+//
+//        RepositoryInfoJson repositoryInfoJson = null;
+//        getRepoInfoRequest.setHttpRequestFactory(Jackson2GoogleHttpClientSpiceService.createRequestFactory());
+//
+//        try {
+//            repositoryInfoJson = getRepoInfoRequest.loadDataFromNetwork();
+//        } catch (Exception e) {
+//            onError(e, id);
+//            e.printStackTrace();
+//        }
+//
+//        if (repositoryInfoJson != null) {
+//            if (!"FAIL".equals(repositoryInfoJson.getStatus())) {
+//                store.setName(repositoryInfoJson.getListing().getName());
+//                store.setDownloads(repositoryInfoJson.getListing().getDownloads());
+//
+//                if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
+//
+//                    String sizeString = IconSizes.generateSizeStringAvatar(getApplicationContext());
+//                    String avatar = repositoryInfoJson.getListing().getAvatar_hd();
+//                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+//                    avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
+//                    store.setAvatar(avatar);
+//
+//                }else{
+//                    store.setAvatar(repositoryInfoJson.getListing().getAvatar());
+//                }
+//
+//                store.setDescription(repositoryInfoJson.getListing().getDescription());
+//                store.setTheme(repositoryInfoJson.getListing().getTheme());
+//                store.setView(repositoryInfoJson.getListing().getView());
+//                store.setItems(repositoryInfoJson.getListing().getItems());
+//
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        beginParse(db, store, id);
+//                    }
+//                }).start();
+//            }else{
+//                onError(new Exception("Failed repositoryInfo"), id);
+//            }
+//        }
     }
 
     private void beginParse(Database db, Store store, long id) {

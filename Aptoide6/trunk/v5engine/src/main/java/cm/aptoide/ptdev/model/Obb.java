@@ -1,6 +1,6 @@
 package cm.aptoide.ptdev.model;
 
-import com.google.api.client.util.Key;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,16 +12,16 @@ import com.google.api.client.util.Key;
 public class Obb {
 
 
-    @Key
+
     private String filename;
 
-    @Key
+
     private Number filesize;
 
-    @Key
+
     private String md5sum;
 
-    @Key
+
     private String path;
 
     public String getFilename(){

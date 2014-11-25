@@ -1,7 +1,7 @@
 
 package cm.aptoide.ptdev.model;
 
-import com.google.api.client.util.Key;
+
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -9,16 +9,16 @@ import java.util.ArrayList;
 
 public class Comment {
 
-    @Key private Number id;
-    @Key private String lang;
-    @Key private String reponame;
-    @Key private String subject;
-    @Key private String text;
-    @Key private String timestamp;
-    @Key private String useridhash;
-    @Key private String username;
-    @Key private Number answerto;
-    @Key private Number votes;
+     private Number id;
+     private String lang;
+     private String reponame;
+     private String subject;
+     private String text;
+     private String timestamp;
+     private String useridhash;
+     private String username;
+     private Number answerto;
+     private Number votes;
 
     private ArrayList<Comment> subComments = new ArrayList<Comment>();
     private boolean isShowingSubcomments;

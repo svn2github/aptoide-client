@@ -7,14 +7,13 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import retrofit.RestAdapter;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.io.EOFException;
 import java.util.HashMap;
@@ -28,8 +27,14 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 
-public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJson> {
+public class UpdateUserRequest extends RetrofitSpiceRequest<CreateUserJson, UpdateUserRequest.Webservice> {
 
+
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/createUser")
+        @FormUrlEncoded
+        CreateUserJson updateUser(@FieldMap HashMap<String, String> args);
+    }
 
     String baseUrl = WebserviceOptions.WebServicesLink + "createUser";
 
@@ -37,14 +42,14 @@ public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
     private Context context;
 
     public UpdateUserRequest(Context context) {
-        super(CreateUserJson.class);
+        super(CreateUserJson.class, Webservice.class);
         this.context = context;
     }
 
     @Override
     public CreateUserJson loadDataFromNetwork() throws Exception {
 
-        GenericUrl url = new GenericUrl(baseUrl);
+        //GenericUrl url = new GenericUrl(baseUrl);
         AccountManager manager = AccountManager.get(context);
         Account account = manager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
         String email = account.name.toLowerCase(Locale.ENGLISH);
@@ -60,24 +65,32 @@ public class UpdateUserRequest extends GoogleHttpClientSpiceRequest<CreateUserJs
 
         parameters.put("hmac", AptoideUtils.Algorithms.computeHmacSha1(email+passhash+name+"true", "bazaar_hmac"));
 
-        HttpContent content = new UrlEncodedContent(parameters);
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        HttpResponse response;
+//        try{
+//            response = request.execute();
+//        } catch (EOFException e){
+//
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.put("Connection", "close");
+//            request.setHeaders(httpHeaders);
+//            response = request.execute();
+//        }
+//
+//        return response.parseAs(getResultType());
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(new JacksonConverter()).build();
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
+        setService(adapter.create(getRetrofitedInterfaceClass()));
 
-        HttpResponse response;
-        try{
-            response = request.execute();
-        } catch (EOFException e){
+        return getService().updateUser(parameters);
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put("Connection", "close");
-            request.setHeaders(httpHeaders);
-            response = request.execute();
-        }
-
-        return response.parseAs(getResultType());    }
+    }
 
     public void setName(String name) {
         this.name = name;

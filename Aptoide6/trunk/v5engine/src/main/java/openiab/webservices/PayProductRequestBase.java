@@ -1,12 +1,12 @@
 package openiab.webservices;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
+
+
+
+
+
+
 
 import java.io.EOFException;
 import java.util.ArrayList;
@@ -16,13 +16,20 @@ import java.util.Map;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import openiab.webservices.json.IabPurchaseStatusJson;
+import openiab.webservices.json.IabSimpleResponseJson;
+import openiab.webservices.json.IabSkuDetailsJson;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 15-09-2014.
  */
-public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatusJson> {
+public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatusJson, PayProductRequestBase.Webservice > {
     private String productId;
     private String oemId;
     private String repo;
@@ -30,14 +37,21 @@ public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatu
     private String price;
     private String currency;
 
-    @Override
-    protected GenericUrl getURL() {
-        String baseUrl = WebserviceOptions.WebServicesLink + "3/payProduct";
-        return new GenericUrl(baseUrl);
+
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/3/payProduct")
+        @FormUrlEncoded
+        IabPurchaseStatusJson payProduct(@FieldMap HashMap<String, String> args);
     }
 
+//    @Override
+//    protected GenericUrl getURL() {
+//        String baseUrl = WebserviceOptions.WebServicesLink + "3/payProduct";
+//        return new GenericUrl(baseUrl);
+//    }
+
     public PayProductRequestBase() {
-        super(IabPurchaseStatusJson.class);
+        super(IabPurchaseStatusJson.class, Webservice.class);
     }
 
     protected abstract void optionsAddExtra(List<WebserviceOptions> options);
@@ -59,7 +73,7 @@ public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatu
         }
         sb.append(")");
 
-        GenericUrl url = getURL();
+//        GenericUrl url = getURL();
 
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("mode","json");
@@ -78,23 +92,15 @@ public abstract class PayProductRequestBase extends BaseRequest<IabPurchaseStatu
 
         parameters.put("access_token", token);
 
-        HttpContent content = new UrlEncodedContent(parameters);
+        IabPurchaseStatusJson response = null;
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-        request.setParser(new JacksonFactory().createJsonObjectParser());
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
-
-        HttpResponse response;
         try{
-            response = request.execute();
-        } catch (EOFException e){
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.put("Connection", "close");
-            request.setHeaders(httpHeaders);
-            response = request.execute();
+            response = getService().payProduct(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
         }
 
-        return response.parseAs(getResultType());
+        return response;
     }
 
     public String getProductId() {

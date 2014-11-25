@@ -3,7 +3,7 @@ package cm.aptoide.ptdev.webservices.json;
 
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -13,27 +13,27 @@ import java.util.List;
 
 public class CheckUserCredentialsJson {
 
-    @Key
+
     private String status;
 
-    @Key
+
     private String token;
 
-    @Key String repo;
+     String repo;
 
-    @Key
+
     private String avatar;
 
-    @Key
+
     private String username;
 
-    @Key
+
     private String queueName;
 
-    @Key
+
     private List<Error> errors;
 
-    @Key private Settings settings;
+     private Settings settings;
 
     public Settings getSettings() {
         return settings;
@@ -78,7 +78,7 @@ public class CheckUserCredentialsJson {
     public String getRepo() { return repo; }
 
     public static class Settings {
-        @Key private String timeline;
+         private String timeline;
 
         public String getTimeline() {
             return timeline;

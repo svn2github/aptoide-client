@@ -12,6 +12,33 @@
         <item name="android:background">?attr/homeLabelbackground</item>
     </style>
 
+    <style name="customSelectableForegroundStyle">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/background_card</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">160dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="customHomeRowsBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">180dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="customTopSelectableForegroundStyle">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/background_card</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
 
     <style name="titleLabel">
         <item name="android:layout_width">match_parent</item>

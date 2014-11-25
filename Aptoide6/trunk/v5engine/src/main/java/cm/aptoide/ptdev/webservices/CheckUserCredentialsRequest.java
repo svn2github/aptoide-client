@@ -1,24 +1,40 @@
 package cm.aptoide.ptdev.webservices;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.UrlEncodedContent;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.octo.android.robospice.request.googlehttpclient.GoogleHttpClientSpiceRequest;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+
+
+
+
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
 
+import javax.annotation.CheckForNull;
+
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
+import retrofit.RestAdapter;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by brutus on 09-12-2013.
  */
-public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<CheckUserCredentialsJson> {
+public class CheckUserCredentialsRequest extends RetrofitSpiceRequest<CheckUserCredentialsJson, CheckUserCredentialsRequest.Webservice> {
 
     String baseUrl = WebserviceOptions.WebServicesLink+"3/getUserInfo";
 
+    public interface Webservice{
+        @FormUrlEncoded
+        @POST("/webservices.aptoide.com/webservices/3/getUserInfo")
+        CheckUserCredentialsJson getUserInfo(@FieldMap HashMap<String, String> args);
+    }
 
     //"http://www.aptoide.com/webservices/checkUserCredentials/";
 
@@ -41,13 +57,21 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
     private String token;
 
     public CheckUserCredentialsRequest() {
-        super(CheckUserCredentialsJson.class);
+        super(CheckUserCredentialsJson.class, CheckUserCredentialsRequest.Webservice.class);
+    }
+
+    protected Converter createConverter() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return new JacksonConverter(objectMapper);
     }
 
     @Override
     public CheckUserCredentialsJson loadDataFromNetwork() throws Exception {
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         //token = SecurePreferences.getInstance().getString("access_token", null);
@@ -67,13 +91,19 @@ public class CheckUserCredentialsRequest extends GoogleHttpClientSpiceRequest<Ch
 
         parameters.put("mode", "json");
 
-        HttpContent content = new UrlEncodedContent(parameters);
+        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        setService(adapter.create(getRetrofitedInterfaceClass()));
 
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
 
-        request.setParser(new JacksonFactory().createJsonObjectParser());
+        return getService().getUserInfo(parameters);
 
-        return request.execute().parseAs( getResultType() );
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        return request.execute().parseAs( getResultType() );
     }
 
     public String getUser() {

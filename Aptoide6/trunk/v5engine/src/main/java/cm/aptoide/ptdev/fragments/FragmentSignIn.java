@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
-import com.google.api.client.util.Data;
+
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;

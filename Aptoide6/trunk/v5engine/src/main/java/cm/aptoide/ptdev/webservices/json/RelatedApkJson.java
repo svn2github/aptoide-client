@@ -2,7 +2,7 @@ package cm.aptoide.ptdev.webservices.json;
 
 import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
-import com.google.api.client.util.Key;
+
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class RelatedApkJson {
 
-    @Key("develbased") private List<Item> develbased;
-    @Key("itembased") private List<Item> itembased;
-    @Key("multiversion") private List<Item> multiversion;
-    @Key private String status;
+     private List<Item> develbased;
+     private List<Item> itembased;
+     private List<Item> multiversion;
+     private String status;
 
 
-    @Key private List<cm.aptoide.ptdev.model.Error> errors;
+     private List<cm.aptoide.ptdev.model.Error> errors;
 
     public List<Error> getErrors() {
         return errors;
@@ -43,19 +43,19 @@ public class RelatedApkJson {
     }
 
     public static class Item{
-        @Key private String age;
-        @Key private String icon;
-        @Key private String icon_hd;
-        @Key private Number malrank;
-        @Key private String md5sum;
-        @Key private String name;
-        @Key("package") private String packageName;
+         private String age;
+         private String icon;
+         private String icon_hd;
+         private Number malrank;
+         private String md5sum;
+         private String name;
+         private String packageName;
 
-        @Key private String repo;
-        @Key private String signature;
-        @Key private String timestamp;
-        @Key private Number vercode;
-        @Key private String vername;
+         private String repo;
+         private String signature;
+         private String timestamp;
+         private Number vercode;
+         private String vername;
 
         public String getAge(){
             return this.age;

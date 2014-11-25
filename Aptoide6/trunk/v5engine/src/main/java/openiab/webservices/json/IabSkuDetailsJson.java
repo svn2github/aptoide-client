@@ -1,7 +1,9 @@
 package openiab.webservices.json;
 
-import com.google.api.client.util.Key;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +13,20 @@ import java.util.List;
  */
 public class IabSkuDetailsJson {
 
-    @Key
+
     private String status;
 
     public Metadata getMetadata() {
         return metadata;
     }
 
-    @Key
+
     private Metadata metadata;
 
-    @Key
+
     private PublisherResponse publisher_response;
 
-    @Key
+
     private ArrayList<PaymentServices> payment_services;
 
     public String getStatus() {
@@ -45,17 +47,17 @@ public class IabSkuDetailsJson {
 
     public static class PublisherResponse {
 
-        @Key("DETAILS_LIST") private List<PurchaseDataObject> details_list;
+        @JsonProperty("DETAILS_LIST") private List<PurchaseDataObject> details_list;
 
         public List<PurchaseDataObject> getDetails_list() { return details_list; }
 
         public static class PurchaseDataObject {
-            @Key private String productId;
-            @Key private String sku;
-            @Key private String price;
-            @Key private String title;
-            @Key private String description;
-            @Key private String developerPayload;
+             private String productId;
+             private String sku;
+             private String price;
+             private String title;
+             private String description;
+             private String developerPayload;
 
 
 
@@ -84,12 +86,13 @@ public class IabSkuDetailsJson {
 
             public String getJson() {
 
-                Gson gson = new Gson();
 
-
-
-
-                return gson.toJson(PurchaseDataObject.this);
+                try {
+                    return new ObjectMapper().writeValueAsString(PurchaseDataObject.this);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         }
     }
