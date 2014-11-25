@@ -3,14 +3,16 @@ package cm.aptoide.ptdev.webservices;
 import android.content.Context;
 import android.util.Log;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-
-
-
-
-
+import openiab.webservices.BasePurchaseStatusRequest;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 
 import java.util.ArrayList;
@@ -24,10 +26,17 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 
-public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRecomended> {
+public class ListUserbasedApkRequest extends RetrofitSpiceRequest<ListRecomended, ListUserbasedApkRequest.Webservice> {
 
 
     String baseUrl = WebserviceOptions.WebServicesLink + "3/listUserBasedApks";
+
+
+    public interface Webservice{
+        @POST("/webservices.aptoide.com/webservices/3/listUserBasedApks")
+        @FormUrlEncoded
+        ListRecomended getRecommended(@FieldMap HashMap<String, String> args);
+    }
 
     private Context context;
     private String token;
@@ -35,7 +44,7 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
 
 
     public ListUserbasedApkRequest(Context context) {
-        super(ListRecomended.class);
+        super(ListRecomended.class, Webservice.class);
         this.context = context;
     }
 
@@ -44,7 +53,7 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
     public ListRecomended loadDataFromNetwork() throws Exception {
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
 
-        GenericUrl url = new GenericUrl(baseUrl);
+//        GenericUrl url = new GenericUrl(baseUrl);
 
         HashMap<String, String > parameters = new HashMap<String, String>();
 
@@ -65,19 +74,30 @@ public class ListUserbasedApkRequest extends GoogleHttpClientSpiceRequest<ListRe
         sb.append(")");
 
         parameters.put("options", sb.toString());
-
-        HttpContent content = new UrlEncodedContent(parameters);
-
-        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
-
         token = SecurePreferences.getInstance().getString("access_token", "empty");
         parameters.put("access_token", token);
-        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
 
-        Log.d("Aptoide-ApkUserBased", url.toString());
-        request.setParser(new JacksonFactory().createJsonObjectParser());
+//        HttpContent content = new UrlEncodedContent(parameters);
+//
+//        HttpRequest request = getHttpRequestFactory().buildPostRequest(url, content);
+//
+//        request.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, getHttpRequestFactory()));
+//
+//        Log.d("Aptoide-ApkUserBased", url.toString());
+//        request.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//        return request.execute().parseAs( getResultType() );
 
-        return request.execute().parseAs( getResultType() );
+        ListRecomended response = null;
+
+        try{
+            response = getService().getRecommended(parameters);
+        }catch (RetrofitError error){
+            OauthErrorHandler.handle(error);
+        }
+
+        return response;
+
     }
 
 

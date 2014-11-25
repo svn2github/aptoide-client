@@ -1,7 +1,9 @@
 package openiab.webservices.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -84,8 +86,12 @@ public class    IabPurchasesJson {
                 if(developerPayload!=null) myJson.put("developerPayload", developerPayload);
 
 
-
-                return new Gson().toJson(myJson);
+                try {
+                    return new ObjectMapper().writeValueAsString(myJson);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         }
     }

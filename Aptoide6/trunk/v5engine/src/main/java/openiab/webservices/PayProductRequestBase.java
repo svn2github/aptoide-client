@@ -8,19 +8,15 @@ package openiab.webservices;
 
 
 
-import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import openiab.webservices.json.IabPurchaseStatusJson;
-import openiab.webservices.json.IabSimpleResponseJson;
-import openiab.webservices.json.IabSkuDetailsJson;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;

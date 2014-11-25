@@ -19,8 +19,12 @@ public class RegisterUserFriendsInviteRequest extends TimelineRequest<GenericRes
         list.add("f"+(list.size()+1)+"=" + value);
     }
 
+    public interface RegisterUserFriendsInvite extends TimelineRequest.Webservice<GenericResponse>{
+
+    }
+
     public RegisterUserFriendsInviteRequest() {
-        super(GenericResponse.class);
+        super(GenericResponse.class, RegisterUserFriendsInvite.class );
         list= new ArrayList<String>();
     }
     @Override

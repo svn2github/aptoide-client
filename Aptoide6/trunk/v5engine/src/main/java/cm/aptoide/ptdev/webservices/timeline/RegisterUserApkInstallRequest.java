@@ -14,8 +14,12 @@ public class RegisterUserApkInstallRequest extends TimelineRequest<GenericRespon
         this.appId = id;
     }
 
+
+    public interface RegisterUserApkInstall extends TimelineRequest.Webservice<GenericResponse>{
+    }
+
     public RegisterUserApkInstallRequest() {
-        super(GenericResponse.class);
+        super(GenericResponse.class, RegisterUserApkInstall.class);
     }
 
     @Override

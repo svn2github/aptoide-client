@@ -15,14 +15,19 @@ public class AddUserApkInstallCommentRequest extends TimelineRequest<GenericResp
         public void setPostID(long id){		this.postID = id;	}
         public void setComment(String comment) {    this.comment = comment; }
 
-        public AddUserApkInstallCommentRequest() {     super(GenericResponse.class);   }
+        public AddUserApkInstallCommentRequest() {     super(GenericResponse.class, AddUserApkInstallComment.class);   }
 
         @Override
         protected String getUrl() {
                 return WebserviceOptions.WebServicesLink+"3/addUserApkInstallComment";
         }
 
-        @Override
+    public interface AddUserApkInstallComment extends TimelineRequest.Webservice<GenericResponse>{
+
+    }
+
+
+    @Override
         protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
             parameters.put("id", String.valueOf(postID));
             parameters.put("text", comment);

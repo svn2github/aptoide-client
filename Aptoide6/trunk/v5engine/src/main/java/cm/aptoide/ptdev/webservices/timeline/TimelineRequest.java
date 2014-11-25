@@ -16,12 +16,18 @@ import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 /**
  * Created by asantos on 24-09-2014.
  */
-public abstract class TimelineRequest<E> extends RetrofitSpiceRequest<E, Class<? extends TimelineRequest.Webservice<E>>> {
-    public TimelineRequest(Class<E> i, Class <?extends TimelineRequest.Webservice<E>> e ) {    super(i, e);    }
-    protected abstract String getUrl();
-    protected abstract HashMap<String, String > fillWithExtraOptions(HashMap<String, String > parameters);
+public abstract class TimelineRequest<E> extends RetrofitSpiceRequest<E, TimelineRequest.Webservice<E>> {
 
-    public interface Webservice<E>{
+
+    public TimelineRequest(Class<E> i, Class<? extends TimelineRequest.Webservice<E>> e) {
+        super(i, (Class<Webservice<E>>) e);
+    }
+
+    protected abstract String getUrl();
+
+    protected abstract HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters);
+
+    public interface Webservice<E> {
         public E run(HashMap<String, String> args);
     }
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 
 /**
  * Created by asantos on 24-09-2014.
@@ -17,9 +18,13 @@ public class ChangeUserApkInstallStatusRequest extends TimelineRequest<GenericRe
     public void setPostId(long id){this.postID = id;}
     private String status;
 
+    public interface ChangeUserApkInstallStatus extends TimelineRequest.Webservice<GenericResponse>{
+
+    }
+
     public void setPostStatus(String status){this.status = status;}
 
-    public ChangeUserApkInstallStatusRequest() {  super(GenericResponse.class);  }
+    public ChangeUserApkInstallStatusRequest() {  super(GenericResponse.class, ChangeUserApkInstallStatus.class);  }
 
     @Override
     protected String getUrl() {

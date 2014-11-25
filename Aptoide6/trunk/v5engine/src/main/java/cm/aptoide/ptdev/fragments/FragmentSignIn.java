@@ -220,19 +220,19 @@ public class FragmentSignIn extends Fragment {
                 if ("OK".equals(checkUserCredentialsJson.getStatus())) {
                     SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
 
-                    if (!Data.isNull(checkUserCredentialsJson.getQueue())) {
+                    if (null !=(checkUserCredentialsJson.getQueue())) {
                         //hasQueue = true;
                         preferences.putString("queueName", checkUserCredentialsJson.getQueue());
                     }
-                    if (!Data.isNull(checkUserCredentialsJson.getAvatar())) {
+                    if (null !=(checkUserCredentialsJson.getAvatar())) {
                         preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
                     }
 
-                    if (!Data.isNull(checkUserCredentialsJson.getRepo())) {
+                    if (null !=(checkUserCredentialsJson.getRepo())) {
                         preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
                     }
 
-                    if (!Data.isNull(checkUserCredentialsJson.getUsername())) {
+                    if (null !=(checkUserCredentialsJson.getUsername())) {
                         preferences.putString("username", checkUserCredentialsJson.getUsername());
                     }
 

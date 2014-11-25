@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices.timeline;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 import cm.aptoide.ptdev.webservices.timeline.json.ListapklikesJson;
 
 /**
@@ -12,8 +13,12 @@ public class ListUserapklikesRequest extends TimelineRequest<ListapklikesJson> {
     private int limit;
     private long postID;
 
+    public interface ListUserapklikes extends TimelineRequest.Webservice<ListapklikesJson>{
+
+    }
+
     public ListUserapklikesRequest() {
-        super(ListapklikesJson.class);
+        super(ListapklikesJson.class, ListUserapklikes.class);
     }
     public void setPostID(long id){		this.postID = id;	}
     public void setLimit(int limit) {

@@ -2,6 +2,7 @@ package cm.aptoide.ptdev.webservices.timeline;
 
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 
@@ -12,8 +13,12 @@ public class ListUserFriendsRequest extends TimelineRequest<ListUserFriendsJson>
     private int limit;
     private int offset;
 
+    public interface ListUserFriends extends TimelineRequest.Webservice<ListUserFriendsJson>{
+
+    }
+
     public ListUserFriendsRequest() {
-        super(ListUserFriendsJson.class);
+        super(ListUserFriendsJson.class, ListUserFriends.class);
     }
 
     public void setLimit(int limit) {

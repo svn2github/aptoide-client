@@ -37,7 +37,7 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Errors;
-import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
+
 import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
 
 
@@ -60,7 +60,7 @@ public class AddStoreDialog extends DialogFragment {
     };
     private String repoName;
     private String url;
-    private GetRepositoryInfoRequest getRepoInfoRequest;
+
     private CheckServerRequest checkServerRequest;
     private Login login;
 

@@ -18,7 +18,11 @@ public class AddUserApkInstallLikeRequest extends TimelineRequest<GenericRespons
     public void setPostId(long postID) {	this.postID = postID;	}
     public void setLike(String s) {	this.like = s;	}
 
-    public AddUserApkInstallLikeRequest() { super(GenericResponse.class);   }
+    public AddUserApkInstallLikeRequest() { super(GenericResponse.class, AddUserApkInstallLike.class);   }
+
+    public interface AddUserApkInstallLike extends TimelineRequest.Webservice<GenericResponse>{
+
+    }
 
     @Override
     protected String getUrl() {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
+import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
  * Created by asantos on 24-09-2014.
@@ -19,8 +20,13 @@ public class GetUserSettingsRequest extends TimelineRequest<GetUserSettingsJson>
         list.add(setting);
     }
 
+    public interface GetUserSettings extends TimelineRequest.Webservice<GetUserSettingsJson>{
+
+    }
+
+
     public GetUserSettingsRequest() {
-        super(GetUserSettingsJson.class);
+        super(GetUserSettingsJson.class, GetUserSettings.class );
         list = new ArrayList<String>();
     }
     @Override

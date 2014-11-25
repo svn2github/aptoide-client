@@ -8,14 +8,10 @@ package openiab.webservices;
 
 
 
-import java.io.EOFException;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
-import openiab.webservices.json.IabAvailableJson;
 import openiab.webservices.json.IabConsumeJson;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;

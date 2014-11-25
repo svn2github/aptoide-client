@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import cm.aptoide.ptdev.webservices.timeline.json.ListapklikesJson;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
 /**
@@ -20,6 +21,11 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
     private boolean upwards = false;
     private long postId;
 
+
+    public interface ListApksInstalls extends TimelineRequest.Webservice<TimelineListAPKsJson>{
+
+    }
+
     public void setLimit(String limit) {
         this.limit = limit;
     }
@@ -28,7 +34,7 @@ public class ListApksInstallsRequest extends TimelineRequest<TimelineListAPKsJso
     }
 
     public ListApksInstallsRequest() {
-        super(TimelineListAPKsJson.class);
+        super(TimelineListAPKsJson.class, ListApksInstalls.class);
     }
 
     @Override

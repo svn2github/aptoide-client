@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
 
 /**
  * Created by asantos on 24-09-2014.
@@ -20,8 +21,12 @@ public class ChangeUserSettingsRequest extends TimelineRequest<GenericResponseV2
         list.add("timeline=" + value);
     }
 
+    public interface ChangeUserSettings extends TimelineRequest.Webservice<GenericResponseV2>{
+
+    }
+
     public ChangeUserSettingsRequest() {
-        super(GenericResponseV2.class);
+        super(GenericResponseV2.class, ChangeUserSettings.class );
         list = new ArrayList<String>();
     }
     @Override

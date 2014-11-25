@@ -12,7 +12,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
 
-import javax.annotation.CheckForNull;
+
 
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;

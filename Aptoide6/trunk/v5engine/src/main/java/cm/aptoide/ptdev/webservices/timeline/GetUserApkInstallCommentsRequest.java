@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
+import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
 
 /**
  * Created by asantos on 24-09-2014.
@@ -16,7 +17,11 @@ public class GetUserApkInstallCommentsRequest extends TimelineRequest<ApkInstall
     public void setPostID(long id) { this.postID = id; }
     public void setPostLimit(int limit) { this.limit = limit; }
     public void setPostOffSet(int offset) { this.offset = offset; }
-    public GetUserApkInstallCommentsRequest() {    super(ApkInstallComments.class);    }
+    public GetUserApkInstallCommentsRequest() {    super(ApkInstallComments.class, GetUserApkInstallComments.class);    }
+
+    public interface GetUserApkInstallComments extends TimelineRequest.Webservice<ApkInstallComments>{
+
+    }
 
     @Override
     protected String getUrl() {

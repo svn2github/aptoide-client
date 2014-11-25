@@ -14,16 +14,16 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 
-
-
-
-
-
+import com.facebook.Request;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -44,9 +44,8 @@ import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
-import cm.aptoide.ptdev.webservices.OAuthAccessTokenHandler;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
-import cm.aptoide.ptdev.webservices.RegisterAdRequest;
+
+
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 /**
@@ -142,11 +141,24 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    RegisterAdRequest registerAdRequest = new RegisterAdRequest(context);
-                    registerAdRequest.setUrl(apk.getCpiUrl());
-                    registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+
+                    OkHttpClient client = new OkHttpClient();
+
+
+                    FormEncodingBuilder formBody = new FormEncodingBuilder();
+                    String oemid = Aptoide.getConfiguration().getExtraId();
+
+                    if(!TextUtils.isEmpty(oemid)){
+                        formBody.add("oemid", oemid);
+                    }
+                    com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().post(formBody.build()).url(apk.getCpiUrl()).build();
+
+                    //RegisterAdRequest registerAdRequest = new RegisterAdRequest(context, apk.getCpiUrl());
+
+                    //registerAdRequest.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
                     try {
-                        registerAdRequest.loadDataFromNetwork();
+                        client.newCall(request).execute();
+                        //registerAdRequest.loadDataFromNetwork();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
