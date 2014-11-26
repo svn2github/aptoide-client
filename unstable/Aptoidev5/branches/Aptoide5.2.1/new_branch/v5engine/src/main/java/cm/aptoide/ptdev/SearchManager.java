@@ -23,13 +23,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.view.*;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.*;
-import android.view.CollapsibleActionView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,20 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.commonsware.cwac.merge.MergeAdapter;
+import com.flurry.android.FlurryAgent;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.adapters.SearchAdapter2;
 import cm.aptoide.ptdev.database.Database;
@@ -52,19 +67,6 @@ import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
-
-import com.commonsware.cwac.merge.MergeAdapter;
-import com.flurry.android.FlurryAgent;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -353,8 +355,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
             if(adapter.getItem(position) instanceof Cursor){
                 intent.putExtra("id", id);
-
-            }else{
+            }else if(adapter.getItem(position) instanceof SearchJson.Results.Apks ){
 
                 intent.putExtra("fromRelated", true);
                 intent.putExtra("repoName", ((SearchJson.Results.Apks) adapter.getItem(position)).getRepo());
@@ -809,15 +810,17 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
                                     @Override
                                     public void onRequestSuccess(SearchJson searchJson) {
-                                        items2.addAll(searchJson.getResults().getApks());
-                                        if(!searchJson.getResults().getApks().isEmpty()){
-                                            adapter.notifyDataSetChanged();
-                                            loading = false;
-                                        }else if(items2.size()> 9 && hasUapks){
-                                            adapter.setActive(v2, true);
-                                        }
+                                        if(searchJson!=null && searchJson.getResults()!=null) {
+                                            items2.addAll(searchJson.getResults().getApks());
+                                            if (!searchJson.getResults().getApks().isEmpty()) {
+                                                adapter.notifyDataSetChanged();
+                                                loading = false;
+                                            } else if (items2.size() > 9 && hasUapks) {
+                                                adapter.setActive(v2, true);
+                                            }
 
-                                        adapter.setActive(pb, false);
+                                            adapter.setActive(pb, false);
+                                        }
 
                                     }
                                 });

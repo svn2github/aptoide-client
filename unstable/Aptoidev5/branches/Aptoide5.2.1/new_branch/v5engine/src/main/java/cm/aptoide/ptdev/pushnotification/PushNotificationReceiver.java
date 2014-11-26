@@ -8,9 +8,9 @@ import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -33,8 +32,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,7 +40,6 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
@@ -131,6 +127,10 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                             String oemid = Aptoide.getConfiguration().getExtraId();
                             if (!TextUtils.isEmpty(oemid)) {
                                 parameters.put("oem_id", oemid);
+                            }
+                            if(Aptoide.DEBUG_MODE){
+                              SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                              parameters.put("notification_type", sPref.getString("notificationtype", null));
                             }
                             parameters.put("mode", "json");
                             parameters.put("limit", "1");
