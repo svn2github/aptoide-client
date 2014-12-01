@@ -4,19 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
-
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -27,14 +22,11 @@ import org.xml.sax.ext.DefaultHandler2;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeoutException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -53,16 +45,11 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     private Activity activity;
     private String TAG = "AutoUpdate";
 
-
-
-
     public AutoUpdate(Activity activity){
         this.activity=activity;
         url = getAutoUpdateUrl();
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(activity);
     }
-
-
 
     public String getAutoUpdateUrl(){
         return String.format(OEM_AUTO_UPDATE_URL, activity.getString(R.string.defaultstorename), activity.getString(R.string.defaultstorename));
@@ -86,13 +73,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
             return autoUpdateHandler.getAutoUpdateInfo();
 
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

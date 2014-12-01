@@ -26,9 +26,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v17.leanback.widget.DetailsOverviewRow;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -38,15 +36,13 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.Data;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +52,8 @@ import cm.aptoidetv.pt.Model.GetApkInfoJson;
 import cm.aptoidetv.pt.Model.MediaObject;
 import cm.aptoidetv.pt.Model.Screenshot;
 import cm.aptoidetv.pt.Model.Video;
+import cm.aptoidetv.pt.WebServices.HttpService;
+import cm.aptoidetv.pt.WebServices.old.GetApkInfoRequestFromMd5;
 
 /*
  * Details activity class that loads LeanbackDetailsFragment class
@@ -67,16 +65,16 @@ public class DetailsActivity extends Activity {
     public static final String PACKAGE_NAME = "packageName";
     public static final String FEATURED_GRAPHIC = "featuredGraphic";
     public static final String APP_NAME = "name";
-    public static final String DOWNLOAD_URL = "download";
+    public static final String DOWNLOADS = "downloads";
+    public static final String DOWNLOAD_URL = "download_URL";
     public static final String VERCODE = "vercode";
     public static final String MD5_SUM = "md5sum";
     public static final String APP_ICON = "icon";
     public static final String APP_SIZE = "size";
-    private static final String TAG = "DetailsActivity";
     public static final String MOVIE = "";
     public static final String SHARED_ELEMENT_NAME = "";
 
-    private String packageName, featuredGraphic, appName, downloads, vercode, md5sum, icon, size;
+    private String packageName, featuredGraphic, appName,download_URL, downloads, vercode, md5sum, icon, size;
 
     private ImageView app_icon;
     private Button download;
@@ -100,9 +98,19 @@ public class DetailsActivity extends Activity {
 
 //    private TextView noComments;
 
-    /**
-     * Called when the activity is first created.
-     */
+    private SpiceManager manager = new SpiceManager(HttpService.class);
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        manager.start(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        manager.shouldStop();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +119,8 @@ public class DetailsActivity extends Activity {
         packageName = getIntent().getStringExtra(PACKAGE_NAME);
         featuredGraphic = getIntent().getStringExtra(FEATURED_GRAPHIC);
         appName = getIntent().getStringExtra(APP_NAME);
-        downloads = getIntent().getStringExtra(DOWNLOAD_URL);
+        downloads = getIntent().getStringExtra(DOWNLOADS);
+        download_URL = getIntent().getStringExtra(DOWNLOAD_URL);
         vercode = getIntent().getStringExtra(VERCODE);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
@@ -127,6 +136,7 @@ public class DetailsActivity extends Activity {
         app_developer = (TextView) findViewById(R.id.app_developer);
         app_version = (TextView) findViewById(R.id.app_version);
         app_downloads = (TextView) findViewById(R.id.app_downloads);
+        app_downloads.setText(getString(R.string.downloads)+": " + downloads);
         rating_bar = (RatingBar) findViewById(R.id.rating_bar);
         app_ratings = (TextView) findViewById(R.id.app_ratings);
         app_size = (TextView) findViewById(R.id.app_size);
@@ -137,9 +147,96 @@ public class DetailsActivity extends Activity {
 //        noComments = (TextView) findViewById(R.id.no_comments);
         commentsContainer = (LinearLayout) findViewById(R.id.comments_container);
 
-        new DetailRowBuilderTask().execute(md5sum);
 
+        Picasso.with(DetailsActivity.this)
+                .load(icon)
+                .error(R.drawable.icon_non_available)
+                .into(app_icon);
+
+       // new DetailRowBuilderTask().execute(md5sum);
+
+        GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(this);
+        request.setMd5Sum(md5sum);
+        manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                finish();
+            }
+
+            @Override
+            public void onRequestSuccess(GetApkInfoJson apkInfoJson) {
+                loading_pb.setVisibility(View.GONE);
+                addDownloadButtonListener(apkInfoJson);
+
+                int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
+
+                app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
+                app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
+                rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
+                app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
+                String description = apkInfoJson.getMeta().getDescription();
+                app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
+
+                screenshots.removeAllViews();
+                View cell;
+                ArrayList<MediaObject> mediaObjects = apkInfoJson.getMedia().getScreenshotsAndThumbVideo();
+                String imagePath = "";
+                int screenshotIndexToAdd = 0;
+                for (int i = 0; i != mediaObjects.size(); i++) {
+//                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
+                    cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
+                    final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
+                    //final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
+                    final ImageView play = (ImageView) cell.findViewById(R.id.play_button);
+                    final FrameLayout mediaLayout = (FrameLayout) cell.findViewById(R.id.media_layout);
+
+                    if (mediaObjects.get(i) instanceof Video) {
+                        screenshotIndexToAdd++;
+                        imagePath = mediaObjects.get(i).getImageUrl();
+//                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
+                        play.setVisibility(View.VISIBLE);
+                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
+                        imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        mediaLayout.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
+                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
+
+
+                    } else if (mediaObjects.get(i) instanceof Screenshot) {
+                        imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
+//                        Log.d(TAG, "IMAGEPATH: " + imagePath);
+                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
+                    }
+
+                    screenshots.addView(cell);
+
+                    Picasso.with(DetailsActivity.this)
+                            .load(imagePath)
+                            .error(R.drawable.icon_non_available)
+                            .into(imageView);
+                }
+                List<Comment> comments = apkInfoJson.getMeta().getComments();
+//                Log.d(TAG, "comments size: " + comments.size());
+
+//                for(int i=0; i < comments.size(); i++) {
+//                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
+//                }
+                FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
+                commentsLayout.setVisibility(View.VISIBLE);
+                if (comments.size() == 0) {
+                    commentsLayout.setVisibility(View.GONE);
+                    comments_label.setVisibility(View.GONE);
+//                    Log.d(TAG, getString(R.string.no_comments));
+//                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
+//                    noComments.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
+
+
+/*
 
     private class DetailRowBuilderTask extends AsyncTask<String, Integer, DetailsOverviewRow> {
         @Override
@@ -181,6 +278,7 @@ public class DetailsActivity extends Activity {
 
             return row;
         }
+
 
         @Override
         protected void onPostExecute(final DetailsOverviewRow detailRow) {
@@ -287,7 +385,7 @@ public class DetailsActivity extends Activity {
         }
 
 
-    }
+    }*/
     private PackageInfo getPackageInfo(String package_name){
         try {
             return getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);

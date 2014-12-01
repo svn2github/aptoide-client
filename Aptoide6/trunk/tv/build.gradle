@@ -24,6 +24,18 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    packagingOptions {
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+        pickFirst 'META-INF/DEPENDENCIES.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/MANIFEST.MF'
+        pickFirst 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
@@ -31,7 +43,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.android.support:leanback-v17:+'
     compile 'com.android.support:appcompat-v7:+'
-    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile('com.google.http-client:google-http-client-gson:1.19.0') {
         exclude(group: 'xpp3', module: 'xpp3') //by both name and group
@@ -39,9 +52,13 @@ dependencies {
         exclude(group: 'junit', module: 'junit') //by both name and group
     }
 
-    compile('com.google.http-client:google-http-client-android:1.19.0') {
-        exclude(group: 'xpp3', module: 'xpp3') //by both name and group
+    compile ('com.octo.android.robospice:robospice-retrofit:1.4.14'){
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
-        exclude(group: 'junit', module: 'junit') //by both name and group
+        exclude group: 'commons-io', module: 'commons-io'
+        exclude group: 'com.google.code.gson'
+
+    }
+    compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
+        exclude group: 'com.google.code.gson'
     }
 }

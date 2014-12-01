@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-
 import java.io.Serializable;
 
 import cm.aptoidetv.pt.DetailsActivity;
+import cm.aptoidetv.pt.WebServices.Response;
 
 public class EditorsChoice implements Serializable, BindInterface {
 
@@ -20,8 +20,33 @@ public class EditorsChoice implements Serializable, BindInterface {
     private PackageName packagename;
     private String name;
 
-    public EditorsChoice() {
+    public EditorsChoice(Response.GetStore.Widgets.Widget widget) {
+        this.name = widget.name;
+        /*        public static class Widget {
 
+            public String type;
+            public String name;
+            public WidgetData data;
+
+
+            public static class WidgetCategory {
+                public Number id;
+                public String ref_id;
+                public Number parent_id;
+                public String parent_ref_id;
+                public Number apps_count;
+                public String name;
+                public String graphic;
+            }
+
+
+            public static class WidgetData {
+                public String ref_id;
+                public List<WidgetCategory> categories;
+
+            }
+
+        }     */
     }
 
     public String getName() {
@@ -54,7 +79,7 @@ public class EditorsChoice implements Serializable, BindInterface {
         intent.putExtra(DetailsActivity.PACKAGE_NAME, packagename.getApkid());
         intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, featuregraphicpath + packagename.featuregraphic);
         intent.putExtra(DetailsActivity.APP_NAME, packagename.name);
-        intent.putExtra(DetailsActivity.DOWNLOAD_URL, apkpath+getPackagename().getPath());
+        intent.putExtra(DetailsActivity.DOWNLOADS, apkpath+getPackagename().getPath());
         intent.putExtra(DetailsActivity.VERCODE, getPackagename().getVercode());
         intent.putExtra(DetailsActivity.MD5_SUM, getPackagename().getMd5h());
         intent.putExtra(DetailsActivity.APP_SIZE, getPackagename().getSz());

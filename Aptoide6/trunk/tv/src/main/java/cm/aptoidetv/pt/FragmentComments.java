@@ -1,22 +1,13 @@
 package cm.aptoidetv.pt;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

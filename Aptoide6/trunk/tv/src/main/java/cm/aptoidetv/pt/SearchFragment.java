@@ -27,19 +27,7 @@ import android.support.v17.leanback.widget.Row;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.json.gson.GsonFactory;
-
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 import cm.aptoidetv.pt.Model.BindInterface;
 import cm.aptoidetv.pt.Model.SearchJson;
@@ -148,6 +136,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         }
 
         public void run() {
+/*
 
             if(searchQuery.length()>=3) {
 
@@ -185,6 +174,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     e.printStackTrace();
                 }
             }
+*/
 
         }
 

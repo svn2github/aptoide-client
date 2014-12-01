@@ -23,30 +23,25 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cm.aptoidetv.pt.Model.BindInterface;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.net.URI;
+import cm.aptoidetv.pt.Model.BindInterface;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand. 
  * It contains an Image CardView
  */
 public class CardPresenter extends Presenter {
-    private static final String TAG = "CardPresenter";
-
     private static Context mContext;
     private static int CARD_WIDTH = 313;
     private static int CARD_HEIGHT = 176;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        Log.d(TAG, "onCreateViewHolder");
         mContext = parent.getContext();
 
         ImageCardView cardView = new ImageCardView(mContext);
@@ -65,7 +60,7 @@ public class CardPresenter extends Presenter {
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         BindInterface application = (BindInterface) item;
 
-        if(application.getCategory().equals("Editors' Choice")) {
+        if(application.getCategory().equals("Editors' Choice") || application.getCategory().equals("Editors Choice")) {
 
             if (!TextUtils.isEmpty(application.getImage())) {
                 ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
@@ -93,7 +88,6 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
-        Log.d(TAG, "onUnbindViewHolder");
         ViewHolder vh = (ViewHolder) viewHolder;
         // Remove references to images so that the garbage collector can free up memory
         vh.mCardView.setBadgeImage(null);

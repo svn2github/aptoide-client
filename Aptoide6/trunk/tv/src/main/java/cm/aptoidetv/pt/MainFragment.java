@@ -14,9 +14,7 @@
 
 package cm.aptoidetv.pt;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -33,33 +30,35 @@ import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import cm.aptoidetv.pt.Model.BindInterface;
-import cm.aptoidetv.pt.Model.EditorsChoice;
-import cm.aptoidetv.pt.Model.StoreApplication;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/*
- * Main class to show BrowseFragment with header and rows of videos
- */
-public class MainFragment extends BrowseFragment implements
-        LoaderManager.LoaderCallbacks<HashMap<String, List<Movie>>> {
+import cm.aptoidetv.pt.Model.ApplicationAPK;
+import cm.aptoidetv.pt.Model.BindInterface;
+import cm.aptoidetv.pt.Model.EditorsChoice;
+import cm.aptoidetv.pt.Model.StoreApplication;
+import cm.aptoidetv.pt.WebServices.HttpService;
+import cm.aptoidetv.pt.WebServices.RequestTV;
+import cm.aptoidetv.pt.WebServices.Response;
+
+public class MainFragment extends BrowseFragment{
     private static final String TAG = "MainFragment";
 
     private static int BACKGROUND_UPDATE_DELAY = 300;
@@ -74,21 +73,99 @@ public class MainFragment extends BrowseFragment implements
     private Timer mBackgroundTimer;
     private URI mBackgroundURI;
 
-
+    private RequestListener<Response> requestListener;
     private List<EditorsChoice> mEditorsChoice = new ArrayList<EditorsChoice>();
     private StoreApplication mStoreApplications = new StoreApplication();
 
+    private SpiceManager manager = new SpiceManager(HttpService.class);
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        manager.start(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        manager.shouldStop();
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 //        Log.d(TAG, "onCreate");
         super.onActivityCreated(savedInstanceState);
 
-        loadData();
+//        loadData();
 
         prepareBackgroundManager();
         setupUIElements();
 
         setupEventListeners();
+        RequestTV request = new RequestTV("home");
+
+        requestListener= new RequestListener<Response>(){
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.d("pois", "Fail!!!");
+            }
+
+            @Override
+            public void onRequestSuccess(Response response) {
+                Log.d("pois", "ha pois é!");
+                loadData();
+                mRowsAdapter = new ArrayObjectAdapter( new ListRowPresenter() );
+                CardPresenter cardPresenter = new CardPresenter();
+
+                //List<String> categories = getCategories();
+                List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
+
+                if( categories == null || categories.isEmpty() )
+                    return;
+
+                for( Response.GetStore.Widgets.Widget widget : categories ) {
+                    if(widget==null || widget.data==null || response.responses.listApps.datasets.getDataset()==null)
+                        continue;
+                    final String ref_id = widget.data.ref_id;
+                    Log.d("pois","nome da categoria: "+widget.name);
+
+                    if(response.responses.listApps.datasets.getDataset().get(ref_id)==null ||
+                       response.responses.listApps.datasets.getDataset().get(ref_id).data==null ||
+                       response.responses.listApps.datasets.getDataset().get(ref_id).data.list==null)
+                        continue;
+
+                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter( cardPresenter );
+                    for( Response.ListApps.Apk apk :  response.responses.listApps.datasets.getDataset().get(ref_id).data.list) {
+                        ApplicationAPK storeApplication = new ApplicationAPK(apk,widget.name);
+                        listRowAdapter.add(storeApplication);
+                        Log.d("pois"," ######## apk: "+apk.name);
+                    }
+
+                    if( listRowAdapter.size() > 0 ) {
+                        HeaderItem header = new HeaderItem( mRowsAdapter.size() - 1, widget.name, null );
+                        mRowsAdapter.add( new ListRow( header, listRowAdapter ) );
+                    }
+
+ /*                   ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter( cardPresenter );
+                    for( EditorsChoice editorsChoice : mEditorsChoice) {
+                        if( widget.equalsIgnoreCase( editorsChoice.getCategories() ) )
+                            listRowAdapter.add(editorsChoice);
+                    }
+
+                    for( StoreApplication.PackageName storeApplication : mStoreApplications.getPackagenames()) {
+                        if( widget.equalsIgnoreCase(storeApplication.getCategory()) )
+                            listRowAdapter.add(storeApplication);
+                    }
+                    if( listRowAdapter.size() > 0 ) {
+                        HeaderItem header = new HeaderItem( mRowsAdapter.size() - 1, widget, null );
+                        mRowsAdapter.add( new ListRow( header, listRowAdapter ) );
+                    }*/
+                }
+
+                setAdapter( mRowsAdapter );
+
+            }
+        };
+        manager.execute(request, "home", DurationInMillis.ALWAYS_RETURNED,  requestListener);
     }
 
     @Override
@@ -139,7 +216,7 @@ public class MainFragment extends BrowseFragment implements
         Type collectionInfo = new TypeToken<StoreApplication>(){}.getType();
         mStoreApplications = gsonInfo.fromJson( jsonInfo, collectionInfo );
 
-        getLoaderManager().initLoader(0, null, this);
+        //getLoaderManager().initLoader(0, null, this);
     }
 
     private void setupEventListeners() {
@@ -161,17 +238,17 @@ public class MainFragment extends BrowseFragment implements
      * @see android.support.v4.app.LoaderManager.LoaderCallbacks#onCreateLoader(int,
      * android.os.Bundle)
      */
-    @Override
+  /*  @Override
     public Loader<HashMap<String, List<Movie>>> onCreateLoader(int arg0, Bundle arg1) {
         Log.d(TAG, "VideoItemLoader created ");
         return new VideoItemLoader(getActivity(), mVideosUrl);
     }
 
-    /*
+    *//*
      * (non-Javadoc)
      * @see android.support.v4.app.LoaderManager.LoaderCallbacks#onLoadFinished(android
      * .support.v4.content.Loader, java.lang.Object)
-     */
+     *//*
     @Override
     public void onLoadFinished(Loader<HashMap<String, List<Movie>>> arg0,
                                HashMap<String, List<Movie>> data) {
@@ -205,9 +282,13 @@ public class MainFragment extends BrowseFragment implements
 
         setAdapter( mRowsAdapter );
 
-
+    @Override
+    public void onLoaderReset(Loader<HashMap<String, List<Movie>>> arg0) {
+        mRowsAdapter.clear();
     }
-
+    }
+*/
+/*
     private List<String> getCategories() {
         if( mEditorsChoice == null )
             return null;
@@ -228,11 +309,9 @@ public class MainFragment extends BrowseFragment implements
 
         return categories;
     }
+*/
 
-    @Override
-    public void onLoaderReset(Loader<HashMap<String, List<Movie>>> arg0) {
-        mRowsAdapter.clear();
-    }
+
 
     protected void setDefaultBackground(Drawable background) {
         mDefaultBackground = background;
