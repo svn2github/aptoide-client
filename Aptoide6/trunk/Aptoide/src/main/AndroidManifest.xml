@@ -107,6 +107,7 @@
         <activity android:name="cm.aptoide.ptdev.RollbackActivity" />
 
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
+        <activity android:name="cm.aptoide.ptdev.MoreFriendsInstallsActivity" />
         <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
 
 
