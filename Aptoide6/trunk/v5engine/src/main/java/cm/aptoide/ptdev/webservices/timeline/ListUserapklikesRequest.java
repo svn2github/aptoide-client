@@ -1,22 +1,30 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
-import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
+import cm.aptoide.ptdev.webservices.timeline.ListUserapklikesRequest.ListUserapklikes;
 import cm.aptoide.ptdev.webservices.timeline.json.ListapklikesJson;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 08-10-2014.
  */
-public class ListUserapklikesRequest extends TimelineRequest<ListapklikesJson> {
+public class ListUserapklikesRequest extends RetrofitSpiceRequest<ListapklikesJson, ListUserapklikes> {
+
     private int limit;
     private long postID;
 
-    public interface ListUserapklikes extends TimelineRequest.Webservice<ListapklikesJson>{
-
+    public interface ListUserapklikes {
+        @POST(WebserviceOptions.WebServicesLink+"3/listUserApkInstallLikes")
+        @FormUrlEncoded
+        public ListapklikesJson run(@FieldMap HashMap<String, String> args);
     }
-
     public ListUserapklikesRequest() {
         super(ListapklikesJson.class, ListUserapklikes.class);
     }
@@ -26,14 +34,17 @@ public class ListUserapklikesRequest extends TimelineRequest<ListapklikesJson> {
     }
 
     @Override
-    protected String getUrl() {
-        return WebserviceOptions.WebServicesLink+"3/listUserApkInstallLikes";
-    }
+    public ListapklikesJson loadDataFromNetwork() throws Exception {
+//        GenericUrl url= new GenericUrl(getUrl());
 
-    @Override
-    protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        parameters.put("mode" , "json");
         parameters.put("post_id", String.valueOf(postID));
         parameters.put("limit", String.valueOf(limit));
-        return parameters;
+
+        String token = SecurePreferences.getInstance().getString("access_token", "empty");
+        parameters.put("access_token", token);
+
+         return getService().run(parameters);
     }
 }

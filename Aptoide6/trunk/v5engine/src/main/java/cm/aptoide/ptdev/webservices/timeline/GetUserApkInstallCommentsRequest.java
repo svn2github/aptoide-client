@@ -1,15 +1,20 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import java.util.HashMap;
 
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.ApkInstallComments;
-import cm.aptoide.ptdev.webservices.timeline.json.GetUserSettingsJson;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 24-09-2014.
  */
-public class GetUserApkInstallCommentsRequest extends TimelineRequest<ApkInstallComments> {
+public class GetUserApkInstallCommentsRequest extends RetrofitSpiceRequest<ApkInstallComments, GetUserApkInstallCommentsRequest.GetUserApkInstallComments> {
 
     private long postID;
     private int limit;
@@ -19,20 +24,25 @@ public class GetUserApkInstallCommentsRequest extends TimelineRequest<ApkInstall
     public void setPostOffSet(int offset) { this.offset = offset; }
     public GetUserApkInstallCommentsRequest() {    super(ApkInstallComments.class, GetUserApkInstallComments.class);    }
 
-    public interface GetUserApkInstallComments extends TimelineRequest.Webservice<ApkInstallComments>{
-
+    public interface GetUserApkInstallComments{
+        @POST(WebserviceOptions.WebServicesLink+"3/getUserApkInstallComments")
+        @FormUrlEncoded
+        public ApkInstallComments run(@FieldMap HashMap<String, String> args);
     }
 
     @Override
-    protected String getUrl() {
-        return WebserviceOptions.WebServicesLink+"3/getUserApkInstallComments";
-    }
+    public ApkInstallComments loadDataFromNetwork() throws Exception {
+//        GenericUrl url= new GenericUrl(getUrl());
 
-    @Override
-    protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        parameters.put("mode" , "json");
         parameters.put("id", String.valueOf(postID));
         parameters.put("limit", String.valueOf(limit));
         parameters.put("offset", String.valueOf(offset));
-        return parameters;
+
+        String token = SecurePreferences.getInstance().getString("access_token", "empty");
+        parameters.put("access_token", token);
+
+        return getService().run(parameters);
     }
 }

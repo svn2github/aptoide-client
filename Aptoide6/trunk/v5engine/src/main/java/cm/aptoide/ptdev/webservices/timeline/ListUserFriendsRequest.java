@@ -1,20 +1,27 @@
 package cm.aptoide.ptdev.webservices.timeline;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import java.util.HashMap;
 
-import cm.aptoide.ptdev.fragments.GenericResponse;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 08-10-2014.
  */
-public class ListUserFriendsRequest extends TimelineRequest<ListUserFriendsJson> {
+public class ListUserFriendsRequest extends RetrofitSpiceRequest<ListUserFriendsJson, ListUserFriendsRequest.ListUserFriends> {
     private int limit;
     private int offset;
 
-    public interface ListUserFriends extends TimelineRequest.Webservice<ListUserFriendsJson>{
-
+    public interface ListUserFriends {
+        @POST(WebserviceOptions.WebServicesLink+"3/listUserFriends")
+        @FormUrlEncoded
+        public ListUserFriendsJson run(@FieldMap HashMap<String, String> args);
     }
 
     public ListUserFriendsRequest() {
@@ -29,14 +36,18 @@ public class ListUserFriendsRequest extends TimelineRequest<ListUserFriendsJson>
     }
 
     @Override
-    protected String getUrl() {
-        return WebserviceOptions.WebServicesLink+"3/listUserFriends";
-    }
+    public ListUserFriendsJson loadDataFromNetwork() throws Exception {
+//        GenericUrl url= new GenericUrl(getUrl());
 
-    @Override
-    protected HashMap<String, String> fillWithExtraOptions(HashMap<String, String> parameters) {
+        HashMap<String, String > parameters = new HashMap<String, String>();
+        parameters.put("mode" , "json");
         parameters.put("limit", String.valueOf(limit));
         parameters.put("offset", String.valueOf(offset));
-        return parameters;
+
+        String token = SecurePreferences.getInstance().getString("access_token", "empty");
+        parameters.put("access_token", token);
+
+        return getService().run(parameters);
+
     }
 }
