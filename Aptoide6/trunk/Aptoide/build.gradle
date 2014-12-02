@@ -21,12 +21,9 @@ android {
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 19
+        targetSdkVersion 21 
     }
-    dexOptions {
-        incremental true
-        javaMaxHeapSize "4g"
-    }
+
 
     packagingOptions {
         pickFirst 'META-INF/services/javax.annotation.processing.Processor'
@@ -44,16 +41,21 @@ android {
     buildTypes {
 
         debug {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
-            zipAlign true
+            zipAlignEnabled true
             signingConfig signingConfigs.release
 
         }
 
+	dexOptions{
+		preDexLibraries true
+		incremental  true
+		javaMaxHeapSize  "2g"
+	}
 
         release {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
             signingConfig signingConfigs.release
 
