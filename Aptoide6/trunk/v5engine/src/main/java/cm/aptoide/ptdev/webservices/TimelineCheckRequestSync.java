@@ -2,13 +2,14 @@ package cm.aptoide.ptdev.webservices;
 
 import android.preference.PreferenceManager;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.*;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
@@ -33,7 +34,7 @@ public class TimelineCheckRequestSync {
             .add("timestamp", String.valueOf(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getLong("timelineTimestamp", 1)))
             .build();
 
-            Request request = new Request.Builder().url(WebserviceOptions.WebServicesLink + "3/checkUserApkInstallsActivity").post(body).build();
+            Request request = new Request.Builder().url("http:/" + WebserviceOptions.WebServicesLink + "3/checkUserApkInstallsActivity").post(body).build();
 
 //            HttpContent content = new UrlEncodedContent(parameters);
 //            HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);

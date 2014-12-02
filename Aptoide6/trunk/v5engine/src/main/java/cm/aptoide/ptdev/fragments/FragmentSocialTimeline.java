@@ -149,7 +149,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 public void run() {
                     ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
                     request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
-                    request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
+                    //request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
                     try {
                         request.loadDataFromNetwork();
                     } catch (Exception e) {

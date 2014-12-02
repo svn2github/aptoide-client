@@ -3,10 +3,7 @@ package cm.aptoide.ptdev.dialogs;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,27 +15,25 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.PendingRequestListener;
-import com.octo.android.robospice.request.listener.RequestCancellationListener;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.util.HashMap;
-import java.util.Iterator;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.ResponseCode;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.CheckServerRequest;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.webservices.Errors;
-
-import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
+import cm.aptoide.ptdev.webservices.Api;
+import cm.aptoide.ptdev.webservices.Response;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 
 /**
@@ -99,7 +94,7 @@ public class AddStoreDialog extends DialogFragment {
         spiceManager.start(getActivity());
 
         if(url!=null){
-            spiceManager.addListenerIfPending(ResponseCode.class, (url+"rc"),new CheckStoreListener(login));
+            //spiceManager.addListenerIfPending(ResponseCode.class, (url+"rc"),new CheckStoreListener(login));
             //spiceManager.getFromCache(ResponseCode.class, (url+"rc"), DurationInMillis.ONE_MINUTE, new CheckStoreListener(login));
         }
 
@@ -108,7 +103,7 @@ public class AddStoreDialog extends DialogFragment {
 
 
 
-    public final class CheckStoreListener implements RequestListener<ResponseCode>, PendingRequestListener<ResponseCode> {
+    public final class CheckStoreListener implements RequestListener<Response.GetStore> {
 
 
         private final Login login;
@@ -125,63 +120,47 @@ public class AddStoreDialog extends DialogFragment {
         }
 
         @Override
-        public void onRequestSuccess(ResponseCode integer) {
+        public void onRequestSuccess(Response.GetStore response) {
 
-            if (integer != null) {
-                Log.d("Aptoide", "Response was" + integer.responseCode);
-                switch (integer.responseCode) {
-                    case 401:
-                        //on401(url);
-                        dismissDialog("Private store found");
-                        DialogFragment passDialog = AptoideDialog.passwordDialog();
-                        passDialog.setTargetFragment(AddStoreDialog.this, 20);
-                        passDialog.show(getFragmentManager(), "passDialog");
-                        break;
-                    case -1:
-                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                        dismissDialog("Invalid Store added.");
-                        break;
-                    case 0:
+            Toast.makeText(Aptoide.getContext(), "success", Toast.LENGTH_LONG).show();
 
-                        if (!url.endsWith(".store.aptoide.com/")) {
+            final Store store = new Store();
+            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+            store.setId(data.id.longValue());
+            store.setName(response.datasets.meta.data.name);
+            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
 
-                            Store store = new Store();
 
-                            store.setBaseUrl(url);
-                            store.setName(url);
-                            store.setLogin(login);
+            String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
 
-                            callback.startParse(store);
-                            dismissDialog();
 
-                        } else {
+            String avatar = data.avatar;
 
-                            Store store = new Store();
-                            store.setLogin(login);
-                            store.setBaseUrl(url);
-                            store.setName(AptoideUtils.RepoUtils.split(url));
-                            callback.startParse(store);
-                            dismissDialog();
-                            dismiss();
-                        }
-                        break;
-                    case 404:
-                        Toast.makeText(Aptoide.getContext(), R.string.error_REPO_1, Toast.LENGTH_LONG).show();
-                        dismissDialog();
-                        break;
-                    default:
-                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                        dismissDialog();
-                        break;
-                }
+            if(avatar!=null) {
+                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
             }
+
+            store.setAvatar(avatar);
+            store.setDescription(data.description);
+            store.setTheme(data.theme);
+            store.setView(data.view);
+            store.setBaseUrl(data.name);
+
+            Database database = new Database(Aptoide.getDb());
+
+            database.insertStore(store);
+            database.updateStore(store);
+
+            BusProvider.getInstance().post(new RepoAddedEvent());
+            dismissDialog();
+            dismiss();
+
+
         }
 
 
-        @Override
-        public void onRequestNotFound() {
 
-        }
     }
 
     @Override
@@ -211,83 +190,7 @@ public class AddStoreDialog extends DialogFragment {
 
     }
 
-    public final class RepositoryRequestListener implements RequestListener<RepositoryInfoJson>, RequestCancellationListener {
 
-        private final String url;
-        private final Login login;
-
-
-        public RepositoryRequestListener(String url, Login login){
-            this.url = url;
-            this.login = login;
-        }
-
-        @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            dismissDialog("Unable to add store.");
-        }
-
-        @Override
-        public void onRequestSuccess(RepositoryInfoJson repositoryInfoJson) {
-            String message = null;
-
-            Log.i("Aptoide-", "success");
-            if (repositoryInfoJson != null) {
-
-
-                if ("FAIL".equals(repositoryInfoJson.getStatus())) {
-
-                    if(!repositoryInfoJson.getErrors().isEmpty()) {
-                        final HashMap<String, Integer> errorsMapConversion = Errors.getErrorsMap();
-
-                        Iterator i = repositoryInfoJson.getErrors().iterator();
-                        message = getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error)i.next()).getCode()));
-                        while (i.hasNext()) {
-                            message += ", " + getActivity().getApplicationContext().getString(errorsMapConversion.get(((Error) i.next()).getCode()));
-                        }
-                    }
-                    dismissDialog(message);
-
-                } else {
-                    final Store store = new Store();
-
-                    store.setName(repositoryInfoJson.getListing().getName());
-                    store.setDownloads(repositoryInfoJson.getListing().getDownloads());
-
-
-                    if(repositoryInfoJson.getListing().getAvatar_hd()!=null){
-
-                        String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
-
-
-                        String avatar = repositoryInfoJson.getListing().getAvatar_hd();
-                        String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                        avatar = splittedUrl[0] + "_" + sizeString + "."+ splittedUrl[1];
-
-                        store.setAvatar(avatar);
-
-                    }else{
-                        store.setAvatar(repositoryInfoJson.getListing().getAvatar());
-                    }
-
-                    store.setDescription(repositoryInfoJson.getListing().getDescription());
-                    store.setTheme(repositoryInfoJson.getListing().getTheme());
-                    store.setView(repositoryInfoJson.getListing().getView());
-                    store.setItems(repositoryInfoJson.getListing().getItems());
-
-
-
-                    callback.startParse(store);
-
-                }
-            }
-        }
-
-        @Override
-        public void onRequestCancelled() {
-            Toast.makeText(Aptoide.getContext(), "Request was canceled", Toast.LENGTH_LONG).show();
-        }
-    }
 
     void dismissDialog(){
         setRetainInstance(false);
@@ -305,30 +208,67 @@ public class AddStoreDialog extends DialogFragment {
         dismissDialog();
     }
 
+    public interface TestServerWebservice{
+        @POST("/ws2.aptoide.com/api/6/getStore")
+        Response.GetStore checkServer(@Body Api.GetStore body);
+    }
+
+    public class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice>{
+
+
+        private String store_name;
+        public TestServerRequest() {
+            super(Response.GetStore.class, TestServerWebservice.class);
+        }
+
+        public void setStore_name(String store_name){
+
+            this.store_name = store_name;
+        }
+
+        @Override
+        public Response.GetStore loadDataFromNetwork() throws Exception {
+
+            Api.GetStore api = new Api.GetStore();
+            api.addDataset("meta");
+            api.datasets_params = null;
+            api.store_name = store_name;
+
+            return getService().checkServer(api);
+        }
+    }
 
     public void get(String s, final Login login) {
 
-        url = AptoideUtils.checkStoreUrl(s);
-        this.login = login;
-        repoName = AptoideUtils.RepoUtils.split(url);
-        checkServerRequest = new CheckServerRequest(url, login);
+
+        TestServerRequest request = new TestServerRequest();
         CheckStoreListener checkStoreListener = new CheckStoreListener(login);
-        setRetainInstance(true);
-        spiceManager.execute(checkServerRequest, checkStoreListener);
 
-        checkServerRequest.setRequestCancellationListener(new RequestCancellationListener() {
-            @Override
-            public void onRequestCancelled() {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
-                    }
-                });
+        url = AptoideUtils.checkStoreUrl(s);
+//        this.login = login;
 
-            }
-        });
+        repoName = AptoideUtils.RepoUtils.split(url);
+        request.setStore_name(repoName);
+        spiceManager.execute(request, checkStoreListener);
+
+//        checkServerRequest = new CheckServerRequest(url, login);
+
+//        setRetainInstance(true);
+//        spiceManager.execute(checkServerRequest, checkStoreListener);
+//
+//        checkServerRequest.setRequestCancellationListener(new RequestCancellationListener() {
+//            @Override
+//            public void onRequestCancelled() {
+//                Handler handler = new Handler(Looper.getMainLooper());
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(getActivity(), "Request2 was canceled", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//
+//            }
+//        });
 
         Log.i("Aptoide-", "Request:" +(url+"rc") );
 

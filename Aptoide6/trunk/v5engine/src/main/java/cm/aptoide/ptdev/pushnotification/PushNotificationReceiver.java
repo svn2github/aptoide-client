@@ -4,48 +4,34 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.flurry.android.FlurryAgent;
-
-
-
-
-
-
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 /**
  * Created by asantos on 01-09-2014.
@@ -119,92 +105,106 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
                 final Handler handler = new Handler(Looper.getMainLooper());
 
-                Executors.newSingleThreadExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "/3/getPushNotifications");
-
-                            HashMap<String, String> parameters = new HashMap<String, String>();
-
-                            String oemid = Aptoide.getConfiguration().getExtraId();
-                            if (!TextUtils.isEmpty(oemid)) {
-                                parameters.put("oem_id", oemid);
-                            }
-                            parameters.put("mode", "json");
-                            parameters.put("limit", "1");
-
-
-                            int lastId = PreferenceManager.getDefaultSharedPreferences(context).getInt(SPREF_PNOTIFICATION_ID,0);
-
-                            parameters.put("id", String.valueOf(lastId));
-
-                            HttpContent content = new UrlEncodedContent(parameters);
-                            HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
-                            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
-
-                            PushNotificationJson response = httpRequest.execute().parseAs(PushNotificationJson.class);
-//                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
-
-                            for (final PushNotificationJson.Notification notification : response.getResults()) {
-                                final Bundle extra = intent.getExtras();
-
-                                extra.putString(PUSH_NOTIFICATION_EXTERNAL_URL, notification.getTarget_url());
-                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getMessage());
-                                extra.putString(PUSH_NOTIFICATION_TRACK_URL, notification.getTrack_url());
-                                extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
-
-//                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
-
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        String bannerUrl = notification.getImages()!=null?getSize(notification.getImages().getBanner_url()):null;
-
-                                        ImageLoader.getInstance().loadImage(bannerUrl,
-                                                new MyImageLoadingListener(context, extra));
-                                    }
-                                });
-
-
-
-                            }
-
-                            if(!response.getResults().isEmpty()){
-                                lastId = response.getResults().get(0).getId().intValue();
-                            }
-
-
-
-
-
-                            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SPREF_PNOTIFICATION_ID, lastId).commit();
-
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (NullPointerException e){
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
+//                Executors.newSingleThreadExecutor().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//
+//                            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "/3/getPushNotifications");
+//
+//                            HashMap<String, String> parameters = new HashMap<String, String>();
+//
+//                            String oemid = Aptoide.getConfiguration().getExtraId();
+//                            if (!TextUtils.isEmpty(oemid)) {
+//                                parameters.put("oem_id", oemid);
+//                            }
+//                            parameters.put("mode", "json");
+//                            parameters.put("limit", "1");
+//
+//
+//                            int lastId = PreferenceManager.getDefaultSharedPreferences(context).getInt(SPREF_PNOTIFICATION_ID,0);
+//
+//                            parameters.put("id", String.valueOf(lastId));
+//
+//
+//
+//                            HttpContent content = new UrlEncodedContent(parameters);
+//                            HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
+//                            httpRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//
+//                            PushNotificationJson response = httpRequest.execute().parseAs(PushNotificationJson.class);
+////                            Log.i("PushNotificationReceiver", "getResults() is " + response.getResults().size());
+//
+//                            for (final PushNotificationJson.Notification notification : response.getResults()) {
+//                                final Bundle extra = intent.getExtras();
+//
+//                                extra.putString(PUSH_NOTIFICATION_EXTERNAL_URL, notification.getTarget_url());
+//                                extra.putString(PUSH_NOTIFICATION_MSG, notification.getMessage());
+//                                extra.putString(PUSH_NOTIFICATION_TRACK_URL, notification.getTrack_url());
+//                                extra.putString(PUSH_NOTIFICATION_TITLE, notification.getTitle());
+//
+////                                Log.i("PushNotificationReceiver", "Loading image " + notification.getTitle());
+//
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//
+//                                        String bannerUrl = notification.getImages()!=null?getSize(notification.getImages().getBanner_url()):null;
+//
+//                                        ImageLoader.getInstance().loadImage(bannerUrl,
+//                                                new MyImageLoadingListener(context, extra));
+//                                    }
+//                                });
+//
+//
+//
+//                            }
+//
+//                            if(!response.getResults().isEmpty()){
+//                                lastId = response.getResults().get(0).getId().intValue();
+//                            }
+//
+//
+//
+//
+//
+//                            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SPREF_PNOTIFICATION_ID, lastId).commit();
+//
+//
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        } catch (NullPointerException e){
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                });
 
             }else if(action.equals(PUSH_NOTIFICATION_Action_TRACK_URL)){
                 String trackUrl = intent.getStringExtra(PUSH_NOTIFICATION_TRACK_URL);
                 String externalUrl = intent.getStringExtra(PUSH_NOTIFICATION_EXTERNAL_URL);
-                GenericUrl url = new GenericUrl(trackUrl);
+
 
                 try {
-                    AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).executeAsync();
+
+                    new OkHttpClient().newCall(new Request.Builder().url(trackUrl).build()).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Request request, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Response response) throws IOException {
+
+                        }
+                    });
+
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (ActivityNotFoundException ignore){}
+                }
             }
         }
 

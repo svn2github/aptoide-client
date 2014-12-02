@@ -7,13 +7,10 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
 import retrofit.http.POST;
 
 /**
@@ -75,8 +72,7 @@ public class AddLikeRequest extends RetrofitSpiceRequest<GenericResponseV2, AddL
         parameters.put("apkversion", apkversion);
         GenericResponseV2 response = null;
 
-        Webservice adapter = new RestAdapter.Builder().setEndpoint("http://").build().create(getRetrofitedInterfaceClass());
-        setService(adapter);
+
 
 //        HttpContent content = new UrlEncodedContent(parameters);
 //

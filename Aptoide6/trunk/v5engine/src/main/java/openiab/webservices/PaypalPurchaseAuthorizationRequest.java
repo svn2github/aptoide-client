@@ -1,21 +1,14 @@
 package openiab.webservices;
 
-import android.util.Log;
-
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import openiab.webservices.json.IabSimpleResponseJson;
-import openiab.webservices.json.IabSkuDetailsJson;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;

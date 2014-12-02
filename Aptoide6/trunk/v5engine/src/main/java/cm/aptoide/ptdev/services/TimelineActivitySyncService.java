@@ -42,7 +42,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+
 import cm.aptoide.ptdev.webservices.TimelineCheckRequestSync;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;

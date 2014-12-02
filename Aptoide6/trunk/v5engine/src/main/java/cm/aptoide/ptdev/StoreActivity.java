@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -14,23 +13,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.events.RepoErrorEvent;
-import cm.aptoide.ptdev.fragments.FragmentStore;
-import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
-import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
-import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
-import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
-import cm.aptoide.ptdev.model.Login;
-import cm.aptoide.ptdev.model.Store;
-import cm.aptoide.ptdev.services.DownloadService;
-import cm.aptoide.ptdev.services.ParserService;
 
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
+
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoErrorEvent;
+import cm.aptoide.ptdev.fragments.FragmentListStore;
+import cm.aptoide.ptdev.fragments.FragmentStore;
+import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Login;
+import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.ParserService;
 
 /**
  * Created with IntelliJ IDEA.
@@ -82,10 +81,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             service = ((ParserService.MainServiceBinder) binder).getService();
             isRefreshing = service.repoIsParsing(storeid);
 
-            final FragmentStore fragmentStoreListCategories = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-            if(isRefreshing){
-                if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
-            }
+//            final FragmentStore fragmentStoreListCategories = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
+  //          if(isRefreshing){
+ //               if (fragmentStoreListCategories != null) fragmentStoreListCategories.setRefreshing(isRefreshing);
+  //          }
 
             serviceIsBound = true;
         }
@@ -134,22 +133,33 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     private void setFragment() {
 
-        Fragment fragment;
+        Fragment fragment = new FragmentListStore();
 
 
         if(!getIntent().getBooleanExtra("list", true)){
-            fragment = new FragmentStoreListCategories();
+            //fragment = new FragmentStoreListCategories();
         }else{
-            fragment = new FragmentStoreGridCategories();
+            //fragment = new FragmentStoreGridCategories();
         }
 
+
+        final Database db = new Database(Aptoide.getDb());
+
+        Cursor c = db.getStore(storeid);
+
+        c.moveToFirst();
+        String name = c.getString(c.getColumnIndex("name"));
+
+        c.close();
 
         Fragment fragmentHeader = new FragmentStoreHeader();
 
         //Log.d("Aptoide-", "StoreActivity id" + storeid);
 
         Bundle args = new Bundle();
+        args.putString("storename", name);
         args.putLong("storeid", storeid);
+        //args.putString("widgetrefid", "cat_1");
 
         fragment.setArguments(args);
         fragmentHeader.setArguments(args);

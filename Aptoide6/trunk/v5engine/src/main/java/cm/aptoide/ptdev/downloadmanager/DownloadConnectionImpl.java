@@ -4,15 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.content.SharedPreferences;
 import android.util.Log;
-
-
-
-
-
-
-
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -36,8 +28,6 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.WebserviceOptions;
-import cm.aptoide.ptdev.webservices.json.OAuth;
 
 /**
  * Created with IntelliJ IDEA.
@@ -160,15 +150,15 @@ public class DownloadConnectionImpl extends DownloadConnection implements Serial
         parameters.put("grant_type", "refresh_token");
         parameters.put("client_id", "Aptoide");
         parameters.put("refresh_token", refreshToken);
-        HttpContent content = new UrlEncodedContent(parameters);
-        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"/3/oauth2Authentication");
-        HttpRequest oauth2RefresRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
-        oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
-        OAuth responseJson = oauth2RefresRequest.execute().parseAs(OAuth.class);
-
-        SharedPreferences preferences = SecurePreferences.getInstance();
-
-        preferences.edit().putString("access_token", responseJson.getAccess_token()).commit();
+//        HttpContent content = new UrlEncodedContent(parameters);
+//        GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink+"/3/oauth2Authentication");
+//        HttpRequest oauth2RefresRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildPostRequest(url, content);
+//        oauth2RefresRequest.setParser(new JacksonFactory().createJsonObjectParser());
+//        OAuth responseJson = oauth2RefresRequest.execute().parseAs(OAuth.class);
+//
+//        SharedPreferences preferences = SecurePreferences.getInstance();
+//
+//        preferences.edit().putString("access_token", responseJson.getAccess_token()).commit();
     }
 
 

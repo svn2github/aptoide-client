@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,33 +51,35 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
     }
 
     public static class MoreFriendsInstallsFragment extends Fragment {
-        private RecyclerView view;
+        private RecyclerView recyclerView;
+
         SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+
         @Override
-        public void onStart() {
-            super.onStart();
-            spiceManager.start(getActivity());
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            spiceManager.start(activity);
+
         }
+
+
         @Override
-        public void onStop() {
-            super.onStop();
+        public void onDetach() {
+            super.onDetach();
             spiceManager.shouldStop();
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
-
-            view = (RecyclerView) rootView.findViewById(R.id.list);
-
-            return rootView;
-
-
+            return inflater.inflate(R.layout.fragment_list_apps, container, false);
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
+            recyclerView = (RecyclerView) view.findViewById(R.id.list);
+
             ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
 
             spiceManager.execute(listRelatedApkRequest, "MoreFriendsInstallsFragment", DurationInMillis.ONE_DAY, new RequestListener<TimelineListAPKsJson>() {

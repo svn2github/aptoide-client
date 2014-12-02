@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.webservices;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -58,7 +59,22 @@ public class Api {
         }
     }
 
+    public static class ListApps implements ApiParam{
+
+        public int limit;
+
+        public List<String> datasets = new ArrayList<String>();
+
+        @Override
+        public String getApiName() {
+            return "listApps";
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class GetStore implements ApiParam {
+
+        public String store_name;
 
 
         public List<String> datasets = new ArrayList<String>();
@@ -86,7 +102,7 @@ public class Api {
         public static class CategoriesParams implements DatasetParam {
 
             public String parent_ref_id;
-            public int max_depth = 3;
+
 
 
             public void setParent_ref_id(String parent_ref_id) {
@@ -99,9 +115,13 @@ public class Api {
             }
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class WidgetParams implements DatasetParam {
 
             private String context;
+            public String widgetid;
+            public Number offset;
+            public Number limit;
 
             public String getContext() {
                 return context;
@@ -114,6 +134,10 @@ public class Api {
             @Override
             public String getDatasetName() {
                 return "widgets";
+            }
+
+            public void setWidgetid(String widgetid) {
+                this.widgetid = widgetid;
             }
         }
 

@@ -6,9 +6,6 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.SharedPreferences;
 
-
-import com.squareup.okhttp.OkHttpClient;
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -40,8 +37,8 @@ public class OauthErrorHandler {
             case NETWORK:
             case CONVERSION:
             case UNEXPECTED:
+                throw error;
             case HTTP:
-
 
                 if(error.getResponse().getStatus() == 401) {
                     AccountManager accountManager = AccountManager.get(Aptoide.getContext());

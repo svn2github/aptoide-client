@@ -1,24 +1,21 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
-import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
-import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -96,9 +93,9 @@ public class ListRelatedApkRequest extends RetrofitSpiceRequest<RelatedApkJson, 
         parameters.put("options", sb.toString());
 
 
-        RestAdapter adapter = new RestAdapter.Builder().setConverter(createConverter()).build();
+//        RestAdapter adapter = new RestAdapter.Builder().setConverter(createConverter()).build();
 
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
 
         return getService().getRelatedApkJson(parameters);

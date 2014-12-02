@@ -1,17 +1,12 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.database.Cursor;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-
-import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,11 +17,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
-import cm.aptoide.ptdev.webservices.json.RepositoryCommentsJson;
 import cm.aptoide.ptdev.webservices.json.SearchJson;
-import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
@@ -116,8 +107,8 @@ public class ListSearchApkRequest extends RetrofitSpiceRequest<SearchJson, ListS
         parameters.put("search", searchString);
         parameters.put("options", sb.toString());
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        //  setService(adapter.create(getRetrofitedInterfaceClass()));
 
         return getService().listSearchApk(parameters);
 

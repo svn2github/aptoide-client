@@ -1,8 +1,8 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -21,7 +20,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
@@ -30,14 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.webservices.AllCommentsRequest;
 import cm.aptoide.ptdev.webservices.Api;
-
+import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
-import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -66,7 +64,7 @@ public class FragmentListApps extends Fragment {
     public interface TestService{
 
         @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
-        Response postApk(@Body Api user);
+        Response postApk(@Body Api user) throws Response.TicketException;
     }
 
     public interface Displayable {
@@ -85,11 +83,20 @@ public class FragmentListApps extends Fragment {
     public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
 
         private final String context;
+        private int offset;
 
         public TestRequest(String context) {
             super(Response.class, TestService.class);
             this.context = context;
         }
+
+
+        public void setOffset(int offset){
+
+            this.offset = offset;
+        }
+
+
 
         @Override
         public Response loadDataFromNetwork() throws Exception {
@@ -102,12 +109,13 @@ public class FragmentListApps extends Fragment {
             Api.GetStore getStore = new Api.GetStore();
             Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
 
-            categoriesParams.setParent_ref_id("cat_1");
+            categoriesParams.setParent_ref_id("cat_2");
 
             Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
             widgetParams.setContext("home");
-
-            //getStore.getDatasets_params().set(categoriesParams);
+            //widgetParams.offset = offset;
+            //widgetParams.limit = 3;
+            getStore.getDatasets_params().set(categoriesParams);
             getStore.getDatasets_params().set(widgetParams);
 
             //getStore.addDataset(categoriesParams.getDatasetName());
@@ -115,8 +123,16 @@ public class FragmentListApps extends Fragment {
 
             api.getApi_params().set(getStore);
 
+            Api.ListApps listApps = new Api.ListApps();
+            listApps.limit = 6;
+            listApps.datasets = null;
+            api.getApi_params().set(listApps);
 
-            return getService().postApk(api);
+            Response response;
+
+            response = getService().postApk(api);
+
+            return response;
 
         }
 
@@ -126,7 +142,9 @@ public class FragmentListApps extends Fragment {
 
         private final Context context;
         public String header;
+        public String widgetid;
         public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>(3);
+        public String widgetrefid;
         //private Picasso picasso;
 
         public void setEnabled(boolean enabled) {
@@ -164,8 +182,6 @@ public class FragmentListApps extends Fragment {
             }else{
                 return -1;
             }
-
-
         }
 
 
@@ -188,6 +204,17 @@ public class FragmentListApps extends Fragment {
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
                 //picasso.load(icon).into(itemViewHolder.icon);
+                viewHolder.views[i].setClickable(true);
+                viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(context, AppViewActivity.class);
+                        i.putExtra("fromRelated", true);
+                        i.putExtra("md5sum", apks.get(0).md5sum);
+                        i.putExtra("download_from", "recommended_apps");
+                        context.startActivity(i);
+                    }
+                });
                 i++;
             }
 
@@ -198,6 +225,8 @@ public class FragmentListApps extends Fragment {
             viewHolder.tv.setText(header);
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -211,6 +240,21 @@ public class FragmentListApps extends Fragment {
         StickyRecyclerHeadersTouchListener touchListener = new StickyRecyclerHeadersTouchListener(view, stickyRecyclerHeadersDecoration);
 
 
+        touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
+            @Override
+            public void onHeaderClick(View viewHeader, int i, long l) {
+
+                Intent intent = new Intent(getActivity(), MoreActivity.class);
+
+                intent.putExtra("widgetid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid);
+                intent.putExtra("widgetrefid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetrefid);
+                intent.putExtra("widgetname", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).header);
+                startActivity(intent);
+
+                //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
+
+            }
+        });
         view.addOnItemTouchListener(touchListener);
 
 
@@ -224,8 +268,6 @@ public class FragmentListApps extends Fragment {
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
         TestRequest request = new TestRequest("home");
-
-
 
         requestListener = new RequestListener<Response>() {
 
@@ -247,16 +289,21 @@ public class FragmentListApps extends Fragment {
                 for(Response.GetStore.Widgets.Widget widget : list) {
 
                     if(widget.type.equals("apps_list")) {
+                        Response.ListApps.Category category = dataset.get(widget.data.ref_id);
 
-                        ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+                        if(category !=null && category.data!=null) {
+                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
-                        while (!inElements.isEmpty()) {
-                            Row row = new Row(getActivity());
-                            row.header = widget.name;
-                            for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
-                                row.addItem(inElements.remove(0));
+                            while (!inElements.isEmpty()) {
+                                Row row = new Row(getActivity());
+                                row.widgetid = widget.widgetid;
+                                row.header = widget.name;
+                                row.widgetrefid = widget.data.ref_id;
+                                for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
+                                    row.addItem(inElements.remove(0));
+                                }
+                                map.add(row);
                             }
-                            map.add(row);
                         }
 
                     } else {
@@ -268,16 +315,141 @@ public class FragmentListApps extends Fragment {
 
                 }
 
-                string.clear();
+                //string.clear();
                 string.addAll(map);
 
                 Log.d("AptoideDebug", string.toString());
-
+                int offset = ((RecyclerAdapter) view.getAdapter()).offset;
+                ((RecyclerAdapter) view.getAdapter()).offset =  offset + list.size();
                 view.getAdapter().notifyDataSetChanged();
+                loading = false;
 
+                GetAdsRequest request = new GetAdsRequest(getActivity());
+
+                request.setLimit(3);
+                request.setLocation("homepage");
+                request.setKeyword("__NULL__");
+
+
+//                ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
+
+
+//                if(AptoideUtils.isLoggedIn(getActivity())) {
+//
+//                    manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ONE_DAY, new RequestListener<TimelineListAPKsJson>() {
+//                        @Override
+//                        public void onRequestFailure(SpiceException spiceException) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
+//
+//
+//                            Row row = new Row(getActivity());
+//
+//                            for (TimelineListAPKsJson.UserApk apkSuggestion : timelineListAPKsJson.getUsersapks()) {
+//
+//                                    row.header = "Your friends installed";
+//                                    Response.ListApps.Apk apk = new Response.ListApps.Apk();
+//
+//                                    apk.name = apkSuggestion.getApk().getName();
+//                                    apk.icon = apkSuggestion.getApk().getIcon();
+//                                    apk.downloads = 0;
+//                                    row.addItem(apk);
+//
+//                            }
+//
+//                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
+//
+//
+//                            ((RecyclerAdapter) view.getAdapter()).list.remove(location);
+//                            ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+//
+//
+//                            (view.getAdapter()).notifyDataSetChanged();
+//
+//                        }
+//                    });
+//
+//                }
+
+
+                manager.execute(request, new RequestListener<ApkSuggestionJson>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+
+                    }
+
+                    @Override
+                    public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+                        if (apkSuggestionJson != null && apkSuggestionJson.getAds() != null && apkSuggestionJson.getAds().size() > 0) {
+                            Row row = new Row(getActivity());
+
+                            for (ApkSuggestionJson.Ads apkSuggestion : apkSuggestionJson.getAds()) {
+
+
+                                if (apkSuggestion.getInfo().getAd_type().equals("app:suggested")) {
+                                    row.header = "Highlighted";
+                                    Response.ListApps.Apk apk = new Response.ListApps.Apk();
+
+                                    apk.name = apkSuggestion.getData().getName();
+                                    apk.icon = apkSuggestion.getData().getIcon();
+
+                                    apk.downloads = 0;
+
+                                    row.addItem(apk);
+                                }
+
+
+                            }
+                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("ads_list");
+
+                            ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+
+
+                            (view.getAdapter()).notifyDataSetChanged();
+                        }
+
+
+                    }
+                });
             }
 
         };
+
+
+
+
+//        view.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                visibleItemCount = recyclerView.getChildCount();
+//                totalItemCount = recyclerView.getLayoutManager().getItemCount();
+//                firstVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+//
+//                if (loading) {
+//                    if (totalItemCount > previousTotal) {
+//                        previousTotal = totalItemCount;
+//                    }
+//                }
+//                if (!loading && (totalItemCount - visibleItemCount)
+//                        <= (firstVisibleItem + visibleThreshold)) {
+//                    // End has been reached
+//
+//                    Log.i("...", "end called");
+//                    TestRequest request = new TestRequest("home");
+//                    request.setOffset(((RecyclerAdapter) view.getAdapter()).offset);
+//                    loading = true;
+//                    manager.execute(request, "home" + totalItemCount, DurationInMillis.ALWAYS_RETURNED,  requestListener);
+//
+//                    // Do something
+//
+//                }
+//            }
+//        });
 
         manager.execute(request, "home", DurationInMillis.ALWAYS_RETURNED,  requestListener);
 
@@ -285,8 +457,14 @@ public class FragmentListApps extends Fragment {
         return rootView;
     }
 
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int visibleThreshold = 5;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+
     public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RowViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
 
+        public int offset = 0;
 
         public Context getContext() {
             return context;

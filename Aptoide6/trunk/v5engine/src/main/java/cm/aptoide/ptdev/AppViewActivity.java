@@ -86,7 +86,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cm.aptoide.ptdev.SpiceStuff.AlmostGenericResponseV2RequestListener;
-import cm.aptoide.ptdev.ads.AptoideAdNetworks;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
@@ -1277,67 +1276,67 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-                executorService.submit(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if(getIntent().hasExtra("partnerExtra")){
-
-                            try {
-
-                                String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
-                                Log.d("Aptoide", "InSponsoredExtras");
-                                String partnerType = getIntent().getBundleExtra("partnerExtra").getString("partnerType");
-
-                                clickUrl = AptoideAdNetworks.parseString(partnerType, Aptoide.getContext(), clickUrl);
-                                HttpResponse response;
-                                boolean repeat;
-                                do  {
-                                    repeat = false;
-                                    GenericUrl url = new GenericUrl(clickUrl);
-                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
-
-                                    try{
-                                        response = httpRequest.execute();
-
-                                    } catch (HttpResponseException exception){
-
-                                        if(exception.getStatusCode() / 100 == 3 ) {
-                                            repeat = true;
-                                            final String location = exception.getHeaders().getLocation();
-                                            Log.d("CENAAS", "Response was: " + exception.getStatusCode());
-
-                                            if (!TextUtils.isEmpty(location)) {
-                                                clickUrl = location;
-                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com"))) {
-                                                    referrer = getReferrer(clickUrl);
-                                                }
-                                            } else {
-                                                Log.d("CENAAS", "Cenas was epmty");
-                                            }
-                                        }else if(exception.getStatusCode() == HttpStatusCodes.STATUS_CODE_OK && exception.getHeaders().containsKey("Refresh")){
-
-                                            String refresh = exception.getHeaders().getFirstHeaderStringValue("Refresh");
-
-                                            if(refresh.contains("url=")){
-                                                clickUrl = refresh.split("=")[1];
-                                            }
-
-                                        }
-
-                                    }
-
-
-
-                                } while ( repeat );
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
+//                executorService.submit(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        if(getIntent().hasExtra("partnerExtra")){
+//
+//                            try {
+//
+//                                String clickUrl = getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
+//                                Log.d("Aptoide", "InSponsoredExtras");
+//                                String partnerType = getIntent().getBundleExtra("partnerExtra").getString("partnerType");
+//
+//                                clickUrl = AptoideAdNetworks.parseString(partnerType, Aptoide.getContext(), clickUrl);
+//                                HttpResponse response;
+//                                boolean repeat;
+//                                do  {
+//                                    repeat = false;
+//                                    GenericUrl url = new GenericUrl(clickUrl);
+//                                    HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url).setFollowRedirects(false).setSuppressUserAgentSuffix(true);
+//
+//                                    try{
+//                                        response = httpRequest.execute();
+//
+//                                    } catch (HttpResponseException exception){
+//
+//                                        if(exception.getStatusCode() / 100 == 3 ) {
+//                                            repeat = true;
+//                                            final String location = exception.getHeaders().getLocation();
+//                                            Log.d("CENAAS", "Response was: " + exception.getStatusCode());
+//
+//                                            if (!TextUtils.isEmpty(location)) {
+//                                                clickUrl = location;
+//                                                if (clickUrl.contains("referrer=") && (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com"))) {
+//                                                    referrer = getReferrer(clickUrl);
+//                                                }
+//                                            } else {
+//                                                Log.d("CENAAS", "Cenas was epmty");
+//                                            }
+//                                        }else if(exception.getStatusCode() == HttpStatusCodes.STATUS_CODE_OK && exception.getHeaders().containsKey("Refresh")){
+//
+//                                            String refresh = exception.getHeaders().getFirstHeaderStringValue("Refresh");
+//
+//                                            if(refresh.contains("url=")){
+//                                                clickUrl = refresh.split("=")[1];
+//                                            }
+//
+//                                        }
+//
+//                                    }
+//
+//
+//
+//                                } while ( repeat );
+//
+//
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
 
 
                 executorService.submit(new Runnable() {

@@ -1,5 +1,9 @@
 package cm.aptoide.ptdev.webservices;
 
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
+import java.util.HashMap;
+
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import retrofit.RestAdapter;
@@ -8,9 +12,6 @@ import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-
-import java.util.HashMap;
 
 /**
  * Created by j-pac on 30-05-2014.
@@ -18,7 +19,7 @@ import java.util.HashMap;
 public class AddApkFlagRequest extends RetrofitSpiceRequest<GenericResponseV2, AddApkFlagRequest.Webservice> {
 
     public interface Webservice {
-        @POST("webservices.aptoide.com/webservices/3/addApkFlag")
+        @POST("/webservices.aptoide.com/webservices/3/addApkFlag")
         @FormUrlEncoded
         GenericResponseV2 addApkFlag(@FieldMap HashMap<String, String> args);
     }

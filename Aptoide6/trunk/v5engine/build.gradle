@@ -26,10 +26,7 @@ android {
     }
 
 
-    dexOptions {
-        incremental true
-        javaMaxHeapSize "4g"
-    }
+
 
     compileOptions {
     }
@@ -54,10 +51,10 @@ dependencies {
     compile project(':hanselandgretel')
     compile project(':android-websockets')
     compile project(':facebook')
-    compile 'com.google.android.gms:play-services:6.1.+'
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.google.android.gms:play-services:6.1.71'
+    compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.0'
-    compile 'com.squareup.okhttp:okhttp:2.1.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
 
     compile 'com.timehop.stickyheadersrecyclerview:library:0.3.3@aar'
     compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
@@ -68,6 +65,7 @@ dependencies {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
         exclude group: 'commons-io', module: 'commons-io'
         exclude group: 'com.google.code.gson'
+        exclude group: 'com.squareup.retrofit'
 
     }
     compile project(':mopub-sdk')

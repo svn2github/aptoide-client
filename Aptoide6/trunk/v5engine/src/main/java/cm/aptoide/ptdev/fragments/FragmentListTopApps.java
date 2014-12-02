@@ -3,7 +3,6 @@ package cm.aptoide.ptdev.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -31,15 +29,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.webservices.Api;
-
 import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
-import retrofit.http.FieldMap;
 import retrofit.http.POST;
 
 /**
@@ -134,7 +131,7 @@ public class FragmentListTopApps extends Fragment {
 
 
 
-        void bindView(FragmentListTopApps.RecyclerAdapter.RowViewHolder viewHolder);
+        void bindView(RecyclerView.ViewHolder viewHolder);
 
         void onBindHeaderViewHolder(FragmentListTopApps.RecyclerAdapter.HeaderViewHolder viewHolder);
     }
@@ -143,7 +140,9 @@ public class FragmentListTopApps extends Fragment {
 
         private final Context context;
         public String header;
+        public String widgetid;
         public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>(3);
+        public String widgetrefid;
         //private Picasso picasso;
 
         public void setEnabled(boolean enabled) {
@@ -188,7 +187,9 @@ public class FragmentListTopApps extends Fragment {
 
 
         @Override
-        public void bindView(RecyclerAdapter.RowViewHolder viewHolder) {
+        public void bindView(RecyclerView.ViewHolder vh) {
+
+            RecyclerAdapter.RowViewHolder viewHolder = (RecyclerAdapter.RowViewHolder) vh;
 
                 if(!apks.isEmpty()) {
                     viewHolder.name.setText(apks.get(0).name);
@@ -239,7 +240,23 @@ public class FragmentListTopApps extends Fragment {
         final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), string);
         StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
         StickyRecyclerHeadersTouchListener touchListener = new StickyRecyclerHeadersTouchListener(view, stickyRecyclerHeadersDecoration);
+        touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
+            @Override
+            public void onHeaderClick(View viewHeader, int i, long l) {
 
+
+
+                Intent intent = new Intent(getActivity(), MoreActivity.class);
+
+                intent.putExtra("widgetid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid);
+                intent.putExtra("widgetrefid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetrefid);
+                intent.putExtra("widgetname", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).header);
+                startActivity(intent);
+
+                //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
+
+            }
+        });
 
         view.addOnItemTouchListener(touchListener);
 
@@ -271,20 +288,40 @@ public class FragmentListTopApps extends Fragment {
 
                 List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                 HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
+                HashMap<String, Response.ListStores.StoreGroup> storesdataset = response.responses.listStores.datasets.getDataset();
+
 
 
                 for(Response.GetStore.Widgets.Widget widget : list) {
 
                     if(widget.type.equals("apps_list")) {
 
-                        ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+                        Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+
+                        if (category != null && category.data != null) {
+                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+
+                            while (!inElements.isEmpty()) {
+                                Row row = new Row(getActivity());
+                                row.widgetid = widget.widgetid;
+                                row.header = widget.name;
+                                row.widgetrefid = widget.data.ref_id;
+                                for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
+                                    row.addItem(inElements.remove(0));
+                                }
+                                map.add(row);
+                            }
+                        }
+                    }else if(widget.type.equals("stores_list")){
+                        ArrayList<Response.ListStores.Store> inElements = new ArrayList<Response.ListStores.Store>(storesdataset.get(widget.data.ref_id).data.list);
 
                         while (!inElements.isEmpty()) {
-                            Row row = new Row(getActivity());
+                            StoreRow row = new StoreRow(getActivity());
+                            Response.ListStores.Store store = inElements.remove(0);
                             row.header = widget.name;
-                            for (int j = 0; j < 1 && !inElements.isEmpty(); j++) {
-                                row.addItem(inElements.remove(0));
-                            }
+                            row.appscount = store.apps_count.intValue();
+                            row.avatar = store.avatar;
+                            row.name = store.name;
                             map.add(row);
                         }
 
@@ -313,7 +350,34 @@ public class FragmentListTopApps extends Fragment {
         return rootView;
     }
 
-    public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RowViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
+    public static class StoreRow extends Row{
+
+        public String name;
+        public String avatar;
+        public int downloads;
+        public int appscount;
+
+
+        public StoreRow(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int getViewType() {
+            return 1000;
+        }
+
+        @Override
+        public void bindView(RecyclerView.ViewHolder vh) {
+            RecyclerAdapter.StoreRowViewHolder viewHolder = (RecyclerAdapter.StoreRowViewHolder) vh;
+
+            viewHolder.name.setText(name);
+            ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
+
+        }
+    }
+
+    public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
 
 
         public Context getContext() {
@@ -336,17 +400,24 @@ public class FragmentListTopApps extends Fragment {
 
 
         @Override
-        public RowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View inflate = LayoutInflater.from(context).inflate(R.layout.top_item, parent, false);
+            View inflate;
+            if(viewType<1000){
+                inflate = LayoutInflater.from(context).inflate(R.layout.top_item, parent, false);
+                return new RowViewHolder(inflate, viewType, context);
+
+            }else{
+                inflate = LayoutInflater.from(context).inflate(R.layout.store_item, parent, false);
+                return new StoreRowViewHolder(inflate, viewType, context);
+            }
 
 
-            return new RowViewHolder(inflate, viewType, context);
         }
 
 
         @Override
-        public void onBindViewHolder(RowViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             list.get(position).bindView(holder);
         }
 
@@ -382,6 +453,31 @@ public class FragmentListTopApps extends Fragment {
 
         public HashMap<String, Integer> getPlaceholders() {
             return placeholders;
+        }
+
+        public static class StoreRowViewHolder extends RecyclerView.ViewHolder{
+
+
+            public static class ItemViewHolder {
+
+
+            }
+
+
+            public TextView name;
+            public TextView store_info;
+
+            public ImageView icon;
+
+            public StoreRowViewHolder(View itemView, int viewType, Context context) {
+                super(itemView);
+
+                name = (TextView) itemView.findViewById(R.id.store_name);
+                icon = (ImageView) itemView.findViewById(R.id.store_avatar);
+                store_info = (TextView) itemView.findViewById(R.id.store_info);
+
+            }
+
         }
 
         public static class RowViewHolder extends RecyclerView.ViewHolder{

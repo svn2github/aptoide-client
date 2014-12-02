@@ -18,12 +18,9 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-
-import com.facebook.Request;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.RequestBody;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -32,21 +29,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
-import cm.aptoide.ptdev.preferences.Preferences;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
-
-
-import cm.aptoide.ptdev.webservices.WebserviceOptions;
 
 /**
  * Created with IntelliJ IDEA.
@@ -170,24 +160,24 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
 
-        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0 && !isUpdate){
-            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
-
-            HashMap<String, String> parameters = new HashMap<String, String>();
-
-            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
-            parameters.put("appid", String.valueOf(apk.getId()));
-            HttpContent content = new UrlEncodedContent(parameters);
-            try {
-                HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
-                HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
-                httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
-                httpRequest.executeAsync(Executors.newSingleThreadExecutor());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+//        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0 && !isUpdate){
+//            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
+//
+//            HashMap<String, String> parameters = new HashMap<String, String>();
+//
+//            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
+//            parameters.put("appid", String.valueOf(apk.getId()));
+//            HttpContent content = new UrlEncodedContent(parameters);
+//            try {
+//                HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
+//                HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
+//                httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
+//                httpRequest.executeAsync(Executors.newSingleThreadExecutor());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 
 
 

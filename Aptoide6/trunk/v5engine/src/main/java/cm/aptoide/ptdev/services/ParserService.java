@@ -15,8 +15,15 @@ import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.util.SparseArray;
+
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.squareup.otto.Subscribe;
+
+import java.io.IOException;
+import java.net.URL;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
@@ -31,18 +38,12 @@ import cm.aptoide.ptdev.parser.callbacks.CompleteCallback;
 import cm.aptoide.ptdev.parser.callbacks.ErrorCallback;
 import cm.aptoide.ptdev.parser.callbacks.PoolEndedCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
-import cm.aptoide.ptdev.parser.handlers.*;
+import cm.aptoide.ptdev.parser.handlers.HandlerEditorsChoiceXml;
+import cm.aptoide.ptdev.parser.handlers.HandlerFeaturedTop;
+import cm.aptoide.ptdev.parser.handlers.HandlerInfoXml;
+import cm.aptoide.ptdev.parser.handlers.HandlerLatestXml;
+import cm.aptoide.ptdev.parser.handlers.HandlerTopXml;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.webservices.GetRepositoryInfoRequest;
-import cm.aptoide.ptdev.webservices.json.RepositoryInfoJson;
-
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.squareup.otto.Subscribe;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -203,17 +204,17 @@ public class ParserService extends Service implements ErrorCallback, CompleteCal
 //
 //        startService(new Intent(getApplicationContext(), ParserService.class));
 //        startForeground(45, createDefaultNotification(getString(R.string.loading_stores)));
-//        final long id;
-//        if(newStore){
-//            if(db.existsServer(store.getBaseUrl())){
-//                return;
-//            }
-//            id = insertStoreDatabase(db, store);
-//            store.setId(id);
-//            BusProvider.getInstance().post(produceRepoAddedEvent());
-//        }else{
-//            id = store.getId();
-//        }
+        final long id;
+        if(newStore){
+            if(db.existsServer(store.getBaseUrl())){
+                return;
+            }
+            id = insertStoreDatabase(db, store);
+            store.setId(id);
+            BusProvider.getInstance().post(produceRepoAddedEvent());
+        }else{
+            id = store.getId();
+        }
 //
 //        if(store.getBaseUrl().contains("store.aptoide.com")){
 //            store.setName(AptoideUtils.RepoUtils.split(store.getBaseUrl()));

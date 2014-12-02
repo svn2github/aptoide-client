@@ -2,7 +2,6 @@ package cm.aptoide.ptdev.webservices.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class ApkSuggestionJson {
     public List<Ads> getAds(){
         return this.ads;
     }
-    public void setAds(List ads){
+    public void setAds(List<Ads> ads){
         this.ads = ads;
     }
     public String getStatus(){
@@ -132,9 +131,10 @@ public class ApkSuggestionJson {
 
 
     public static class Ads{
-         private Data data;
-         private Info info;
-         private Partner partner;
+
+        private Data data;
+        private Info info;
+        private Partner partner;
 
         public Data getData(){
             return this.data;
@@ -151,6 +151,10 @@ public class ApkSuggestionJson {
 
         public Partner getPartner() {
             return partner;
+        }
+
+        public void setPartner(Partner partner) {
+            this.partner = partner;
         }
     }
 

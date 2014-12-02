@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/customTopSelectableForegroundStyle">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/store_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"/>
+
+
+        <View
+            android:id="@+id/view_alpha3"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffff4444" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/store_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+
+                android:gravity="left|center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:singleLine="true"
+                android:text="Mark8 Store"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                 />
+
+            <TextView
+                android:id="@+id/store_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:ellipsize="end"
+                android:layout_below="@+id/store_name"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:singleLine="true"
+                android:text="2.546 apps • 616,2K downloads"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                 />
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

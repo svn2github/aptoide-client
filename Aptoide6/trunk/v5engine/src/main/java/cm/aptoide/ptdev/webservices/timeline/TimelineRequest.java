@@ -11,7 +11,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.OAuthRefreshAccessTokenHandler;
+
 
 /**
  * Created by asantos on 24-09-2014.
