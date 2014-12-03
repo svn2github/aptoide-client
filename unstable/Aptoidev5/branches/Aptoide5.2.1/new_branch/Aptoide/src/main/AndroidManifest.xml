@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="447"
-    android:versionName="5.4.3" >
+    android:versionCode="448"
+    android:versionName="5.4.4" >
 
 
     <uses-permission android:name="android.permission.INTERNET" />
