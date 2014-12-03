@@ -35,7 +35,11 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
     private int limit;
     private String package_name;
     private String repo;
+    private boolean filter_pkg;
 
+    public void setFilter_pkg(boolean filter_pkg) {
+        this.filter_pkg = filter_pkg;
+    }
     public void setPackage_name(String package_name) {
         this.package_name = package_name;
     }
@@ -98,7 +102,7 @@ public class GetAdsRequest extends GoogleHttpClientSpiceRequest<ApkSuggestionJso
         if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0) {
             parameters.put("flag", "gms");
         }
-
+        parameters.put("filter_pkg", String.valueOf(filter_pkg));
         GenericUrl url = new GenericUrl(this.url);
 
         HttpContent content = new UrlEncodedContent(parameters);

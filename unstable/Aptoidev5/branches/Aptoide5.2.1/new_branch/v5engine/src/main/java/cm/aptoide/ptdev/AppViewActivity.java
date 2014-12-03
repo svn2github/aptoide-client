@@ -56,10 +56,6 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.flurry.android.FlurryAgent;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.util.Data;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
@@ -1447,8 +1443,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         return referrer;
     }
 
-
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadPublicity() {
 //        Log.d("AppViewActivity", "loadPublicity");
@@ -1466,6 +1460,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         final GetAdsRequest getAdsRequest = new GetAdsRequest(AppViewActivity.this);
 
+        getAdsRequest.setFilter_pkg(true);
         getAdsRequest.setLocation("appview");
         getAdsRequest.setKeyword("__NULL__");
         getAdsRequest.setRepo(repoName);
@@ -1507,50 +1502,105 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
 
                     if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
-                        adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
-                        FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
-
-                        customAdBannerView.setVisibility(View.VISIBLE);
-                        ImageView iconbackground = (ImageView) customAdBannerView.findViewById(R.id.app_icon_background);
-                        ImageView icon = (ImageView) customAdBannerView.findViewById(R.id.app_icon);
-                        TextView name = (TextView) customAdBannerView.findViewById(R.id.app_name);
-                        RatingBar rating = (RatingBar) customAdBannerView.findViewById(R.id.app_rating);
-
-                        name.setText(appSuggested.getData().getName());
-                        ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), iconbackground);
-                        ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), icon);
-                        rating.setRating(appSuggested.getData().getStars().floatValue());
-                        customAdBannerView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
-                                Intent i = new Intent(AppViewActivity.this, appViewClass);
-                                long id = appSuggested.getData().getId().longValue();
-                                i.putExtra("id", id);
-                                i.putExtra("packageName", appSuggested.getData().getPackageName());
-                                i.putExtra("repoName", appSuggested.getData().getRepo());
-                                i.putExtra("fromSponsored", true);
-                                i.putExtra("location", "homepage");
-                                i.putExtra("keyword", "__NULL__");
-                                i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
-                                i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
-                                i.putExtra("whereFrom", "sponsored");
-                                i.putExtra("download_from", "sponsored");
 
 
-                                if(appSuggested.getPartner() != null){
-                                    Bundle bundle = new Bundle();
+                        if(appSuggested.getData().getPackageName().equals(package_name)){
+                            advertising.setVisibility(View.GONE);
 
-                                    bundle.putString("partnerType", appSuggested.getPartner().getPartnerInfo().getName());
-                                    bundle.putString("partnerClickUrl", appSuggested.getPartner().getPartnerData().getClick_url());
+                            if (appSuggested.getPartner() != null) {
+                                String clickUrl = appSuggested.getPartner().getPartnerData().getClick_url();//getIntent().getBundleExtra("partnerExtra").getString("partnerClickUrl");
+                                Log.d("Aptoide", "InSponsoredExtras");
 
-                                    i.putExtra("partnerExtra", bundle);
+
+                                try {
+                                    clickUrl = AptoideAdNetworks.parseString(appSuggested.getPartner().getPartnerInfo().getName(), Aptoide.getContext(), clickUrl);
+                                } catch (Exception e) {
+                                    Log.e("Execption:",e.getMessage());
                                 }
 
-
-                                startActivity(i);
+                                final String url = clickUrl;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        webview = new WebView(AppViewActivity.this);
+                                        webview.getSettings().setJavaScriptEnabled(true);
+                                        webview.setWebViewClient(new WebViewClient() {
+                                            @Override
+                                            public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
+                                                if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com")) {
+                                                    referrer = getReferrer(clickUrl);
+                                                } else {
+                                                    view.loadUrl(clickUrl);
+                                                }
+                                                return true;
+                                            }
+                                        });
+                                        webview.loadUrl(url);
+                                    }
+                                });
+                                //appSuggested.getPartner().getPartnerData().getImpression_url();
                             }
-                        });
+
+
+
+
+                            try {
+                                GenericUrl url = new GenericUrl(appSuggested.getInfo().getCpc_url());
+                                AndroidHttp.newCompatibleTransport().createRequestFactory()
+                                        .buildGetRequest(url).setSuppressUserAgentSuffix(true)
+                                        .executeAsync( Executors.newSingleThreadExecutor());
+                                Intent intent = new Intent();
+                                intent.putExtra("cpi", appSuggested.getInfo().getCpi_url());
+                                setIntent(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+
+                            adTypeArgs.put("type", appSuggested.getInfo().getAd_type());
+                            FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+
+                            customAdBannerView.setVisibility(View.VISIBLE);
+                            ImageView iconbackground = (ImageView) customAdBannerView.findViewById(R.id.app_icon_background);
+                            ImageView icon = (ImageView) customAdBannerView.findViewById(R.id.app_icon);
+                            TextView name = (TextView) customAdBannerView.findViewById(R.id.app_name);
+                            RatingBar rating = (RatingBar) customAdBannerView.findViewById(R.id.app_rating);
+
+                            name.setText(appSuggested.getData().getName());
+                            ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), iconbackground);
+                            ImageLoader.getInstance().displayImage(appSuggested.getData().getIcon(), icon);
+                            rating.setRating(appSuggested.getData().getStars().floatValue());
+
+                            customAdBannerView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+                                    Intent i = new Intent(AppViewActivity.this, appViewClass);
+                                    long id = appSuggested.getData().getId().longValue();
+                                    i.putExtra("id", id);
+                                    i.putExtra("packageName", appSuggested.getData().getPackageName());
+                                    i.putExtra("repoName", appSuggested.getData().getRepo());
+                                    i.putExtra("fromSponsored", true);
+                                    i.putExtra("location", "homepage");
+                                    i.putExtra("keyword", "__NULL__");
+                                    i.putExtra("cpc", appSuggested.getInfo().getCpc_url());
+                                    i.putExtra("cpi", appSuggested.getInfo().getCpi_url());
+                                    i.putExtra("whereFrom", "sponsored");
+                                    i.putExtra("download_from", "sponsored");
+                                    if (appSuggested.getPartner() != null) {
+                                        Bundle bundle = new Bundle();
+
+                                        bundle.putString("partnerType", appSuggested.getPartner().getPartnerInfo().getName());
+                                        bundle.putString("partnerClickUrl", appSuggested.getPartner().getPartnerData().getClick_url());
+
+                                        i.putExtra("partnerExtra", bundle);
+                                    }
+
+
+                                    startActivity(i);
+                                }
+                            });
+                        }
 
 
                     } else if (appSuggested.getInfo().getAd_type().equals("url:googleplay")) {
