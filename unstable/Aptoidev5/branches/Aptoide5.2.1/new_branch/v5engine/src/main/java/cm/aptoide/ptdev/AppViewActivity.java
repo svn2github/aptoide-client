@@ -215,8 +215,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     minSdk = apk.getMinSdk().intValue();
                     payment= getApkInfoJson.getPayment();
 
-
-
                     boolean showLatestString = false;
                     if (apk.getIconHd() != null) {
                         icon = apk.getIconHd();
@@ -403,7 +401,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                         }
 
                     }
-
+                    loadPublicity();
                     // Check if Download is already completed to disable schedule
                 } else {
                     AptoideUtils.toastError(json.getErrors());
@@ -1418,10 +1416,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         }
 
-        if(!getIntent().getBooleanExtra("fromSponsored", false)){
-            loadPublicity();
-        }
-
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 
     }
@@ -1821,7 +1815,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             repoName = apkCursor.getString(apkCursor.getColumnIndex("reponame"));
             name = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_NAME));
             package_name = apkCursor.getString(apkCursor.getColumnIndex("package_name"));
-
             versionName = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_VERNAME));
             String localIcon = apkCursor.getString(apkCursor.getColumnIndex(Schema.Apk.COLUMN_ICON));
             final String iconpath = apkCursor.getString(apkCursor.getColumnIndex("iconpath"));
