@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -209,6 +210,7 @@ public class FragmentListTopApps extends Fragment {
                             Intent i = new Intent(context, AppViewActivity.class);
                             i.putExtra("fromRelated", true);
                             i.putExtra("md5sum", apks.get(0).md5sum);
+                            i.putExtra("repoName", apks.get(0).store_name);
                             i.putExtra("download_from", "recommended_apps");
                             context.startActivity(i);
                         }
@@ -271,7 +273,8 @@ public class FragmentListTopApps extends Fragment {
         view.setLayoutManager(linearLayoutManager);
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
-        TestRequest request = new TestRequest("top");
+        final TestRequest request = new TestRequest("top");
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
         requestListener = new RequestListener<Response>() {
 
@@ -341,11 +344,23 @@ public class FragmentListTopApps extends Fragment {
                 Log.d("AptoideDebug", string.toString());
 
                 view.getAdapter().notifyDataSetChanged();
+
+                swipeLayout.setRefreshing(false);
+
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
             }
 
         };
+
+
+
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                manager.execute(request, "top" , DurationInMillis.ALWAYS_EXPIRED,  requestListener);
+            }
+        });
 
         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.list).setVisibility(View.GONE);

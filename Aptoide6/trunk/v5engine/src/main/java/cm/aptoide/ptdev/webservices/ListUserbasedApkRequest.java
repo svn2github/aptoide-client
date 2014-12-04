@@ -1,22 +1,20 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import openiab.webservices.BasePurchaseStatusRequest;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,14 +36,14 @@ public class ListUserbasedApkRequest extends RetrofitSpiceRequest<ListRecomended
         ListRecomended getRecommended(@FieldMap HashMap<String, String> args);
     }
 
-    private Context context;
+
     private String token;
     private int limit;
 
 
     public ListUserbasedApkRequest(Context context) {
         super(ListRecomended.class, Webservice.class);
-        this.context = context;
+
     }
 
 
@@ -59,10 +57,10 @@ public class ListUserbasedApkRequest extends RetrofitSpiceRequest<ListRecomended
 
         parameters.put("mode", "json");
 
-        options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
+        options.add(new WebserviceOptions("q", AptoideUtils.filters(Aptoide.getContext())));
 
         if(limit>0)options.add(new WebserviceOptions("limit", String.valueOf(limit)));
-        options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
+        options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext())));
 
 
         StringBuilder sb = new StringBuilder();

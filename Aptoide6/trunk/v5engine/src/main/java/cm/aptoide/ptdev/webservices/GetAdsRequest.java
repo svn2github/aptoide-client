@@ -4,9 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.flurry.android.FlurryAgent;
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.squareup.okhttp.*;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import retrofit.http.POST;
 public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAdsRequest.Webservice> {
 
     private int CONNECTION_TIMEOUT = 10000;
-    private final Context context;
+
     private String location;
     private String keyword;
     private int limit;
@@ -47,7 +48,7 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
     public GetAdsRequest(Context context) {
         super(ApkSuggestionJson.class, Webservice.class);
-        this.context = context;
+
     }
 
     public interface Webservice{
@@ -63,8 +64,8 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         HashMap<String, String> parameters = new HashMap<String, String>();
 
-        parameters.put("q", AptoideUtils.filters(context));
-        parameters.put("lang", AptoideUtils.getMyCountryCode(context));
+        parameters.put("q", AptoideUtils.filters(Aptoide.getContext()));
+        parameters.put("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext()));
 
         String myid = AptoideUtils.getSharedPreferences().getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
         parameters.put("cpuid", myid);
@@ -96,6 +97,8 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         parameters.put("app_pkg", package_name);
         parameters.put("app_store", repo);
+
+
 
         parameters.put("conn_type", AptoideUtils.NetworkUtils.getConnectionType().toString());
 

@@ -2,9 +2,11 @@ package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
@@ -41,6 +45,9 @@ public class FragmentListStore extends Fragment {
 
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+    private ArrayList<StoreListItem> items;
+    private RecyclerView rRiew;
+    private View view;
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,6 +69,7 @@ public class FragmentListStore extends Fragment {
         private String widgetId;
         private String refId;
         private String store;
+        private StoreActivity.Sort sort;
 
         public GetStoreRequest() {
             super(Response.class, Webservice.class);
@@ -100,6 +108,7 @@ public class FragmentListStore extends Fragment {
             //widgetParams.offset = offset;
             //widgetParams.limit = 3;
 
+
             getStore.getDatasets_params().set(widgetParams);
 
             //getStore.addDataset(categoriesParams.getDatasetName());
@@ -108,6 +117,9 @@ public class FragmentListStore extends Fragment {
             Api.ListApps listApps = new Api.ListApps();
             listApps.datasets_params = null;
             api.getApi_params().set(getStore);
+            listApps.order_by = sort.getSort();
+            listApps.order_dir = sort.getDir();
+
 
             if(widgetId != null){
                 listApps.datasets.add(refId);
@@ -122,6 +134,10 @@ public class FragmentListStore extends Fragment {
 
         }
 
+        public void setSort(StoreActivity.Sort sort) {
+            this.sort = sort;
+        }
+
         public interface Webservice{
             @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore/")
             Response postApk(@Body Api user) throws Response.TicketException;
@@ -133,26 +149,46 @@ public class FragmentListStore extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         return inflater.inflate(R.layout.fragment_list_apps, container, false);
     }
-
+    SwipeRefreshLayout swipeLayout;
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final ArrayList<StoreListItem> items = new ArrayList<StoreListItem>();
-
-        final RecyclerView rRiew  = (RecyclerView) view.findViewById(R.id.list);
+        items = new ArrayList<StoreListItem>();
+        this.view = view;
+        rRiew  = (RecyclerView) view.findViewById(R.id.list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
         StoreListAdapter adapter = new StoreListAdapter(getActivity(), items);
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh(DurationInMillis.ALWAYS_EXPIRED);
+            }
+        });
+        swipeLayout.setRefreshing(true);
+        adapter.setStorename(getArguments().getString("storename"));
 
+        rRiew.setAdapter(adapter);
+
+        refresh(DurationInMillis.ONE_HOUR);
+    }
+
+    public void refresh(long expire){
+        view.findViewById(R.id.error).setVisibility(View.GONE);
+        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.list).setVisibility(View.GONE);
         GetStoreRequest request = new GetStoreRequest();
+        StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
+        request.setSort(sort);
 
         request.setStore(getArguments().getString("storename"));
 
@@ -161,109 +197,108 @@ public class FragmentListStore extends Fragment {
             request.setRefId(getArguments().getString("refid"));
         }
 
-        adapter.setStorename(getArguments().getString("storename"));
-
-        rRiew.setAdapter(adapter);
-        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.list).setVisibility(View.GONE);
-        manager.execute(request, getArguments().getString("storename") + getArguments().getString("widgetrefid") + getArguments().getString("refid") , DurationInMillis.ONE_HOUR, new RequestListener<Response>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.error).setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onRequestSuccess(Response response) {
-                ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
-
-                List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
-                HashMap<String, Response.ListApps.Category> dataset = null;
-                if (response.responses.listApps != null) {
-                    dataset = response.responses.listApps.datasets.getDataset();
-                }
-
-
-                String widgetrefid = getArguments().getString("refid");
-                if (list.isEmpty()) {
-
-                    if (dataset != null) {
-                        if(dataset.get(widgetrefid).data != null) {
-
-                            List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
-
-                            for (Response.ListApps.Apk apk : apksList) {
-                                App app = new App();
-                                app.setName(apk.name);
-                                app.setIcon(apk.icon);
-
-                                if(apk.rating!=null){
-                                    app.setRating(apk.rating.floatValue());
-                                }
-
-                                app.setVersionName(apk.vername);
-                                map.add(app);
-                            }
-
-                        }else{
-                            manager.removeDataFromCache(Response.class);
-                        }
-                    }
-
-                } else {
-
-                    for (Response.GetStore.Widgets.Widget widget : list) {
-
-                        if (widget.type.equals("apps_list")) {
-                            //Response.ListApps.Category category = dataset.get(widget.data.ref_id);
-                            WidgetCategory item = new WidgetCategory();
-                            item.refid = widget.data.ref_id;
-                            item.widgetid = widget.widgetid;
-                            item.name = widget.name;
-                            map.add(item);
-                        } else {
-                            WidgetCategory item = new WidgetCategory();
-                            item.name = widget.name;
-                            map.add(item);
-                        }
-
-                    }
-
-                    if (dataset != null ) {
-
-                        if(dataset.get(widgetrefid).data != null) {
-
-                            List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
-
-                            for (Response.ListApps.Apk apk : apksList) {
-
-                                App app = new App();
-                                app.setName(apk.name);
-                                app.setIcon(apk.icon);
-                                if(apk.rating!=null){
-                                    app.setRating(apk.rating.floatValue());
-                                }
-                                app.setVersionName(apk.vername);
-                                map.add(app);
-
-                            }
-
-                        }
-                    }
-
-
-                }
-
-                //string.clear();
-                items.addAll(map);
-                rRiew.getAdapter().notifyDataSetChanged();
-
-                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
-
-            }
-        });
+        manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") , expire, listener);
     }
+
+    RequestListener<Response> listener = new RequestListener<Response>() {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+            view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onRequestSuccess(Response response) {
+            ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
+
+            List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
+            HashMap<String, Response.ListApps.Category> dataset = null;
+            if (response.responses.listApps != null) {
+                dataset = response.responses.listApps.datasets.getDataset();
+            }
+
+
+            String widgetrefid = getArguments().getString("refid");
+            if (list.isEmpty()) {
+
+                if (dataset != null) {
+                    if(dataset.get(widgetrefid).data != null) {
+
+                        List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
+
+                        for (Response.ListApps.Apk apk : apksList) {
+                            App app = new App();
+                            app.setName(apk.name);
+                            app.setIcon(apk.icon);
+
+                            if(apk.rating!=null){
+                                app.setRating(apk.rating.floatValue());
+                            }
+
+                            app.setVersionName(apk.vername);
+                            map.add(app);
+                        }
+
+                    }else{
+                        manager.removeDataFromCache(Response.class);
+                    }
+                }
+
+            } else {
+
+                for (Response.GetStore.Widgets.Widget widget : list) {
+
+                    if (widget.type.equals("apps_list")) {
+                        //Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+                        WidgetCategory item = new WidgetCategory();
+                        item.refid = widget.data.ref_id;
+                        item.widgetid = widget.widgetid;
+                        item.name = widget.name;
+                        map.add(item);
+                    } else {
+                        WidgetCategory item = new WidgetCategory();
+                        item.name = widget.name;
+                        map.add(item);
+                    }
+
+                }
+
+                if (dataset != null ) {
+
+                    if(dataset.get(widgetrefid).data != null) {
+
+                        List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
+
+                        for (Response.ListApps.Apk apk : apksList) {
+
+                            App app = new App();
+                            app.setName(apk.name);
+                            app.setIcon(apk.icon);
+                            app.setMd5sum(apk.md5sum);
+                            app.setRepo(apk.store_name);
+                            if(apk.rating!=null){
+                                app.setRating(apk.rating.floatValue());
+                            }
+                            app.setVersionName(apk.vername);
+                            map.add(app);
+
+                        }
+
+                    }
+                }
+
+            }
+
+            //string.clear();
+            items.clear();
+            items.addAll(map);
+            rRiew.getAdapter().notifyDataSetChanged();
+            swipeLayout.setRefreshing(false);
+            view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+            view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+
+        }
+    };
 
 
     public class WidgetCategory implements StoreListItem{
@@ -287,6 +322,8 @@ public class FragmentListStore extends Fragment {
         private float rating;
         private String icon;
         private String versionName;
+        private String repo;
+        private String md5sum;
 
         @Override
         public int getItemViewType() {
@@ -324,6 +361,22 @@ public class FragmentListStore extends Fragment {
 
         public void setVersionName(String versionName) {
             this.versionName = versionName;
+        }
+
+        public String getRepo() {
+            return repo;
+        }
+
+        public void setRepo(String repo) {
+            this.repo = repo;
+        }
+
+        public String getMd5sum() {
+            return md5sum;
+        }
+
+        public void setMd5sum(String md5sum) {
+            this.md5sum = md5sum;
         }
     }
 
@@ -383,7 +436,12 @@ public class FragmentListStore extends Fragment {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Intent i = new Intent(context, AppViewActivity.class);
+                            i.putExtra("fromRelated", true);
+                            i.putExtra("md5sum", appItem.getMd5sum());
+                            i.putExtra("repoName", appItem.getRepo());
+                            i.putExtra("download_from", "recommended_apps");
+                            context.startActivity(i);
                         }
                     });
 

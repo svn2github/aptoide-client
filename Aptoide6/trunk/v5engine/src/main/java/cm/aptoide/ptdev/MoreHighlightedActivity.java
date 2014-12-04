@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -89,10 +90,11 @@ public class MoreHighlightedActivity extends ActionBarActivity {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-
-
             GetAdsRequest request = new GetAdsRequest(getActivity());
             recyclerView.setAdapter(new HighlightedAdapter(list));
+            final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+
+            swipeLayout.setEnabled(false);
 
             request.setLimit(10);
             request.setLocation("homepage");
@@ -111,7 +113,7 @@ public class MoreHighlightedActivity extends ActionBarActivity {
                         ArrayList<ApkSuggestionJson.Ads> inElements = new ArrayList<>(apkSuggestionJson.getAds());
 
                         while (!inElements.isEmpty()) {
-                            FragmentListApps.AdRow row = new FragmentListApps.AdRow(getActivity());
+                            FragmentListApps.AdRow row = new FragmentListApps.AdRow();
                             for (int i = 0; i < 3 && !inElements.isEmpty(); i++) {
                                 row.ads.add(inElements.remove(0));
                             }

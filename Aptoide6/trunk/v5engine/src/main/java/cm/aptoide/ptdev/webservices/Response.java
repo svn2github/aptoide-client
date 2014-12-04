@@ -209,6 +209,9 @@ public class Response {
         public static class Apk {
             public Number id;
             public String name;
+            public Number store_id;
+
+            public String store_name;
 
             @JsonProperty("package")
             public String packageName;

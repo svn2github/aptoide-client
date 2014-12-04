@@ -17,13 +17,10 @@
                       android:title="@string/order_popup_lst3"/>
                 <item android:id="@+id/download"
                       android:title="@string/order_popup_lst4"/>
-                <item android:id="@+id/price"
-                      android:title="@string/order_popup_lst5"/>
+
             </group>
 
-            <item android:id="@+id/show_all"
-                  android:checkable="true"
-                  android:title="@string/order_popup_catg2"/>
+
 
 
         </menu>

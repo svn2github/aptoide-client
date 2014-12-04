@@ -2,13 +2,22 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.fragments.*;
 
 import java.lang.reflect.Field;
+
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
+import cm.aptoide.ptdev.fragments.FragmentHome;
+import cm.aptoide.ptdev.fragments.FragmentListApps;
+import cm.aptoide.ptdev.fragments.FragmentListTopApps;
+import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
+import cm.aptoide.ptdev.fragments.FragmentStores;
+import cm.aptoide.ptdev.fragments.FragmentUpdates;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,19 +75,14 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
 
 
         if(timeline) {
-            Fragment fragmentListApps;
-            Bundle bundle = new Bundle();
+
+
 
             switch (position) {
                 case 0:
-                    fragmentListApps = new FragmentListApps();
-
-                    return fragmentListApps;
-
+                    return new FragmentListApps();
                 case 1:
-                    fragmentListApps = new FragmentListTopApps();
-
-                    return fragmentListApps;
+                    return new FragmentListTopApps();
                 case 2:
                     return new FragmentStores();
                 case 3:

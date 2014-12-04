@@ -9,12 +9,12 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentBreadCrumbs;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flurry.android.FlurryAgent;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
@@ -68,7 +68,25 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         return storeTheme;
     }
 
-    public enum Sort{ 	NAMEAZ,NAMEZA, DOWNLOADS, DATE, PRICE, RATING}
+    public enum Sort{
+        NAMEAZ("alpha", "asc"),NAMEZA("alpha", "desc"), DOWNLOADS("downloads", "desc"), DATE("latest", "desc"), PRICE("alpha", "asc"), RATING("rating", "desc");
+        private final String sort;
+        private final String dir;
+
+        Sort(String sort, String dir){
+
+            this.sort = sort;
+            this.dir = dir;
+        }
+
+        public String getDir() {
+            return dir;
+        }
+
+        public String getSort() {
+            return sort;
+        }
+    }
     public boolean categories;
     public Sort sort;
 
@@ -215,21 +233,12 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
                 menu.findItem(R.id.date).setChecked(true);
                 break;
             case PRICE:
-                menu.findItem(R.id.price).setChecked(true);
+                menu.findItem(R.id.nameAZ).setChecked(true);
                 break;
             case RATING:
                 menu.findItem(R.id.rating).setChecked(true);
                 break;
         }
-
-        if(categories && storeid != -1){
-            breadCrumbs.setTitle(getString(R.string.categories), null);
-        }else{
-            menu.findItem(R.id.show_all).setChecked(true);
-            breadCrumbs.setTitle(getString(R.string.order_popup_catg2), null);
-        }
-
-        menu.findItem(R.id.show_all).setVisible(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false));
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -274,11 +283,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             } else if (i == R.id.price) {
                 FlurryAgent.logEvent("Store_View_Sorted_Apps_By_Price");
                 sort = Sort.PRICE;
-                setSort(item);
-            } else if (i == R.id.show_all) {
-                FlurryAgent.logEvent("Store_View_Sorted_Apps_By_All_Applications");
-                categories = !categories;
-                getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 setSort(item);
             }
         }
@@ -338,16 +342,9 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     }
 
 
-
-
     private void refreshList() {
-        if(service!=null){
-            isRefreshing = service.repoIsParsing(storeid);
-            FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-            fragStore.onRefreshCalled();
-            fragStore.setListShown(false);
-            fragStore.setRefreshing(isRefreshing);
-        }
+        FragmentListStore fragmentById = (FragmentListStore) getSupportFragmentManager().findFragmentById(R.id.content_layout);
+        fragmentById.refresh(DurationInMillis.ONE_HOUR);
     }
 
     public void onRefreshStarted() {

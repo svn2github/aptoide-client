@@ -92,6 +92,9 @@ public class Api {
 
         public int limit;
 
+        public String order_by;
+        public String order_dir;
+
         public DatasetParams datasets_params = new DatasetParams();
 
         public List<String> datasets = new ArrayList<String>();

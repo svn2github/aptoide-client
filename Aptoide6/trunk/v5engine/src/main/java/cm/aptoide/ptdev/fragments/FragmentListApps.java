@@ -1,9 +1,11 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,6 +39,7 @@ import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
@@ -54,22 +57,25 @@ import retrofit.http.POST;
  * Created by rmateus on 21-11-2014.
  */
 public class FragmentListApps extends Fragment {
-    private RecyclerView view;
-    private ArrayList<Displayable> string;
+
+
 
     SpiceManager manager = new SpiceManager(HttpService.class);
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         manager.start(getActivity());
+
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDetach() {
+        super.onDetach();
         manager.shouldStop();
+
     }
+
 
     public interface TestService{
 
@@ -90,12 +96,12 @@ public class FragmentListApps extends Fragment {
 
     public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
 
-        private final String context;
+
         private int offset;
 
-        public TestRequest(String context) {
+        public TestRequest() {
             super(Response.class, TestService.class);
-            this.context = context;
+
         }
 
 
@@ -168,13 +174,11 @@ public class FragmentListApps extends Fragment {
 
     public static class TimelineRow extends Row{
 
-        private final Context context;
+
         public List<TimelineListAPKsJson.UserApk> apks = new ArrayList<TimelineListAPKsJson.UserApk>(3);
 
 
-        public TimelineRow(Context context, List<TimelineListAPKsJson.UserApk> apks) {
-            super(context);
-            this.context = context;
+        public TimelineRow(List<TimelineListAPKsJson.UserApk> apks) {
             this.apks = apks;
         }
 
@@ -185,11 +189,11 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public void bindView(RecyclerView.ViewHolder holder) {
-            RecyclerAdapter.TimelineRowViewHolder viewHolder = (RecyclerAdapter.TimelineRowViewHolder) holder;
+            final RecyclerAdapter.TimelineRowViewHolder viewHolder = (RecyclerAdapter.TimelineRowViewHolder) holder;
 
             int i=0;
             for(final TimelineListAPKsJson.UserApk apk : apks) {
-                RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder itemViewHolder = (RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
+                final RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder itemViewHolder = (RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apk.getApk().getName());
                 String icon = apk.getApk().getIcon_hd();
                 itemViewHolder.friend.setText(apk.getInfo().getUsername() + " installed this.");
@@ -205,11 +209,12 @@ public class FragmentListApps extends Fragment {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(context, AppViewActivity.class);
+                        Intent i = new Intent(viewHolder.itemView.getContext(), AppViewActivity.class);
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.getApk().getMd5sum());
+                        i.putExtra("repoName", apk.getApk().getRepo());
                         i.putExtra("download_from", "recommended_apps");
-                        context.startActivity(i);
+                        viewHolder.itemView.getContext().startActivity(i);
                     }
                 });
                 i++;
@@ -224,11 +229,9 @@ public class FragmentListApps extends Fragment {
 
         final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).displayer(new FadeInBitmapDisplayer(1000)).build();
 
-        Context context;
 
-        public FeaturedRow(Context context) {
-            super(context);
-            this.context = context;
+
+        public FeaturedRow() {
             setEnabled(false);
         }
 
@@ -245,18 +248,19 @@ public class FragmentListApps extends Fragment {
         @Override
         public void bindView(RecyclerView.ViewHolder holder) {
 
-            RecyclerAdapter.FeaturedViewHolder viewHolder = (RecyclerAdapter.FeaturedViewHolder) holder;
+            final RecyclerAdapter.FeaturedViewHolder viewHolder = (RecyclerAdapter.FeaturedViewHolder) holder;
             for(int i = 0; i < apks.size() ; i++){
                 final Response.ListApps.Apk apk = apks.get(i);
                 ImageLoader.getInstance().displayImage(apk.graphic, viewHolder.images[i], options);
                 viewHolder.frameLayouts[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, AppViewActivity.class);
+                        Intent intent = new Intent(viewHolder.itemView.getContext(), AppViewActivity.class);
                         intent.putExtra("fromRelated", true);
                         intent.putExtra("md5sum", apk.md5sum);
+                        intent.putExtra("repoName", apk.store_name);
                         intent.putExtra("download_from", "recommended_apps");
-                        context.startActivity(intent);
+                        viewHolder.itemView.getContext().startActivity(intent);
                     }
                 });
             }
@@ -316,13 +320,12 @@ public class FragmentListApps extends Fragment {
 
     public static class AdRow extends Row {
 
-        private final Context context;
+
         public List<ApkSuggestionJson.Ads> ads = new ArrayList<ApkSuggestionJson.Ads>();
 
 
-        public AdRow(Context context) {
-            super(context);
-            this.context = context;
+        public AdRow() {
+
         }
 
         @Override
@@ -391,7 +394,7 @@ public class FragmentListApps extends Fragment {
 
     public static class Row implements Displayable{
 
-        private final Context context;
+
         public String header;
         public String widgetid;
         public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>();
@@ -404,10 +407,10 @@ public class FragmentListApps extends Fragment {
 
         private boolean enabled = true;
 
-        public Row(Context context) {
+        public Row() {
             //picasso = Picasso.with(context);
             //picasso.setIndicatorsEnabled(true);
-            this.context = context;
+
         }
 
         public void addItem(Response.ListApps.Apk apk){
@@ -462,11 +465,12 @@ public class FragmentListApps extends Fragment {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(context, AppViewActivity.class);
+                        Intent i = new Intent(v.getContext(), AppViewActivity.class);
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.md5sum);
+                        i.putExtra("repoName", apk.store_name);
                         i.putExtra("download_from", "recommended_apps");
-                        context.startActivity(i);
+                        v.getContext().startActivity(i);
                     }
                 });
                 i++;
@@ -486,8 +490,8 @@ public class FragmentListApps extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
 
-        view = (RecyclerView) rootView.findViewById(R.id.list);
-        string = new ArrayList<Displayable>(20);
+        final RecyclerView view = (RecyclerView) rootView.findViewById(R.id.list);
+        final ArrayList<Displayable> string = new ArrayList<Displayable>(20);
 
         final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), string);
         StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
@@ -531,9 +535,10 @@ public class FragmentListApps extends Fragment {
         view.setLayoutManager(linearLayoutManager);
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
-        TestRequest request = new TestRequest("home");
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
-        RequestListener<Response> requestListener = new RequestListener<Response>() {
+
+        final RequestListener<Response> requestListener = new RequestListener<Response>() {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -559,7 +564,7 @@ public class FragmentListApps extends Fragment {
 
                             ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
-                            Row row = new FeaturedRow(getActivity());
+                            Row row = new FeaturedRow();
                             row.widgetid = widget.widgetid;
                             row.header = widget.name;
                             row.widgetrefid = widget.data.ref_id;
@@ -576,7 +581,7 @@ public class FragmentListApps extends Fragment {
                                 ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
                                 while (!inElements.isEmpty()) {
-                                    Row row = new Row(getActivity());
+                                    Row row = new Row();
                                     row.widgetid = widget.widgetid;
                                     row.header = widget.name;
                                     row.widgetrefid = widget.data.ref_id;
@@ -607,7 +612,7 @@ public class FragmentListApps extends Fragment {
 
                     } else {
 
-                        Row row = new Row(getActivity());
+                        Row row = new Row();
                         row.setEnabled(false);
                         map.add(row);
                         ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
@@ -616,7 +621,7 @@ public class FragmentListApps extends Fragment {
 
                 }
 
-                //string.clear();
+                string.clear();
                 string.addAll(map);
 
                 Log.d("AptoideDebug", string.toString());
@@ -647,7 +652,7 @@ public class FragmentListApps extends Fragment {
                         public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
 
 
-                            TimelineRow row = new TimelineRow(getActivity(), timelineListAPKsJson.getUsersapks());
+                            TimelineRow row = new TimelineRow(timelineListAPKsJson.getUsersapks());
                             int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
                             row.header = "Your friends installs";
                             row.widgetid = "timeline";
@@ -672,7 +677,7 @@ public class FragmentListApps extends Fragment {
 
                         @Override
                         public void onRequestSuccess(ListRecomended listRecomended) {
-                            Row row = new Row(getActivity());
+                            Row row = new Row();
                             int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
 
                             for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
@@ -704,7 +709,7 @@ public class FragmentListApps extends Fragment {
 
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
-                manager.execute(request, new RequestListener<ApkSuggestionJson>() {
+                manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + 3, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<ApkSuggestionJson>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
 
@@ -714,7 +719,7 @@ public class FragmentListApps extends Fragment {
                     public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
                         if (apkSuggestionJson != null && apkSuggestionJson.getAds() != null && apkSuggestionJson.getAds().size() > 0) {
 
-                            AdRow row = new AdRow(getActivity());
+                            AdRow row = new AdRow();
 
                             row.header = "Highlighted";
                             row.widgetid = "highlighted";
@@ -725,13 +730,14 @@ public class FragmentListApps extends Fragment {
 
                             ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
 
-
                             (view.getAdapter()).notifyDataSetChanged();
                         }
 
 
                     }
                 });
+
+                swipeLayout.setRefreshing(false);
 
 
             }
@@ -770,8 +776,18 @@ public class FragmentListApps extends Fragment {
 //                }
 //            }
 //        });
+        final TestRequest request = new TestRequest();
 
-        manager.execute(request, "home", DurationInMillis.ALWAYS_RETURNED, requestListener);
+
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                manager.execute(request, "home", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+            }
+        });
+
+
+        manager.execute(request, "home", DurationInMillis.ONE_WEEK, requestListener);
 
         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.list).setVisibility(View.GONE);
@@ -788,16 +804,14 @@ public class FragmentListApps extends Fragment {
 
         public int offset = 0;
 
-        public Context getContext() {
-            return context;
-        }
 
-        private final Context context;
+
+
         private final List<Displayable> list;
         private final HashMap<String, Integer> placeholders = new HashMap<String, Integer>();
 
         public RecyclerAdapter(Context context, List<Displayable> list) {
-            this.context = context;
+
             this.list = list;
         }
 
@@ -809,7 +823,7 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+            Context context = parent.getContext();
             if(viewType>3000) {
 
                 LinearLayout inflate = new LinearLayout(context);
@@ -860,7 +874,7 @@ public class FragmentListApps extends Fragment {
         @Override
         public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
 
-            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, false);
+            View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.home_separator, viewGroup, false);
 
             return new HeaderViewHolder(inflate);
         }
@@ -955,11 +969,11 @@ public class FragmentListApps extends Fragment {
             final View[] views;
             final LinearLayout layout;
 
-            public RowViewHolder(View itemView, int viewType, Context context) {
+            public RowViewHolder(View itemView, int viewType, Context context1) {
                 super(itemView);
 
                 views = new View[viewType];
-
+                Context context = itemView.getContext();
                 layout = (LinearLayout) itemView;
                 for(int i = 0; i < viewType; i++){
                     View inflate = LayoutInflater.from(context).inflate(R.layout.home_item, layout, false);
@@ -1008,11 +1022,11 @@ public class FragmentListApps extends Fragment {
             final View[] views;
             final LinearLayout layout;
 
-            public TimelineRowViewHolder(View itemView, int viewType, Context context) {
+            public TimelineRowViewHolder(View itemView, int viewType, Context context1) {
                 super(itemView);
 
                 views = new View[3];
-
+                Context context = itemView.getContext();
                 layout = (LinearLayout) itemView;
                 for(int i = 0; i < 3; i++){
                     View inflate = LayoutInflater.from(context).inflate(R.layout.timeline_item, layout, false);

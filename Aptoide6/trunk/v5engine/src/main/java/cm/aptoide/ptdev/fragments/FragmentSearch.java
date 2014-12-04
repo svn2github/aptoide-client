@@ -11,11 +11,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
-import android.view.*;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.commonsware.cwac.merge.MergeAdapter;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
@@ -23,7 +29,6 @@ import cm.aptoide.ptdev.adapters.SearchAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.downloadmanager.Utils;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import com.commonsware.cwac.merge.MergeAdapter;
 
 /**
  * Created by tdeus on 3/21/14.
@@ -60,7 +65,7 @@ public class FragmentSearch extends ListFragment implements LoaderManager.Loader
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_categories, menu);
-        menu.findItem(R.id.show_all).setVisible(false);
+
         menu.findItem(R.id.download).setChecked(true);
 
     }

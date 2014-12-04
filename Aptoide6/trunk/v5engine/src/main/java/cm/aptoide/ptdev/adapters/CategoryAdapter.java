@@ -3,7 +3,6 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.PopupMenu;
 import android.text.Html;
@@ -16,14 +15,19 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.utils.IconSizes;
 
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import cm.aptoide.ptdev.Category;
+import cm.aptoide.ptdev.CategoryCallback;
+import cm.aptoide.ptdev.EnumCategories;
+import cm.aptoide.ptdev.EnumStoreTheme;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.utils.IconSizes;
 
 /**
  * Created with IntelliJ IDEA.
@@ -236,7 +240,6 @@ public class CategoryAdapter extends CursorAdapter {
         MenuListener(Context context, long id) {
             this.context = context;
             this.id = id;
-
 
         }
 
