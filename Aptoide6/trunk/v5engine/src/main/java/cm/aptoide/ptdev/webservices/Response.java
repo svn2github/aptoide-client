@@ -135,7 +135,6 @@ public class Response {
 
         public static class Datasets {
 
-            public Categories categories;
             public Widgets widgets;
             public StoreMeta meta;
 

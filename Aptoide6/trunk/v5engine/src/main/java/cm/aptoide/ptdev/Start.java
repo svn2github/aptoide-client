@@ -29,7 +29,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -56,15 +56,12 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.otto.Subscribe;
-
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +70,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -121,13 +117,11 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
 import cm.aptoide.ptdev.views.BadgeView;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
-import cm.aptoide.ptdev.webservices.RepositoryChangeRequest;
 import cm.aptoide.ptdev.webservices.TimelineCheckRequestSync;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
-import retrofit.converter.JacksonConverter;
 import roboguice.util.temp.Ln;
 
 public class Start extends ActionBarActivity implements
@@ -166,6 +160,7 @@ public class Start extends ActionBarActivity implements
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             rabbitMqConnBound = true;
+
             rabbitMqService = ((RabbitMqService.RabbitMqBinder) binder).getService();
             rabbitMqService.startAmqpService();
         }
@@ -774,22 +769,25 @@ public class Start extends ActionBarActivity implements
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open,
+                R.string.drawer_open,
                 R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
+                syncState();
             }
 
             public void onDrawerOpened(View drawerView) {
                 mDrawerLayout.findViewById(R.id.left_drawer).requestFocus();
+                syncState();
             }
         };
 
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+        mDrawerToggle.syncState();
     }
 
     public int getFriendsTotal(Number number){

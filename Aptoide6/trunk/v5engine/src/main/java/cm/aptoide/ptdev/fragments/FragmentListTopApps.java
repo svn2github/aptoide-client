@@ -232,7 +232,7 @@ public class FragmentListTopApps extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
 
         view = (RecyclerView) rootView.findViewById(R.id.list);
         string = new ArrayList<Displayable>(20);
@@ -277,7 +277,8 @@ public class FragmentListTopApps extends Fragment {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-
+                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -340,11 +341,14 @@ public class FragmentListTopApps extends Fragment {
                 Log.d("AptoideDebug", string.toString());
 
                 view.getAdapter().notifyDataSetChanged();
-
+                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
             }
 
         };
 
+        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.list).setVisibility(View.GONE);
         manager.execute(request, "top" , DurationInMillis.ALWAYS_RETURNED,  requestListener);
 
         return rootView;

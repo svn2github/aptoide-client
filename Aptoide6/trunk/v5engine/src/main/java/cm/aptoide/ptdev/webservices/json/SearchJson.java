@@ -4,7 +4,6 @@ package cm.aptoide.ptdev.webservices.json;
 
 import java.util.List;
 
-import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
 
 /**
@@ -35,9 +34,9 @@ public class SearchJson{
 
 
     public static class Results{
-         private List<Apks> apks;
-         private List<Apks> u_apks;
-         private List<String> didyoumean;
+        public List<Apks> apks;
+        public List<Apks> u_apks;
+        public List<String> didyoumean;
 
         public List<Apks> getApks(){
             return this.apks;

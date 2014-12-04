@@ -1251,7 +1251,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.applications);
 
-        if(savedInstanceState==null) {
+        if(savedInstanceState == null) {
 
             if(getIntent().getBooleanExtra("fromSponsored", false)){
                 GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());

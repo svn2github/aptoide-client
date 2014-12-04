@@ -59,9 +59,40 @@ public class Api {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+
+    public static class CategoryParam implements DatasetParam{
+
+        @JsonIgnore
+        private final String category;
+
+        private Number limit;
+
+        @JsonIgnore
+        public CategoryParam(String categoryName) {
+            this.category = categoryName;
+        }
+
+        @Override
+        public String getDatasetName() {
+            return category;
+        }
+
+        public void setLimit(int limit) {
+            this.limit = limit;
+        }
+
+        public Number getLimit() {
+            return limit;
+        }
+    }
+
+
     public static class ListApps implements ApiParam{
 
         public int limit;
+
+        public DatasetParams datasets_params = new DatasetParams();
 
         public List<String> datasets = new ArrayList<String>();
 

@@ -26,21 +26,21 @@ public class ApkSuggestionJson {
     }
 
     public static class Data{
-         private String description;
-         private Number downloads;
-         private String icon;
-         private Number id;
-         private String md5sum;
-         private String name;
-         @JsonProperty("package") private String packageName;
-         private String repo;
-         private Number size;
-         private Number stars;
-         private Number vercode;
-         private String vername;
+        public String description;
+        public Number downloads;
+        public String icon;
+        public Number id;
+        public String md5sum;
+        public String name;
+         @JsonProperty("package") public String packageName;
+        public String repo;
+        public Number size;
+        public Number stars;
+        public Number vercode;
+        public String vername;
 
-         private String url;
-         private String image;
+        public String url;
+        public String image;
 
         public String getDescription(){
             return this.description;
@@ -132,9 +132,9 @@ public class ApkSuggestionJson {
 
     public static class Ads{
 
-        private Data data;
-        private Info info;
-        private Partner partner;
+        public Data data;
+        public Info info;
+        public Partner partner;
 
         public Data getData(){
             return this.data;
@@ -194,7 +194,7 @@ public class ApkSuggestionJson {
         }
 
         @JsonProperty("info") private Info partnerInfo;
-         private Data partnerData;
+        @JsonProperty("data")public Data partnerData;
 
         public static class Info{
 
@@ -206,8 +206,8 @@ public class ApkSuggestionJson {
                 return name;
             }
 
-             private Number id;
-             private String name;
+            public Number id;
+             public String name;
         }
 
         public static class Data{
@@ -220,8 +220,8 @@ public class ApkSuggestionJson {
                 return impression_url;
             }
 
-             private String click_url;
-             private String impression_url;
+             public String click_url;
+             public String impression_url;
         }
 
 

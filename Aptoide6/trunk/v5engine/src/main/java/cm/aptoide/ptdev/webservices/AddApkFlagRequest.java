@@ -6,9 +6,7 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -57,9 +55,7 @@ public class AddApkFlagRequest extends RetrofitSpiceRequest<GenericResponseV2, A
 
         GenericResponseV2 genericResponseV2 = null;
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(new JacksonConverter()).build();
 
-        setService(adapter.create(getRetrofitedInterfaceClass()));
         try{
             genericResponseV2 = getService().addApkFlag(parameters);
         }catch (RetrofitError error){

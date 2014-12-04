@@ -136,7 +136,10 @@ public class MoreActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
-
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if(savedInstanceState == null){
             Fragment fragment = new MoreFragment();
@@ -175,7 +178,7 @@ public class MoreActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
             recyclerView = (RecyclerView) view.findViewById(R.id.list);
@@ -208,7 +211,8 @@ public class MoreActivity extends ActionBarActivity {
 
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-
+                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    view.findViewById(R.id.error).setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -275,6 +279,9 @@ public class MoreActivity extends ActionBarActivity {
                     recyclerView.getAdapter().notifyDataSetChanged();
                     //loading = false;
 
+                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+
                 }
                                                                                                                                 
             };
@@ -284,6 +291,8 @@ public class MoreActivity extends ActionBarActivity {
             request.setWidgetId(getArguments().getString("widgetid"));
 
             manager.execute(request, getArguments().getString("widgetid"), DurationInMillis.ALWAYS_RETURNED,  requestListener);
+            view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.list).setVisibility(View.GONE);
 
 
         }

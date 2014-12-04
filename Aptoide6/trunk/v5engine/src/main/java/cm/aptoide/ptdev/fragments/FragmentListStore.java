@@ -106,11 +106,12 @@ public class FragmentListStore extends Fragment {
             getStore.addDataset(widgetParams.getDatasetName());
 
             Api.ListApps listApps = new Api.ListApps();
-
+            listApps.datasets_params = null;
             api.getApi_params().set(getStore);
 
             if(widgetId != null){
                 listApps.datasets.add(refId);
+
                 api.getApi_params().set(listApps);
 
                 return getService().postApk2(api);
@@ -140,7 +141,7 @@ public class FragmentListStore extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         final ArrayList<StoreListItem> items = new ArrayList<StoreListItem>();
@@ -163,10 +164,13 @@ public class FragmentListStore extends Fragment {
         adapter.setStorename(getArguments().getString("storename"));
 
         rRiew.setAdapter(adapter);
+        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.list).setVisibility(View.GONE);
         manager.execute(request, getArguments().getString("storename") + getArguments().getString("widgetrefid") + getArguments().getString("refid") , DurationInMillis.ONE_HOUR, new RequestListener<Response>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.error).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -253,6 +257,9 @@ public class FragmentListStore extends Fragment {
                 //string.clear();
                 items.addAll(map);
                 rRiew.getAdapter().notifyDataSetChanged();
+
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
 
             }
         });

@@ -206,13 +206,18 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+
+    </style>
 
     <style name="Widget.Styled.ActionBar.Aptoide" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/ic_widget_launcher</item>
         <item name="background">@drawable/ab_background_aptoide</item>
+        <item name="logo">@drawable/ic_widget_launcher</item>
         <item name="displayOptions">showHome|useLogo</item>
         <item name="titleTextStyle">@style/titleStyle</item>
-        <item name="android:icon">@drawable/ic_widget_launcher</item>
+
         <item name="android:background">@drawable/ab_background_aptoide</item>
         <item name="android:displayOptions" tools:ignore="NewApi">showHome|useLogo</item>
         <item name="android:titleTextStyle" tools:ignore="NewApi">@style/titleStyle</item>
