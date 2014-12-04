@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -136,7 +137,8 @@ public class DetailsActivity extends Activity {
         app_developer = (TextView) findViewById(R.id.app_developer);
         app_version = (TextView) findViewById(R.id.app_version);
         app_downloads = (TextView) findViewById(R.id.app_downloads);
-        app_downloads.setText(getString(R.string.downloads)+": " + downloads);
+        if(downloads!=null)
+            app_downloads.setText(getString(R.string.downloads)+": " + downloads);
         rating_bar = (RatingBar) findViewById(R.id.rating_bar);
         app_ratings = (TextView) findViewById(R.id.app_ratings);
         app_size = (TextView) findViewById(R.id.app_size);
@@ -169,7 +171,8 @@ public class DetailsActivity extends Activity {
                 addDownloadButtonListener(apkInfoJson);
 
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
-
+                downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
+                app_downloads.setText(getString(R.string.downloads)+": " + downloads);
                 app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
                 rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
@@ -426,7 +429,7 @@ public class DetailsActivity extends Activity {
                     downloadmanager = (DownloadManager) getSystemService(servicestring);
 
                     Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
-//                        Log.d(TAG, "getPath() " + ((GetApkInfoJson) detailRow.getItem()).getApk().getPath());
+                    Log.d("pois", "DownLoadLink: " + ApkInfoJson.getApk().getPath());
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     new updateDownLoadInfoTask().execute();
@@ -436,7 +439,7 @@ public class DetailsActivity extends Activity {
                     request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                     request.setAllowedOverRoaming(false);
                     request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
-//                        Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
+//                  Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
 
                     request.setDestinationInExternalPublicDir("apks", ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk");

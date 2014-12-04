@@ -79,7 +79,7 @@ public class EditorsChoice implements Serializable, BindInterface {
         intent.putExtra(DetailsActivity.PACKAGE_NAME, packagename.getApkid());
         intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, featuregraphicpath + packagename.featuregraphic);
         intent.putExtra(DetailsActivity.APP_NAME, packagename.name);
-        intent.putExtra(DetailsActivity.DOWNLOADS, apkpath+getPackagename().getPath());
+        intent.putExtra(DetailsActivity.DOWNLOAD_URL, apkpath+getPackagename().getPath());
         intent.putExtra(DetailsActivity.VERCODE, getPackagename().getVercode());
         intent.putExtra(DetailsActivity.MD5_SUM, getPackagename().getMd5h());
         intent.putExtra(DetailsActivity.APP_SIZE, getPackagename().getSz());

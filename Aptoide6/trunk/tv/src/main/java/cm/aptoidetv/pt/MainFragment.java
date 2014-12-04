@@ -53,7 +53,6 @@ import java.util.TimerTask;
 import cm.aptoidetv.pt.Model.ApplicationAPK;
 import cm.aptoidetv.pt.Model.BindInterface;
 import cm.aptoidetv.pt.Model.EditorsChoice;
-import cm.aptoidetv.pt.Model.StoreApplication;
 import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.RequestTV;
 import cm.aptoidetv.pt.WebServices.Response;
@@ -61,10 +60,10 @@ import cm.aptoidetv.pt.WebServices.Response;
 public class MainFragment extends BrowseFragment{
     private static final String TAG = "MainFragment";
 
-    private static int BACKGROUND_UPDATE_DELAY = 300;
-    private static int GRID_ITEM_WIDTH = 200;
+    private static final int BACKGROUND_UPDATE_DELAY = 300;
+/*    private static int GRID_ITEM_WIDTH = 200;
     private static int GRID_ITEM_HEIGHT = 200;
-    private static String mVideosUrl;
+    private static String mVideosUrl;*/
     private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
     private Drawable mDefaultBackground;
@@ -74,8 +73,8 @@ public class MainFragment extends BrowseFragment{
     private URI mBackgroundURI;
 
     private RequestListener<Response> requestListener;
-    private List<EditorsChoice> mEditorsChoice = new ArrayList<EditorsChoice>();
-    private StoreApplication mStoreApplications = new StoreApplication();
+    private List<EditorsChoice> mEditorsChoice = new ArrayList<>();
+/*    private StoreApplication mStoreApplications = new StoreApplication();*/
 
     private SpiceManager manager = new SpiceManager(HttpService.class);
 
@@ -95,7 +94,7 @@ public class MainFragment extends BrowseFragment{
 //        Log.d(TAG, "onCreate");
         super.onActivityCreated(savedInstanceState);
 
-//        loadData();
+//        loadmEditorsChoice();
 
         prepareBackgroundManager();
         setupUIElements();
@@ -106,27 +105,33 @@ public class MainFragment extends BrowseFragment{
         requestListener= new RequestListener<Response>(){
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.d("pois", "Fail!!!");
             }
 
             @Override
             public void onRequestSuccess(Response response) {
-                Log.d("pois", "ha pois é!");
-                loadData();
-                mRowsAdapter = new ArrayObjectAdapter( new ListRowPresenter() );
+                loadmEditorsChoice();
+                mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
                 CardPresenter cardPresenter = new CardPresenter();
 
                 //List<String> categories = getCategories();
                 List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
 
-                if( categories == null || categories.isEmpty() )
+                if (categories == null || categories.isEmpty())
                     return;
-
+                {
+                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    for (EditorsChoice editorsChoice : mEditorsChoice) {
+                        listRowAdapter.add(editorsChoice);
+                    }
+                    if(mEditorsChoice.size()>0) {
+                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, "Editors Choice", null);
+                        mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                    }
+                }
                 for( Response.GetStore.Widgets.Widget widget : categories ) {
                     if(widget==null || widget.data==null || response.responses.listApps.datasets.getDataset()==null)
                         continue;
                     final String ref_id = widget.data.ref_id;
-                    Log.d("pois","nome da categoria: "+widget.name);
 
                     if(response.responses.listApps.datasets.getDataset().get(ref_id)==null ||
                        response.responses.listApps.datasets.getDataset().get(ref_id).data==null ||
@@ -137,11 +142,11 @@ public class MainFragment extends BrowseFragment{
                     for( Response.ListApps.Apk apk :  response.responses.listApps.datasets.getDataset().get(ref_id).data.list) {
                         ApplicationAPK storeApplication = new ApplicationAPK(apk,widget.name);
                         listRowAdapter.add(storeApplication);
-                        Log.d("pois"," ######## apk: "+apk.name);
                     }
 
                     if( listRowAdapter.size() > 0 ) {
                         HeaderItem header = new HeaderItem( mRowsAdapter.size() - 1, widget.name, null );
+
                         mRowsAdapter.add( new ListRow( header, listRowAdapter ) );
                     }
 
@@ -204,21 +209,26 @@ public class MainFragment extends BrowseFragment{
         // set search icon color
         setSearchAffordanceColor(getResources().getColor(searchColorResourceId));
     }
-
-    private void loadData() {
+/*
+    private void loadmEditorsChoice() {
         String json = Utils.loadJSONFromResource(getActivity(), R.raw.editorschoice);
         Gson gson = new Gson();
         Type collection = new TypeToken<ArrayList<EditorsChoice>>(){}.getType();
         mEditorsChoice = gson.fromJson( json, collection );
 
-        String jsonInfo = Utils.loadJSONFromResource( getActivity(), R.raw.info );
+     String jsonInfo = Utils.loadJSONFromResource( getActivity(), R.raw.info );
         Gson gsonInfo = new Gson();
         Type collectionInfo = new TypeToken<StoreApplication>(){}.getType();
         mStoreApplications = gsonInfo.fromJson( jsonInfo, collectionInfo );
 
         //getLoaderManager().initLoader(0, null, this);
+    }*/
+    private final void loadmEditorsChoice() {
+        String json = Utils.loadJSONFromResource(getActivity(), R.raw.editorschoice);
+        Gson gson = new Gson();
+        Type collection = new TypeToken<ArrayList<EditorsChoice>>(){}.getType();
+        mEditorsChoice = gson.fromJson( json, collection );
     }
-
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
 

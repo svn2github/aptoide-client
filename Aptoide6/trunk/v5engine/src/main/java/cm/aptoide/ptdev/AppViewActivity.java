@@ -1429,7 +1429,6 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             } else {
                 getSupportLoaderManager().initLoader(50, getIntent().getExtras(), this);
-
             }
         }
 
@@ -1526,9 +1525,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                     loadMoPub();
                 } else if(apkSuggestionJson != null ) {
 
-                    HashMap<String, String> adTypeArgs = new HashMap<String, String>();
+                    HashMap<String, String> adTypeArgs = new HashMap<>();
 
-                    final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
+                    final ApkSuggestionJson.Ads appSuggested = apkSuggestionJson.getAds().get(0);
 
                     if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
                         adTypeArgs.put("type", appSuggested.getInfo().getAd_type());

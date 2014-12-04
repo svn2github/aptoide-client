@@ -37,8 +37,8 @@ import cm.aptoidetv.pt.Model.BindInterface;
  */
 public class CardPresenter extends Presenter {
     private static Context mContext;
-    private static int CARD_WIDTH = 313;
-    private static int CARD_HEIGHT = 176;
+    private static final int CARD_WIDTH = 313;
+    private static final int CARD_HEIGHT = 176;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -49,7 +49,7 @@ public class CardPresenter extends Presenter {
         cardView.setFocusableInTouchMode(true);
 
         TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor});
-        int brandColorResourceId = typedArray.getResourceId(0, 0);
+        //int brandColorResourceId = typedArray.getResourceId(0, 0);
         typedArray.recycle();
 
         cardView.setBackgroundColor(mContext.getResources().getColor(R.color.overlay_black));
@@ -58,31 +58,31 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+        ViewHolder myViewHolder = (ViewHolder) viewHolder;
         BindInterface application = (BindInterface) item;
-
-        if(application.getCategory().equals("Editors' Choice") || application.getCategory().equals("Editors Choice")) {
-
-            if (!TextUtils.isEmpty(application.getImage())) {
-                ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
-                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.downloads) +": "+application.getDownloads());
-                ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.card_presenter_width),((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.card_presenter_height));
-                ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
+        if (!TextUtils.isEmpty(application.getImage())) {
+            String text;
+            int width;
+            int height;
+            if (application.getCategory().equals("Editors' Choice") || application.getCategory().equals("Editors Choice")) {
+                text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
+                width=R.integer.card_presenter_width;
+                height=R.integer.card_presenter_height;
+            } else if (application.getCategory().equals("Search Results")) {
+                text =mContext.getString(R.string.version) + ": " + application.getVersion();
+                width=R.integer.icon_width;
+                height=R.integer.icon_height;
+            } else {
+                text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
+                width=R.integer.icon_width;
+                height=R.integer.icon_height;
             }
-
-        } else if(application.getCategory().equals("Search Results")){
-            if (!TextUtils.isEmpty(application.getImage())) {
-                ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
-                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.version) +": " + application.getVersion());
-                ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_width), ((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_height));
-                ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
-            }
-        } else {
-            if (!TextUtils.isEmpty(application.getImage())) {
-                ((ViewHolder) viewHolder).mCardView.setTitleText(Html.fromHtml(application.getName()));
-                ((ViewHolder) viewHolder).mCardView.setContentText(mContext.getString(R.string.downloads) +": " + application.getDownloads());
-                ((ViewHolder) viewHolder).mCardView.setMainImageDimensions(((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_width), ((ViewHolder) viewHolder).mCardView.getContext().getResources().getInteger(R.integer.icon_height));
-                ((ViewHolder) viewHolder).updateCardViewImage(application.getImage());
-            }
+            myViewHolder.mCardView.setContentText(text);
+            myViewHolder.mCardView.setTitleText(Html.fromHtml(application.getName()));
+            myViewHolder.mCardView.setMainImageDimensions(
+                    myViewHolder.mCardView.getContext().getResources().getInteger(width),
+                    myViewHolder.mCardView.getContext().getResources().getInteger(height));
+            myViewHolder.updateCardViewImage(application.getImage());
         }
     }
 
@@ -109,6 +109,7 @@ public class CardPresenter extends Presenter {
             super(view);
             mCardView = (ImageCardView) view;
             mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView);
+
             mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
         }
 

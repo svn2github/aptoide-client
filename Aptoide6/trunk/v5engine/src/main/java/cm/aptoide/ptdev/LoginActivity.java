@@ -96,7 +96,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     public void onConnected(Bundle bundle) {
         Log.d("Aptoide-", "On Connected");
 
-
         final String serverId = "928466497334-7aqsaffv18r3k1ebthkchfi3nibft5vq.apps.googleusercontent.com";
         AptoideDialog.pleaseWaitDialog().show(getSupportFragmentManager(), "pleaseWaitDialog");
 
