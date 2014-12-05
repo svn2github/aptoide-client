@@ -1234,7 +1234,7 @@ public class Start extends ActionBarActivity implements
         Response.GetStore checkServer(@Body Api.GetStore body);
     }
 
-    public class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice> {
+    public static class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice> {
 
 
         private String store_name;

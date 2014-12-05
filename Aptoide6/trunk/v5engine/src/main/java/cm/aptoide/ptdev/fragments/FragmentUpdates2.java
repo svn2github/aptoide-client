@@ -200,7 +200,7 @@ public class FragmentUpdates2 extends Fragment {
 
             if(icon1.contains("_icon")){
                 String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
-                icon1 = splittedUrl[0] + "_" + "_96x96" + "."+ splittedUrl[1];
+                icon1 = splittedUrl[0] + "_" + "96x96" + "."+ splittedUrl[1];
             }
 
             ImageLoader.getInstance().displayImage(icon1, holder.appIcon);

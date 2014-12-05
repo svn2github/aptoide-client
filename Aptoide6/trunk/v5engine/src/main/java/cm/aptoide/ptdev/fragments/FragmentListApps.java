@@ -541,7 +541,7 @@ public class FragmentListApps extends Fragment {
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + Aptoide.iconSize  + "."+ splittedUrl[1];
+                    icon = splittedUrl[0] + "_"+ Aptoide.iconSize  + "."+ splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -936,7 +936,13 @@ public class FragmentListApps extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             int BUCKET_SIZE = AptoideUtils.getBucketSize();
-            if(viewType>3000) {
+
+            if(viewType == 8723487 ){
+
+                return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_switch, parent, false)) {
+                };
+
+            } else if(viewType>3000) {
 
                 LinearLayout inflate = new LinearLayout(context);
                 inflate.setOrientation(LinearLayout.HORIZONTAL);
