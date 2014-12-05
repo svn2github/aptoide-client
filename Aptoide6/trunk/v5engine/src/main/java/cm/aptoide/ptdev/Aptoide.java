@@ -28,6 +28,7 @@ import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 
 public class Aptoide extends Application {
 
@@ -36,6 +37,7 @@ public class Aptoide extends Application {
     private static DatabaseHelper db;
     private static boolean webInstallServiceRunning;
     private static String sponsoredCache;
+    public static String iconSize;
 
     public static AptoideThemePicker getThemePicker() {
         return themePicker;
@@ -85,7 +87,7 @@ public class Aptoide extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
+        iconSize = IconSizes.generateSizeString(context);
 
         boolean debugmode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("debugmode", false);
         DEBUG_MODE = DEBUG_MODE | debugmode;

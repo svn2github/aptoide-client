@@ -625,5 +625,9 @@
     <string name="social_timeline_notifications">Timeline Notifications</string>
     <string name="social_timeline_notifications_sum">Disable Aptoide Social Timeline Notifications. You will not receive the latest news on the notification bar.</string>
     <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
-    <string name="experiencing_problems">Aptoide is experiencing problems. Please try again.</string>
+    <string name="error503">Ufff... Is it just me or is everyone installing apps at the same time?</string>
+    <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
+    <string name="friends_installs">Your friends installs</string>
+    <string name="highlighted_apps">Highlighted</string>
+    <string name="installed_this">installed this.</string>
 </resources>

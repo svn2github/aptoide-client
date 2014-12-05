@@ -3,7 +3,9 @@ package cm.aptoide.ptdev.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -34,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
@@ -42,6 +47,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.HttpService;
@@ -54,6 +60,8 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
 /**
  * Created by rmateus on 21-11-2014.
  */
@@ -62,6 +70,7 @@ public class FragmentListApps extends Fragment {
 
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+    private RequestListener<Response> requestListener;
 
     @Override
     public void onAttach(Activity activity) {
@@ -119,6 +128,9 @@ public class FragmentListApps extends Fragment {
 
             api.getApi_global_params().setLang("en");
             api.getApi_global_params().setStore_name("apps");
+
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+            api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
 
 
             Api.GetStore getStore = new Api.GetStore();
@@ -197,11 +209,11 @@ public class FragmentListApps extends Fragment {
                 final RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder itemViewHolder = (RecyclerAdapter.TimelineRowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apk.getApk().getName());
                 String icon = apk.getApk().getIcon_hd();
-                itemViewHolder.friend.setText(apk.getInfo().getUsername() + " installed this.");
+                itemViewHolder.friend.setText(apk.getInfo().getUsername() + " " + ((RecyclerAdapter.TimelineRowViewHolder) holder).itemView.getContext().getString(R.string.installed_this));
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_96x96"  + "."+ splittedUrl[1];
+                    icon = splittedUrl[0] + Aptoide.iconSize  + "."+ splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -347,11 +359,11 @@ public class FragmentListApps extends Fragment {
                 RecyclerAdapter.RowViewHolder.ItemViewHolder itemViewHolder = (RecyclerAdapter.RowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apkSuggestion.getData().getName());
                 String icon = apkSuggestion.getData().getIcon();
-                itemViewHolder.category.setText("Sponsored");
+                itemViewHolder.category.setText(viewHolder.itemView.getContext().getString(R.string.sponsored));
 
                 if (icon.contains("_icon")) {
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_96x96" + "." + splittedUrl[1];
+                    icon = splittedUrl[0] + Aptoide.iconSize + "." + splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -392,6 +404,68 @@ public class FragmentListApps extends Fragment {
     }
 
 
+    AdultContentRow.AdultInterface adultInterface = new AdultContentRow.AdultInterface() {
+        @Override
+        public void onAdultChange() {
+            TestRequest request = new TestRequest();
+            manager.execute(request, "home", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+        }
+    };
+
+
+    public static class AdultContentRow implements Displayable {
+
+        public interface AdultInterface{
+            void onAdultChange();
+        }
+
+        public AdultContentRow(AdultInterface adultInterface) {
+            this.adultInterface = adultInterface;
+        }
+
+        AdultInterface adultInterface;
+
+        public static final int VIEW_TYPE = 8723487;
+
+
+
+        @Override
+        public int getViewType() {
+            return VIEW_TYPE;
+        }
+
+        @Override
+        public long getHeaderId() {
+            return -1;
+        }
+
+        @Override
+        public void bindView(RecyclerView.ViewHolder viewHolder) {
+
+
+            CompoundButton viewById = (CompoundButton) viewHolder.itemView.findViewById(R.id.adult_content);
+
+            viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                    sPref.edit().putBoolean("matureChkBox", isChecked).apply();
+                    adultInterface.onAdultChange();
+
+
+                }
+            });
+        }
+
+        @Override
+        public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
+
+        }
+    }
+
+
+
 
     public static class Row implements Displayable{
 
@@ -409,6 +483,8 @@ public class FragmentListApps extends Fragment {
         private boolean enabled = true;
 
         public Row() {
+
+
             //picasso = Picasso.with(context);
             //picasso.setIndicatorsEnabled(true);
 
@@ -447,17 +523,24 @@ public class FragmentListApps extends Fragment {
 
             RecyclerAdapter.RowViewHolder viewHolder = (RecyclerAdapter.RowViewHolder) holder;
 
+            Context context = viewHolder.itemView.getContext();
             int i=0;
+
             for(final Response.ListApps.Apk apk : apks){
                 RecyclerAdapter.RowViewHolder.ItemViewHolder itemViewHolder =
                         (RecyclerAdapter.RowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apk.name);
+
+
                 String icon = apk.icon;
-                itemViewHolder.category.setText(apk.downloads.intValue() + " Downloads");
+
+
+                int downloads = apk.downloads.intValue();
+                itemViewHolder.category.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_96x96"  + "."+ splittedUrl[1];
+                    icon = splittedUrl[0] + Aptoide.iconSize  + "."+ splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -539,7 +622,7 @@ public class FragmentListApps extends Fragment {
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
 
-        final RequestListener<Response> requestListener = new RequestListener<Response>() {
+        requestListener = new RequestListener<Response>() {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -622,6 +705,8 @@ public class FragmentListApps extends Fragment {
 
                 }
 
+                map.add(new AdultContentRow(adultInterface));
+
                 string.clear();
                 string.addAll(map);
 
@@ -655,7 +740,7 @@ public class FragmentListApps extends Fragment {
 
                             TimelineRow row = new TimelineRow(timelineListAPKsJson.getUsersapks());
                             int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
-                            row.header = "Your friends installs";
+                            row.header = getString(R.string.friends_installs);
                             row.widgetid = "timeline";
 
                             ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
@@ -685,7 +770,7 @@ public class FragmentListApps extends Fragment {
 
                                 for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
 
-                                    row.header = "Recommended for you";
+                                    row.header = getString(R.string.recommended_for_you);
                                     Response.ListApps.Apk apk = new Response.ListApps.Apk();
                                     row.widgetid = "recommended";
 
@@ -722,7 +807,7 @@ public class FragmentListApps extends Fragment {
 
                             AdRow row = new AdRow();
 
-                            row.header = "Highlighted";
+                            row.header = getString(R.string.highlighted_apps);
                             row.widgetid = "highlighted";
 
                             row.ads.addAll(apkSuggestionJson.getAds());
@@ -825,7 +910,15 @@ public class FragmentListApps extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
-            if(viewType>3000) {
+
+            if(viewType == 8723487){
+
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_switch, parent, false);
+                return new RecyclerView.ViewHolder(v){
+
+                };
+
+            }else if(viewType>3000) {
 
                 LinearLayout inflate = new LinearLayout(context);
                 inflate.setOrientation(LinearLayout.HORIZONTAL);

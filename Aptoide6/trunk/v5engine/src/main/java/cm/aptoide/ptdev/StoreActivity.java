@@ -167,6 +167,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         c.moveToFirst();
         String name = c.getString(c.getColumnIndex("name"));
+        String theme = c.getString(c.getColumnIndex("theme"));
 
         c.close();
 
@@ -176,6 +177,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         Bundle args = new Bundle();
         args.putString("storename", name);
+        args.putString("theme", theme);
         args.putLong("storeid", storeid);
         //args.putString("widgetrefid", "cat_1");
 

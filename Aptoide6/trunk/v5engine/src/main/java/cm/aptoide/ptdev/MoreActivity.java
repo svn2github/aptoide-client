@@ -2,7 +2,9 @@ package cm.aptoide.ptdev;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -350,6 +352,10 @@ public class MoreActivity extends ActionBarActivity {
 
                 api.getApi_global_params().setLang("en");
                 api.getApi_global_params().setStore_name("apps");
+
+
+                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
 
 
                 Api.GetStore getStore = new Api.GetStore();

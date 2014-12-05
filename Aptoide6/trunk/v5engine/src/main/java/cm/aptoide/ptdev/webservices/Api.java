@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 /**
  * Created by rmateus on 13-11-2014.
  */
@@ -47,8 +50,10 @@ public class Api {
 
     public static class ApiGlobalParams {
 
+        public String mature;
         public String lang;
         public String store_name;
+        public String q = AptoideUtils.filters(Aptoide.getContext());
 
         public void setLang(String lang) {
             this.lang = lang;

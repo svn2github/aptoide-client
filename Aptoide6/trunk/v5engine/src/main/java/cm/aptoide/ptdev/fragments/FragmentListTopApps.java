@@ -2,7 +2,9 @@ package cm.aptoide.ptdev.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -40,6 +43,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
+
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created by rmateus on 21-11-2014.
@@ -85,6 +90,10 @@ public class FragmentListTopApps extends Fragment {
             api.getApi_global_params().setLang("en");
             api.getApi_global_params().setStore_name("apps");
 
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+
+            api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
+            
             Api.GetStore getStore = new Api.GetStore();
             Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
 
@@ -393,7 +402,7 @@ public class FragmentListTopApps extends Fragment {
 
             viewHolder.name.setText(name);
             ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
-
+            viewHolder.store_info.setText(appscount + " " + viewHolder.itemView.getContext().getString(R.string.applications) + " • " + viewHolder.itemView.getContext().getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
         }
     }
 

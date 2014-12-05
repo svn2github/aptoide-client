@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,11 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import cm.aptoide.ptdev.AppViewActivity;
+import cm.aptoide.ptdev.EnumCategories;
+import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -48,6 +52,7 @@ public class FragmentListStore extends Fragment {
     private ArrayList<StoreListItem> items;
     private RecyclerView rRiew;
     private View view;
+    private String theme;
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,7 +67,11 @@ public class FragmentListStore extends Fragment {
     }
 
 
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        theme = getArguments().getString("theme");
+    }
 
     public static class GetStoreRequest extends RetrofitSpiceRequest<Response, GetStoreRequest.Webservice>{
 
@@ -182,6 +191,7 @@ public class FragmentListStore extends Fragment {
         refresh(DurationInMillis.ONE_HOUR);
     }
 
+
     public void refresh(long expire){
         view.findViewById(R.id.error).setVisibility(View.GONE);
         view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
@@ -254,10 +264,16 @@ public class FragmentListStore extends Fragment {
                         item.refid = widget.data.ref_id;
                         item.widgetid = widget.widgetid;
                         item.name = widget.name;
+                        item.theme = theme;
+                        item.store_id = getArguments().getLong("storeid");
                         map.add(item);
                     } else {
                         WidgetCategory item = new WidgetCategory();
+                        item.refid = widget.data.ref_id;
+                        item.widgetid = widget.widgetid;
                         item.name = widget.name;
+                        item.theme = theme;
+                        item.store_id = getArguments().getLong("storeid");
                         map.add(item);
                     }
 
@@ -306,7 +322,13 @@ public class FragmentListStore extends Fragment {
         public String refid;
         public String widgetid;
         public String name;
+        public String theme;
+        public long store_id;
 
+        @Override
+        public String toString() {
+            return refid + " "+ widgetid + " " + name + " " + theme + " " + store_id ;
+        }
 
         @Override
         public int getItemViewType() {
@@ -460,19 +482,104 @@ public class FragmentListStore extends Fragment {
                             String refid = storeListItem.refid;
                             String widgetid = storeListItem.widgetid;
 
-                            FragmentListStore fragment = new FragmentListStore();
 
+                            Log.d("FragmentListStore", storeListItem.toString());
+
+                            Fragment fragment;
                             Bundle bundle = new Bundle();
 
-                            bundle.putString("widgetrefid", widgetid);
-                            bundle.putString("refid", refid);
-                            bundle.putString("storename", storename);
+                            if("comments".equals(refid)){
+                                bundle.putLong("storeid", storeListItem.store_id);
+                                fragment = new LatestCommentsFragment();
+
+                            } else if("likes".equals(refid)){
+                                bundle.putLong("storeid", storeListItem.store_id);
+                                fragment = new LatestLikesFragment();
+
+                            }else {
+
+                                fragment = new FragmentListStore();
+
+                                bundle.putString("widgetrefid", widgetid);
+                                bundle.putString("refid", refid);
+                                bundle.putString("storename", storename);
+
+                            }
 
                             fragment.setArguments(bundle);
 
                             ((ActionBarActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).addToBackStack(storeListItem.name).commit();
+
                         }
                     });
+
+                    int catid;
+                    try{
+
+                        if("group_top".equals(storeListItem)){
+
+                            catid = EnumCategories.TOP_APPS;
+
+                        }else if("likes".equals(storeListItem)) {
+
+
+                            catid = EnumCategories.LATEST_LIKES;
+
+                        }else if("comments".equals(storeListItem)) {
+
+                            catid = EnumCategories.LATEST_COMMENTS;
+
+                        }else if("group_latest".equals(storeListItem)) {
+
+                            catid = EnumCategories.LATEST_APPS;
+
+                        }else {
+
+                            catid = Integer.valueOf(storeListItem.refid.substring(4));
+                        }
+                    }catch (Exception e){
+                        catid = 0;
+                    }
+
+                    EnumStoreTheme theme;
+                    try{
+                        String themeString = storeListItem.theme;
+                        theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
+                    }catch (Exception e){
+                        theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;
+                    }
+
+                    switch (catid) {
+                        case EnumCategories.APPLICATIONS:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_applications);
+                            break;
+                        case EnumCategories.GAMES:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_games);
+                            break;
+                        case EnumCategories.TOP_APPS:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_top_apps);
+                            break;
+                        case EnumCategories.LATEST_APPS:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_latest);
+                            break;
+                        case EnumCategories.LATEST_LIKES:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_likes);
+                            break;
+                        case EnumCategories.LATEST_COMMENTS:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_comments);
+                            break;
+
+
+                        default:
+                            String iconUrl = EnumCategories.getCategoryIcon(catid, storeListItem.name);
+                            if (iconUrl != null) {
+                                ImageLoader.getInstance().displayImage(iconUrl, categoryHolder.icon);
+                            } else {
+                                categoryHolder.icon.setImageResource(theme.getStoreCategoryDrawable());
+                            }
+                            break;
+                    }
+
 
                     break;
             }
@@ -518,19 +625,15 @@ public class FragmentListStore extends Fragment {
 
         public static class CategoryStoreListViewHolder extends StoreListViewHolder{
             public final TextView name;
-
+            public final ImageView icon;
 
             public CategoryStoreListViewHolder(View itemView) {
                 super(itemView);
 
                 name = ((TextView) itemView.findViewById(R.id.category_first_level_name));
-
+                icon = ((ImageView) itemView.findViewById(R.id.category_first_level_icon));
 
             }
-
-
-
-
 
         }
 
