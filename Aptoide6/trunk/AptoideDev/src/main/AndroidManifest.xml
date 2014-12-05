@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.aptoide.pt.dev"
-    android:versionCode="445"
-    android:versionName="5.4.0 Dev Version"
+    android:versionCode="448"
+    android:versionName="6.0.0 Dev Version"
     android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19"/>
@@ -23,7 +23,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.READ_LOGS" />
-
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
 
     <application android:icon="@drawable/ic_launcher"
         android:name=".AptoideDev"
@@ -57,6 +58,7 @@
 
 
         <activity android:name="cm.aptoide.ptdev.tutorial.Tutorial" />
+        <activity android:name="cm.aptoide.ptdev.MoreActivity" />
 
         <activity android:name="cm.aptoide.ptdev.TimelineActivity" />
 
@@ -101,7 +103,8 @@
         <activity android:name="cm.aptoide.ptdev.RollbackActivity"/>
 
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsListActivity" />
-
+        <activity android:name="cm.aptoide.ptdev.MoreHighlightedActivity" />
+        <activity android:name="cm.aptoide.ptdev.MoreFriendsInstallsActivity" />
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
         <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
 
@@ -221,11 +224,11 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
         <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
-
-        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
-            android:hardwareAccelerated="true"/>
-
+        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity" android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" android:hardwareAccelerated="true" android:theme="@style/NoActionBar" />
+        <activity
+            android:name="org.nexage.sourcekit.mraid.MRAIDBrowser"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <activity android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
             android:launchMode="singleInstance"/>
@@ -360,6 +363,17 @@
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+
+        <receiver android:name="cm.aptoide.ptdev.pushnotification.PushNotificationReceiver">
+            <intent-filter>
+                <action android:name="cm.aptoide.pt.PushNotification" />
+                <action android:name="cm.aptoide.pt.PushNotificationTrackUrl" />
+
+                <action android:name="cm.aptoide.pt.PushNotificationFirstTime" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

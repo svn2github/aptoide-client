@@ -1,6 +1,6 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 
 repositories{
@@ -21,19 +21,42 @@ android {
     }
 
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+        pickFirst 'META-INF/DEPENDENCIES.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/MANIFEST.MF'
+        pickFirst 'META-INF/LGPL2.1'
     }
 
-   buildTypes{
-       release {
-           runProguard true
-           proguardFile 'proguard-aptoide.txt'
-           signingConfig signingConfigs.release
-       }
 
-   }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
+//            signingConfig signingConfigs.release
+
+        }
+
+        dexOptions {
+            preDexLibraries true
+            incremental true
+            javaMaxHeapSize "2g"
+        }
+
+        release {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+//            signingConfig signingConfigs.release
+
+        }
+    }
 }
 
 dependencies {
