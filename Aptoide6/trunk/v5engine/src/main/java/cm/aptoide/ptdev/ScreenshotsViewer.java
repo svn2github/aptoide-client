@@ -12,14 +12,11 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
-import android.view.Window;
 import android.view.WindowManager;
-import cm.aptoide.ptdev.adapters.ViewPagerAdapterScreenshots;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
 
 import java.util.ArrayList;
+
+import cm.aptoide.ptdev.adapters.ViewPagerAdapterScreenshots;
 
 public class ScreenshotsViewer extends ActionBarActivity {
 
@@ -43,7 +40,7 @@ public class ScreenshotsViewer extends ActionBarActivity {
 	protected void onCreate(Bundle arg0) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(arg0);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.page_screenshots_viewer);

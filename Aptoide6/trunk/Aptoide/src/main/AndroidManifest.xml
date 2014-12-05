@@ -26,6 +26,7 @@
     <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
 
     <application
+        android:debuggable="true"
         android:name="cm.aptoide.ptdev.Aptoide"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon_brand_aptoide"
@@ -94,7 +95,7 @@
             android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
             android:theme="@style/transparent" />
 
-        <activity android:name="cm.aptoide.ptdev.ScreenshotsViewer" />
+        <activity android:name="cm.aptoide.ptdev.ScreenshotsViewer" android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity android:name="cm.aptoide.ptdev.AllCommentsActivity" />
 

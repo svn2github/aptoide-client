@@ -47,11 +47,7 @@ public class OauthErrorHandler {
                     String refreshToken = "";
                     try {
                         refreshToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
+                    } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                         e.printStackTrace();
                     }
 
@@ -63,7 +59,7 @@ public class OauthErrorHandler {
                     OAuth oAuth = new RestAdapter.Builder().setEndpoint("http://webservices.aptoide.com/webservices").build().create(OauthService.class).authenticate(parameters);
 
                     SharedPreferences preferences = SecurePreferences.getInstance();
-                    preferences.edit().putString("access_token", oAuth.getAccess_token()).commit();
+                    preferences.edit().putString("access_token", oAuth.getAccess_token()).apply();
 
                 }
 

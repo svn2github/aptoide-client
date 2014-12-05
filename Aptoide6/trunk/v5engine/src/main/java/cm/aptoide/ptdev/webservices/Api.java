@@ -96,6 +96,7 @@ public class Api {
     public static class ListApps implements ApiParam{
 
         public int limit;
+        public Number offset;
 
         public String order_by;
         public String order_dir;

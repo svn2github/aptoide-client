@@ -146,6 +146,7 @@ public class Response {
 
         public int total;
         public int offset;
+        public int next;
         public int limit;
         public List<T> list;
 

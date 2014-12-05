@@ -18,6 +18,7 @@ import cm.aptoide.ptdev.fragments.FragmentListTopApps;
 import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
 import cm.aptoide.ptdev.fragments.FragmentStores;
 import cm.aptoide.ptdev.fragments.FragmentUpdates;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,7 +87,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
                 case 2:
                     return new FragmentStores();
                 case 3:
-                    return new FragmentUpdates();
+                    return new FragmentUpdates2();
                 case 4:
                     return new FragmentSocialTimeline();
                 case 5:

@@ -60,6 +60,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -90,6 +91,7 @@ import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.DismissRefreshEvent;
+import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
@@ -114,13 +116,18 @@ import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.views.BadgeView;
+import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
+import cm.aptoide.ptdev.webservices.Response;
 import cm.aptoide.ptdev.webservices.TimelineCheckRequestSync;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import cm.aptoide.ptdev.webservices.json.RepositoryChangeJson;
 import cm.aptoide.ptdev.webservices.json.TimelineActivityJson;
+import retrofit.http.Body;
+import retrofit.http.POST;
 import roboguice.util.temp.Ln;
 
 public class Start extends ActionBarActivity implements
@@ -492,8 +499,8 @@ public class Start extends ActionBarActivity implements
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(pager);
 
-        badgeUpdates = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(2));
-        badgeNew = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(3));
+        badgeUpdates = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(3));
+        badgeNew = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(4));
 
         Intent i = new Intent(this, ParserService.class);
         final SQLiteDatabase db = Aptoide.getDb();
@@ -542,7 +549,7 @@ public class Start extends ActionBarActivity implements
                         Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                     } else if (!getIntent().getBooleanExtra("nodialog", false)) {
                         AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
-                        pager.setCurrentItem(1);
+                        pager.setCurrentItem(2);
                     } else {
 
                         Store store = new Store();
@@ -550,7 +557,7 @@ public class Start extends ActionBarActivity implements
                         store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                         store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                         startParse(store);
-                        pager.setCurrentItem(1);
+                        pager.setCurrentItem(2);
                         FlurryAgent.logEvent("Added_Store_From_My_App_Installation");
                     }
 
@@ -558,11 +565,11 @@ public class Start extends ActionBarActivity implements
                 getIntent().removeExtra("newrepo");
             } else if (getIntent().hasExtra("fromDownloadNotification") && pager != null) {
                 getIntent().removeExtra("fromDownloadNotification");
-                pager.setCurrentItem(4);
+                pager.setCurrentItem(5);
                 FlurryAgent.logEvent("Opened_Updates_Notification");
             }else if(getIntent().hasExtra("fromTimeline")){
                 timelineRefresh = true;
-                pager.setCurrentItem(3);
+                pager.setCurrentItem(4);
                 getIntent().removeExtra("fromTimeline");
             }
             final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -925,24 +932,24 @@ public class Start extends ActionBarActivity implements
                     Toast.makeText(this, getString(R.string.store_already_added), Toast.LENGTH_LONG).show();
                 } else if (!intent.getBooleanExtra("nodialog", false)) {
                     AptoideDialog.addMyAppStore(repoUrl).show(getSupportFragmentManager(), "addStoreMyApp");
-                    pager.setCurrentItem(1);
+                    pager.setCurrentItem(2);
                 } else {
 
                     Store store = new Store();
                     store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                     store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                     startParse(store);
-                    pager.setCurrentItem(1);
+                    pager.setCurrentItem(2);
 
                 }
             }
         }else if (intent.hasExtra("new_updates") && pager != null) {
-            pager.setCurrentItem(2);
+            pager.setCurrentItem(3);
         }else if(intent.hasExtra("fromDownloadNotification") && pager != null){
-            pager.setCurrentItem(4);
+            pager.setCurrentItem(5);
         }else if(intent.hasExtra("fromTimeline") && pager != null){
             timelineRefresh = true;
-            pager.setCurrentItem(3);
+            pager.setCurrentItem(4);
         }
 
 
@@ -1167,8 +1174,101 @@ public class Start extends ActionBarActivity implements
         newFragment.show(getSupportFragmentManager(), "addStoreDialog");
     }
 
+    public final class CheckStoreListener implements RequestListener<Response.GetStore> {
+
+
+        private final Login login;
+
+        public CheckStoreListener(Login login) {
+            this.login = login;
+
+        }
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onRequestSuccess(Response.GetStore response) {
+
+            final Store store = new Store();
+            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+            store.setId(data.id.longValue());
+            store.setName(response.datasets.meta.data.name);
+            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
+
+
+            String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
+
+
+            String avatar = data.avatar;
+
+            if(avatar!=null) {
+                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+            }
+
+            store.setAvatar(avatar);
+            store.setDescription(data.description);
+            store.setTheme(data.theme);
+            store.setView(data.view);
+            store.setBaseUrl(data.name);
+
+            Database database = new Database(Aptoide.getDb());
+
+            database.insertStore(store);
+            database.updateStore(store);
+
+            BusProvider.getInstance().post(new RepoAddedEvent());
+
+
+        }
+
+
+
+    }
+
+    public interface TestServerWebservice{
+        @POST("/ws2.aptoide.com/api/6/getStore")
+        Response.GetStore checkServer(@Body Api.GetStore body);
+    }
+
+    public class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice> {
+
+
+        private String store_name;
+        public TestServerRequest() {
+            super(Response.GetStore.class, TestServerWebservice.class);
+        }
+
+        public void setStore_name(String store_name){
+
+            this.store_name = store_name;
+        }
+
+        @Override
+        public Response.GetStore loadDataFromNetwork() throws Exception {
+
+            Api.GetStore api = new Api.GetStore();
+            api.addDataset("meta");
+            api.datasets_params = null;
+            api.store_name = store_name;
+
+            return getService().checkServer(api);
+        }
+    }
+
     @Override
     public void startParse(final Store store) {
+        TestServerRequest request = new TestServerRequest();
+        CheckStoreListener checkStoreListener = new CheckStoreListener(null);
+
+
+        request.setStore_name(store.getName());
+
+        spiceManager.execute(request, checkStoreListener);
+
 //        executorService.execute(new Runnable() {
 //            @Override
 //            public void run() {

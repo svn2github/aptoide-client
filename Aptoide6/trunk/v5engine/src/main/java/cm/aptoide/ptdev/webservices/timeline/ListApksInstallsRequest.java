@@ -11,8 +11,10 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
+import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -64,8 +66,17 @@ public class ListApksInstallsRequest extends RetrofitSpiceRequest<TimelineListAP
         String token = SecurePreferences.getInstance().getString("access_token", "empty");
         parameters.put("access_token", token);
 
-        TimelineListAPKsJson response = getService().run(parameters);
-        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putLong("timelineTimestamp", DateTime.now(DateTimeZone.forID("UTC")).toDate().getTime()/1000).commit();
+
+        TimelineListAPKsJson response = null;
+
+        try {
+            response = getService().run(parameters);
+            PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putLong("timelineTimestamp", DateTime.now(DateTimeZone.forID("UTC")).toDate().getTime() / 1000).commit();
+        }catch (RetrofitError e){
+            OauthErrorHandler.handle(e);
+        }
+
+
         return response;
 
     }

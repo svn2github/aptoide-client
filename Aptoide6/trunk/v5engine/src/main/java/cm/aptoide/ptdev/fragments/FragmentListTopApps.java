@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,9 +38,7 @@ import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
-import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -57,15 +56,17 @@ public class FragmentListTopApps extends Fragment {
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         manager.start(getActivity());
+
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDetach() {
+        super.onDetach();
         manager.shouldStop();
+
     }
 
     public interface TestService{
@@ -75,11 +76,11 @@ public class FragmentListTopApps extends Fragment {
 
     public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
 
-        private final String context;
 
-        public TestRequest(String context) {
+
+        public TestRequest() {
             super(Response.class, TestService.class);
-            this.context = context;
+
         }
 
         @Override
@@ -114,19 +115,7 @@ public class FragmentListTopApps extends Fragment {
             try{
                 response = getService().postApk(api);
             }catch (RetrofitError error){
-
-                switch (error.getKind()){
-                    case NETWORK:
-                    case CONVERSION:
-                    case UNEXPECTED:
-                    case HTTP:
-                        if(error.getResponse().getStatus() / 100 == 4){
-                            new RestAdapter.Builder().build().create(TestService.class);
-                        }
-                        break;
-                }
                 throw error;
-
             }
 
             return response;
@@ -139,8 +128,6 @@ public class FragmentListTopApps extends Fragment {
         int getViewType();
 
         long getHeaderId();
-
-
 
         void bindView(RecyclerView.ViewHolder viewHolder);
 
@@ -192,9 +179,7 @@ public class FragmentListTopApps extends Fragment {
                 return -1;
             }
 
-
         }
-
 
 
         @Override
@@ -283,7 +268,7 @@ public class FragmentListTopApps extends Fragment {
         view.setLayoutManager(linearLayoutManager);
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
-        final TestRequest request = new TestRequest("top");
+        final TestRequest request = new TestRequest();
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
         requestListener = new RequestListener<Response>() {

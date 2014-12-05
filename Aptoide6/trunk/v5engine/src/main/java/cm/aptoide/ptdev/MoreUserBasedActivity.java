@@ -1,18 +1,13 @@
 package cm.aptoide.ptdev;
 
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -20,21 +15,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+import java.util.ArrayList;
+
 import cm.aptoide.ptdev.adapters.HomeBucketAdapter;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.fragments.HomeItem;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by rmateus on 06-02-2014.
@@ -90,17 +84,22 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
 
 
         @Override
-        public void onStart() {
-            super.onStart();
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
             spiceManager.start(getActivity());
         }
 
         @Override
-        public void onStop() {
-            super.onStop();
-            if (spiceManager.isStarted()) {
-                spiceManager.shouldStop();
-            }
+        public void onStart() {
+            super.onStart();
+
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            spiceManager.shouldStop();
+
         }
 
         @Override
@@ -123,36 +122,13 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
 
-            final AccountManager accountManager = AccountManager.get(getActivity());
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
+
                     final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
-                    Account account = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType())[0];
-                    String token = null;
 
-                    try {
 
-                        token = AccountManager.get(getActivity()).blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,false);
-                        request.setLimit(10);
-                        //request.setToken(token);
-
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
-                    }
-
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    final String finalToken = token;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(finalToken !=null){
-                                spiceManager.execute(request, finalToken, DurationInMillis.ONE_DAY, new RequestListener<ListRecomended>() {
+                                spiceManager.execute(request,  new RequestListener<ListRecomended>() {
                                     @Override
                                     public void onRequestFailure(SpiceException e) {
 
@@ -198,12 +174,7 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
                                     }
                                 });
                             }
-                        }
-                    });
-                }
-            }).start();
 
-        }
 
 
         }

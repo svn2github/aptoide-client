@@ -7,7 +7,9 @@ import java.util.HashMap;
 
 import cm.aptoide.ptdev.fragments.GenericResponse;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
+import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -45,9 +47,13 @@ public class AddUserApkInstallLikeRequest extends RetrofitSpiceRequest<GenericRe
         parameters.put("id", String.valueOf(postID));
         parameters.put("like", like);
 
-        GenericResponse response = getService().run(parameters);
+        try{
+            return getService().run(parameters);
+        }catch (RetrofitError e){
+            OauthErrorHandler.handle(e);
+        }
 
-        return response;
+        return null;
 
     }
 

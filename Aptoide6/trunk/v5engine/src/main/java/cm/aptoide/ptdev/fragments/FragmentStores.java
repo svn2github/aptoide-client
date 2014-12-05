@@ -2,10 +2,8 @@ package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -13,10 +11,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import cm.aptoide.ptdev.*;
+
+import com.flurry.android.FlurryAgent;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.EnumStoreTheme;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.StoreItem;
 import cm.aptoide.ptdev.adapters.StoreAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.database.schema.Schema;
@@ -27,13 +42,6 @@ import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-
-import com.flurry.android.FlurryAgent;
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -72,7 +80,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
         if(savedInstanceState!=null){
             isMergeStore = savedInstanceState.getBoolean("isMerge");
         }else{

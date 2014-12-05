@@ -13,20 +13,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
 
@@ -34,9 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cm.aptoide.ptdev.fragments.FragmentListApps;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
-import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -47,94 +43,7 @@ import retrofit.http.POST;
 
 public class MoreActivity extends ActionBarActivity {
 
-    public static class Row implements Displayable{
 
-        private final Context context;
-        public String header;
-        public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>(3);
-        //private Picasso picasso;
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        private boolean enabled = true;
-
-        public Row(Context context) {
-            //picasso = Picasso.with(context);
-            //picasso.setIndicatorsEnabled(true);
-            this.context = context;
-        }
-
-        public void addItem(Response.ListApps.Apk apk){
-            apks.add(apk);
-        }
-
-
-        @Override
-        public String toString() {
-            return "Row:" + header + " enabled: " + String.valueOf(enabled);
-        }
-
-        @Override
-        public int getViewType() {
-            return apks.size();
-        }
-
-        @Override
-        public long getHeaderId() {
-
-            if(enabled){
-                return Math.abs(header.hashCode());
-            }else{
-                return -1;
-            }
-
-
-        }
-
-
-
-        @Override
-        public void bindView(RecyclerAdapter.RowViewHolder viewHolder) {
-
-            int i=0;
-            for(final Response.ListApps.Apk apk : apks){
-                RecyclerAdapter.RowViewHolder.ItemViewHolder itemViewHolder =
-                        (RecyclerAdapter.RowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
-                itemViewHolder.name.setText(apk.name);
-                String icon = apk.icon;
-                itemViewHolder.category.setText(apk.downloads.intValue() + " Downloads");
-
-                if(icon.contains("_icon")){
-                    String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_96x96"  + "."+ splittedUrl[1];
-                }
-
-
-                ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
-                //picasso.load(icon).into(itemViewHolder.icon);
-                viewHolder.views[i].setClickable(true);
-                viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(context, AppViewActivity.class);
-                        i.putExtra("fromRelated", true);
-                        i.putExtra("md5sum", apk.md5sum);
-                        i.putExtra("download_from", "recommended_apps");
-                        context.startActivity(i);
-                    }
-                });
-                i++;
-            }
-
-        }
-
-        @Override
-        public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
-            viewHolder.tv.setText(header);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,33 +62,61 @@ public class MoreActivity extends ActionBarActivity {
 
     }
 
-    public interface Displayable {
-        int getViewType();
-
-        long getHeaderId();
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        void bindView(RecyclerAdapter.RowViewHolder viewHolder);
+        int i = item.getItemId();
+        if (i == android.R.id.home || i == R.id.home) {
+            finish();
+        }
 
-        void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder);
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static class ProgressBarRow implements FragmentListApps.Displayable{
+
+        @Override
+        public int getViewType() {
+            return 123456789;
+        }
+
+        @Override
+        public long getHeaderId() {
+            return -1;
+        }
+
+        @Override
+        public void bindView(RecyclerView.ViewHolder viewHolder) {
+
+        }
+
+        @Override
+        public void onBindHeaderViewHolder(FragmentListApps.RecyclerAdapter.HeaderViewHolder viewHolder) {
+
+        }
     }
 
     public static class MoreFragment extends Fragment {
 
 
         private RecyclerView recyclerView;
-        ArrayList<Displayable> list = new ArrayList<Displayable>(20);
+        ArrayList<FragmentListApps.Displayable> list = new ArrayList<FragmentListApps.Displayable>(20);
         private RequestListener<Response> requestListener;
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
-
-
-
             return rootView;
         }
+
+        private int previousTotal = 0;
+        private int offset;
+
+        private boolean loading = true;
+        private int visibleThreshold = 5;
+        int firstVisibleItem, visibleItemCount, totalItemCount;
 
         @Override
         public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
@@ -187,7 +124,7 @@ public class MoreActivity extends ActionBarActivity {
 
             recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
-            final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), list);
+            final FragmentListApps.RecyclerAdapter mAdapter = new MoreRecycler(getActivity(), list);
             StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
             StickyRecyclerHeadersTouchListener touchListener = new StickyRecyclerHeadersTouchListener(recyclerView, stickyRecyclerHeadersDecoration);
 
@@ -195,11 +132,19 @@ public class MoreActivity extends ActionBarActivity {
             touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
                 @Override
                 public void onHeaderClick(View viewHeader, int i, long l) {
-                    Toast.makeText(Aptoide.getContext(), "" + ((RecyclerAdapter) recyclerView.getAdapter()).list.get(i).getHeaderId() + " " + l, Toast.LENGTH_LONG).show();
+                    String widgetid = ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetid;
+
+                    Intent intent = new Intent(getActivity(), MoreActivity.class);
+                    intent.putExtra("widgetid", widgetid);
+                    intent.putExtra("widgetrefid", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetrefid);
+                    intent.putExtra("widgetname", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).header);
+
+                    startActivity(intent);
                 }
             });
 
             recyclerView.addOnItemTouchListener(touchListener);
+
 
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -213,33 +158,85 @@ public class MoreActivity extends ActionBarActivity {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.addItemDecoration(stickyRecyclerHeadersDecoration);
 
+            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
+
+
+                    if(offset>0) {
+
+                        LinearLayoutManager mLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+                        visibleItemCount = mRecyclerView.getChildCount();
+                        totalItemCount = mLayoutManager.getItemCount();
+                        firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+                        if (loading) {
+                            if (totalItemCount > previousTotal) {
+                                previousTotal = totalItemCount;
+                            }
+                        }
+                        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                            // End has been reached
+                            loading = true;
+                            TestRequest request = new TestRequest();
+
+                            request.setWidgetId(getArguments().getString("widgetid"));
+                            request.setOffset(offset);
+
+                            list.add(new ProgressBarRow());
+
+                            Log.d("AptoideAdapter", "Adding row");
+
+                            recyclerView.getAdapter().notifyItemInserted(recyclerView.getAdapter().getItemCount());
+
+                            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize(), DurationInMillis.ALWAYS_EXPIRED, requestListener);
+
+                            // Do something
+
+                        }
+                    }
+
+                }
+            });
+
             requestListener = new RequestListener<Response>() {
 
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                     view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                    if(loading && !list.isEmpty()){
+                        list.remove(list.size() - 1);
+                        loading = false;
+                    }
                 }
 
                 @Override
                 public void onRequestSuccess(Response response) {
 
 
-                    ArrayList<Displayable> map = new ArrayList<Displayable>();
+                    int BUCKET_SIZE = AptoideUtils.getBucketSize();
+                    ArrayList<FragmentListApps.Displayable> map = new ArrayList<FragmentListApps.Displayable>();
 
                     List<Response.GetStore.Widgets.Widget> appsList = response.responses.getStore.datasets.widgets.data.list;
                     HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
 
                     if(appsList.isEmpty()){
+
                         Response.ListApps.Category category = dataset.get(getArguments().getString("widgetrefid"));
 
                         if(category !=null && category.data!=null) {
+
+                            offset = category.data.next;
+
                             ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(category.data.list);
 
                             while (!inElements.isEmpty()) {
-                                Row row = new Row(getActivity());
+                                FragmentListApps.Row row = new FragmentListApps.Row();
+                                row.setEnabled(false);
                                 row.header = getArguments().getString("widgetname");
-                                for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
+
+                                for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
                                     row.addItem(inElements.remove(0));
                                 }
                                 map.add(row);
@@ -256,9 +253,13 @@ public class MoreActivity extends ActionBarActivity {
                                     ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
                                     while (!inElements.isEmpty()) {
-                                        Row row = new Row(getActivity());
+                                        FragmentListApps.Row row = new FragmentListApps.Row();
                                         row.header = widget.name;
-                                        for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
+
+                                        row.widgetid = widget.widgetid;
+                                        row.widgetrefid = widget.data.ref_id;
+
+                                        for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
                                             row.addItem(inElements.remove(0));
                                         }
                                         map.add(row);
@@ -266,41 +267,68 @@ public class MoreActivity extends ActionBarActivity {
                                 }
 
                             } else {
-                                Row row = new Row(getActivity());
+                                FragmentListApps.Row row = new FragmentListApps.Row();
                                 row.setEnabled(false);
                                 map.add(row);
-                                ((RecyclerAdapter)recyclerView.getAdapter()).getPlaceholders().put(widget.type, map.size());
+                                ((FragmentListApps.RecyclerAdapter)recyclerView.getAdapter()).getPlaceholders().put(widget.type, map.size());
                             }
 
                         }
 
                     }
 
+                    if(loading && !list.isEmpty()){
+                        list.remove(list.size() - 1);
+                    }
                     //string.clear();
                     list.addAll(map);
 
                     //Log.d("AptoideDebug", string.toString());
-                    int offset = ((RecyclerAdapter) recyclerView.getAdapter()).offset;
-                    ((RecyclerAdapter) recyclerView.getAdapter()).offset =  offset + list.size();
+
                     recyclerView.getAdapter().notifyDataSetChanged();
                     //loading = false;
 
                     view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                     view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                    loading = false;
 
                 }
                                                                                                                                 
             };
 
-            TestRequest request = new TestRequest("");
+            TestRequest request = new TestRequest();
 
             request.setWidgetId(getArguments().getString("widgetid"));
 
-            manager.execute(request, getArguments().getString("widgetid"), DurationInMillis.ALWAYS_RETURNED,  requestListener);
+            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize(), DurationInMillis.ALWAYS_RETURNED,  requestListener);
             view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
             view.findViewById(R.id.list).setVisibility(View.GONE);
 
 
+        }
+
+        public static class MoreRecycler extends FragmentListApps.RecyclerAdapter{
+
+            public MoreRecycler(Context context, List<FragmentListApps.Displayable> list) {
+                super(context, list);
+            }
+
+
+
+
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                if(viewType==123456789){
+
+                    return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar, parent, false)) {
+                    };
+
+                }else{
+                    return super.onCreateViewHolder(parent, viewType);
+                }
+            }
         }
 
         SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
@@ -324,13 +352,12 @@ public class MoreActivity extends ActionBarActivity {
 
         public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
 
-            private final String context;
             private int offset;
             private String widget;
 
-            public TestRequest(String context) {
+            public TestRequest() {
                 super(Response.class, TestService.class);
-                this.context = context;
+
             }
 
 
@@ -352,7 +379,7 @@ public class MoreActivity extends ActionBarActivity {
 
                 api.getApi_global_params().setLang("en");
                 api.getApi_global_params().setStore_name("apps");
-
+                int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
                 SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
                 api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
@@ -370,12 +397,18 @@ public class MoreActivity extends ActionBarActivity {
                 //widgetParams.limit = 3;
                 //getStore.getDatasets_params().set(categoriesParams);
                 getStore.getDatasets_params().set(widgetParams);
-
+                Api.ListApps listApps = new Api.ListApps();
+                listApps.datasets_params = null;
+                listApps.datasets = null;
+                if(offset>0){
+                    listApps.offset = offset;
+                }
+                listApps.limit = BUCKET_SIZE * 3;
                 //getStore.addDataset(categoriesParams.getDatasetName());
                 getStore.addDataset(widgetParams.getDatasetName());
 
                 api.getApi_params().set(getStore);
-
+                api.getApi_params().set(listApps);
 
                 return getService().postApk(api);
 
@@ -386,147 +419,7 @@ public class MoreActivity extends ActionBarActivity {
 
     }
 
-    public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RowViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
 
-        public int offset = 0;
-
-        public Context getContext() {
-            return context;
-        }
-
-        private final Context context;
-        private final List<Displayable> list;
-        private final HashMap<String, Integer> placeholders = new HashMap<String, Integer>();
-
-        public RecyclerAdapter(Context context, List<Displayable> list) {
-            this.context = context;
-            this.list = list;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return list.get(position).getViewType();
-        }
-
-
-        @Override
-        public RowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            LinearLayout inflate = new LinearLayout(context);
-            inflate.setOrientation(LinearLayout.HORIZONTAL);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            inflate.setLayoutParams(params);
-
-            return new RowViewHolder(inflate, viewType, context);
-        }
-
-
-        @Override
-        public void onBindViewHolder(RowViewHolder holder, int position) {
-            list.get(position).bindView(holder);
-        }
-
-        @Override
-        public long getHeaderId(int position) {
-            return list.get(position).getHeaderId();
-        }
-
-        @Override
-        public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
-
-            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, false);
-
-            inflate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("OnClick", "OnClick");
-                }
-            });
-
-            return new HeaderViewHolder(inflate);
-        }
-
-        @Override
-        public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
-            list.get(position).onBindHeaderViewHolder(viewHolder);
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-        public HashMap<String, Integer> getPlaceholders() {
-            return placeholders;
-        }
-
-        public static class RowViewHolder extends RecyclerView.ViewHolder{
-
-
-            public static class ItemViewHolder {
-                public TextView name;
-                public TextView category;
-                public ImageView icon;
-            }
-
-            public LinearLayout getLinearLayout() {
-                return layout;
-            }
-
-            public View[] getViews() {
-                return views;
-            }
-
-
-            final View[] views;
-            final LinearLayout layout;
-
-            public RowViewHolder(View itemView, int viewType, Context context) {
-                super(itemView);
-
-                views = new View[viewType];
-
-                layout = (LinearLayout) itemView;
-                for(int i = 0; i < viewType; i++){
-                    View inflate = LayoutInflater.from(context).inflate(R.layout.home_item, layout, false);
-                    views[i] = inflate;
-                    ItemViewHolder holder = new ItemViewHolder();
-                    holder.name = (TextView) inflate.findViewById(R.id.app_name);
-                    holder.icon = (ImageView) inflate.findViewById(R.id.app_icon);
-                    holder.category = (TextView) inflate.findViewById(R.id.app_category);
-
-                    inflate.setTag(holder);
-                    layout.addView(inflate);
-
-                }
-
-                if(viewType>0){
-                    for(int i = viewType; i < 3; i++){
-                        View inflate = LayoutInflater.from(context).inflate(R.layout.home_item, layout, false);
-                        inflate.setVisibility(View.INVISIBLE);
-                        layout.addView(inflate);
-                    }
-                }
-
-
-            }
-
-        }
-        public static class HeaderViewHolder extends RecyclerView.ViewHolder{
-
-            TextView tv;
-
-
-            public HeaderViewHolder(View itemView) {
-                super(itemView);
-                tv = (TextView) itemView.findViewById(R.id.header);
-
-            }
-
-
-
-        }
-    }
 
 
 

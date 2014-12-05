@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.EnumCategories;
+import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
@@ -240,11 +241,11 @@ public class FragmentListStore extends Fragment {
                             App app = new App();
                             app.setName(apk.name);
                             app.setIcon(apk.icon);
-
+                            app.setMd5sum(apk.md5sum);
+                            app.setRepo(apk.store_name);
                             if(apk.rating!=null){
                                 app.setRating(apk.rating.floatValue());
                             }
-
                             app.setVersionName(apk.vername);
                             map.add(app);
                         }
@@ -472,8 +473,13 @@ public class FragmentListStore extends Fragment {
                     final WidgetCategory storeListItem = (WidgetCategory) list.get(position);
 
                     CategoryStoreListViewHolder categoryHolder = (CategoryStoreListViewHolder) holder;
-
                     categoryHolder.name.setText(storeListItem.name);
+                    try{
+                        ImageLoader.getInstance().displayImage(EnumCategories.getCategoryIcon(Integer.parseInt(storeListItem.refid.substring(4)), storename), categoryHolder.icon);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -508,8 +514,7 @@ public class FragmentListStore extends Fragment {
 
                             fragment.setArguments(bundle);
 
-                            ((ActionBarActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, fragment).addToBackStack(storeListItem.name).commit();
-
+                            ((ActionBarActivity) context).getSupportFragmentManager().beginTransaction().setBreadCrumbTitle(storeListItem.name).replace(R.id.content_layout, fragment).addToBackStack(storeListItem.name).commit();
                         }
                     });
 

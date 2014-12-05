@@ -122,8 +122,6 @@ public class AddStoreDialog extends DialogFragment {
         @Override
         public void onRequestSuccess(Response.GetStore response) {
 
-            Toast.makeText(Aptoide.getContext(), "success", Toast.LENGTH_LONG).show();
-
             final Store store = new Store();
             Response.GetStore.StoreMetaData data = response.datasets.meta.data;
             store.setId(data.id.longValue());

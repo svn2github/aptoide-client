@@ -270,6 +270,25 @@ public class AptoideUtils {
 
     }
 
+    public static int getBucketSize(){
+        float screenWidth = getScreenWidthInDip();
+
+        if (120 >= screenWidth) {
+            return  1;
+        } else {
+            return (int) (screenWidth / 120);
+        }
+
+    }
+
+    protected static float getScreenWidthInDip() {
+        WindowManager wm = ((WindowManager) Aptoide.getContext().getSystemService(Context.WINDOW_SERVICE));
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        int screenWidth_in_pixel = dm.widthPixels;
+        return screenWidth_in_pixel / dm.density;
+    }
+
     public static class Algorithms {
 
         public static String computeHmacSha1(String value, String keyString)
@@ -304,6 +323,8 @@ public class AptoideUtils {
             return buf.toString();
         }
 
+
+
         public static String computeSHA1sum(String text)
                 throws NoSuchAlgorithmException, UnsupportedEncodingException {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -319,7 +340,29 @@ public class AptoideUtils {
             byte[] sha1hash;
             md.update(bytes, 0, bytes.length);
             sha1hash = md.digest();
-            return convToHex(sha1hash);
+            return convToHexWithColon(sha1hash);
+        }
+
+        private static String convToHexWithColon(byte[] data) {
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < data.length; i++) {
+                int halfbyte = (data[i] >>> 4) & 0x0F;
+                int two_halfs = 0;
+                do {
+                    if ((0 <= halfbyte) && (halfbyte <= 9))
+                        buf.append((char) ('0' + halfbyte));
+                    else
+                        buf.append((char) ('a' + (halfbyte - 10)));
+                    halfbyte = data[i] & 0x0F;
+
+                } while (two_halfs++ < 1);
+
+                if(i< data.length - 1 ){
+                    buf.append(":");
+                }
+
+            }
+            return buf.toString();
         }
 
         public static String md5Calc(File f) {
