@@ -36,9 +36,14 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
+import info.hoang8f.widget.FButton;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -366,6 +371,7 @@ public class FragmentListTopApps extends Fragment {
 
     public static class StoreRow extends Row{
 
+        private final Context context;
         public String name;
         public String avatar;
         public int downloads;
@@ -374,6 +380,7 @@ public class FragmentListTopApps extends Fragment {
 
         public StoreRow(Context context) {
             super(context);
+            this.context = context;
         }
 
         @Override
@@ -388,6 +395,16 @@ public class FragmentListTopApps extends Fragment {
             viewHolder.name.setText(name);
             ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
             viewHolder.store_info.setText(appscount + " " + viewHolder.itemView.getContext().getString(R.string.applications) + " • " + viewHolder.itemView.getContext().getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
+
+            viewHolder.addstore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Store store = new Store();
+                    store.setName(name);
+                    ((Start) context).startParse(store);
+                }
+            });
         }
     }
 
@@ -443,7 +460,7 @@ public class FragmentListTopApps extends Fragment {
         @Override
         public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
 
-            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, false);
+            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, true);
 
             inflate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -483,13 +500,15 @@ public class FragmentListTopApps extends Fragment {
 
             public ImageView icon;
 
+            public FButton addstore;
+
             public StoreRowViewHolder(View itemView, int viewType, Context context) {
                 super(itemView);
 
                 name = (TextView) itemView.findViewById(R.id.store_name);
                 icon = (ImageView) itemView.findViewById(R.id.store_avatar);
                 store_info = (TextView) itemView.findViewById(R.id.store_info);
-
+                addstore = (FButton) itemView.findViewById(R.id.add_store_button);
             }
 
         }

@@ -133,16 +133,16 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_stores, menu);
-
-        if(gridViewMyStores!=null && gridViewMyStores.getAdapter().getCount()>1 || isMergeStore){
-            menu.findItem(R.id.menu_merge).setVisible(true);
-            if(isMergeStore){
-                menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
-            }else{
-                menu.findItem(R.id.menu_merge).setTitle(R.string.merge_all_stores);
-            }
-        }
+//        inflater.inflate(R.menu.menu_stores, menu);
+//
+//        if(gridViewMyStores!=null && gridViewMyStores.getAdapter().getCount()>1 || isMergeStore){
+//            menu.findItem(R.id.menu_merge).setVisible(true);
+//            if(isMergeStore){
+//                menu.findItem(R.id.menu_merge).setTitle(R.string.split_stores);
+//            }else{
+//                menu.findItem(R.id.menu_merge).setTitle(R.string.merge_all_stores);
+//            }
+//        }
 
 
     }

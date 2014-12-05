@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-
+    compile 'info.hoang8f:fbutton:1.0.5'
     compile 'org.jraf:android-switch-backport:1.4.0'
     compile 'com.commonsware.cwac:endless:1.2.3'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
