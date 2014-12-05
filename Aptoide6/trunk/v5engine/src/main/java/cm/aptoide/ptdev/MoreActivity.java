@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
@@ -300,7 +301,7 @@ public class MoreActivity extends ActionBarActivity {
 
         }
 
-        SpiceManager manager = new SpiceManager(HttpService.class);
+        SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
         @Override
         public void onStart() {

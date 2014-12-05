@@ -32,6 +32,7 @@ import java.util.List;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.HttpService;
 import cm.aptoide.ptdev.webservices.Response;
@@ -48,7 +49,7 @@ public class FragmentListTopApps extends Fragment {
     private ArrayList<Displayable> string;
     private RequestListener<Response> requestListener;
 
-    SpiceManager manager = new SpiceManager(HttpService.class);
+    SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
     @Override
     public void onStart() {

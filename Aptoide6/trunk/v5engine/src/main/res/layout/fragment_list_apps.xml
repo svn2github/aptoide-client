@@ -21,7 +21,7 @@
             <TextView
                 android:id="@+id/error_text" android:gravity="center_horizontal"
                 android:layout_width="300dp" style="?android:textAppearanceMedium"
-                android:layout_height="wrap_content" android:text="Aptoide is experiencing problems. Please try again."/>
+                android:layout_height="wrap_content" android:text="@string/experiencing_problems"/>
 
         </LinearLayout>
 

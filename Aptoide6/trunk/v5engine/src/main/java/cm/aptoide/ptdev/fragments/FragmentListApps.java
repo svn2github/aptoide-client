@@ -40,6 +40,7 @@ import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
@@ -60,7 +61,7 @@ public class FragmentListApps extends Fragment {
 
 
 
-    SpiceManager manager = new SpiceManager(HttpService.class);
+    SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
     @Override
     public void onAttach(Activity activity) {

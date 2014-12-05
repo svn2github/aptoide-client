@@ -115,4 +115,7 @@
     <attr name="icTimelineAccessSecure" format="reference"/>
 
     <attr name="fontPath" format="string"/>
+
+    <attr name="backgroundHomeSeparator" format="color" />
+
 </resources>

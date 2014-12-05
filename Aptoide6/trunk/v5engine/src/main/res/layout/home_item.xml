@@ -1,12 +1,10 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/customRowForegroundHomeLayout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_margin="5dp"
-    android:padding="5dp"
     android:layout_weight="1"
-
-    style="@style/customSelectableForegroundStyle">
+    android:padding="5dp">
 
 
     <RelativeLayout
@@ -20,8 +18,7 @@
             android:layout_height="96dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:contentDescription="@null"
-            />
+            android:contentDescription="@null" />
 
 
         <TextView
@@ -32,7 +29,7 @@
             android:layout_gravity="center_horizontal|bottom"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Heroes Charge"
+            android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
