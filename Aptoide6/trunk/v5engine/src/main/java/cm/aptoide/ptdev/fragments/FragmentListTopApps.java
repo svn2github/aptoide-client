@@ -400,9 +400,9 @@ public class FragmentListTopApps extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    Store store = new Store();
-                    store.setName(name);
-                    ((Start) context).startParse(store);
+//                    Store store = new Store();
+//                    store.setName(name);
+//                    ((Start) context).startParse(store);
                 }
             });
         }
