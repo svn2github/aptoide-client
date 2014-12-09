@@ -36,6 +36,8 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
@@ -391,14 +393,14 @@ public class FragmentListTopApps extends Fragment {
             viewHolder.name.setText(name);
             ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
             viewHolder.store_info.setText(appscount + " " + viewHolder.itemView.getContext().getString(R.string.applications) + " • " + viewHolder.itemView.getContext().getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
-
             viewHolder.addstore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-//                    Store store = new Store();
-//                    store.setName(name);
-//                    ((Start) context).startParse(store);
+                    Store store = new Store();
+                    store.setName(name);
+                    ((Start) context).startParse(store);
+
                 }
             });
         }
@@ -456,14 +458,9 @@ public class FragmentListTopApps extends Fragment {
         @Override
         public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
 
-            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, true);
+            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, false);
 
-            inflate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("OnClick", "OnClick");
-                }
-            });
+
 
             return new HeaderViewHolder(inflate);
         }
@@ -503,7 +500,7 @@ public class FragmentListTopApps extends Fragment {
 
                 name = (TextView) itemView.findViewById(R.id.store_name);
                 icon = (ImageView) itemView.findViewById(R.id.store_avatar);
-                store_info = (TextView) itemView.findViewById(R.id.store_info);
+                store_info = (TextView) itemView.findViewById(R.id.store_info_dwn);
                 addstore = (FButton) itemView.findViewById(R.id.add_store_button);
             }
 

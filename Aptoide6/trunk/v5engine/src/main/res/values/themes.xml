@@ -84,7 +84,7 @@
         <item name="timelinePostBackground">@drawable/timeline_post_background_light</item>
         <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
 
-        <item name="backgroundHomeSeparator">@color/background_material_light</item>
+        <item name="backgroundHomeSeparator">@color/background_window</item>
     </style>
 
 
@@ -156,7 +156,7 @@
         <item name="timelinePostBackground">@drawable/timeline_post_background_dark</item>
         <item name="icTimelineAccessSecure">@drawable/ic_action_secure_dark</item>
 
-        <item name="backgroundHomeSeparator">@color/background_material_dark</item>
+        <item name="backgroundHomeSeparator">@color/transparent_black</item>
 
     </style>
 
