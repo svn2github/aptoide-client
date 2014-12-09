@@ -2,7 +2,7 @@ package cm.aptoide.ptdev;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
@@ -38,7 +38,7 @@ public abstract class MoreBaseActivity extends ActionBarActivity {
 
     protected abstract MoreBaseFragment getFragment();
 
-    public static class MoreBaseFragment extends ListFragment {
+    public static class MoreBaseFragment extends Fragment {
 
         SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 

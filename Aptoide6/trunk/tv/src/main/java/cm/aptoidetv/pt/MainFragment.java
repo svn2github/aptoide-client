@@ -100,7 +100,7 @@ public class MainFragment extends BrowseFragment{
         setupUIElements();
 
         setupEventListeners();
-        RequestTV request = new RequestTV("home");
+        RequestTV request = new RequestTV("store");
 
         requestListener= new RequestListener<Response>(){
             @Override
@@ -170,7 +170,7 @@ public class MainFragment extends BrowseFragment{
 
             }
         };
-        manager.execute(request, "home", DurationInMillis.ALWAYS_RETURNED,  requestListener);
+        manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED,  requestListener);
     }
 
     @Override

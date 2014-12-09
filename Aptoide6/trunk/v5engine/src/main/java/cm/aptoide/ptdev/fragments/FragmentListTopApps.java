@@ -129,7 +129,7 @@ public class FragmentListTopApps extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
 
         view = (RecyclerView) rootView.findViewById(R.id.list);
-        string = new ArrayList<Displayable>(20);
+        string = new ArrayList<>(20);
 
         final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), string);
         StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
@@ -137,26 +137,23 @@ public class FragmentListTopApps extends Fragment {
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
+                Log.d("pois","i:"+i);
                 Displayable displayable = ((RecyclerAdapter) view.getAdapter()).list.get(i);
-
-                if(displayable instanceof AppsRow) {
-
+                Log.d("pois","click");
+                if(displayable.getViewType()==1000) {
+                    Log.d("pois","Else");
+                    Intent intent = new Intent(getActivity(), MoreTopStoresActivity.class);
+                    startActivity(intent);
+                }else{
+                    Log.d("pois","AppsRow");
                     Intent intent = new Intent(getActivity(), MoreActivity.class);
 
                     intent.putExtra("widgetid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid);
                     intent.putExtra("widgetrefid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
                     intent.putExtra("widgetname", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
                     startActivity(intent);
-                }else{
-                    Intent intent = new Intent(getActivity(), MoreTopStoresActivity.class);
-                    startActivity(intent);
                 }
-
-
-
-
                 //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -179,12 +176,12 @@ public class FragmentListTopApps extends Fragment {
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                rootView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                         rootView.findViewById(R.id.list).setVisibility(View.GONE);
-                        manager.execute(request, "top" , DurationInMillis.ALWAYS_RETURNED,  requestListener);
+                        manager.execute(request, "top", DurationInMillis.ALWAYS_RETURNED, requestListener);
                     }
                 });
             }

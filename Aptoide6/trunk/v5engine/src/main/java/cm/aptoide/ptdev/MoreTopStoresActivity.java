@@ -77,7 +77,7 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
         }
 
         @Override
-        public void onViewCreated(final View view, Bundle savedInstanceState) {
+        public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
 
             recyclerView = (RecyclerView) view.findViewById(R.id.list);
