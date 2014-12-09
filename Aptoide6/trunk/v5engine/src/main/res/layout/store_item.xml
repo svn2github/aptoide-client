@@ -64,23 +64,23 @@
                 android:textColor="@android:color/white"
                 android:textSize="10sp" />
 
-            <!--<info.hoang8f.widget.FButton-->
-                <!--xmlns:fbutton="http://schemas.android.com/apk/res-auto"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/add_store"-->
-                <!--android:textSize="12sp"-->
-                <!--android:textStyle="bold"-->
-                <!--fbutton:buttonColor="@android:color/white"-->
-                <!--fbutton:cornerRadius="0dp"-->
-                <!--fbutton:shadowColor="@color/light_gray"-->
-                <!--fbutton:shadowEnabled="true"-->
-                <!--fbutton:shadowHeight="2dp"-->
-                <!--android:id="@+id/add_store_button"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_margin="5dp" />-->
+            <info.hoang8f.widget.FButton
+                xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_store"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                fbutton:buttonColor="@android:color/white"
+                fbutton:cornerRadius="0dp"
+                fbutton:shadowColor="@color/light_gray"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="2dp"
+                android:id="@+id/add_store_button"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp" />
 
         </RelativeLayout>
     </RelativeLayout>
