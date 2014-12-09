@@ -14,18 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
 
@@ -33,21 +27,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
-import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.adapters.V6.Displayable;
+import cm.aptoide.ptdev.adapters.V6.Holders.AppViewHolder;
+import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
+import cm.aptoide.ptdev.adapters.V6.Rows.StoreRow;
+import cm.aptoide.ptdev.adapters.V6.V6StoresRecyclerAdapter;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
-import info.hoang8f.widget.FButton;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
-
-import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
  * Created by rmateus on 21-11-2014.
@@ -128,108 +121,7 @@ public class FragmentListTopApps extends Fragment {
 
     }
 
-    public interface Displayable {
-        int getViewType();
 
-        long getHeaderId();
-
-        void bindView(RecyclerView.ViewHolder viewHolder);
-
-        void onBindHeaderViewHolder(FragmentListTopApps.RecyclerAdapter.HeaderViewHolder viewHolder);
-    }
-
-    public static class Row implements Displayable{
-
-        private final Context context;
-        public String header;
-        public String widgetid;
-        public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>(3);
-        public String widgetrefid;
-        //private Picasso picasso;
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        private boolean enabled = true;
-
-        public Row(Context context) {
-            //picasso = Picasso.with(context);
-            //picasso.setIndicatorsEnabled(true);
-            this.context = context;
-        }
-
-        public void addItem(Response.ListApps.Apk apk){
-            apks.add(apk);
-        }
-
-
-        @Override
-        public String toString() {
-            return "Row:" + header + " enabled: " + String.valueOf(enabled);
-        }
-
-        @Override
-        public int getViewType() {
-            return apks.size();
-        }
-
-        @Override
-        public long getHeaderId() {
-
-            if(enabled){
-                return Math.abs(header.hashCode());
-            }else{
-                return -1;
-            }
-
-        }
-
-
-        @Override
-        public void bindView(RecyclerView.ViewHolder vh) {
-
-            RecyclerAdapter.RowViewHolder viewHolder = (RecyclerAdapter.RowViewHolder) vh;
-
-                if(!apks.isEmpty()) {
-                    viewHolder.name.setText(apks.get(0).name);
-                    String icon = apks.get(0).icon;
-                    viewHolder.version.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(apks.get(0).downloads))));
-
-                    if (icon.contains("_icon")) {
-                        String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                        icon = splittedUrl[0] +"_"+ Aptoide.iconSize + "." + splittedUrl[1];
-                    }
-
-                    ImageLoader.getInstance().displayImage(icon, viewHolder.icon);
-                    viewHolder.itemView.setClickable(true);
-                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(context, AppViewActivity.class);
-                            i.putExtra("fromRelated", true);
-                            i.putExtra("md5sum", apks.get(0).md5sum);
-                            i.putExtra("repoName", apks.get(0).store_name);
-                            i.putExtra("download_from", "recommended_apps");
-                            context.startActivity(i);
-                        }
-                    });
-
-
-
-                }
-
-                //picasso.load(icon).into(itemViewHolder.icon);
-
-
-
-        }
-
-        @Override
-        public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
-            viewHolder.tv.setText(header);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -249,9 +141,9 @@ public class FragmentListTopApps extends Fragment {
 
                 Intent intent = new Intent(getActivity(), MoreActivity.class);
 
-                intent.putExtra("widgetid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid);
-                intent.putExtra("widgetrefid", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetrefid);
-                intent.putExtra("widgetname", ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).header);
+                intent.putExtra("widgetid", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid);
+                intent.putExtra("widgetrefid", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetrefid);
+                intent.putExtra("widgetname", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).header);
                 startActivity(intent);
 
                 //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
@@ -264,9 +156,6 @@ public class FragmentListTopApps extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-
-
 
         view.setAdapter(mAdapter);
         view.setLayoutManager(linearLayoutManager);
@@ -305,7 +194,7 @@ public class FragmentListTopApps extends Fragment {
                             ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
                             while (!inElements.isEmpty()) {
-                                Row row = new Row(getActivity());
+                                AppsRow row = new AppsRow(getActivity());
                                 row.widgetid = widget.widgetid;
                                 row.header = widget.name;
                                 row.widgetrefid = widget.data.ref_id;
@@ -329,7 +218,7 @@ public class FragmentListTopApps extends Fragment {
                         }
 
                     } else {
-                        Row row = new Row(getActivity());
+                        AppsRow row = new AppsRow(getActivity());
                         row.setEnabled(false);
                         map.add(row);
                         ((RecyclerAdapter)view.getAdapter()).getPlaceholders().put(widget.type, map.size());
@@ -352,8 +241,6 @@ public class FragmentListTopApps extends Fragment {
 
         };
 
-
-
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -368,184 +255,22 @@ public class FragmentListTopApps extends Fragment {
         return rootView;
     }
 
-    public static class StoreRow extends Row{
-
-        private final Context context;
-        public String name;
-        public String avatar;
-        public int downloads;
-        public int appscount;
-
-
-
-        public StoreRow(Context context) {
-            super(context);
-            this.context = context;
-        }
-
-        @Override
-        public int getViewType() {
-            return 1000;
-        }
-
-        @Override
-        public void bindView(RecyclerView.ViewHolder vh) {
-            RecyclerAdapter.StoreRowViewHolder viewHolder = (RecyclerAdapter.StoreRowViewHolder) vh;
-            viewHolder.name.setText(name);
-            ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
-            viewHolder.store_info.setText(appscount + " " + viewHolder.itemView.getContext().getString(R.string.applications) + " • " + viewHolder.itemView.getContext().getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
-            viewHolder.addstore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Store store = new Store();
-                    store.setName(name);
-                    ((Start) context).startParse(store);
-                    Toast.makeText(context, context.getString(R.string.store_added), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
-
-
-        public Context getContext() {
-            return context;
-        }
-
-        private final Context context;
-        private final List<Displayable> list;
-        private final HashMap<String, Integer> placeholders = new HashMap<String, Integer>();
+    public static class RecyclerAdapter extends V6StoresRecyclerAdapter {
 
         public RecyclerAdapter(Context context, List<Displayable> list) {
-            this.context = context;
-            this.list = list;
+            super(context, list);
         }
-
-        @Override
-        public int getItemViewType(int position) {
-            return list.get(position).getViewType();
-        }
-
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View inflate;
             if(viewType<1000){
                 inflate = LayoutInflater.from(context).inflate(R.layout.top_item, parent, false);
-                return new RowViewHolder(inflate, viewType, context);
+                return new AppViewHolder(inflate, viewType, context);
 
             }else{
-                inflate = LayoutInflater.from(context).inflate(R.layout.store_item, parent, false);
-                return new StoreRowViewHolder(inflate, viewType, context);
+                return super.onCreateViewHolder(parent,viewType);
             }
-
-
-        }
-
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            list.get(position).bindView(holder);
-        }
-
-        @Override
-        public long getHeaderId(int position) {
-            return list.get(position).getHeaderId();
-        }
-
-        @Override
-        public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
-
-            View inflate = LayoutInflater.from(context).inflate(R.layout.home_separator, viewGroup, false);
-
-
-
-            return new HeaderViewHolder(inflate);
-        }
-
-        @Override
-        public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
-            list.get(position).onBindHeaderViewHolder(viewHolder);
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-        public HashMap<String, Integer> getPlaceholders() {
-            return placeholders;
-        }
-
-        public static class StoreRowViewHolder extends RecyclerView.ViewHolder{
-
-
-            public static class ItemViewHolder {
-
-
-            }
-
-
-            public TextView name;
-            public TextView store_info;
-
-            public ImageView icon;
-
-            public FButton addstore;
-
-            public StoreRowViewHolder(View itemView, int viewType, Context context) {
-                super(itemView);
-
-                name = (TextView) itemView.findViewById(R.id.store_name);
-                icon = (ImageView) itemView.findViewById(R.id.store_avatar);
-                store_info = (TextView) itemView.findViewById(R.id.store_info_dwn);
-                addstore = (FButton) itemView.findViewById(R.id.add_store_button);
-            }
-
-        }
-
-        public static class RowViewHolder extends RecyclerView.ViewHolder{
-
-
-            public static class ItemViewHolder {
-
-
-            }
-
-
-            public TextView name;
-            public TextView version;
-            public RatingBar app_rating;
-            public ImageView icon;
-
-            public RowViewHolder(View itemView, int viewType, Context context) {
-                super(itemView);
-
-                name = (TextView) itemView.findViewById(R.id.app_name);
-                icon = (ImageView) itemView.findViewById(R.id.app_icon);
-                version = (TextView) itemView.findViewById(R.id.app_version);
-                app_rating = (RatingBar) itemView.findViewById(R.id.app_rating);
-
-            }
-
-        }
-        public static class HeaderViewHolder extends RecyclerView.ViewHolder{
-
-            TextView tv;
-
-
-            public HeaderViewHolder(View itemView) {
-                super(itemView);
-                tv = (TextView) itemView.findViewById(R.id.header);
-
-            }
-
-
-
         }
     }
-
 }

@@ -70,7 +70,6 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
 
         }
 
-
         @Override
         public void onDetach() {
             super.onDetach();

@@ -50,8 +50,6 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
         
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
@@ -74,10 +72,9 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
         downloadService.startDownloadFromAppId(id);
     }
 
-
     public static class MoreUserBasedFragment extends ListFragment {
 
-        ArrayList<HomeItem> items = new ArrayList<HomeItem>();
+        ArrayList<HomeItem> items = new ArrayList<>();
 
         HomeBucketAdapter adapter;
         SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
@@ -87,12 +84,6 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
         public void onAttach(Activity activity) {
             super.onAttach(activity);
             spiceManager.start(getActivity());
-        }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-
         }
 
         @Override
@@ -122,67 +113,56 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
             getListView().setCacheColorHint(getResources().getColor(android.R.color.transparent));
             getListView().setItemsCanFocus(true);
 
+            final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
 
 
+            spiceManager.execute(request,  new RequestListener<ListRecomended>() {
+                @Override
+                public void onRequestFailure(SpiceException e) {
 
-                    final ListUserbasedApkRequest request = new ListUserbasedApkRequest(getActivity());
+                }
 
+                @Override
+                public void onRequestSuccess(ListRecomended listRecomended) {
 
-                                spiceManager.execute(request,  new RequestListener<ListRecomended>() {
-                                    @Override
-                                    public void onRequestFailure(SpiceException e) {
+                    items.clear();
+                    final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+                    for(ListRecomended.Repository repository : listRecomended.getRepository()){
 
-                                    }
+                        String repoName = repository.getName();
+                        String iconPath = repository.getIconspath();
+                        for(ListRecomended.Repository.Package aPackage : repository.getPackage()){
 
-                                    @Override
-                                    public void onRequestSuccess(ListRecomended listRecomended) {
+                            String icon;
 
-                                        items.clear();
-                                        final boolean matureCheck = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-                                        for(ListRecomended.Repository repository : listRecomended.getRepository()){
+                            if(aPackage.getIcon_hd()!=null){
+                                icon = aPackage.getIcon_hd();
+                            }else{
+                                icon = aPackage.getIcon();
+                            }
+                            HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
+                            item.setRecommended(true);
+                            item.setRepoName(repoName);
+                            item.setMd5(aPackage.getMd5h());
 
-                                            String repoName = repository.getName();
-                                            String iconPath = repository.getIconspath();
-                                            for(ListRecomended.Repository.Package aPackage : repository.getPackage()){
-
-                                                String icon;
-
-                                                if(aPackage.getIcon_hd()!=null){
-                                                    icon = aPackage.getIcon_hd();
-                                                }else{
-                                                    icon = aPackage.getIcon();
-                                                }
-                                                HomeItem item = new HomeItem(aPackage.getName(), aPackage.getCatg2(), iconPath + icon, 0, String.valueOf(aPackage.getDwn()), aPackage.getRat().floatValue(), aPackage.getCatg2());
-                                                item.setRecommended(true);
-                                                item.setRepoName(repoName);
-                                                item.setMd5(aPackage.getMd5h());
-
-                                                if (matureCheck) {
-                                                    if (!aPackage.getAge().equals("Mature")) {
-                                                        items.add(item);
-                                                    }
-                                                } else {
-                                                    items.add(item);
-                                                }
-
-                                            }
-
-                                        }
-
-                                        setListAdapter(adapter);
-
-                                    }
-                                });
+                            if (matureCheck) {
+                                if (!aPackage.getAge().equals("Mature")) {
+                                    items.add(item);
+                                }
+                            } else {
+                                items.add(item);
                             }
 
+                        }
 
+                    }
 
+                    setListAdapter(adapter);
+
+                }
+            });
         }
-
-
-
-
-
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -197,5 +177,4 @@ public class MoreUserBasedActivity extends ActionBarActivity implements Download
 
         return super.onOptionsItemSelected(item);
     }
-
 }

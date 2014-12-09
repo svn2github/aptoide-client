@@ -262,8 +262,7 @@ public class FragmentListStore extends Fragment {
 
                 for (Response.GetStore.Widgets.Widget widget : list) {
 
-                    if (widget.type.equals("apps_list")) {
-                        //Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+
                         WidgetCategory item = new WidgetCategory();
                         item.refid = widget.data.ref_id;
                         item.widgetid = widget.widgetid;
@@ -271,15 +270,7 @@ public class FragmentListStore extends Fragment {
                         item.theme = theme;
                         item.store_id = getArguments().getLong("storeid");
                         map.add(item);
-                    } else {
-                        WidgetCategory item = new WidgetCategory();
-                        item.refid = widget.data.ref_id;
-                        item.widgetid = widget.widgetid;
-                        item.name = widget.name;
-                        item.theme = theme;
-                        item.store_id = getArguments().getLong("storeid");
-                        map.add(item);
-                    }
+
 
                 }
 

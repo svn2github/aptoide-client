@@ -111,8 +111,10 @@
 
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
         <activity android:name="cm.aptoide.ptdev.MoreFriendsInstallsActivity" />
+        <activity android:name="cm.aptoide.ptdev.MoreTopStoresActivity" />
         <activity android:name="cm.aptoide.ptdev.MoreHighlightedActivity" />
         <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
+
 
 
         <activity
