@@ -80,6 +80,9 @@ public class AppsRow implements Displayable {
             viewHolder.name.setText(apks.get(0).name);
             String icon = apks.get(0).icon;
             viewHolder.version.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(apks.get(0).downloads))));
+            if(apks.get(0).rating!=null){
+                viewHolder.app_rating.setRating(apks.get(0).rating.floatValue());
+            }
 
             if (icon.contains("_icon")) {
                 String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");

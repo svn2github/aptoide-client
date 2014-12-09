@@ -23,7 +23,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +97,11 @@ public class MoreActivity extends ActionBarActivity {
         public void onBindHeaderViewHolder(FragmentListApps.RecyclerAdapter.HeaderViewHolder viewHolder) {
 
         }
+
+        @Override
+        public boolean isMore() {
+            return false;
+        }
     }
 
     public static class MoreFragment extends Fragment {
@@ -108,8 +113,7 @@ public class MoreActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_list_apps, container, false);
         }
 
         private int previousTotal = 0;
@@ -200,17 +204,36 @@ public class MoreActivity extends ActionBarActivity {
 
                 }
             });
+            final TestRequest request = new TestRequest();
 
             requestListener = new RequestListener<Response>() {
 
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
-                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                    view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+
+
+                    if(list.isEmpty()){
+                        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                        view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize(), DurationInMillis.ALWAYS_RETURNED,  requestListener);
+                                view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.list).setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
+
+
+
                     if(loading && !list.isEmpty()){
                         list.remove(list.size() - 1);
                         loading = false;
                     }
+
+
                 }
 
                 @Override
@@ -254,10 +277,13 @@ public class MoreActivity extends ActionBarActivity {
                                 if(category !=null && category.data!=null) {
                                     ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
 
+                                    boolean showMore = inElements.size()>=BUCKET_SIZE*4;
+
                                     while (!inElements.isEmpty()) {
                                         FragmentListApps.Row row = new FragmentListApps.Row();
                                         row.header = widget.name;
 
+                                        row.setMore(showMore);
                                         row.widgetid = widget.widgetid;
                                         row.widgetrefid = widget.data.ref_id;
 
@@ -298,7 +324,6 @@ public class MoreActivity extends ActionBarActivity {
                                                                                                                                 
             };
 
-            TestRequest request = new TestRequest();
 
             request.setWidgetId(getArguments().getString("widgetid"));
 

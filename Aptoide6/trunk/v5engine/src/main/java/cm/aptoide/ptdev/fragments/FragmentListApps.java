@@ -29,7 +29,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -94,6 +94,8 @@ public class FragmentListApps extends Fragment {
         int getViewType();
 
         long getHeaderId();
+
+        boolean isMore();
 
         void bindView(RecyclerView.ViewHolder viewHolder);
 
@@ -329,6 +331,11 @@ public class FragmentListApps extends Fragment {
         public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
             viewHolder.tv.setText(header);
         }
+
+        @Override
+        public boolean isMore() {
+            return false;
+        }
     }
 
 
@@ -443,15 +450,14 @@ public class FragmentListApps extends Fragment {
         @Override
         public void bindView(RecyclerView.ViewHolder viewHolder) {
 
-
+            final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
             CompoundButton viewById = (CompoundButton) viewHolder.itemView.findViewById(R.id.adult_content);
-
+            viewById.setChecked(defaultSharedPreferences.getBoolean("matureChkBox", false));
             viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-                    sPref.edit().putBoolean("matureChkBox", isChecked).apply();
+                    defaultSharedPreferences.edit().putBoolean("matureChkBox", isChecked).apply();
                     adultInterface.onAdultChange();
 
 
@@ -462,6 +468,11 @@ public class FragmentListApps extends Fragment {
         @Override
         public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
 
+        }
+
+        @Override
+        public boolean isMore() {
+            return false;
         }
     }
 
@@ -475,6 +486,7 @@ public class FragmentListApps extends Fragment {
         public String widgetid;
         public List<Response.ListApps.Apk> apks = new ArrayList<Response.ListApps.Apk>();
         public String widgetrefid;
+        private boolean more = true;
         //private Picasso picasso;
 
         public void setEnabled(boolean enabled) {
@@ -567,6 +579,14 @@ public class FragmentListApps extends Fragment {
         public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
             viewHolder.tv.setText(header);
         }
+
+        public void setMore(boolean more) {
+            this.more = more;
+        }
+
+        public boolean isMore() {
+            return more;
+        }
     }
 
 
@@ -590,22 +610,25 @@ public class FragmentListApps extends Fragment {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
 
-                Intent intent;
-                String widgetid = ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid;
-                if(widgetid.equals("timeline")){
-                    intent = new Intent(getActivity(), MoreFriendsInstallsActivity.class);
-                }else if(widgetid.equals("recommended")){
-                    intent = new Intent(getActivity(), MoreUserBasedActivity.class);
-                }else if(widgetid.equals("highlighted")){
-                    intent = new Intent(getActivity(), MoreHighlightedActivity.class);
-                }else {
-                    intent = new Intent(getActivity(), MoreActivity.class);
-                    intent.putExtra("widgetid", widgetid);
-                    intent.putExtra("widgetrefid", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
-                    intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
-                }
+                if((((RecyclerAdapter) view.getAdapter()).list.get(i)).isMore()) {
 
-                startActivity(intent);
+                    Intent intent;
+                    String widgetid = ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid;
+                    if (widgetid.equals("timeline")) {
+                        intent = new Intent(getActivity(), MoreFriendsInstallsActivity.class);
+                    } else if (widgetid.equals("recommended")) {
+                        intent = new Intent(getActivity(), MoreUserBasedActivity.class);
+                    } else if (widgetid.equals("highlighted")) {
+                        intent = new Intent(getActivity(), MoreHighlightedActivity.class);
+                    } else {
+                        intent = new Intent(getActivity(), MoreActivity.class);
+                        intent.putExtra("widgetid", widgetid);
+                        intent.putExtra("widgetrefid", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
+                        intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                    }
+
+                    startActivity(intent);
+                }
 
                 //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
 
@@ -625,6 +648,7 @@ public class FragmentListApps extends Fragment {
 
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
+        final TestRequest request = new TestRequest();
 
         requestListener = new RequestListener<Response>() {
 
@@ -632,6 +656,17 @@ public class FragmentListApps extends Fragment {
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+
+
+                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
+                        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                        rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                    }
+                });
+
             }
 
             @Override
@@ -883,7 +918,6 @@ public class FragmentListApps extends Fragment {
 //                }
 //            }
 //        });
-        final TestRequest request = new TestRequest();
 
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -972,7 +1006,6 @@ public class FragmentListApps extends Fragment {
                     return new TimelineRowViewHolder(inflate, BUCKET_SIZE, context);
                 } else {
                     return new RowViewHolder(inflate, viewType, context);
-
                 }
             }
 
@@ -1000,6 +1033,13 @@ public class FragmentListApps extends Fragment {
         @Override
         public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
             list.get(position).onBindHeaderViewHolder(viewHolder);
+
+            if(list.get(position).isMore()){
+                viewHolder.more.setVisibility(View.VISIBLE);
+            }else{
+                viewHolder.more.setVisibility(View.INVISIBLE);
+            }
+
         }
 
         @Override
@@ -1165,13 +1205,14 @@ public class FragmentListApps extends Fragment {
         }
         public static class HeaderViewHolder extends RecyclerView.ViewHolder{
 
+            private final TextView more;
             TextView tv;
 
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.header);
-
+                more = (TextView) itemView.findViewById(R.id.more);
             }
 
 

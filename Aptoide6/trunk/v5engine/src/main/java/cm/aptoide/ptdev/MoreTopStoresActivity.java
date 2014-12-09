@@ -88,6 +88,7 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
 
             GetTopStoresRequest request = new GetTopStoresRequest();
 
+
             spiceManager.execute(request, "MoreTopStoresActivity", DurationInMillis.ONE_DAY, new RequestListener<Response.ListStores>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {

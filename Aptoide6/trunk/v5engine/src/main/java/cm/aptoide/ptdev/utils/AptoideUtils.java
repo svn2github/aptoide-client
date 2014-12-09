@@ -173,6 +173,10 @@ public class AptoideUtils {
         }
     }
 
+    public static void toast(String text) {
+        Toast.makeText(Aptoide.getContext(), text, Toast.LENGTH_LONG).show();
+    }
+
     public static class HWSpecifications {
 
 

@@ -198,8 +198,8 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 AppViewActivity.this.json = getApkInfoJson;
                 if ("OK".equals(json.getStatus())) {
                     GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
-                    if(s!=null){
-                        signature = s.getSHA1().toLowerCase(Locale.ENGLISH);
+                    if(s!=null) {
+                        signature = s.getSHA1();
                     }
                     final GetApkInfoJson.Apk apk = getApkInfoJson.getApk();
                     altPath = apk.getAltPath();
@@ -400,6 +400,10 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                             findViewById(R.id.badge_layout).setVisibility(View.VISIBLE);
                         }
 
+                    }
+
+                    if(!getIntent().getBooleanExtra("fromSponsored", false)){
+                        loadPublicity();
                     }
 
                     // Check if Download is already completed to disable schedule
@@ -1432,9 +1436,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
         }
 
-        if(!getIntent().getBooleanExtra("fromSponsored", false)){
-            loadPublicity();
-        }
+
 
         bindService(new Intent(AppViewActivity.this, DownloadService.class), downloadConnection, BIND_AUTO_CREATE);
 

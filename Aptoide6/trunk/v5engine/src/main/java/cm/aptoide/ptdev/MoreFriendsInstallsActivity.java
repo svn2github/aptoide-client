@@ -1,6 +1,8 @@
 package cm.aptoide.ptdev;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
@@ -32,6 +35,8 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
  * Created by asantos on 01-12-2014.
  */
 public class MoreFriendsInstallsActivity extends ActionBarActivity {
+
+
 
 
     @Override
@@ -56,25 +61,31 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
 
         Fragment fragment = new MoreFriendsInstallsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
     }
 
     public static class MoreFriendsInstallsFragment extends Fragment {
         private RecyclerView recyclerView;
 
         SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+        private int BUCKET_SIZE;
 
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
             spiceManager.start(activity);
-
+            BUCKET_SIZE = AptoideUtils.getBucketSize();
         }
+
 
         @Override
         public void onDetach() {
             super.onDetach();
             spiceManager.shouldStop();
         }
+
+
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,6 +101,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
             recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
 
 
             recyclerView.setAdapter(new FriendsInstallsAdapter(list));
@@ -110,7 +122,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
 
                     while (!inElements.isEmpty()) {
                         Row row = new Row();
-                        for (int i = 0; i < 3 && !inElements.isEmpty(); i++) {
+                        for (int i = 0; i < BUCKET_SIZE && !inElements.isEmpty(); i++) {
                             row.addItem(inElements.remove(0));
                         }
                         list.add(row);
@@ -165,6 +177,8 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             inflate.setLayoutParams(params);
 
+
+
             return new TimelineRowViewHolder(inflate, viewType);
 
         }
@@ -172,21 +186,21 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
         @Override
         public void onBindViewHolder(TimelineRowViewHolder holder, int position) {
 
-            TimelineRowViewHolder viewHolder = (TimelineRowViewHolder) holder;
-
+            final TimelineRowViewHolder viewHolder = (TimelineRowViewHolder) holder;
+            Context context = viewHolder.itemView.getContext();
             int i=0;
-            for(TimelineListAPKsJson.UserApk apk : list.get(position).list) {
+            for(final TimelineListAPKsJson.UserApk apk : list.get(position).list) {
                 TimelineRowViewHolder.ItemViewHolder itemViewHolder = (TimelineRowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apk.getApk().getName());
                 String icon = apk.getApk().getIcon_hd();
                 if(icon == null){
                     icon = apk.getApk().getIcon();
                 }
-                itemViewHolder.friend.setText(apk.getInfo().getUsername() + " installed this.");
+                itemViewHolder.friend.setText(apk.getInfo().getUsername() + " " + context.getString(R.string.installed_this));
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + "_96x96"  + "."+ splittedUrl[1];
+                    icon = splittedUrl[0] + "_" + Aptoide.iconSize  + "."+ splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -195,7 +209,12 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent i = new Intent(viewHolder.itemView.getContext(), AppViewActivity.class);
+                        i.putExtra("fromRelated", true);
+                        i.putExtra("md5sum", apk.getApk().getMd5sum());
+                        i.putExtra("repoName", apk.getApk().getRepo());
+                        i.putExtra("download_from", "recommended_apps");
+                        viewHolder.itemView.getContext().startActivity(i);
                     }
                 });
                 i++;
@@ -234,10 +253,10 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
             public TimelineRowViewHolder(View itemView, int viewType) {
                 super(itemView);
 
-                views = new View[viewType ];
+                views = new View[viewType];
 
                 layout = (LinearLayout) itemView;
-                for(int i = 0; i < 3 && i < viewType; i++){
+                for(int i = 0; i < viewType; i++){
                     View inflate = LayoutInflater.from(itemView.getContext()).inflate(R.layout.timeline_item, layout, false);
                     views[i] = inflate;
                     ItemViewHolder holder = new ItemViewHolder();

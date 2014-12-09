@@ -219,6 +219,8 @@ public class FragmentListStore extends Fragment {
         public void onRequestFailure(SpiceException spiceException) {
             view.findViewById(R.id.please_wait).setVisibility(View.GONE);
             view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+
+
         }
 
         @Override

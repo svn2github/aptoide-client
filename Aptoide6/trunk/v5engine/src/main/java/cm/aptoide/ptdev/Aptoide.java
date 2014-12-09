@@ -29,6 +29,7 @@ import cm.aptoide.ptdev.database.DatabaseHelper;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
+import roboguice.util.temp.Ln;
 
 public class Aptoide extends Application {
 
@@ -95,6 +96,8 @@ public class Aptoide extends Application {
         if(DEBUG_MODE){
             Toast.makeText(Aptoide.getContext(), "Debug mode is: " + Aptoide.DEBUG_MODE, Toast.LENGTH_LONG).show();
         }
+
+        Ln.getConfig().setLoggingLevel(Log.VERBOSE);
 
         JodaTimeAndroid.init(this);
 
