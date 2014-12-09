@@ -47,6 +47,7 @@ public class MoreActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_store);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

@@ -630,4 +630,5 @@
     <string name="friends_installs">Your friends installs</string>
     <string name="highlighted_apps">Highlighted</string>
     <string name="installed_this">installed this.</string>
+    <string name="store_added">Store added</string>
 </resources>

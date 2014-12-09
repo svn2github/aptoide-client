@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -400,7 +401,7 @@ public class FragmentListTopApps extends Fragment {
                     Store store = new Store();
                     store.setName(name);
                     ((Start) context).startParse(store);
-
+                    Toast.makeText(context, context.getString(R.string.store_added), Toast.LENGTH_SHORT).show();
                 }
             });
         }
