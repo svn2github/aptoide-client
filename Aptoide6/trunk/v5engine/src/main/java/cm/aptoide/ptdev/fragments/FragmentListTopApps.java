@@ -21,7 +21,6 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersTouchListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +30,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.MoreTopStoresActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
 import cm.aptoide.ptdev.adapters.V6.Holders.AppViewHolder;
 import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
@@ -179,6 +179,14 @@ public class FragmentListTopApps extends Fragment {
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                        rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                        manager.execute(request, "top" , DurationInMillis.ALWAYS_RETURNED,  requestListener);
+                    }
+                });
             }
 
             @Override
@@ -207,9 +215,7 @@ public class FragmentListTopApps extends Fragment {
                                 row.widgetid = widget.widgetid;
                                 row.header = widget.name;
                                 row.widgetrefid = widget.data.ref_id;
-                                for (int j = 0; j < 3 && !inElements.isEmpty(); j++) {
-                                    row.addItem(inElements.remove(0));
-                                }
+                                row.addItem(inElements.remove(0));
                                 map.add(row);
                             }
                         }
