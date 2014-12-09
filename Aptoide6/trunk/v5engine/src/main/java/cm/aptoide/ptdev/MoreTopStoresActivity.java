@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,10 @@ import java.util.List;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
 import cm.aptoide.ptdev.adapters.V6.Rows.StoreRow;
 import cm.aptoide.ptdev.adapters.V6.V6StoresRecyclerAdapter;
+import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 /**
  * Created by asantos on 09-12-2014.
@@ -30,6 +34,33 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.stores);
     }
+
+
+
+    public interface Webservice{
+
+        @POST("/ws2.aptoide.com/api/6/listStores")
+        Response.ListStores getStores(@Body Api api);
+
+    }
+
+    public static class GetTopStoresRequest extends RetrofitSpiceRequest<Response.ListStores, Webservice>{
+
+        public GetTopStoresRequest() {
+            super(Response.ListStores.class, Webservice.class);
+        }
+
+        @Override
+        public Response.ListStores loadDataFromNetwork() throws Exception {
+
+
+            Api api = new Api();
+
+
+            return getService().getStores(api);
+        }
+    }
+
 
     @Override
     protected MoreBaseFragment getFragment() {
@@ -55,9 +86,9 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
 
             recyclerView.setAdapter(new V6StoresRecyclerAdapter(view.getContext(),list));
 
-            //TODO passa o request
+            GetTopStoresRequest request = new GetTopStoresRequest();
 
-            spiceManager.execute(null, "MoreTopStoresActivity", DurationInMillis.ONE_DAY, new RequestListener<Response.ListStores>() {
+            spiceManager.execute(request, "MoreTopStoresActivity", DurationInMillis.ONE_DAY, new RequestListener<Response.ListStores>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     view.findViewById(R.id.please_wait).setVisibility(View.GONE);
