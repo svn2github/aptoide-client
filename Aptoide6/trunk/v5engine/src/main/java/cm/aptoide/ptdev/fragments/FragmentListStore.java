@@ -3,7 +3,9 @@ package cm.aptoide.ptdev.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,10 +31,9 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import cm.aptoide.ptdev.AppViewActivity;
-import cm.aptoide.ptdev.EnumCategories;
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
@@ -109,6 +110,8 @@ public class FragmentListStore extends Fragment {
             api.getApi_global_params().setLang("en");
             api.getApi_global_params().setStore_name(store);
 
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+            api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
 
             Api.GetStore getStore = new Api.GetStore();
 

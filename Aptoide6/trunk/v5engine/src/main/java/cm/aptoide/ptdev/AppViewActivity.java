@@ -199,7 +199,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 if ("OK".equals(json.getStatus())) {
                     GetApkInfoJson.Signature s = getApkInfoJson.getSignature();
                     if(s!=null){
-                        signature = s.getSHA1().replace(":","");
+                        signature = s.getSHA1().toLowerCase(Locale.ENGLISH);
                     }
                     final GetApkInfoJson.Apk apk = getApkInfoJson.getApk();
                     altPath = apk.getAltPath();

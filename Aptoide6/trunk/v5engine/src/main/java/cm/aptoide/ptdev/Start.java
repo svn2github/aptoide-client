@@ -1217,10 +1217,14 @@ public class Start extends ActionBarActivity implements
 
             Database database = new Database(Aptoide.getDb());
 
-            database.insertStore(store);
-            database.updateStore(store);
+            try {
+                database.insertStore(store);
+                database.updateStore(store);
 
-            BusProvider.getInstance().post(new RepoAddedEvent());
+                BusProvider.getInstance().post(new RepoAddedEvent());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
         }

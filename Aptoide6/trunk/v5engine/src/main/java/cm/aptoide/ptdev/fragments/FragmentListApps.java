@@ -209,13 +209,13 @@ public class FragmentListApps extends Fragment {
                 if(icon==null){
                     icon = apk.getApk().getIcon();
                 }
-                itemViewHolder.friend.setText(apk.getInfo().getUsername() + " installed this.");
+
                 itemViewHolder.friend.setText(apk.getInfo().getUsername() + " " + ((RecyclerAdapter.TimelineRowViewHolder) holder).itemView.getContext().getString(R.string.installed_this));
 
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + Aptoide.iconSize  + "."+ splittedUrl[1];
+                    icon = splittedUrl[0] +"_"+ Aptoide.iconSize  + "."+ splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -364,7 +364,7 @@ public class FragmentListApps extends Fragment {
 
                 if (icon.contains("_icon")) {
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                    icon = splittedUrl[0] + Aptoide.iconSize + "." + splittedUrl[1];
+                    icon = splittedUrl[0] +"_"+ Aptoide.iconSize + "." + splittedUrl[1];
                 }
 
                 ImageLoader.getInstance().displayImage(icon, itemViewHolder.icon);
@@ -731,7 +731,7 @@ public class FragmentListApps extends Fragment {
                 if (AptoideUtils.isLoggedIn(getActivity())) {
                     ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
 
-                    listRelatedApkRequest.setLimit("3");
+                    listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
 
                     manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
                         @Override

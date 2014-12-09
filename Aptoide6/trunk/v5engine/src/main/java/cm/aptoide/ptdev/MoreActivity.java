@@ -162,6 +162,7 @@ public class MoreActivity extends ActionBarActivity {
                 @Override
                 public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
 
+                    Log.d("AptoideAdapter", "scrolling");
 
                     if(offset>0) {
 
@@ -403,7 +404,7 @@ public class MoreActivity extends ActionBarActivity {
                 if(offset>0){
                     listApps.offset = offset;
                 }
-                listApps.limit = BUCKET_SIZE * 3;
+                listApps.limit = BUCKET_SIZE * 4;
                 //getStore.addDataset(categoriesParams.getDatasetName());
                 getStore.addDataset(widgetParams.getDatasetName());
 

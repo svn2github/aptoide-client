@@ -1,11 +1,13 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
@@ -150,6 +153,9 @@ public class FragmentUpdates2 extends Fragment {
 
         viewById.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
+        SwipeRefreshLayout layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        layout.setEnabled(false);
+
         final ArrayList<UpdatesResponse.UpdateApk> list = new ArrayList<>();
 
         viewById.setAdapter(new UpdatesRecyclerView(list));
@@ -165,8 +171,13 @@ public class FragmentUpdates2 extends Fragment {
             @Override
             public void onRequestSuccess(UpdatesResponse updatesResponse) {
                 list.clear();
-                list.addAll(updatesResponse.data.list);
-                viewById.getAdapter().notifyDataSetChanged();
+                try{
+                    list.addAll(updatesResponse.data.list);
+                    viewById.getAdapter().notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -191,9 +202,9 @@ public class FragmentUpdates2 extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(UpdatesViewHolder holder, int position) {
+        public void onBindViewHolder(final UpdatesViewHolder holder, int position) {
 
-            UpdatesResponse.UpdateApk item = packageList.get(position);
+            final UpdatesResponse.UpdateApk item = packageList.get(position);
             holder.appName.setText(Html.fromHtml(item.name).toString());
             String icon1 = item.icon;
             holder.versionName.setText(item.vername);
@@ -204,6 +215,21 @@ public class FragmentUpdates2 extends Fragment {
             }
 
             ImageLoader.getInstance().displayImage(icon1, holder.appIcon);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(v.getContext(), AppViewActivity.class);
+                    i.putExtra("fromRelated", true);
+                    i.putExtra("md5sum", item.md5sum);
+                    i.putExtra("repoName", item.store_name);
+                    i.putExtra("download_from", "recommended_apps");
+                    v.getContext().startActivity(i);
+
+                }
+            });
+
 
         }
 

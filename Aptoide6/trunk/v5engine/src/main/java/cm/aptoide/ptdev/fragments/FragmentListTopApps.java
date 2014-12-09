@@ -36,14 +36,10 @@ import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.Start;
-import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
-import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
 import info.hoang8f.widget.FButton;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -195,11 +191,11 @@ public class FragmentListTopApps extends Fragment {
                 if(!apks.isEmpty()) {
                     viewHolder.name.setText(apks.get(0).name);
                     String icon = apks.get(0).icon;
-                    viewHolder.version.setText(apks.get(0).downloads.intValue() + " Downloads");
+                    viewHolder.version.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(apks.get(0).downloads))));
 
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                        icon = splittedUrl[0] + "_96x96" + "." + splittedUrl[1];
+                        icon = splittedUrl[0] +"_"+ Aptoide.iconSize + "." + splittedUrl[1];
                     }
 
                     ImageLoader.getInstance().displayImage(icon, viewHolder.icon);
@@ -378,6 +374,7 @@ public class FragmentListTopApps extends Fragment {
         public int appscount;
 
 
+
         public StoreRow(Context context) {
             super(context);
             this.context = context;
@@ -391,7 +388,6 @@ public class FragmentListTopApps extends Fragment {
         @Override
         public void bindView(RecyclerView.ViewHolder vh) {
             RecyclerAdapter.StoreRowViewHolder viewHolder = (RecyclerAdapter.StoreRowViewHolder) vh;
-
             viewHolder.name.setText(name);
             ImageLoader.getInstance().displayImage(avatar, viewHolder.icon);
             viewHolder.store_info.setText(appscount + " " + viewHolder.itemView.getContext().getString(R.string.applications) + " • " + viewHolder.itemView.getContext().getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
