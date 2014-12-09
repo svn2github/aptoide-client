@@ -29,6 +29,7 @@ import java.util.List;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
+import cm.aptoide.ptdev.MoreTopStoresActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
 import cm.aptoide.ptdev.adapters.V6.Holders.AppViewHolder;
@@ -136,15 +137,23 @@ public class FragmentListTopApps extends Fragment {
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
+                Displayable displayable = ((RecyclerAdapter) view.getAdapter()).list.get(i);
+
+                if(displayable instanceof AppsRow) {
+
+                    Intent intent = new Intent(getActivity(), MoreActivity.class);
+
+                    intent.putExtra("widgetid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid);
+                    intent.putExtra("widgetrefid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
+                    intent.putExtra("widgetname", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getActivity(), MoreTopStoresActivity.class);
+                    startActivity(intent);
+                }
 
 
 
-                Intent intent = new Intent(getActivity(), MoreActivity.class);
-
-                intent.putExtra("widgetid", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid);
-                intent.putExtra("widgetrefid", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetrefid);
-                intent.putExtra("widgetname", ((AppsRow)((RecyclerAdapter)view.getAdapter()).list.get(i)).header);
-                startActivity(intent);
 
                 //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
 
@@ -212,6 +221,7 @@ public class FragmentListTopApps extends Fragment {
                             Response.ListStores.Store store = inElements.remove(0);
                             row.header = widget.name;
                             row.appscount = store.apps_count.intValue();
+                            row.downloads = store.downloads.intValue();
                             row.avatar = store.avatar;
                             row.name = store.name;
                             map.add(row);
