@@ -19,6 +19,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 
 import java.net.MalformedURLException;
@@ -39,7 +41,8 @@ public class WebViewFacebook extends ActionBarActivity {
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        Aptoide.getThemePicker().setAptoideTheme(this);
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.webview_social);
 
 		Bundle parameters = new Bundle();

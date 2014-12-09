@@ -44,6 +44,8 @@ import cm.aptoide.ptdev.webservices.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
+
 /**
  * Created by rmateus on 28-11-2014.
  */
@@ -472,7 +474,7 @@ public class FragmentListStore extends Fragment {
                     ImageLoader.getInstance().displayImage(icon,appHolder.appIcon);
 
                     if("group_top".equals(appItem.getCategory_ref_id())){
-                        appHolder.versionName.setText(appItem.getDownloads());
+                        appHolder.versionName.setText(withSuffix(String.valueOf(appItem.getDownloads())));
                     }else{
                         appHolder.versionName.setText(appItem.getVersionName());
                     }

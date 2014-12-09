@@ -19,6 +19,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 
 public class WebViewTwitter extends ActionBarActivity {
@@ -29,6 +31,7 @@ public class WebViewTwitter extends ActionBarActivity {
 
 
     protected void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview_social);
         url = "http://mobile.twitter.com/aptoide";

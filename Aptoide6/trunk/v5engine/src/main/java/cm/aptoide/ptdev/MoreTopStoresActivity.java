@@ -31,6 +31,7 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.stores);
     }
