@@ -19,7 +19,6 @@ import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -37,6 +35,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -1299,6 +1298,9 @@ public class Start extends ActionBarActivity implements
             downloadService.startDownloadFromAppId(id);
         }
     }
+
+
+
 
     public void updateAll(long[] ids) {
         Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();

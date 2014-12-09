@@ -57,7 +57,13 @@ public class StickyRecyclerHeadersTouchListener implements RecyclerView.OnItemTo
 
         @Override
         public boolean onDown(MotionEvent e) {
-            return true;
+
+            int position = mDecor.findHeaderPositionUnder((int) e.getX(), (int) e.getY());
+            if (position != -1) {
+                return true;
+            }
+
+            return false;
         }
 
         @Override
