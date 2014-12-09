@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 
 repositories{
@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "cm.aptoide.pt.dev"
-        minSdkVersion 9 
+        minSdkVersion 9
         targetSdkVersion 21
 
     }
@@ -40,7 +40,7 @@ android {
             minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
             zipAlignEnabled true
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
 
         }
 
