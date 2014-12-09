@@ -38,7 +38,7 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
         this.timeline = timeline;
 
         if(timeline){
-            TITLES = new String[] { context.getString(R.string.home), "Top" ,context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
+            TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.top_tab) ,context.getString(R.string.stores), context.getString(R.string.updates_tab),context.getString(R.string.social_timeline), context.getString(R.string.download_manager)};
         }else{
             TITLES = new String[] { context.getString(R.string.home), context.getString(R.string.stores), context.getString(R.string.updates_tab), context.getString(R.string.download_manager)};
         }

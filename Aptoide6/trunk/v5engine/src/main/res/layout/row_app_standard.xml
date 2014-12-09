@@ -34,7 +34,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="App Name"
                 android:layout_marginLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center|left"
@@ -49,7 +48,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="V 1.15.0.aadsf.13r"
                 android:gravity="center|left"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_alignLeft="@+id/app_name"
@@ -67,8 +65,8 @@
                 android:layout_height="wrap_content"
                 android:numStars="5" />
 
-        <ImageView android:id="@+id/ic_action"
-                   style="@style/overflowStoreButton" />
+        <!--<ImageView android:id="@+id/ic_action"-->
+                   <!--style="@style/overflowStoreButton" />-->
 
     </RelativeLayout>
 

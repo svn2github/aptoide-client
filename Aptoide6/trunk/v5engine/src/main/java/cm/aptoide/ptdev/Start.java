@@ -153,7 +153,8 @@ public class Start extends ActionBarActivity implements
     private ReentrantLock lock = new ReentrantLock();
     private Condition boundCondition = lock.newCondition();
     public ViewPager pager;
-    private BadgeView badgeUpdates, badgeNew;
+    private BadgeView badgeUpdates;
+//    private BadgeView badgeNew;
     private HashMap<String, Long> storesIds;
     private int checkServerCacheString;
     private boolean isResumed;
@@ -207,6 +208,10 @@ public class Start extends ActionBarActivity implements
 
         }
     };
+
+    public void setCurrentItem(int page){
+        pager.setCurrentItem(page);
+    }
 
     private ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -500,7 +505,7 @@ public class Start extends ActionBarActivity implements
         tabStrip.setViewPager(pager);
 
         badgeUpdates = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(3));
-        badgeNew = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(4));
+//        badgeNew = new BadgeView(mContext, ((LinearLayout) tabStrip.getChildAt(0)).getChildAt(4));
 
         Intent i = new Intent(this, ParserService.class);
         final SQLiteDatabase db = Aptoide.getDb();
@@ -718,8 +723,8 @@ public class Start extends ActionBarActivity implements
             editor.commit();
 
             updateBadge(PreferenceManager.getDefaultSharedPreferences(this));
-            updateNewFeature(PreferenceManager.getDefaultSharedPreferences(this));
-            updateTimelinePostsBadge(sharedPreferences);
+//            updateNewFeature(PreferenceManager.getDefaultSharedPreferences(this));
+//            updateTimelinePostsBadge(sharedPreferences);
         } else {
             sponsoredCache = savedInstanceState.getString("sponsoredCache");
         }
@@ -781,10 +786,10 @@ public class Start extends ActionBarActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    badgeNew.setText(String.valueOf(finalTotal));
-                                    badgeNew.setTextSize(11);
-                                    badgeNew.setBadgeBackgroundColor(Color.RED);
-                                    badgeNew.show();
+//                                    badgeNew.setText(String.valueOf(finalTotal));
+//                                    badgeNew.setTextSize(11);
+//                                    badgeNew.setBadgeBackgroundColor(Color.RED);
+//                                    badgeNew.show();
                                 }
                             });
 
@@ -1077,20 +1082,20 @@ public class Start extends ActionBarActivity implements
     }
 
     public void updateTimelineBadge() {
-        badgeNew.hide();
+//        badgeNew.hide();
     }
 
     public void updateNewFeature(SharedPreferences sPref) {
-        badgeNew.setText(getString(R.string.new_feature));
-        badgeNew.setTextSize(10);
-        badgeNew.setBadgeMargin(5);
-        badgeNew.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badgeNew.setBadgeBackgroundColor(Color.parseColor("#A4C639"));
-        if (!sPref.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
-            badgeNew.show(false);
-        } else {
-            badgeNew.hide(false);
-        }
+//        badgeNew.setText(getString(R.string.new_feature));
+//        badgeNew.setTextSize(10);
+//        badgeNew.setBadgeMargin(5);
+//        badgeNew.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//        badgeNew.setBadgeBackgroundColor(Color.parseColor("#A4C639"));
+//        if (!sPref.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+//            badgeNew.show(false);
+//        } else {
+//            badgeNew.hide(false);
+//        }
     }
 
 

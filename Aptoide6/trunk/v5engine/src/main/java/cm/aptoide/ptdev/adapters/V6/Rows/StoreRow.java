@@ -3,6 +3,7 @@ package cm.aptoide.ptdev.adapters.V6.Rows;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -45,11 +46,11 @@ public class StoreRow extends AppsRow{
         viewHolder.addstore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Store store = new Store();
                 store.setName(name);
                 ((Start) context).startParse(store);
-
+                Toast.makeText(context, context.getString(R.string.store_added), Toast.LENGTH_SHORT).show();
+                ((Start) context).setCurrentItem(2);
             }
         });
     }

@@ -8,8 +8,9 @@
     android:gravity="center"
     android:id="@+id/more"
     android:focusable="true"
+    android:clickable="true"
     android:background="@drawable/flat_selector"
     android:padding="5dp"
     android:layout_margin="5dp"
-    android:text="More"
+    android:text="@string/button_more"
     android:textColor="@android:color/white" />

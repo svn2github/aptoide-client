@@ -102,7 +102,7 @@ public class CategoryAdapter extends CursorAdapter {
                 if(holder==null){
                     holder = new AppViewHolder();
                     holder.appIcon = (ImageView) view.findViewById(R.id.app_icon);
-                    holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
+//                    holder.overFlow = (ImageView) view.findViewById(R.id.ic_action);
                     holder.appName = (TextView) view.findViewById(R.id.app_name);
                     holder.versionName = (TextView) view.findViewById(R.id.app_version);
                     holder.rating = (RatingBar) view.findViewById(R.id.app_rating);
@@ -122,13 +122,13 @@ public class CategoryAdapter extends CursorAdapter {
                 ImageLoader.getInstance().displayImage(iconpath + icon1,holder.appIcon);
                 holder.versionName.setText(cursor.getString(cursor.getColumnIndex("version_name")));
 
-                holder.overFlow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FlurryAgent.logEvent("Store_Category_List_View_Opened_Popup_Install");
-                        showPopup(v, id);
-                    }
-                });
+//                holder.overFlow.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        FlurryAgent.logEvent("Store_Category_List_View_Opened_Popup_Install");
+//                        showPopup(v, id);
+//                    }
+//                });
                 break;
             case 1:
                 ImageView icon = (ImageView) view.findViewById(R.id.category_first_level_icon);
@@ -219,7 +219,7 @@ public class CategoryAdapter extends CursorAdapter {
 
     public static class AppViewHolder{
         ImageView appIcon;
-        ImageView overFlow;
+//        ImageView overFlow;
         TextView appName;
         TextView versionName;
         TextView downloads;

@@ -541,8 +541,8 @@
     <string name="feedback_to_write">Write here to send us your feedback</string>
     <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can get:
-        \n\u2022 Steps you have done
-        \n\u2022 Errors you are seeing</string>
+        \n\&#8226; Steps you have done
+        \n\&#8226; Errors you are seeing</string>
     <string name="feedback_include_logs">Include ScreenShot and Logs</string>
     <string name="feedback_not_valid">Please enter some valid Subject!</string>
     <string name="feedback_no_email">No email client installed!</string>
@@ -567,9 +567,9 @@
     <string name="disable_social_timeline">Disable Social Timeline</string>
     <string name="whats_timeline">What is Aptoide Social Timeline?</string>
     <string name="facebook_tos">
-        \u2022 Share the apps you install with your Facebook friends in a Timeline inside Aptoide
-        \n\n\u2022 See, like and comment in the Timeline
-        \n\n\u2022 We never, never, never post on your Facebook wall. We respect your privacy
+        &#8226; Share the apps you install with your Facebook friends in a Timeline inside Aptoide
+        \n\n&#8226; See, like and comment in the Timeline
+        \n\n&#8226; We never, never, never post on your Facebook wall. We respect your privacy
     </string>
     <string name="facebook_logout_and_login">Logout and Login with Facebook</string>
     <string name="facebook_timeline_feature">Ooohhh… This feature only works with Facebook login and you’re logged in with another authentication</string>
@@ -625,10 +625,13 @@
     <string name="social_timeline_notifications">Timeline Notifications</string>
     <string name="social_timeline_notifications_sum">Disable Aptoide Social Timeline Notifications. You will not receive the latest news on the notification bar.</string>
     <string name="social_timeline_notifications_sum2">Enable Aptoide Social Timeline Notifications. You will receive the latest news on the notification bar.</string>
-    <string name="error503">Ufff... Is it just me or is everyone installing apps at the same time?</string>
+    <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
     <string name="having_some_trouble">Having some trouble. Can you retry later?</string>
     <string name="friends_installs">Your friends installs</string>
     <string name="highlighted_apps">Highlighted</string>
     <string name="installed_this">installed this.</string>
     <string name="store_added">Store added</string>
+    <string name="top_tab">Top</string>
+    <string name="button_more">More</string>
+
 </resources>

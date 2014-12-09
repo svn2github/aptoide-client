@@ -29,9 +29,8 @@
             android:ellipsize="end"
             android:gravity="center|left"
             android:maxLines="1"
-            android:paddingLeft="5dp"
+            android:layout_marginLeft="5dp"
             android:singleLine="true"
-            android:text="1. UC Browser"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -41,11 +40,11 @@
             android:layout_below="@+id/app_name"
             android:layout_toEndOf="@+id/app_icon"
             android:layout_toRightOf="@+id/app_icon"
+            android:layout_alignLeft="@+id/app_name"
             android:ellipsize="end"
             android:gravity="center|left"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="Downloads: 16,5 M "
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RatingBar
@@ -56,6 +55,7 @@
             android:layout_below="@+id/app_version"
             android:layout_toEndOf="@+id/app_icon"
             android:layout_toRightOf="@+id/app_icon"
+            android:layout_alignLeft="@+id/app_name"
             android:numStars="5" />
 
     </RelativeLayout>

@@ -242,6 +242,8 @@ public class FragmentListStore extends Fragment {
 
                         for (Response.ListApps.Apk apk : apksList) {
                             App app = new App();
+                            app.setDownloads(apk.downloads.intValue());
+                            app.setCategory_ref_id(widgetrefid);
                             app.setName(apk.name);
                             app.setIcon(apk.icon);
                             app.setMd5sum(apk.md5sum);
@@ -335,6 +337,9 @@ public class FragmentListStore extends Fragment {
 
     public class App implements StoreListItem{
 
+        private String category_ref_id;
+        private int downloads;
+
         private String name;
         private float rating;
         private String icon;
@@ -347,6 +352,21 @@ public class FragmentListStore extends Fragment {
             return 0;
         }
 
+        public String getCategory_ref_id() {
+            return category_ref_id;
+        }
+
+        public void setCategory_ref_id(String category_ref_id) {
+            this.category_ref_id = category_ref_id;
+        }
+
+        public int getDownloads() {
+            return downloads;
+        }
+
+        public void setDownloads(int downloads) {
+            this.downloads = downloads;
+        }
 
         public void setName(String name) {
             this.name = name;
@@ -448,7 +468,15 @@ public class FragmentListStore extends Fragment {
                         icon = splittedUrl[0] + "_" + "96x96" + "." + splittedUrl[1];
                     }
                     ImageLoader.getInstance().displayImage(icon,appHolder.appIcon);
-                    appHolder.versionName.setText(appItem.getVersionName());
+
+                    if("group_top".equals(appItem.getCategory_ref_id())){
+                        appHolder.versionName.setText(appItem.getDownloads());
+                    }else{
+                        appHolder.versionName.setText(appItem.getVersionName());
+                    }
+
+
+
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -606,14 +634,12 @@ public class FragmentListStore extends Fragment {
             public final RatingBar rating;
             public final TextView versionName;
             public final TextView appName;
-            public final ImageView overFlow;
             public final TextView name;
 
             public AppStoreListViewHolder(View itemView) {
                 super(itemView);
                 name = (TextView) itemView.findViewById(R.id.app_name);
                 appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
-                overFlow = (ImageView) itemView.findViewById(R.id.ic_action);
                 appName = (TextView) itemView.findViewById(R.id.app_name);
                 versionName = (TextView) itemView.findViewById(R.id.app_version);
                 rating = (RatingBar) itemView.findViewById(R.id.app_rating);
