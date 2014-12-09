@@ -625,6 +625,7 @@ public class FragmentListApps extends Fragment {
                         intent.putExtra("widgetid", widgetid);
                         intent.putExtra("widgetrefid", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
                         intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+
                     }
 
                     startActivity(intent);

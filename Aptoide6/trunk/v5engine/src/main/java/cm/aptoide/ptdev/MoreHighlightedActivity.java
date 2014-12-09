@@ -50,7 +50,7 @@ public class MoreHighlightedActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("Highlighted");
+        getSupportActionBar().setTitle(getString(R.string.highlighted_apps));
 
         Fragment fragment = new MoreFriendsInstallsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();

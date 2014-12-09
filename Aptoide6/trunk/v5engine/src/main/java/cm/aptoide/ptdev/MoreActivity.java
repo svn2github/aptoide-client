@@ -54,6 +54,7 @@ public class MoreActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("widgetname"));
 
         if(savedInstanceState == null){
             Fragment fragment = new MoreFragment();

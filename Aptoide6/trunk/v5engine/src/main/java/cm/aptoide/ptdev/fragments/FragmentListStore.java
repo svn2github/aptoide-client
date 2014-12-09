@@ -474,7 +474,7 @@ public class FragmentListStore extends Fragment {
                     ImageLoader.getInstance().displayImage(icon,appHolder.appIcon);
 
                     if("group_top".equals(appItem.getCategory_ref_id())){
-                        appHolder.versionName.setText(withSuffix(String.valueOf(appItem.getDownloads())));
+                        appHolder.versionName.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(appItem.getDownloads()))));
                     }else{
                         appHolder.versionName.setText(appItem.getVersionName());
                     }
