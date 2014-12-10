@@ -547,26 +547,31 @@ public class FragmentListStore extends Fragment {
                     int catid;
                     try{
 
-                        if("group_top".equals(storeListItem)){
+                        if("group_top".equals(storeListItem.refid)){
 
                             catid = EnumCategories.TOP_APPS;
-
-                        }else if("likes".equals(storeListItem)) {
+                            Log.d("FragmentListStore", "group_top "+catid);
+                        }else if("likes".equals(storeListItem.refid)) {
 
 
                             catid = EnumCategories.LATEST_LIKES;
+                            Log.d("FragmentListStore", "likes "+catid);
 
-                        }else if("comments".equals(storeListItem)) {
+                        }else if("comments".equals(storeListItem.refid)) {
 
                             catid = EnumCategories.LATEST_COMMENTS;
+                            Log.d("FragmentListStore", "comments "+catid);
 
-                        }else if("group_latest".equals(storeListItem)) {
+                        }else if("group_latest".equals(storeListItem.refid)) {
 
                             catid = EnumCategories.LATEST_APPS;
+                            Log.d("FragmentListStore", "group_latest "+catid);
 
                         }else {
 
-                            catid = Integer.valueOf(storeListItem.refid.substring(4));
+                            catid = Integer.valueOf(storeListItem.refid.replaceAll("[^-?0-9]+", ""));
+                            Log.d("FragmentListStore", "catid "+catid);
+
                         }
                     }catch (Exception e){
                         catid = 0;
@@ -576,6 +581,8 @@ public class FragmentListStore extends Fragment {
                     try{
                         String themeString = storeListItem.theme;
                         theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
+                        Log.d("FragmentListStore", "theme "+theme);
+
                     }catch (Exception e){
                         theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;
                     }
