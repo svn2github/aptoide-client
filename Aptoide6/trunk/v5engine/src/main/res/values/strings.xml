@@ -633,5 +633,6 @@
     <string name="store_added">Store added</string>
     <string name="top_tab">Top</string>
     <string name="button_more">More</string>
+    <string name="no_updates">You have no Updates</string>
 
 </resources>

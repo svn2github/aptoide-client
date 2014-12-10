@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -74,15 +75,10 @@ public class FragmentUpdates2 extends Fragment {
 
     }
 
-
-
-
-
     public static class UpdatesResponse{
 
         public Response.Info info;
         public Response.Data<UpdateApk> data;
-
 
         public static class UpdateApk extends Response.ListApps.Apk{
 
@@ -180,7 +176,6 @@ public class FragmentUpdates2 extends Fragment {
 
 
         final ArrayList<UpdatesResponse.UpdateApk> list = new ArrayList<>();
-
         viewById.setAdapter(new UpdatesRecyclerView(list));
 
         final UpdatesRequest request = new UpdatesRequest();
@@ -192,20 +187,28 @@ public class FragmentUpdates2 extends Fragment {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+                Log.d("pois","onRequestFailure");
+            }
 
+            private void setUINoUpdates(){
+                TextView tv = (TextView)view.findViewById(R.id.empty);
+                tv.setVisibility(View.VISIBLE);
+                tv.setText(R.string.no_updates);
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.list).setVisibility(View.GONE);
             }
 
             @Override
             public void onRequestSuccess(UpdatesResponse updatesResponse) {
-
+                Log.d("pois","onRequestSuccess");
                 registerForContextMenu(viewById);
+                if(updatesResponse==null || updatesResponse.data==null){
+                    setUINoUpdates();
+                }
 
                 list.clear();
-
-                ArrayList<String> excludedPackages = new ArrayList<String>();
-
+                ArrayList<String> excludedPackages = new ArrayList<>();
                 Database database = new Database(Aptoide.getDb());
-
                 Cursor c = database.getExcludedApks();
 
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -225,15 +228,19 @@ public class FragmentUpdates2 extends Fragment {
                         }
 
                     }
-
-                    viewById.getAdapter().notifyDataSetChanged();
+                    Log.d("pois","list size: "+list.size());
+                    if(list.size()>1){
+                        viewById.getAdapter().notifyDataSetChanged();
+                        view.findViewById(R.id.empty).setVisibility(View.GONE);
+                        view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                    }else{
+                        setUINoUpdates();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    setUINoUpdates();
                 }
 
-                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
-                layout.setRefreshing(false);
             }
         };
         manager.execute(request, requestListener);
