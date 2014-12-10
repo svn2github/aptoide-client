@@ -547,8 +547,6 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public void bindView(RecyclerView.ViewHolder holder) {
-
-
             RecyclerAdapter.RowViewHolder viewHolder = (RecyclerAdapter.RowViewHolder) holder;
 
             Context context = viewHolder.itemView.getContext();
@@ -559,9 +557,7 @@ public class FragmentListApps extends Fragment {
                         (RecyclerAdapter.RowViewHolder.ItemViewHolder) viewHolder.views[i].getTag();
                 itemViewHolder.name.setText(apk.name);
 
-
                 String icon = apk.icon;
-
 
                 int downloads = apk.downloads.intValue();
                 itemViewHolder.category.setText(context.getString(R.string.X_download_number, withSuffix(String.valueOf(downloads))));
@@ -606,22 +602,18 @@ public class FragmentListApps extends Fragment {
         }
     }
 
-
     int BUCKET_SIZE = AptoideUtils.getBucketSize();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_list_apps, container, false);
 
         final RecyclerView view = (RecyclerView) rootView.findViewById(R.id.list);
-        final ArrayList<Displayable> string = new ArrayList<Displayable>(20);
+        final ArrayList<Displayable> string = new ArrayList<>(20);
 
         final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), string);
         StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
         StickyRecyclerHeadersTouchListener touchListener = new StickyRecyclerHeadersTouchListener(view, stickyRecyclerHeadersDecoration);
-
-
 
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
@@ -653,9 +645,6 @@ public class FragmentListApps extends Fragment {
 
                     startActivity(intent);
                 }
-
-                //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
-
             }
         });
         view.addOnItemTouchListener(touchListener);
@@ -663,8 +652,6 @@ public class FragmentListApps extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-
 
         view.setAdapter(mAdapter);
         view.setLayoutManager(linearLayoutManager);
@@ -680,8 +667,6 @@ public class FragmentListApps extends Fragment {
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
-
-
                 rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -695,9 +680,10 @@ public class FragmentListApps extends Fragment {
 
             @Override
             public void onRequestSuccess(Response response) {
-
-
-                ArrayList<Displayable> map = new ArrayList<Displayable>();
+                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.error).setVisibility(View.GONE);
+                ArrayList<Displayable> map = new ArrayList<>();
 
                 List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                 HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
@@ -709,7 +695,7 @@ public class FragmentListApps extends Fragment {
 
                         if ("apps_list:EDITORS_group_hrand".equals(widget.widgetid)) {
 
-                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<>(dataset.get(widget.data.ref_id).data.list);
 
                             Row row = new FeaturedRow();
                             row.widgetid = widget.widgetid;
@@ -758,12 +744,10 @@ public class FragmentListApps extends Fragment {
                         }
 
                     } else {
-
                         Row row = new Row();
                         row.setEnabled(false);
                         map.add(row);
                         ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
-
                     }
 
                 }
@@ -777,15 +761,13 @@ public class FragmentListApps extends Fragment {
                 int offset = ((RecyclerAdapter) view.getAdapter()).offset;
                 ((RecyclerAdapter) view.getAdapter()).offset = offset + list.size();
                 view.getAdapter().notifyDataSetChanged();
-                loading = false;
+                //loading = false;
 
                 GetAdsRequest request = new GetAdsRequest(getActivity());
 
                 request.setLimit(BUCKET_SIZE);
                 request.setLocation("homepage");
                 request.setKeyword("__NULL__");
-
-
 
                 if (AptoideUtils.isLoggedIn(getActivity())) {
                     ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
@@ -800,7 +782,6 @@ public class FragmentListApps extends Fragment {
 
                         @Override
                         public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
-
                             TimelineRow row = new TimelineRow(timelineListAPKsJson.getUsersapks());
                             int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
                             row.header = getString(R.string.friends_installs);
@@ -809,7 +790,6 @@ public class FragmentListApps extends Fragment {
                             ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
 
                             (view.getAdapter()).notifyDataSetChanged();
-
                         }
                     });
 
@@ -829,23 +809,14 @@ public class FragmentListApps extends Fragment {
                             int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
 
                             if(listRecomended!= null && listRecomended.getRepository()!=null) {
-
-
-
                                 for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
 
                                     row.header = getString(R.string.recommended_for_you);
                                     Response.ListApps.Apk apk = new Response.ListApps.Apk();
                                     row.widgetid = "recommended";
 
-
-
                                     if(apkSuggestion.getPackage()!=null) {
-
                                         for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
-
-
-
                                             apk.name = apkRecommended.getName();
                                             apk.icon = apkSuggestion.getIconspath() + apkRecommended.getIcon_hd();
                                             apk.downloads = apkRecommended.getDwn();
@@ -865,16 +836,9 @@ public class FragmentListApps extends Fragment {
 
                             }
 
-
-
                         }
                     });
-
-
                 }
-
-                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
                 manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + BUCKET_SIZE, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<ApkSuggestionJson>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
@@ -898,20 +862,13 @@ public class FragmentListApps extends Fragment {
 
                             (view.getAdapter()).notifyDataSetChanged();
                         }
-
-
                     }
                 });
 
                 swipeLayout.setRefreshing(false);
-
-
             }
 
         };
-
-
-
 
 //        view.setOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
@@ -951,7 +908,6 @@ public class FragmentListApps extends Fragment {
             }
         });
 
-
         manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
 
         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
@@ -960,11 +916,10 @@ public class FragmentListApps extends Fragment {
         return rootView;
     }
 
-
-    private int previousTotal = 0;
+/*    private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
-    int firstVisibleItem, visibleItemCount, totalItemCount;
+    int firstVisibleItem, visibleItemCount, totalItemCount;*/
 
     public static class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<RecyclerAdapter.HeaderViewHolder> {
 
@@ -977,7 +932,7 @@ public class FragmentListApps extends Fragment {
         private final List<Displayable> list;
 
 
-        private final HashMap<String, Integer> placeholders = new HashMap<String, Integer>();
+        private final HashMap<String, Integer> placeholders = new HashMap<>();
 
         public RecyclerAdapter(Context context, List<Displayable> list) {
 
@@ -988,7 +943,6 @@ public class FragmentListApps extends Fragment {
         public int getItemViewType(int position) {
             return list.get(position).getViewType();
         }
-
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -1001,23 +955,14 @@ public class FragmentListApps extends Fragment {
                 };
 
             } else if(viewType>3000) {
-
                 LinearLayout inflate = new LinearLayout(context);
                 inflate.setOrientation(LinearLayout.HORIZONTAL);
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 inflate.setLayoutParams(params);
-
                 return new HomeCategoryViewHolder(inflate, viewType % 3000, context);
-
-
             } else if( viewType > 2000){
-
                 View view = LayoutInflater.from(context).inflate(R.layout.row_app_home_featured, parent, false);
-
-
                 return new FeaturedViewHolder(view, viewType % 2000, context);
-
-
             }else {
 
                 LinearLayout inflate = new LinearLayout(context);
@@ -1025,16 +970,13 @@ public class FragmentListApps extends Fragment {
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 inflate.setLayoutParams(params);
 
-
                 if (viewType > 1000) {
                     return new TimelineRowViewHolder(inflate, BUCKET_SIZE, context);
                 } else {
                     return new RowViewHolder(inflate, viewType, context);
                 }
             }
-
         }
-
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -1078,7 +1020,6 @@ public class FragmentListApps extends Fragment {
 
         public static class HomeCategoryViewHolder extends RecyclerView.ViewHolder{
 
-
             private final LinearLayout layout;
             private final ImageView[] views;
 
@@ -1093,12 +1034,8 @@ public class FragmentListApps extends Fragment {
                     views[i] = (ImageView) inflate.findViewById(R.id.image);
                     layout.addView(inflate);
                 }
-
             }
-
-
         }
-
 
         public static class FeaturedViewHolder extends RecyclerView.ViewHolder {
 
@@ -1121,18 +1058,10 @@ public class FragmentListApps extends Fragment {
                     frameLayouts[i] = (FrameLayout) itemView.findViewById(frameLayoutRes[i]);
                     images[i] = (ImageView) itemView.findViewById(imageRes[i]);
                 }
-
-
             }
-
-
-
-
         }
 
         public static class RowViewHolder extends RecyclerView.ViewHolder{
-
-
             public static class ItemViewHolder {
                 public TextView name;
                 public TextView category;
@@ -1146,7 +1075,6 @@ public class FragmentListApps extends Fragment {
             public View[] getViews() {
                 return views;
             }
-
 
             final View[] views;
             final LinearLayout layout;
@@ -1177,21 +1105,15 @@ public class FragmentListApps extends Fragment {
                         layout.addView(inflate);
                     }
                 }
-
-
             }
-
         }
 
         public static class TimelineRowViewHolder extends RecyclerView.ViewHolder{
-
-
             public static class ItemViewHolder {
                 public TextView name;
                 public TextView friend;
                 public ImageView icon;
                 public RoundedImageView avatar;
-
             }
 
             public LinearLayout getLinearLayout() {
@@ -1201,7 +1123,6 @@ public class FragmentListApps extends Fragment {
             public View[] getViews() {
                 return views;
             }
-
 
             final View[] views;
             final LinearLayout layout;
@@ -1225,10 +1146,7 @@ public class FragmentListApps extends Fragment {
                     layout.addView(inflate);
 
                 }
-
-
             }
-
         }
         public static class HeaderViewHolder extends RecyclerView.ViewHolder{
 
@@ -1241,10 +1159,6 @@ public class FragmentListApps extends Fragment {
                 tv = (TextView) itemView.findViewById(R.id.header);
                 more = (TextView) itemView.findViewById(R.id.more);
             }
-
-
-
         }
     }
-
 }

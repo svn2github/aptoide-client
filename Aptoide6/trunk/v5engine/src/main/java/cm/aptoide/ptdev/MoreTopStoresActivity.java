@@ -53,11 +53,12 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
 
         @Override
         public Response.ListStores loadDataFromNetwork() throws Exception {
-
-
             Api api = new Api();
-
-
+            Api.ListApps listApps = new Api.ListApps();
+            listApps.datasets_params = null;
+            listApps.order_by = "downloads";
+            listApps.order_dir = "desc";
+            api.getApi_params().set(listApps);
             return getService().getStores(api);
         }
     }

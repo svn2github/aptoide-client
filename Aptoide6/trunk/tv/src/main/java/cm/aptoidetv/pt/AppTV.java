@@ -2,7 +2,6 @@ package cm.aptoidetv.pt;
 
 import android.app.Application;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.File;
 
@@ -17,7 +16,6 @@ public class AppTV extends Application {
 
         if(!PreferenceManager.getDefaultSharedPreferences(this).contains("Rooted")) {
             boolean isRooted = isRooted();
-            Log.d("pois", "Root:" + isRooted);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("Rooted",isRooted).commit();
         }
     }

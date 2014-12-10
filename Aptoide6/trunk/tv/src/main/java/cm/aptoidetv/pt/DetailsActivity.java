@@ -429,7 +429,6 @@ public class DetailsActivity extends Activity {
                     downloadmanager = (DownloadManager) getSystemService(servicestring);
 
                     Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
-                    Log.d("pois", "DownLoadLink: " + ApkInfoJson.getApk().getPath());
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     new updateDownLoadInfoTask().execute();

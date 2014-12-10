@@ -54,7 +54,6 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  */
 public class FragmentListStore extends Fragment {
 
-
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private ArrayList<StoreListItem> items;
     private RecyclerView rRiew;
@@ -108,8 +107,6 @@ public class FragmentListStore extends Fragment {
 
         @Override
         public Response loadDataFromNetwork() throws Exception {
-
-
             Api api = new Api();
 
             api.getApi_global_params().setLang("en");

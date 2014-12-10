@@ -47,7 +47,6 @@ public class ListUserapklikesRequest extends RetrofitSpiceRequest<ListapklikesJs
         String token = SecurePreferences.getInstance().getString("access_token", "empty");
         parameters.put("access_token", token);
 
-
         try{
             return getService().run(parameters);
         }catch (RetrofitError e){

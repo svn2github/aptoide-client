@@ -139,18 +139,14 @@ public class FragmentListTopApps extends Fragment {
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
-//                Log.d("pois","i:"+i);
                 Displayable displayable = ((RecyclerAdapter) view.getAdapter()).list.get(i);
-//                Log.d("pois","click");
                 if(displayable.getViewType()==1000) {
-                    Log.d("pois","Else");
                     Intent intent = new Intent(getActivity(), MoreTopStoresActivity.class);
                     startActivity(intent);
 
                     FlurryAgent.logEvent("Top_Page_Clicked_On_More_Top_Stores");
 
                 }else{
-//                    Log.d("pois","AppsRow");
                     Intent intent = new Intent(getActivity(), MoreActivity.class);
 
                     intent.putExtra("widgetid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid);
@@ -186,7 +182,7 @@ public class FragmentListTopApps extends Fragment {
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
@@ -198,15 +194,13 @@ public class FragmentListTopApps extends Fragment {
 
             @Override
             public void onRequestSuccess(Response response) {
-
-
-                ArrayList<Displayable> map = new ArrayList<Displayable>();
-
+                ArrayList<Displayable> map = new ArrayList<>();
+                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.error).setVisibility(View.GONE);
                 List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                 HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
                 HashMap<String, Response.ListStores.StoreGroup> storesdataset = response.responses.listStores.datasets.getDataset();
-
-
 
                 for(Response.GetStore.Widgets.Widget widget : list) {
 
@@ -263,18 +257,13 @@ public class FragmentListTopApps extends Fragment {
             }
 
         };
-
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 manager.execute(request, "top" , DurationInMillis.ALWAYS_EXPIRED,  requestListener);
             }
         });
-
-        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-        rootView.findViewById(R.id.list).setVisibility(View.GONE);
         manager.execute(request, "top" , DurationInMillis.ALWAYS_RETURNED,  requestListener);
-
         return rootView;
     }
 
