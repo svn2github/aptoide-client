@@ -25,8 +25,22 @@ android {
     }
     buildTypes {
         debug {
-            runProguard true
-            //proguardFile 'proguard-aptoide.txt'
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+
+        }
+
+        dexOptions {
+            preDexLibraries true
+            incremental true
+            javaMaxHeapSize "2g"
+        }
+
+        release {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
             signingConfig signingConfigs.release
 
         }
@@ -34,7 +48,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.+'
+    compile 'com.android.support:appcompat-v7:21.+'
     compile 'commons-io:commons-io:2.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

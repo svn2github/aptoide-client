@@ -2,15 +2,15 @@ package com.example.aptoidehelper.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
-import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -29,6 +29,8 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.enable_debug_mode).setOnClickListener(new Listeners.DebugMode(true, this));
         findViewById(R.id.delete_aptoide_settings_cache).setOnClickListener(new Listeners.OnDeleteCacheClick(this));
         findViewById(R.id.set_country).setOnClickListener(new Listeners.SetAptoideCountry((android.widget.EditText) findViewById(R.id.iso_field),this));
+        findViewById(R.id.set_notification).setOnClickListener(new Listeners.SetNotificationType((android.widget.EditText) findViewById(R.id.notification_field),this));
+
 
     }
 

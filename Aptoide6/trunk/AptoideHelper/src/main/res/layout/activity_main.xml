@@ -59,5 +59,20 @@
                 android:layout_height="wrap_content" android:layout_toLeftOf="@id/set_country" android:id="@+id/iso_field"/>
             </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:text="Set" android:id="@+id/set_notification" android:layout_centerInParent="true" android:gravity="center"/>
+            <EditText
+                android:hint="Notification Type"
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content" android:layout_toLeftOf="@id/set_notification" android:id="@+id/notification_field"/>
+        </RelativeLayout>
+
     </LinearLayout>
 </RelativeLayout>
