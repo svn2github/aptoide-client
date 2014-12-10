@@ -1,18 +1,15 @@
 package cm.aptoide.ptdev.webservices;
 
-import cm.aptoide.ptdev.model.Comment;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.converter.JacksonConverter;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
+
+import cm.aptoide.ptdev.preferences.SecurePreferences;
+import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import retrofit.RetrofitError;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created by j-pac on 30-05-2014.
@@ -54,10 +51,10 @@ public class AddApkCommentVoteRequest extends RetrofitSpiceRequest<GenericRespon
 
         parameters.put("access_token", token);
 
-        RestAdapter adapter = new RestAdapter.Builder().setConverter(new JacksonConverter()).setEndpoint("http://").build();
+        //RestAdapter adapter = new RestAdapter.Builder().setConverter(new JacksonConverter()).setEndpoint("http://").build();
 
 
-        setService(adapter.create(Webservice.class));
+        //setService(adapter.create(Webservice.class));
 
 //        HttpContent content = new UrlEncodedContent(parameters);
 //

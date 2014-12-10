@@ -3,21 +3,18 @@ package cm.aptoide.ptdev.webservices;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.configuration.AccountGeneral;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import retrofit.RestAdapter;
-import retrofit.converter.JacksonConverter;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import java.io.EOFException;
 import java.util.HashMap;
 import java.util.Locale;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.json.CreateUserJson;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created with IntelliJ IDEA.
@@ -84,9 +81,9 @@ public class UpdateUserRequest extends RetrofitSpiceRequest<CreateUserJson, Upda
 //
 //        return response.parseAs(getResultType());
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(new JacksonConverter()).build();
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(new JacksonConverter()).build();
 
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
         return getService().updateUser(parameters);
 

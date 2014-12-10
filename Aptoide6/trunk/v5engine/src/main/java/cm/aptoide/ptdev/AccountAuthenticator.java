@@ -1,34 +1,31 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.*;
-import android.accounts.AccountAuthenticatorActivity;
-import android.content.ContentResolver;
+import android.accounts.AbstractAccountAuthenticator;
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
+import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 
-import static cm.aptoide.ptdev.configuration.AccountGeneral.*;
-import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+import org.apache.commons.lang3.ArrayUtils;
 
-import android.widget.Toast;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.RabbitMqService;
 import cm.aptoide.ptdev.utils.Configs;
-import com.facebook.Session;
-import com.facebook.TokenCachingStrategy;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.Arrays;
+import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+import static cm.aptoide.ptdev.configuration.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static cm.aptoide.ptdev.configuration.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+import static cm.aptoide.ptdev.configuration.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
+import static cm.aptoide.ptdev.configuration.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -100,41 +97,27 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d("udinic", TAG + "> peekAuthToken returned - " + authToken);
+        Log.d("udinic", TAG + "> peekAuthToken returned - " + account+ " " + authToken);
 
         // Lets give another try to authenticate the user
-        if (TextUtils.isEmpty(authToken)) {
-            final String password = am.getPassword(account);
-            if (password != null) {
-                try {
-                    Log.d("udinic", TAG + "> re-authenticating with the existing password");
-                    //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
 
         // If we get an authToken - we return it
-        if (!TextUtils.isEmpty(authToken)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
             result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+
+            Log.d("udinic", TAG + "> getAuthToken returning - " + account+ " " + authToken);
+
+
             return result;
-        }
+
 
         // If we get here, then we couldn't access the user's password - so we
         // need to re-prompt them for their credentials. We do that by creating
         // an intent to display our AuthenticatorActivity.
-        final Intent intent = new Intent(mContext, LoginActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(LoginActivity.ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(LoginActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(LoginActivity.ARG_ACCOUNT_NAME, account.name);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
+
     }
 
 

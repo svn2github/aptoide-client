@@ -2,21 +2,12 @@ package cm.aptoide.ptdev.webservices;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-
-
-
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
 
-
-
 import cm.aptoide.ptdev.LoginActivity;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
-import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
@@ -91,8 +82,8 @@ public class CheckUserCredentialsRequest extends RetrofitSpiceRequest<CheckUserC
 
         parameters.put("mode", "json");
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
 
         return getService().getUserInfo(parameters);

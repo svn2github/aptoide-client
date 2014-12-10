@@ -39,6 +39,7 @@ import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
 import cm.aptoide.ptdev.adapters.V6.Rows.StoreRow;
 import cm.aptoide.ptdev.adapters.V6.V6StoresRecyclerAdapter;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
 import retrofit.RetrofitError;
@@ -88,17 +89,16 @@ public class FragmentListTopApps extends Fragment {
         public Response loadDataFromNetwork() throws Exception {
             Api api = new Api();
 
-            api.getApi_global_params().setLang("en");
+            api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
             api.getApi_global_params().setStore_name("apps");
+            api.getApi_global_params().limit = 10;
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
             api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
             
             Api.GetStore getStore = new Api.GetStore();
-            Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
 
-            categoriesParams.setParent_ref_id("cat_1");
 
             Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
             widgetParams.setContext("top");

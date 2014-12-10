@@ -50,6 +50,8 @@ public class Api {
 
     public static class ApiGlobalParams {
 
+        public Number limit;
+
         public String mature;
         public String lang;
         public String store_name;

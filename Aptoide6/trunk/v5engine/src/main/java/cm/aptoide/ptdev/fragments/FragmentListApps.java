@@ -1,5 +1,6 @@
 package cm.aptoide.ptdev.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.squareup.otto.Subscribe;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -44,7 +46,11 @@ import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
+import cm.aptoide.ptdev.dialogs.AdultDialog;
+import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.RoundedImageView;
@@ -129,7 +135,7 @@ public class FragmentListApps extends Fragment {
         public Response loadDataFromNetwork() throws Exception {
             Api api = new Api();
             final int BUCKET_SIZE = AptoideUtils.getBucketSize();
-            api.getApi_global_params().setLang("en");
+            api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
             api.getApi_global_params().setStore_name("apps");
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
@@ -196,6 +202,11 @@ public class FragmentListApps extends Fragment {
 
         public TimelineRow(List<TimelineListAPKsJson.UserApk> apks) {
             this.apks = apks;
+        }
+
+
+        public void addItem(TimelineListAPKsJson.UserApk apk) {
+            apks.add(apk);
         }
 
         @Override
@@ -429,17 +440,39 @@ public class FragmentListApps extends Fragment {
 
     AdultContentRow.AdultInterface adultInterface = new AdultContentRow.AdultInterface() {
         @Override
-        public void onAdultChange() {
-            TestRequest request = new TestRequest();
-            manager.execute(request, "home", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+        public void onAdultChange(boolean isChecked) {
+            if (isChecked) {
+                FlurryAgent.logEvent("Switch_Turned_On_Adult_Content");
+                new AdultDialog().show(getFragmentManager(), "adultDialog");
+            } else {
+                ((GetStartActivityCallback) getActivity()).matureLock();
+            }
         }
     };
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void refresh(RepoCompleteEvent event){
+        TestRequest request = new TestRequest();
+        manager.execute(request, "home", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+    }
 
 
     public static class AdultContentRow implements Displayable {
 
         public interface AdultInterface{
-            void onAdultChange();
+            void onAdultChange(boolean isChecked);
         }
 
         public AdultContentRow(AdultInterface adultInterface) {
@@ -465,16 +498,14 @@ public class FragmentListApps extends Fragment {
         @Override
         public void bindView(RecyclerView.ViewHolder viewHolder) {
 
-            final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+
             CompoundButton viewById = (CompoundButton) viewHolder.itemView.findViewById(R.id.adult_content);
-            viewById.setChecked(defaultSharedPreferences.getBoolean("matureChkBox", false));
+
             viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    defaultSharedPreferences.edit().putBoolean("matureChkBox", isChecked).apply();
-                    adultInterface.onAdultChange();
-
+                    adultInterface.onAdultChange(isChecked);
 
                 }
             });
@@ -770,28 +801,49 @@ public class FragmentListApps extends Fragment {
                 request.setKeyword("__NULL__");
 
                 if (AptoideUtils.isLoggedIn(getActivity())) {
-                    ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
 
-                    listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
+                    SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-                    manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
-                        @Override
-                        public void onRequestFailure(SpiceException spiceException) {
+                    if (defaultSharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
 
-                        }
+                        ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
 
-                        @Override
-                        public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
-                            TimelineRow row = new TimelineRow(timelineListAPKsJson.getUsersapks());
-                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
-                            row.header = getString(R.string.friends_installs);
-                            row.widgetid = "timeline";
+                        listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
 
-                            ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+                        manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
+                            @Override
+                            public void onRequestFailure(SpiceException spiceException) {
 
-                            (view.getAdapter()).notifyDataSetChanged();
-                        }
-                    });
+                            }
+                            @Override
+                            public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
+                                TimelineRow row = new TimelineRow(new ArrayList<TimelineListAPKsJson.UserApk>());
+
+                                int i = 0;
+                                for (TimelineListAPKsJson.UserApk userApk : timelineListAPKsJson.getUsersapks()) {
+                                    row.addItem(userApk);
+                                    i++;
+
+                                    if(i>=BUCKET_SIZE){
+                                        break;
+                                    }
+
+                                }
+
+                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
+                                row.header = getString(R.string.friends_installs);
+                                row.widgetid = "timeline";
+
+                                ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+
+                                (view.getAdapter()).notifyDataSetChanged();
+
+                            }
+                        });
+
+                    }
+
+
 
                     final ListUserbasedApkRequest recommendedRequest = new ListUserbasedApkRequest(getActivity());
 
@@ -950,8 +1002,11 @@ public class FragmentListApps extends Fragment {
             int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
             if(viewType == 8723487 ){
+                View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_switch, parent, false);
 
-                return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_switch, parent, false)) {
+                ((CompoundButton)inflate.findViewById(R.id.adult_content)).setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
+
+                return new RecyclerView.ViewHolder(inflate) {
                 };
 
             } else if(viewType>3000) {

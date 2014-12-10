@@ -42,6 +42,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
 import retrofit.http.Body;
@@ -109,7 +110,7 @@ public class FragmentListStore extends Fragment {
         public Response loadDataFromNetwork() throws Exception {
             Api api = new Api();
 
-            api.getApi_global_params().setLang("en");
+            api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
             api.getApi_global_params().setStore_name(store);
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());

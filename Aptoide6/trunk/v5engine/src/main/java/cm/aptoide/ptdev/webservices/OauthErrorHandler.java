@@ -6,6 +6,10 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.SharedPreferences;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -15,6 +19,8 @@ import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.json.OAuth;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -56,7 +62,8 @@ public class OauthErrorHandler {
                     parameters.put("client_id", "Aptoide");
                     parameters.put("refresh_token", refreshToken);
 
-                    OAuth oAuth = new RestAdapter.Builder().setEndpoint("http://webservices.aptoide.com/webservices").build().create(OauthService.class).authenticate(parameters);
+                    OAuth oAuth = new RestAdapter.Builder().setConverter(createConverter()).setEndpoint("http://webservices.aptoide.com/webservices").build().create(OauthService.class).authenticate(parameters);
+
 
                     SharedPreferences preferences = SecurePreferences.getInstance();
                     preferences.edit().putString("access_token", oAuth.getAccess_token()).apply();
@@ -67,5 +74,15 @@ public class OauthErrorHandler {
         }
 
         throw error;
+    }
+
+
+    protected static Converter createConverter() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        return new JacksonConverter(objectMapper);
     }
 }

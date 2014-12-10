@@ -13,15 +13,15 @@ public class OAuth {
 
 
 
-    private String access_token;
+    public String access_token;
 
-    private String refresh_token;
-
-
-    private String error_description;
+    public String refresh_token;
 
 
-    private List<Error> errors;
+    public String error_description;
+
+
+    public List<Error> errors;
 
 
     private String status;

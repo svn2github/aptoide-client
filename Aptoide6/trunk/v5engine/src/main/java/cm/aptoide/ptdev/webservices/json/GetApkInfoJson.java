@@ -593,7 +593,7 @@ public class GetApkInfoJson {
 
         private String vername;
 
-        private String icon_hd;
+        public String icon_hd;
 
         public String getIcon(){
             return this.icon;

@@ -1,24 +1,17 @@
 package cm.aptoide.ptdev.webservices;
 
-import android.util.Log;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import cm.aptoide.ptdev.webservices.json.RelatedApkJson;
+import java.util.HashMap;
+
 import cm.aptoide.ptdev.webservices.json.RepositoryCommentsJson;
-import cm.aptoide.ptdev.webservices.json.RepositoryLikesJson;
-import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-
-import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,8 +54,8 @@ public class ListRepositoryCommentsRequest extends RetrofitSpiceRequest<Reposito
         parameters.put("repo", storeName);
         parameters.put("mode", "json");
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
         return getService().listRepositoryComments(parameters);
 

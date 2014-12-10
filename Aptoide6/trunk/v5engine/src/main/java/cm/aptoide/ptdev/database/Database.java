@@ -31,6 +31,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 import cm.aptoide.ptdev.fragments.Home;
 import cm.aptoide.ptdev.fragments.HomeBucket;
 import cm.aptoide.ptdev.fragments.HomeCategory;
@@ -116,6 +117,24 @@ public class Database {
         }
     }
 
+    public void addToExcludeUpdate(FragmentUpdates2.UpdatesResponse.UpdateApk apk) {
+        ContentValues values = new ContentValues();
+
+
+                String apkid = apk.packageName;
+                int vercode = apk.vercode;
+                String name = apk.name;
+                String iconpath = apk.icon;
+
+                values.put(Schema.Excluded.COLUMN_PACKAGE_NAME, apkid);
+                values.put(Schema.Excluded.COLUMN_VERCODE, vercode);
+                values.put(Schema.Excluded.COLUMN_NAME, name);
+                values.put(Schema.Excluded.COLUMN_ICONPATH, iconpath);
+                database.insert(Schema.Excluded.getName(), null, values);
+
+
+    }
+
     public void deleteFromExcludeUpdate(String apkid, int vercode) {
         database.delete(Schema.Excluded.getName(),
                 "package_name = ? and vercode = ?",
@@ -151,6 +170,15 @@ public class Database {
     }
 
     public long insertStore(Store store) {
+
+        Cursor servers = getServers();
+
+        for(servers.moveToFirst(); !servers.isAfterLast();servers.moveToNext()){
+            if(servers.getString(servers.getColumnIndex("name")).equals(store.getName())){
+                return 0;
+            }
+        }
+
         ContentValues values = BuildContentValuesFromStore(store);
 
         if(store.getId()!=0)

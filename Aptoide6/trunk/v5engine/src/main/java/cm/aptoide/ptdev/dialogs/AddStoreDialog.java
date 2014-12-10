@@ -116,43 +116,50 @@ public class AddStoreDialog extends DialogFragment {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             dismissDialog();
-            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onRequestSuccess(Response.GetStore response) {
 
-            final Store store = new Store();
-            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
-            store.setId(data.id.longValue());
-            store.setName(response.datasets.meta.data.name);
-            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
+            try{
+
+                final Store store = new Store();
+                Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+                store.setId(data.id.longValue());
+                store.setName(response.datasets.meta.data.name);
+                store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
 
 
-            String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
+                String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
 
 
-            String avatar = data.avatar;
+                String avatar = data.avatar;
 
-            if(avatar!=null) {
-                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                if(avatar!=null) {
+                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                    avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                }
+
+                store.setAvatar(avatar);
+                store.setDescription(data.description);
+                store.setTheme(data.theme);
+                store.setView(data.view);
+                store.setBaseUrl(data.name);
+
+                Database database = new Database(Aptoide.getDb());
+
+                database.insertStore(store);
+                database.updateStore(store);
+
+                BusProvider.getInstance().post(new RepoAddedEvent());
+                dismissDialog();
+                dismiss();
+
+            }catch (Exception e){
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                dismissDialog();
+
             }
-
-            store.setAvatar(avatar);
-            store.setDescription(data.description);
-            store.setTheme(data.theme);
-            store.setView(data.view);
-            store.setBaseUrl(data.name);
-
-            Database database = new Database(Aptoide.getDb());
-
-            database.insertStore(store);
-            database.updateStore(store);
-
-            BusProvider.getInstance().post(new RepoAddedEvent());
-            dismissDialog();
-            dismiss();
 
 
         }

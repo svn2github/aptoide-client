@@ -1,9 +1,9 @@
 package cm.aptoide.ptdev.model;
 
+import java.io.Serializable;
+
 import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
 import cm.aptoide.ptdev.downloadmanager.state.EnumState;
-
-import java.io.Serializable;
 
 /**
  * Created by rmateus on 11-12-2013.
@@ -20,6 +20,8 @@ public class Download implements Serializable{
     private String icon;
     private String md5;
     private boolean paid;
+
+
 
     public String getReferrer() {
         return referrer;

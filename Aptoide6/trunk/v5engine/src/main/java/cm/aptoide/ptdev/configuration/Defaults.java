@@ -11,7 +11,7 @@ import android.os.Environment;
  */
 public class Defaults {
 
-    public static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version.xml";
+    public static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version_v6 .xml";
     public static final String WEBSERVICES_URI = "http://webservices.aptoide.com/";
     public static final String DOMAIN_APTOIDE_STORE = ".store.aptoide.com/";
     public static final String URI_SEARCH_BAZAAR = "http://m.aptoide.com/searchview.php?search=";

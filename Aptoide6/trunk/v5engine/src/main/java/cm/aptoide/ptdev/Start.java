@@ -94,11 +94,13 @@ import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.events.SocialTimelineEvent;
 import cm.aptoide.ptdev.events.SocialTimelineInitEvent;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 import cm.aptoide.ptdev.fragments.callbacks.DownloadManagerCallback;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.PullToRefreshCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
+import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.parser.exceptions.InvalidVersionException;
@@ -1358,7 +1360,45 @@ public class Start extends ActionBarActivity implements
         Toast.makeText(this, getString(R.string.starting_download), Toast.LENGTH_LONG).show();
     }
 
-    public void installAppFromManager(long id) {
+    public void installApp(FragmentUpdates2.UpdatesResponse.UpdateApk apk){
+
+
+
+        Download download = new Download();
+        download.setId(apk.hashCode());
+        download.setName(apk.name);
+        download.setPackageName(apk.packageName);
+        download.setVersion(apk.vername);
+        download.setMd5(apk.md5sum);
+
+        String icon = apk.icon;
+
+        if (icon.contains("_icon")) {
+            String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+            icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
+        }
+
+        download.setIcon(icon);
+
+        downloadService.startDownloadFromV6(download,apk);
+
+
+    }
+
+    public void installApp(List<FragmentUpdates2.UpdatesResponse.UpdateApk> apk) {
+
+        for (FragmentUpdates2.UpdatesResponse.UpdateApk updateApk : apk) {
+
+            if(updateApk.name != null){
+                installApp(updateApk);
+            }
+
+        }
+
+
+    }
+
+        public void installAppFromManager(long id) {
         downloadService.startExistingDownload(id);
     }
 

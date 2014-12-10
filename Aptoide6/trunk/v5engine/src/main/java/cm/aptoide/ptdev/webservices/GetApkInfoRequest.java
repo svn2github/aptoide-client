@@ -4,24 +4,14 @@ import android.content.Context;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-
-
-
-
-
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
@@ -91,8 +81,8 @@ public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfo
 //        }
         //return response.parseAs(getResultType());
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
 
         return getService().getApkInfo(parameters);

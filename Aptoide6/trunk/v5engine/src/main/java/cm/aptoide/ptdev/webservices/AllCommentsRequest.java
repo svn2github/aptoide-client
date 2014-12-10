@@ -1,18 +1,10 @@
 package cm.aptoide.ptdev.webservices;
 
-import android.util.Log;
-
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import cm.aptoide.ptdev.webservices.json.AllCommentsJson;
-import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Path;
-
-
-
-import java.net.URLEncoder;
-import java.util.HashMap;
 
 /**
  * Created by rmateus on 27-12-2013.
@@ -47,8 +39,8 @@ public class AllCommentsRequest extends RetrofitSpiceRequest<AllCommentsJson, Al
 
     @Override
     public AllCommentsJson loadDataFromNetwork() throws Exception {
-        AllCommentsRequest.WebService adapter = new RestAdapter.Builder().setEndpoint("http://").build().create(getRetrofitedInterfaceClass());
-        setService(adapter);
+        //AllCommentsRequest.WebService adapter = new RestAdapter.Builder().setEndpoint("http://").build().create(getRetrofitedInterfaceClass());
+        //setService(adapter);
         //GenericUrl url = new GenericUrl(baseUrl);
 
 //        HashMap<String, String > parameters = new HashMap<String, String>();

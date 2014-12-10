@@ -166,7 +166,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     private Class appViewClass = Aptoide.getConfiguration().getAppViewActivityClass();
     private GetApkInfoJson.Payment payment;
     private boolean isPaidApp;
-    private boolean isPaidToschedule;
+    private boolean isPaidToschedule = true;
     private String referrer;
 
 
@@ -1719,7 +1719,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             }
 
         } else if(isDownloadCompleted || !isPaidToschedule) {
-            //Log.d( "schedule_download", "isDownloadCompleted" );
+            Log.d( "schedule_download", "isDownloadCompleted" );
             menu.findItem(R.id.menu_schedule).setVisible(false);
         }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,6 +36,8 @@ import java.util.Locale;
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Response;
@@ -44,6 +51,8 @@ public class FragmentUpdates2 extends Fragment {
 
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+    private RequestListener<UpdatesResponse> requestListener;
+    private cm.aptoide.ptdev.widget.RecyclerView viewById;
 
 
     @Override
@@ -78,10 +87,13 @@ public class FragmentUpdates2 extends Fragment {
         public static class UpdateApk extends Response.ListApps.Apk{
 
             public Apk apk;
+            public int vercode;
 
             public static class Apk{
                 public String path;
-                public String filesize;
+                public String path_alt;
+
+                public Number filesize;
             }
 
         }
@@ -124,7 +136,18 @@ public class FragmentUpdates2 extends Fragment {
             //aPackage.vercode = 447;
             //aPackage.signature = "D5:90:A7:D7:92:FD:03:31:54:2D:99:FA:F9:99:76:41:79:07:73:A9";
 
-            api.store_names.add("apps");
+            Database database = new Database(Aptoide.getDb());
+
+            Cursor servers = database.getServers();
+
+            for(servers.moveToFirst(); !servers.isAfterLast(); servers.moveToNext()){
+                api.store_names.add(servers.getString(servers.getColumnIndex("name")));
+            }
+
+
+            servers.close();
+
+
             PackageManager packageManager = Aptoide.getContext().getPackageManager();
             List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
 
@@ -146,23 +169,27 @@ public class FragmentUpdates2 extends Fragment {
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final cm.aptoide.ptdev.widget.RecyclerView viewById = (cm.aptoide.ptdev.widget.RecyclerView) view.findViewById(R.id.list);
+        viewById = (cm.aptoide.ptdev.widget.RecyclerView) view.findViewById(R.id.list);
 
         viewById.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        SwipeRefreshLayout layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        layout.setEnabled(false);
+        final SwipeRefreshLayout layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+
 
         final ArrayList<UpdatesResponse.UpdateApk> list = new ArrayList<>();
 
         viewById.setAdapter(new UpdatesRecyclerView(list));
 
-        UpdatesRequest request = new UpdatesRequest();
+        final UpdatesRequest request = new UpdatesRequest();
 
-        manager.execute(request, new RequestListener<UpdatesResponse>() {
+        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.list).setVisibility(View.GONE);
+
+        requestListener = new RequestListener<UpdatesResponse>() {
+
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -170,19 +197,82 @@ public class FragmentUpdates2 extends Fragment {
 
             @Override
             public void onRequestSuccess(UpdatesResponse updatesResponse) {
+
+                registerForContextMenu(viewById);
+
                 list.clear();
-                try{
-                    list.addAll(updatesResponse.data.list);
+
+                ArrayList<String> excludedPackages = new ArrayList<String>();
+
+                Database database = new Database(Aptoide.getDb());
+
+                Cursor c = database.getExcludedApks();
+
+                for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                    excludedPackages.add(c.getString(c.getColumnIndex("package_name")));
+                }
+
+                c.close();
+
+                list.add(new UpdatesResponse.UpdateApk());
+
+                try {
+
+                    for (UpdatesResponse.UpdateApk updateApk : updatesResponse.data.list) {
+
+                        if (!excludedPackages.contains(updateApk.packageName)) {
+                            list.add(updateApk);
+                        }
+
+                    }
+
                     viewById.getAdapter().notifyDataSetChanged();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                layout.setRefreshing(false);
+            }
+        };
+        manager.execute(request, requestListener);
+
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                manager.execute(request, requestListener);
             }
         });
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = this.getActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_updates_context, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+
+        cm.aptoide.ptdev.widget.RecyclerView.RecyclerContextMenuInfo info = (cm.aptoide.ptdev.widget.RecyclerView.RecyclerContextMenuInfo) item.getMenuInfo();
+
+        int position = info.position;
+
+        UpdatesResponse.UpdateApk updateApk = ((UpdatesRecyclerView) viewById.getAdapter()).packageList.get(position);
+        Database database = new Database(Aptoide.getDb());
+        database.addToExcludeUpdate(updateApk);
+
+        UpdatesRequest request = new UpdatesRequest();
+        manager.execute(request, requestListener);
+
+        return super.onContextItemSelected(item);
+    }
 
     public static class UpdatesRecyclerView extends RecyclerView.Adapter<UpdatesRecyclerView.UpdatesViewHolder>{
 
@@ -195,51 +285,92 @@ public class FragmentUpdates2 extends Fragment {
 
         @Override
         public UpdatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = null;
+            switch (viewType){
+                case 0:
+                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_app_update, parent, false);
+                    break;
+                case 1:
+                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.separator_updates, parent, false);
+                    break;
+            }
 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_app_update, parent, false);
-
-            return new UpdatesViewHolder(v);
+            return new UpdatesViewHolder(v, viewType);
         }
 
         @Override
-        public void onBindViewHolder(final UpdatesViewHolder holder, int position) {
+        public void onBindViewHolder(final UpdatesViewHolder holder, final int position) {
 
-            final UpdatesResponse.UpdateApk item = packageList.get(position);
-            holder.appName.setText(Html.fromHtml(item.name).toString());
-            String icon1 = item.icon;
-            holder.versionName.setText(item.vername);
+            switch (getItemViewType(position)) {
+                case 0:
 
-            if(icon1.contains("_icon")){
-                String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
-                icon1 = splittedUrl[0] + "_" + Aptoide.iconSize + "."+ splittedUrl[1];
+
+                final UpdatesResponse.UpdateApk item = packageList.get(position);
+                holder.appName.setText(Html.fromHtml(item.name).toString());
+                String icon1 = item.icon;
+                holder.versionName.setText(item.vername);
+
+                if (icon1.contains("_icon")) {
+                    String[] splittedUrl = icon1.split("\\.(?=[^\\.]+$)");
+                    icon1 = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
+                }
+
+                ImageLoader.getInstance().displayImage(icon1, holder.appIcon);
+
+                holder.itemView.setLongClickable(true);
+
+                holder.manageIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Toast.makeText(holder.itemView.getContext(), holder.itemView.getContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+                        ((Start)holder.itemView.getContext()).installApp(packageList.get(position));
+
+                    }
+                });
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent i = new Intent(v.getContext(), AppViewActivity.class);
+                        i.putExtra("fromRelated", true);
+                        i.putExtra("md5sum", item.md5sum);
+                        i.putExtra("repoName", item.store_name);
+                        i.putExtra("download_from", "recommended_apps");
+                        v.getContext().startActivity(i);
+
+                    }
+                });
+                    break;
+
+                case 1:
+
+                    holder.more.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((Start)holder.itemView.getContext()).installApp(packageList);
+                            Toast.makeText(holder.itemView.getContext(), holder.itemView.getContext().getString(R.string.starting_download), Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+                    holder.label.setText(holder.itemView.getContext().getString(R.string.updates_tab));
+
+                    break;
             }
 
-            ImageLoader.getInstance().displayImage(icon1, holder.appIcon);
+
+        }
 
 
-            holder.manageIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        @Override
+        public int getItemViewType(int position) {
 
+            if(position == 0){
+                return 1;
+            }
 
-
-                }
-            });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent i = new Intent(v.getContext(), AppViewActivity.class);
-                    i.putExtra("fromRelated", true);
-                    i.putExtra("md5sum", item.md5sum);
-                    i.putExtra("repoName", item.store_name);
-                    i.putExtra("download_from", "recommended_apps");
-                    v.getContext().startActivity(i);
-
-                }
-            });
-
-
+            return super.getItemViewType(position);
         }
 
         @Override
@@ -248,18 +379,36 @@ public class FragmentUpdates2 extends Fragment {
         }
 
         public static class UpdatesViewHolder extends RecyclerView.ViewHolder{
+            TextView label;
+            View more;
             ImageView appIcon;
             ImageView manageIcon;
             TextView appName;
             TextView versionName;
             TextView notsafe;
-            public UpdatesViewHolder(View v) {
+            public UpdatesViewHolder(View v, int viewType) {
                 super(v);
 
-                appIcon = (ImageView) v.findViewById(R.id.app_icon);
-                manageIcon = (ImageView) v.findViewById(R.id.manage_icon);
-                appName = (TextView) v.findViewById(R.id.app_name);
-                versionName = (TextView) v.findViewById(R.id.app_version);
+                switch (viewType){
+
+                    case 0:
+
+                        appIcon = (ImageView) v.findViewById(R.id.app_icon);
+                        manageIcon = (ImageView) v.findViewById(R.id.manage_icon);
+                        appName = (TextView) v.findViewById(R.id.app_name);
+                        versionName = (TextView) v.findViewById(R.id.app_version);
+
+                        break;
+
+                    case 1:
+                        more = v.findViewById(R.id.more);
+                        label = (TextView) v.findViewById(R.id.separator_label);
+
+                        break;
+
+                }
+
+
             }
         }
 

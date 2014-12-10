@@ -16,29 +16,44 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
-
 import android.widget.Toast;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.downloadmanager.*;
-import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
-import cm.aptoide.ptdev.model.*;
-import cm.aptoide.ptdev.model.Error;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.webservices.Errors;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
-import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.DownloadExecutorImpl;
+import cm.aptoide.ptdev.downloadmanager.DownloadInfo;
+import cm.aptoide.ptdev.downloadmanager.DownloadManager;
+import cm.aptoide.ptdev.downloadmanager.DownloadModel;
+import cm.aptoide.ptdev.downloadmanager.FinishedApk;
+import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
+import cm.aptoide.ptdev.model.Download;
+import cm.aptoide.ptdev.model.Error;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.Errors;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
 
 /**
  * Created by rmateus on 11-12-2013.
@@ -234,6 +249,39 @@ public class DownloadService extends Service{
         apk.setRepoName(repoName);
 
         download(id, download, apk, filesToDownload);
+    }
+
+    public void startDownloadFromV6(Download download , FragmentUpdates2.UpdatesResponse.UpdateApk apk){
+        ArrayList<DownloadModel> filesToDownload = new ArrayList<DownloadModel>();
+
+//        if(json.getObb()!=null){
+//            DownloadModel mainObbDownload = new DownloadModel(json.getObb().getMain().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getMain().getFilename(), json.getObb().getMain().getMd5sum(), json.getObb().getMain().getFilesize().longValue());
+//            filesToDownload.add(mainObbDownload);
+//            if(json.getObb().getPatch()!=null){
+//                DownloadModel patchObbDownload = new DownloadModel(json.getObb().getPatch().getPath(), OBB_DESTINATION + download.getPackageName() + "/" +json.getObb().getPatch().getFilename(), json.getObb().getPatch().getMd5sum(), json.getObb().getPatch().getFilesize().longValue());
+//                filesToDownload.add(patchObbDownload);
+//            }
+//        }
+
+        String path = Aptoide.getConfiguration().getPathCacheApks();
+
+        if(apk.md5sum!=null){
+            download.setId(apk.md5sum.hashCode());
+        }
+
+        DownloadModel downloadModel = new DownloadModel(apk.apk.path, path + apk.md5sum + ".apk", apk.md5sum, apk.apk.filesize.longValue());
+        downloadModel.setAutoExecute(true);
+        downloadModel.setFallbackUrl(apk.apk.path_alt);
+        filesToDownload.add(downloadModel);
+
+        FinishedApk fapk = new FinishedApk(download.getName(),
+                download.getPackageName(),
+                download.getVersion(), apk.id.longValue(),
+                download.getIcon(),
+                path + apk.md5sum + ".apk",
+                new ArrayList<String>());
+        fapk.setId(apk.id.longValue());
+        download(download.getId(), download, fapk, filesToDownload);
     }
 
     public void startDownloadFromJson(GetApkInfoJson json, long id, Download download){

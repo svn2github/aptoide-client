@@ -1,22 +1,19 @@
 package cm.aptoide.ptdev.webservices;
 
-import android.os.Build;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.json.CreateUserJson;
-import cm.aptoide.ptdev.webservices.json.OAuth;
-import retrofit.RestAdapter;
-import retrofit.converter.Converter;
-import retrofit.converter.JacksonConverter;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.json.OAuth;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created with IntelliJ IDEA.
@@ -80,8 +77,8 @@ public class CreateUserRequest extends RetrofitSpiceRequest<OAuth, CreateUserReq
         parameters.put("hmac", AptoideUtils.Algorithms.computeHmacSha1(email+passhash+name, "bazaar_hmac"));
 
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
-        setService(adapter.create(getRetrofitedInterfaceClass()));
+        //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
+        //setService(adapter.create(getRetrofitedInterfaceClass()));
 
 
 
