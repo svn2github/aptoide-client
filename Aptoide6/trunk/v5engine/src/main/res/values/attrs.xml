@@ -117,5 +117,5 @@
     <attr name="fontPath" format="string"/>
 
     <attr name="backgroundHomeSeparator" format="color" />
-
+    <attr name="backgroundAddStoreButton" format="color" />
 </resources>

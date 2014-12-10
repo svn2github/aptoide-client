@@ -45,6 +45,7 @@ import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.views.RoundedImageView;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
@@ -213,6 +214,7 @@ public class FragmentListApps extends Fragment {
                 }
 
                 itemViewHolder.friend.setText(apk.getInfo().getUsername() + " " + ((RecyclerAdapter.TimelineRowViewHolder) holder).itemView.getContext().getString(R.string.installed_this));
+                ImageLoader.getInstance().displayImage(apk.getInfo().getAvatar(), itemViewHolder.avatar);
 
 
                 if(icon.contains("_icon")){
@@ -618,6 +620,7 @@ public class FragmentListApps extends Fragment {
                         intent = new Intent(getActivity(), MoreFriendsInstallsActivity.class);
                     } else if (widgetid.equals("recommended")) {
                         intent = new Intent(getActivity(), MoreUserBasedActivity.class);
+                        intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
                     } else if (widgetid.equals("highlighted")) {
                         intent = new Intent(getActivity(), MoreHighlightedActivity.class);
                     } else {
@@ -1167,6 +1170,8 @@ public class FragmentListApps extends Fragment {
                 public TextView name;
                 public TextView friend;
                 public ImageView icon;
+                public RoundedImageView avatar;
+
             }
 
             public LinearLayout getLinearLayout() {
@@ -1194,6 +1199,7 @@ public class FragmentListApps extends Fragment {
                     holder.name = (TextView) inflate.findViewById(R.id.app_name);
                     holder.icon = (ImageView) inflate.findViewById(R.id.app_icon);
                     holder.friend = (TextView) inflate.findViewById(R.id.app_friend);
+                    holder.avatar = (RoundedImageView) inflate.findViewById(R.id.user_avatar);
 
                     inflate.setTag(holder);
                     layout.addView(inflate);

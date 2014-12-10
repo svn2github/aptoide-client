@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.views.RoundedImageView;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 
@@ -57,7 +59,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(R.string.notification_timeline_posts);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("widgetname"));
 
         Fragment fragment = new MoreFriendsInstallsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
@@ -197,6 +199,8 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
                     icon = apk.getApk().getIcon();
                 }
                 itemViewHolder.friend.setText(apk.getInfo().getUsername() + " " + context.getString(R.string.installed_this));
+                ImageLoader.getInstance().displayImage(apk.getInfo().getAvatar(), itemViewHolder.avatar);
+//                Log.d("MoreFriendsInstallsActivity", "avatar: "+apk.getInfo().getAvatar());
 
                 if(icon.contains("_icon")){
                     String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
@@ -236,6 +240,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
                 public TextView name;
                 public TextView friend;
                 public ImageView icon;
+                public RoundedImageView avatar;
             }
 
             public LinearLayout getLinearLayout() {
@@ -263,6 +268,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
                     holder.name = (TextView) inflate.findViewById(R.id.app_name);
                     holder.icon = (ImageView) inflate.findViewById(R.id.app_icon);
                     holder.friend = (TextView) inflate.findViewById(R.id.app_friend);
+                    holder.avatar = (RoundedImageView) inflate.findViewById(R.id.user_avatar);
 
                     inflate.setTag(holder);
                     layout.addView(inflate);

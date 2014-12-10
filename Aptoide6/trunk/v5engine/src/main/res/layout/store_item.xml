@@ -71,7 +71,7 @@
                 android:text="@string/add_store"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                fbutton:buttonColor="@android:color/white"
+                fbutton:buttonColor="?attr/backgroundAddStoreButton"
                 fbutton:cornerRadius="0dp"
                 fbutton:shadowColor="@color/light_gray"
                 fbutton:shadowEnabled="true"
