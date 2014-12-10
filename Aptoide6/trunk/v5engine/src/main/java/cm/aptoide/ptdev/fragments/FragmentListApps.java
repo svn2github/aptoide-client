@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -33,6 +34,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
@@ -68,6 +70,7 @@ public class FragmentListApps extends Fragment {
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private RequestListener<Response> requestListener;
+    Map<String, String> flurryParams = new HashMap<String, String>();
 
     @Override
     public void onStart() {
@@ -232,8 +235,10 @@ public class FragmentListApps extends Fragment {
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.getApk().getMd5sum());
                         i.putExtra("repoName", apk.getApk().getRepo());
-                        i.putExtra("download_from", "recommended_apps");
+                        i.putExtra("download_from", "timeline");
                         viewHolder.itemView.getContext().startActivity(i);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_Timeline_App");
+
                     }
                 });
                 i++;
@@ -277,8 +282,10 @@ public class FragmentListApps extends Fragment {
                         intent.putExtra("fromRelated", true);
                         intent.putExtra("md5sum", apk.md5sum);
                         intent.putExtra("repoName", apk.store_name);
-                        intent.putExtra("download_from", "recommended_apps");
+                        intent.putExtra("download_from", "featured");
                         viewHolder.itemView.getContext().startActivity(intent);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_Featured_App");
+
                     }
                 });
             }
@@ -292,6 +299,7 @@ public class FragmentListApps extends Fragment {
         public String widgetid;
         public String header;
         public ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory> list = new ArrayList<>();
+        Map<String, String> flurryParams = new HashMap<String, String>();
 
         @Override
         public int getViewType() {
@@ -323,6 +331,10 @@ public class FragmentListApps extends Fragment {
                         intent.putExtra("widgetid", "apps_list:" + widgetCategory.ref_id);
                         intent.putExtra("widgetname", header);
                         v.getContext().startActivity(intent);
+
+                        flurryParams.put("WidgetCategory", header);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More", flurryParams);
+
                     }
                 });
             }
@@ -394,6 +406,7 @@ public class FragmentListApps extends Fragment {
                         i.putExtra("cpi", apkSuggestion.getInfo().getCpi_url());
                         i.putExtra("whereFrom", "sponsored");
                         i.putExtra("download_from", "sponsored");
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
 
                         if(apkSuggestion.getPartner() != null){
                             Bundle bundle = new Bundle();
@@ -568,8 +581,10 @@ public class FragmentListApps extends Fragment {
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.md5sum);
                         i.putExtra("repoName", apk.store_name);
-                        i.putExtra("download_from", "recommended_apps");
+                        i.putExtra("download_from", "home");
                         v.getContext().startActivity(i);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_App");
+
                     }
                 });
                 i++;
@@ -618,16 +633,21 @@ public class FragmentListApps extends Fragment {
                     String widgetid = ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid;
                     if (widgetid.equals("timeline")) {
                         intent = new Intent(getActivity(), MoreFriendsInstallsActivity.class);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More_Timeline_Installs");
                     } else if (widgetid.equals("recommended")) {
                         intent = new Intent(getActivity(), MoreUserBasedActivity.class);
                         intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More_Recommended");
                     } else if (widgetid.equals("highlighted")) {
                         intent = new Intent(getActivity(), MoreHighlightedActivity.class);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More_Highlighted");
                     } else {
                         intent = new Intent(getActivity(), MoreActivity.class);
                         intent.putExtra("widgetid", widgetid);
                         intent.putExtra("widgetrefid", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
                         intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                        flurryParams.put("WidgetCategory", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                        FlurryAgent.logEvent("Home_Page_Clicked_On_More", flurryParams);
 
                     }
 

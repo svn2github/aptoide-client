@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -31,6 +32,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
@@ -38,6 +40,7 @@ import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
@@ -489,8 +492,10 @@ public class FragmentListStore extends Fragment {
                             i.putExtra("fromRelated", true);
                             i.putExtra("md5sum", appItem.getMd5sum());
                             i.putExtra("repoName", appItem.getRepo());
-                            i.putExtra("download_from", "recommended_apps");
+                            i.putExtra("download_from", "store");
                             context.startActivity(i);
+                            FlurryAgent.logEvent("Store_Clicked_On_App");
+
                         }
                     });
 
@@ -515,7 +520,7 @@ public class FragmentListStore extends Fragment {
                             String widgetid = storeListItem.widgetid;
 
 
-                            Log.d("FragmentListStore", storeListItem.toString());
+//                            Log.d("FragmentListStore", storeListItem.toString());
 
                             Fragment fragment;
                             Bundle bundle = new Bundle();
@@ -523,10 +528,12 @@ public class FragmentListStore extends Fragment {
                             if("comments".equals(refid)){
                                 bundle.putLong("storeid", storeListItem.store_id);
                                 fragment = new LatestCommentsFragment();
+                                FlurryAgent.logEvent("Store_Clicked_On_Latest_Comments");
 
                             } else if("likes".equals(refid)){
                                 bundle.putLong("storeid", storeListItem.store_id);
                                 fragment = new LatestLikesFragment();
+                                FlurryAgent.logEvent("Store_Clicked_On_Latest_Likes");
 
                             }else {
 
@@ -535,6 +542,10 @@ public class FragmentListStore extends Fragment {
                                 bundle.putString("widgetrefid", widgetid);
                                 bundle.putString("refid", refid);
                                 bundle.putString("storename", storename);
+
+                                Map<String, String> flurryParams = new HashMap<String, String>();
+                                flurryParams.put("Category", storeListItem.name);
+                                FlurryAgent.logEvent("Store_Clicked_On", flurryParams);
 
                             }
 
@@ -550,27 +561,27 @@ public class FragmentListStore extends Fragment {
                         if("group_top".equals(storeListItem.refid)){
 
                             catid = EnumCategories.TOP_APPS;
-                            Log.d("FragmentListStore", "group_top "+catid);
+//                            Log.d("FragmentListStore", "group_top "+catid);
                         }else if("likes".equals(storeListItem.refid)) {
 
 
                             catid = EnumCategories.LATEST_LIKES;
-                            Log.d("FragmentListStore", "likes "+catid);
+//                            Log.d("FragmentListStore", "likes "+catid);
 
                         }else if("comments".equals(storeListItem.refid)) {
 
                             catid = EnumCategories.LATEST_COMMENTS;
-                            Log.d("FragmentListStore", "comments "+catid);
+//                            Log.d("FragmentListStore", "comments "+catid);
 
                         }else if("group_latest".equals(storeListItem.refid)) {
 
                             catid = EnumCategories.LATEST_APPS;
-                            Log.d("FragmentListStore", "group_latest "+catid);
+//                            Log.d("FragmentListStore", "group_latest "+catid);
 
                         }else {
 
                             catid = Integer.valueOf(storeListItem.refid.replaceAll("[^-?0-9]+", ""));
-                            Log.d("FragmentListStore", "catid "+catid);
+//                            Log.d("FragmentListStore", "catid "+catid);
 
                         }
                     }catch (Exception e){

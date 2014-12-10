@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -25,6 +26,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
@@ -137,20 +139,28 @@ public class FragmentListTopApps extends Fragment {
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
-                Log.d("pois","i:"+i);
+//                Log.d("pois","i:"+i);
                 Displayable displayable = ((RecyclerAdapter) view.getAdapter()).list.get(i);
-                Log.d("pois","click");
+//                Log.d("pois","click");
                 if(displayable.getViewType()==1000) {
                     Log.d("pois","Else");
                     Intent intent = new Intent(getActivity(), MoreTopStoresActivity.class);
                     startActivity(intent);
+
+                    FlurryAgent.logEvent("Top_Page_Clicked_On_More_Top_Stores");
+
                 }else{
-                    Log.d("pois","AppsRow");
+//                    Log.d("pois","AppsRow");
                     Intent intent = new Intent(getActivity(), MoreActivity.class);
 
                     intent.putExtra("widgetid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid);
                     intent.putExtra("widgetrefid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
                     intent.putExtra("widgetname", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+
+                    Map<String, String> flurryParams = new HashMap<String, String>();
+                    flurryParams.put("WidgetCategory", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
+                    FlurryAgent.logEvent("Top_Page_Clicked_On_More_Top_Stores", flurryParams);
+
                     startActivity(intent);
                 }
                 //Toast.makeText(Aptoide.getContext(), "" + ((Row)((RecyclerAdapter)view.getAdapter()).list.get(i)).widgetid + " " + l, Toast.LENGTH_LONG).show();
