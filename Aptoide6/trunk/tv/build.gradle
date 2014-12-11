@@ -1,9 +1,23 @@
+buildscript {
+    repositories {
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
 
 
 def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase()
 
+repositories{
 
+    maven { url 'http://download.crashlytics.com/maven' }
+
+}
 android {
     compileSdkVersion 21
     buildToolsVersion "21.0.0"
@@ -14,12 +28,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+/*    buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
+    }*/
     lintOptions{
         checkReleaseBuilds false
         abortOnError false
@@ -41,6 +55,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.crashlytics.android:crashlytics:1.1.13'
     compile 'com.android.support:leanback-v17:+'
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
@@ -61,4 +76,5 @@ dependencies {
     compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
         exclude group: 'com.google.code.gson'
     }
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }

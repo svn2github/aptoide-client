@@ -27,7 +27,19 @@ import android.support.v17.leanback.widget.Row;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import cm.aptoidetv.pt.Model.BindInterface;
 import cm.aptoidetv.pt.Model.SearchJson;
@@ -136,20 +148,21 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         }
 
         public void run() {
-/*
+
 
             if(searchQuery.length()>=3) {
 
                 GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/listSearchApks/" + searchQuery + "/options=(repos=geniatechapps)/json");
-                HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
-
+                //HttpRequestFactory requestFactory = new UrlFetchTransport();
+                //AndroidHttp.newCompatibleTransport().createRequestFactory();
+                HttpRequestFactory requestFactory = new ApacheHttpTransport().createRequestFactory();
 
                 try {
                     final HttpRequest httpRequest = requestFactory.buildGetRequest(url);
                     httpRequest.setParser(new GsonFactory().createJsonObjectParser());
                     Executor executor = Executors.newSingleThreadExecutor();
 
-                    FutureTask<HttpResponse> future = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
+                    FutureTask<HttpResponse> future = new FutureTask<>(new Callable<HttpResponse>() {
 
                         public HttpResponse call() throws Exception {
                             final List<SearchJson.Results.Apks> apks = httpRequest.execute().parseAs(SearchJson.class).getResults().getApks();
@@ -174,7 +187,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     e.printStackTrace();
                 }
             }
-*/
+
 
         }
 

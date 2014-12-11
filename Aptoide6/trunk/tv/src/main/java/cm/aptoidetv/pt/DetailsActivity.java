@@ -134,6 +134,8 @@ public class DetailsActivity extends Activity {
         app_icon = (ImageView) findViewById(R.id.app_icon);
         download = (Button) findViewById(R.id.download);
         app_name = (TextView) findViewById(R.id.app_name);
+        if(appName!=null)
+            app_name.setText(appName);
         app_developer = (TextView) findViewById(R.id.app_developer);
         app_version = (TextView) findViewById(R.id.app_version);
         app_downloads = (TextView) findViewById(R.id.app_downloads);
@@ -150,15 +152,17 @@ public class DetailsActivity extends Activity {
         commentsContainer = (LinearLayout) findViewById(R.id.comments_container);
 
 
-        Picasso.with(DetailsActivity.this)
-                .load(icon)
-                .error(R.drawable.icon_non_available)
-                .into(app_icon);
-
+        if(icon==null) {
+            Picasso.with(DetailsActivity.this)
+                    .load(icon)
+                    .error(R.drawable.icon_non_available)
+                    .into(app_icon);
+        }
        // new DetailRowBuilderTask().execute(md5sum);
 
         GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(this);
         request.setMd5Sum(md5sum);
+        final DetailsActivity a = this;
         manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -175,11 +179,28 @@ public class DetailsActivity extends Activity {
                 app_downloads.setText(getString(R.string.downloads)+": " + downloads);
                 app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
-                rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
                 app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
+                if(totalRatings>0){
+                    app_ratings.setVisibility(View.VISIBLE);
+                    rating_bar.setVisibility(View.VISIBLE);
+                    a.findViewById(R.id.view_separator4).setVisibility(View.VISIBLE);
+                    app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
+                    rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+                }else {
+                    a.findViewById(R.id.view_separator4).setVisibility(View.INVISIBLE);
+                    app_ratings.setVisibility(View.INVISIBLE);
+                    rating_bar.setVisibility(View.INVISIBLE);
+                }
+
                 String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
+
+                icon = apkInfoJson.getApk().getIconhd()!=null?apkInfoJson.getApk().getIconhd():apkInfoJson.getApk().getIcon();
+                if(icon !=null)
+                    Picasso.with(DetailsActivity.this)
+                            .load(icon)
+                            .error(R.drawable.icon_non_available)
+                            .into(app_icon);
 
                 screenshots.removeAllViews();
                 View cell;
@@ -211,8 +232,6 @@ public class DetailsActivity extends Activity {
                         imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                         mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                     }
-
-                    screenshots.addView(cell);
 
                     Picasso.with(DetailsActivity.this)
                             .load(imagePath)
@@ -431,7 +450,8 @@ public class DetailsActivity extends Activity {
                     Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
 
                     DownloadManager.Request request = new DownloadManager.Request(uri);
-                    new updateDownLoadInfoTask().execute();
+                    String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
+                    new updateDownLoadInfoTask().execute(APKpath);
                     request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
 //                    Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
 
@@ -441,7 +461,7 @@ public class DetailsActivity extends Activity {
 //                  Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
 
-                    request.setDestinationInExternalPublicDir("apks", ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk");
+                    request.setDestinationInExternalPublicDir("apks", APKpath);
                     ;
 //                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
 
@@ -507,7 +527,7 @@ public class DetailsActivity extends Activity {
         }
     }
 
-    private class updateDownLoadInfoTask extends AsyncTask<Void, Integer, Void> {
+    private class updateDownLoadInfoTask extends AsyncTask<String, Integer, Void> {
         @Override
         protected void onPreExecute() {
             downloading_progress = (ProgressBar) findViewById(R.id.downloading_progress);
@@ -532,7 +552,7 @@ public class DetailsActivity extends Activity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(String... path) {
             boolean loopagain = true;
             do {
                 DownloadManager.Query query = new DownloadManager.Query();
@@ -558,8 +578,8 @@ public class DetailsActivity extends Activity {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
 
                                 String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-
-                                intent.setDataAndType(Uri.fromFile(new File(absolutePath + "/apks/" + packageName + "-" + vercode + "-" + md5sum + ".apk")), "application/vnd.android.package-archive");
+                                Log.d("pois",absolutePath + "/apks/" +path[0]);
+                                intent.setDataAndType(Uri.fromFile(new File(absolutePath + "/apks/" + path[0])), "application/vnd.android.package-archive");
 
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);

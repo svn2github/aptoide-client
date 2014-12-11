@@ -150,6 +150,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:visibility="invisible"
                     android:background="@android:color/darker_gray" />
 
                 <RatingBar
@@ -162,6 +163,7 @@
                     android:layout_marginRight="5dp"
                     android:numStars="5"
                     android:layout_weight="1"
+                    android:visibility="invisible"
                     android:gravity="center" />
 
                 <TextView
@@ -173,6 +175,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="(0 ratings)"
+                    android:visibility="invisible"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 

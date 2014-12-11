@@ -763,7 +763,7 @@ public class GetApkInfoJson {
         @Key
         private String vername;
         @Key
-        private String icon_hd;
+        public String icon_hd;
 
         public String getIcon(){
             return this.icon;
@@ -825,8 +825,7 @@ public class GetApkInfoJson {
         public void setVername(String vername){
             this.vername = vername;
         }
-
-        public String getIconHd() {
+        public String getIconhd() {
             return icon_hd;
         }
 

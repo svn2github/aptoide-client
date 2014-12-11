@@ -26,12 +26,10 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -89,12 +87,10 @@ public class MainFragment extends BrowseFragment{
         super.onStop();
         manager.shouldStop();
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-//        Log.d(TAG, "onCreate");
         super.onActivityCreated(savedInstanceState);
-
-//        loadmEditorsChoice();
 
         prepareBackgroundManager();
         setupUIElements();
@@ -177,7 +173,6 @@ public class MainFragment extends BrowseFragment{
     public void onDestroy() {
         super.onDestroy();
         if (null != mBackgroundTimer) {
-            Log.d(TAG, "onDestroy: " + mBackgroundTimer.toString());
             mBackgroundTimer.cancel();
         }
     }
@@ -321,16 +316,20 @@ public class MainFragment extends BrowseFragment{
     }
 */
 
-
-
-    protected void setDefaultBackground(Drawable background) {
+/*    protected void setDefaultBackground(Drawable background) {
         mDefaultBackground = background;
     }
 
     protected void setDefaultBackground(int resourceId) {
         mDefaultBackground = getResources().getDrawable(resourceId);
     }
+    protected void updateBackground(Drawable drawable) {
+        BackgroundManager.getInstance(getActivity()).setDrawable(drawable);
+    }
 
+    protected void clearBackground() {
+        BackgroundManager.getInstance(getActivity()).setDrawable(mDefaultBackground);
+    }*/
     protected void updateBackground(URI uri) {
         Picasso.with(getActivity())
                 .load(uri.toString())
@@ -341,13 +340,7 @@ public class MainFragment extends BrowseFragment{
         mBackgroundTimer.cancel();
     }
 
-    protected void updateBackground(Drawable drawable) {
-        BackgroundManager.getInstance(getActivity()).setDrawable(drawable);
-    }
 
-    protected void clearBackground() {
-        BackgroundManager.getInstance(getActivity()).setDrawable(mDefaultBackground);
-    }
 
     private void startBackgroundTimer() {
         if (null != mBackgroundTimer) {
@@ -408,7 +401,7 @@ public class MainFragment extends BrowseFragment{
     }
 
 
-    private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+   /* private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
@@ -418,5 +411,5 @@ public class MainFragment extends BrowseFragment{
             }
 
         }
-    }
+    }*/
 }
