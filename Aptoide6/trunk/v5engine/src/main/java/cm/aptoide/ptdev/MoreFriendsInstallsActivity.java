@@ -59,7 +59,7 @@ public class MoreFriendsInstallsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(getIntent().getStringExtra("widgetname"));
+        getSupportActionBar().setTitle(getString(R.string.more_friends_installs));
 
         Fragment fragment = new MoreFriendsInstallsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();

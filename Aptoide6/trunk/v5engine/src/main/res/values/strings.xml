@@ -634,5 +634,6 @@
     <string name="top_tab">Top</string>
     <string name="button_more">More</string>
     <string name="no_updates">You have no Updates</string>
+    <string name="more_friends_installs">More from your friends installs</string>
 
 </resources>

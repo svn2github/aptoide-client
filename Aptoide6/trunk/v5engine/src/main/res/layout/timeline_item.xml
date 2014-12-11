@@ -3,7 +3,7 @@
     style="?attr/customRowForegroundHomeLayout"
     android:layout_width="match_parent"
     android:layout_weight="1"
-    android:layout_height="wrap_content">
+    android:layout_height="180dp">
 
     <RelativeLayout
         style="?attr/backgroundCard"
