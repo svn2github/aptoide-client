@@ -3,6 +3,8 @@ package cm.aptoidetv.pt;
 import android.app.Application;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.File;
 
 /**
@@ -13,7 +15,7 @@ public class AppTV extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Crashlytics.start(this);
         if(!PreferenceManager.getDefaultSharedPreferences(this).contains("Rooted")) {
             boolean isRooted = isRooted();
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("Rooted",isRooted).commit();

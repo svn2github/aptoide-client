@@ -97,6 +97,10 @@
             android:exported="false"
             android:label="HttpService2" />
 
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="9126e203fae298b81ea59f714683a1010d1ccef9" />
     </application>
 
 </manifest>
