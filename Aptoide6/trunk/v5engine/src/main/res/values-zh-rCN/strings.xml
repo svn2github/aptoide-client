@@ -577,4 +577,12 @@
   <string name="timeline_empty_send_email_to_friends">电邮好友</string>
   <string name="select_friends_to_invite">请选择您的朋友，邀请他们！</string>
   <string name="aptoide_timeline">Aptoide社交时间轴</string>
+  <string name="timeline_email_invitation">邀请你加入他的Aptoide社会时间轴。连接！</string>
+  <string name="timeline_email_how_to_join">您怎么加入社会时间轴？</string>
+  <string name="timeline_email_step1">1-下载Aptoide的最新版本：</string>
+  <string name="timeline_email_step2">2 - 转到标签“社交时间轴”并加入网络</string>
+  <string name="timeline_not_compatible">Ooohhh...这个功能与你的Android版本不兼容</string>
+  <string name="social_timeline_notifications">时间轴通知</string>
+  <string name="social_timeline_notifications_sum">禁用Aptoide社交时间轴通知。您将不会收到通知栏上的最新消息。</string>
+  <string name="social_timeline_notifications_sum2">启用Aptoide社会时间轴通知。您将收到该通知栏上的最新消息。</string>
 </resources>

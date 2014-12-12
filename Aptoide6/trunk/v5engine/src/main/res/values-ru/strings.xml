@@ -584,4 +584,5 @@
   <string name="timeline_not_compatible">Оооу... Эта функция не совместима с вашей версией Android</string>
   <string name="social_timeline_notifications">Уведомления ленты</string>
   <string name="social_timeline_notifications_sum">Отключить уведомления социальной ленты. Вы не будете получать последние новости на панели уведомлений.</string>
+  <string name="social_timeline_notifications_sum2">Включить уведомления социальной ленты Aptoide. Вы будете видеть последние новости на панели уведомлений.</string>
 </resources>

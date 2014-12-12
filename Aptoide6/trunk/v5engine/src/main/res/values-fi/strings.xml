@@ -204,7 +204,7 @@
   <string name="restore">Asenna</string>
   <string name="x_app">%d sovellus</string>
   <string name="x_apps">%d sovellusta</string>
-  <string name="aptoide_downloading">Ladataan sovellusta %s</string>
+  <string name="aptoide_downloading">%s-lataus käynnissä</string>
   <string name="min_sdk">Minimi-SDK</string>
   <string name="min_screen">Miniminäyttö</string>
   <string name="found_results">Löydetty %s tulos(ta)</string>
@@ -573,15 +573,24 @@
   <string name="friends_to_invite">Kaikki muut Facebook-kaverit Aptoidessa</string>
   <string name="timeline_is_empty_no_friends">Aikajanasi on tyhjä. Tämä johtunee siitä, että joko sinulla ole kavereita Aptoidessa tai he eivät ole vielä julkaisseet mitään.</string>
   <string name="timeline_is_empty_start_invite">Aloitetaan kutsumalla joitakin kavereita:</string>
-  <string name="timeline_empty_no_friends_send_email">Näyttää siltä, että kaverisi eivät ole kirjautuneet Aptoideen Facebook-tileillään. Lähetä heille sähköpostilla pyyntö kirjautua sisään Facebook-tilillään.</string>
+  <string name="timeline_empty_no_friends_send_email">Näyttää siltä, että kaverisi eivät ole kirjautuneet Aptoideen Facebook-tileillään. Lähetä heille sähköpostilla pyyntö kirjautua sisään Facebook-tilillään</string>
   <string name="timeline_empty_send_email_to_friends">Sähköpostia kavereille</string>
   <string name="select_friends_to_invite">Valitse kaverisi kutsuaksesi heidät!</string>
   <string name="aptoide_timeline">Aptoiden aikajana</string>
   <string name="timeline_email_invitation">kutsui sinut liittymään hänen Aptoiden sosiaaliseen aikajanaansa. Ole yhteydessä!</string>
   <string name="timeline_email_how_to_join">Miten voit liittyä Aptoiden sosiaaliseen aikajanaan?</string>
-  <string name="timeline_email_step1">1 - Lataa uusin versio Aptoidesta</string>
+  <string name="timeline_email_step1">1 - Lataa uusin versio Aptoidesta:</string>
   <string name="timeline_email_step2">2 - Siirry “Sosiaalinen aikajana” -välilehdelle ja liity verkkoon</string>
   <string name="timeline_not_compatible">Hupsista... Tämä toiminto ei ole yhteensopiva Android-versiosi kanssa</string>
   <string name="social_timeline_notifications">Aikajanan ilmoitukset</string>
   <string name="social_timeline_notifications_sum">Poista Aptoiden sosiaalisen aikajanan ilmoitukset käytöstä. Et saa uusimpia uutisia ilmoituspalkkiin.</string>
+  <string name="social_timeline_notifications_sum2">Ota Aptoiden sosiaalinen aikajana käyttöösi. Saat viimeisimmät uutiset ilmoituspalkkiin.</string>
+  <string name="error503">Tuota... Olenko se vain minä vai asentavatko kaikki sovelluksia samaan aikaan?</string>
+  <string name="having_some_trouble">Onko ongelmia? Yrittäisitkö myöhemmin uudelleen?</string>
+  <string name="friends_installs">Ystäväsi asentaa</string>
+  <string name="highlighted_apps">Korostetut</string>
+  <string name="installed_this">asensi tämän.</string>
+  <string name="store_added">Kauppa lisätty</string>
+  <string name="top_tab">Huiput</string>
+  <string name="button_more">Lisää</string>
 </resources>

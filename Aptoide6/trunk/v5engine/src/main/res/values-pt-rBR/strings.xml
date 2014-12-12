@@ -583,5 +583,16 @@
   <string name="timeline_email_step2">2- Vá para a aba “Linha do Tempo Social” e junte-se à rede</string>
   <string name="timeline_not_compatible">Aaahhh... Este recurso não é compatível com sua versão do Android</string>
   <string name="social_timeline_notifications">Notificações da Linha do Tempo</string>
-  <string name="social_timeline_notifications_sum">Desativar Notificações da Linha do Tempo Social do Aptoide. Você não vai receber as últimas notícias na barra de notificações.</string>
+  <string name="social_timeline_notifications_sum">Desativa as Notificações da Linha do Tempo Social do Aptoide. Você não vai receber as últimas notícias na barra de notificações.</string>
+  <string name="social_timeline_notifications_sum2">Ativa as Notificações da Linha do Tempo Social do Aptoide. Você vai receber as últimas notícias na barra de notificações.</string>
+  <string name="error503">Ufff… Sou eu ou todo mundo que está instalando apps ao mesmo tempo?</string>
+  <string name="having_some_trouble">Tendo alguns problemas. Você pode tentar novamente mais tarde?</string>
+  <string name="friends_installs">Instalações dos seus amigos</string>
+  <string name="highlighted_apps">Destacados</string>
+  <string name="installed_this">instalou isso.</string>
+  <string name="store_added">Loja adicionada</string>
+  <string name="top_tab">Top</string>
+  <string name="button_more">Mais</string>
+  <string name="no_updates">Você não tem Atualizações</string>
+  <string name="more_friends_installs">Mais das instalações dos seus amigos</string>
 </resources>

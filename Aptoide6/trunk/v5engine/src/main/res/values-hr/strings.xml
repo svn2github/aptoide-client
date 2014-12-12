@@ -540,7 +540,6 @@
   <string name="facebook_timeline_preview">Pregled vremeske linije:</string>
   <string name="facebook_start_timeline">Pridružite se društvenoj vremenskoj liniji</string>
   <string name="facebook_join_friends">Želite li se pridružiti društvenoj vremenskoj liniji?</string>
-  <string name="facebook_friends_list_using_timeline">U Aptoide</string>
   <string name="facebook_friends_list_using_timeline_empty">Društvena vremenska linija dozvoljava dijeljenje vaših aplikacija s vašim Facebook prijateljima. Želite li se pridružiti mreži?</string>
   <string name="share_on_timeline">Podijeli nha vremenskoj liniji</string>
   <string name="do_you_accept_timeline">Prihvaćate li Aptoide vremensku liniju?</string>
@@ -564,6 +563,4 @@
   <string name="invite_friends">Pozovi prijatelje</string>
   <string name="timeline_is_empty_send_email">Mi ćemo poslati na e-poštu koju izaberete</string>
   <string name="facebook_timeline_friends_invited">Prijatelj pozvan!</string>
-  <string name="friends_that_use_timeline">Prijatelji koji koriste Aptoide drušetvenu vremensku liniju</string>
-  <string name="friends_to_invite">Svi fFacebook prijatelji u Aptoide</string>
 </resources>

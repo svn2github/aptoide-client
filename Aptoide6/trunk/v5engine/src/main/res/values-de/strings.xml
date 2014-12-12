@@ -511,6 +511,7 @@
   <string name="feedback_send_button">Feedback senden</string>
   <string name="feedback_subject">Thema</string>
   <string name="feedback_to_write">Schreiben Sie hier, um uns Ihr Feedback zu senden</string>
+  <string name="feedback_to_write2">Schreibe hier um uns dein Feedback zu senden...\n\n• Bitte gebe uns alle Daten die du hast \n• Schritte die du gemacht hast \n• Fehler die du siehst</string>
   <string name="feedback_include_logs">Enthält ScreenShots und Protokolle</string>
   <string name="feedback_not_valid">Bitte geben Sie einen gültigen Betreff ein!</string>
   <string name="feedback_no_email">Keine Email Anwendung Installiert!</string>
@@ -540,6 +541,7 @@
   <string name="facebook_timeline_preview">Timeline Vorschau:</string>
   <string name="facebook_start_timeline">Trette der Social Timeline bei</string>
   <string name="facebook_join_friends">Wollen Sie der Social Timeline beitreten?</string>
+  <string name="facebook_friends_list_using_timeline">benutzen bereits Aptoide Social Timeline</string>
   <string name="facebook_friends_list_using_timeline_empty">Social Timeline erlaubt es dir Anwendungen mit deinen Facebook Freunden zu teilen. Willst du dem Netzwerk beitreten?</string>
   <string name="share_on_timeline">Auf Timeline teilen</string>
   <string name="do_you_accept_timeline">Akzeptierst du die Aptoide Timeline?</string>
@@ -561,8 +563,8 @@
   <string name="facebook_private_actions">Die App wird keine Facebook Posts machen</string>
   <string name="notification_social_timeline">Aptoide Social Timeline. Sieh sie dir an!</string>
   <string name="notification_timeline_activity">Du hast %1$s neue Kommentare und %2$s Likes. Sieh sie dir in der Social Timeline an!</string>
-  <string name="notification_timeline_new_comments">Du hast %1$s neue Kommentare und %2$s Likes. Sieh sie dir in der Social Timeline an!</string>
-  <string name="notification_timeline_new_likes">Du hast %1$s neue Kommentare und %2$s Likes. Sieh sie dir in der Social Timeline an!</string>
+  <string name="notification_timeline_new_comments">Du hast %s neue Kommentare. Sieh sie dir in der Social Timeline an!</string>
+  <string name="notification_timeline_new_likes">Du hast %s neue Likes. Sieh sie dir in der Social Timeline an!</string>
   <string name="notification_timeline_posts">Deine Freunde haben neue Apps installiert!</string>
   <string name="timeline_is_empty">Ohh… Keine Freunde auf der Aptoide Social Timeline? Lade sie ein!</string>
   <string name="invite_friends">Freunde einladen</string>
@@ -570,5 +572,27 @@
   <string name="facebook_timeline_friends_invited">Freunde eingeladen!</string>
   <string name="friends_to_invite">Alle anderen Facebook Freunde in Aptoide</string>
   <string name="timeline_is_empty_no_friends">Deine Timeline ist leer. Du hast wahrscheinlich noch keine Freunde bei Aptoide oder sie haben noch nichts geschrieben.</string>
+  <string name="timeline_is_empty_start_invite">Starte indem du neue Freunde einlädst:</string>
+  <string name="timeline_empty_no_friends_send_email">Es sieht so aus als wenn deine Freunde sich noch nicht mit ihrem Facebook Account bei Aptoide eingeloggt haben. Sende Ihnen eine Email um sich mit Facebook anzumelden.</string>
+  <string name="timeline_empty_send_email_to_friends">Freunde emailen</string>
+  <string name="select_friends_to_invite">Bitte wähle deine Freunde zum Einladen aus!</string>
+  <string name="aptoide_timeline">Aptoide Timeline</string>
+  <string name="timeline_email_invitation">Hat dich eingeladen seine Aptoide Social Timeline beizutreten. Sei verbunden!</string>
+  <string name="timeline_email_how_to_join">Wie kannst du der Social Timeline beitreten?</string>
   <string name="timeline_email_step1">1- Lade die neuste Version von Aptoide herunter:</string>
+  <string name="timeline_email_step2">2- Gehe zum Tab \"Social Timeline\" und treten dem Netzwerk bei</string>
+  <string name="timeline_not_compatible">Ooohhh... Dieser Feature ist nicht mit deiner Android Version kompatibel</string>
+  <string name="social_timeline_notifications">Timeline Benachrichtigungen</string>
+  <string name="social_timeline_notifications_sum">Deaktiviere die Aptoide Social Timeline Benachrichtigungen. Du wirst die letzten Nachrichten nicht in der Statusbar angezeigt bekommen.</string>
+  <string name="social_timeline_notifications_sum2">Aktiviere die Aptoide Social Timeline Benachrichtigungen. Du wirst die letzten Nachrichten in deine Statusbar bekommen.</string>
+  <string name="error503">Pfff... Bin nur ich es oder installiert jeder gerade Apps zur gleichen Zeit?</string>
+  <string name="having_some_trouble">Habe ein paar Probleme. Kannst du es später noch einmal versuchen?</string>
+  <string name="friends_installs">Dein Freunde haben installiert</string>
+  <string name="highlighted_apps">Hervorgehoben</string>
+  <string name="installed_this">hat dies installiert.</string>
+  <string name="store_added">Store hinzugefügt</string>
+  <string name="top_tab">Oberste</string>
+  <string name="button_more">Mehr</string>
+  <string name="no_updates">Du hast keine Updates</string>
+  <string name="more_friends_installs">Mehr von dem was deine Freunde installiert haben</string>
 </resources>

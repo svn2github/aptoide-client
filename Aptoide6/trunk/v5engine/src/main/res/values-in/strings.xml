@@ -511,6 +511,7 @@
   <string name="feedback_send_button">Kirim Tanggapan</string>
   <string name="feedback_subject">Subjek</string>
   <string name="feedback_to_write">Tulis di sini untuk mengirimkan tanggapan Anda</string>
+  <string name="feedback_to_write2">Tulis di sini untuk mengirimkan tanggapan anda ... \n\n• Tolong berikan kami semua rincian yang anda lakukan \n• Langkah-langkah yang telah anda lakukan \n• Kesalahan yang anda lihat</string>
   <string name="feedback_include_logs">Sertakan ScreenShot dan Log</string>
   <string name="feedback_not_valid">Masukkan beberapa Subjek yang valid!</string>
   <string name="feedback_no_email">Tidak ada email client yang terpasang</string>
@@ -540,7 +541,7 @@
   <string name="facebook_timeline_preview">Timeline Preview:</string>
   <string name="facebook_start_timeline">Bergabung Timeline Sosial</string>
   <string name="facebook_join_friends">Apakah anda ingin bergabung dengan mereka di Timeline Sosial?</string>
-  <string name="facebook_friends_list_using_timeline">Ada di Aptoide</string>
+  <string name="facebook_friends_list_using_timeline">telah menggunakan Aptoide Timeline Sosial</string>
   <string name="facebook_friends_list_using_timeline_empty">Timeline sosial memungkinkan Anda untuk berbagi aplikasi dengan teman-teman Facebook Anda. Apakah Anda ingin bergabung dengan jaringan?</string>
   <string name="share_on_timeline">Bagikan di Timeline</string>
   <string name="do_you_accept_timeline">Apakah anda menerima Timeline Aptoide?</string>
@@ -548,6 +549,7 @@
   <string name="more_friends">lagi</string>
   <string name="hide_post">MENYEMBUNYIKAN</string>
   <string name="unhide_post">MENAMPILKAN</string>
+  <string name="timeline_like">Suka</string>
   <string name="unlike">Tidak Suka</string>
   <string name="comment">Komentar</string>
   <string name="hide_post_info">Teman anda tidak dapat melihat posting ini</string>
@@ -560,10 +562,27 @@
   <string name="new_feature">Baru!</string>
   <string name="facebook_private_actions">Apps ini tidak akan memposting ke Facebook</string>
   <string name="notification_social_timeline">Timeline Sosial Aptoide. Lihat sekarang!</string>
+  <string name="notification_timeline_activity">Anda mempunyai %1$s komentar baru dan %2$s suka. Lihat di Timeline Sosial!</string>
+  <string name="notification_timeline_new_comments">Anda mempunyai %1$s komentar baru dan %2$s suka. Lihat di Timeline Sosial!</string>
+  <string name="notification_timeline_new_likes">Anda mempunyai %1$s komentar baru dan %2$s suka. Lihat di Timeline Sosial!</string>
+  <string name="notification_timeline_posts">Teman anda menginstal apps baru!</string>
   <string name="timeline_is_empty">Ohh... tidak ada teman di Timeline Sosial Aptoide? Undang mereka!</string>
   <string name="invite_friends">Undang Teman-teman</string>
   <string name="timeline_is_empty_send_email">Kami akan mengirim email ke yang anda pilih</string>
   <string name="facebook_timeline_friends_invited">Teman teman telah di undang!</string>
-  <string name="friends_that_use_timeline">Teman teman yang telah menggunakan Timeline Sosial Aptoide</string>
   <string name="friends_to_invite">Semua Teman teman Facebook di Aptoide</string>
+  <string name="timeline_is_empty_no_friends">Timeline anda kosong, Itu mungkin karena Anda masih belum memiliki teman di Aptoide atau mereka tidak memiliki tulisan.</string>
+  <string name="timeline_is_empty_start_invite">Mari di mulai dengan mengajak beberapa teman:</string>
+  <string name="timeline_empty_no_friends_send_email">Tampaknya teman-teman Anda tidak log-in di Aptoide dengan menggunakan akun Facebook mereka. Kirim email untuk login dengan akun Facebook mereka</string>
+  <string name="timeline_empty_send_email_to_friends">Email Teman-teman</string>
+  <string name="select_friends_to_invite">Silakan pilih teman-teman Anda untuk mengundang mereka!</string>
+  <string name="aptoide_timeline">Timeline Aptoide</string>
+  <string name="timeline_email_invitation">Mengundang Anda untuk bergabung di Aptoide Sosial Timeline. Hubungkan!</string>
+  <string name="timeline_email_how_to_join">Bagaimana Anda bisa bergabung dengan Timeline Sosial?</string>
+  <string name="timeline_email_step1">1- Download versi terbaru dari Aptoide:</string>
+  <string name="timeline_email_step2">2- Buka tab \"Timeline Sosial\" dan bergabung dijaringan</string>
+  <string name="timeline_not_compatible">Ooohhh ... Fitur ini tidak kompatibel dengan versi Android Anda</string>
+  <string name="social_timeline_notifications">Notifikasi Timeline</string>
+  <string name="social_timeline_notifications_sum">Nonaktifkan notifikasi Sosial Timeline.Aptoide. Anda tidak akan menerima berita terbaru pada bar notifikasi.</string>
+  <string name="social_timeline_notifications_sum2">Aktifkan Notifikasi Sosial Timeline Aptoide. Anda akan menerima berita terbaru pada bar notifikasi</string>
 </resources>

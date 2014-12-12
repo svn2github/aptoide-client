@@ -584,4 +584,15 @@
   <string name="timeline_not_compatible">Ooohhh... Questa funzione non è compatibile con la tua versione di Android</string>
   <string name="social_timeline_notifications">Notifiche Timeline</string>
   <string name="social_timeline_notifications_sum">Disabilita le notifiche della Timeline Sociale di Aptoide. Non riceverai le ultime notizie nella barra delle notifiche.</string>
+  <string name="social_timeline_notifications_sum2">Abilita le notifiche della Timeline Sociale di Aptoide. Riceverai le ultime notizie nella barra delle notifiche.</string>
+  <string name="error503">Ufff... È un problema mio o stanno tutti installando app nello stesso momento?</string>
+  <string name="having_some_trouble">Stimo sperimentando dei problemi. Riprova più tardi.</string>
+  <string name="friends_installs">I tuoi amici installano</string>
+  <string name="highlighted_apps">In evidenza</string>
+  <string name="installed_this">ha installato questo.</string>
+  <string name="store_added">Store aggiunto</string>
+  <string name="top_tab">Top</string>
+  <string name="button_more">Altro</string>
+  <string name="no_updates">Non ci sono aggiornamenti</string>
+  <string name="more_friends_installs">Altre installazioni dai tuoi amici</string>
 </resources>

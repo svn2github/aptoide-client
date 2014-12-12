@@ -584,4 +584,15 @@
   <string name="timeline_not_compatible">Ωωωχχ... Αυτό το χαρακτηριστικό δεν είναι συμβατό με την Aptoide έκδοσή σας</string>
   <string name="social_timeline_notifications">Ειδοποιήσεις Χρονολογίου</string>
   <string name="social_timeline_notifications_sum">Απενεργοποιήστε τις Ειδοποιήσεις του Aptoide Κοινωνικού Χρονολογίου. Δεν θα λαμβάνετε τα τελευταία νέα στην μπάρα ειδοποιήσεων.</string>
+  <string name="social_timeline_notifications_sum2">Ενεργοποιήστε τις Ενημερώσεις του Aptoide Κοινωνικού Χρονολογίου. Θα λαμβάνετε τα τελευταία νέα στην μπάρα ειδοποιήσεων.</string>
+  <string name="error503">Ουυυφ... Είμαι μόνο εγώ ή όλοι εγκαθιστούν εφαρμογές την ίδια στιγμή?</string>
+  <string name="having_some_trouble">Έχουμε κάποια προβλήματα. Μπορείτε να προσπαθήσετε αργότερα?</string>
+  <string name="friends_installs">Οι φίλοι σας εγκαθιστούν</string>
+  <string name="highlighted_apps">Τόνισε</string>
+  <string name="installed_this">εγκατέστησε αυτό.</string>
+  <string name="store_added">Κατάστημα προστέθηκε</string>
+  <string name="top_tab">Κορυφή</string>
+  <string name="button_more">Περισσότερα</string>
+  <string name="no_updates">Δεν έχετε Ενημερώσεις</string>
+  <string name="more_friends_installs">Περισσότερα από τις εγκαταστάσεις φίλων</string>
 </resources>
