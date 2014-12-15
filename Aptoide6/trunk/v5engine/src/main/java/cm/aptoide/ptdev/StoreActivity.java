@@ -45,7 +45,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     private long storeid;
     private ParserService service;
     private boolean serviceIsBound;
-    private boolean isRefreshing;
     private DownloadService downloadService;
     private ServiceConnection conn2 = new ServiceConnection() {
         @Override
@@ -95,7 +94,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((ParserService.MainServiceBinder) binder).getService();
-            isRefreshing = service.repoIsParsing(storeid);
+            //isRefreshing = service.repoIsParsing(storeid);
 
 //            final FragmentStore fragmentStoreListCategories = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
   //          if(isRefreshing){
@@ -110,10 +109,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             serviceIsBound = false;
         }
     };
-
-    public boolean isRefreshing() {
-        return isRefreshing;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,40 +340,32 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
     }
 
     public void onRefreshStarted() {
+        Executors.newSingleThreadExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
+                final Database db = new Database(Aptoide.getDb());
+                final Store store = new Store();
 
+                Cursor c = db.getStore(storeid);
 
-        if(!isRefreshing){
-
-
-            Executors.newSingleThreadExecutor().submit(new Runnable() {
-                @Override
-                public void run() {
-                    final Database db = new Database(Aptoide.getDb());
-                    final Store store = new Store();
-
-                    Cursor c = db.getStore(storeid);
-
-                    if(c.moveToFirst()){
-                        store.setBaseUrl(c.getString(c.getColumnIndex("url")));
-                        store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
-                        store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
-                        store.setDelta(c.getString(c.getColumnIndex("hash")));
-                        store.setId(c.getLong(c.getColumnIndex("id_repo")));
-                        if(c.getString(c.getColumnIndex("username"))!=null){
-                            Login login = new Login();
-                            login.setUsername(c.getString(c.getColumnIndex("username")));
-                            login.setPassword(c.getString(c.getColumnIndex("password")));
-                            store.setLogin(login);
-                        }
-
+                if(c.moveToFirst()){
+                    store.setBaseUrl(c.getString(c.getColumnIndex("url")));
+                    store.setTopTimestamp(c.getLong(c.getColumnIndex("top_timestamp")));
+                    store.setLatestTimestamp(c.getLong(c.getColumnIndex("latest_timestamp")));
+                    store.setDelta(c.getString(c.getColumnIndex("hash")));
+                    store.setId(c.getLong(c.getColumnIndex("id_repo")));
+                    if(c.getString(c.getColumnIndex("username"))!=null){
+                        Login login = new Login();
+                        login.setUsername(c.getString(c.getColumnIndex("username")));
+                        login.setPassword(c.getString(c.getColumnIndex("password")));
+                        store.setLogin(login);
                     }
-                    c.close();
-                    //service.startParse(db, store, false);
+
                 }
-            });
-
-        }
-
+                c.close();
+                //service.startParse(db, store, false);
+            }
+        });
     }
 
     public void installApp(long id){

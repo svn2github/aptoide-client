@@ -217,7 +217,7 @@ public class Start extends ActionBarActivity implements
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = (ParserService) ((ParserService.MainServiceBinder) binder).getService();
+            service = ((ParserService.MainServiceBinder) binder).getService();
             //Log.d("Aptoide-Start", "onServiceConnected");
             parserServiceIsBound = true;
 
@@ -1351,11 +1351,6 @@ public class Start extends ActionBarActivity implements
 //        }
 
 
-    }
-
-    @Override
-    public boolean isRefreshing(long id) {
-        return service.repoIsParsing(id);
     }
 
     public void installApp(long id) {

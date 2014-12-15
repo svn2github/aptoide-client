@@ -1,7 +1,5 @@
 package cm.aptoide.ptdev.fragments.callbacks;
 
-import cm.aptoide.ptdev.model.Login;
-
 import java.util.Set;
 
 /**
@@ -15,7 +13,4 @@ public interface StoresCallback {
     void showAddStoreDialog();
 
     void reloadStores(Set<Long> checkedItems);
-
-    boolean isRefreshing(long id);
-
 }

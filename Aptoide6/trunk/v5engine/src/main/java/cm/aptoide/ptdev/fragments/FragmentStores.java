@@ -64,11 +64,6 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
         @Override
         public void reloadStores(Set<Long> checkedItems) {}
 
-        @Override
-        public boolean isRefreshing(long id) {
-            return false;
-        }
-
     };
 
 
@@ -178,11 +173,9 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 StoreItem store = (StoreItem) parent.getItemAtPosition(position);
 
                 i.putExtra("storeid", id);
-                i.putExtra("isrefreshing", callback.isRefreshing(id));
                 i.putExtra("list", store.isList());
                 i.putExtra("theme", store.getTheme().ordinal());
                 i.putExtra("download_from", "store");
-
 
                 if(store.getLogin() !=null){
                     i.putExtra("username", store.getLogin().getUsername());
