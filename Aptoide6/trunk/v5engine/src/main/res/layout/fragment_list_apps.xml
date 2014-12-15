@@ -6,7 +6,7 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <ScrollView
         android:id="@+id/error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,7 +60,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/please_wait"
