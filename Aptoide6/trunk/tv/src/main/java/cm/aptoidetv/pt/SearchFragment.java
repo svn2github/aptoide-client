@@ -17,6 +17,7 @@ package cm.aptoidetv.pt;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v17.leanback.app.SearchFragment2;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
@@ -48,8 +49,8 @@ import cm.aptoidetv.pt.Model.SearchJson;
  * This class demonstrates how to do in-app search 
  */
 @SuppressLint("DefaultLocale")
-public class SearchFragment extends android.support.v17.leanback.app.SearchFragment
-        implements android.support.v17.leanback.app.SearchFragment.SearchResultProvider {
+public class SearchFragment extends SearchFragment2
+        implements android.support.v17.leanback.app.SearchFragment2.SearchResultProvider {
     private static final String TAG = "SearchFragment";
     private static final int SEARCH_DELAY_MS = 300;
 
@@ -74,9 +75,6 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     }
 
     private void queryByWords(String words) {
-
-
-
         if (!TextUtils.isEmpty(words)) {
             mDelayedLoad.setSearchQuery(words);
             mHandler.removeCallbacks(mDelayedLoad);
@@ -148,8 +146,6 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         }
 
         public void run() {
-
-
             if(searchQuery.length()>=3) {
 
                 GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/listSearchApks/" + searchQuery + "/options=(repos=geniatechapps)/json");
@@ -174,21 +170,15 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     });
 
                     executor.execute(future);
-
-
-                    mHandler.post(new Runnable() {
+/*                    mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                         }
-                    });
-
-
+                    });*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-
         }
 
         public void setSearchQuery(String value) {

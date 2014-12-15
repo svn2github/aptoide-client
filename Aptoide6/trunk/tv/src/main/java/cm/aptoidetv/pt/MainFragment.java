@@ -16,10 +16,8 @@ package cm.aptoidetv.pt;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
@@ -30,6 +28,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -38,15 +37,10 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cm.aptoidetv.pt.Model.ApplicationAPK;
 import cm.aptoidetv.pt.Model.BindInterface;
@@ -64,11 +58,12 @@ public class MainFragment extends BrowseFragment{
     private static String mVideosUrl;*/
     private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
-    private Drawable mDefaultBackground;
-    private Target mBackgroundTarget;
+
     private DisplayMetrics mMetrics;
-    private Timer mBackgroundTimer;
+/*    private Timer mBackgroundTimer;
     private URI mBackgroundURI;
+    private Drawable mDefaultBackground;
+    private Target mBackgroundTarget;*/
 
     private RequestListener<Response> requestListener;
     private List<EditorsChoice> mEditorsChoice = new ArrayList<>();
@@ -89,14 +84,17 @@ public class MainFragment extends BrowseFragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        //prepareBackgroundManager();
+        setupUIElements();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        prepareBackgroundManager();
-        setupUIElements();
-
         setupEventListeners();
-        RequestTV request = new RequestTV("store");
+        final RequestTV request = new RequestTV("store");
 
         requestListener= new RequestListener<Response>(){
             @Override
@@ -112,8 +110,6 @@ public class MainFragment extends BrowseFragment{
                 //List<String> categories = getCategories();
                 List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
 
-                if (categories == null || categories.isEmpty())
-                    return;
                 {
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                     for (EditorsChoice editorsChoice : mEditorsChoice) {
@@ -125,17 +121,28 @@ public class MainFragment extends BrowseFragment{
                     }
                 }
                 for( Response.GetStore.Widgets.Widget widget : categories ) {
-                    if(widget==null || widget.data==null || response.responses.listApps.datasets.getDataset()==null)
+                    if(!"apps_list".equals(widget.type))
                         continue;
+/*                    if(widget==null || widget.data==null || response.responses.listApps.datasets.getDataset()==null) {
+                        Log.d("pois","continue cuz widget was null");
+                        continue;
+                    }*/
                     final String ref_id = widget.data.ref_id;
 
-                    if(response.responses.listApps.datasets.getDataset().get(ref_id)==null ||
-                       response.responses.listApps.datasets.getDataset().get(ref_id).data==null ||
-                       response.responses.listApps.datasets.getDataset().get(ref_id).data.list==null)
-                        continue;
+                    final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
+                    if(data ==null|| data.data==null) {
+                        Log.d("pois","continue cuz get was null, ref_id: "+ref_id);
+                        Log.d("pois", "expected in : " + data.ticket.getExpected_time());
+                        try {
+                            Thread.sleep(Math.min(data.ticket.getExpected_time().longValue(), 5000));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED,  requestListener);
+                    }
 
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter( cardPresenter );
-                    for( Response.ListApps.Apk apk :  response.responses.listApps.datasets.getDataset().get(ref_id).data.list) {
+                    for( Response.ListApps.Apk apk :  data.data.list) {
                         ApplicationAPK storeApplication = new ApplicationAPK(apk,widget.name);
                         listRowAdapter.add(storeApplication);
                     }
@@ -169,14 +176,8 @@ public class MainFragment extends BrowseFragment{
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED,  requestListener);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (null != mBackgroundTimer) {
-            mBackgroundTimer.cancel();
-        }
-    }
 
+/*
     private void prepareBackgroundManager() {
         BackgroundManager backgroundManager = BackgroundManager.getInstance(getActivity());
         backgroundManager.attach(getActivity().getWindow());
@@ -184,13 +185,13 @@ public class MainFragment extends BrowseFragment{
         mDefaultBackground = getResources().getDrawable(R.drawable.default_background);
         mMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-    }
+    }*/
 
     private void setupUIElements() {
 //        setBadgeDrawable(getActivity().getResources().getDrawable(R.drawable.videos_by_google_banner));
         setTitle(getString(R.string.app_name)); // Badge, when set, takes precedent over title
         setHeadersState(HEADERS_ENABLED);
-        setHeadersTransitionOnBackEnabled(true);
+        //setHeadersTransitionOnBackEnabled(true);
         // set fastLane (or headers) background color
 
         TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor, R.attr.searchColor});
@@ -329,7 +330,7 @@ public class MainFragment extends BrowseFragment{
 
     protected void clearBackground() {
         BackgroundManager.getInstance(getActivity()).setDrawable(mDefaultBackground);
-    }*/
+    }
     protected void updateBackground(URI uri) {
         Picasso.with(getActivity())
                 .load(uri.toString())
@@ -339,9 +340,9 @@ public class MainFragment extends BrowseFragment{
                 .into(mBackgroundTarget);
         mBackgroundTimer.cancel();
     }
+    */
 
-
-
+ /*
     private void startBackgroundTimer() {
         if (null != mBackgroundTimer) {
             mBackgroundTimer.cancel();
@@ -351,7 +352,7 @@ public class MainFragment extends BrowseFragment{
     }
 
 
-    private class UpdateBackgroundTask extends TimerTask {
+  private class UpdateBackgroundTask extends TimerTask {
 
         @Override
         public void run() {
@@ -364,7 +365,7 @@ public class MainFragment extends BrowseFragment{
                 }
             });
         }
-    }
+    }*/
 
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {

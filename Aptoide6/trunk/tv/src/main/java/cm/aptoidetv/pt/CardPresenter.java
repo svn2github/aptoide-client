@@ -23,6 +23,7 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,12 +53,13 @@ public class CardPresenter extends Presenter {
         //int brandColorResourceId = typedArray.getResourceId(0, 0);
         typedArray.recycle();
 
-        cardView.setBackgroundColor(mContext.getResources().getColor(R.color.overlay_black));
+        //cardView.setBackgroundColor(mContext.getResources().getColor(R.color.overlay_black));
         return new ViewHolder(cardView);
     }
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
+        Log.d("pois","onBindViewHolder");
         ViewHolder myViewHolder = (ViewHolder) viewHolder;
         BindInterface application = (BindInterface) item;
         if (!TextUtils.isEmpty(application.getImage())) {
@@ -94,15 +96,10 @@ public class CardPresenter extends Presenter {
         vh.mCardView.setMainImage(null);
     }
 
-    @Override
-    public void onViewAttachedToWindow(Presenter.ViewHolder viewHolder) {
-        // TO DO
-    }
-
     static class ViewHolder extends Presenter.ViewHolder {
         private Movie mMovie;
         private ImageCardView mCardView;
-        private Drawable mDefaultCardImage;
+        //private Drawable mDefaultCardImage;
         private PicassoImageCardViewTarget mImageCardViewTarget;
 
         public ViewHolder(View view) {
@@ -110,7 +107,7 @@ public class CardPresenter extends Presenter {
             mCardView = (ImageCardView) view;
             mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView);
 
-            mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
+            //mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
         }
 
         public Movie getMovie() {
@@ -126,13 +123,14 @@ public class CardPresenter extends Presenter {
         }
 
         protected void updateCardViewImage(String uri) {
+            Log.d("pois","updateCardViewImage");
             Picasso.with(mContext)
                     .load(uri)
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .centerInside()
                     .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
                             Utils.convertDpToPixel(mContext, CARD_HEIGHT))
-                    .error(mDefaultCardImage)
+                 //   .error(mDefaultCardImage)
                     .into(mImageCardViewTarget);
         }
     }

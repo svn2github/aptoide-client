@@ -177,7 +177,8 @@ public class DetailsActivity extends Activity {
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
                 downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
                 app_downloads.setText(getString(R.string.downloads)+": " + downloads);
-                app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
+                if(apkInfoJson.getMeta().getDeveloper()!=null)
+                    app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
                 app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
                 if(totalRatings>0){

@@ -1,7 +1,6 @@
 package cm.aptoidetv.pt.WebServices;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -20,21 +19,48 @@ public class Response {
         public Number time_taken;
     }
 
+    public static class Ticket {
+
+        public Ticket() {
+        }
+
+        public String id;
+        public String status;
+
+        public Number getExpected_time() {
+            return expected_time;
+        }
+
+        private Number expected_time;
+
+
+        public void setExpected_time(Number expected_time) throws TicketException, InterruptedException {
+            this.expected_time = expected_time;
+            Thread.sleep(Math.min(expected_time.intValue(), 5000));
+            throw new TicketException();
+        }
+
+    }
+
+    public  static class TicketException extends Exception {}
+
     public static class Responses {
 
         public GetStore getStore;
         public ListApps listApps;
+        public ListStores listStores;
 
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
+
     public static class GetStore {
 
+        public Ticket ticket;
         public Datasets datasets;
 
 
         public static class StoreMeta {
-
+            public Ticket ticket;
             public Info info;
             public StoreMetaData data;
 
@@ -42,7 +68,7 @@ public class Response {
 
         public static class Categories {
             public Info info;
-
+            public Ticket ticket;
             public Data<Category> data;
 
             public static class Category{
@@ -61,6 +87,7 @@ public class Response {
 
         public static class Widgets {
             public Info info;
+            public Ticket ticket;
             public Data<Widget> data;
 
 
@@ -68,6 +95,7 @@ public class Response {
 
                 public String type;
                 public String name;
+                public String widgetid;
                 public WidgetData data;
 
 
@@ -107,7 +135,6 @@ public class Response {
 
         public static class Datasets {
 
-            public Categories categories;
             public Widgets widgets;
             public StoreMeta meta;
 
@@ -119,19 +146,63 @@ public class Response {
 
         public int total;
         public int offset;
+        public int next;
         public int limit;
         public List<T> list;
 
     }
 
+    public static class ListStores {
+
+        public Ticket ticket;
+        public Info info;
+        public Datasets datasets;
+
+        public static class Datasets {
+
+            private HashMap<String, StoreGroup> dataset = new HashMap<String, StoreGroup>();
+
+            @JsonAnySetter
+            public void setDynamicProperty(String name, StoreGroup object) {
+                dataset.put(name, object);
+            }
+
+            public HashMap<String, StoreGroup> getDataset() {
+                return dataset;
+            }
+
+            public void setDataset(HashMap<String, StoreGroup> dataset) {
+                this.dataset = dataset;
+            }
+
+
+        }
+
+        public static class StoreGroup{
+            public Info info;
+            public Ticket ticket;
+            public Data<Store> data;
+
+
+        }
+        public static class Store{
+            public Number id;
+            public String name;
+            public Number apps_count;
+            public Number downloads;
+            public String avatar;
+        }
+    }
+
     public static class ListApps {
 
-
+        public Ticket ticket;
         public Info info;
         public Datasets datasets;
 
         public static class Category {
             public Info info;
+            public Ticket ticket;
             public Data<Apk> data;
 
         }
@@ -139,6 +210,9 @@ public class Response {
         public static class Apk {
             public Number id;
             public String name;
+            public Number store_id;
+
+            public String store_name;
 
             @JsonProperty("package")
             public String packageName;

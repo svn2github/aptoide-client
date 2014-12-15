@@ -6,8 +6,7 @@ include 'v5engine',
         'AptoideDev',
         'android-websockets',
         'facebook',
-        //'google-play-services',
+
+        'google-play-services',
         'mopub-sdk'
-
-
-
+//include       'tv'
