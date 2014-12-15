@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
@@ -40,7 +41,6 @@ import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
-import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
@@ -86,6 +86,8 @@ public class FragmentListStore extends Fragment {
         private String refId;
         private String store;
         private StoreActivity.Sort sort;
+        private String password;
+        private String username;
 
         public GetStoreRequest() {
             super(Response.class, Webservice.class);
@@ -106,6 +108,14 @@ public class FragmentListStore extends Fragment {
             this.refId = refId;
         }
 
+        public void setUsername(String username){
+            this.username = username;
+        }
+
+        public void setPassword(String password){
+            this.password = password;
+        }
+
         @Override
         public Response loadDataFromNetwork() throws Exception {
             Api api = new Api();
@@ -124,6 +134,10 @@ public class FragmentListStore extends Fragment {
             //widgetParams.offset = offset;
             //widgetParams.limit = 3;
 
+            if(username != null){
+                getStore.store_user = username;
+                getStore.store_pass_sha1 = password;
+            }
 
             getStore.getDatasets_params().set(widgetParams);
 
@@ -198,14 +212,36 @@ public class FragmentListStore extends Fragment {
         refresh(DurationInMillis.ONE_HOUR);
     }
 
-
-    public void refresh(long expire){
-        view.findViewById(R.id.error).setVisibility(View.GONE);
+    public void setLoading(View view){
         view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
         view.findViewById(R.id.list).setVisibility(View.GONE);
-        GetStoreRequest request = new GetStoreRequest();
+    }
+
+    private void setError(final View view, final SpiceManager manager, final RequestListener requestListener, final SpiceRequest request){
+        view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
+        view.findViewById(R.id.empty).setVisibility(View.GONE);
+        view.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLoading(view);
+                manager.execute(request, requestListener);
+
+            }
+        });
+    }
+    GetStoreRequest request;
+
+    public void refresh(long expire){
+        setLoading(view);
+        request = new GetStoreRequest();
         StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
         request.setSort(sort);
+
+        if(getArguments().containsKey("username")){
+            request.setUsername(getArguments().getString("username"));
+            request.setPassword(getArguments().getString("password"));
+        }
 
         request.setStore(getArguments().getString("storename"));
 
@@ -217,57 +253,56 @@ public class FragmentListStore extends Fragment {
         manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") , expire, listener);
     }
 
+
+
     RequestListener<Response> listener = new RequestListener<Response>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-            view.findViewById(R.id.error).setVisibility(View.VISIBLE);
-
-
+            setError(view, manager, listener, request );
         }
 
         @Override
         public void onRequestSuccess(Response response) {
             ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
-
-            List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
-            HashMap<String, Response.ListApps.Category> dataset = null;
-            if (response.responses.listApps != null) {
-                dataset = response.responses.listApps.datasets.getDataset();
-            }
-
-
-            String widgetrefid = getArguments().getString("refid");
-            if (list.isEmpty()) {
-
-                if (dataset != null) {
-                    if(dataset.get(widgetrefid).data != null) {
-
-                        List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
-
-                        for (Response.ListApps.Apk apk : apksList) {
-                            App app = new App();
-                            app.setDownloads(apk.downloads.intValue());
-                            app.setCategory_ref_id(widgetrefid);
-                            app.setName(apk.name);
-                            app.setIcon(apk.icon);
-                            app.setMd5sum(apk.md5sum);
-                            app.setRepo(apk.store_name);
-                            if(apk.rating!=null){
-                                app.setRating(apk.rating.floatValue());
-                            }
-                            app.setVersionName(apk.vername);
-                            map.add(app);
-                        }
-
-                    }else{
-                        manager.removeDataFromCache(Response.class);
-                    }
+            try {
+                List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
+                HashMap<String, Response.ListApps.Category> dataset = null;
+                if (response.responses.listApps != null) {
+                    dataset = response.responses.listApps.datasets.getDataset();
                 }
 
-            } else {
 
-                for (Response.GetStore.Widgets.Widget widget : list) {
+                String widgetrefid = getArguments().getString("refid");
+                if (list.isEmpty()) {
+
+                    if (dataset != null) {
+                        if (dataset.get(widgetrefid).data != null) {
+
+                            List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
+
+                            for (Response.ListApps.Apk apk : apksList) {
+                                App app = new App();
+                                app.setDownloads(apk.downloads.intValue());
+                                app.setCategory_ref_id(widgetrefid);
+                                app.setName(apk.name);
+                                app.setIcon(apk.icon);
+                                app.setMd5sum(apk.md5sum);
+                                app.setRepo(apk.store_name);
+                                if (apk.rating != null) {
+                                    app.setRating(apk.rating.floatValue());
+                                }
+                                app.setVersionName(apk.vername);
+                                map.add(app);
+                            }
+
+                        } else {
+                            manager.removeDataFromCache(Response.class);
+                        }
+                    }
+
+                } else {
+
+                    for (Response.GetStore.Widgets.Widget widget : list) {
 
 
                         WidgetCategory item = new WidgetCategory();
@@ -279,41 +314,44 @@ public class FragmentListStore extends Fragment {
                         map.add(item);
 
 
-                }
+                    }
 
-                if (dataset != null ) {
+                    if (dataset != null) {
 
-                    if(dataset.get(widgetrefid).data != null) {
+                        if (dataset.get(widgetrefid).data != null) {
 
-                        List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
+                            List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
 
-                        for (Response.ListApps.Apk apk : apksList) {
+                            for (Response.ListApps.Apk apk : apksList) {
 
-                            App app = new App();
-                            app.setName(apk.name);
-                            app.setIcon(apk.icon);
-                            app.setMd5sum(apk.md5sum);
-                            app.setRepo(apk.store_name);
-                            if(apk.rating!=null){
-                                app.setRating(apk.rating.floatValue());
+                                App app = new App();
+                                app.setName(apk.name);
+                                app.setIcon(apk.icon);
+                                app.setMd5sum(apk.md5sum);
+                                app.setRepo(apk.store_name);
+                                if (apk.rating != null) {
+                                    app.setRating(apk.rating.floatValue());
+                                }
+                                app.setVersionName(apk.vername);
+                                map.add(app);
+
                             }
-                            app.setVersionName(apk.vername);
-                            map.add(app);
 
                         }
-
                     }
+
                 }
 
-            }
+                //string.clear();
+                items.clear();
+                items.addAll(map);
+                rRiew.getAdapter().notifyDataSetChanged();
+                swipeLayout.setRefreshing(false);
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+            }catch (Exception e){
 
-            //string.clear();
-            items.clear();
-            items.addAll(map);
-            rRiew.getAdapter().notifyDataSetChanged();
-            swipeLayout.setRefreshing(false);
-            view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-            view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+            }
 
         }
     };

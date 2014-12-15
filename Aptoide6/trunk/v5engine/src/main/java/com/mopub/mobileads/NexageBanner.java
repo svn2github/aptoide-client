@@ -1,3 +1,4 @@
+/*
 package com.mopub.mobileads;
 
 import static com.mopub.mobileads.MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR;
@@ -147,3 +148,4 @@ public class NexageBanner extends CustomEventBanner implements NexageAdViewListe
         }
 	}
 }
+*/

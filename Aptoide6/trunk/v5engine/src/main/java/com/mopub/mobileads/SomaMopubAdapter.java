@@ -1,3 +1,4 @@
+/*
 package com.mopub.mobileads;
 
 import java.util.Map;
@@ -20,13 +21,15 @@ import com.smaato.soma.exception.ClosingLandingPageFailed;
 
 public class SomaMopubAdapter extends CustomEventBanner {
     private static BannerView mBanner;
-    /*
+    */
+/*
     * (non-Javadoc)
     * @see
     * com.mopub.mobileads.CustomEventBanner#loadBanner(android.content.Context,
     * com.mopub.mobileads.CustomEventBanner.CustomEventBannerListener,
     * java.util.Map, java.util.Map)
-    */
+    *//*
+
     @Override
     public void loadBanner(Context context,
                            final CustomEventBannerListener customEventBannerListener,
@@ -71,11 +74,13 @@ public class SomaMopubAdapter extends CustomEventBanner {
             Log.e(this.getClass().getCanonicalName(), "Failed to load banner");
         }
     }
-    /*
+    */
+/*
     * (non-Javadoc)
     * @see com.mopub.mobileads.CustomEventBanner#onInvalidate()
-    */
+    *//*
+
     @Override
     public void onInvalidate() {
     }
-}
+}*/

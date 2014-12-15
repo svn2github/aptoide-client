@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class RelatedApkJson {
 
-     private List<Item> develbased;
-     private List<Item> itembased;
-     private List<Item> multiversion;
-     private String status;
+     public List<Item> develbased;
+     public List<Item> itembased;
+     public List<Item> multiversion;
+     public String status;
 
 
-     private List<cm.aptoide.ptdev.model.Error> errors;
+     public List<cm.aptoide.ptdev.model.Error> errors;
 
     public List<Error> getErrors() {
         return errors;
@@ -43,19 +43,19 @@ public class RelatedApkJson {
     }
 
     public static class Item{
-         private String age;
-         private String icon;
-         private String icon_hd;
-         private Number malrank;
-         private String md5sum;
-         private String name;
-         private String packageName;
+         public String age;
+         public String icon;
+         public String icon_hd;
+         public Number malrank;
+         public String md5sum;
+         public String name;
+         public String packageName;
 
-         private String repo;
-         private String signature;
-         private String timestamp;
-         private Number vercode;
-         private String vername;
+         public String repo;
+         public String signature;
+         public String timestamp;
+         public Number vercode;
+         public String vername;
 
         public String getAge(){
             return this.age;

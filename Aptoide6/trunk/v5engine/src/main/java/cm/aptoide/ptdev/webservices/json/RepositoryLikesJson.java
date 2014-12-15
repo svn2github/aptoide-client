@@ -8,8 +8,8 @@ import java.util.List;
  * Created by rmateus on 18-02-2014.
  */
 public class RepositoryLikesJson{
-     private List<Listing> listing;
-     private String status;
+     public List<Listing> listing;
+     public String status;
 
     public List<Listing> getListing(){
         return this.listing;
@@ -23,13 +23,13 @@ public class RepositoryLikesJson{
     }
 
     public static class Listing{
-         private String apkid;
-         private String like;
-         private String name;
-         private String useridhash;
-         private String username;
-         private String ver;
-         private Number vercode;
+         public String apkid;
+         public String like;
+         public String name;
+         public String useridhash;
+         public String username;
+         public String ver;
+         public Number vercode;
 
         public String getApkid(){
             return this.apkid;

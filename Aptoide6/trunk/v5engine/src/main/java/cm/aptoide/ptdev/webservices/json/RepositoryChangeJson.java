@@ -31,13 +31,13 @@ public class RepositoryChangeJson {
     public static class Listing{
 
 
-        private Number appscount;
+        public Number appscount;
 
 
-        private String hasupdates;
+        public String hasupdates;
 
 
-        private String repo;
+        public String repo;
 
         public Number getAppscount(){
             return this.appscount;

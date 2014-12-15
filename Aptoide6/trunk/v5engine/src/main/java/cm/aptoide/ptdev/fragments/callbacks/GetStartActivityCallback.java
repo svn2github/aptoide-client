@@ -16,6 +16,8 @@ public interface GetStartActivityCallback {
     public void updateTimelineBadge();
 
 
+
+
     SocialTimelineEvent produceTimelineEvent();
 
     SocialTimelineInitEvent produceInitEvent();

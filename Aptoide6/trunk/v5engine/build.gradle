@@ -59,6 +59,7 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:0.3.3@aar'
     compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
         exclude group: 'com.google.code.gson'
+
     }
     //compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile ('com.octo.android.robospice:robospice-retrofit:1.4.14'){

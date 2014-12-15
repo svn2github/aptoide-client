@@ -21,7 +21,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.MoreTopStoresActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StickyRecyclerHeadersDecoration;
 import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
 import cm.aptoide.ptdev.adapters.V6.Holders.AppViewHolder;
@@ -187,6 +187,7 @@ public class FragmentListTopApps extends Fragment {
                     public void onClick(View v) {
                         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                         rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.error).setVisibility(View.GONE);
                         manager.execute(request, "top", DurationInMillis.ALWAYS_RETURNED, requestListener);
                     }
                 });

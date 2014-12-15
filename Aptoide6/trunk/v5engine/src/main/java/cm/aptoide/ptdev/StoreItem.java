@@ -1,8 +1,11 @@
 package cm.aptoide.ptdev;
 
+import cm.aptoide.ptdev.model.Login;
+
 public class StoreItem {
 
-	private String storeName;
+    private final Login login;
+    private String storeName;
 
 	private String storeDwnNumber;
 
@@ -13,7 +16,8 @@ public class StoreItem {
     private boolean list;
     private long id;
 
-    public StoreItem(String name, String number, String avatar, EnumStoreTheme theme, boolean list, long id) {
+    public StoreItem(String name, String number, String avatar, EnumStoreTheme theme, boolean list, long id, Login login) {
+        this.login = login;
 		this.storeName = name;
 		this.storeDwnNumber = number;
 		this.storeAvatar = avatar;
@@ -50,4 +54,7 @@ public class StoreItem {
         this.id = id;
     }
 
+    public Login getLogin() {
+        return login;
+    }
 }

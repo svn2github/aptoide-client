@@ -12,12 +12,12 @@ import java.lang.reflect.Field;
 
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
-import cm.aptoide.ptdev.fragments.FragmentHome;
+
 import cm.aptoide.ptdev.fragments.FragmentListApps;
 import cm.aptoide.ptdev.fragments.FragmentListTopApps;
 import cm.aptoide.ptdev.fragments.FragmentSocialTimeline;
 import cm.aptoide.ptdev.fragments.FragmentStores;
-import cm.aptoide.ptdev.fragments.FragmentUpdates;
+
 import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 
 /**
@@ -93,18 +93,19 @@ public class AptoidePagerAdapter extends FragmentStatePagerAdapter {
                 case 5:
                     return new FragmentDownloadManager();
             }
-        }else{
-            switch (position) {
-                case 0:
-                    return new FragmentHome();
-                case 1:
-                    return new FragmentStores();
-                case 2:
-                    return new FragmentUpdates();
-                case 3:
-                    return new FragmentDownloadManager();
-            }
         }
+//        else{
+//            switch (position) {
+//                case 0:
+//                    return new FragmentHome();
+//                case 1:
+//                    return new FragmentStores();
+//                case 2:
+//                    return new FragmentUpdates();
+//                case 3:
+//                    return new FragmentDownloadManager();
+//            }
+//        }
 
         return null;
     }

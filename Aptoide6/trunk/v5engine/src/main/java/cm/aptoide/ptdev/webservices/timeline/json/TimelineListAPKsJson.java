@@ -17,7 +17,7 @@ public class TimelineListAPKsJson extends GenericResponse {
     }
 
     
-    private List<UserApk> usersapks;
+    public List<UserApk> usersapks;
 
 
 

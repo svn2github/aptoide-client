@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class ApkSuggestionJson {
 
-     private List<Ads> ads;
-     private String status;
+     public List<Ads> ads;
+     public String status;
 
     public List<Ads> getAds(){
         return this.ads;
@@ -118,8 +118,9 @@ public class ApkSuggestionJson {
         public String getUrl(){
             return this.url;
         }
+
         public void setUrl(String url){
-            this.vername = url;
+            this.url = url;
         }
         public String getImage(){
             return this.image;
@@ -159,9 +160,10 @@ public class ApkSuggestionJson {
     }
 
     public static class Info{
-         private String ad_type;
-         private String cpc_url;
-         private String cpi_url;
+
+        public String ad_type;
+        public String cpc_url;
+        public String cpi_url;
 
         public String getAd_type(){
             return this.ad_type;
@@ -193,7 +195,7 @@ public class ApkSuggestionJson {
             return partnerData;
         }
 
-        @JsonProperty("info") private Info partnerInfo;
+        @JsonProperty("info") public Info partnerInfo;
         @JsonProperty("data")public Data partnerData;
 
         public static class Info{
@@ -220,8 +222,8 @@ public class ApkSuggestionJson {
                 return impression_url;
             }
 
-             public String click_url;
-             public String impression_url;
+            public String click_url;
+            public String impression_url;
         }
 
 

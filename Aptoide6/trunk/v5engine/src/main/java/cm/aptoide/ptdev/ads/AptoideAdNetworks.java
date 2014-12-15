@@ -32,7 +32,9 @@ public class AptoideAdNetworks {
         }else if(type.equalsIgnoreCase("taptica")){
             clickUrl = replaceAdvertisementId(clickUrl);
         }else if(type.equalsIgnoreCase("instal")){
-            clickUrl = replaceAdvertisementId(clickUrl);
+            //do nothing;
+        }else if(type.equalsIgnoreCase("woobi")){
+
         }
 
         return clickUrl;

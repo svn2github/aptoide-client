@@ -52,11 +52,17 @@ public class Response {
 
     }
 
+    public static class Error{
+        public String code;
+        public String description;
+    }
+
 
     public static class GetStore {
 
         public Ticket ticket;
         public Datasets datasets;
+        public List<Error> errors;
 
 
         public static class StoreMeta {

@@ -116,6 +116,7 @@ public class AddStoreDialog extends DialogFragment {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             dismissDialog();
+            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -123,37 +124,57 @@ public class AddStoreDialog extends DialogFragment {
 
             try{
 
-                final Store store = new Store();
-                Response.GetStore.StoreMetaData data = response.datasets.meta.data;
-                store.setId(data.id.longValue());
-                store.setName(response.datasets.meta.data.name);
-                store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
+                if(response.errors != null){
+                    dismissDialog();
+
+                    if(response.errors.get(0).code.equals("STORE-3")){
+                        DialogFragment fragment = new PasswordDialog();
+                        fragment.setTargetFragment(AddStoreDialog.this, 20);
+                        fragment.show(getFragmentManager(), "passwordDialog");
+
+                    }else{
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+
+                    }
+
+                } else {
+
+                    final Store store = new Store();
+                    Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+                    store.setId(data.id.longValue());
+                    store.setName(response.datasets.meta.data.name);
+                    store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
 
 
-                String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
+                    String sizeString = IconSizes.generateSizeStringAvatar(getActivity());
 
 
-                String avatar = data.avatar;
+                    String avatar = data.avatar;
 
-                if(avatar!=null) {
-                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                    avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                    if (avatar != null) {
+                        String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                        avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                    }
+
+                    store.setAvatar(avatar);
+                    store.setDescription(data.description);
+                    store.setTheme(data.theme);
+                    store.setView(data.view);
+                    store.setBaseUrl(data.name);
+
+                    if(login!=null){
+                        store.setLogin(login);
+                    }
+
+                    Database database = new Database(Aptoide.getDb());
+
+                    database.insertStore(store);
+                    database.updateStore(store);
+
+                    BusProvider.getInstance().post(new RepoAddedEvent());
+                    dismissDialog();
+                    dismiss();
                 }
-
-                store.setAvatar(avatar);
-                store.setDescription(data.description);
-                store.setTheme(data.theme);
-                store.setView(data.view);
-                store.setBaseUrl(data.name);
-
-                Database database = new Database(Aptoide.getDb());
-
-                database.insertStore(store);
-                database.updateStore(store);
-
-                BusProvider.getInstance().post(new RepoAddedEvent());
-                dismissDialog();
-                dismiss();
 
             }catch (Exception e){
                 Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
@@ -222,6 +243,13 @@ public class AddStoreDialog extends DialogFragment {
 
 
         private String store_name;
+
+        public void setLogin(Login login) {
+            this.login = login;
+        }
+
+        private Login login;
+
         public TestServerRequest() {
             super(Response.GetStore.class, TestServerWebservice.class);
         }
@@ -229,7 +257,10 @@ public class AddStoreDialog extends DialogFragment {
         public void setStore_name(String store_name){
 
             this.store_name = store_name;
+
         }
+
+
 
         @Override
         public Response.GetStore loadDataFromNetwork() throws Exception {
@@ -238,6 +269,10 @@ public class AddStoreDialog extends DialogFragment {
             api.addDataset("meta");
             api.datasets_params = null;
             api.store_name = store_name;
+            if(login != null){
+                api.store_user = login.getUsername();
+                api.store_pass_sha1 = AptoideUtils.Algorithms.computeSHA1sum(login.getPassword());
+            }
 
             return getService().checkServer(api);
         }
@@ -247,6 +282,7 @@ public class AddStoreDialog extends DialogFragment {
 
 
         TestServerRequest request = new TestServerRequest();
+        request.setLogin(login);
         CheckStoreListener checkStoreListener = new CheckStoreListener(login);
 
         url = AptoideUtils.checkStoreUrl(s);

@@ -7,12 +7,12 @@ import java.util.List;
 public class ListRecomended{
 
 
-    private Number productscount;
+    public Number productscount;
 
-   	private List<Repository> repository;
+   	public List<Repository> repository;
 
 
-   	private String status;
+   	public String status;
 
  	public Number getProductscount(){
 		return this.productscount;
@@ -37,21 +37,21 @@ public class ListRecomended{
     public static class Repository{
 
 
-        private String apkpath;
-        private Number appscount;
-        private String basepath;
-        private String featuregraphicpath;
-        private String hash;
+        public String apkpath;
+        public Number appscount;
+        public String basepath;
+        public String featuregraphicpath;
+        public String hash;
 
 
-        private String iconspath;
+        public String iconspath;
 
 
-        private String name;
+        public String name;
 
 
-        private List<Package> thePackages;
-        private String screenspath;
+        public List<Package> thePackages;
+        public String screenspath;
 
         public String getApkpath(){
             return this.apkpath;
@@ -113,69 +113,69 @@ public class ListRecomended{
         public static class Package{
 
 
-            private String age;
+            public String age;
 
 
-            private String apkid;
+            public String apkid;
 
 
-            private String catg;
+            public String catg;
 
 
-            private String catg2;
+            public String catg2;
 
 
-            private Number catids;
+            public Number catids;
 
 
-            private String cpu;
+            public String cpu;
 
 
-            private Number dwn;
+            public Number dwn;
 
 
-            private String icon;
+            public String icon;
 
 
-            private String icon_hd;
+            public String icon_hd;
 
 
-            private String md5h;
+            public String md5h;
 
 
-            private String minGles;
+            public String minGles;
 
 
-            private String minScreen;
+            public String minScreen;
 
 
-            private Number minSdk;
+            public Number minSdk;
 
 
 
 
-            private String name;
+            public String name;
 
 
-            private String path;
+            public String path;
 
 
-            private Number rat;
+            public Number rat;
 
 
-            private String signature;
+            public String signature;
 
 
-            private Number sz;
+            public Number sz;
 
 
-            private String timestamp;
+            public String timestamp;
 
 
-            private String ver;
+            public String ver;
 
 
-            private Number vercode;
+            public Number vercode;
 
             public String getAge(){
                 return this.age;

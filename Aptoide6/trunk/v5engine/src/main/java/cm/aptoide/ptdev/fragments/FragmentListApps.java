@@ -31,7 +31,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +44,7 @@ import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.StickyRecyclerHeadersDecoration;
 import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -139,7 +139,7 @@ public class FragmentListApps extends Fragment {
             api.getApi_global_params().setStore_name("apps");
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-            api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
+            api.getApi_global_params().mature = String.valueOf(!sPref.getBoolean("matureChkBox", true));
 
 
             Api.GetStore getStore = new Api.GetStore();
@@ -500,6 +500,9 @@ public class FragmentListApps extends Fragment {
 
 
             CompoundButton viewById = (CompoundButton) viewHolder.itemView.findViewById(R.id.adult_content);
+            viewById.setOnCheckedChangeListener(null);
+
+            viewById.setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
 
             viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -513,7 +516,6 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
-
         }
 
         @Override
@@ -643,6 +645,7 @@ public class FragmentListApps extends Fragment {
         final ArrayList<Displayable> string = new ArrayList<>(20);
 
         final RecyclerAdapter mAdapter = new RecyclerAdapter(getActivity(), string);
+
         StickyRecyclerHeadersDecoration stickyRecyclerHeadersDecoration = new StickyRecyclerHeadersDecoration(mAdapter);
         StickyRecyclerHeadersTouchListener touchListener = new StickyRecyclerHeadersTouchListener(view, stickyRecyclerHeadersDecoration);
 
@@ -697,6 +700,7 @@ public class FragmentListApps extends Fragment {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                rootView.findViewById(R.id.list).setVisibility(View.GONE);
                 rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
                 rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -704,6 +708,8 @@ public class FragmentListApps extends Fragment {
                         manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
                         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                         rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.error).setVisibility(View.GONE);
+
                     }
                 });
 

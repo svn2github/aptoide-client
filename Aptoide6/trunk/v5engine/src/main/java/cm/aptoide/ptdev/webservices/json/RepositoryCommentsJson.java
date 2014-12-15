@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class RepositoryCommentsJson {
 
-    private List<Listing> listing;
+    public List<Listing> listing;
 
-    private String status;
+    public String status;
 
     public List<Listing> getListing() {
         return this.listing;
@@ -27,29 +27,29 @@ public class RepositoryCommentsJson {
 
     public static class Listing {
 
-        private Number answerto;
+        public Number answerto;
 
-        private String apkid;
+        public String apkid;
 
-        private Number id;
+        public Number id;
 
-        private String lang;
+        public String lang;
 
-        private String name;
+        public String name;
 
-        private String text;
+        public String text;
 
-        private String timestamp;
+        public String timestamp;
 
-        private String useridhash;
+        public String useridhash;
 
-        private String username;
+        public String username;
 
-        private String ver;
+        public String ver;
 
-        private Number vercode;
+        public Number vercode;
 
-        private Number votes;
+        public Number votes;
 
         public Number getAnswerto() {
             return this.answerto;

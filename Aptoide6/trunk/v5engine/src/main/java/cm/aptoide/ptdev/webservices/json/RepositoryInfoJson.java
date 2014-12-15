@@ -9,12 +9,12 @@ import java.util.List;
 
 public class RepositoryInfoJson{
 
-   	private RepositoryInfoListing listing;
+   	public RepositoryInfoListing listing;
 
-   	private String status;
+   	public String status;
 
 
-    private List<Error> errors;
+    public List<Error> errors;
 
     public List<cm.aptoide.ptdev.model.Error> getErrors() {
         return errors;

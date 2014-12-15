@@ -1,3 +1,4 @@
+/*
 package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
@@ -12,9 +13,11 @@ import com.mopub.common.util.Views;
 
 import java.util.HashMap;
 import java.util.Map;
+*/
 /*
 * Tested with InMobi SDK 4.4.1
-*/
+*//*
+
 public class InMobiBanner extends CustomEventBanner implements IMBannerListener {
     @Override
     protected void loadBanner(Context context,
@@ -37,10 +40,12 @@ public class InMobiBanner extends CustomEventBanner implements IMBannerListener 
             InMobi.initialize(activity, inMobiAppId);
             isAppInitialized = true;
         }
+*/
 /*
 * You may also pass this String down in the serverExtras Map by
 * specifying Custom Event Data in MoPub's web interface.
-*/
+*//*
+
         iMBanner = new IMBanner(activity, inMobiAppId,
                 IMBanner.INMOBI_AD_UNIT_320X50);
         Map<String, String> map = new HashMap<String, String>();
@@ -55,9 +60,11 @@ public class InMobiBanner extends CustomEventBanner implements IMBannerListener 
     private CustomEventBannerListener mBannerListener;
     private IMBanner iMBanner;
     private static boolean isAppInitialized = false;
-    /*
-    * Abstract methods from CustomEventBanner
     */
+/*
+    * Abstract methods from CustomEventBanner
+    *//*
+
     @Override
     public void onInvalidate() {
         if (iMBanner != null) {
@@ -105,4 +112,4 @@ public class InMobiBanner extends CustomEventBanner implements IMBannerListener 
     public void onShowBannerScreen(IMBanner imBanner) {
         mBannerListener.onBannerExpanded();
     }
-}
+}*/

@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by rmateus on 18-02-2014.
  */
-public class LatestCommentsFragment extends ListFragment implements FragmentStore{
+public class LatestCommentsFragment extends ListFragment {
 
     SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
     private String repoName;
@@ -120,20 +120,7 @@ public class LatestCommentsFragment extends ListFragment implements FragmentStor
 
     }
 
-    @Override
-    public void onRefreshCalled() {
 
-    }
-
-    @Override
-    public void onError() {
-
-    }
-
-    @Override
-    public void setRefreshing(boolean bool) {
-
-    }
 
 
     public class CommentsAdapter extends ArrayAdapter<RepositoryCommentsJson.Listing>{

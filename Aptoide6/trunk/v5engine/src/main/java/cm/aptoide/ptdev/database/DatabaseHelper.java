@@ -4,12 +4,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Locale;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.Constants;
 import cm.aptoide.ptdev.database.schema.OnConflict;
@@ -19,12 +24,6 @@ import cm.aptoide.ptdev.database.schema.anotations.ColumnDefinition;
 import cm.aptoide.ptdev.database.schema.anotations.TableDefinition;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Server;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -295,20 +294,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if (oldVersion >= 21 && oldVersion < 22 && Aptoide.getConfiguration().isSaveOldRepos()){
+        }else if (oldVersion >= 21 && oldVersion < 24 && Aptoide.getConfiguration().isSaveOldRepos()){
             try {
-                Cursor c = db.query("repo", new String[]{"url", "name", "username", "password"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
+                Cursor c = db.query("repo", new String[]{"url", "name", "username", "password", "avatar_url"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 
                     Server server = new Server();
                     server.setUrl(c.getString(0));
                     server.setName(c.getString(1));
 
+
+
                     if(c.getString(2)!=null){
                         server.login = new Login();
                         server.login.setUsername(c.getString(2));
                         server.login.setPassword(c.getString(3));
                     }
+
+                    server.setFeaturedGraphicPath(c.getString(4));
 
                     oldServers.add(server);
                 }
@@ -335,7 +338,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        if (oldVersion >= 13 && oldVersion <= 21 && Aptoide.getConfiguration().isSaveOldRepos()) {
+        if (oldVersion >= 13 && oldVersion <= 23 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             for (Server server : oldServers) {
                 ContentValues values = new ContentValues();
@@ -349,12 +352,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     values.put(Schema.Repo.COLUMN_PASSWORD, server.login.getPassword());
                 }
 
+                values.put(Schema.Repo.COLUMN_AVATAR, server.getFeaturedGraphicPath());
+
                 db.insert(Schema.Repo.getName(), null, values);
             }
         }
-
-
-
 
 
         removeSharedPreferences();
@@ -364,7 +366,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void removeSharedPreferences() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-        preferences.edit().remove("editorschoiceTimestamp").remove("topappsTimestamp").commit();
+        preferences.edit().remove("editorschoiceTimestamp").remove("topappsTimestamp").remove("updates").commit();
 
     }
 

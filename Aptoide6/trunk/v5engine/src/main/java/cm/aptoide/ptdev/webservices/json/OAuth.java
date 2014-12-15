@@ -24,7 +24,7 @@ public class OAuth {
     public List<Error> errors;
 
 
-    private String status;
+    public String status;
 
     public String getStatus() {
         return status;

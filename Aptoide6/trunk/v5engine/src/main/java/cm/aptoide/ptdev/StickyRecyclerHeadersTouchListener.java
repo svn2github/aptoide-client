@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
 
 public class StickyRecyclerHeadersTouchListener implements RecyclerView.OnItemTouchListener {
     private final GestureDetector mTapDetector;
@@ -57,6 +57,11 @@ public class StickyRecyclerHeadersTouchListener implements RecyclerView.OnItemTo
 
         @Override
         public boolean onDown(MotionEvent e) {
+
+
+
+
+
 
             int position = mDecor.findHeaderPositionUnder((int) e.getX(), (int) e.getY());
             

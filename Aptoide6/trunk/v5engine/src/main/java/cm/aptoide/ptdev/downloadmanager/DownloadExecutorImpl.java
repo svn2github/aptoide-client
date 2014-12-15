@@ -29,14 +29,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Locale;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.model.RollBackItem;
+import cm.aptoide.ptdev.preferences.Preferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.Base64;
+import cm.aptoide.ptdev.webservices.OauthErrorHandler;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.converter.JacksonConverter;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,6 +104,13 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
         return BitmapFactory.decodeFile(file, options);
     }
 
+    public interface RegisterUserApkInstall{
+
+        @POST("/3/registerUserApkInstall")
+        @FormUrlEncoded
+        Object call(@FieldMap HashMap<String, String> map);
+
+    }
 
 
     @Override
@@ -135,12 +152,16 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                     OkHttpClient client = new OkHttpClient();
 
 
+
                     FormEncodingBuilder formBody = new FormEncodingBuilder();
                     String oemid = Aptoide.getConfiguration().getExtraId();
+
+                    formBody.add("dummyproperty", "dummyvalue");
 
                     if(!TextUtils.isEmpty(oemid)){
                         formBody.add("oemid", oemid);
                     }
+
                     com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder().post(formBody.build()).url(apk.getCpiUrl()).build();
 
                     //RegisterAdRequest registerAdRequest = new RegisterAdRequest(context, apk.getCpiUrl());
@@ -160,28 +181,35 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
 
 
 
-//        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0 && !isUpdate){
-//            GenericUrl url = new GenericUrl(WebserviceOptions.WebServicesLink + "3/registerUserApkInstall");
-//
-//            HashMap<String, String> parameters = new HashMap<String, String>();
-//
-//            parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
-//            parameters.put("appid", String.valueOf(apk.getId()));
-//            HttpContent content = new UrlEncodedContent(parameters);
-//            try {
-//                HttpRequestFactory requestFactory = AndroidHttp.newCompatibleTransport().createRequestFactory();
-//                HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
-//                httpRequest.setUnsuccessfulResponseHandler(new OAuthRefreshAccessTokenHandler(parameters, requestFactory));
-//                httpRequest.executeAsync(Executors.newSingleThreadExecutor());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
+        if(sPref.getBoolean(Preferences.SHARE_TIMELINE_DOWNLOAD_BOOL, false) && apk.getId() > 0 && !isUpdate){
 
+            try {
 
+                RestAdapter adapter = new RestAdapter.Builder().setConverter(new JacksonConverter()).setEndpoint("http://webservices.aptoide.com/webservices").build();
+                HashMap<String, String> parameters = new HashMap<String, String>();
 
+                parameters.put("access_token", SecurePreferences.getInstance().getString("access_token", null));
+                parameters.put("appid", String.valueOf(apk.getId()));
 
+                try {
+                    adapter.create(RegisterUserApkInstall.class).call(parameters);
+
+                } catch (RetrofitError e) {
+                    OauthErrorHandler.handle(e);
+                    try {
+                        adapter.create(RegisterUserApkInstall.class).call(parameters);
+                    } catch (Exception e1) {
+
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }catch (Exception e){
+
+            }
+
+        }
 
         if (Aptoide.IS_SYSTEM || (sPref.getBoolean("allowRoot", true) && canRunRootCommands() && !apk.getApkid().equals(context.getPackageName()))) {
 

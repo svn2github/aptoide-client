@@ -16,6 +16,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -163,7 +165,13 @@ public class Database {
 
         if (store.getLogin() != null) {
             values.put(Schema.Repo.COLUMN_USERNAME, store.getLogin().getUsername());
-            values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
+            try {
+                values.put(Schema.Repo.COLUMN_PASSWORD, AptoideUtils.Algorithms.computeSHA1sum(store.getLogin().getPassword()));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         values.put(Schema.Repo.COLUMN_IS_USER, true);
         return values;
@@ -510,6 +518,19 @@ public class Database {
         values.put(Schema.Installed.COLUMN_VERNAME, apk.getVersion_name());
         values.put(Schema.Installed.COLUMN_SIGNATURE, apk.getSignature());
         database.insert(Schema.Installed.getName(), null, values);
+
+    }
+
+    public void insertInstalled(FragmentUpdates2.UpdatesApi.Package apk) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Updates.COLUMN_PACKAGE, apk.packageName);
+        values.put(Schema.Updates.COLUMN_VERCODE, apk.vercode.intValue());
+        values.put(Schema.Updates.COLUMN_SIGNATURE, apk.signature);
+        values.put(Schema.Updates.COLUMN_TIMESTAMP, 0);
+
+        database.insert(Schema.Updates.getName(), null, values);
 
     }
 
@@ -1444,5 +1465,43 @@ public class Database {
 
     public void deleteFeaturedGraphics() {
         database.delete(Schema.FeaturedEditorsChoice.getName(), null,null);
+    }
+
+    public List<FragmentUpdates2.UpdatesApi.Package> getUpdates(int i) {
+
+        DateTime dateTime = DateTime.now().minusHours(24);
+
+        Cursor cursor = database.rawQuery("select * from updates where timestamp < ? limit ?", new String[]{String.valueOf(dateTime.getMillis()), String.valueOf(i)});
+
+        ArrayList<FragmentUpdates2.UpdatesApi.Package> list = new ArrayList<>();
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+            FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
+            aPackage.signature = cursor.getString(cursor.getColumnIndex("signature"));
+            aPackage.vercode = cursor.getInt(cursor.getColumnIndex("version_code"));
+            aPackage.packageName = cursor.getString(cursor.getColumnIndex("package_name"));
+            list.add(aPackage);
+        }
+
+        cursor.close();
+
+        return list;
+
+    }
+
+    public void updatePackage(FragmentUpdates2.UpdatesResponse.UpdateApk aPackage) {
+
+        ContentValues values = new ContentValues();
+
+        database.update(Schema.Updates.getName(), values, "package_name = ?" , new String[]{aPackage.packageName});
+
+    }
+
+    public void updateApkUpdateTimestamp(String packageName) {
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Updates.COLUMN_TIMESTAMP, DateTime.now().getMillis());
+
+        database.update(Schema.Updates.getName(), values, "package_name = ?" , new String[]{packageName});
     }
 }

@@ -27,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Time: 17:24
  * To change this template use File | Settings | File Templates.
  */
-public class FragmentStoreHeader extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, FragmentStore{
+public class FragmentStoreHeader extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     TextView banner_store_name;
     TextView banner_description;
@@ -124,26 +124,5 @@ public class FragmentStoreHeader extends Fragment implements LoaderManager.Loade
 
     }
 
-    @Override
-    public void onRefreshCalled() {
 
-    }
-
-    @Override
-    public void onError() {
-
-
-
-
-    }
-
-    @Override
-    public void setRefreshing(boolean bool) {
-
-    }
-
-    @Override
-    public void setListShown(boolean b) {
-
-    }
 }

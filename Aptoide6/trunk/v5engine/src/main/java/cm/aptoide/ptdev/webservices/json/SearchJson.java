@@ -11,9 +11,9 @@ import cm.aptoide.ptdev.model.Error;
  */
 public class SearchJson{
 
-     private Results results;
-     private String status;
-     private List<Error> errors ;
+     public Results results;
+     public String status;
+     public List<Error> errors ;
 
     public Results getResults(){
         return this.results;
@@ -59,33 +59,33 @@ public class SearchJson{
 
         public static class Apks {
 
-            private String age;
+            public String age;
 
-            private String icon;
+            public String icon;
 
-            private String iconhd;
+            public String icon_hd;
 
-            private Number malrank;
+            public Number malrank;
 
-            private String md5sum;
+            public String md5sum;
 
-            private String name;
-
-
-            private String thePackage;
-
-            private String repo;
-
-            private String signature;
-
-            private Number stars;
+            public String name;
 
 
-            private String timestamp;
+            public String thePackage;
 
-            private Number vercode;
+            public String repo;
 
-            private String vername;
+            public String signature;
+
+            public Number stars;
+
+
+            public String timestamp;
+
+            public Number vercode;
+
+            public String vername;
 
 
             public String getAge() {
@@ -177,7 +177,7 @@ public class SearchJson{
             }
 
             public String getIconhd() {
-                return iconhd;
+                return icon_hd;
             }
 
 

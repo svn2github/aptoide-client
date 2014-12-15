@@ -12,13 +12,13 @@ import java.util.List;
 public class CreateUserJson {
 
 
-    private String status;
+    public String status;
 
 
-    private List<Error> errors;
+    public List<Error> errors;
 
    //
-    //private String queueName;
+    //public String queueName;
 
     public String getStatus() {
         return status;

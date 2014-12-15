@@ -10,11 +10,11 @@ import cm.aptoide.ptdev.fragments.GenericResponse;
 public class GetUserSettingsJson extends GenericResponse {
 
 
-    private Setting settings;
+    public Setting settings;
 
     public static class Setting {
 
-        private String timeline;
+        public String timeline;
 
         public String getTimeline() {	return timeline;	}
     }

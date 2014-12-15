@@ -49,8 +49,6 @@ android {
         }
 
 	dexOptions{
-		preDexLibraries true
-		incremental  true
 		javaMaxHeapSize  "2g"
 	}
 

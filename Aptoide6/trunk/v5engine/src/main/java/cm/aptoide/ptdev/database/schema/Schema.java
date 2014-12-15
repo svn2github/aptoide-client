@@ -379,4 +379,25 @@ public class Schema {
 
     }
 
+
+    public static class Updates{
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_PACKAGE = "package_name";
+
+        @ColumnDefinition(type = SQLType.INTEGER)
+        public static final String COLUMN_VERCODE = "version_code";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+
+        public static final String COLUMN_SIGNATURE = "signature";
+
+        @ColumnDefinition(type = SQLType.DATE)
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+
+        public static String getName() {
+            return "updates";
+        }
+    }
+
 }

@@ -19,6 +19,8 @@ import java.util.List;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
 import cm.aptoide.ptdev.adapters.V6.Rows.StoreRow;
 import cm.aptoide.ptdev.adapters.V6.V6StoresRecyclerAdapter;
+import cm.aptoide.ptdev.dialogs.AddStoreDialog;
+import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
 import retrofit.http.Body;
@@ -27,7 +29,7 @@ import retrofit.http.POST;
 /**
  * Created by asantos on 09-12-2014.
  */
-public class MoreTopStoresActivity extends MoreBaseActivity {
+public class MoreTopStoresActivity extends MoreBaseActivity implements AddStoreDialog.Callback {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,17 @@ public class MoreTopStoresActivity extends MoreBaseActivity {
         getSupportActionBar().setTitle(R.string.stores);
     }
 
+
+    @Override
+    public void startParse(Store store) {
+        Start.TestServerRequest request = new Start.TestServerRequest();
+        Start.CheckStoreListener checkStoreListener = new Start.CheckStoreListener(null);
+
+
+        request.setStore_name(store.getName());
+
+        spiceManager.execute(request, checkStoreListener);
+    }
 
 
     public interface Webservice{

@@ -15,12 +15,28 @@ import cm.aptoide.ptdev.services.HttpClientSpiceService;
  */
 public abstract class MoreBaseActivity extends ActionBarActivity {
 
+    SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home || item.getItemId() == R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        spiceManager.start(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        spiceManager.shouldStop();
     }
 
     @Override
@@ -35,6 +51,8 @@ public abstract class MoreBaseActivity extends ActionBarActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, getFragment()).commit();
     }
+
+
 
     protected abstract MoreBaseFragment getFragment();
 

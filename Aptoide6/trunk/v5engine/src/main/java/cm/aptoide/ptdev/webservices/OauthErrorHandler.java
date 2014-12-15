@@ -77,7 +77,7 @@ public class OauthErrorHandler {
     }
 
 
-    protected static Converter createConverter() {
+    public static Converter createConverter() {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

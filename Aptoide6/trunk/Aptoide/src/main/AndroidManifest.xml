@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="448"
-    android:versionName="6.0.0a" >
+    android:versionCode="450"
+    android:versionName="6.1.0" >
+
+
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="21"/>
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +23,7 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-                                                <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
@@ -250,9 +253,9 @@
             android:label="WebInstallService" />
 
         <service
-            android:name="cm.aptoide.ptdev.services.ParserService"
+            android:name="cm.aptoide.ptdev.services.UpdatesService"
             android:exported="false"
-            android:label="ParserService" />
+            android:label="UpdatesService" />
 
         <service
             android:name="cm.aptoide.ptdev.webservices.HttpService"

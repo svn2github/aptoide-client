@@ -21,9 +21,7 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentListStore;
-import cm.aptoide.ptdev.fragments.FragmentStore;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
@@ -179,6 +177,13 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         args.putString("storename", name);
         args.putString("theme", theme);
         args.putLong("storeid", storeid);
+
+        if(getIntent().hasExtra("username")){
+
+            args.putString("username", getIntent().getStringExtra("username"));
+            args.putString("password", getIntent().getStringExtra("password"));
+
+        }
         //args.putString("widgetrefid", "cat_1");
 
         fragment.setArguments(args);
@@ -327,17 +332,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         }
     }
 
-    @Subscribe
-    public void onStoreError(RepoErrorEvent event) {
-        if (event.getRepoId() == storeid) {
-            FragmentStore fragStoreHeader = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStoreHeader");
-            fragStoreHeader.onError();
-            FragmentStore fragStore = (FragmentStore) getSupportFragmentManager().findFragmentByTag("fragStore");
-            fragStore.onError();
-            fragStore.onRefreshCalled();
-            fragStore.setRefreshing(service.repoIsParsing(storeid));
-        }
-    }
+
 
     public SortObject getSort(){
         return new SortObject(sort, !categories);

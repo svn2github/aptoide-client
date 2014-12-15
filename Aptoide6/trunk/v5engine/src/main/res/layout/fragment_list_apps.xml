@@ -76,10 +76,10 @@
 
     </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <cm.aptoide.ptdev.widget.CustomSwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <cm.aptoide.ptdev.widget.RecyclerView
             android:id="@+id/list"
@@ -87,7 +87,7 @@
             android:layout_height="match_parent"
             tools:context=".MainActivity" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </cm.aptoide.ptdev.widget.CustomSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/empty"
@@ -95,6 +95,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
-        android:visibility="gone"/>
+        />
 
 </LinearLayout>

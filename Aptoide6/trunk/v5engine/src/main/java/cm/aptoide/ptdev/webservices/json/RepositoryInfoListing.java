@@ -11,15 +11,15 @@ package cm.aptoide.ptdev.webservices.json;
  */
 public class RepositoryInfoListing{
 
-    private String avatar_hd;
+    public String avatar_hd;
 
-    private String avatar;
-     private String description;
-     private String downloads;
-     private String items;
-     private String name;
-     private String theme;
-     private String view;
+    public String avatar;
+     public String description;
+     public String downloads;
+     public String items;
+     public String name;
+     public String theme;
+     public String view;
 
     public String getAvatar_hd(){
         return this.avatar_hd;

@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
 import cm.aptoide.ptdev.adapters.V6.Holders.StoreViewHolder;
+import cm.aptoide.ptdev.dialogs.AddStoreDialog;
 import cm.aptoide.ptdev.model.Store;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
@@ -48,9 +49,13 @@ public class StoreRow extends AppsRow{
             public void onClick(View v) {
                 Store store = new Store();
                 store.setName(name);
-                ((Start) context).startParse(store);
+                ((AddStoreDialog.Callback) context).startParse(store);
                 Toast.makeText(context, context.getString(R.string.store_added), Toast.LENGTH_SHORT).show();
-                ((Start) context).setCurrentItem(2);
+
+                if(context instanceof Start){
+                    ((Start) context).setCurrentItem(2);
+                }
+
             }
         });
     }

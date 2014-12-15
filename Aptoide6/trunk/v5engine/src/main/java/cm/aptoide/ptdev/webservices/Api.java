@@ -118,6 +118,8 @@ public class Api {
 
         public String store_name;
 
+        public String store_user;
+        public String store_pass_sha1 ;
 
         public List<String> datasets = new ArrayList<String>();
 

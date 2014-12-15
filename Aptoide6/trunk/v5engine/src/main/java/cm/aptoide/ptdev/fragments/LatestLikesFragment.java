@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by rmateus on 18-02-2014.
  */
-public class LatestLikesFragment extends ListFragment implements FragmentStore{
+public class LatestLikesFragment extends ListFragment {
 
     SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
     private String repoName;
@@ -104,20 +104,7 @@ public class LatestLikesFragment extends ListFragment implements FragmentStore{
 
     }
 
-    @Override
-    public void onRefreshCalled() {
 
-    }
-
-    @Override
-    public void onError() {
-
-    }
-
-    @Override
-    public void setRefreshing(boolean bool) {
-
-    }
 
 
     public class LikesAdapter extends ArrayAdapter<RepositoryLikesJson.Listing>{

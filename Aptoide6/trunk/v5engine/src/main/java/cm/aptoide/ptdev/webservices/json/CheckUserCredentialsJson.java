@@ -14,26 +14,26 @@ import java.util.List;
 public class CheckUserCredentialsJson {
 
 
-    private String status;
+    public String status;
 
 
-    private String token;
+    public String token;
 
      String repo;
 
 
-    private String avatar;
+    public String avatar;
 
 
-    private String username;
+    public String username;
 
 
-    private String queueName;
+    public String queueName;
 
 
-    private List<Error> errors;
+    public List<Error> errors;
 
-     private Settings settings;
+     public Settings settings;
 
     public Settings getSettings() {
         return settings;
@@ -78,7 +78,7 @@ public class CheckUserCredentialsJson {
     public String getRepo() { return repo; }
 
     public static class Settings {
-         private String timeline;
+         public String timeline;
 
         public String getTimeline() {
             return timeline;

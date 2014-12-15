@@ -477,6 +477,7 @@ public class Start extends ActionBarActivity implements
 
             initDrawerHeader();
             BusProvider.getInstance().post(new SocialTimelineInitEvent(true));
+            BusProvider.getInstance().post(new RepoCompleteEvent(-1));
             refresh = true;
 
         }
@@ -1122,6 +1123,8 @@ public class Start extends ActionBarActivity implements
                 else
                     matureLock();
 
+
+
                 refresh = true;
 
                 BusProvider.getInstance().post(new RepoCompleteEvent(0));
@@ -1180,7 +1183,7 @@ public class Start extends ActionBarActivity implements
         newFragment.show(getSupportFragmentManager(), "addStoreDialog");
     }
 
-    public final class CheckStoreListener implements RequestListener<Response.GetStore> {
+    public static final class CheckStoreListener implements RequestListener<Response.GetStore> {
 
 
         private final Login login;

@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,6 +30,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,14 @@ import java.util.Locale;
 
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.InstalledApkEvent;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.Start;
+import cm.aptoide.ptdev.UnInstalledApkEvent;
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoAddedEvent;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Response;
@@ -59,12 +66,16 @@ public class FragmentUpdates2 extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        BusProvider.getInstance().register(this);
         manager.start(activity);
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
+        BusProvider.getInstance().unregister(this);
         manager.shouldStop();
     }
 
@@ -78,6 +89,7 @@ public class FragmentUpdates2 extends Fragment {
     public static class UpdatesResponse{
 
         public Response.Info info;
+        public Response.Ticket ticket;
         public Response.Data<UpdateApk> data;
 
         public static class UpdateApk extends Response.ListApps.Apk{
@@ -99,6 +111,10 @@ public class FragmentUpdates2 extends Fragment {
     public static class UpdatesApi{
         public List<String> store_names = new ArrayList<>();
         public List<Package> apks_data = new ArrayList<>();
+
+        public String q = AptoideUtils.filters(Aptoide.getContext());
+        public boolean mature;
+
 
         public static class Package{
             @JsonProperty("package")
@@ -127,6 +143,9 @@ public class FragmentUpdates2 extends Fragment {
         public UpdatesResponse loadDataFromNetwork() throws Exception {
 
             UpdatesApi api = new UpdatesApi();
+
+
+            api.mature = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
 
             //aPackage.packageName = "cm.aptoide.pt";
             //aPackage.vercode = 447;
@@ -163,6 +182,40 @@ public class FragmentUpdates2 extends Fragment {
         }
     }
 
+    public void setLoading(View view){
+        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.list).setVisibility(View.GONE);
+        view.findViewById(R.id.error).setVisibility(View.GONE);
+
+    }
+
+    private void setError(final View view, final SpiceManager manager, final RequestListener requestListener){
+        view.findViewById(R.id.error).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
+        view.findViewById(R.id.empty).setVisibility(View.GONE);
+        view.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLoading(view);
+                manager.execute(request, requestListener);
+
+            }
+        });
+    }
+
+
+
+    private void setUINoUpdates(View view){
+        TextView tv = (TextView)view.findViewById(R.id.empty);
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(R.string.no_updates);
+        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+        view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
+        view.findViewById(R.id.error).setVisibility(View.GONE);
+
+    }
+
+    final UpdatesRequest request = new UpdatesRequest();
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
@@ -178,24 +231,16 @@ public class FragmentUpdates2 extends Fragment {
         final ArrayList<UpdatesResponse.UpdateApk> list = new ArrayList<>();
         viewById.setAdapter(new UpdatesRecyclerView(list));
 
-        final UpdatesRequest request = new UpdatesRequest();
 
-        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.list).setVisibility(View.GONE);
+        setLoading(view);
 
         requestListener = new RequestListener<UpdatesResponse>() {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.d("pois","onRequestFailure");
-            }
-
-            private void setUINoUpdates(){
-                TextView tv = (TextView)view.findViewById(R.id.empty);
-                tv.setVisibility(View.VISIBLE);
-                tv.setText(R.string.no_updates);
-                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.list).setVisibility(View.GONE);
+                setError(view, manager, requestListener);
+                layout.setRefreshing(false);
             }
 
             @Override
@@ -203,7 +248,8 @@ public class FragmentUpdates2 extends Fragment {
                 Log.d("pois","onRequestSuccess");
                 registerForContextMenu(viewById);
                 if(updatesResponse==null || updatesResponse.data==null){
-                    setUINoUpdates();
+                    setError(view, manager, requestListener);
+                    return;
                 }
 
                 list.clear();
@@ -225,21 +271,25 @@ public class FragmentUpdates2 extends Fragment {
 
                         if (!excludedPackages.contains(updateApk.packageName)) {
                             list.add(updateApk);
+
                         }
 
                     }
-                    Log.d("pois","list size: "+list.size());
+
                     if(list.size()>1){
                         viewById.getAdapter().notifyDataSetChanged();
-                        view.findViewById(R.id.empty).setVisibility(View.GONE);
+                        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                        view.findViewById(R.id.error).setVisibility(View.GONE);
                         view.findViewById(R.id.list).setVisibility(View.VISIBLE);
                     }else{
-                        setUINoUpdates();
+                        setUINoUpdates(view);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    setUINoUpdates();
+                    setError(view, manager, requestListener);
                 }
+
+                layout.setRefreshing(false);
 
             }
         };
@@ -252,6 +302,29 @@ public class FragmentUpdates2 extends Fragment {
             }
         });
 
+    }
+
+    @Subscribe
+    public void repoAddedEvent(RepoAddedEvent event){
+        refreshStoresEvent(null);
+    }
+
+    @Subscribe
+    public void newAppEvent(InstalledApkEvent event) {
+        refreshStoresEvent(null);
+    }
+
+    @Subscribe
+    public void removedAppEvent(UnInstalledApkEvent event) {
+        refreshStoresEvent(null);
+    }
+
+    @Subscribe
+    public void refreshStoresEvent(RepoCompleteEvent event) {
+
+
+
+        manager.execute(request, requestListener);
     }
 
     @Override
@@ -275,7 +348,8 @@ public class FragmentUpdates2 extends Fragment {
         Database database = new Database(Aptoide.getDb());
         database.addToExcludeUpdate(updateApk);
 
-        UpdatesRequest request = new UpdatesRequest();
+
+
         manager.execute(request, requestListener);
 
         return super.onContextItemSelected(item);

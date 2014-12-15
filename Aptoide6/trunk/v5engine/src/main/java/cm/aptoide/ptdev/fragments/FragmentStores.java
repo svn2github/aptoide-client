@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +41,7 @@ import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.fragments.callbacks.StoresCallback;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.parser.events.StopParseEvent;
 import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 
@@ -180,6 +182,13 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
                 i.putExtra("list", store.isList());
                 i.putExtra("theme", store.getTheme().ordinal());
                 i.putExtra("download_from", "store");
+
+
+                if(store.getLogin() !=null){
+                    i.putExtra("username", store.getLogin().getUsername());
+                    i.putExtra("password", store.getLogin().getPassword());
+                }
+
                 startActivity(i);
 
 
@@ -188,7 +197,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(isMergeStore){
             stores.clear();
-            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
+            //stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://" + R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             getLoaderManager().restartLoader(0, null, this);
@@ -226,13 +235,21 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
             }else{
                 theme="DEFAULT";
             }
+
+            Login login = null;
+            if(!TextUtils.isEmpty(data.getString(data.getColumnIndex("username")))){
+                login = new Login();
+                login.setUsername(data.getString(data.getColumnIndex("username")));
+                login.setPassword(data.getString(data.getColumnIndex("password")));
+            }
+
             stores.add(new StoreItem(
-                    data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME)),
-                    data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
-                    data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
-                    EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme),
-                    "grid".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
-                    data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)))
+                            data.getString(data.getColumnIndex(Schema.Repo.COLUMN_NAME)),
+                            data.getString(data.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)),
+                            data.getString(data.getColumnIndex(Schema.Repo.COLUMN_AVATAR)),
+                            EnumStoreTheme.get("APTOIDE_STORE_THEME_" + theme),
+                            "grid".equals(data.getString(data.getColumnIndex(Schema.Repo.COLUMN_VIEW))),
+                            data.getLong(data.getColumnIndex(Schema.Repo.COLUMN_ID)),login)
             );
             //Log.d("Aptoide-", "Added store");
         }
@@ -341,7 +358,7 @@ public class FragmentStores extends Fragment implements LoaderManager.LoaderCall
 
         if(mergeStore){
             stores.clear();
-            stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://"+R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
+            //stores.add(new StoreItem(getString(R.string.all_stores), "", "drawable://"+R.drawable.avatar_apps, EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE, false, -1));
             storeAdapter.notifyDataSetChanged();
         }else{
             refreshStoresEvent(null);

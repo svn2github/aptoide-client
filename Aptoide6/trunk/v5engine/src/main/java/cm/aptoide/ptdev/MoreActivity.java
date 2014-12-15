@@ -22,7 +22,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
 
 
 import java.util.ArrayList;
