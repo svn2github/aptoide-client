@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,10 +25,18 @@ import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 
@@ -35,6 +44,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.RepoErrorEvent;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
@@ -131,6 +141,19 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             }
         }
 
+        try {
+            if(getChildrenPlaying()){
+                startPartner = false;
+                Log.d("StartPartner","Value of children_playing " + getChildrenPlaying());
+            }else{
+                startPartner = true;
+                Log.d("StartPartner","Value of children_playing " + getChildrenPlaying());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
 
@@ -139,13 +162,31 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+    public boolean getChildrenPlaying() throws IOException {
+        Properties prop = new Properties();
+        String propFileName = "session.txt";
+        File file = new File("/data/lisciani/", propFileName);
+        InputStream inputStream = new FileInputStream(file);
+//        Log.d("StartPartner","path " + file.getCanonicalPath());
+
+        if (inputStream != null) {
+            prop.load(inputStream);
+//            Log.d("StartPartner","loading " + propFileName);
+        } else {
+            throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+        }
+
+        String children_playing = prop.getProperty("children_playing");
+
+        boolean start = "1".equals(children_playing);
+        return start;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (!startPartner) {
-            Toast toast = Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.device_not_allowed), Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.children_text_alert, AptoideConfigurationPartners.MARKETNAME), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
