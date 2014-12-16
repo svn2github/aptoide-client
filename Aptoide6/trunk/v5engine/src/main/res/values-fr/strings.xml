@@ -585,4 +585,13 @@
   <string name="social_timeline_notifications">Notifications de flux</string>
   <string name="social_timeline_notifications_sum">Désactiver les notifications du flux social d\'Aptoide. Vous ne recevrez pas les dernières nouvelles sur la barre de notifications.</string>
   <string name="social_timeline_notifications_sum2">Activer les notifications du flux social d\'Aptoide. Vous recevrez les dernières nouvelles sur la barre de notifications.</string>
+  <string name="error503">Ouf… C\'est juste moi ou bien tout le monde installe ces applis en même temps ?</string>
+  <string name="having_some_trouble">Il y a un petit souci. Pouvez-vous réessayer plus tard ?</string>
+  <string name="friends_installs">Les installations de vos amis</string>
+  <string name="highlighted_apps">Mis en évidence</string>
+  <string name="installed_this">a installé ceci.</string>
+  <string name="store_added">Magasin ajouté</string>
+  <string name="button_more">Davantage</string>
+  <string name="no_updates">Vous n\'avez aucune mise à jour</string>
+  <string name="more_friends_installs">Davantage des installations de vos amis</string>
 </resources>

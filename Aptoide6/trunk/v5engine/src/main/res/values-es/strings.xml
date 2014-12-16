@@ -593,4 +593,6 @@
   <string name="store_added">Tienda añadida</string>
   <string name="top_tab">Top</string>
   <string name="button_more">Más</string>
+  <string name="no_updates">No hay Actualizaciones</string>
+  <string name="more_friends_installs">Más de las instalaciones de tus amigos</string>
 </resources>

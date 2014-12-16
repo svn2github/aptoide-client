@@ -585,4 +585,14 @@
   <string name="social_timeline_notifications">Уведомления ленты</string>
   <string name="social_timeline_notifications_sum">Отключить уведомления социальной ленты. Вы не будете получать последние новости на панели уведомлений.</string>
   <string name="social_timeline_notifications_sum2">Включить уведомления социальной ленты Aptoide. Вы будете видеть последние новости на панели уведомлений.</string>
+  <string name="error503">Уфф.. Это только я или другие устанавливают приложения в то же самое время?</string>
+  <string name="having_some_trouble">Возникли некоторые проблемы. Вы можете повторить попытку позже?</string>
+  <string name="friends_installs">Ваши друзья устанавливают</string>
+  <string name="highlighted_apps">Обратите внимание</string>
+  <string name="installed_this">установил это.</string>
+  <string name="store_added">Магазин добавлен</string>
+  <string name="top_tab">Топ</string>
+  <string name="button_more">Больше</string>
+  <string name="no_updates">У вас нет обновлений</string>
+  <string name="more_friends_installs">Больше из установок ваших друзей</string>
 </resources>

@@ -175,7 +175,7 @@
   <string name="password_tip">اختر كلمة مرور</string>
   <string name="add_pvt_store">إضافة متجر خاص</string>
   <string name="accept_terms">من خلال قيامك بعملية التسجيل فأنت توافق على شروط أبتويد للخدمة وسياسة المحتوى للمطورين</string>
-  <string name="accept_oem_terms">من خلال التوقيع فإنك توافق على ٪ و شروط الخدمة</string>
+  <string name="accept_oem_terms">من خلال التوقيع فإنك توافق على ٪s و شروط الخدمة</string>
   <string name="register">التسجيل</string>
   <string name="or">أو</string>
   <string name="showpass">إظهار كلمة المرور</string>
@@ -563,6 +563,8 @@
   <string name="facebook_private_actions">هذا التطبيق لن ينشر على فيس بوك</string>
   <string name="notification_social_timeline">الصفحة الاجتماعية لـ أبتويد. جربها الآن!</string>
   <string name="notification_timeline_activity">لديك %1$s تعليقات جديدة و %2$s إعجابات جديدة. تفحّص الصفحة الاجتماعية!</string>
+  <string name="notification_timeline_new_comments">لديك% تعليقات جديدة.تفقدها في اليوميات</string>
+  <string name="notification_timeline_new_likes">لديك% اعجابات جديدة.تفقدها في اليوميات</string>
   <string name="notification_timeline_posts">أصدقاؤك قاموا بتنصيب تطبيقات جديدة!</string>
   <string name="timeline_is_empty">لااا... لا يوجد اصدقاء على صفحة أبتويد الاجتماعية؟ قم بدعوتهم!</string>
   <string name="invite_friends">إدع أصدقائك</string>
@@ -582,4 +584,15 @@
   <string name="timeline_not_compatible">"ووه ... هذه الميزة غير متوافقة مع إصدار الأندرويد  الخاص بك"</string>
   <string name="social_timeline_notifications">اشعارات اليوميات</string>
   <string name="social_timeline_notifications_sum">ايقاف تنبيهات يوميات ابتويد. لن تصلك اخر الاخبار على شريط التنبيهات.</string>
+  <string name="social_timeline_notifications_sum2">تمكين اشعارات اليوميات.سوف تستلم اخر الاخبار على شريط الاشعارات.</string>
+  <string name="error503">هل هذا فقط انا ام لكل الذين يثبتون التطبيقات في الوقت نفسه؟</string>
+  <string name="having_some_trouble">هنالك بعض المشاكل.هل تستطيع المحاولة لاحقاً؟</string>
+  <string name="friends_installs">تثبيتات اصدقائك</string>
+  <string name="highlighted_apps">العناوين الرئيسية</string>
+  <string name="installed_this">ثبت هذا</string>
+  <string name="store_added">تم اضافة المتجر</string>
+  <string name="top_tab">الاعلى</string>
+  <string name="button_more">اكثر</string>
+  <string name="no_updates">ليس لديك تحديثات</string>
+  <string name="more_friends_installs">المزيد من تثبيتات اصدقائك</string>
 </resources>

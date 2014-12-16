@@ -63,9 +63,9 @@
   <string name="settings_title_bar">პარამეტრები</string>
   <string name="settings_dwn_network_rules">მობილურის ქსელის პარამეტრები</string>
   <string name="setting_icon_download_rules">ხატულების გადმოწერის პარამეტრები</string>
-  <string name="setting_sum_icon_download_rules">ხატულების გადმოწერა ნებადართული მობილური ინტერნეტის მეშვეობით</string>
+  <string name="setting_sum_icon_download_rules">ხატულების გადმოწერა ნებადართული ქსელის მეშვეობით</string>
   <string name="setting_general_download_rules">გადმოწერის წესები</string>
-  <string name="setting_sum_general_download_rules">გადმოიწერე აპლიკაციები, რედაქტორების არჩევანი, ტოპ აპლიკაციები და მარკეტები ნებადართული მობილური ინტერნეტის მეშვეობით</string>
+  <string name="setting_sum_general_download_rules">გადმოიწერე აპლიკაციები, რედაქტორების არჩევანი, ტოპ აპლიკაციები და მარკეტები ნებადართული ქსელის მეშვეობით</string>
   <string name="setting_wifi">Wi-Fi</string>
   <string name="setting_3g">3G</string>
   <string name="setting_4g">4G</string>
@@ -301,6 +301,7 @@
   <string name="arcade">არკადა</string>
   <string name="trivia">წვრილმანი თამაშები</string>
   <string name="card">ბანქო</string>
+  <string name="role_playing">RPG</string>
   <string name="educational">საგანმანათლებლო</string>
   <string name="music">მუსიკა</string>
   <string name="widgets">ვიჯეტები</string>
@@ -353,6 +354,7 @@
   <string name="error_MARG_7">პაკეტის პარამეტრები ვერ მოიძებნა</string>
   <string name="error_MARG_8">hmac ის პარამეტრები ვერ მოიძებნა</string>
   <string name="error_MARG_9">შეზღუდვის პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_10">აკლია გაფართოების პარამეტრი</string>
   <string name="error_MARG_11">lang ის პარამეტრები ვერ მოიძებნა</string>
   <string name="error_MARG_100">აპლიკაციის სახელი ვერ მოიძებნა</string>
   <string name="error_MARG_101">აღწერა არ არის</string>
@@ -370,6 +372,7 @@
   <string name="error_MARG_113">hash პარამეტრი ვერ მოიძებნა</string>
   <string name="error_MARG_200">ავტორიზაციის დროს დაფიქსირდა შეცდომა</string>
   <string name="error_MARG_201">არასწორი სახელი ან პაროლი</string>
+  <string name="error_MARG_202">არასწორი სახელი ან პაროლი</string>
   <string name="error_IARG_1">არასწორი მარკეტი</string>
   <string name="error_IARG_2">არასწორი ლოგინი</string>
   <string name="error_IARG_3">ვერ მოხდა იდენტიფიკაცია!</string>
@@ -494,6 +497,7 @@
   <string name="failed_auth_code">აუტორიცაზიის დროს დაფიქსირდა შეცდომა. სცადეთ ახლიდან.</string>
   <string name="error_occured_retry_later">დაფიქსირდა შეცდომა. Aptoide მოგვიანებით ხელახლა ცდის.</string>
   <string name="account">ექაუნთი</string>
+  <string name="no_payments_available">გადახდის ფორმები ხელმიუწვდომელია.</string>
   <string name="change_payment">უკან</string>
   <string name="confirm_carrier_payment">გნებავთ შეიძინოთ \'{title}\' ამ ფასად {value}? გადახდა მოხდება თქვენი ანგარიშიდან.</string>
   <string name="featured_editors_choice">რედაქტორების არჩევანი</string>
@@ -577,10 +581,14 @@
   <string name="social_timeline_notifications">სოციალური გვერდის შეტყობინებები</string>
   <string name="social_timeline_notifications_sum">გამორთე სოციალური გვერდის შეტყობინებები. შენ აღარ მიიღებ შეტყობინებას უახლესი ამბების შესახებ.</string>
   <string name="social_timeline_notifications_sum2">ჩართე სოციალური გვერდის შეტყობინებები. შენ მიიღებ შეტყობინებას უახლესი ამბების შესახებ.</string>
+  <string name="error503">უიი...ეს მხოლოდ მე ვარ, თუ ყველა იწერს აპლიკაციებს ერთდროულად?</string>
   <string name="having_some_trouble">რაღაც პრობლემაა. შეგიძლიათ, რომ მოგვიანებით სცადოთ?</string>
+  <string name="friends_installs">თქვენი მეგობრების აპლიკაციები</string>
+  <string name="highlighted_apps">გამოყოფილი</string>
   <string name="installed_this">დააყენა ეს.</string>
   <string name="store_added">მარკეტი დამატებულია</string>
   <string name="top_tab">ტოპ</string>
   <string name="button_more">მეტი</string>
   <string name="no_updates">განახლებები არ არის</string>
+  <string name="more_friends_installs">იხილეთ მეტი, თქვენი მეგობრების აპლიაციებიდან</string>
 </resources>

@@ -593,4 +593,6 @@
   <string name="store_added">Kauppa lisätty</string>
   <string name="top_tab">Huiput</string>
   <string name="button_more">Lisää</string>
+  <string name="no_updates">Sinulla ei ole päivityksiä</string>
+  <string name="more_friends_installs">Lisää ystäviesi asennuksista</string>
 </resources>

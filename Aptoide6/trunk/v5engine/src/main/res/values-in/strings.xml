@@ -585,4 +585,14 @@
   <string name="social_timeline_notifications">Notifikasi Timeline</string>
   <string name="social_timeline_notifications_sum">Nonaktifkan notifikasi Sosial Timeline.Aptoide. Anda tidak akan menerima berita terbaru pada bar notifikasi.</string>
   <string name="social_timeline_notifications_sum2">Aktifkan Notifikasi Sosial Timeline Aptoide. Anda akan menerima berita terbaru pada bar notifikasi</string>
+  <string name="error503">Ah... apakah hanya saya atau semua orang memasang palikais pada saat yang bersamaan?</string>
+  <string name="having_some_trouble">Mengalami masalah. Dapatkah Anda mencoba lagi nanti?</string>
+  <string name="friends_installs">Teman anda memasang</string>
+  <string name="highlighted_apps">yang di highlight</string>
+  <string name="installed_this">Ini telah terpasang</string>
+  <string name="store_added">Toko telah di tambah</string>
+  <string name="top_tab">Top</string>
+  <string name="button_more">lagi</string>
+  <string name="no_updates">Anda tidak memiliki Pembaruan</string>
+  <string name="more_friends_installs">"Teman anda menginstal "</string>
 </resources>

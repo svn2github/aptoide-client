@@ -587,7 +587,7 @@
   <string name="social_timeline_notifications_sum2">Abilita le notifiche della Timeline Sociale di Aptoide. Riceverai le ultime notizie nella barra delle notifiche.</string>
   <string name="error503">Ufff... È un problema mio o stanno tutti installando app nello stesso momento?</string>
   <string name="having_some_trouble">Stimo sperimentando dei problemi. Riprova più tardi.</string>
-  <string name="friends_installs">I tuoi amici installano</string>
+  <string name="friends_installs">I tuoi amici hanno installato</string>
   <string name="highlighted_apps">In evidenza</string>
   <string name="installed_this">ha installato questo.</string>
   <string name="store_added">Store aggiunto</string>

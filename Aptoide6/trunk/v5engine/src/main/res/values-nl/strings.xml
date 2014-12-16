@@ -586,13 +586,13 @@
   <string name="social_timeline_notifications_sum">Aptoide Sociale Tijdlijn Notificaties Uitschakelen. Je zal niet het laatste nieuws ontvangen in je notificatie balk.</string>
   <string name="social_timeline_notifications_sum2">Activeer Aptoide Sociale Tijdlijn Notificaties. Je zult het laatste nieuws ontvangen in je notificatie balk.</string>
   <string name="error503">Hhhmmm... Ligt het aan mij of is iedereen tegelijk apps aan het installeren?</string>
-  <string name="having_some_trouble">Ondervindt problemen. Kun je later proberen?</string>
-  <string name="friends_installs">Geïnstalleerden van je vrienden</string>
+  <string name="having_some_trouble">Er zijn een paar problemen. Kun je het later nog eens proberen?</string>
+  <string name="friends_installs">Installaties van je vrienden</string>
   <string name="highlighted_apps">Gemarkeerd</string>
   <string name="installed_this">deze geïnstalleerd.</string>
   <string name="store_added">Winkel toegevoegd</string>
   <string name="top_tab">Top</string>
   <string name="button_more">Meer</string>
   <string name="no_updates">Je hebt geen updates</string>
-  <string name="more_friends_installs">Meer geïnstalleerden van je vrienden</string>
+  <string name="more_friends_installs">Meer installaties van je vrienden</string>
 </resources>
