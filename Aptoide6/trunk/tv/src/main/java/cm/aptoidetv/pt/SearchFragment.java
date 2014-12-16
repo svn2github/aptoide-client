@@ -64,7 +64,6 @@ public class SearchFragment extends SearchFragment2
 
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setSearchResultProvider(this);
-
         setOnItemClickedListener(getDefaultItemClickedListener());
         mDelayedLoad = new SearchRunnable();
     }

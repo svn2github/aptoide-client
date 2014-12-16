@@ -16,7 +16,6 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SearchBar;
-import android.support.v17.leanback.widget.SpeechRecognitionCallback;
 import android.support.v17.leanback.widget.VerticalGridView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +25,8 @@ import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cm.aptoidetv.pt.R;
 
 /**
  * Created by asantos on 12-12-2014.
@@ -144,7 +145,6 @@ public class SearchFragment2 extends Fragment {
     private OnItemViewSelectedListener mOnItemViewSelectedListener;
     private OnItemViewClickedListener mOnItemViewClickedListener;
     private ObjectAdapter mResultAdapter;
-    private SpeechRecognitionCallback mSpeechRecognitionCallback;
 
     private String mTitle;
     private Drawable mBadgeDrawable;
@@ -156,55 +156,16 @@ public class SearchFragment2 extends Fragment {
 
     private int mStatus;
 
-    /**
-     * @param args Bundle to use for the arguments, if null a new Bundle will be created.
-     */
-    public static Bundle createArgs(Bundle args, String query) {
-        return createArgs(args, query, null);
-    }
-
-    public static Bundle createArgs(Bundle args, String query, String title)  {
-        if (args == null) {
-            args = new Bundle();
-        }
-        args.putString(ARG_QUERY, query);
-        args.putString(ARG_TITLE, title);
-        return args;
-    }
-
-    /**
-     * Create a search fragment with a given search query.
-     *
-     * <p>You should only use this if you need to start the search fragment with a
-     * pre-filled query.
-     *
-     * @param query The search query to begin with.
-     * @return A new SearchFragment.
-     */
-    public static SearchFragment newInstance(String query) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = createArgs(null, query);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(android.support.v17.leanback.R.layout.lb_search_fragment, container, false);
-
+        Log.d("pois","onCreateView");
         FrameLayout searchFrame = (FrameLayout) root.findViewById(android.support.v17.leanback.R.id.lb_search_frame);
         mSearchBar = (SearchBar) searchFrame.findViewById(android.support.v17.leanback.R.id.lb_search_bar);
         mSearchBar.setSearchBarListener(new SearchBar.SearchBarListener() {
             @Override
             public void onSearchQueryChange(String query) {
-                if (DEBUG) Log.v(TAG, String.format("onSearchQueryChange %s %s", query,
-                        null == mProvider ? "(null)" : mProvider));
                 if (null != mProvider) {
                     retrieveResults(query);
                 } else {
@@ -214,7 +175,6 @@ public class SearchFragment2 extends Fragment {
 
             @Override
             public void onSearchQuerySubmit(String query) {
-                if (DEBUG) Log.v(TAG, String.format("onSearchQuerySubmit %s", query));
                 queryComplete();
                 if (null != mProvider) {
                     mProvider.onQueryTextSubmit(query);
@@ -223,11 +183,10 @@ public class SearchFragment2 extends Fragment {
 
             @Override
             public void onKeyboardDismiss(String query) {
-                if (DEBUG) Log.v(TAG, String.format("onKeyboardDismiss %s", query));
                 queryComplete();
             }
         });
-        mSearchBar.setSpeechRecognitionCallback(mSpeechRecognitionCallback);
+        //mSearchBar.setSpeechRecognitionCallback(mSpeechRecognitionCallback);
 
         readArguments(getArguments());
         if (null != mBadgeDrawable) {
@@ -251,7 +210,6 @@ public class SearchFragment2 extends Fragment {
             public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                        RowPresenter.ViewHolder rowViewHolder, Row row) {
                 int position = mRowsFragment.getVerticalGridView().getSelectedPosition();
-                if (DEBUG) Log.v(TAG, String.format("onItemSelected %d", position));
                 mSearchBar.setVisibility(0 >= position ? View.VISIBLE : View.GONE);
                 if (null != mOnItemSelectedListener) {
                     mOnItemSelectedListener.onItemSelected(item, row);
@@ -266,8 +224,7 @@ public class SearchFragment2 extends Fragment {
             @Override
             public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                       RowPresenter.ViewHolder rowViewHolder, Row row) {
-                int position = mRowsFragment.getVerticalGridView().getSelectedPosition();
-                if (DEBUG) Log.v(TAG, String.format("onItemClicked %d", position));
+
                 if (null != mOnItemClickedListener) {
                     mOnItemClickedListener.onItemClicked(item, row);
                 }
@@ -281,14 +238,18 @@ public class SearchFragment2 extends Fragment {
         if (null != mProvider) {
             onSetSearchResultProvider();
         }
-        if (savedInstanceState == null) {
-            // auto start recognition if this is the first time create fragment
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSearchBar.startRecognition();
-                }
-            }, SPEECH_RECOGNITION_DELAY_MS);
+        if(SpeechRecognizer.isRecognitionAvailable(getActivity())){
+            if (savedInstanceState == null) {
+                // auto start recognition if this is the first time create fragment
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSearchBar.startRecognition();
+                    }
+                }, SPEECH_RECOGNITION_DELAY_MS);
+            }
+        }else{
+            mSearchBar.findViewById(R.id.lb_search_text_editor).requestFocus();
         }
         return root;
     }
@@ -296,10 +257,8 @@ public class SearchFragment2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         VerticalGridView list = mRowsFragment.getVerticalGridView();
-        int mContainerListAlignTop =
-                getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_search_browse_rows_align_top);
+        int mContainerListAlignTop = getResources().getDimensionPixelSize(android.support.v17.leanback.R.dimen.lb_search_browse_rows_align_top);
         list.setItemAlignmentOffset(0);
         list.setItemAlignmentOffsetPercent(VerticalGridView.ITEM_ALIGN_OFFSET_PERCENT_DISABLED);
         list.setWindowAlignmentOffset(mContainerListAlignTop);
@@ -310,7 +269,7 @@ public class SearchFragment2 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mSpeechRecognitionCallback == null && null == mSpeechRecognizer) {
+        if (null == mSpeechRecognizer && SpeechRecognizer.isRecognitionAvailable(getActivity())) {
             mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(getActivity());
             mSearchBar.setSpeechRecognizer(mSpeechRecognizer);
         }
@@ -318,7 +277,7 @@ public class SearchFragment2 extends Fragment {
 
     @Override
     public void onPause() {
-        if (mSpeechRecognitionCallback != null && null != mSpeechRecognizer) {
+        if (SpeechRecognizer.isRecognitionAvailable(getActivity())){
             releaseRecognizer();
         }
         super.onPause();
@@ -460,7 +419,7 @@ public class SearchFragment2 extends Fragment {
      * Set this callback to have the fragment pass speech recognition requests
      * to the activity rather than using an internal recognizer.
      */
-    public void setSpeechRecognitionCallback(SpeechRecognitionCallback callback) {
+/*    public void setSpeechRecognitionCallback(SpeechRecognitionCallback callback) {
         mSpeechRecognitionCallback = callback;
         if (mSearchBar != null) {
             mSearchBar.setSpeechRecognitionCallback(mSpeechRecognitionCallback);
@@ -468,7 +427,7 @@ public class SearchFragment2 extends Fragment {
         if (callback != null) {
             releaseRecognizer();
         }
-    }
+    }*/
 
     /**
      * Sets the text of the search query and optionally submits the query. Either

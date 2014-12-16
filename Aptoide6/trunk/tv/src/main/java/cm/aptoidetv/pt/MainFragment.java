@@ -121,12 +121,10 @@ public class MainFragment extends BrowseFragment{
                     }
                 }
                 for( Response.GetStore.Widgets.Widget widget : categories ) {
-                    if(!"apps_list".equals(widget.type))
+                    if(!"apps_list".equals(widget.type)) {
                         continue;
-/*                    if(widget==null || widget.data==null || response.responses.listApps.datasets.getDataset()==null) {
-                        Log.d("pois","continue cuz widget was null");
-                        continue;
-                    }*/
+                    }
+
                     final String ref_id = widget.data.ref_id;
 
                     final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
