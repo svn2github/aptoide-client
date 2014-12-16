@@ -1279,6 +1279,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                 request.setPackageName(package_name);
 
+                request.setFromSponsored(true);
                 cacheKey = "sponsored - " + String.valueOf(id);
 
                 spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, cacheKey, DurationInMillis.ONE_HOUR, requestListener);

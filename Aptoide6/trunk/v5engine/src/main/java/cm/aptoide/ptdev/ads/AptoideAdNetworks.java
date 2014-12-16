@@ -35,6 +35,12 @@ public class AptoideAdNetworks {
             //do nothing;
         }else if(type.equalsIgnoreCase("woobi")){
 
+        }else if(type.equalsIgnoreCase("mobpartner")){
+
+        }else if(type.equalsIgnoreCase("marsmedia")){
+
+        }else if(type.equalsIgnoreCase("appnext")){
+
         }
 
         return clickUrl;

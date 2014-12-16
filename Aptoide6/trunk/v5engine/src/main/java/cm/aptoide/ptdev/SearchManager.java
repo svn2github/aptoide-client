@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,13 +21,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.view.*;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.*;
-import android.view.CollapsibleActionView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,20 +37,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import cm.aptoide.ptdev.adapters.SearchAdapter;
-import cm.aptoide.ptdev.adapters.SearchAdapter2;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.downloadmanager.Utils;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.services.DownloadService;
-import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import cm.aptoide.ptdev.utils.IconSizes;
-import cm.aptoide.ptdev.utils.SimpleCursorLoader;
-import cm.aptoide.ptdev.webservices.Errors;
-import cm.aptoide.ptdev.webservices.GetAdsRequest;
-import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
-import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
-import cm.aptoide.ptdev.webservices.json.SearchJson;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.flurry.android.FlurryAgent;
@@ -65,6 +50,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cm.aptoide.ptdev.adapters.SearchAdapter;
+import cm.aptoide.ptdev.adapters.SearchAdapter2;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.downloadmanager.Utils;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.utils.SimpleCursorLoader;
+import cm.aptoide.ptdev.webservices.Errors;
+import cm.aptoide.ptdev.webservices.GetAdsRequest;
+import cm.aptoide.ptdev.webservices.ListSearchApkRequest;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
+import cm.aptoide.ptdev.webservices.json.SearchJson;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -443,12 +444,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         }
 
 
-        private boolean isNetworkAvailable(Context context) {
-            ConnectivityManager connectivityManager
-                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        }
+
 
         ProgressBar pb;
         StringBuilder sb = new StringBuilder();
@@ -467,7 +463,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
 
 
 
-            if (!isNetworkAvailable(getActivity())) {
+            if (!AptoideUtils.isNetworkAvailable(getActivity())) {
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
                 getLoaderManager().initLoader(60, bundle, SearchFragment.this);

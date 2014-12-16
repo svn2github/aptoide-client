@@ -58,7 +58,6 @@ dependencies {
 
     compile 'com.timehop.stickyheadersrecyclerview:library:0.3.3@aar'
     compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
-        exclude group: 'com.google.code.gson'
 
     }
 

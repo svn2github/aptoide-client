@@ -3,21 +3,25 @@ package cm.aptoide.ptdev.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import android.os.Build;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.fragments.HomeItem;
-import cm.aptoide.ptdev.utils.IconSizes;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.DownloadInterface;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.fragments.HomeItem;
+import cm.aptoide.ptdev.utils.IconSizes;
 
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
@@ -103,13 +107,7 @@ public class HomeBucketAdapter extends BucketListAdapter<HomeItem> {
         //holder.rating.setOnRatingBarChangeListener(null);
 
         //ImageView overflow = (ImageView) v.findViewById(R.id.ic_action);;
-        holder.overflow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FlurryAgent.logEvent("Home_Page_Opened_Popup_Install");
-                showPopup(v, item.getId());
-            }
-        });
+
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -328,7 +328,7 @@ public class MoreActivity extends ActionBarActivity {
 
             request.setWidgetId(getArguments().getString("widgetid"));
 
-            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize(), DurationInMillis.ALWAYS_RETURNED,  requestListener);
+            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize() + offset, DurationInMillis.ALWAYS_RETURNED,  requestListener);
             view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
             view.findViewById(R.id.list).setVisibility(View.GONE);
 

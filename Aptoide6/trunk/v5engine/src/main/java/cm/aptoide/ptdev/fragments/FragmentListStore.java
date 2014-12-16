@@ -214,7 +214,7 @@ public class FragmentListStore extends Fragment {
 
     public void setLoading(View view){
         view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.list).setVisibility(View.GONE);
+        view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
     }
 
     private void setError(final View view, final SpiceManager manager, final RequestListener requestListener, final SpiceRequest request){
@@ -348,7 +348,7 @@ public class FragmentListStore extends Fragment {
                 rRiew.getAdapter().notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
                 view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
             }catch (Exception e){
 
             }
@@ -508,7 +508,7 @@ public class FragmentListStore extends Fragment {
                     String icon = appItem.getIcon();
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
-                        icon = splittedUrl[0] + "_" + "96x96" + "." + splittedUrl[1];
+                        icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
                     }
                     ImageLoader.getInstance().displayImage(icon,appHolder.appIcon);
 
@@ -656,7 +656,7 @@ public class FragmentListStore extends Fragment {
 
 
                         default:
-                            String iconUrl = EnumCategories.getCategoryIcon(catid, storeListItem.name);
+                            String iconUrl = EnumCategories.getCategoryIcon(catid, storename);
                             if (iconUrl != null) {
                                 ImageLoader.getInstance().displayImage(iconUrl, categoryHolder.icon);
                             } else {

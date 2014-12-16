@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.services.UpdatesService;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import retrofit.RestAdapter;
@@ -118,7 +119,18 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                 i.setAction(PUSH_NOTIFICATION_Action);
                 PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PUSH_NOTIFICATION_TIME_INTERVAL, pi);
+
+                Intent i2 = new Intent(context, PushNotificationReceiver.class);
+                i.setAction("updates_service");
+                PendingIntent pi2 = PendingIntent.getBroadcast(context, 982765, i2, PendingIntent.FLAG_UPDATE_CURRENT);
+                am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_HALF_DAY / 2, pi2);
 //                Log.i("PushNotificationReceiver", "Alarm Registed Received");
+
+            }else if(action.equals("updates_service")) {
+
+                Intent i = new Intent(context, UpdatesService.class);
+                context.startService(i);
+
             } else if (action.equals(PUSH_NOTIFICATION_Action)) {
 //                Log.i("PushNotificationReceiver", "PUSH_NOTIFICATION_Action");
 

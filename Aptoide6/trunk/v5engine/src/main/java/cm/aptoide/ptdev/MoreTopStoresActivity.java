@@ -54,7 +54,7 @@ public class MoreTopStoresActivity extends MoreBaseActivity implements AddStoreD
     public interface Webservice{
 
         @POST("/ws2.aptoide.com/api/6/listStores")
-        Response.ListStores getStores(@Body Api api);
+        Response.ListStores getStores(@Body Api.ListStores api);
 
     }
 
@@ -67,12 +67,13 @@ public class MoreTopStoresActivity extends MoreBaseActivity implements AddStoreD
         @Override
         public Response.ListStores loadDataFromNetwork() throws Exception {
             Api api = new Api();
-            Api.ListApps listApps = new Api.ListApps();
-            listApps.datasets_params = null;
-            listApps.order_by = "downloads";
-            listApps.order_dir = "desc";
-            api.getApi_params().set(listApps);
-            return getService().getStores(api);
+            Api.ListStores listStores = new Api.ListStores();
+            listStores.datasets_params = null;
+            listStores.datasets = null;
+            listStores.order_by = "downloads";
+            listStores.order_dir = "desc";
+            api.getApi_params().set(listStores);
+            return getService().getStores(listStores);
         }
     }
 

@@ -96,6 +96,12 @@ public class AptoideUtils {
     private final static String cpu2 = HWSpecifications.getCpuAbi2();
     private final static String cpu3 = cpu2.equals("armeabi-v7a") ? "armeabi" : "";
 
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     public static boolean isLoggedIn(Context context) {
         AccountManager manager = AccountManager.get(context);

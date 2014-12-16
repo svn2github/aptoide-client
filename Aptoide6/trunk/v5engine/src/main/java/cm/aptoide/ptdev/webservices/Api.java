@@ -55,6 +55,9 @@ public class Api {
         public String mature;
         public String lang;
         public String store_name;
+
+        public String country;
+
         public String q = AptoideUtils.filters(Aptoide.getContext());
 
         public void setLang(String lang) {
@@ -94,6 +97,23 @@ public class Api {
         }
     }
 
+    public static class ListStores implements ApiParam{
+
+        public int limit;
+        public Number offset;
+
+        public String order_by;
+        public String order_dir;
+
+        public DatasetParams datasets_params = new DatasetParams();
+
+        public List<String> datasets = new ArrayList<String>();
+
+        @Override
+        public String getApiName() {
+            return "listStores";
+        }
+    }
 
     public static class ListApps implements ApiParam{
 

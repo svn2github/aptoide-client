@@ -92,8 +92,8 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         parameters.put("get_mature", mature);
 
-        parameters.put("partners", "1-3,5-6");
-
+        parameters.put("partners", "1-3,5-9");
+        //parameters.put("partners", "7-9");
 
         parameters.put("app_pkg", package_name);
         parameters.put("app_store", repo);
@@ -151,6 +151,7 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
                         public void onResponse(Response response) throws IOException {
 
                         }
+
                     });
 
 //                    GenericUrl impressionUrl = new GenericUrl(impressionUrlString);

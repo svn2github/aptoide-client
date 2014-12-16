@@ -1,30 +1,23 @@
 package cm.aptoide.ptdev;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
+
+import java.util.Locale;
 
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.*;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
+import cm.aptoide.ptdev.model.InstalledPackage;
+import cm.aptoide.ptdev.model.RollBackItem;
 import cm.aptoide.ptdev.utils.AptoideUtils;
-
-import java.net.URLEncoder;
-import java.util.Locale;
 
 /**
  * Created by rmateus on 13-12-2013.
@@ -41,6 +34,21 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
 
             Log.d("InstalledBroadcastReceiver", "Updated rollback action");
 
+            try{
+                PackageManager mPm = context.getPackageManager();
+                final PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), PackageManager.GET_SIGNATURES);
+                FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
+                aPackage.signature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
+                aPackage.vercode = pkg.versionCode;
+                aPackage.packageName = pkg.packageName;
+                db.insertInstalled(aPackage);
+                Log.d("AptoideUpdates", "Inserting " + aPackage.packageName);
+
+            }catch (Exception e){
+
+            }
+
+
         } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
 
             InstalledPackage apk;
@@ -49,18 +57,15 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                 final PackageInfo pkg = mPm.getPackageInfo(intent.getData().getEncodedSchemeSpecificPart(), PackageManager.GET_SIGNATURES);
 
 
-                apk = new InstalledPackage(
+                FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
+                aPackage.signature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
+                aPackage.vercode = pkg.versionCode;
+                aPackage.packageName = pkg.packageName;
+                db.insertInstalled(aPackage);
+                Log.d("AptoideUpdates", "Inserting " + aPackage.packageName);
 
-                        (String) pkg.applicationInfo.loadLabel(context.getPackageManager()),
-                        pkg.packageName,
-                        pkg.versionCode,
-                        pkg.versionName,
-                        AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH));
-
-
-                db.insertInstalled(apk);
                 db.deleteScheduledDownloadByPackageName(intent.getData().getEncodedSchemeSpecificPart());
-                BusProvider.getInstance().post(new InstalledApkEvent(apk));
+                BusProvider.getInstance().post(new InstalledApkEvent(null));
 
 
                 if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
@@ -98,7 +103,7 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
                     }
                 }
 
-                BusProvider.getInstance().post(new InstalledApkEvent(apk));
+                BusProvider.getInstance().post(new InstalledApkEvent(null));
 
                 if(Build.VERSION.SDK_INT >= 11 && context.getPackageManager().getInstallerPackageName(intent.getData().getEncodedSchemeSpecificPart())==null){
                     context.getPackageManager().setInstallerPackageName(intent.getData().getEncodedSchemeSpecificPart() , context.getPackageName());
@@ -114,6 +119,8 @@ public class InstalledBroadcastReceiver extends BroadcastReceiver {
             String packageName = intent.getData().getEncodedSchemeSpecificPart();
 
             db.deleteInstalledApk(packageName);
+
+            Log.d("AptoideUpdates", "Deleting " + packageName);
             BusProvider.getInstance().post(new UnInstalledApkEvent(packageName));
 
             if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {

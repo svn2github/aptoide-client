@@ -95,6 +95,10 @@ public class FragmentListTopApps extends Fragment {
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
+            if(Aptoide.DEBUG_MODE){
+                api.getApi_global_params().country = AptoideUtils.getSharedPreferences().getString("forcecountry", null);
+            }
+
             api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
             
             Api.GetStore getStore = new Api.GetStore();

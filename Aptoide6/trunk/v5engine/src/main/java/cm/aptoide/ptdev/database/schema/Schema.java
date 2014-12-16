@@ -389,11 +389,31 @@ public class Schema {
         public static final String COLUMN_VERCODE = "version_code";
 
         @ColumnDefinition(type = SQLType.TEXT)
-
         public static final String COLUMN_SIGNATURE = "signature";
 
         @ColumnDefinition(type = SQLType.DATE)
         public static final String COLUMN_TIMESTAMP = "timestamp";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_MD5 = "md5";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_REPO = "repo";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_URL = "url";
+
+        @ColumnDefinition(type = SQLType.REAL)
+        public static final String COLUMN_FILESIZE = "filesize";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_UPDATE_VERNAME = "update_vername";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_ALT_URL = "alt_url";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_ICON = "icon";
 
         public static String getName() {
             return "updates";

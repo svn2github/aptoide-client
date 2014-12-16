@@ -12,6 +12,7 @@ import java.util.HashMap;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import retrofit.RetrofitError;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
@@ -23,6 +24,16 @@ import retrofit.http.POST;
  */
 public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfoJson, GetApkInfoRequest.Webservice> {
 
+
+    private boolean fromSponsored;
+
+    public void setFromSponsored(boolean fromSponsored) {
+        this.fromSponsored = fromSponsored;
+    }
+
+    public boolean isFromSponsored() {
+        return fromSponsored;
+    }
 
     public interface Webservice{
         @POST("/webservices.aptoide.com/webservices/3/getApkInfo")
@@ -60,6 +71,10 @@ public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfo
         parameters.put("options", buildOptions(options));
         parameters.put("mode", "json");
 
+        if(fromSponsored){
+            parameters.put("adview", "1");
+        }
+
 //        HttpContent content = new UrlEncodedContent(parameters);
 //        HttpRequest request = getHttpRequestFactory().buildPostRequest(
 //                new GenericUrl( WebserviceOptions.WebServicesLink+"3/getApkInfo"),
@@ -84,8 +99,12 @@ public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfo
         //RestAdapter adapter = new RestAdapter.Builder().setEndpoint("http://").setConverter(createConverter()).build();
         //setService(adapter.create(getRetrofitedInterfaceClass()));
 
-
-        return getService().getApkInfo(parameters);
+        try{
+            return getService().getApkInfo(parameters);
+        }catch (RetrofitError e){
+            OauthErrorHandler.handle(e);
+            throw e;
+        }
 
     };
 

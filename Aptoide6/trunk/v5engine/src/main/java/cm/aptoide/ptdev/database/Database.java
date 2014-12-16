@@ -460,33 +460,10 @@ public class Database {
 
     public Cursor getUpdates() {
 
-        boolean filterMature = AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true);
-        boolean filterCompatible = AptoideUtils.getSharedPreferences().getBoolean("hwspecsChkBox", true);
-        boolean filterUpdates = AptoideUtils.getSharedPreferences().getBoolean("showAllUpdates", true);
         //final long startTime = System.currentTimeMillis();
 
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
-        Cursor c = database.rawQuery("select * from (select " +
-                " (installed.version_code < apk.version_code) as is_update, " +
-                " (installed.signature = apk.signature or apk.signature='')  as signature_valid, " +
-                " apk.id_apk as _id, " +
-                " apk.name as name, " +
-                " apk.version_code as version_code, " +
-                " apk.package_name as package_name, " +
-                " apk.downloads as count, " +
-                " apk.version_name as version_name, " +
-                " installed.version_name as installed_version_name, " +
-                " apk.icon as icon, " +
-                " repo.name as repo_name, " +
-                " repo.icons_path as iconpath " +
-                " from apk inner " +
-                " join installed on apk.package_name = installed.package_name " +
-                " join repo on apk.id_repo = repo.id_repo where not exists (select 1 from excluded as d where apk.package_name = d.package_name ) "+
-                    (filterCompatible ? " and apk.is_compatible='1' " :" "   ) +
-                    (filterMature ?  " and apk.mature='0' " : " "  )   +
-                    (filterUpdates? " and (installed.signature = apk.signature or apk.signature='') " : " ") +
-                " order by apk.version_code asc) as firstQuery " +
-                " group by package_name, is_update order by is_update desc, name collate nocase ", null);
+        Cursor c = database.rawQuery("select * from updates where url not null", null);
 
         //final long endTime = System.currentTimeMillis();
         c.getCount();
@@ -523,6 +500,7 @@ public class Database {
 
     public void insertInstalled(FragmentUpdates2.UpdatesApi.Package apk) {
 
+
         ContentValues values = new ContentValues();
 
         values.put(Schema.Updates.COLUMN_PACKAGE, apk.packageName);
@@ -530,7 +508,13 @@ public class Database {
         values.put(Schema.Updates.COLUMN_SIGNATURE, apk.signature);
         values.put(Schema.Updates.COLUMN_TIMESTAMP, 0);
 
-        database.insert(Schema.Updates.getName(), null, values);
+        Cursor cursor = database.rawQuery("select 1 from updates where package_name = ?", new String[]{apk.packageName});
+
+        if(!cursor.moveToFirst()){
+            database.insert(Schema.Updates.getName(), null, values);
+        }
+        cursor.close();
+
 
     }
 
@@ -1119,7 +1103,7 @@ public class Database {
 
     public void deleteInstalledApk(String packageName) {
 
-        database.delete(Schema.Installed.getName(), "package_name = ?", new String[]{packageName});
+        database.delete(Schema.Updates.getName(), "package_name = ?", new String[]{packageName});
 
     }
 
@@ -1467,11 +1451,25 @@ public class Database {
         database.delete(Schema.FeaturedEditorsChoice.getName(), null,null);
     }
 
+
+    public boolean hasInstalled(){
+
+        Cursor cursor = database.rawQuery("select 1 from updates", null);
+
+        try{
+            return cursor.moveToFirst();
+        }finally {
+            cursor.close();
+        }
+
+
+    }
+
     public List<FragmentUpdates2.UpdatesApi.Package> getUpdates(int i) {
 
         DateTime dateTime = DateTime.now().minusHours(24);
 
-        Cursor cursor = database.rawQuery("select * from updates where timestamp < ? limit ?", new String[]{String.valueOf(dateTime.getMillis()), String.valueOf(i)});
+        Cursor cursor = database.rawQuery("select * from updates where timestamp < ? order by timestamp asc limit ?", new String[]{String.valueOf(dateTime.getMillis()), String.valueOf(i)});
 
         ArrayList<FragmentUpdates2.UpdatesApi.Package> list = new ArrayList<>();
 
@@ -1493,15 +1491,54 @@ public class Database {
 
         ContentValues values = new ContentValues();
 
+        values.put(Schema.Updates.COLUMN_TIMESTAMP, DateTime.now().getMillis());
+        values.put(Schema.Updates.COLUMN_ALT_URL, aPackage.apk.path_alt);
+        values.put(Schema.Updates.COLUMN_URL, aPackage.apk.path);
+        values.put(Schema.Updates.COLUMN_FILESIZE, aPackage.apk.filesize.intValue());
+        values.put(Schema.Updates.COLUMN_UPDATE_VERNAME, aPackage.vername);
+        values.put(Schema.Updates.COLUMN_REPO, aPackage.store_name);
+        values.put(Schema.Updates.COLUMN_MD5, aPackage.md5sum);
+        values.put(Schema.Updates.COLUMN_ICON, aPackage.icon);
+
         database.update(Schema.Updates.getName(), values, "package_name = ?" , new String[]{aPackage.packageName});
 
     }
 
-    public void updateApkUpdateTimestamp(String packageName) {
+    public void invalidateUpdates(){
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.Updates.COLUMN_TIMESTAMP, 0);
+
+        database.update(Schema.Updates.getName(), values, null, null);
+    }
+
+
+
+    public void resetPackage(String packageName) {
         ContentValues values = new ContentValues();
 
         values.put(Schema.Updates.COLUMN_TIMESTAMP, DateTime.now().getMillis());
 
+        values.putNull(Schema.Updates.COLUMN_ALT_URL);
+        values.putNull(Schema.Updates.COLUMN_URL);
+        values.putNull(Schema.Updates.COLUMN_FILESIZE);
+        values.putNull(Schema.Updates.COLUMN_UPDATE_VERNAME);
+        values.putNull(Schema.Updates.COLUMN_REPO);
+        values.putNull(Schema.Updates.COLUMN_ICON);
+        values.putNull(Schema.Updates.COLUMN_MD5);
+
         database.update(Schema.Updates.getName(), values, "package_name = ?" , new String[]{packageName});
     }
+
+    public Cursor getUpdatesTabList() {
+
+
+        Cursor cursor = database.rawQuery("select * from updates order by url desc", null);
+
+        cursor.getCount();
+
+        return cursor;
+
+    }
 }
+

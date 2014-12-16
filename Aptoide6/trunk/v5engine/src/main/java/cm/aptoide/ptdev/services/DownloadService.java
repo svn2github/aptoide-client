@@ -276,11 +276,11 @@ public class DownloadService extends Service{
 
         FinishedApk fapk = new FinishedApk(download.getName(),
                 download.getPackageName(),
-                download.getVersion(), apk.id.longValue(),
+                download.getVersion(), apk.md5sum.hashCode(),
                 download.getIcon(),
                 path + apk.md5sum + ".apk",
                 new ArrayList<String>());
-        fapk.setId(apk.id.longValue());
+        fapk.setId(apk.md5sum.hashCode());
         download(download.getId(), download, fapk, filesToDownload);
     }
 

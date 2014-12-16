@@ -112,6 +112,7 @@ import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.services.RabbitMqService;
+import cm.aptoide.ptdev.services.UpdatesService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
@@ -200,7 +201,7 @@ public class Start extends ActionBarActivity implements
             BusProvider.getInstance().post(new DownloadServiceConnected());
 
             if (getIntent().hasExtra("new_updates") && pager != null) {
-                pager.setCurrentItem(2);
+                pager.setCurrentItem(3);
             }
         }
 
@@ -214,26 +215,7 @@ public class Start extends ActionBarActivity implements
         pager.setCurrentItem(page);
     }
 
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            service = ((ParserService.MainServiceBinder) binder).getService();
-            //Log.d("Aptoide-Start", "onServiceConnected");
-            parserServiceIsBound = true;
 
-            lock.lock();
-            try {
-                boundCondition.signalAll();
-            } finally {
-                lock.unlock();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            parserServiceIsBound = false;
-        }
-    };
     private Database database;
     private Context mContext;
     private SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
@@ -264,8 +246,8 @@ public class Start extends ActionBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (parserServiceIsBound) {
-            unbindService(conn);
+
+        if(downloadService!=null) {
             unbindService(conn2);
         }
 
@@ -513,7 +495,7 @@ public class Start extends ActionBarActivity implements
         final SQLiteDatabase db = Aptoide.getDb();
         database = new Database(db);
 
-        bindService(i, conn, BIND_AUTO_CREATE);
+
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
 
@@ -670,6 +652,8 @@ public class Start extends ActionBarActivity implements
                     e.printStackTrace();
                 }
             }
+
+            startService(new Intent(this, UpdatesService.class));
 
             //loadEditorsAndTopApps();
 
@@ -1368,7 +1352,7 @@ public class Start extends ActionBarActivity implements
 
         String icon = apk.icon;
 
-        if (icon.contains("_icon")) {
+        if (icon != null && icon.contains("_icon")) {
             String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
             icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
         }
