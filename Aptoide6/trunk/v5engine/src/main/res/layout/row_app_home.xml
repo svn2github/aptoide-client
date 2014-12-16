@@ -11,8 +11,8 @@
     android:layout_height="180dp"
     android:layout_gravity="center_horizontal"
     android:layout_weight="1"
-    android:nextFocusRight="@+id/ic_action"
-    android:clickable="true">
+    android:clickable="true"
+    android:nextFocusRight="@+id/ic_action">
 
     <RelativeLayout
         style="?attr/backgroundCard"
@@ -31,20 +31,13 @@
             android:layout_centerHorizontal="true"
             android:contentDescription="@null" />
 
-        <ImageView
-            android:id="@+id/ic_action"
-            style="@style/overflowHomeButton"
-            android:layout_below="@+id/app_icon" />
-
         <TextView
             android:id="@+id/app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/app_icon"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginRight="-10dp"
-            android:layout_toLeftOf="@+id/ic_action"
+            android:layout_centerHorizontal="true"
+
             android:ellipsize="end"
             android:maxLines="2"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -52,15 +45,15 @@
 
         <TextView
             android:id="@+id/app_category"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center|left"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray"
-            android:layout_below="@+id/ic_action"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/app_name"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray" />
 
     </RelativeLayout>
 
