@@ -17,9 +17,14 @@ package cm.aptoidetv.pt;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 public class MainActivity extends Activity {
-
+    private static final int MINTIMEFORSPLASHSCREEN=3000;
+    SplashDialogFragment d;
+    long time;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ThemePicker.setThemePicker(this);
@@ -27,16 +32,34 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         if(getResources().getBoolean(R.bool.showsplash)) {
-            new SplashDialogFragment().show(getFragmentManager(), SplashDialogFragment.TAG);
+            d = new SplashDialogFragment();
+            time = System.currentTimeMillis();
+            d.show(getFragmentManager(), "SSF");
         }
 
         new AutoUpdate(this).execute();
-
     }
 
     @Override
     public boolean onSearchRequested() {
         startActivity(new Intent(this, SearchActivity.class));
         return true;
+    }
+
+    public void dismissSplashDialog(){
+        long timepassed = System.currentTimeMillis()-time;
+        Log.d("pois","timePassed for SplashScreen: "+timepassed);
+        if (timepassed>=MINTIMEFORSPLASHSCREEN && d.isAdded()) {
+            d.dismissAllowingStateLoss();
+        }
+        else{
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dismissSplashDialog();
+                }
+            }, MINTIMEFORSPLASHSCREEN-timepassed);
+        }
     }
 }

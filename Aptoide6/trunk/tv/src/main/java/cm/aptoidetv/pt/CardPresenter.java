@@ -23,7 +23,6 @@ import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,7 +58,6 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Log.d("pois","onBindViewHolder");
         ViewHolder myViewHolder = (ViewHolder) viewHolder;
         BindInterface application = (BindInterface) item;
         if (!TextUtils.isEmpty(application.getImage())) {
@@ -123,7 +121,6 @@ public class CardPresenter extends Presenter {
         }
 
         protected void updateCardViewImage(String uri) {
-            Log.d("pois","updateCardViewImage");
             Picasso.with(mContext)
                     .load(uri)
                     .placeholder(android.R.drawable.sym_def_app_icon)

@@ -1359,9 +1359,6 @@ public class Start extends ActionBarActivity implements
     }
 
     public void installApp(FragmentUpdates2.UpdatesResponse.UpdateApk apk){
-
-
-
         Download download = new Download();
         download.setId(apk.hashCode());
         download.setName(apk.name);

@@ -131,8 +131,7 @@ public class MainFragment extends BrowseFragment{
 
                     final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
                     if(data ==null|| data.data==null) {
-                        Log.d("pois","continue cuz get was null, ref_id: "+ref_id);
-                        Log.d("pois", "expected in : " + data.ticket.getExpected_time());
+                        Log.d("pois", "Response expected in : " + data.ticket.getExpected_time());
                         try {
                             Thread.sleep(Math.min(data.ticket.getExpected_time().longValue(), 5000));
                         } catch (InterruptedException e) {
@@ -170,7 +169,7 @@ public class MainFragment extends BrowseFragment{
                 }
 
                 setAdapter( mRowsAdapter );
-
+                ((MainActivity)getActivity()).dismissSplashDialog();
             }
         };
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED,  requestListener);
