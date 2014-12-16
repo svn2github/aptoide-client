@@ -37,9 +37,13 @@ import cm.aptoidetv.pt.Model.BindInterface;
  */
 public class CardPresenter extends Presenter {
     private static Context mContext;
+    public static final int card_presenter_width = 320;
+    public static final int card_presenter_height = 180;
     private static final int CARD_WIDTH = 313;
     private static final int CARD_HEIGHT = 176;
-
+    private static final int ICON_WIDTH = 144;
+    private static final int ICON_HEIGHT = 144;
+    private static final int[] attrs =  new int[]{R.attr.brandColor};
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         mContext = parent.getContext();
@@ -48,11 +52,9 @@ public class CardPresenter extends Presenter {
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
 
-        TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor});
-        //int brandColorResourceId = typedArray.getResourceId(0, 0);
+        TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), attrs);
         typedArray.recycle();
 
-        //cardView.setBackgroundColor(mContext.getResources().getColor(R.color.overlay_black));
         return new ViewHolder(cardView);
     }
 
@@ -66,22 +68,20 @@ public class CardPresenter extends Presenter {
             int height;
             if (application.getCategory().equals("Editors' Choice") || application.getCategory().equals("Editors Choice")) {
                 text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
-                width=R.integer.card_presenter_width;
-                height=R.integer.card_presenter_height;
+                width=card_presenter_width;
+                height=card_presenter_height;
             } else if (application.getCategory().equals("Search Results")) {
                 text =mContext.getString(R.string.version) + ": " + application.getVersion();
-                width=R.integer.icon_width;
-                height=R.integer.icon_height;
+                width=ICON_WIDTH;
+                height=ICON_HEIGHT;
             } else {
                 text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
-                width=R.integer.icon_width;
-                height=R.integer.icon_height;
+                width=ICON_WIDTH;
+                height=ICON_HEIGHT;
             }
             myViewHolder.mCardView.setContentText(text);
             myViewHolder.mCardView.setTitleText(Html.fromHtml(application.getName()));
-            myViewHolder.mCardView.setMainImageDimensions(
-                    myViewHolder.mCardView.getContext().getResources().getInteger(width),
-                    myViewHolder.mCardView.getContext().getResources().getInteger(height));
+            myViewHolder.mCardView.setMainImageDimensions(width,height);
             myViewHolder.updateCardViewImage(application.getImage());
         }
     }

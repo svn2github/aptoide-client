@@ -21,8 +21,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-public class MainActivity extends Activity {
-    private static final int MINTIMEFORSPLASHSCREEN=3000;
+public class MainActivity extends Activity implements RequestsTvListener {
+    private static final int MINTIME_FOR_SPLASHSCREEN =3000;
+    public static final String ARGS_SKIP ="SKIP";
     SplashDialogFragment d;
     long time;
     @Override
@@ -31,12 +32,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        if(getResources().getBoolean(R.bool.showsplash)) {
-            d = new SplashDialogFragment();
-            time = System.currentTimeMillis();
-            d.show(getFragmentManager(), "SSF");
+        if(getIntent().getExtras()==null || getIntent().getExtras().containsKey(ARGS_SKIP)) {
+            if (getResources().getBoolean(R.bool.showsplash)) {
+                Log.d("pois","splash");
+                d = new SplashDialogFragment();
+                time = System.currentTimeMillis();
+                d.show(getFragmentManager(), "SSF");
+            }
         }
-
         new AutoUpdate(this).execute();
     }
 
@@ -46,10 +49,13 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public void dismissSplashDialog(){
+    @Override
+    public void onSuccess() {
+        if(d==null)
+            return;
         long timepassed = System.currentTimeMillis()-time;
         Log.d("pois","timePassed for SplashScreen: "+timepassed);
-        if (timepassed>=MINTIMEFORSPLASHSCREEN && d.isAdded()) {
+        if (timepassed>= MINTIME_FOR_SPLASHSCREEN && d.isAdded()) {
             d.dismissAllowingStateLoss();
         }
         else{
@@ -57,9 +63,18 @@ public class MainActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    dismissSplashDialog();
+                    onSuccess();
                 }
-            }, MINTIMEFORSPLASHSCREEN-timepassed);
+            }, MINTIME_FOR_SPLASHSCREEN -timepassed);
         }
+    }
+
+    @Override
+    public void onFailure() {
+        if (d.isAdded()) {
+            d.dismissAllowingStateLoss();
+        }
+        startActivity(new Intent(this, MainFail.class));
+        finish();
     }
 }

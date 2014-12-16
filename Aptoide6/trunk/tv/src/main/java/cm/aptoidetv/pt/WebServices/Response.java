@@ -1,5 +1,7 @@
 package cm.aptoidetv.pt.WebServices;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -36,6 +38,7 @@ public class Response {
 
         public void setExpected_time(Number expected_time) throws TicketException, InterruptedException {
             this.expected_time = expected_time;
+            Log.d("pois", "Response expected in : " + expected_time);
             Thread.sleep(Math.min(expected_time.intValue(), 5000));
             throw new TicketException();
         }

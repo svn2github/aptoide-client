@@ -63,7 +63,7 @@ public class ScreenshotsPresenter extends Presenter {
                     .load(uri)
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .centerInside()
-                    .resize(mCardView.getResources().getInteger(R.integer.card_presenter_width), mCardView.getResources().getInteger(R.integer.card_presenter_height))
+                    .resize(CardPresenter.card_presenter_width, CardPresenter.card_presenter_height)
                     .error(mDefaultCardImage)
                     .into(mImageViewTarget);
         }

@@ -160,7 +160,6 @@ public class SearchFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(android.support.v17.leanback.R.layout.lb_search_fragment, container, false);
-        Log.d("pois","onCreateView");
         FrameLayout searchFrame = (FrameLayout) root.findViewById(android.support.v17.leanback.R.id.lb_search_frame);
         mSearchBar = (SearchBar) searchFrame.findViewById(android.support.v17.leanback.R.id.lb_search_bar);
         mSearchBar.setSearchBarListener(new SearchBar.SearchBarListener() {
