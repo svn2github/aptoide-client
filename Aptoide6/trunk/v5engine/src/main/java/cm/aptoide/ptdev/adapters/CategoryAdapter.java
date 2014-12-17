@@ -187,9 +187,9 @@ public class CategoryAdapter extends CursorAdapter {
                     case EnumCategories.LATEST_COMMENTS:
                         icon.setImageResource(R.drawable.cat_comments);
                         break;
-                    case EnumCategories.RECOMMENDED_APPS:
-                        icon.setImageResource(R.drawable.cat_recommended);
-                        break;
+//                    case EnumCategories.RECOMMENDED_APPS:
+//                        icon.setImageResource(R.drawable.cat_recommended);
+//                        break;
 
                     default:
                         String iconUrl = EnumCategories.getCategoryIcon(id, repoName);
