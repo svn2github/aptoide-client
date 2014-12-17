@@ -302,7 +302,7 @@
   <string name="trivia">טריוויה</string>
   <string name="card">כרטיס</string>
   <string name="role_playing">משחק תפקידים</string>
-  <string name="educational">חינוך</string>
+  <string name="educational">חינוכי</string>
   <string name="music">מוזיקה</string>
   <string name="widgets">ווידג\'ט</string>
   <string name="board">לוח</string>
@@ -378,15 +378,15 @@
   <string name="error_IARG_3">מזהה לא חוקי</string>
   <string name="error_IARG_4">נתוני MD5 לא חוקיים</string>
   <string name="error_IARG_5">תבנית hmac לא חוקית</string>
-  <string name="error_IARG_6">apk לא תקין</string>
+  <string name="error_IARG_6">לא חוקי בלבד</string>
   <string name="error_IARG_100">בהערה מספר התווים המינימלי המותר הינו 10</string>
   <string name="error_IARG_101">בהערת תשובה מספר התווים המינימלי המותר הינו 10</string>
   <string name="error_IARG_102">ארגומנט לא חוקי</string>
   <string name="error_IARG_103">קטגוריה לא חוקית</string>
-  <string name="error_IARG_104">apk לא תקין</string>
+  <string name="error_IARG_104">דירוג לא חוקי</string>
   <string name="error_IARG_105">אתר זה אינו כתובת URL חוקית</string>
   <string name="error_IARG_106">כתובת דוא\"ל לא חוקית</string>
-  <string name="error_IARG_107">apk לא תקין</string>
+  <string name="error_IARG_107">דגל לא חוקי</string>
   <string name="error_IARG_108">הערה לא חוקית</string>
   <string name="error_IARG_109">הצבעה לא חוקית</string>
   <string name="error_IARG_110">הערת תשובה לא חוקית</string>
@@ -468,7 +468,7 @@
   <string name="fields_cannot_empty">אנא בדוק את הדוא\"ל והשם שלך</string>
   <string name="password_validation_text">הסיסמה חייבת להיות מורכבת מ-8 תווים לפחות וחייבת לכלות לפחות אות אחת ומספר או תו מיוחד (!\@#$%*) אחד</string>
   <string name="jolla_not_supported">"תכונה עדיין לא נתמכת ע\"י פלטפורמה Jolla "</string>
-  <string name="flags">לאותת</string>
+  <string name="flags">דגלים</string>
   <string name="flag_good">טוב</string>
   <string name="flag_license">דרוש רישיון</string>
   <string name="flag_fake">זיוף</string>
@@ -495,7 +495,7 @@
   <string name="requestAdultpin">הכנס PIN ךביטול הנעילה</string>
   <string name="adultpinwrong">PIN שגוי, נסה שנית.</string>
   <string name="cancel">ביטול</string>
-  <string name="setting_hide_mature">סנן תוכן מבוגרים</string>
+  <string name="setting_hide_mature">הסתר תכנים למבוגרים</string>
   <string name="error_occured_paying">אירעה שגיאה. התשלום לא התבצע.</string>
   <string name="failed_auth_code">אישור החשבון נכשל. אנא נסה שנית.</string>
   <string name="error_occured_retry_later">אירעה שגיאה. אפטויד תנסה יותר מאוחר בצורה אוטומטית.</string>
@@ -503,7 +503,7 @@
   <string name="no_payments_available">אין תשלומים זמינים.</string>
   <string name="change_payment">חזרה</string>
   <string name="confirm_carrier_payment">האם ברצונך לקנות \'{title}\' ב-{value}? תחוייב ע\"י חברת הסלולר שלך.</string>
-  <string name="featured_editors_choice">עוד מבחירות העורך</string>
+  <string name="featured_editors_choice">לחץ לבחירת העורכים</string>
   <string name="set_mature_pin_title">הגדר PIN לתוכן למבוגרים.</string>
   <string name="set_mature_pin_summary">הגדר PIN שיידרש לביטול נעילת תוכן למבוגרים.</string>
   <string name="remove_mature_pin_title">הסר PIN ךתוכן למבוגרים</string>
@@ -551,7 +551,7 @@
   <string name="unhide_post">ביטול הסתרה</string>
   <string name="timeline_like">אוהבים</string>
   <string name="unlike">הסרת אהבתי</string>
-  <string name="comment">הערות</string>
+  <string name="comment">הערה</string>
   <string name="hide_post_info">הידידים שלך לא יראו את הוסט הזה</string>
   <string name="wizard_new_timeline">1 - ציר זמן חברתי חדש</string>
   <string name="wizard_new_timeline_description">שתף את היישומים שהתקנת עם הידידים שלך בפייסבוק</string>
@@ -585,4 +585,14 @@
   <string name="social_timeline_notifications">הודעות בציר הזמן</string>
   <string name="social_timeline_notifications_sum">השבת הודעות בציר הזמן של אפוטיד. לא תקבל את החדשות האחרונות דרך סרגל ההודאות.</string>
   <string name="social_timeline_notifications_sum2">הפעל הודעות בציר הזמן של אפטויד. תקבל את החדשות האחרונות דרך סרגל ההודאות.</string>
+  <string name="error503">אוף... האם זה רק אני או שזה לכולם התקנה יישומים באותו הזמן?</string>
+  <string name="having_some_trouble">יש כמה בעיות. אנא נסה שוב מאוחר יותר?</string>
+  <string name="friends_installs">החברים שלך התקינו</string>
+  <string name="highlighted_apps">מודגש</string>
+  <string name="installed_this">התקן את זה.</string>
+  <string name="store_added">חנות הוספה</string>
+  <string name="top_tab">עליון</string>
+  <string name="button_more">יותר</string>
+  <string name="no_updates">אין לך עדכונים</string>
+  <string name="more_friends_installs">החברים שלך התקינו יותר</string>
 </resources>
