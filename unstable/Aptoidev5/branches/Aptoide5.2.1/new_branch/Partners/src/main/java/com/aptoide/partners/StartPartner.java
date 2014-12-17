@@ -14,8 +14,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -192,7 +195,15 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 //            Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.device_not_allowed), Toast.LENGTH_SHORT).show();
 //            finish();
             /** Lisciani **/
-            Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.children_text_alert, AptoideConfigurationPartners.MARKETNAME), Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast,(ViewGroup) findViewById(R.id.toast_layout_id));
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText(getString(cm.aptoide.ptdev.R.string.children_text_alert));
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
             finish();
         }
     }
