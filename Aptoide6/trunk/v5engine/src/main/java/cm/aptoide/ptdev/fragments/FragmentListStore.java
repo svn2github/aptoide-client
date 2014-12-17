@@ -595,30 +595,17 @@ public class FragmentListStore extends Fragment {
                     try{
 
                         if("group_top".equals(storeListItem.refid)){
-
                             catid = EnumCategories.TOP_APPS;
-//                            Log.d("FragmentListStore", "group_top "+catid);
                         }else if("likes".equals(storeListItem.refid)) {
-
-
                             catid = EnumCategories.LATEST_LIKES;
-//                            Log.d("FragmentListStore", "likes "+catid);
-
                         }else if("comments".equals(storeListItem.refid)) {
-
                             catid = EnumCategories.LATEST_COMMENTS;
-//                            Log.d("FragmentListStore", "comments "+catid);
-
                         }else if("group_latest".equals(storeListItem.refid)) {
-
                             catid = EnumCategories.LATEST_APPS;
-//                            Log.d("FragmentListStore", "group_latest "+catid);
-
+                        }else if("ucat_3239".equals(storeListItem.refid)) {
+                            catid = EnumCategories.APTOIDE_PUBLISHERS;
                         }else {
-
                             catid = Integer.valueOf(storeListItem.refid.replaceAll("[^-?0-9]+", ""));
-//                            Log.d("FragmentListStore", "catid "+catid);
-
                         }
                     }catch (Exception e){
                         catid = 0;
@@ -653,7 +640,9 @@ public class FragmentListStore extends Fragment {
                         case EnumCategories.LATEST_COMMENTS:
                             categoryHolder.icon.setImageResource(R.drawable.cat_comments);
                             break;
-
+                        case EnumCategories.APTOIDE_PUBLISHERS:
+                            categoryHolder.icon.setImageResource(R.drawable.cat_publishers);
+                            break;
 
                         default:
                             String iconUrl = EnumCategories.getCategoryIcon(catid, storename);

@@ -16,6 +16,7 @@ public class EnumCategories {
     public static final int LATEST_LIKES = 502;
     public static final int LATEST_COMMENTS = 503;
     public static final int RECOMMENDED_APPS = 504;
+    public static final int APTOIDE_PUBLISHERS = 505;
     private final String repo;
 
     public EnumCategories(String repo) {
@@ -91,7 +92,7 @@ public class EnumCategories {
             put(502, R.string.latest_likes);
             put(503, R.string.latest_comments);
             put(504, R.string.recommended_for_you);
-
+            put(505, R.string.aptoide_publishers);
         }
     };
 
