@@ -128,19 +128,21 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(AptoideConfigurationPartners.getRestrictionlist() != null) {
-            StringTokenizer tokenizer = new StringTokenizer(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getRestrictionlist(), ",");
+          /** Epiland **/
+//        if(AptoideConfigurationPartners.getRestrictionlist() != null) {
+//            StringTokenizer tokenizer = new StringTokenizer(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getRestrictionlist(), ",");
+//
+//            startPartner = false;
+//            while (tokenizer.hasMoreElements() && !startPartner) {
+//                String token = tokenizer.nextToken().trim();
+//                if (Build.MODEL.equals(token)) {
+//                    startPartner = true;
+//                    Log.d("Restriction List", "Device model " + token + " in restriction list, you're allowed to continue");
+//                }
+//            }
+//        }
 
-            startPartner = false;
-            while (tokenizer.hasMoreElements() && !startPartner) {
-                String token = tokenizer.nextToken().trim();
-                if (Build.MODEL.equals(token)) {
-                    startPartner = true;
-                    Log.d("Restriction List", "Device model " + token + " in restriction list, you're allowed to continue");
-                }
-            }
-        }
-
+        /** Lisciani **/
         try {
             if(getChildrenPlaying()){
                 startPartner = false;
@@ -186,6 +188,10 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     protected void onResume() {
         super.onResume();
         if (!startPartner) {
+            /** Epiland **/
+//            Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.device_not_allowed), Toast.LENGTH_SHORT).show();
+//            finish();
+            /** Lisciani **/
             Toast.makeText(this, getString(cm.aptoide.ptdev.R.string.children_text_alert, AptoideConfigurationPartners.MARKETNAME), Toast.LENGTH_SHORT).show();
             finish();
         }
