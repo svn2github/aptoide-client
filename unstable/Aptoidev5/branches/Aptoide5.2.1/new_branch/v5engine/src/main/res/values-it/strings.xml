@@ -584,4 +584,7 @@
   <string name="timeline_not_compatible">Ooohhh... Questa funzione non è compatibile con la tua versione di Android</string>
   <string name="social_timeline_notifications">Notifiche Timeline</string>
   <string name="social_timeline_notifications_sum">Disabilita le notifiche della Timeline Sociale di Aptoide. Non riceverai le ultime notizie nella barra delle notifiche.</string>
+
+  <string name="children_text_alert">Attenzione: non puoi accedere allo store dall\'area bambino!</string>
+
 </resources>
