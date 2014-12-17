@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -66,6 +67,7 @@ import cm.aptoide.ptdev.model.Apk;
 import cm.aptoide.ptdev.model.DownloadPermissions;
 import cm.aptoide.ptdev.model.Error;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
+import cm.aptoide.ptdev.services.UpdatesService;
 import cm.aptoide.ptdev.webservices.Errors;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
@@ -917,8 +919,11 @@ public class AptoideUtils {
     public static void syncInstalledApps(Context context, SQLiteDatabase db) {
         //Log.d("Aptoide-InstalledSync", "Syncing");
         long startTime = System.currentTimeMillis();
+
         InstalledAppsHelper.sync(db, context);
-        //Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
+
+        context.startService(new Intent(context, UpdatesService.class));
+        Log.d("Aptoide-InstalledSync", "Sync complete in " + (System.currentTimeMillis() - startTime)+"ms");
 
     }
 

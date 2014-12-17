@@ -92,7 +92,7 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         parameters.put("get_mature", mature);
 
-        parameters.put("partners", "1-3,5-9");
+        parameters.put("partners", "1-3,5-10");
         //parameters.put("partners", "7-9");
 
         parameters.put("app_pkg", package_name);

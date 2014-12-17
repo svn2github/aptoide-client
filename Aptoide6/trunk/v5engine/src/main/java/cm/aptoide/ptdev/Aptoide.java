@@ -40,6 +40,7 @@ public class Aptoide extends Application {
     private static String sponsoredCache;
     public static String iconSize;
 
+
     public static AptoideThemePicker getThemePicker() {
         return themePicker;
     }

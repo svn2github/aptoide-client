@@ -118,6 +118,7 @@ public class Response {
 
                 public static class WidgetData {
                     public String ref_id;
+                    public int apps_count;
                     public List<WidgetCategory> categories;
 
                 }

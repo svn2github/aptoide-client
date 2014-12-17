@@ -112,7 +112,6 @@ import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.services.RabbitMqService;
-import cm.aptoide.ptdev.services.UpdatesService;
 import cm.aptoide.ptdev.social.WebViewFacebook;
 import cm.aptoide.ptdev.social.WebViewTwitter;
 import cm.aptoide.ptdev.tutorial.Tutorial;
@@ -260,6 +259,11 @@ public class Start extends ActionBarActivity implements
         if(isFinishing()) stopService(new Intent(this, RabbitMqService.class));
 
 
+    }
+
+    @Subscribe
+    public void updateBadge(UnInstalledApkEvent e){
+        updateBadge(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()));
     }
 
     @Override
@@ -653,18 +657,21 @@ public class Start extends ActionBarActivity implements
                 }
             }
 
-            startService(new Intent(this, UpdatesService.class));
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    AptoideUtils.syncInstalledApps(mContext, db);
+                }
+            });
+
 
             //loadEditorsAndTopApps();
 
 
 
-//            executorService.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    AptoideUtils.syncInstalledApps(mContext, db);
-//                }
-//            });
+
+
+
 //
 //            Cursor c = database.getServers();
 //
@@ -979,7 +986,7 @@ public class Start extends ActionBarActivity implements
 
                     int previousVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0);
 
-                    if (previousVersion < 451) {
+                    if (previousVersion < 452) {
                         Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                         whatsNewTutorial.putExtra("isUpdate", true);
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);
@@ -1058,7 +1065,12 @@ public class Start extends ActionBarActivity implements
 
     public void updateBadge(SharedPreferences sPref) {
         badgeUpdates.setTextSize(11);
-        int size = sPref.getInt("updates", 0);
+
+        Cursor data = new Database(Aptoide.getDb()).getUpdates();
+        int size = data.getCount();
+        data.close();
+
+
         if (size != 0) {
             badgeUpdates.setText(String.valueOf(size));
             if (!badgeUpdates.isShown()) badgeUpdates.show(true);

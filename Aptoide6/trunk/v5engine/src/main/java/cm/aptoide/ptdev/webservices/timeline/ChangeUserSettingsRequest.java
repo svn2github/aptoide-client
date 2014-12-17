@@ -2,6 +2,9 @@ package cm.aptoide.ptdev.webservices.timeline;
 
 import android.text.TextUtils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.ArrayList;
@@ -11,7 +14,10 @@ import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.converter.Converter;
+import retrofit.converter.JacksonConverter;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -40,9 +46,15 @@ public class ChangeUserSettingsRequest extends RetrofitSpiceRequest<GenericRespo
     }
 
 
+    protected RestAdapter.Builder createRestAdapterBuilder() {
+        return new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint("http://").setConverter(createConverter());
+    }
+
     @Override
     public GenericResponseV2 loadDataFromNetwork() throws Exception {
 //        GenericUrl url= new GenericUrl(getUrl());
+
+        setService(createRestAdapterBuilder().build().create(ChangeUserSettings.class));
 
         HashMap<String, String > parameters = new HashMap<String, String>();
         parameters.put("mode" , "json");
@@ -58,5 +70,14 @@ public class ChangeUserSettingsRequest extends RetrofitSpiceRequest<GenericRespo
         }
 
         return null;
+    }
+
+    protected Converter createConverter() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        return new JacksonConverter(objectMapper);
     }
 }

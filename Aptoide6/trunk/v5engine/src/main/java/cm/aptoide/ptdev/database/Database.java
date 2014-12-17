@@ -194,6 +194,8 @@ public class Database {
         values.put(Schema.Repo.COLUMN_URL, store.getBaseUrl());
         values.put(Schema.Repo.COLUMN_NAME, store.getName());
 
+        invalidateUpdates();
+
         return database.insert(Schema.Repo.getName(), "error", values);
     }
 
@@ -453,6 +455,9 @@ public class Database {
         }
         database.setTransactionSuccessful();
         database.endTransaction();
+
+        invalidateUpdates();
+
         return true;
     }
 
@@ -463,7 +468,7 @@ public class Database {
         //final long startTime = System.currentTimeMillis();
 
         //select  apk.package_name, (installed.version_code < apk.version_code) as is_update, apk.version_code as repoVC from apk join installed on  apk.package_name = installed.package_name group by apk.package_name, is_update order by is_update desc
-        Cursor c = database.rawQuery("select * from updates where url not null", null);
+        Cursor c = database.rawQuery("select * from updates where url not null and updates.package_name not in (select package_name from excluded) ", null);
 
         //final long endTime = System.currentTimeMillis();
         c.getCount();
@@ -475,11 +480,12 @@ public class Database {
 
         ArrayList<InstalledPackage> installedPackages = new ArrayList<InstalledPackage>();
 
-        Cursor c = database.rawQuery("select package_name, version_code from installed", null);
+        Cursor c = database.rawQuery("select package_name, version_code from updates", null);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             installedPackages.add(new InstalledPackage(null, c.getString(0), c.getInt(1), null, null));
         }
+
         c.close();
 
         return installedPackages;
@@ -510,9 +516,10 @@ public class Database {
 
         Cursor cursor = database.rawQuery("select 1 from updates where package_name = ?", new String[]{apk.packageName});
 
-        if(!cursor.moveToFirst()){
+        if(cursor.getCount()==0){
             database.insert(Schema.Updates.getName(), null, values);
         }
+
         cursor.close();
 
 
@@ -1469,7 +1476,7 @@ public class Database {
 
         DateTime dateTime = DateTime.now().minusHours(24);
 
-        Cursor cursor = database.rawQuery("select * from updates where timestamp < ? order by timestamp asc limit ?", new String[]{String.valueOf(dateTime.getMillis()), String.valueOf(i)});
+        Cursor cursor = database.rawQuery("select * from updates where timestamp < ? and updates.package_name not in (select package_name from excluded) order by timestamp asc limit ?", new String[]{String.valueOf(dateTime.getMillis()), String.valueOf(i)});
 
         ArrayList<FragmentUpdates2.UpdatesApi.Package> list = new ArrayList<>();
 
@@ -1499,6 +1506,7 @@ public class Database {
         values.put(Schema.Updates.COLUMN_REPO, aPackage.store_name);
         values.put(Schema.Updates.COLUMN_MD5, aPackage.md5sum);
         values.put(Schema.Updates.COLUMN_ICON, aPackage.icon);
+        values.put(Schema.Updates.COLUMN_UPDATE_VERCODE, aPackage.vercode);
 
         database.update(Schema.Updates.getName(), values, "package_name = ?" , new String[]{aPackage.packageName});
 

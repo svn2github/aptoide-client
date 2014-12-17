@@ -415,6 +415,10 @@ public class Schema {
         @ColumnDefinition(type = SQLType.TEXT)
         public static final String COLUMN_ICON = "icon";
 
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_UPDATE_VERCODE = "update_vercode";
+                ;
+
         public static String getName() {
             return "updates";
         }

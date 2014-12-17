@@ -294,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if (oldVersion >= 21 && oldVersion < 25 && Aptoide.getConfiguration().isSaveOldRepos()){
+        }else if (oldVersion >= 21 && oldVersion < 26 && Aptoide.getConfiguration().isSaveOldRepos()){
             try {
                 Cursor c = db.query("repo", new String[]{"url", "name", "username", "password", "avatar_url"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {

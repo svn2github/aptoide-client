@@ -124,7 +124,7 @@ public class FragmentListStore extends Fragment {
             api.getApi_global_params().setStore_name(store);
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-            api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
+            api.getApi_global_params().mature = String.valueOf(!sPref.getBoolean("matureChkBox", true));
 
             Api.GetStore getStore = new Api.GetStore();
 
@@ -310,6 +310,7 @@ public class FragmentListStore extends Fragment {
                         item.widgetid = widget.widgetid;
                         item.name = widget.name;
                         item.theme = theme;
+                        item.apps_count = widget.data.apps_count;
                         item.store_id = getArguments().getLong("storeid");
                         map.add(item);
 
@@ -363,6 +364,7 @@ public class FragmentListStore extends Fragment {
         public String widgetid;
         public String name;
         public String theme;
+        public int apps_count;
         public long store_id;
 
         @Override
@@ -547,6 +549,11 @@ public class FragmentListStore extends Fragment {
                         e.printStackTrace();
                     }
 
+                    if(storeListItem.apps_count>0){
+                        ((CategoryStoreListViewHolder) holder).apps_count.setText( storeListItem.apps_count + "");
+                    }else{
+                        ((CategoryStoreListViewHolder) holder).apps_count.setText( "");
+                    }
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -697,6 +704,7 @@ public class FragmentListStore extends Fragment {
 
         public static class CategoryStoreListViewHolder extends StoreListViewHolder{
             public final TextView name;
+            public final TextView apps_count;
             public final ImageView icon;
 
             public CategoryStoreListViewHolder(View itemView) {
@@ -704,6 +712,8 @@ public class FragmentListStore extends Fragment {
 
                 name = ((TextView) itemView.findViewById(R.id.category_first_level_name));
                 icon = ((ImageView) itemView.findViewById(R.id.category_first_level_icon));
+                apps_count = ((TextView) itemView.findViewById(R.id.category_first_level_number));
+
 
             }
 

@@ -23,6 +23,7 @@ import java.util.List;
 
 import cm.aptoide.ptdev.fragments.FragmentListApps;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 
@@ -96,7 +97,7 @@ public class MoreHighlightedActivity extends ActionBarActivity {
 
             swipeLayout.setEnabled(false);
 
-            request.setLimit(10);
+            request.setLimit(20);
             request.setLocation("homepage");
             request.setKeyword("__NULL__");
 
@@ -111,10 +112,10 @@ public class MoreHighlightedActivity extends ActionBarActivity {
                     if (apkSuggestionJson != null && apkSuggestionJson.getAds() != null && apkSuggestionJson.getAds().size() > 0) {
 
                         ArrayList<ApkSuggestionJson.Ads> inElements = new ArrayList<>(apkSuggestionJson.getAds());
-
+                        int bucketSize = AptoideUtils.getBucketSize();
                         while (!inElements.isEmpty()) {
                             FragmentListApps.AdRow row = new FragmentListApps.AdRow();
-                            for (int i = 0; i < 3 && !inElements.isEmpty(); i++) {
+                            for (int i = 0; i < bucketSize && !inElements.isEmpty(); i++) {
                                 row.ads.add(inElements.remove(0));
                             }
                             row.header = "Highlighted";

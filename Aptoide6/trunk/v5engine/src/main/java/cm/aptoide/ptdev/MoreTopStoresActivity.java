@@ -123,6 +123,7 @@ public class MoreTopStoresActivity extends MoreBaseActivity implements AddStoreD
                             row.appscount = store.apps_count.intValue();
                             row.avatar = store.avatar;
                             row.name = store.name;
+                            row.downloads = store.downloads.intValue();
                             map.add(row);
                         }
                     }

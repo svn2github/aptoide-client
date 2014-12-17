@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.facebook.FacebookException;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
-
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -337,6 +336,7 @@ public class FragmentSocialTimelineLayouts extends Fragment {
                     public void run() {
                         ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
                         request.addTimeLineSetting(ChangeUserSettingsRequest.TIMELINEACTIVE);
+
                         //request.setHttpRequestFactory(AndroidHttp.newCompatibleTransport().createRequestFactory());
                         try {
                             request.loadDataFromNetwork();
@@ -350,4 +350,6 @@ public class FragmentSocialTimelineLayouts extends Fragment {
             }
         });
     }
+
+
 }

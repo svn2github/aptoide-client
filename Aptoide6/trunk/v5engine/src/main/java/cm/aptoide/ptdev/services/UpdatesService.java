@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -40,41 +41,57 @@ import retrofit.converter.JacksonConverter;
  */
 public class UpdatesService extends Service {
 
-
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    ScheduledExecutorService executor;
+    static ScheduledExecutorService executor;
 
     GetUpdates task = new GetUpdates();
 
-    int retries = 0;
+    static int retries = 0;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-
 
         synchronized (this) {
 
             if(AptoideUtils.isNetworkAvailable(getApplicationContext())) {
 
-                if (executor == null) {
-                    executor = Executors.newSingleThreadScheduledExecutor();
-                    executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
-                }
+                    if (executor == null) {
+                        executor = Executors.newSingleThreadScheduledExecutor();
+                        executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
+                    }
 
-                if (intent.hasExtra("force")) {
+                    if (intent != null && intent.hasExtra("force")) {
 
-                    executor.shutdown();
-                    executor = Executors.newSingleThreadScheduledExecutor();
-                    executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    executor.shutdown();
+                                    Log.d("AptoideUpdates", "Awaiting previous executor to terminate");
+                                    executor.awaitTermination(2, TimeUnit.MINUTES);
+                                    Log.d("AptoideUpdates", "Previous terminatated");
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                executor = Executors.newSingleThreadScheduledExecutor();
+                                executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
+                            }
+                        }).start();
 
-                }
+                    }
+
+
+
             }else{
+
+                if(executor!=null){
+                    executor.shutdown();
+                }
+
                 executor = null;
                 stopSelf();
             }
@@ -91,100 +108,108 @@ public class UpdatesService extends Service {
         @Override
         public void run() {
 
+
+
             try {
+                    Database database = new Database(Aptoide.getDb());
 
+                    if (!database.hasInstalled()) {
+                        Log.d("AptoideUpdates", "First run install");
+                        PackageManager packageManager = Aptoide.getContext().getPackageManager();
+                        List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
 
-                Database database = new Database(Aptoide.getDb());
-
-                if(!database.hasInstalled()) {
-                    Log.d("AptoideUpdates", "First run install");
-                    PackageManager packageManager = Aptoide.getContext().getPackageManager();
-                    List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
-
-                    for (PackageInfo anInstalledPackage : installedPackages) {
-                        FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
-                        aPackage.signature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(anInstalledPackage.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
-                        aPackage.vercode = anInstalledPackage.versionCode;
-                        aPackage.packageName = anInstalledPackage.packageName;
-                        database.insertInstalled(aPackage);
-                    }
-
-                }
-
-                List<FragmentUpdates2.UpdatesApi.Package> updates1 = database.getUpdates(50);
-
-                if(updates1.isEmpty()){
-                    executor.shutdown();
-                    Log.d("AptoideUpdates", "Stopping service and executor is " + executor.isShutdown());
-
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true)){
-                        showUpdatesNotification();
-                    }
-
-                    stopSelf();
-                    return;
-                }
-
-                FragmentUpdates2.UpdatesApi api = new FragmentUpdates2.UpdatesApi();
-                api.mature = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
-
-
-                Cursor servers = database.getServers();
-
-                for (servers.moveToFirst(); !servers.isAfterLast(); servers.moveToNext()) {
-                    api.store_names.add(servers.getString(servers.getColumnIndex("name")));
-                }
-
-                servers.close();
-                List<FragmentUpdates2.UpdatesResponse.UpdateApk> responseList = new ArrayList<>();
-                if(!api.store_names.isEmpty()) {
-
-                    api.apks_data.addAll(updates1);
-
-                    ObjectMapper mapper = new ObjectMapper();
-
-                    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-                    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-                    RestAdapter adapter = new RestAdapter.Builder().setConverter(new JacksonConverter(mapper)).setEndpoint("http://").build();
-
-                    Log.d("AptoideUpdates", "Getting updates");
-                    FragmentUpdates2.UpdatesResponse updates = adapter.create(FragmentUpdates2.Webservice.class).getUpdates(api);
-                    Log.d("AptoideUpdates", "Getted updates");
-                    List<FragmentUpdates2.UpdatesResponse.UpdateApk> list = updates.data.list;
-                    responseList.addAll(list);
-                }
-
-                for (FragmentUpdates2.UpdatesApi.Package aPackage : updates1) {
-
-                    database.resetPackage(aPackage.packageName);
-
-                    for(FragmentUpdates2.UpdatesResponse.UpdateApk aPackage2 : responseList){
-                        if(aPackage2.packageName.equals(aPackage.packageName)){
-                            database.updatePackage(aPackage2);
+                        for (PackageInfo anInstalledPackage : installedPackages) {
+                            FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
+                            aPackage.signature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(anInstalledPackage.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
+                            aPackage.vercode = anInstalledPackage.versionCode;
+                            aPackage.packageName = anInstalledPackage.packageName;
+                            database.insertInstalled(aPackage);
                         }
+
                     }
 
-                }
+                    List<FragmentUpdates2.UpdatesApi.Package> updates1 = database.getUpdates(50);
 
-                retries = 0;
+                    if (updates1.isEmpty()) {
+                        executor.shutdown();
+                        Log.d("AptoideUpdates", "Stopping service and executor is " + executor.isShutdown());
 
-            }catch (Exception e){
-                e.printStackTrace();
+                        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showUpdatesNotification", true)) {
+                            showUpdatesNotification();
+                            BusProvider.getInstance().post(new UnInstalledApkEvent(""));
+                        }
 
-                if(retries == 5){
-                    executor.shutdown();
-                    stopSelf();
+                        stopSelf();
+                        return;
+                    }
+
+                    FragmentUpdates2.UpdatesApi api = new FragmentUpdates2.UpdatesApi();
+                    api.mature = !PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true);
+
+
+                    Cursor servers = database.getServers();
+
+                    for (servers.moveToFirst(); !servers.isAfterLast(); servers.moveToNext()) {
+                        api.store_names.add(servers.getString(servers.getColumnIndex("name")));
+                    }
+
+                    servers.close();
+                    List<FragmentUpdates2.UpdatesResponse.UpdateApk> responseList = new ArrayList<>();
+
+                    if (!api.store_names.isEmpty()) {
+
+                        api.apks_data.addAll(updates1);
+
+                        ObjectMapper mapper = new ObjectMapper();
+
+                        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+                        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                        RestAdapter adapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL).setConverter(new JacksonConverter(mapper)).setEndpoint("http://").build();
+
+                        Log.d("AptoideUpdates", "Getting updates");
+                        FragmentUpdates2.UpdatesResponse updates = adapter.create(FragmentUpdates2.Webservice.class).getUpdates(api);
+                        Log.d("AptoideUpdates", "Getted updates");
+                        List<FragmentUpdates2.UpdatesResponse.UpdateApk> list = updates.data.list;
+                        responseList.addAll(list);
+                    }
+
+                    for (FragmentUpdates2.UpdatesApi.Package aPackage : updates1) {
+
+                        database.resetPackage(aPackage.packageName);
+
+                        for (FragmentUpdates2.UpdatesResponse.UpdateApk aPackage2 : responseList) {
+                            if (aPackage2.packageName.equals(aPackage.packageName)) {
+                                database.updatePackage(aPackage2);
+                            }
+                        }
+
+                    }
+
                     retries = 0;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    Log.d("AptoideUpdates", "Exception retries: " + retries);
+
+                    if (retries == 7) {
+                        executor.shutdown();
+                        stopSelf();
+                        Log.d("AptoideUpdates", "Service exceeded retries. Shutting down. ");
+
+                        retries = 0;
+                    }
+                    retries++;
+
                 }
 
-            }
+                BusProvider.getInstance().post(new UnInstalledApkEvent(""));
+                Log.d("AptoideUpdates", "Stopped");
 
-            BusProvider.getInstance().post(new UnInstalledApkEvent(""));
 
 
-            Log.d("AptoideUpdates", "Stopped execution");
 
         }
 
@@ -193,17 +218,21 @@ public class UpdatesService extends Service {
     private void showUpdatesNotification() {
         int updates = 0;
         Cursor data=null;
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try {
+
             data = new Database(Aptoide.getDb()).getUpdates();
 
             updates = data.getCount();
 
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putInt("updates", data.getCount());
+            defaultSharedPreferences.edit().putInt("updates", data.getCount()).apply();
+
         }finally {
             if(data!=null)
                 data.close();
         }
-        if(updates>0){
+
+        if(updates > 0 && updates != defaultSharedPreferences.getInt("updates", 0)){
             NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 
@@ -254,7 +283,6 @@ public class UpdatesService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Log.d("AptoideUpdates", "OnDestroy");
     }
 }

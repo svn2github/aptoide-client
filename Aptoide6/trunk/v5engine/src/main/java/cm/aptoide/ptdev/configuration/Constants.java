@@ -9,7 +9,7 @@ package cm.aptoide.ptdev.configuration;
  */
 public class Constants {
 
-    public static final int DATABASE_VERSION = 25;
+    public static final int DATABASE_VERSION = 26;
     public static final String LOGIN_USER_ID 	= "useridLogin";
     public static final String LOGIN_PASSWORD 	= "passwordLogin";
     public static final String LOGIN_USER_LOGIN 	= "usernameLogin";

@@ -5,17 +5,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import cm.aptoide.ptdev.database.Database;
-import cm.aptoide.ptdev.model.InstalledPackage;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Locale;
+
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.fragments.FragmentUpdates2;
+import cm.aptoide.ptdev.model.InstalledPackage;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,33 +24,66 @@ import java.util.Locale;
 public class InstalledAppsHelper {
 
     public static void sync(SQLiteDatabase database, Context context) {
-
         Database db = new Database(database);
-        //db.clearInstalled();
 
-        List<PackageInfo> system_installed_list = context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
-        List<InstalledPackage> database_installed_list = db.getStartupInstalled();
+        try{
+            //db.clearInstalled();
+
+            db.getDatabaseInstance().beginTransaction();
+
+            List<InstalledPackage> database_installed_list = db.getStartupInstalled();
 
 
-        for (PackageInfo pkg : system_installed_list) {
+            PackageManager packageManager = Aptoide.getContext().getPackageManager();
+            List<PackageInfo> installedPackages = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
 
-            try {
-                InstalledPackage apk = new InstalledPackage(
-                                (String) pkg.applicationInfo.loadLabel(context.getPackageManager()),
-                                pkg.packageName,
-                                pkg.versionCode,
-                                pkg.versionName,
-                        AptoideUtils.Algorithms.computeSHA1sumFromBytes(pkg.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH));
+            for (PackageInfo anInstalledPackage : installedPackages) {
 
-                if (!database_installed_list.contains(apk)) {
-                    //Log.d("Aptoide-InstalledSync", "Adding " + apk.getPackage_name() + "-" + apk.getVersion_name());
-                    db.insertInstalled(apk);
+                try {
+
+                    FragmentUpdates2.UpdatesApi.Package aPackage = new FragmentUpdates2.UpdatesApi.Package();
+                    aPackage.signature = AptoideUtils.Algorithms.computeSHA1sumFromBytes(anInstalledPackage.signatures[0].toByteArray()).toUpperCase(Locale.ENGLISH);
+                    aPackage.vercode = anInstalledPackage.versionCode;
+                    aPackage.packageName = anInstalledPackage.packageName;
+
+                    InstalledPackage apk = new InstalledPackage(
+                            "",
+                            anInstalledPackage.packageName,
+                            anInstalledPackage.versionCode,
+                            anInstalledPackage.versionName,
+                            aPackage.signature);
+
+                    if (!database_installed_list.contains(apk)) {
+                        Log.d("Aptoide-InstalledSync", "Adding " + apk.getPackage_name() + "-" + apk.getVersion_name());
+                        db.insertInstalled(aPackage);
+                    } else {
+                        database_installed_list.remove(apk);
+                        Log.d("Aptoide-InstalledSync", "Removing from list" + apk.getPackage_name() + "-" + apk.getVersion_name());
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            if (!database_installed_list.isEmpty()) {
+                for (InstalledPackage installedPackage : database_installed_list) {
+                    db.deleteInstalledApk(installedPackage.getPackage_name());
+                    Log.d("Aptoide-InstalledSync", "Removing from database" + installedPackage.getPackage_name() + "-" + installedPackage.getVersion_name());
+                }
+
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            db.getDatabaseInstance().setTransactionSuccessful();
+            db.getDatabaseInstance().endTransaction();
         }
+
+
+
     }
 
 

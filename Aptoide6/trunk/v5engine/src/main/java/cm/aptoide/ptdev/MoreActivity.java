@@ -410,7 +410,7 @@ public class MoreActivity extends ActionBarActivity {
                 int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
                 SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-                api.getApi_global_params().mature = String.valueOf(sPref.getBoolean("matureChkBox", false));
+                api.getApi_global_params().mature = String.valueOf(!sPref.getBoolean("matureChkBox", true));
 
 
                 Api.GetStore getStore = new Api.GetStore();

@@ -377,6 +377,7 @@ public class FragmentUpdates2 extends Fragment {
                             apk.apk.filesize = updatesTabList.getInt(filesize);
                             apk.apk.path_alt = updatesTabList.getString(alt_path);
                             apk.apk.path = updatesTabList.getString(path);
+                            apk.vercode = updatesTabList.getInt(updatesTabList.getColumnIndex(Schema.Updates.COLUMN_UPDATE_VERCODE));
 
                             String string = updatesTabList.getString(vername);
                             if(string == null){
@@ -497,7 +498,6 @@ public class FragmentUpdates2 extends Fragment {
     @Subscribe
     public void refreshStoresEvent(RepoCompleteEvent event) {
         Database database = new Database(Aptoide.getDb());
-        database.invalidateUpdates();
         Aptoide.getContext().startService(new Intent(Aptoide.getContext(), UpdatesService.class));
 
     }
