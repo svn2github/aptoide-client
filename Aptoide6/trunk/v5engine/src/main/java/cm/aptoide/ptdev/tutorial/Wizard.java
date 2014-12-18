@@ -199,19 +199,14 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
+            View view = inflater.inflate(R.layout.fragment_wizard_new_improvements, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_and_improved));
-            ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_optimized_cut);
-            TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_and_improved_description));
+
         }
 
         @Override
@@ -232,20 +227,13 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
+            View view = inflater.inflate(R.layout.fragment_wizard_new_homepage, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-
-            TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_homepage));
-            ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_homepage);
-            TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_homepage_description));
         }
 
         @Override
@@ -266,25 +254,13 @@ public class Wizard {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_tutorial, container, false);
+            View view = inflater.inflate(R.layout.fragment_wizard_new_top, container, false);
             return view;
         }
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-
-            TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText(getString(R.string.wizard_new_top));
-            ImageView image = (ImageView) view.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wizard_top);
-            TextView description = (TextView) view.findViewById(R.id.description);
-            description.setText(getString(R.string.wizard_new_top_description));
-
-            TextView more_text = (TextView) view.findViewById(R.id.more_text_right);
-            more_text.setText(getString(R.string.wizard_new_top_stores));
-            ImageView arrow = (ImageView) view.findViewById(R.id.arrow_right);
-            arrow.setVisibility(View.VISIBLE);
         }
 
         @Override

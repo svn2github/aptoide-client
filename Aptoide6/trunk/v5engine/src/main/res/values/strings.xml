@@ -635,16 +635,17 @@
     <string name="button_more">More</string>
     <string name="no_updates">You have no Updates</string>
     <string name="more_friends_installs">More from your friends installs</string>
+    <string name="top_stores">Top Stores</string>
 
     <string name="wizard_new_and_improved">Improved performance!</string>
-    <string name="wizard_new_and_improved_description">
-        &#8226; Save battery life
-    \n\n&#8226; Reduced CPU and bandwidth usage
-    \n\n&#8226; Load fewer resources
-    \n\n&#8226; Clean User Interface
-    </string>
+    <string name="wizard_new_and_improved_bullet_1">Save battery life</string>
+    <string name="wizard_new_and_improved_bullet_2">Reduce CPU and bandwidth usage</string>
+    <string name="wizard_new_and_improved_bullet_3">Load fewer resources</string>
+    <string name="wizard_new_and_improved_bullet_4">Clean User Interface</string>
     <string name="wizard_new_homepage">New homepage layout</string>
-    <string name="wizard_new_homepage_description">More Editors\' Choice, Organized Content and Your friends installs</string>
+    <string name="wizard_new_homepage_bullet_1">More Editors\' Choice</string>
+    <string name="wizard_new_homepage_bullet_2">Organized Content</string>
+    <string name="wizard_new_homepage_bullet_3">Your friends installs</string>
     <string name="wizard_new_top">New Top tab</string>
     <string name="wizard_new_top_description">Global and local Top Apps</string>
     <string name="wizard_new_top_stores">Discover and add Top Stores</string>
