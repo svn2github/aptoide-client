@@ -986,7 +986,7 @@ public class Start extends ActionBarActivity implements
 
                     int previousVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("version", 0);
 
-                    if (previousVersion < 452) {
+                    if (previousVersion < 453) {
                         Intent whatsNewTutorial = new Intent(mContext, Tutorial.class);
                         whatsNewTutorial.putExtra("isUpdate", true);
                         startActivityForResult(whatsNewTutorial, WIZARD_REQ_CODE);

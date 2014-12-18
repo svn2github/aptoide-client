@@ -296,22 +296,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }else if (oldVersion >= 21 && oldVersion < 26 && Aptoide.getConfiguration().isSaveOldRepos()){
             try {
-                Cursor c = db.query("repo", new String[]{"url", "name", "username", "password", "avatar_url"}, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
+                Cursor c = db.query("repo", null, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
+
                 for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 
                     Server server = new Server();
-                    server.setUrl(c.getString(0));
-                    server.setName(c.getString(1));
+                    server.setId(c.getInt(c.getColumnIndex(Schema.Repo.COLUMN_ID)));
+                    server.setUrl(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_URL)));
+                    server.setName(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_NAME)));
+                    server.setTheme(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_THEME)));
+                    server.setDownloads(c.getLong(c.getColumnIndex(Schema.Repo.COLUMN_DOWNLOADS)));
 
-
-
-                    if(c.getString(2)!=null){
+                    if(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_USERNAME))!=null){
                         server.login = new Login();
-                        server.login.setUsername(c.getString(2));
-                        server.login.setPassword(c.getString(3));
+                        server.login.setUsername(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_USERNAME)));
+                        server.login.setPassword(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_PASSWORD)));
                     }
 
-                    server.setFeaturedGraphicPath(c.getString(4));
+                    server.setFeaturedGraphicPath(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_FEATURED_GRAPHIC_PATH)));
 
                     oldServers.add(server);
                 }
@@ -338,14 +340,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        if (oldVersion >= 13 && oldVersion <= 23 && Aptoide.getConfiguration().isSaveOldRepos()) {
+        if (oldVersion >= 13 && oldVersion <= 25 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             for (Server server : oldServers) {
                 ContentValues values = new ContentValues();
 
+                values.put(Schema.Repo.COLUMN_ID, server.getId());
+
                 values.put(Schema.Repo.COLUMN_NAME, server.getName());
                 values.put(Schema.Repo.COLUMN_IS_USER, true);
                 values.put(Schema.Repo.COLUMN_URL, server.getUrl());
+
+                values.put(Schema.Repo.COLUMN_THEME, server.getTheme());
+                values.put(Schema.Repo.COLUMN_DOWNLOADS, server.getDownloads());
+
 
                 if(server.login!=null){
                     values.put(Schema.Repo.COLUMN_USERNAME, server.login.getUsername());

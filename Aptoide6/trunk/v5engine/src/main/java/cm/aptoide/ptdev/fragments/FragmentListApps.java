@@ -722,208 +722,224 @@ public class FragmentListApps extends Fragment {
                 rootView.findViewById(R.id.error).setVisibility(View.GONE);
                 ArrayList<Displayable> map = new ArrayList<>();
 
-                List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
-                HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
+                try {
+                    List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
+                    HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
 
 
-                for (Response.GetStore.Widgets.Widget widget : list) {
+                    for (Response.GetStore.Widgets.Widget widget : list) {
 
-                    if (widget.type.equals("apps_list")) {
+                        if (widget.type.equals("apps_list")) {
 
-                        if ("apps_list:EDITORS_group_hrand".equals(widget.widgetid)) {
+                            if ("apps_list:EDITORS_group_hrand".equals(widget.widgetid)) {
 
-                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<>(dataset.get(widget.data.ref_id).data.list);
+                                ArrayList<Response.ListApps.Apk> inElements = new ArrayList<>(dataset.get(widget.data.ref_id).data.list);
 
-                            Row row = new FeaturedRow();
-                            row.widgetid = widget.widgetid;
-                            row.header = widget.name;
-                            row.widgetrefid = widget.data.ref_id;
-                            while (!inElements.isEmpty()) {
-                                row.addItem(inElements.remove(0));
+                                Row row = new FeaturedRow();
+                                row.widgetid = widget.widgetid;
+                                row.header = widget.name;
+                                row.widgetrefid = widget.data.ref_id;
+                                while (!inElements.isEmpty()) {
+                                    row.addItem(inElements.remove(0));
+                                }
+                                map.add(row);
+
+                            } else {
+
+                                Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+
+                                if (category != null && category.data != null) {
+                                    ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+
+                                    while (!inElements.isEmpty()) {
+                                        Row row = new Row();
+                                        row.widgetid = widget.widgetid;
+                                        row.header = widget.name;
+                                        row.widgetrefid = widget.data.ref_id;
+                                        for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
+                                            row.addItem(inElements.remove(0));
+                                        }
+                                        map.add(row);
+                                    }
+                                }
+
                             }
-                            map.add(row);
+
+                        } else if ("categs_list".equals(widget.type)) {
+
+                            ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory> inElements = new ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory>(widget.data.categories);
+
+                            while (!inElements.isEmpty()) {
+                                CategoryRow row = new CategoryRow();
+                                row.header = widget.name;
+
+                                for (int i = 0; i < 2 && !inElements.isEmpty(); i++) {
+                                    Response.GetStore.Widgets.Widget.WidgetCategory widgetCategory = inElements.remove(0);
+
+                                    row.addItem(widgetCategory);
+                                }
+                                map.add(row);
+                            }
 
                         } else {
-
-                            Response.ListApps.Category category = dataset.get(widget.data.ref_id);
-
-                            if (category != null && category.data != null) {
-                                ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
-
-                                while (!inElements.isEmpty()) {
-                                    Row row = new Row();
-                                    row.widgetid = widget.widgetid;
-                                    row.header = widget.name;
-                                    row.widgetrefid = widget.data.ref_id;
-                                    for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
-                                        row.addItem(inElements.remove(0));
-                                    }
-                                    map.add(row);
-                                }
-                            }
-
-                        }
-
-                    } else if ("categs_list".equals(widget.type)) {
-
-                        ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory> inElements = new ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory>(widget.data.categories);
-
-                        while (!inElements.isEmpty()) {
-                            CategoryRow row = new CategoryRow();
-                            row.header = widget.name;
-
-                            for (int i = 0; i < 2 && !inElements.isEmpty(); i++) {
-                                Response.GetStore.Widgets.Widget.WidgetCategory widgetCategory = inElements.remove(0);
-
-                                row.addItem(widgetCategory);
-                            }
+                            Row row = new Row();
+                            row.setEnabled(false);
                             map.add(row);
+                            ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
                         }
 
-                    } else {
-                        Row row = new Row();
-                        row.setEnabled(false);
-                        map.add(row);
-                        ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
                     }
 
-                }
+                    map.add(new AdultContentRow(adultInterface));
 
-                map.add(new AdultContentRow(adultInterface));
+                    string.clear();
+                    string.addAll(map);
 
-                string.clear();
-                string.addAll(map);
+                    Log.d("AptoideDebug", string.toString());
+                    int offset = ((RecyclerAdapter) view.getAdapter()).offset;
+                    ((RecyclerAdapter) view.getAdapter()).offset = offset + list.size();
+                    view.getAdapter().notifyDataSetChanged();
+                    //loading = false;
 
-                Log.d("AptoideDebug", string.toString());
-                int offset = ((RecyclerAdapter) view.getAdapter()).offset;
-                ((RecyclerAdapter) view.getAdapter()).offset = offset + list.size();
-                view.getAdapter().notifyDataSetChanged();
-                //loading = false;
+                    GetAdsRequest request = new GetAdsRequest(getActivity());
 
-                GetAdsRequest request = new GetAdsRequest(getActivity());
+                    request.setLimit(BUCKET_SIZE);
+                    request.setLocation("homepage");
+                    request.setKeyword("__NULL__");
 
-                request.setLimit(BUCKET_SIZE);
-                request.setLocation("homepage");
-                request.setKeyword("__NULL__");
+                    if (AptoideUtils.isLoggedIn(getActivity())) {
 
-                if (AptoideUtils.isLoggedIn(getActivity())) {
+                        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
-                    SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                        if (defaultSharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
 
-                    if (defaultSharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
+                            ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
 
-                        ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
+                            listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
 
-                        listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
+                            manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {
 
-                        manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
+                                }
+
+                                @Override
+                                public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
+                                    TimelineRow row = new TimelineRow(new ArrayList<TimelineListAPKsJson.UserApk>());
+
+                                    int i = 0;
+                                    for (TimelineListAPKsJson.UserApk userApk : timelineListAPKsJson.getUsersapks()) {
+                                        row.addItem(userApk);
+                                        i++;
+
+                                        if (i >= BUCKET_SIZE) {
+                                            break;
+                                        }
+
+                                    }
+
+                                    int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
+                                    row.header = getString(R.string.friends_installs);
+                                    row.widgetid = "timeline";
+
+                                    ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+
+                                    (view.getAdapter()).notifyDataSetChanged();
+
+                                }
+                            });
+
+                        }
+
+
+                        final ListUserbasedApkRequest recommendedRequest = new ListUserbasedApkRequest(getActivity());
+
+                        recommendedRequest.setLimit(BUCKET_SIZE);
+
+                        manager.execute(recommendedRequest, new RequestListener<ListRecomended>() {
                             @Override
                             public void onRequestFailure(SpiceException spiceException) {
 
                             }
+
                             @Override
-                            public void onRequestSuccess(TimelineListAPKsJson timelineListAPKsJson) {
-                                TimelineRow row = new TimelineRow(new ArrayList<TimelineListAPKsJson.UserApk>());
+                            public void onRequestSuccess(ListRecomended listRecomended) {
+                                Row row = new Row();
+                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
 
-                                int i = 0;
-                                for (TimelineListAPKsJson.UserApk userApk : timelineListAPKsJson.getUsersapks()) {
-                                    row.addItem(userApk);
-                                    i++;
+                                if (listRecomended != null && listRecomended.getRepository() != null) {
+                                    for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
 
-                                    if(i>=BUCKET_SIZE){
-                                        break;
+                                        row.header = getString(R.string.recommended_for_you);
+                                        Response.ListApps.Apk apk = new Response.ListApps.Apk();
+                                        row.widgetid = "recommended";
+
+                                        if (apkSuggestion.getPackage() != null) {
+                                            for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
+                                                apk.name = apkRecommended.getName();
+                                                apk.icon = apkSuggestion.getIconspath() + apkRecommended.getIcon_hd();
+                                                apk.downloads = apkRecommended.getDwn();
+                                                apk.md5sum = apkRecommended.getMd5h();
+
+                                                row.addItem(apk);
+                                            }
+
+                                        }
                                     }
+                                }
+
+                                if (!row.apks.isEmpty()) {
+
+                                    ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+                                    (view.getAdapter()).notifyDataSetChanged();
 
                                 }
 
-                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("timeline");
-                                row.header = getString(R.string.friends_installs);
-                                row.widgetid = "timeline";
-
-                                ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
-
-                                (view.getAdapter()).notifyDataSetChanged();
-
                             }
                         });
-
                     }
-
-
-
-                    final ListUserbasedApkRequest recommendedRequest = new ListUserbasedApkRequest(getActivity());
-
-                    recommendedRequest.setLimit(BUCKET_SIZE);
-
-                    manager.execute(recommendedRequest, new RequestListener<ListRecomended>() {
+                    manager.execute(request, ((GetStartActivityCallback) getActivity()).getSponsoredCache() + BUCKET_SIZE, DurationInMillis.ALWAYS_RETURNED, new RequestListener<ApkSuggestionJson>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
 
                         }
 
                         @Override
-                        public void onRequestSuccess(ListRecomended listRecomended) {
-                            Row row = new Row();
-                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
+                        public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+                            if (apkSuggestionJson != null && apkSuggestionJson.getAds() != null && apkSuggestionJson.getAds().size() > 0) {
 
-                            if(listRecomended!= null && listRecomended.getRepository()!=null) {
-                                for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
+                                AdRow row = new AdRow();
 
-                                    row.header = getString(R.string.recommended_for_you);
-                                    Response.ListApps.Apk apk = new Response.ListApps.Apk();
-                                    row.widgetid = "recommended";
+                                row.header = getString(R.string.highlighted_apps);
+                                row.widgetid = "highlighted";
 
-                                    if(apkSuggestion.getPackage()!=null) {
-                                        for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
-                                            apk.name = apkRecommended.getName();
-                                            apk.icon = apkSuggestion.getIconspath() + apkRecommended.getIcon_hd();
-                                            apk.downloads = apkRecommended.getDwn();
-                                            apk.md5sum = apkRecommended.getMd5h();
+                                row.ads.addAll(apkSuggestionJson.getAds());
 
-                                            row.addItem(apk);
-                                        }
-
-                                    }
-                                }
-                            }
-
-                            if(!row.apks.isEmpty()) {
+                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("ads_list");
 
                                 ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
-                                (view.getAdapter()).notifyDataSetChanged();
 
+                                (view.getAdapter()).notifyDataSetChanged();
                             }
+                        }
+                    });
+
+                    swipeLayout.setRefreshing(false);
+                }catch (Exception e){
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.error).setVisibility(View.GONE);
 
                         }
                     });
                 }
-                manager.execute(request, ((GetStartActivityCallback)getActivity()).getSponsoredCache() + BUCKET_SIZE, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<ApkSuggestionJson>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-
-                    }
-
-                    @Override
-                    public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
-                        if (apkSuggestionJson != null && apkSuggestionJson.getAds() != null && apkSuggestionJson.getAds().size() > 0) {
-
-                            AdRow row = new AdRow();
-
-                            row.header = getString(R.string.highlighted_apps);
-                            row.widgetid = "highlighted";
-
-                            row.ads.addAll(apkSuggestionJson.getAds());
-
-                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("ads_list");
-
-                            ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
-
-                            (view.getAdapter()).notifyDataSetChanged();
-                        }
-                    }
-                });
-
-                swipeLayout.setRefreshing(false);
             }
 
         };
@@ -1046,7 +1062,13 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public long getHeaderId(int position) {
-            return list.get(position).getHeaderId();
+
+            if(position > list.size() - 1){
+                return -1;
+            }else{
+                return list.get(position).getHeaderId();
+            }
+
         }
 
         @Override

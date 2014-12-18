@@ -19,6 +19,33 @@ public class Server {
     private String basepath;
     public Login login;
     private String featuredGraphicPath;
+    private String theme;
+    private long downloads;
+    private int id;
+
+    public Login getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login login) {
+        this.login = login;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public long getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(long downloads) {
+        this.downloads = downloads;
+    }
 
     public String getName() {
         return name;
@@ -93,5 +120,13 @@ public class Server {
 
     public String getFeaturedGraphicPath() {
         return featuredGraphicPath;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

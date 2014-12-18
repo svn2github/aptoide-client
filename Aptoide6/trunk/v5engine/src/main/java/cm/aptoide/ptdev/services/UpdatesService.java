@@ -61,7 +61,7 @@ public class UpdatesService extends Service {
 
                     if (executor == null) {
                         executor = Executors.newSingleThreadScheduledExecutor();
-                        executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
+                        executor.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
                     }
 
                     if (intent != null && intent.hasExtra("force")) {
@@ -78,7 +78,7 @@ public class UpdatesService extends Service {
                                     e.printStackTrace();
                                 }
                                 executor = Executors.newSingleThreadScheduledExecutor();
-                                executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
+                                executor.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
                             }
                         }).start();
 
@@ -225,7 +225,6 @@ public class UpdatesService extends Service {
 
             updates = data.getCount();
 
-            defaultSharedPreferences.edit().putInt("updates", data.getCount()).apply();
 
         }finally {
             if(data!=null)
@@ -233,6 +232,7 @@ public class UpdatesService extends Service {
         }
 
         if(updates > 0 && updates != defaultSharedPreferences.getInt("updates", 0)){
+
             NotificationManager managerNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 
@@ -276,6 +276,7 @@ public class UpdatesService extends Service {
                     .setTicker(tickerText)
                     .build();
             managerNotification.notify(546, notification);
+            defaultSharedPreferences.edit().putInt("updates", data.getCount()).apply();
 
         }
     }
@@ -283,6 +284,7 @@ public class UpdatesService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        executor = null;
         Log.d("AptoideUpdates", "OnDestroy");
     }
 }
