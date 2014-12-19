@@ -887,6 +887,8 @@ public class AptoideUtils {
 
     public static String filters(Context context) {
 
+
+
         int minSdk = HWSpecifications.getSdkVer();
         String minScreen = Filters.Screen.values()
                 [HWSpecifications.getScreenSize(context)]

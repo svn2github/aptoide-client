@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -939,6 +942,15 @@ public class FragmentListApps extends Fragment {
 
                         }
                     });
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String s = mapper.writeValueAsString(response);
+                        Crashlytics.logException(new Throwable(s, e));
+                    } catch (JsonProcessingException e1) {
+                        e1.printStackTrace();
+                    }
+
                 }
             }
 
@@ -1031,13 +1043,13 @@ public class FragmentListApps extends Fragment {
                 return new RecyclerView.ViewHolder(inflate) {
                 };
 
-            } else if(viewType>3000) {
+            } else if(viewType>=3000) {
                 LinearLayout inflate = new LinearLayout(context);
                 inflate.setOrientation(LinearLayout.HORIZONTAL);
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 inflate.setLayoutParams(params);
                 return new HomeCategoryViewHolder(inflate, viewType % 3000, context);
-            } else if( viewType > 2000){
+            } else if( viewType >= 2000){
                 View view = LayoutInflater.from(context).inflate(R.layout.row_app_home_featured, parent, false);
                 return new FeaturedViewHolder(view, viewType % 2000, context);
             }else {

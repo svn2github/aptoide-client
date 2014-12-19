@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -203,62 +206,89 @@ public class FragmentListTopApps extends Fragment {
                 rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
                 rootView.findViewById(R.id.error).setVisibility(View.GONE);
-                List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
-                HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
-                HashMap<String, Response.ListStores.StoreGroup> storesdataset = response.responses.listStores.datasets.getDataset();
 
-                for(Response.GetStore.Widgets.Widget widget : list) {
+                try {
 
-                    if(widget.type.equals("apps_list")) {
+                    List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
+                    HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
+                    HashMap<String, Response.ListStores.StoreGroup> storesdataset = response.responses.listStores.datasets.getDataset();
 
-                        Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+                    for (Response.GetStore.Widgets.Widget widget : list) {
 
-                        if (category != null && category.data != null) {
-                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+                        if (widget.type.equals("apps_list")) {
+
+                            Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+
+                            if (category != null && category.data != null) {
+                                ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+
+                                while (!inElements.isEmpty()) {
+                                    AppsRow row = new AppsRow(getActivity());
+                                    row.widgetid = widget.widgetid;
+                                    row.header = widget.name;
+                                    row.widgetrefid = widget.data.ref_id;
+                                    row.addItem(inElements.remove(0));
+                                    map.add(row);
+                                }
+                            }
+                        } else if (widget.type.equals("stores_list")) {
+                            ArrayList<Response.ListStores.Store> inElements = new ArrayList<Response.ListStores.Store>(storesdataset.get(widget.data.ref_id).data.list);
 
                             while (!inElements.isEmpty()) {
-                                AppsRow row = new AppsRow(getActivity());
-                                row.widgetid = widget.widgetid;
+                                StoreRow row = new StoreRow(getActivity());
+                                Response.ListStores.Store store = inElements.remove(0);
                                 row.header = widget.name;
-                                row.widgetrefid = widget.data.ref_id;
-                                row.addItem(inElements.remove(0));
+                                row.appscount = store.apps_count.intValue();
+                                row.downloads = store.downloads.intValue();
+                                row.avatar = store.avatar;
+                                row.name = store.name;
                                 map.add(row);
                             }
-                        }
-                    }else if(widget.type.equals("stores_list")){
-                        ArrayList<Response.ListStores.Store> inElements = new ArrayList<Response.ListStores.Store>(storesdataset.get(widget.data.ref_id).data.list);
 
-                        while (!inElements.isEmpty()) {
-                            StoreRow row = new StoreRow(getActivity());
-                            Response.ListStores.Store store = inElements.remove(0);
-                            row.header = widget.name;
-                            row.appscount = store.apps_count.intValue();
-                            row.downloads = store.downloads.intValue();
-                            row.avatar = store.avatar;
-                            row.name = store.name;
+                        } else {
+                            AppsRow row = new AppsRow(getActivity());
+                            row.setEnabled(false);
                             map.add(row);
+                            ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
                         }
 
-                    } else {
-                        AppsRow row = new AppsRow(getActivity());
-                        row.setEnabled(false);
-                        map.add(row);
-                        ((RecyclerAdapter)view.getAdapter()).getPlaceholders().put(widget.type, map.size());
                     }
 
+                    string.clear();
+                    string.addAll(map);
+
+                    Log.d("AptoideDebug", string.toString());
+
+                    view.getAdapter().notifyDataSetChanged();
+
+                    swipeLayout.setRefreshing(false);
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                }catch (Exception e){
+
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    try {
+                        String s = mapper.writeValueAsString(response);
+                        Crashlytics.logException(new Throwable(s, e));
+                    } catch (JsonProcessingException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.error).setVisibility(View.GONE);
+                            manager.execute(request, "top", DurationInMillis.ALWAYS_RETURNED, requestListener);
+                        }
+                    });
+
                 }
-
-                string.clear();
-                string.addAll(map);
-
-                Log.d("AptoideDebug", string.toString());
-
-                view.getAdapter().notifyDataSetChanged();
-
-                swipeLayout.setRefreshing(false);
-
-                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                rootView.findViewById(R.id.list).setVisibility(View.VISIBLE);
             }
 
         };

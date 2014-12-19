@@ -1,8 +1,8 @@
 package cm.aptoide.ptdev;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -128,7 +128,16 @@ public class FeedBackActivity extends ActionBarActivity {
 
         //emailIntent.putExtra(Intent.EXTRA_EMAIL ,new String[]{ "andre.santos@aptoide.com"});
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@aptoide.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[FeedBack]: " + subject);
+
+        String versionName = "";
+
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[FeedBack]-" + versionName + ": " + subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, text);
         //screenshot();
         if (check) {

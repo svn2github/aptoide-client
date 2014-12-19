@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
@@ -350,7 +353,18 @@ public class FragmentListStore extends Fragment {
                 swipeLayout.setRefreshing(false);
                 view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
+
             }catch (Exception e){
+
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String s = mapper.writeValueAsString(response);
+                    Crashlytics.logException(new Throwable(s, e));
+                } catch (JsonProcessingException e1) {
+                    e1.printStackTrace();
+                }
+
+                setError(view, manager, listener, request);
 
             }
 
@@ -519,9 +533,6 @@ public class FragmentListStore extends Fragment {
                     }else{
                         appHolder.versionName.setText(appItem.getVersionName());
                     }
-
-
-
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override

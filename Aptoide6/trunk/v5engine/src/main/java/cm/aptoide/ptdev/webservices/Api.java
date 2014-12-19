@@ -1,5 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.preference.PreferenceManager;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,10 +60,18 @@ public class Api {
 
         public String country;
 
-        public String q = AptoideUtils.filters(Aptoide.getContext());
+        public String q = getFilters();
 
         public void setLang(String lang) {
             this.lang = lang;
+        }
+
+        public String getFilters(){
+            if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("hwspecsChkBox", true)){
+                return AptoideUtils.filters(Aptoide.getContext());
+            }else{
+                return null;
+            }
         }
 
         public void setStore_name(String store_name) {
