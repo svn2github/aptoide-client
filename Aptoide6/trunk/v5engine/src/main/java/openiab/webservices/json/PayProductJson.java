@@ -8,10 +8,10 @@ package openiab.webservices.json;
 public class PayProductJson {
 
 
-    private String status;
+    public String status;
 
 
-    private Response response;
+    public Response response;
 
     public String getStatus() {
         return status;
@@ -24,7 +24,7 @@ public class PayProductJson {
     public static class Response {
 
 
-        private String orderId;
+        public String orderId;
 
         public String getOrderId() {
             return orderId;

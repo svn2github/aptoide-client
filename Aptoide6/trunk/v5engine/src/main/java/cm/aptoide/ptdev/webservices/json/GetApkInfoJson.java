@@ -139,8 +139,10 @@ public class GetApkInfoJson {
     public static class Payment{
 
          public Number amount;
+
+         @JsonProperty("currency_symbol")
          public String symbol;
-         public String error;
+
          public String apkpath;
          public Metadata metadata;
          public List<PaymentServices> payment_services;
@@ -158,12 +160,7 @@ public class GetApkInfoJson {
         public void setapkpath(String apkpath){
             this.apkpath = apkpath;
         }
-        public String geterror(){
-            return this.error;
-        }
-        public void seterror(String error){
-            this.error = error;
-        }
+
         public String getStatus(){
             return this.status;
         }

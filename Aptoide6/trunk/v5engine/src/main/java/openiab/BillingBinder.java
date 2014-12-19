@@ -12,6 +12,8 @@ import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -163,9 +165,19 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
 
                         if("OK".equals(response.getStatus())) {
 
-                            for(IabSkuDetailsJson.PublisherResponse.PurchaseDataObject details : response.getPublisher_response().getDetails_list()) {
-                                detailsList.add(details.getJson());
-                                Log.d("AptoideBillingService", "Sku Details: " + details.getJson());
+                            for(IabSkuDetailsJson.PurchaseDataObject details : response.getPublisher_response().getDetailss_list()) {
+
+
+                                String s = "";
+                                try {
+                                    s = new ObjectMapper().writeValueAsString(details);
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+
+                                detailsList.add(s);
+                                Log.d("AptoideBillingService", "Sku Details: " + s);
+
                             }
 
                             if (detailsList.size() == 0) {

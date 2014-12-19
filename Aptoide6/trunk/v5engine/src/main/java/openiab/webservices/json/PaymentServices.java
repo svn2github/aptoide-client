@@ -14,14 +14,14 @@ import java.util.List;
 public class PaymentServices implements Parcelable {
 
 
-    private int id;
-     private String short_name;
-     private String name;
-     private ArrayList<PaymentType> types;
-     private double price;
-     private String currency;
-     private double taxRate;
-     private String sign;
+    public int id;
+    public String short_name;
+    public String name;
+    public ArrayList<PaymentType> types;
+    public double price;
+    public String currency;
+    public double taxRate;
+    public String sign;
 
     public double getPrice() {
         return price;
@@ -114,8 +114,8 @@ public class PaymentServices implements Parcelable {
             return label;
         }
 
-         String reqType;
-         String label;
+        public String reqType;
+        public String label;
 
         public PaymentType(){
 

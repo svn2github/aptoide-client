@@ -1,12 +1,8 @@
 package openiab.webservices.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by j-pac on 19-02-2014.
@@ -14,20 +10,20 @@ import java.util.List;
 public class IabSkuDetailsJson {
 
 
-    private String status;
+    public String status;
 
     public Metadata getMetadata() {
         return metadata;
     }
 
 
-    private Metadata metadata;
+    public Metadata metadata;
 
 
-    private PublisherResponse publisher_response;
+    public PublisherResponse publisher_response;
 
 
-    private ArrayList<PaymentServices> payment_services;
+    public ArrayList<PaymentServices> payment_services;
 
     public String getStatus() {
         return status;
@@ -47,54 +43,50 @@ public class IabSkuDetailsJson {
 
     public static class PublisherResponse {
 
-        @JsonProperty("DETAILS_LIST") private List<PurchaseDataObject> details_list;
+        @JsonProperty("DETAILS_LIST")
+        public ArrayList<PurchaseDataObject> details_slist;
 
-        public List<PurchaseDataObject> getDetails_list() { return details_list; }
-
-        public static class PurchaseDataObject {
-             private String productId;
-             private String sku;
-             private String price;
-             private String title;
-             private String description;
-             private String developerPayload;
+        public ArrayList<PurchaseDataObject> getDetailss_list() { return details_slist; }
 
 
+    }
 
+    public static class PurchaseDataObject {
 
-            public String getPrice() {
-                return price;
-            }
-
-            public String getTitle() {
-                return title;
-            }
-
-            public String getDescription() {
-                return description;
-            }
-
-            public String getSku() {
-                return sku;
-            }
-
-            public String getProductId() {
-                return productId;
-            }
+        public String productId;
+        public String sku;
+        public String price;
+        public String title;
+        public String description;
+        public String developerPayload;
 
 
 
-            public String getJson() {
 
 
-                try {
-                    return new ObjectMapper().writeValueAsString(PurchaseDataObject.this);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
+        public String getPrice() {
+            return price;
         }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getSku() {
+            return sku;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+
+
+
     }
 
 

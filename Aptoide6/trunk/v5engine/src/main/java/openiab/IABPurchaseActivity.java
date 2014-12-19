@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -329,9 +331,17 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
 
                         if ("OK".equals(response.getStatus())) {
 
-                            for (IabSkuDetailsJson.PublisherResponse.PurchaseDataObject details : response.getPublisher_response().getDetails_list()) {
-                                detailsList.add(details.getJson());
-                                Log.d("AptoideBillingService", "Sku Details: " + details.getJson());
+                            for (IabSkuDetailsJson.PurchaseDataObject details : response.getPublisher_response().getDetailss_list()) {
+
+                                String s = "";
+                                try {
+                                    s = new ObjectMapper().writeValueAsString(details);
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+
+                                detailsList.add(s);
+                                Log.d("AptoideBillingService", "Sku Details: " + s);
                             }
 
 
@@ -412,9 +422,9 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                                                         paymentMethodsLayout.addView(button);
                                                         DecimalFormat df = new DecimalFormat("######.#");
                                                         button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(),
-                                                                String.valueOf(response.getPublisher_response().getDetails_list().get(0).getPrice()),
+                                                                String.valueOf(response.getPublisher_response().getDetailss_list().get(0).getPrice()),
                                                                 telephonyManager.getSimOperatorName(),
-                                                                response.getPublisher_response().getDetails_list().get(0).getTitle(),
+                                                                response.getPublisher_response().getDetailss_list().get(0).getTitle(),
                                                                 service.getId(), telephonyManager.getSubscriberId(),
                                                                 service.getCurrency(),
                                                                 df.format(service.getPrice())));

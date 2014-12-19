@@ -10,11 +10,11 @@ import android.os.Parcelable;
 public class Metadata implements Parcelable {
 
 
-    private int id;
-     private String icon;
-     private double price;
-     private String currency;
-     private double tax_rate;
+    public int id;
+     public String icon;
+     public double price;
+     public String currency;
+     public double tax_rate;
 
 
 

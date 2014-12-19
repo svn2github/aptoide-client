@@ -313,7 +313,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         server.login.setPassword(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_PASSWORD)));
                     }
 
-                    server.setFeaturedGraphicPath(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_FEATURED_GRAPHIC_PATH)));
+                    server.setFeaturedGraphicPath(c.getString(c.getColumnIndex(Schema.Repo.COLUMN_AVATAR)));
 
                     oldServers.add(server);
                 }

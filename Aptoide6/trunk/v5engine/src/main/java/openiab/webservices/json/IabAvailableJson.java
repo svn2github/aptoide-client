@@ -9,10 +9,10 @@ import openiab.webservices.BaseRequest;
 public class IabAvailableJson  {
 
 
-    private String status;
+    public String status;
 
 
-    private Response response;
+    public Response response;
 
     public String getStatus() {
         return status;
@@ -22,7 +22,7 @@ public class IabAvailableJson  {
 
     public static class Response {
 
-        private String iabavailable;
+        public String iabavailable;
 
         public String getIabavailable() {
             return iabavailable;

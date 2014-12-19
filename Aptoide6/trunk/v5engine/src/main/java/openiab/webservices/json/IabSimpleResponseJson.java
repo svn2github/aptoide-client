@@ -7,7 +7,7 @@ package openiab.webservices.json;
 public class IabSimpleResponseJson {
 
 
-    private String status;
+    public String status;
 
 
 

@@ -15,10 +15,10 @@ import java.util.Map;
 public class    IabPurchasesJson {
 
 
-    private String status;
+    public String status;
 
 
-    private PublisherResponse publisher_response;
+    public PublisherResponse publisher_response;
 
     public String getStatus() { return status; }
 
@@ -27,13 +27,13 @@ public class    IabPurchasesJson {
     }
 
     public static class PublisherResponse {
-        @JsonProperty("INAPP_PURCHASE_ITEM_LIST") private List<String> itemList;
+        @JsonProperty("INAPP_PURCHASE_ITEM_LIST") public List<String> itemList;
 
-        @JsonProperty("INAPP_PURCHASE_DATA_LIST") private List<PurchaseDataObject> purchaseDataList;
+        @JsonProperty("INAPP_PURCHASE_DATA_LIST") public List<PurchaseDataObject> purchaseDataList;
 
-        @JsonProperty("INAAP_DATA_SIGNATURE_LIST") private List<String> signatureList;
+        @JsonProperty("INAAP_DATA_SIGNATURE_LIST") public List<String> signatureList;
 
-        @JsonProperty("INAPP_CONTINUATION_TOKEN") private String inapp_continuation_token;
+        @JsonProperty("INAPP_CONTINUATION_TOKEN") public String inapp_continuation_token;
 
 
         public List<String> getItemList() {
@@ -51,14 +51,14 @@ public class    IabPurchasesJson {
         }
 
         public static class PurchaseDataObject {
-             private int orderId;
-             private String packageName;
-             private String productId;
-             private long purchaseTime;
-             private String purchaseState;
-             private String developerPayload;
-             private String token;
-             private String purchaseToken;
+             public int orderId;
+             public String packageName;
+             public String productId;
+             public long purchaseTime;
+             public String purchaseState;
+             public String developerPayload;
+             public String token;
+             public String purchaseToken;
 
             public int getOrderId() { return orderId; }
 

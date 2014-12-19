@@ -232,9 +232,9 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
 
                                 if ("OK".equals(response.getStatus())) {
 
-                                    for (IabSkuDetailsJson.PublisherResponse.PurchaseDataObject details : response.getPublisher_response().getDetails_list()) {
-                                        detailsList.add(details.getJson());
-                                        Log.d("AptoideBillingService", "Sku Details: " + details.getJson());
+                                    for (IabSkuDetailsJson.PublisherResponse.PurchaseDataObject details : response.getPublisher_response().getDetailss_list()) {
+                                        detailsList.add(details.json());
+                                        Log.d("AptoideBillingService", "Sku Details: " + details.json());
                                     }
 
 
@@ -315,7 +315,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
                                                                 button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
                                                                 paymentMethodsLayout.addView(button);
                                                                 DecimalFormat df = new DecimalFormat("######.#");
-                                                                button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(), String.valueOf(response.getPublisher_response().getDetails_list().get(0).getPrice()), telephonyManager.getSimOperatorName(), response.getPublisher_response().getDetails_list().get(0).getTitle(), service.getId(), telephonyManager.getSubscriberId(), service.getCurrency(), df.format(service.getPrice())));
+                                                                button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(), String.valueOf(response.getPublisher_response().getDetailss_list().get(0).getPrice()), telephonyManager.getSimOperatorName(), response.getPublisher_response().getDetailss_list().get(0).getTitle(), service.getId(), telephonyManager.getSubscriberId(), service.getCurrency(), df.format(service.getPrice())));
                                                             }
                                                         }
 

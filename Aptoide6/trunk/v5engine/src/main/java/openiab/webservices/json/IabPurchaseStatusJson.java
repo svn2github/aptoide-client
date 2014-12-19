@@ -2,16 +2,10 @@ package openiab.webservices.json;
 
 import android.util.Log;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,10 +16,10 @@ import java.util.Map;
 public class IabPurchaseStatusJson {
 
     
-    private String status;
+    public String status;
 
     
-    private PublisherResponse publisher_response;
+    public PublisherResponse publisher_response;
 
     public String getStatus() {
         return status;
@@ -38,16 +32,16 @@ public class IabPurchaseStatusJson {
     public static class PublisherResponse {
 
         @JsonProperty("RESPONSE_CODE")
-        private int response_code;
+        public int response_code;
 
         @JsonProperty("INAPP_PURCHASE_ITEM_LIST")
-        private ArrayList<String> item;
+        public ArrayList<String> item;
 
         @JsonProperty("INAPP_PURCHASE_DATA_LIST")
-        private ArrayList<PurchaseDataObject> data;
+        public ArrayList<PurchaseDataObject> data;
 
         @JsonProperty("INAAP_DATA_SIGNATURE_LIST")
-        private ArrayList<String> signature;
+        public ArrayList<String> signature;
 
         public ArrayList<String> getItem() {
             return item;
@@ -66,13 +60,13 @@ public class IabPurchaseStatusJson {
         }
 
         public static class PurchaseDataObject {
-             private int orderId;
-             private String packageName;
-             private String productId;
-             private long purchaseTime;
-             private String purchaseState;
-             private String purchaseToken;
-             private String developerPayload;
+             public int orderId;
+             public String packageName;
+             public String productId;
+             public long purchaseTime;
+             public String purchaseState;
+             public String purchaseToken;
+             public String developerPayload;
 
             public int getOrderId() { return orderId; }
 

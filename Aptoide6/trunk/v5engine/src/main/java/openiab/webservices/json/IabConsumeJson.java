@@ -7,7 +7,7 @@ package openiab.webservices.json;
 public class IabConsumeJson {
 
 
-    private String status;
+    public String status;
 
     public String getStatus() {
         return status;

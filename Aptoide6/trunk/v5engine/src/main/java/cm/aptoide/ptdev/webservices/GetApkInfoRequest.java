@@ -70,7 +70,7 @@ public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfo
         HashMap<String, String > parameters = getParameters();
         parameters.put("options", buildOptions(options));
         parameters.put("mode", "json");
-
+        parameters.put("access_token", token);
         if(fromSponsored){
             parameters.put("adview", "1");
         }
