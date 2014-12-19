@@ -1,6 +1,8 @@
 package cm.aptoidetv.pt;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
@@ -12,6 +14,7 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -23,6 +26,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cm.aptoidetv.pt.Model.ApplicationAPK;
@@ -53,7 +57,11 @@ public class MainFragment extends BrowseFragment{
         setupUIElements();
         setupEventListeners();
         final RequestTV request = new RequestTV("store");
-
+        final HashMap<String,String> installed= new HashMap<>();
+        for (PackageInfo pi : getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)){
+            if(!pi.packageName.startsWith("com.android"))
+                installed.put(pi.packageName, pi.versionName);
+        }
         RequestListener<Response> requestListener = new RequestListener<Response>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -78,6 +86,9 @@ public class MainFragment extends BrowseFragment{
                         mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }
+
+                HashMap<String,Response.ListApps.Apk> APKUpdates = new HashMap<>();
+
                 for (Response.GetStore.Widgets.Widget widget : categories) {
                     if (!"apps_list".equals(widget.type)) {
                         continue;
@@ -88,17 +99,44 @@ public class MainFragment extends BrowseFragment{
 
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                     for (Response.ListApps.Apk apk : data.data.list) {
-                        ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
-                        listRowAdapter.add(storeApplication);
+                        if(installed.keySet().contains(apk.packageName)){
+                            Log.d("pois","Package: "+apk.packageName);
+                            Log.d("pois","apk.vername: "+apk.vername);
+                            Log.d("pois","installed: "+installed.get(apk.packageName));
+                            Log.d("pois","###############################################");
+                            if(apk.vername.compareTo(installed.get(apk.packageName)) > 0) {
+                                if (APKUpdates.containsKey(apk.packageName)) {
+                                    Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
+                                    if (apk.vername.compareTo(currentapk.vername) > 0) {
+                                        APKUpdates.remove(apk.packageName);
+                                        APKUpdates.put(apk.packageName, apk);
+                                    }
+                                } else {
+                                    APKUpdates.put(apk.packageName, apk);
+                                }
+                            }
+                        }
+                        else{
+                            ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
+                            listRowAdapter.add(storeApplication);
+                        }
                     }
-
                     if (listRowAdapter.size() > 0) {
                         HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, widget.name, null);
 
                         mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }
-
+                if (APKUpdates.size() > 0) {
+                    final String updates = getString(R.string.updates);
+                    ArrayObjectAdapter listUpdatesAdapter = new ArrayObjectAdapter(cardPresenter);
+                    for (Response.ListApps.Apk apk : APKUpdates.values()) {
+                        ApplicationAPK storeApplication = new ApplicationAPK(apk, updates);
+                        listUpdatesAdapter.add(storeApplication);
+                    }
+                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1,updates, null);
+                    mRowsAdapter.add(1,new ListRow(header, listUpdatesAdapter));
+                }
                 setAdapter(mRowsAdapter);
                 ((RequestsTvListener) getActivity()).onSuccess();
             }

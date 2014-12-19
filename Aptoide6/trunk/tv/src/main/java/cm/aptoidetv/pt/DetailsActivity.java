@@ -439,8 +439,11 @@ public class DetailsActivity extends Activity {
     }
     private void addDownloadButtonListener(final GetApkInfoJson ApkInfoJson){
         PackageInfo info = getPackageInfo(ApkInfoJson.getApk().getPackage());
-
-        if (info == null) {
+        if (info != null && info.versionCode>=ApkInfoJson.getApk().getVercode().intValue()) {
+            changebtInstalltoOpen(ApkInfoJson.getApk().getPackage());
+        } else {
+            if(info!=null)
+                download.setText(getString(R.string.update));
             download.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -471,8 +474,6 @@ public class DetailsActivity extends Activity {
                     //isRegistered = true;
                 }
             });
-        } else {
-                changebtInstalltoOpen(ApkInfoJson.getApk().getPackage());
         }
     }
 
