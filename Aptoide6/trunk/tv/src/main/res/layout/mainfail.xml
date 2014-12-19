@@ -25,12 +25,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FAIL!"/>
+        android:text="@string/error_fragment_message"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RETRY!"
+        android:text="@string/retry"
         android:onClick="RetryClick"/>
 
     <ProgressBar

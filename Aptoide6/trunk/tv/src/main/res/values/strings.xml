@@ -57,6 +57,7 @@
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
     <string name="oops">Oops</string>
+    <string name="retry">Retry</string>
 
 
     <!-- Global Search -->
