@@ -148,12 +148,14 @@ public class MainFragment extends BrowseFragment{
         setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
         TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor, R.attr.searchColor});
-        typedArray.recycle();
 
         int brandColorResourceId = typedArray.getResourceId(0, 0);
         int searchColorResourceId = typedArray.getResourceId(1, R.color.search_opaque);
         setBrandColor(getResources().getColor(brandColorResourceId));
         setSearchAffordanceColor(getResources().getColor(searchColorResourceId));
+
+        typedArray.recycle();
+
     }
 
     private List<EditorsChoice> loadmEditorsChoice() {
