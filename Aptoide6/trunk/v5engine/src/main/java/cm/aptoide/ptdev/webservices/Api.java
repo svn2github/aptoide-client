@@ -67,11 +67,13 @@ public class Api {
         }
 
         public String getFilters(){
+
             if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("hwspecsChkBox", true)){
                 return AptoideUtils.filters(Aptoide.getContext());
             }else{
                 return null;
             }
+            
         }
 
         public void setStore_name(String store_name) {

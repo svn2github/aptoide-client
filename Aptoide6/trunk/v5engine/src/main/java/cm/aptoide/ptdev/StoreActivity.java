@@ -14,20 +14,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flurry.android.FlurryAgent;
+import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.fragments.FragmentListStore;
 import cm.aptoide.ptdev.fragments.FragmentStoreHeader;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.services.DownloadService;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.services.ParserService;
+import cm.aptoide.ptdev.utils.IconSizes;
+import cm.aptoide.ptdev.webservices.Api;
+import cm.aptoide.ptdev.webservices.Response;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,6 +51,7 @@ import cm.aptoide.ptdev.services.ParserService;
 public class StoreActivity extends ActionBarActivity implements CategoryCallback {
 
 
+    private SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
 
     private long storeid;
@@ -140,6 +152,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
+
+
+
+
     }
 
     private void setFragment() {
@@ -163,6 +179,13 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         String theme = c.getString(c.getColumnIndex("theme"));
 
         c.close();
+
+        TestServerRequest request = new TestServerRequest();
+        CheckStoreListener checkStoreListener = new CheckStoreListener(null);
+
+        request.setStore_name(name);
+
+        manager.execute(request,"getStore" + name,DurationInMillis.ONE_HOUR * 6, checkStoreListener);
 
         Fragment fragmentHeader = new FragmentStoreHeader();
 
@@ -194,17 +217,110 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     }
 
+    public static final class CheckStoreListener implements RequestListener<Response.GetStore> {
+
+
+        private final Login login;
+
+        public CheckStoreListener(Login login) {
+            this.login = login;
+
+        }
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+
+        }
+
+        @Override
+        public void onRequestSuccess(Response.GetStore response) {
+
+            final Store store = new Store();
+            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+            store.setId(data.id.longValue());
+            store.setName(response.datasets.meta.data.name);
+            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
+
+
+            String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
+
+
+            String avatar = data.avatar;
+
+            if(avatar!=null) {
+                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+            }
+
+
+            store.setAvatar(avatar);
+            store.setDescription(data.description);
+            store.setTheme(data.theme);
+            store.setView(data.view);
+            store.setBaseUrl(data.name);
+
+            Database database = new Database(Aptoide.getDb());
+
+            try {
+                database.insertStore(store);
+                database.updateStore(store);
+
+                BusProvider.getInstance().post(new RepoAddedEvent());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();
         BusProvider.getInstance().register(this);
+        manager.start(this);
         FlurryAgent.onStartSession(this, "X89WPPSKWQB2FT6B8F3X");
 
+    }
+
+    public interface TestServerWebservice{
+        @POST("/ws2.aptoide.com/api/6/getStore")
+        Response.GetStore checkServer(@Body Api.GetStore body);
+    }
+
+    public static class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice> {
+
+
+        private String store_name;
+        public TestServerRequest() {
+            super(Response.GetStore.class, TestServerWebservice.class);
+        }
+
+        public void setStore_name(String store_name){
+
+            this.store_name = store_name;
+        }
+
+        @Override
+        public Response.GetStore loadDataFromNetwork() throws Exception {
+
+            Api.GetStore api = new Api.GetStore();
+            api.addDataset("meta");
+            api.datasets_params = null;
+            api.store_name = store_name;
+
+            return getService().checkServer(api);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        manager.shouldStop();
         BusProvider.getInstance().unregister(this);
         FlurryAgent.onEndSession(this);
     }

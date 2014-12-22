@@ -195,7 +195,7 @@ public class FragmentListTopApps extends Fragment {
                         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                         rootView.findViewById(R.id.list).setVisibility(View.GONE);
                         rootView.findViewById(R.id.error).setVisibility(View.GONE);
-                        manager.execute(request, "top", DurationInMillis.ALWAYS_RETURNED, requestListener);
+                        manager.execute(request, "top", DurationInMillis.ALWAYS_EXPIRED, requestListener);
                     }
                 });
             }
@@ -284,7 +284,7 @@ public class FragmentListTopApps extends Fragment {
                             rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                             rootView.findViewById(R.id.list).setVisibility(View.GONE);
                             rootView.findViewById(R.id.error).setVisibility(View.GONE);
-                            manager.execute(request, "top", DurationInMillis.ALWAYS_RETURNED, requestListener);
+                            manager.execute(request, "top", DurationInMillis.ALWAYS_EXPIRED, requestListener);
                         }
                     });
 
@@ -298,7 +298,7 @@ public class FragmentListTopApps extends Fragment {
                 manager.execute(request, "top" , DurationInMillis.ALWAYS_EXPIRED,  requestListener);
             }
         });
-        manager.execute(request, "top" , DurationInMillis.ALWAYS_RETURNED,  requestListener);
+        manager.execute(request, "top" , DurationInMillis.ONE_DAY,  requestListener);
         return rootView;
     }
 

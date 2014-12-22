@@ -1132,11 +1132,7 @@ public class Start extends ActionBarActivity implements
                 spiceManager.addListenerIfPending(RepositoryChangeJson.class, checkServerCacheString, requestListener);
                 spiceManager.getFromCache(RepositoryChangeJson.class, checkServerCacheString, DurationInMillis.ONE_DAY, requestListener);
                 if (resultCode == RESULT_OK && data.getBooleanExtra("addDefaultRepo", false)) {
-                    Store store = new Store();
-                    String repoUrl = "http://apps.store.aptoide.com/";
-                    store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
-                    store.setName(AptoideUtils.RepoUtils.split(repoUrl));
-                    startParse(store);
+                    addAppsStore();
                     //Log.d("Start-addDefaultRepo", "added default repo "+ repoUrl);
                 }
                 break;
@@ -1236,6 +1232,43 @@ public class Start extends ActionBarActivity implements
 
 
 
+    }
+
+
+    public void addAppsStore(){
+        final Store store = new Store();
+
+        store.setId(15);
+        store.setName("apps");
+        store.setDownloads("");
+
+
+        String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
+
+
+        String avatar = "http://pool.img.aptoide.com/apps/b62b1c9459964d3a876b04c70036b10a_ravatar.png";
+
+        if(avatar!=null) {
+            String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+            avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+        }
+
+        store.setAvatar(avatar);
+        store.setDescription("Aptoide Official App Store");
+        store.setTheme("default");
+        store.setView("list");
+        store.setBaseUrl("apps");
+
+        Database database = new Database(Aptoide.getDb());
+
+        try {
+            database.insertStore(store);
+            database.updateStore(store);
+
+            BusProvider.getInstance().post(new RepoAddedEvent());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public interface TestServerWebservice{

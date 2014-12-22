@@ -23,8 +23,6 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -138,14 +136,19 @@ public class MoreActivity extends ActionBarActivity {
             touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
                 @Override
                 public void onHeaderClick(View viewHeader, int i, long l) {
-                    String widgetid = ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetid;
 
-                    Intent intent = new Intent(getActivity(), MoreActivity.class);
-                    intent.putExtra("widgetid", widgetid);
-                    intent.putExtra("widgetrefid", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetrefid);
-                    intent.putExtra("widgetname", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).header);
+                    if((((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).isMore()) {
 
-                    startActivity(intent);
+                        String widgetid = ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetid;
+
+                        Intent intent = new Intent(getActivity(), MoreActivity.class);
+                        intent.putExtra("widgetid", widgetid);
+                        intent.putExtra("widgetrefid", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).widgetrefid);
+                        intent.putExtra("widgetname", ((FragmentListApps.Row) ((FragmentListApps.RecyclerAdapter) recyclerView.getAdapter()).getList().get(i)).header);
+
+                        startActivity(intent);
+
+                    }
                 }
             });
 
@@ -222,11 +225,10 @@ public class MoreActivity extends ActionBarActivity {
                                 manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize(), DurationInMillis.ALWAYS_RETURNED,  requestListener);
                                 view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.list).setVisibility(View.GONE);
+                                view.findViewById(R.id.error).setVisibility(View.GONE);
                             }
                         });
                     }
-
-
 
 
                     if(loading && !list.isEmpty()){
@@ -328,7 +330,7 @@ public class MoreActivity extends ActionBarActivity {
 
             request.setWidgetId(getArguments().getString("widgetid"));
 
-            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize() + offset, DurationInMillis.ALWAYS_RETURNED,  requestListener);
+            manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize() + offset, DurationInMillis.ONE_DAY,  requestListener);
             view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
             view.findViewById(R.id.list).setVisibility(View.GONE);
 
