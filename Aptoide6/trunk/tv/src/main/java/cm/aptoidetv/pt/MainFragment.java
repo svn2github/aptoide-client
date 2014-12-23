@@ -14,7 +14,6 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -100,10 +99,10 @@ public class MainFragment extends BrowseFragment{
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                     for (Response.ListApps.Apk apk : data.data.list) {
                         if(installed.keySet().contains(apk.packageName)){
-                            Log.d("pois","Package: "+apk.packageName);
+/*                            Log.d("pois","Package: "+apk.packageName);
                             Log.d("pois","apk.vername: "+apk.vername);
                             Log.d("pois","installed: "+installed.get(apk.packageName));
-                            Log.d("pois","###############################################");
+                            Log.d("pois","###############################################");*/
                             if(apk.vername.compareTo(installed.get(apk.packageName)) > 0) {
                                 if (APKUpdates.containsKey(apk.packageName)) {
                                     Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
@@ -135,7 +134,7 @@ public class MainFragment extends BrowseFragment{
                         listUpdatesAdapter.add(storeApplication);
                     }
                     HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1,updates, null);
-                    mRowsAdapter.add(1,new ListRow(header, listUpdatesAdapter));
+                    mRowsAdapter.add(new ListRow(header, listUpdatesAdapter));
                 }
                 setAdapter(mRowsAdapter);
                 ((RequestsTvListener) getActivity()).onSuccess();

@@ -60,7 +60,7 @@ import cm.aptoidetv.pt.WebServices.old.GetApkInfoRequestFromMd5;
  * Details activity class that loads LeanbackDetailsFragment class
  */
 public class DetailsActivity extends Activity {
-
+    private static final String TAG="pois";
     private DownloadManager downloadmanager;
 
     public static final String PACKAGE_NAME = "packageName";
@@ -208,8 +208,9 @@ public class DetailsActivity extends Activity {
                 ArrayList<MediaObject> mediaObjects = apkInfoJson.getMedia().getScreenshotsAndThumbVideo();
                 String imagePath = "";
                 int screenshotIndexToAdd = 0;
+                Log.d(TAG,"mediaObjects.size() : "+mediaObjects.size());
                 for (int i = 0; i != mediaObjects.size(); i++) {
-//                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
+                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
                     cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
                     final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
                     //final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
@@ -219,7 +220,7 @@ public class DetailsActivity extends Activity {
                     if (mediaObjects.get(i) instanceof Video) {
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
-//                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
+                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
                         play.setVisibility(View.VISIBLE);
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
@@ -229,11 +230,11 @@ public class DetailsActivity extends Activity {
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-//                        Log.d(TAG, "IMAGEPATH: " + imagePath);
+                        Log.d(TAG, "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                         mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                     }
-
+                    screenshots.addView(cell);
                     Picasso.with(DetailsActivity.this)
                             .load(imagePath)
                             .error(R.drawable.icon_non_available)
@@ -459,7 +460,7 @@ public class DetailsActivity extends Activity {
                     request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
 //                    Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
 
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                     request.setAllowedOverRoaming(false);
                     request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
 //                  Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
