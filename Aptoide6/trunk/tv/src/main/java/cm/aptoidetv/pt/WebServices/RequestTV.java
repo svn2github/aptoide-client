@@ -1,7 +1,10 @@
 package cm.aptoidetv.pt.WebServices;
 
+import android.content.Context;
+
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
+import cm.aptoidetv.pt.R;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -14,10 +17,12 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
         Response postApk(@Body Api user);
     }
-    private final String context;
+    private final String store;
+    private final Context context;
 
-    public RequestTV(String context) {
+    public RequestTV(String store, Context context) {
         super(Response.class, ServiceTV.class);
+        this.store = store;
         this.context = context;
     }
 
@@ -26,7 +31,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         Api api = new Api();
 
         api.getApi_global_params().setLang("en");
-        api.getApi_global_params().setStore_name("geniatechapps");
+        api.getApi_global_params().setStore_name(context.getString(R.string.defaultstorename));
 
 
         Api.GetStore getStore = new Api.GetStore();
@@ -35,7 +40,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         categoriesParams.setParent_ref_id("cat_1");*/
 
         Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
-        widgetParams.setContext(this.context);
+        widgetParams.setContext(this.store);
 
         //getStore.getDatasets_params().set(categoriesParams);
         getStore.getDatasets_params().set(widgetParams);

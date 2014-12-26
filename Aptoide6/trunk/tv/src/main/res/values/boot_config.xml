@@ -9,20 +9,20 @@
 
     <!--Partner Config-->
     <string name="partnertype">premium</string>
-    <string name="partner_id">23a3c151dba9f4a5ac28a8293a088781</string>
-    <string name="marketname">Geniatech Market</string>
+    <string name="partner_id">f829219cd75e9abfb6201e386d06e838</string>
+    <string name="marketname">Aptoide TV</string>
     <string name="defaultstorename">geniatechapps</string>
-    <string name="aptoidetheme">red_dark</string>
-    <string name="splashscreen">http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen.png</string>
-    <string name="splashscreenland">http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/geniatechapps/app/splashscreens/splashscreen_land.png</string>
+    <string name="aptoidetheme">default</string>
+    <string name="splashscreen">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</string>
+    <string name="splashscreenland">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</string>
     <bool name="searchstores">true</bool>
     <bool name="maturecontentswitch">false</bool>
     <bool name="multiplestores">false</bool>
     <bool name="customeditorschoice">true</bool>
     <bool name="createshortcut">true</bool>
-    <string name="adunitid">fc30c5e696baea9672e75997b63ef04a</string>
+    <string name="adunitid"></string>
     <bool name="showsplash">true</bool>
-    <string name="splashcolor">#FFFFFFFF</string>
+    <string name="splashcolor">#FFe98023</string>
 
     <!--Project Config-->
     <string name="search_authority">cm.aptoidetv.pt.geniatechapps.SearchAuthority</string>

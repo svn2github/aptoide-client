@@ -55,7 +55,7 @@ public class MainFragment extends BrowseFragment{
         super.onActivityCreated(savedInstanceState);
         setupUIElements();
         setupEventListeners();
-        final RequestTV request = new RequestTV("store");
+        final RequestTV request = new RequestTV("store", getActivity());
         final HashMap<String,String> installed= new HashMap<>();
         for (PackageInfo pi : getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)){
             if(!pi.packageName.startsWith("com.android"))

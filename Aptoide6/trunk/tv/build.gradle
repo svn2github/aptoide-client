@@ -9,11 +9,12 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
+apply from: 'signing.gradle'
 
 
-def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase()
+def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase().replaceAll("-", "_")
 
-repositories{
+repositories {
 
     maven { url 'http://download.crashlytics.com/maven' }
 
@@ -28,13 +29,22 @@ android {
         versionCode 2
         versionName "0.8rc"
     }
-/*    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
         }
-    }*/
-    lintOptions{
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            signingConfig signingConfigs.release
+        }
+
+    }
+    lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
@@ -67,13 +77,13 @@ dependencies {
         exclude(group: 'junit', module: 'junit') //by both name and group
     }
 
-    compile ('com.octo.android.robospice:robospice-retrofit:1.4.14'){
+    compile('com.octo.android.robospice:robospice-retrofit:1.4.14') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
         exclude group: 'commons-io', module: 'commons-io'
         exclude group: 'com.google.code.gson'
 
     }
-    compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
+    compile('com.squareup.retrofit:converter-jackson:1.7.1') {
         exclude group: 'com.google.code.gson'
     }
     compile 'com.crashlytics.android:crashlytics:1.+'

@@ -86,7 +86,7 @@
     </style>
 
     <style name="AptoideThemeDefaultGreenApple" parent="Theme.Example.Leanback">
-        <item name="brandColor">@color/green</item>
+        <item name="brandColor">@color/greenapple</item>
     </style>
 
     <style name="AptoideThemeDefaultHappyBlue" parent="Theme.Example.Leanback">
