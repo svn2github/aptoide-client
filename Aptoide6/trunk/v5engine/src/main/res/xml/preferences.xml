@@ -51,12 +51,19 @@
         <Preference
             android:key="hwspecs"
             android:summary="@string/setting_hwspecssum"
-            android:title="@string/setting_hwspecstitle"></Preference>
+            android:title="@string/setting_hwspecstitle"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="hwspecsChkBox"
             android:summary="@string/setting_appfiltersum"
             android:title="@string/setting_appfiltertitle" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_category_autoupdate">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="checkautoupdate"
+            android:title="@string/setting_category_autoupdate_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -188,7 +195,7 @@
         android:title="@string/about_us">
         <Preference
             android:key="aboutDialog"
-            android:title="@string/about_us"></Preference>
+            android:title="@string/about_us"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

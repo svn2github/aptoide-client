@@ -155,6 +155,7 @@ public class Response {
         public int offset;
         public int next;
         public int limit;
+        public int hidden;
         public List<T> list;
 
     }

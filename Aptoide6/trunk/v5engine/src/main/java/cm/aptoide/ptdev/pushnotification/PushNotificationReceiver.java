@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -37,6 +38,7 @@ import java.util.concurrent.Executors;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.services.UpdatesService;
+import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import retrofit.RestAdapter;
@@ -151,6 +153,12 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                             }
                             parameters.put("mode", "json");
                             parameters.put("limit", "1");
+                            parameters.put("lang", AptoideUtils.getMyCountry(Aptoide.getContext()));
+
+                            if(Aptoide.DEBUG_MODE){
+                                SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+                                parameters.put("notification_type", sPref.getString("notificationtype", null));
+                            }
 
 
                             int lastId = PreferenceManager.getDefaultSharedPreferences(context).getInt(SPREF_PNOTIFICATION_ID,0);

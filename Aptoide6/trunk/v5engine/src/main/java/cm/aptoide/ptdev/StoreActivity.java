@@ -185,6 +185,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         request.setStore_name(name);
 
+
         manager.execute(request,"getStore" + name,DurationInMillis.ONE_HOUR * 6, checkStoreListener);
 
         Fragment fragmentHeader = new FragmentStoreHeader();

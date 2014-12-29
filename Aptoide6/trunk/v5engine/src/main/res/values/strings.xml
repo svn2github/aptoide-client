@@ -206,7 +206,7 @@
     <string name="finished_install">%s has been installed.</string>
     <string name="installing">%s is installing...</string>
     <string name="no_permissions_required">No permissions required for this app.</string>
-    <string name="connection_error">no network connection</string>
+    <string name="connection_error">No network connection</string>
     <string name="restore">Install</string>
     <string name="x_app">%d app</string>
     <string name="x_apps">%d apps</string>
@@ -650,5 +650,7 @@
     <string name="wizard_new_top_description">Global and local Top Apps</string>
     <string name="wizard_new_top_stores">Discover and add Top Stores</string>
     <string name="aptoide_publishers">Aptoide Publishers</string>
+    <string name="setting_category_autoupdate">Aptoide Auto update</string>
+    <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
 
 </resources>

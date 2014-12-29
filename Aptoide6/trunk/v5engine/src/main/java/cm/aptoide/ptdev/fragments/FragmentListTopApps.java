@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.exception.NoNetworkException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -187,17 +188,37 @@ public class FragmentListTopApps extends Fragment {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-                        rootView.findViewById(R.id.list).setVisibility(View.GONE);
-                        rootView.findViewById(R.id.error).setVisibility(View.GONE);
-                        manager.execute(request, "top", DurationInMillis.ALWAYS_EXPIRED, requestListener);
-                    }
-                });
+
+
+                if(spiceException instanceof NoNetworkException){
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.no_network_connection).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry_no_network).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            manager.execute(request, "top", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
+                        }
+                    });
+
+                } else {
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.error).setVisibility(View.GONE);
+                            manager.execute(request, "top", DurationInMillis.ALWAYS_EXPIRED, requestListener);
+                        }
+                    });
+                }
             }
 
             @Override

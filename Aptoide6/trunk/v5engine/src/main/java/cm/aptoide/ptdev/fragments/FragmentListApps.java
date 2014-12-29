@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.exception.NoNetworkException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -702,19 +703,39 @@ public class FragmentListApps extends Fragment {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                rootView.findViewById(R.id.list).setVisibility(View.GONE);
-                rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
-                        rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-                        rootView.findViewById(R.id.list).setVisibility(View.GONE);
-                        rootView.findViewById(R.id.error).setVisibility(View.GONE);
 
-                    }
-                });
+                if(spiceException instanceof NoNetworkException){
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.no_network_connection).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry_no_network).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
+                        }
+                    });
+
+                } else {
+
+                    rootView.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.error).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
+                            rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            rootView.findViewById(R.id.list).setVisibility(View.GONE);
+                            rootView.findViewById(R.id.error).setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+
 
             }
 

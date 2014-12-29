@@ -569,7 +569,10 @@ public class Start extends ActionBarActivity implements
             queueName = sharedPreferences.getString("queueName", null);
 
 
-            new AutoUpdate(this).execute();
+            if(sharedPreferences.getBoolean("checkautoupdate", true)){
+                new AutoUpdate(this).execute();
+            }
+
             executeWizard();
             startPushNotifications();
 
@@ -1193,38 +1196,42 @@ public class Start extends ActionBarActivity implements
         @Override
         public void onRequestSuccess(Response.GetStore response) {
 
-            final Store store = new Store();
-            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
-            store.setId(data.id.longValue());
-            store.setName(response.datasets.meta.data.name);
-            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
-
-
-            String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
-
-
-            String avatar = data.avatar;
-
-            if(avatar!=null) {
-                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
-            }
-
-            store.setAvatar(avatar);
-            store.setDescription(data.description);
-            store.setTheme(data.theme);
-            store.setView(data.view);
-            store.setBaseUrl(data.name);
-
-            Database database = new Database(Aptoide.getDb());
-
             try {
-                database.insertStore(store);
-                database.updateStore(store);
+                final Store store = new Store();
+                Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+                store.setId(data.id.longValue());
+                store.setName(response.datasets.meta.data.name);
+                store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
 
-                BusProvider.getInstance().post(new RepoAddedEvent());
+
+                String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
+
+
+                String avatar = data.avatar;
+
+                if (avatar != null) {
+                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                    avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                }
+
+                store.setAvatar(avatar);
+                store.setDescription(data.description);
+                store.setTheme(data.theme);
+                store.setView(data.view);
+                store.setBaseUrl(data.name);
+
+                Database database = new Database(Aptoide.getDb());
+
+                try {
+                    database.insertStore(store);
+                    database.updateStore(store);
+
+                    BusProvider.getInstance().post(new RepoAddedEvent());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }catch (Exception e){
-                e.printStackTrace();
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
             }
 
 

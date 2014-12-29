@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.exception.NoNetworkException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.SpiceRequest;
@@ -68,6 +69,7 @@ public class FragmentListStore extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         manager.start(activity);
+
     }
 
     @Override
@@ -80,6 +82,7 @@ public class FragmentListStore extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         theme = getArguments().getString("theme");
     }
 
@@ -254,6 +257,7 @@ public class FragmentListStore extends Fragment {
         }
 
         manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") , expire, listener);
+
     }
 
 
@@ -261,12 +265,33 @@ public class FragmentListStore extends Fragment {
     RequestListener<Response> listener = new RequestListener<Response>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            setError(view, manager, listener, request );
+
+            if(spiceException instanceof NoNetworkException){
+
+                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                view.findViewById(R.id.list).setVisibility(View.GONE);
+                view.findViewById(R.id.no_network_connection).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.retry_no_network).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        manager.execute(request, listener);
+                        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.list).setVisibility(View.GONE);
+                        view.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
+                    }
+                });
+
+            } else {
+
+                setError(view, manager, listener, request);
+            }
         }
 
         @Override
         public void onRequestSuccess(Response response) {
             ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
+
+
             try {
                 List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                 HashMap<String, Response.ListApps.Category> dataset = null;
@@ -274,13 +299,14 @@ public class FragmentListStore extends Fragment {
                     dataset = response.responses.listApps.datasets.getDataset();
                 }
 
-
+                int hidden = 0;
                 String widgetrefid = getArguments().getString("refid");
                 if (list.isEmpty()) {
 
                     if (dataset != null) {
                         if (dataset.get(widgetrefid).data != null) {
 
+                            hidden += dataset.get(widgetrefid).data.hidden;
                             List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
 
                             for (Response.ListApps.Apk apk : apksList) {
@@ -325,6 +351,7 @@ public class FragmentListStore extends Fragment {
                         if (dataset.get(widgetrefid).data != null) {
 
                             List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
+                            hidden += dataset.get(widgetrefid).data.hidden;
 
                             for (Response.ListApps.Apk apk : apksList) {
 
@@ -353,6 +380,14 @@ public class FragmentListStore extends Fragment {
                 swipeLayout.setRefreshing(false);
                 view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
+
+                if(hidden > 0){
+                    if(getFragmentManager().findFragmentByTag("hiddenadult")==null){
+
+
+
+                    }
+                }
 
             }catch (Exception e){
 
