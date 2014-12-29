@@ -9,7 +9,7 @@
 
     <!--Partner Config-->
     <string name="partnertype">premium</string>
-    <string name="partner_id">f829219cd75e9abfb6201e386d06e838</string>
+    <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
     <string name="marketname">Aptoide TV</string>
     <string name="defaultstorename">geniatechapps</string>
     <string name="aptoidetheme">default</string>
