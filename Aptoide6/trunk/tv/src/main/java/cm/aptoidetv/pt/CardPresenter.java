@@ -1,17 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package cm.aptoidetv.pt;
 
 import android.content.Context;
@@ -22,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -61,29 +46,19 @@ public class CardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         ViewHolder myViewHolder = (ViewHolder) viewHolder;
-        BindInterface application = (BindInterface) item;
-        if (!TextUtils.isEmpty(application.getImage())) {
-            String text;
-            int width;
-            int height;
-            if (application.getCategory().equals("Editors' Choice") || application.getCategory().equals("Editors Choice")) {
-                text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
-                width=card_presenter_width;
-                height=card_presenter_height;
-            } else if (application.getCategory().equals("Search Results")) {
-                text =mContext.getString(R.string.version) + ": " + application.getVersion();
-                width=ICON_WIDTH;
-                height=ICON_HEIGHT;
-            } else {
-                text =mContext.getString(R.string.downloads) + ": " + application.getDownloads();
-                width=ICON_WIDTH;
-                height=ICON_HEIGHT;
-            }
-            myViewHolder.mCardView.setContentText(text);
-            myViewHolder.mCardView.setTitleText(Html.fromHtml(application.getName()));
-            myViewHolder.mCardView.setMainImageDimensions(width,height);
-            myViewHolder.updateCardViewImage(application.getImage());
+        BindInterface bi = (BindInterface) item;
+        int width, height;
+        if (bi.isEditorsChoice()) {
+            width=card_presenter_width;
+            height=card_presenter_height;
+        } else  {
+            width=ICON_WIDTH;
+            height=ICON_HEIGHT;
         }
+        myViewHolder.mCardView.setContentText(bi.getText(mContext));
+        myViewHolder.mCardView.setTitleText(Html.fromHtml(bi.getName(mContext)));
+        myViewHolder.mCardView.setMainImageDimensions(width,height);
+        myViewHolder.updateCardViewImage(bi.getImage());
     }
 
     @Override
@@ -95,7 +70,6 @@ public class CardPresenter extends Presenter {
     }
 
     static class ViewHolder extends Presenter.ViewHolder {
-        private Movie mMovie;
         private ImageCardView mCardView;
         //private Drawable mDefaultCardImage;
         private PicassoImageCardViewTarget mImageCardViewTarget;
@@ -106,18 +80,6 @@ public class CardPresenter extends Presenter {
             mImageCardViewTarget = new PicassoImageCardViewTarget(mCardView);
 
             //mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
-        }
-
-        public Movie getMovie() {
-            return mMovie;
-        }
-
-        public void setMovie(Movie m) {
-            mMovie = m;
-        }
-
-        public ImageCardView getCardView() {
-            return mCardView;
         }
 
         protected void updateCardViewImage(String uri) {

@@ -1,8 +1,6 @@
 
 package cm.aptoidetv.pt.Model;
 
-import android.content.Context;
-
 import com.google.api.client.util.Key;
 
 import java.util.ArrayList;
@@ -164,7 +162,7 @@ public class GetApkInfoJson {
             }
         }
 
-        public static class Screenshots implements BindInterface {
+        public static class Screenshots {
             @Key
             private String path;
             @Key
@@ -178,40 +176,10 @@ public class GetApkInfoJson {
                 return path;
             }
 
-            @Override
-            public String getName() {
-                return "";
-            }
-
-            @Override
-            public String getVersion() {
-                return "";
-            }
-
-            @Override
-            public String getDownloads() {
-                return "";
-            }
-
-            @Override
             public String getImage() {
                 return path;
             }
 
-            @Override
-            public String getCategory() {
-                return "Screenshots";
-            }
-
-            @Override
-            public void startActivity(Context context) {
-
-            }
-
-            @Override
-            public String getDownloadUrl() {
-                return "";
-            }
         }
     }
 

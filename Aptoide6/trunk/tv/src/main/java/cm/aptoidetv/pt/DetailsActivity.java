@@ -1,17 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package cm.aptoidetv.pt;
 
 import android.app.Activity;
@@ -27,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -56,11 +41,8 @@ import cm.aptoidetv.pt.Model.Video;
 import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.old.GetApkInfoRequestFromMd5;
 
-/*
- * Details activity class that loads LeanbackDetailsFragment class
- */
 public class DetailsActivity extends Activity {
-    private static final String TAG="pois";
+
     private DownloadManager downloadmanager;
 
     public static final String PACKAGE_NAME = "packageName";
@@ -91,7 +73,6 @@ public class DetailsActivity extends Activity {
     private TextView downloading_info;
     private LinearLayout screenshots;
     private LinearLayout commentsContainer;
-    private TextView comments_label;
     private LinearLayout commentsLayout;
     private View app_view_icon_layout;
     private View app_view_details_layout;
@@ -146,7 +127,6 @@ public class DetailsActivity extends Activity {
         app_size = (TextView) findViewById(R.id.app_size);
         app_description = (TextView) findViewById(R.id.app_description);
         screenshots = (LinearLayout) findViewById(R.id.screenshots);
-        comments_label = (TextView) findViewById(R.id.comments_label);
         commentsLayout = (LinearLayout) findViewById(R.id.layout_comments);
 //        noComments = (TextView) findViewById(R.id.no_comments);
         commentsContainer = (LinearLayout) findViewById(R.id.comments_container);
@@ -162,6 +142,7 @@ public class DetailsActivity extends Activity {
 
         GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(this);
         request.setMd5Sum(md5sum);
+
         final DetailsActivity a = this;
         manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
             @Override
@@ -175,8 +156,10 @@ public class DetailsActivity extends Activity {
                 addDownloadButtonListener(apkInfoJson);
 
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
-                downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
-                app_downloads.setText(getString(R.string.downloads)+": " + downloads);
+                if(downloads!=String.valueOf(apkInfoJson.getMeta().getDownloads())){
+                    downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
+                    app_downloads.setText(getString(R.string.downloads)+": " + downloads);
+                }
                 if(apkInfoJson.getMeta().getDeveloper()!=null)
                     app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
@@ -208,9 +191,9 @@ public class DetailsActivity extends Activity {
                 ArrayList<MediaObject> mediaObjects = apkInfoJson.getMedia().getScreenshotsAndThumbVideo();
                 String imagePath = "";
                 int screenshotIndexToAdd = 0;
-                Log.d(TAG,"mediaObjects.size() : "+mediaObjects.size());
+
                 for (int i = 0; i != mediaObjects.size(); i++) {
-                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
+
                     cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
                     final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
                     //final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
@@ -220,7 +203,6 @@ public class DetailsActivity extends Activity {
                     if (mediaObjects.get(i) instanceof Video) {
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
-                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
                         play.setVisibility(View.VISIBLE);
                         mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
@@ -230,7 +212,6 @@ public class DetailsActivity extends Activity {
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-                        Log.d(TAG, "IMAGEPATH: " + imagePath);
                         imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                         mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                     }
@@ -246,14 +227,25 @@ public class DetailsActivity extends Activity {
 //                for(int i=0; i < comments.size(); i++) {
 //                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
 //                }
-                FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
-                commentsLayout.setVisibility(View.VISIBLE);
-                if (comments.size() == 0) {
+                final View TocommentsButtonFocus = fillComments(DetailsActivity.this, commentsContainer, comments);
+
+                if (TocommentsButtonFocus==null) {
+                    findViewById(R.id.TocommentsButton).setVisibility(View.GONE);
                     commentsLayout.setVisibility(View.GONE);
-                    comments_label.setVisibility(View.GONE);
 //                    Log.d(TAG, getString(R.string.no_comments));
 //                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
 //                    noComments.setVisibility(View.VISIBLE);
+                }else{
+                    View TocommentsButton = findViewById(R.id.TocommentsButton);
+                    TocommentsButton.setVisibility(View.VISIBLE);
+                    commentsLayout.setVisibility(View.VISIBLE);
+                    TocommentsButtonFocus.setFocusable(true);
+                    TocommentsButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TocommentsButtonFocus.requestFocus();
+                        }
+                    });
                 }
             }
         });
@@ -467,7 +459,7 @@ public class DetailsActivity extends Activity {
 
 
                     request.setDestinationInExternalPublicDir("apks", APKpath);
-                    ;
+
 //                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
 
                     downloadmanager.enqueue(request);
@@ -478,19 +470,21 @@ public class DetailsActivity extends Activity {
         }
     }
 
-    public static class FillComments{
-
-        public static void fillComments(Activity activity, LinearLayout commentsContainer, List<Comment> comments) {
-            final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            View view;
-
-            commentsContainer.removeAllViews();
-            for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
-                view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
-                commentsContainer.addView(view);
+    public View fillComments(Activity activity, LinearLayout commentsContainer, List<Comment> comments) {
+        final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        View view;
+        View viewtoRet=null;
+        commentsContainer.removeAllViews();
+        for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
+            view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
+            commentsContainer.addView(view);
+            if(viewtoRet==null){
+                viewtoRet=view;
             }
         }
+        return viewtoRet;
     }
+
 
     public static class ScreenShotsListener implements View.OnClickListener {
 
@@ -561,6 +555,7 @@ public class DetailsActivity extends Activity {
                 DownloadManager.Query query = new DownloadManager.Query();
 
                 Cursor c = downloadmanager.query(query);
+
                 if (c.moveToFirst()) {
                     int bytes_downloaded = c.getInt(c
                             .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
@@ -581,7 +576,6 @@ public class DetailsActivity extends Activity {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
 
                                 String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                                Log.d("pois",absolutePath + "/apks/" +path[0]);
                                 intent.setDataAndType(Uri.fromFile(new File(absolutePath + "/apks/" + path[0])), "application/vnd.android.package-archive");
 
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

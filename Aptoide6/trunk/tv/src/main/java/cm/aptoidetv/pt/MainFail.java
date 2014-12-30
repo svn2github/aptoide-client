@@ -3,6 +3,7 @@ package cm.aptoidetv.pt;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.octo.android.robospice.SpiceManager;
@@ -57,6 +58,8 @@ public class MainFail extends Activity implements RequestsTvListener {
         RequestListener<Response> requestListener = new RequestListener<Response>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+                Log.d("pois","spiceException msg:"+spiceException.getMessage());
+                Log.d("pois","spiceException cause:"+spiceException.getCause());
                 onFailure();
             }
 

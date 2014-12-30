@@ -9,12 +9,11 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-apply from: 'signing.gradle'
 
 
-def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase().replaceAll("-", "_")
+def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase()
 
-repositories {
+repositories{
 
     maven { url 'http://download.crashlytics.com/maven' }
 
@@ -29,7 +28,6 @@ android {
         versionCode 2
         versionName "0.8rc"
     }
-
     buildTypes {
         debug {
             minifyEnabled true
@@ -40,11 +38,10 @@ android {
             minifyEnabled true
             zipAlignEnabled true
             proguardFile 'proguard-aptoide.txt'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
-
     }
-    lintOptions {
+    lintOptions{
         checkReleaseBuilds false
         abortOnError false
     }
@@ -64,10 +61,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.crashlytics.android:crashlytics:1.1.13'
-    compile 'com.android.support:leanback-v17:+'
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:leanback-v17:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.google.code.gson:gson:2.2.4'
@@ -77,14 +74,17 @@ dependencies {
         exclude(group: 'junit', module: 'junit') //by both name and group
     }
 
-    compile('com.octo.android.robospice:robospice-retrofit:1.4.14') {
+    compile ('com.octo.android.robospice:robospice-retrofit:1.4.14'){
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
         exclude group: 'commons-io', module: 'commons-io'
         exclude group: 'com.google.code.gson'
 
     }
-    compile('com.squareup.retrofit:converter-jackson:1.7.1') {
+    compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
         exclude group: 'com.google.code.gson'
     }
+    compile 'com.rabbitmq:amqp-client:3.2.0'
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile project(':facebook')
+    compile 'com.google.android.gms:play-services:6.1.71'
 }

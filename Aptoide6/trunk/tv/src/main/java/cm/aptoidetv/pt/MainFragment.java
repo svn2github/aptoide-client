@@ -14,6 +14,7 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ import java.util.List;
 import cm.aptoidetv.pt.Model.ApplicationAPK;
 import cm.aptoidetv.pt.Model.BindInterface;
 import cm.aptoidetv.pt.Model.EditorsChoice;
+import cm.aptoidetv.pt.Model.Settingitem.MyaccountItem;
 import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.RequestTV;
 import cm.aptoidetv.pt.WebServices.Response;
@@ -64,6 +66,8 @@ public class MainFragment extends BrowseFragment{
         RequestListener<Response> requestListener = new RequestListener<Response>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+                Log.d("pois","spiceException msg:" + spiceException.getMessage());
+                Log.d("pois","spiceException cause:"+spiceException.getCause());
                 ((RequestsTvListener) getActivity()).onFailure();
             }
 
@@ -77,11 +81,13 @@ public class MainFragment extends BrowseFragment{
                 {
                     List<EditorsChoice> mEditorsChoice = loadmEditorsChoice();
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    int amount=0;
                     for (EditorsChoice editorsChoice : mEditorsChoice) {
+                        amount++;
                         listRowAdapter.add(editorsChoice);
                     }
                     if (mEditorsChoice.size() > 0) {
-                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, "Editors Choice", null);
+                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle("Editors Choice",amount), null);
                         mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }
@@ -97,6 +103,7 @@ public class MainFragment extends BrowseFragment{
                     final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
 
                     ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    int amount=0;
                     for (Response.ListApps.Apk apk : data.data.list) {
                         if(installed.keySet().contains(apk.packageName)){
 /*                            Log.d("pois","Package: "+apk.packageName);
@@ -115,34 +122,50 @@ public class MainFragment extends BrowseFragment{
                                 }
                             }
                         }
-                        else{
-                            ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
-                            listRowAdapter.add(storeApplication);
-                        }
+
+                        ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
+                        amount++;
+                        listRowAdapter.add(storeApplication);
+
                     }
                     if (listRowAdapter.size() > 0) {
-                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, widget.name, null);
+                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle(widget.name, amount), null);
 
                         mRowsAdapter.add(new ListRow(header, listRowAdapter));
                     }
                 }
+                // Updates
                 if (APKUpdates.size() > 0) {
                     final String updates = getString(R.string.updates);
                     ArrayObjectAdapter listUpdatesAdapter = new ArrayObjectAdapter(cardPresenter);
+                    int amount=0;
                     for (Response.ListApps.Apk apk : APKUpdates.values()) {
                         ApplicationAPK storeApplication = new ApplicationAPK(apk, updates);
+                        amount++;
                         listUpdatesAdapter.add(storeApplication);
                     }
-                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1,updates, null);
+                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1,addAmountToTitle(updates,amount), null);
                     mRowsAdapter.add(new ListRow(header, listUpdatesAdapter));
                 }
+                // Settings
+                {
+                    final String settings = getString(R.string.settings);
+                    ArrayObjectAdapter listsettingsAdapter = new ArrayObjectAdapter(cardPresenter);
+                    listsettingsAdapter.add(new MyaccountItem());
+                    //listsettingsAdapter.add(new PreferencesItem());
+                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1,settings, null);
+                    mRowsAdapter.add(new ListRow(header, listsettingsAdapter));
+                }
+
                 setAdapter(mRowsAdapter);
                 ((RequestsTvListener) getActivity()).onSuccess();
             }
         };
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED, requestListener);
     }
-
+    private String addAmountToTitle(String Title,int amount){
+        return Title + " ("+amount+')';
+    }
     private void setupUIElements() {
         setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);

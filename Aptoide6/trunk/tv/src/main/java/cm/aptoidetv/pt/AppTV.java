@@ -1,41 +1,39 @@
 package cm.aptoidetv.pt;
 
 import android.app.Application;
-import android.preference.PreferenceManager;
+import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-
-import java.io.File;
 
 /**
  * Created by asantos on 19-11-2014.
  */
 public class AppTV extends Application {
+    static Context c;
+    private static AptoideConfiguration configuration;
+    private static boolean webInstallServiceRunning;
+
+    public static Context getContext() {
+        return c;
+    }
+
+    public static AptoideConfiguration getConfiguration() {
+        return configuration;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        c=this;
+        configuration= new AptoideConfiguration();
         Crashlytics.start(this);
-        if(!PreferenceManager.getDefaultSharedPreferences(this).contains("Rooted")) {
-            boolean isRooted = isRooted();
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("Rooted",isRooted).commit();
-        }
     }
 
-    private static boolean isRooted() {
-        return findBinary("su");
+    public static boolean isWebInstallServiceRunning() {
+        return webInstallServiceRunning;
     }
 
-    private static boolean findBinary(String binaryName) {
-        boolean found = false;
-        final String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
-        for (String where : places) {
-            if (new File(where + binaryName).exists()) {
-                found = true;
-                break;
-            }
-        }
-        return found;
+    public static void setWebInstallServiceRunning(boolean webInstallServiceRunning) {
+        AppTV.webInstallServiceRunning = webInstallServiceRunning;
     }
 }

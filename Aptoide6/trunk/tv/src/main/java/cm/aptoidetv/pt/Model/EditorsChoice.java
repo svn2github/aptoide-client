@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import java.io.Serializable;
 
 import cm.aptoidetv.pt.DetailsActivity;
+import cm.aptoidetv.pt.R;
 import cm.aptoidetv.pt.WebServices.Response;
 
 public class EditorsChoice implements Serializable, BindInterface {
@@ -22,34 +23,20 @@ public class EditorsChoice implements Serializable, BindInterface {
 
     public EditorsChoice(Response.GetStore.Widgets.Widget widget) {
         this.name = widget.name;
-        /*        public static class Widget {
-
-            public String type;
-            public String name;
-            public WidgetData data;
-
-
-            public static class WidgetCategory {
-                public Number id;
-                public String ref_id;
-                public Number parent_id;
-                public String parent_ref_id;
-                public Number apps_count;
-                public String name;
-                public String graphic;
-            }
-
-
-            public static class WidgetData {
-                public String ref_id;
-                public List<WidgetCategory> categories;
-
-            }
-
-        }     */
     }
 
-    public String getName() {
+    @Override
+    public boolean isEditorsChoice() {
+        return true;
+    }
+
+    @Override
+    public String getText(Context context) {
+        return context.getString(R.string.downloads) + ": " + getDownloads();
+    }
+
+    @Override
+    public String getName(Context context) {
         return packagename.name;
     }
 
@@ -66,11 +53,6 @@ public class EditorsChoice implements Serializable, BindInterface {
     @Override
     public String getImage() {
         return featuregraphicpath +""+ packagename.featuregraphic;
-    }
-
-    @Override
-    public String getCategory() {
-        return "Editors' Choice";
     }
 
     @Override

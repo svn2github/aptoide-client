@@ -46,13 +46,24 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:visibility="gone" />
+
+        <Button
+            android:id="@+id/TocommentsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="10dp"
+            android:layout_margin="15dp"
+            android:text="@string/comments"
+            android:visibility="gone">
+        </Button>
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/app_view_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/app_view_icon_layout"
+        android:layout_toEndOf="@id/app_view_icon_layout"
         android:padding="10dp"
         android:scrollbars="none">
 
@@ -77,12 +88,11 @@
 
                 <TextView
                     android:id="@+id/app_developer"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Developer"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -96,12 +106,11 @@
 
                 <TextView
                     android:id="@+id/app_version"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Version: 1.4.7.2"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -116,12 +125,12 @@
 
                 <TextView
                     android:id="@+id/app_downloads"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Downloads: 0"
+                    android:text="Downloads: "
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -135,12 +144,11 @@
 
                 <TextView
                     android:id="@+id/app_size"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Size: 9.8 MB"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <View
@@ -156,25 +164,27 @@
                 <RatingBar
                     android:id="@+id/rating_bar"
                     style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:stepSize="0.1"
+                    android:isIndicator="true"
+                    android:rating="0.0"
+                    android:max="5"
                     android:numStars="5"
-                    android:layout_weight="1"
                     android:visibility="invisible"
                     android:gravity="center" />
 
                 <TextView
                     android:id="@+id/app_ratings"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="(0 ratings)"
                     android:visibility="invisible"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
@@ -213,13 +223,7 @@
                 android:autoLink="all"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/comments_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/comments"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+
 
             <LinearLayout
                 android:id="@+id/layout_comments"
@@ -229,7 +233,13 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="gone">
-
+                <TextView
+                    android:id="@+id/TocommentsButtonFocus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/comments"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
                 <LinearLayout
                     android:id="@+id/comments_container"
                     android:layout_width="match_parent"
@@ -261,6 +271,5 @@
         android:layout_gravity="center"
         android:gravity="center_vertical"
         android:indeterminate="false" />
-
 
 </RelativeLayout>

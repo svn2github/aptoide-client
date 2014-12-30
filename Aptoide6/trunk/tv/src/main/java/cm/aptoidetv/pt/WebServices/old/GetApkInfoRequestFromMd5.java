@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cm.aptoidetv.pt.R;
+
 /**
  * Created with IntelliJ IDEA.
  * User: rmateus
@@ -16,6 +18,7 @@ public class GetApkInfoRequestFromMd5 extends GetApkInfoRequest {
 
     public GetApkInfoRequestFromMd5(Context context) {
         super(context);
+        setRepoName(context.getString(R.string.defaultstorename));
     }
 
     public void setMd5Sum(String md5Sum) {

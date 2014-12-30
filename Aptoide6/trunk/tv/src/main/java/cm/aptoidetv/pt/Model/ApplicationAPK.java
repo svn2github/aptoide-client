@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import java.io.Serializable;
 
 import cm.aptoidetv.pt.DetailsActivity;
+import cm.aptoidetv.pt.R;
 import cm.aptoidetv.pt.WebServices.Response;
 
 /**
@@ -45,8 +46,19 @@ public class ApplicationAPK implements Serializable, BindInterface{
 
         //public String apk.graphic;
     }
+
     @Override
-    public String getName() {
+    public boolean isEditorsChoice() {
+        return false;
+    }
+
+    @Override
+    public String getText(Context context) {
+        return context.getString(R.string.downloads) + ": " + getDownloads();
+    }
+
+    @Override
+    public String getName(Context context) {
         return name;
     }
 
@@ -63,11 +75,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
     @Override
     public String getImage() {
         return TextUtils.isEmpty(icon_hd) ? icon:icon_hd;
-    }
-
-    @Override
-    public String getCategory() {
-        return catg2;
     }
 
     @Override

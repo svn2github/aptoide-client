@@ -10,7 +10,6 @@
   <string name="WidgetProvider_timestamp_week_ago">%s viikko sitten</string>
   <string name="WidgetProvider_timestamp_this_week">Tällä viikolla</string>
 
-  <string name="screenshots">Kuvaruutukopiot</string>
   <string name="like">Tykkää</string>
   <string name="dont_like">Älä tykkää</string>
   <string name="comments">Kommentit</string>

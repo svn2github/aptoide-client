@@ -1,17 +1,10 @@
-package cm.aptoide.ptdev.configuration;
+package cm.aptoidetv.pt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.io.File;
-
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.SearchManager;
-import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
-import openiab.IABPurchaseActivity;
-import openiab.PaidAppPurchaseActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +15,7 @@ import openiab.PaidAppPurchaseActivity;
  */
 public class AptoideConfiguration {
 
+    private static final String ACCOUNT_TYPE = "cm.aptoidetv.pt";
     private static final String PREF_AUTO_UPDATE_URL = "dev_mode_auto_update_url";
     private static final String PREF_ALWAYS_UPDATE = "dev_mode_always_update";
     private static final String PREF_PATH_CACHE_ICONS = "dev_mode_path_cache_icons";
@@ -34,7 +28,7 @@ public class AptoideConfiguration {
     private static final String PREF_TOP_PATH = "dev_mode_top_path";
     private static final String PREF_DEFAULT_STORE = "dev_mode_featured_store";
 
-    private static Context context = Aptoide.getContext();
+    private static Context context = AppTV.getContext();
     private static SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
 
     private String webservicesPath;
@@ -46,15 +40,15 @@ public class AptoideConfiguration {
     }
 
     public String getUpdatesSyncAdapterAuthority(){
-        return Aptoide.getContext().getPackageName() + ".UpdatesProvider";
+        return AppTV.getContext().getPackageName() + ".UpdatesProvider";
     }
 
     public String getSearchAuthority(){
-        return Aptoide.getContext().getPackageName() + ".SuggestionProvider";
+        return AppTV.getContext().getPackageName() + ".SuggestionProvider";
     }
 
     public String getAutoUpdatesSyncAdapterAuthority(){
-        return Aptoide.getContext().getPackageName() + ".AutoUpdateProvider";
+        return AppTV.getContext().getPackageName() + ".AutoUpdateProvider";
     }
 
 
@@ -67,7 +61,7 @@ public class AptoideConfiguration {
         return "cm.aptoide.pt.TimelinePosts";
     }
 
-    public String getAccountType() { return AccountGeneral.ACCOUNT_TYPE;
+    public String getAccountType() { return ACCOUNT_TYPE;
     };
 
     public String getMarketName() {
@@ -86,12 +80,14 @@ public class AptoideConfiguration {
         AptoideConfiguration.BRAND = brand;
     }
 
+/*
     public Class getShortcutClass() {
         return cm.aptoide.ptdev.Start.class;
     }
     public Class getNotificationsReceiver() {
         return PushNotificationReceiver.class;
     }
+*/
 
 
     public String getTopAppsUrl(){
@@ -216,47 +212,8 @@ public class AptoideConfiguration {
     }
 
     public int getIcon() {
-        return R.drawable.icon_brand_aptoide;
+        return R.drawable.ic_launcher;
     }
 
-    public Class getStartActivityClass(){
-        return cm.aptoide.ptdev.Start.class;
-    }
 
-    public Class getAppViewActivityClass(){
-        return cm.aptoide.ptdev.AppViewActivity.class;
-    }
-
-    public Class getSettingsActivityClass() {
-        return cm.aptoide.ptdev.Settings.class;
-    }
-
-    public Class getSignUpActivityClass() {
-        return cm.aptoide.ptdev.SignUpActivity.class;
-    }
-
-    public Class<?> getSearchActivityClass() {
-        return SearchManager.class;
-    }
-
-    public Class getMoreEditorsChoiceActivityClass() { return  cm.aptoide.ptdev.MoreEditorsChoiceActitivy.class;}
-
-    public Class getIABPurchaseActivityClass(){
-        return IABPurchaseActivity.class;
-    }
-    public Class getPaidAppPurchaseActivityClass(){
-        return PaidAppPurchaseActivity.class;
-    }
-
-    public String getTrackUrl() {
-        return "cm.aptoide.pt.PushNotificationTrackUrl";
-    }
-
-    public String getAction() {
-        return "cm.aptoide.pt.PushNotification";
-    }
-
-    public String getActionFirstTime() {
-        return "cm.aptoide.pt.PushNotificationFirstTime";
-    }
 }

@@ -9,6 +9,7 @@ import com.google.api.client.util.Key;
 import java.util.List;
 
 import cm.aptoidetv.pt.DetailsActivity;
+import cm.aptoidetv.pt.R;
 
 /**
  * Created by rmateus on 08-07-2014.
@@ -124,7 +125,17 @@ public class SearchJson {
                 this.md5sum = md5sum;
             }
 
-            public String getName() {
+            @Override
+            public boolean isEditorsChoice() {
+                return false;
+            }
+
+            @Override
+            public String getText(Context context) {
+                return context.getString(R.string.version) + ": " + getVersion();
+            }
+
+            public String getName(Context context) {
                 return this.name;
             }
 
@@ -150,25 +161,17 @@ public class SearchJson {
             }
 
             @Override
-            public String getCategory() {
-                return "Search Results";
-            }
-
-            @Override
             public void startActivity(Context context) {
-
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.PACKAGE_NAME, getPackage());
                 intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, getImage());
-                intent.putExtra(DetailsActivity.APP_NAME, getName());
+                intent.putExtra(DetailsActivity.APP_NAME, getName(context));
                 intent.putExtra(DetailsActivity.DOWNLOAD_URL, getDownloadUrl());
                 intent.putExtra(DetailsActivity.VERCODE, getVercode());
                 intent.putExtra(DetailsActivity.MD5_SUM, getMd5sum());
                 intent.putExtra(DetailsActivity.APP_ICON, getImage());
 
                 context.startActivity(intent);
-
-
 //                Toast.makeText(context, "Start Activity", Toast.LENGTH_LONG).show();
             }
 

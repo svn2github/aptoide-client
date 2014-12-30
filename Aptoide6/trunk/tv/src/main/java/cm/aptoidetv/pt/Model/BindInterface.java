@@ -7,11 +7,12 @@ import android.content.Context;
  */
 public interface BindInterface {
 
-    public String getName();
+    public boolean isEditorsChoice();
+    public String getText(Context context);
+    public String getName(Context context);
     public String getVersion();
     public String getDownloads();
     public String getImage();
-    public String getCategory();
     public void startActivity(Context context);
     public String getDownloadUrl();
 

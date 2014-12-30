@@ -8,5 +8,4 @@ include 'v5engine',
         'facebook',
 
         'google-play-services',
-        'mopub-sdk'
-//include       'tv'
+        'mopub-sdk', 'tv'

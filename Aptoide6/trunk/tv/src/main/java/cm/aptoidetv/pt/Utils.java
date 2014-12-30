@@ -1,36 +1,14 @@
-/*
- * Copyright (C) 2013 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cm.aptoidetv.pt;
 
-import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,33 +35,6 @@ public class Utils {
      * Making sure public utility methods remain static
      */
     private Utils() {
-    }
-
-    /**
-     * Returns the screen/display size
-     */
-    public static Point getDisplaySize(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        return size;
-    }
-
-    /**
-     * Shows a (long) toast
-     */
-    public static void showToast(Context context, String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Shows a (long) toast.
-     */
-    public static void showToast(Context context, int resourceId) {
-        Toast.makeText(context, context.getString(resourceId), Toast.LENGTH_LONG).show();
     }
 
     public static String formatBytes(long bytes) {
@@ -133,8 +84,8 @@ public class Utils {
 
     public static String getUserAgentString(Context mctx) {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(mctx);
-        String myid = sPref.getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
-        String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
+        String myid = sPref.getString(Preferences.APTOIDE_CLIENT_UUID, "NoInfo");
+        String myscr = sPref.getInt(Preferences.SCREEN_WIDTH, 0) + "x" + sPref.getInt(Preferences.SCREEN_HEIGHT, 0);
         String verString = null;
         try {
             verString = mctx.getPackageManager().getPackageInfo(mctx.getPackageName(), 0).versionName;
@@ -142,32 +93,27 @@ public class Utils {
             e.printStackTrace();
         }
 
-        String extraId = mctx.getString(R.string.partnerid);
+        String extraId = mctx.getString(R.string.partner_id);
 
-        return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + "" + ";" + extraId ;
+        //return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + "" + ";" + extraId ;
+        return "AppTV-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";;" + extraId ;
     }
 
 
     public static class HWSpecifications {
 
-
+/*
         private static String cpuAbi2;
 
         public static String getDeviceId(Context context) {
             return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         }
 
-        /**
-         * @return the sdkVer
-         */
-
         static public int getSdkVer() {
             return Build.VERSION.SDK_INT;
         }
 
-        /**
-         * @return the screenSize
-         */
+
         static public int getScreenSize(Context context) {
             return context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         }
@@ -177,13 +123,23 @@ public class Utils {
             return (size + 1) * 100;
         }
 
+        public static String getCpuAbi() {
+            return Build.CPU_ABI;
+        }
 
-        /**
-         * @return the esglVer
-         */
+        public static String getCpuAbi2() {
+
+            if(getSdkVer()>=8 && !Build.CPU_ABI2.equals(Build.UNKNOWN)){
+                return Build.CPU_ABI2;
+            }else{
+                return "";
+            }
+
+        }
         static public String getGlEsVer(Context context) {
             return ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
         }
+*/
 
 
         public static int getDensityDpi(Context context) {
@@ -213,19 +169,7 @@ public class Utils {
             return dpi;
         }
 
-        public static String getCpuAbi() {
-            return Build.CPU_ABI;
-        }
 
-        public static String getCpuAbi2() {
-
-            if(getSdkVer()>=8 && !Build.CPU_ABI2.equals(Build.UNKNOWN)){
-                return Build.CPU_ABI2;
-            }else{
-                return "";
-            }
-
-        }
 
         public static final String TERMINAL_INFO = getModel() + "("+ getProduct() + ")"+";v"+getRelease()+";"+System.getProperty("os.arch");
 
