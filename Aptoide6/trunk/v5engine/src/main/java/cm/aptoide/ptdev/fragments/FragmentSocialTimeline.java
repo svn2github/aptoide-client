@@ -822,7 +822,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             TimeLineWhoLikesDialog wholikesDialog = new TimeLineWhoLikesDialog();
             wholikesDialog.setArguments(args);
             FragmentTransaction backstack = getChildFragmentManager().beginTransaction().addToBackStack("1");
-             wholikesDialog.show(backstack, LIKESDIALOGTAG);
+            wholikesDialog.show(backstack, LIKESDIALOGTAG);
         }
 
     /* *************** End of Methods of the TimeLineManager Interface *************** */

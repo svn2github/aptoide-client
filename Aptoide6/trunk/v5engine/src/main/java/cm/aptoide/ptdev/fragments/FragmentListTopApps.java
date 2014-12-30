@@ -319,7 +319,9 @@ public class FragmentListTopApps extends Fragment {
                 manager.execute(request, "top" , DurationInMillis.ALWAYS_EXPIRED,  requestListener);
             }
         });
+
         manager.execute(request, "top" , DurationInMillis.ONE_DAY,  requestListener);
+
         return rootView;
     }
 

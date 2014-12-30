@@ -652,5 +652,7 @@
     <string name="aptoide_publishers">Aptoide Publishers</string>
     <string name="setting_category_autoupdate">Aptoide Auto update</string>
     <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
+    <string name="dont_show_again">Don\'t show this dialog again</string>
+    <string name="hidden_adult">There are apps not shown due to activated filters. Do you want to show them?</string>
 
 </resources>

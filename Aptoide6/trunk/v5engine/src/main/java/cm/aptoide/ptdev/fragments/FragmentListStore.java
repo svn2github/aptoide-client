@@ -33,6 +33,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,9 @@ import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.dialogs.AdultHiddenDialog;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
@@ -52,6 +56,7 @@ import cm.aptoide.ptdev.webservices.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
+import static cm.aptoide.ptdev.utils.AptoideUtils.getSharedPreferences;
 import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
 
 /**
@@ -69,13 +74,19 @@ public class FragmentListStore extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         manager.start(activity);
-
+        BusProvider.getInstance().register(this);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         manager.shouldStop();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void refresh(RepoCompleteEvent event){
+        refresh(DurationInMillis.ALWAYS_EXPIRED);
     }
 
 
@@ -256,7 +267,7 @@ public class FragmentListStore extends Fragment {
             request.setRefId(getArguments().getString("refid"));
         }
 
-        manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") , expire, listener);
+        manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , expire, listener);
 
     }
 
@@ -381,12 +392,8 @@ public class FragmentListStore extends Fragment {
                 view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
 
-                if(hidden > 0){
-                    if(getFragmentManager().findFragmentByTag("hiddenadult")==null){
-
-
-
-                    }
+                if(hidden > 0 && getSharedPreferences().getBoolean("showadulthidden", true) && getFragmentManager().findFragmentByTag("hiddenadult")==null){
+                    new AdultHiddenDialog().show(getFragmentManager(), "hiddenadult");
                 }
 
             }catch (Exception e){

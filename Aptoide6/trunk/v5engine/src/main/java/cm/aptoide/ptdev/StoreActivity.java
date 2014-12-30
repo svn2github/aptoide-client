@@ -24,6 +24,7 @@ import com.squareup.otto.Subscribe;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
 import cm.aptoide.ptdev.fragments.FragmentListStore;
@@ -48,11 +49,29 @@ import retrofit.http.POST;
  * To change this template use File | Settings | File Templates.
  */
 
-public class StoreActivity extends ActionBarActivity implements CategoryCallback {
+public class StoreActivity extends ActionBarActivity implements CategoryCallback, AdultDialog.Callback {
 
 
     private SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
 
+    @Override
+    public void matureUnlock() {
+        //Log.d("Mature","Unlocked");
+
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", false).commit();
+        FlurryAgent.logEvent("Unlocked_Mature_Content");
+        BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+
+    }
+
+    public void matureLock() {
+        //Log.d("Mature","locked");
+
+        PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", true).commit();
+        FlurryAgent.logEvent("Locked_Mature_Content");
+        BusProvider.getInstance().post(new RepoCompleteEvent(-1));
+
+    }
 
     private long storeid;
     private ParserService service;

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 
 import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 /**
@@ -68,7 +66,7 @@ public class AdultDialog extends DialogFragment {
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        ((GetStartActivityCallback)getActivity()).matureLock();
+        callback.matureLock();
     }
 
     /*private static Dialog BuildAskSetAdultpin(final Context c, final DialogInterface.OnClickListener positiveButtonlistener){
