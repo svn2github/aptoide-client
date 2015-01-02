@@ -389,6 +389,8 @@ public class FragmentListStore extends Fragment {
                 items.addAll(map);
                 rRiew.getAdapter().notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
+
+
                 view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                 view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
 
