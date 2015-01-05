@@ -63,6 +63,7 @@ import cm.aptoidetv.pt.WebServices.old.OAuth2AuthenticationRequest;
 import cm.aptoidetv.pt.WebServices.old.RabbitMqService;
 import cm.aptoidetv.pt.WebServices.old.json.CheckUserCredentialsJson;
 import cm.aptoidetv.pt.WebServices.old.json.OAuth;
+import retrofit.RetrofitError;
 
 public class LoginActivity extends AccountAuthenticatorActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, View.OnClickListener, ProgressDialogFragment.OnCancelListener {
     public static final String LOGIN_USER_LOGIN 	= "usernameLogin";
@@ -486,10 +487,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         spiceManager.execute(oAuth2AuthenticationRequest, new RequestListener<OAuth>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                String error;
-
-                if (spiceException.getCause().getMessage().equals("Invalid username and password combination")) {
-                    error = getString(R.string.error_AUTH_1);
+                String error=null;
+                if (spiceException.getCause() instanceof RetrofitError) {
+                    final RetrofitError cause = (RetrofitError) spiceException.getCause();
+                    if(cause.getResponse().getStatus() == 400){
+                        error = getString(R.string.error_AUTH_1);
+                    }else {
+                        error = getString(R.string.error_occured);
+                    }
                 } else {
                     error = getString(R.string.error_occured);
                 }

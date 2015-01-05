@@ -22,7 +22,7 @@ public class MyaccountItem extends SettingItem {
 
     @Override
     public String getImage() {
-        return "https://www.aptoide.com/imgs/b/6/2/b62b1c9459964d3a876b04c70036b10a_ravatar_96x96.png";
+        return "http://pool.img.aptoide.com/apps/e8ab34654c33b2e54713db0a4c0e5fc9_icon.png";
     }
 
     @Override

@@ -20,6 +20,10 @@
     <string name="dont_like">Don\'t like</string>
     <string name="dont_likes">Don\'t likes</string>
     <string name="comments">Comments</string>
+    <string name="write_your_comment">Write your comment</string>
+    <string name="send_comment">Send comment</string>
+    <string name="comment_submitted">Your comment was successfuly submitted</string>
+    <string name="no_comments">No comments yet. Be the first!</string>
     <string name="install">Install</string>
     <string name="version">Ver.</string>
     <string name="vote">%s vote</string>
@@ -32,6 +36,7 @@
     <string name="open">Open</string>
     <string name="size">Size</string>
     <string name="ratings">Ratings</string>
+    <string name="review">Review</string>
 
 
     <!-- Error messages -->

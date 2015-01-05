@@ -54,8 +54,6 @@ public class DetailsActivity extends Activity {
     public static final String MD5_SUM = "md5sum";
     public static final String APP_ICON = "icon";
     public static final String APP_SIZE = "size";
-    public static final String MOVIE = "";
-    public static final String SHARED_ELEMENT_NAME = "";
 
     private String packageName, featuredGraphic, appName,download_URL, downloads, vercode, md5sum, icon, size;
 
@@ -74,7 +72,6 @@ public class DetailsActivity extends Activity {
     private LinearLayout screenshots;
     private LinearLayout commentsContainer;
     private LinearLayout commentsLayout;
-    private View app_view_icon_layout;
     private View app_view_details_layout;
     private View loading_pb;
 
@@ -108,7 +105,6 @@ public class DetailsActivity extends Activity {
         icon = getIntent().getStringExtra(APP_ICON);
         size = getIntent().getStringExtra(APP_SIZE);
 
-        app_view_icon_layout = findViewById(R.id.app_view_icon_layout);
         app_view_details_layout = findViewById(R.id.app_view_details_layout);
         loading_pb = findViewById(R.id.loading_pb);
 
@@ -143,7 +139,6 @@ public class DetailsActivity extends Activity {
         GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(this);
         request.setMd5Sum(md5sum);
 
-        final DetailsActivity a = this;
         manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -153,6 +148,7 @@ public class DetailsActivity extends Activity {
             @Override
             public void onRequestSuccess(GetApkInfoJson apkInfoJson) {
                 loading_pb.setVisibility(View.GONE);
+                app_view_details_layout.setVisibility(View.VISIBLE);
                 addDownloadButtonListener(apkInfoJson);
 
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
@@ -165,17 +161,15 @@ public class DetailsActivity extends Activity {
                 app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
                 app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
                 if(totalRatings>0){
-                    app_ratings.setVisibility(View.VISIBLE);
                     rating_bar.setVisibility(View.VISIBLE);
-                    a.findViewById(R.id.view_separator4).setVisibility(View.VISIBLE);
-                    app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
                     rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+                    RatingBar rating_bar2 = (RatingBar) findViewById(R.id.rating_bar2);
+                    rating_bar2.setVisibility(View.VISIBLE);
+                    rating_bar2.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
                 }else {
-                    a.findViewById(R.id.view_separator4).setVisibility(View.INVISIBLE);
-                    app_ratings.setVisibility(View.INVISIBLE);
                     rating_bar.setVisibility(View.INVISIBLE);
                 }
-
+                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
                 String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
 
@@ -204,11 +198,8 @@ public class DetailsActivity extends Activity {
                         screenshotIndexToAdd++;
                         imagePath = mediaObjects.get(i).getImageUrl();
                         play.setVisibility(View.VISIBLE);
-                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
                         imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
                         mediaLayout.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
-                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
-
 
                     } else if (mediaObjects.get(i) instanceof Screenshot) {
                         imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
@@ -232,11 +223,13 @@ public class DetailsActivity extends Activity {
                 if (TocommentsButtonFocus==null) {
                     findViewById(R.id.TocommentsButton).setVisibility(View.GONE);
                     commentsLayout.setVisibility(View.GONE);
+                    findViewById(R.id.no_comments).setVisibility(View.VISIBLE);
 //                    Log.d(TAG, getString(R.string.no_comments));
 //                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
 //                    noComments.setVisibility(View.VISIBLE);
                 }else{
                     View TocommentsButton = findViewById(R.id.TocommentsButton);
+                    findViewById(R.id.no_comments).setVisibility(View.GONE);
                     TocommentsButton.setVisibility(View.VISIBLE);
                     commentsLayout.setVisibility(View.VISIBLE);
                     TocommentsButtonFocus.setFocusable(true);

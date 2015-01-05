@@ -39,7 +39,6 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
-
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,7 +47,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.plus.PlusClient;
-
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -71,9 +69,9 @@ import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.Errors;
 import cm.aptoide.ptdev.webservices.OAuth2AuthenticationRequest;
-import cm.aptoide.ptdev.webservices.exceptions.InvalidGrantSpiceException;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.OAuth;
+import retrofit.RetrofitError;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -575,10 +573,14 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
-                String error;
-
-                if(spiceException.getCause() instanceof InvalidGrantSpiceException && spiceException.getCause().getMessage().equals("Invalid username and password combination")){
-                    error = getString(R.string.error_AUTH_1);
+                String error=null;
+                if (spiceException.getCause() instanceof RetrofitError) {
+                    final RetrofitError cause = (RetrofitError) spiceException.getCause();
+                    if(cause.getResponse().getStatus() == 400){
+                        error = getString(R.string.error_AUTH_1);
+                    }else {
+                        error = getString(R.string.error_occured);
+                    }
                 } else {
                     error = getString(R.string.error_occured);
                 }

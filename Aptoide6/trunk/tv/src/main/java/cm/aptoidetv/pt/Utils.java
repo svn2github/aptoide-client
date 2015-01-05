@@ -93,7 +93,7 @@ public class Utils {
             e.printStackTrace();
         }
 
-        String extraId = mctx.getString(R.string.partner_id);
+        String extraId = mctx.getString(R.string.partnerid);
 
         //return "aptoide-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";" + "" + ";" + extraId ;
         return "AppTV-" + verString + ";" + HWSpecifications.TERMINAL_INFO + ";" + myscr + ";id:" + myid + ";;" + extraId ;

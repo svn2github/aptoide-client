@@ -3,11 +3,15 @@
     android:id="@+id/splash_background"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/splashscreen"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
-
+    <ProgressBar
+        android:layout_centerInParent="true"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

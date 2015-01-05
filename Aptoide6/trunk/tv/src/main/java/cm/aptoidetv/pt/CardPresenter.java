@@ -22,12 +22,16 @@ import cm.aptoidetv.pt.Model.BindInterface;
  */
 public class CardPresenter extends Presenter {
     private static Context mContext;
-    public static final int card_presenter_width = 320;
+    public static final int card_presenter_width = 705;
+    public static final int card_presenter_height = 345;
+    private static final int ICON_WIDTH = 256;
+    private static final int ICON_HEIGHT = 256;
+/*  public static final int card_presenter_width = 320;
     public static final int card_presenter_height = 180;
     private static final int CARD_WIDTH = 313;
     private static final int CARD_HEIGHT = 176;
     private static final int ICON_WIDTH = 144;
-    private static final int ICON_HEIGHT = 144;
+    private static final int ICON_HEIGHT = 144;*/
     private static final int[] attrs =  new int[]{R.attr.brandColor};
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -87,8 +91,7 @@ public class CardPresenter extends Presenter {
                     .load(uri)
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .centerInside()
-                    .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
-                            Utils.convertDpToPixel(mContext, CARD_HEIGHT))
+                    .resize(ICON_WIDTH,ICON_HEIGHT)
                  //   .error(mDefaultCardImage)
                     .into(mImageCardViewTarget);
         }

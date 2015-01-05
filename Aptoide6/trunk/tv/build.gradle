@@ -8,11 +8,12 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+
+
 apply plugin: 'crashlytics'
 
-
 def String packageName = "cm.aptoidetv.pt.".concat(project.STORE_NAME).toLowerCase()
-
+//apply from: '/home/srv/AptoidePriv/signing.gradle'
 repositories{
 
     maven { url 'http://download.crashlytics.com/maven' }
@@ -25,8 +26,8 @@ android {
         applicationId packageName
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 2
-        versionName "0.8rc"
+        versionCode 3
+        versionName "0.9rc"
     }
     buildTypes {
         debug {
