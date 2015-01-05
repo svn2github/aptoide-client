@@ -106,6 +106,16 @@ public class FragmentListStore extends Fragment {
         private String password;
         private String username;
 
+        public Number getOffset() {
+            return offset;
+        }
+
+        public void setOffset(Number offset) {
+            this.offset = offset;
+        }
+
+        private Number offset = 0;
+
         public GetStoreRequest() {
             super(Response.class, Webservice.class);
         }
@@ -166,14 +176,18 @@ public class FragmentListStore extends Fragment {
             api.getApi_params().set(getStore);
             listApps.order_by = sort.getSort();
             listApps.order_dir = sort.getDir();
+            listApps.offset = offset;
 
 
             if(widgetId != null){
                 listApps.datasets.add(refId);
 
                 api.getApi_params().set(listApps);
-
-                return getService().postApk2(api);
+                if(offset.intValue() > 0){
+                    return getService().postApk3(api);
+                }else{
+                    return getService().postApk2(api);
+                }
             }else{
                 return getService().postApk(api);
             }
@@ -191,6 +205,9 @@ public class FragmentListStore extends Fragment {
 
             @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
             Response postApk2(@Body Api user) throws Response.TicketException;
+
+            @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/listApps/")
+            Response postApk3(@Body Api user) throws Response.TicketException;
         }
 
     }
@@ -230,6 +247,9 @@ public class FragmentListStore extends Fragment {
     }
 
     public void setLoading(View view){
+        view.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
+
+        view.findViewById(R.id.error).setVisibility(View.GONE);
         view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
         view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
     }
@@ -237,6 +257,7 @@ public class FragmentListStore extends Fragment {
     private void setError(final View view, final SpiceManager manager, final RequestListener requestListener, final SpiceRequest request){
         view.findViewById(R.id.error).setVisibility(View.VISIBLE);
         view.findViewById(R.id.swipe_container).setVisibility(View.GONE);
+        view.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
         view.findViewById(R.id.empty).setVisibility(View.GONE);
         view.findViewById(R.id.retry).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +275,8 @@ public class FragmentListStore extends Fragment {
         request = new GetStoreRequest();
         StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
         request.setSort(sort);
+        items.clear();
+        rRiew.getAdapter().notifyDataSetChanged();
 
         if(getArguments().containsKey("username")){
             request.setUsername(getArguments().getString("username"));
@@ -267,13 +290,20 @@ public class FragmentListStore extends Fragment {
             request.setRefId(getArguments().getString("refid"));
         }
 
-        manager.execute(request, getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , expire, listener);
+        manager.execute(request, offset + getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , expire, listener);
 
     }
 
+    private int previousTotal = 0;
+    private int offset;
 
+    private boolean loading = true;
+    private int visibleThreshold = 5;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
 
     RequestListener<Response> listener = new RequestListener<Response>() {
+
+
         @Override
         public void onRequestFailure(SpiceException spiceException) {
 
@@ -299,23 +329,41 @@ public class FragmentListStore extends Fragment {
         }
 
         @Override
-        public void onRequestSuccess(Response response) {
+        public void onRequestSuccess(final Response response) {
             ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
 
 
             try {
-                List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
+
+                List<Response.GetStore.Widgets.Widget> list = new ArrayList<>();
+
+                try {
+                    list = response.responses.getStore.datasets.widgets.data.list;
+                }catch (NullPointerException e){
+
+                }
+
+
                 HashMap<String, Response.ListApps.Category> dataset = null;
                 if (response.responses.listApps != null) {
                     dataset = response.responses.listApps.datasets.getDataset();
                 }
+
+
 
                 int hidden = 0;
                 String widgetrefid = getArguments().getString("refid");
                 if (list.isEmpty()) {
 
                     if (dataset != null) {
+
+
                         if (dataset.get(widgetrefid).data != null) {
+                            Response.ListApps.Category category = dataset.get(widgetrefid);
+
+                            if(category !=null && category.data!=null) {
+                                offset = category.data.next;
+                            }
 
                             hidden += dataset.get(widgetrefid).data.hidden;
                             List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
@@ -342,6 +390,8 @@ public class FragmentListStore extends Fragment {
 
                 } else {
 
+
+
                     for (Response.GetStore.Widgets.Widget widget : list) {
 
 
@@ -360,6 +410,12 @@ public class FragmentListStore extends Fragment {
                     if (dataset != null) {
 
                         if (dataset.get(widgetrefid).data != null) {
+
+                            Response.ListApps.Category category = dataset.get(widgetrefid);
+
+                            if(category !=null && category.data!=null) {
+                                offset = category.data.next;
+                            }
 
                             List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
                             hidden += dataset.get(widgetrefid).data.hidden;
@@ -385,7 +441,73 @@ public class FragmentListStore extends Fragment {
                 }
 
                 //string.clear();
-                items.clear();
+
+
+
+
+                rRiew.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
+
+                        Log.d("AptoideAdapter", "scrolling");
+
+                        if(offset>0) {
+
+                            LinearLayoutManager mLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+                            visibleItemCount = mRecyclerView.getChildCount();
+                            totalItemCount = mLayoutManager.getItemCount();
+                            firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+                            if (loading) {
+                                if (totalItemCount > previousTotal) {
+                                    previousTotal = totalItemCount;
+                                }
+                            }
+                            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                                // End has been reached
+                                loading = true;
+
+                                items.add(new StoreListItem() {
+                                    @Override
+                                    public int getItemViewType() {
+                                        return 123456789;
+                                    }
+                                });
+
+                                Log.d("AptoideAdapter", "Adding row");
+
+                                rRiew.getAdapter().notifyItemInserted(rRiew.getAdapter().getItemCount());
+
+                                request = new GetStoreRequest();
+                                StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
+                                request.setSort(sort);
+
+                                if(getArguments().containsKey("username")){
+                                    request.setUsername(getArguments().getString("username"));
+                                    request.setPassword(getArguments().getString("password"));
+                                }
+
+                                request.setOffset(offset);
+                                request.setStore(getArguments().getString("storename"));
+
+                                if(getArguments().containsKey("widgetrefid")){
+                                    request.setWidgetId(getArguments().getString("widgetrefid"));
+                                    request.setRefId(getArguments().getString("refid"));
+                                }
+
+                                manager.execute(request, offset + getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , DurationInMillis.ONE_DAY, listener);
+                                // Do something
+
+                            }
+                        }
+
+                    }
+                });
+
+                if(loading && !items.isEmpty()){
+                    items.remove(items.size() - 1);
+                }
+
                 items.addAll(map);
                 rRiew.getAdapter().notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
@@ -398,8 +520,10 @@ public class FragmentListStore extends Fragment {
                     new AdultHiddenDialog().show(getFragmentManager(), "hiddenadult");
                 }
 
-            }catch (Exception e){
+                loading = false;
 
+            }catch (Exception e){
+                e.printStackTrace();
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     String s = mapper.writeValueAsString(response);
@@ -414,6 +538,7 @@ public class FragmentListStore extends Fragment {
 
         }
     };
+
 
 
     public class WidgetCategory implements StoreListItem{
@@ -540,6 +665,10 @@ public class FragmentListStore extends Fragment {
 
         @Override
         public StoreListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            if(viewType==123456789) {
+                return new StoreListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar, parent, false)) {};
+            }
 
             switch (viewType){
                 case 0:
@@ -783,12 +912,6 @@ public class FragmentListStore extends Fragment {
 
 
         }
-
-
-
-
-
-
 
     }
 
