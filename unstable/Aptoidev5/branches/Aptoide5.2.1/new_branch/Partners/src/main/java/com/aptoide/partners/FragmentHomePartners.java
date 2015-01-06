@@ -18,7 +18,7 @@ public class FragmentHomePartners extends FragmentHome {
         if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitch()){
             mergeAdapter.setActive(adultSwitchView, true);
         }else {
-            Log.d("FragmentHomePartners", "don't show adult content switch");
+            Log.d("pois", "don't show adult content switch");
             mergeAdapter.setActive(adultSwitchView, false);
         }
     }

@@ -32,16 +32,19 @@ android {
         pickFirst 'META-INF/LGPL2.1'
     }
 
-
+    dexOptions{
+        javaMaxHeapSize  "3g"
+    }
     buildTypes{
         debug {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
-            zipAlign true
+            zipAlignEnabled true
         }
         release {
-            runProguard true
+            minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
 //           signingConfig signingConfigs.release
         }
 

@@ -330,22 +330,21 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             adapter.addAdapter(searchAdapterapks);
             adapter.setActive(searchResultsLabel, false);
 
+            if( ((SearchManager)getActivity()).isSearchMoreVisible()) {
+                adapter.addView(v);
+                adapter.setActive(v, false);
 
-            adapter.addView(v);
-            adapter.setActive(v, false);
-
+            }
 
             adapter.addAdapter(searchAdapterapks2);
 
             adapter.addView(pb);
             adapter.setActive(pb, false);
 
-            adapter.addView(v2);
-            adapter.setActive(v2, false);
-
-
-
-
+            if( ((SearchManager)getActivity()).isSearchMoreVisible()){
+                adapter.addView(v2);
+                adapter.setActive(v2, false);
+            }
         }
 
         @Override
