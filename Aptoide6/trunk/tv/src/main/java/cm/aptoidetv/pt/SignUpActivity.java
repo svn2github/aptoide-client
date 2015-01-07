@@ -22,6 +22,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.HashMap;
 import java.util.Locale;
 
+import cm.aptoidetv.pt.Dialogs.ProgressDialogFragment;
 import cm.aptoidetv.pt.Model.Error;
 import cm.aptoidetv.pt.SecurePrefs.SecurePreferences;
 import cm.aptoidetv.pt.WebServices.HttpService;

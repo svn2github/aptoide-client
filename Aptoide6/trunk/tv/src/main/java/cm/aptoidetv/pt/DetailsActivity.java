@@ -1,5 +1,6 @@
 package cm.aptoidetv.pt;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -12,15 +13,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -33,18 +38,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoidetv.pt.Dialogs.ProgressDialogFragment;
+import cm.aptoidetv.pt.Dialogs.UsernameDialog;
 import cm.aptoidetv.pt.Model.Comment;
 import cm.aptoidetv.pt.Model.GetApkInfoJson;
 import cm.aptoidetv.pt.Model.MediaObject;
 import cm.aptoidetv.pt.Model.Screenshot;
 import cm.aptoidetv.pt.Model.Video;
+import cm.aptoidetv.pt.WebServices.old.AddCommentRequest;
+import cm.aptoidetv.pt.WebServices.old.AddLikeRequest;
 import cm.aptoidetv.pt.WebServices.HttpService;
+import cm.aptoidetv.pt.WebServices.old.AptoideUtils;
 import cm.aptoidetv.pt.WebServices.old.GetApkInfoRequestFromMd5;
+import cm.aptoidetv.pt.WebServices.old.UpdateUserRequest;
+import cm.aptoidetv.pt.WebServices.old.json.GenericResponseV2;
 
-public class DetailsActivity extends Activity {
+public class DetailsActivity extends ActionBarActivity {
 
     private DownloadManager downloadmanager;
 
+    public static final String CACHEKEYLikeRequest = "CK";
     public static final String PACKAGE_NAME = "packageName";
     public static final String FEATURED_GRAPHIC = "featuredGraphic";
     public static final String APP_NAME = "name";
@@ -55,7 +68,7 @@ public class DetailsActivity extends Activity {
     public static final String APP_ICON = "icon";
     public static final String APP_SIZE = "size";
 
-    private String packageName, featuredGraphic, appName,download_URL, downloads, vercode, md5sum, icon, size;
+    private String packageName, featuredGraphic, appName,download_URL, downloads, verName, md5sum, icon, size;
 
     private ImageView app_icon;
     private Button download;
@@ -74,11 +87,12 @@ public class DetailsActivity extends Activity {
     private LinearLayout commentsLayout;
     private View app_view_details_layout;
     private View loading_pb;
+    private EditText editText_addcomment;
 
 //    private TextView noComments;
 
     private SpiceManager manager = new SpiceManager(HttpService.class);
-
+    final private  DetailsActivity activity =this;
     @Override
     public void onStart() {
         super.onStart();
@@ -92,6 +106,7 @@ public class DetailsActivity extends Activity {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Base_Theme_AppCompat);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
@@ -100,7 +115,6 @@ public class DetailsActivity extends Activity {
         appName = getIntent().getStringExtra(APP_NAME);
         downloads = getIntent().getStringExtra(DOWNLOADS);
         download_URL = getIntent().getStringExtra(DOWNLOAD_URL);
-        vercode = getIntent().getStringExtra(VERCODE);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
         size = getIntent().getStringExtra(APP_SIZE);
@@ -126,10 +140,10 @@ public class DetailsActivity extends Activity {
         commentsLayout = (LinearLayout) findViewById(R.id.layout_comments);
 //        noComments = (TextView) findViewById(R.id.no_comments);
         commentsContainer = (LinearLayout) findViewById(R.id.comments_container);
-
+        editText_addcomment = (EditText) findViewById(R.id.editText_addcomment);
 
         if(icon==null) {
-            Picasso.with(DetailsActivity.this)
+            Picasso.with(this)
                     .load(icon)
                     .error(R.drawable.icon_non_available)
                     .into(app_icon);
@@ -150,7 +164,7 @@ public class DetailsActivity extends Activity {
                 loading_pb.setVisibility(View.GONE);
                 app_view_details_layout.setVisibility(View.VISIBLE);
                 addDownloadButtonListener(apkInfoJson);
-
+                packageName = apkInfoJson.getApk().getPackage();
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
                 if(downloads!=String.valueOf(apkInfoJson.getMeta().getDownloads())){
                     downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
@@ -158,7 +172,8 @@ public class DetailsActivity extends Activity {
                 }
                 if(apkInfoJson.getMeta().getDeveloper()!=null)
                     app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
-                app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
+                verName = apkInfoJson.getApk().getVername();
+                app_version.setText(getString(R.string.version)+": " + verName);
                 app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
                 if(totalRatings>0){
                     rating_bar.setVisibility(View.VISIBLE);
@@ -169,6 +184,9 @@ public class DetailsActivity extends Activity {
                 }else {
                     rating_bar.setVisibility(View.INVISIBLE);
                 }
+                findViewById(R.id.button_like).setOnClickListener(new AddLikeListener(true,manager));
+                findViewById(R.id.button_dont_like).setOnClickListener(new AddLikeListener(false,manager));
+                findViewById(R.id.button_send_comment).setOnClickListener(new AddCommentListener());
                 app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
                 String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
@@ -244,157 +262,6 @@ public class DetailsActivity extends Activity {
         });
     }
 
-
-/*
-
-    private class DetailRowBuilderTask extends AsyncTask<String, Integer, DetailsOverviewRow> {
-        @Override
-        protected DetailsOverviewRow doInBackground(String... application) {
-//            mSelectedApp = application[0];
-
-            DetailsOverviewRow row = null;
-
-            try {
-                GenericUrl url = new GenericUrl("http://webservices.aptoide.com/webservices/3/getApkInfo/"+getString(R.string.defaultstorename)+"/md5sum:" + application[0] + "/json");
-
-                Log.d(TAG, url.toString());
-                HttpRequest httpRequest = AndroidHttp.newCompatibleTransport().createRequestFactory().buildGetRequest(url);
-
-                httpRequest.setParser(new GsonFactory().createJsonObjectParser());
-
-                GetApkInfoJson json = httpRequest.execute().parseAs(GetApkInfoJson.class);
-
-//                Log.d(TAG, json.getMeta().getTitle());
-//                Log.d(TAG, json.getApk().getIconHd());
-//                Log.d(TAG, json.getMeta().getDeveloper().getInfo().getName());
-//                Log.d(TAG, json.getApk().getVername());
-//                Log.d(TAG, json.getMeta().getDownloads()+"");
-//                Log.d(TAG, json.getMeta().getLikevotes().getLikes()+""+json.getMeta().getLikevotes().getDislikes());
-//                Log.d(TAG, json.getMeta().getDescription());
-
-
-                try {
-                    row = new DetailsOverviewRow(json);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            return row;
-        }
-
-
-        @Override
-        protected void onPostExecute(final DetailsOverviewRow detailRow) {
-            if (detailRow == null)
-                return;
-
-            try {
-                loading_pb.setVisibility(View.GONE);
-                app_view_icon_layout.setVisibility(View.VISIBLE);
-                app_view_details_layout.setVisibility(View.VISIBLE);
-
-                final GetApkInfoJson apkInfoJson = (GetApkInfoJson) detailRow.getItem();
-
-                boolean iconHdExistes = !Data.isNull(apkInfoJson.getApk().getIconHd());
-
-                String iconPath;
-
-                if(iconHdExistes){
-                    iconPath = apkInfoJson.getApk().getIconHd();
-                }else{
-                    iconPath = apkInfoJson.getApk().getIcon();
-                }
-
-                Picasso.with(DetailsActivity.this)
-                        .load(iconPath)
-                        .error(R.drawable.icon_non_available)
-                        .into(app_icon);
-//                Log.d(TAG, "Loading icon " + ((GetApkInfoJson) detailRow.getItem()).getApk().getIconHd());
-
-                app_name.setText(apkInfoJson.getMeta().getTitle());
-
-                addDownloadButtonListener(apkInfoJson);
-
-                int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
-
-                app_developer.setText(apkInfoJson.getMeta().getDeveloper().getInfo().getName());
-                app_version.setText(getString(R.string.version)+": " + apkInfoJson.getApk().getVername());
-                app_downloads.setText(getString(R.string.downloads)+": " + apkInfoJson.getMeta().getDownloads());
-                rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
-                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
-                app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
-                String description = apkInfoJson.getMeta().getDescription();
-                app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
-
-                screenshots.removeAllViews();
-                View cell;
-                ArrayList<MediaObject> mediaObjects = apkInfoJson.getMedia().getScreenshotsAndThumbVideo();
-                String imagePath = "";
-                int screenshotIndexToAdd = 0;
-                for (int i = 0; i != mediaObjects.size(); i++) {
-//                    Log.d(TAG, "mediaObjects: " + mediaObjects.get(i).getImageUrl());
-                    cell = getLayoutInflater().inflate(R.layout.row_item_screenshots_gallery, null);
-                    final ImageView imageView = (ImageView) cell.findViewById(R.id.screenshot_image_item);
-                    final ProgressBar progress = (ProgressBar) cell.findViewById(R.id.screenshot_loading_item);
-                    final ImageView play = (ImageView) cell.findViewById(R.id.play_button);
-                    final FrameLayout mediaLayout = (FrameLayout) cell.findViewById(R.id.media_layout);
-
-                    if (mediaObjects.get(i) instanceof Video) {
-                        screenshotIndexToAdd++;
-                        imagePath = mediaObjects.get(i).getImageUrl();
-//                        Log.d(TAG, "VIDEOIMAGEPATH: " + imagePath);
-                        play.setVisibility(View.VISIBLE);
-                        mediaLayout.setForeground(getResources().getDrawable(R.color.overlay_black));
-                        imageView.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
-                        mediaLayout.setOnClickListener(new VideoListener(DetailsActivity.this, ((Video) mediaObjects.get(i)).getVideoUrl()));
-                        //Log.d("FragmentAppView", "VIDEOURL: " + ((Video) mediaObjects.get(i)).getVideoUrl());
-
-
-                    } else if (mediaObjects.get(i) instanceof Screenshot) {
-                        imagePath = Utils.screenshotToThumb(DetailsActivity.this, mediaObjects.get(i).getImageUrl(), ((Screenshot) mediaObjects.get(i)).getOrient());
-//                        Log.d(TAG, "IMAGEPATH: " + imagePath);
-                        imageView.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
-                        mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
-                    }
-
-                    screenshots.addView(cell);
-
-                    Picasso.with(DetailsActivity.this)
-                            .load(imagePath)
-                            .error(R.drawable.icon_non_available)
-                            .into(imageView);
-                }
-
-                List<Comment> comments = ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments();
-//                Log.d(TAG, "comments size: " + comments.size());
-
-//                for(int i=0; i < comments.size(); i++) {
-//                    Log.d(TAG, "comments["+i+"]: " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getComments().get(i).getText());
-//                }
-                FillComments.fillComments(DetailsActivity.this, commentsContainer, comments);
-                commentsLayout.setVisibility(View.VISIBLE);
-                if (comments.size() == 0) {
-                    commentsLayout.setVisibility(View.GONE);
-                    comments_label.setVisibility(View.GONE);
-//                    Log.d(TAG, getString(R.string.no_comments));
-//                    noComments.startAnimation(AnimationUtils.loadAnimation(DetailsActivity.this, android.R.anim.fade_in));
-//                    noComments.setVisibility(View.VISIBLE);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-    }*/
     private PackageInfo getPackageInfo(String package_name){
         try {
             return getPackageManager().getPackageInfo(package_name, PackageManager.GET_SIGNATURES);
@@ -589,6 +456,146 @@ public class DetailsActivity extends Activity {
             } while (loopagain);
             return null;
         }
+    }
+
+    public class AddCommentListener implements View.OnClickListener {
+        private RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
+
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                dismiss();
+            }
+            @Override
+            public void onRequestSuccess(GenericResponseV2 genericResponse) {
+                dismiss();
+                if (genericResponse.getStatus().equals("OK")) {
+                    Toast.makeText(AppTV.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
+                    manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
+                } else {
+                    AptoideUtils.toastError(genericResponse.getErrors());
+                }
+            }
+        };
+        @Override
+        public void onClick(View v) {
+
+            final AccountManager accountManager = AccountManager.get(activity);
+
+            if (accountManager.getAccountsByType(AppTV.getConfiguration().getAccountType()).length > 0) {
+                if (!PreferenceManager.getDefaultSharedPreferences(AppTV.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
+                    String comment = editText_addcomment.getText().toString();
+
+                    if(comment.length()<10){
+                        Toast.makeText(getApplicationContext(), R.string.error_IARG_100, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    AddCommentRequest request = new AddCommentRequest(activity);
+                    request.setApkversion(verName);
+                    request.setPackageName(packageName);
+                    request.setToken(LoginActivity.getToken(activity));
+                    request.setText(comment);
+                    manager.execute(request, addCommentRequestListener);
+                    new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
+                } else {
+                    new UsernameDialog().show(getSupportFragmentManager(), "updateNameDialog");
+                }
+            } else {
+                accountManager.addAccount(AppTV.getConfiguration().getAccountType(), LoginActivity.AUTHTOKEN_TYPE_FULL_ACCESS,
+                        null, null, activity, null, null);
+
+            }
+
+        }
+    }
+
+    public class AddLikeListener implements View.OnClickListener {
+        private final boolean isLike;
+        RequestListener<GenericResponseV2> requestListener = new RequestListener<GenericResponseV2>() {
+
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                dismiss();
+            }
+
+            @Override
+            public void onRequestSuccess(GenericResponseV2 genericResponse) {
+                dismiss();
+                if(genericResponse.getStatus().equals("OK")){
+                    Toast.makeText(AppTV.getContext(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
+                    manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
+                }else{
+                    AptoideUtils.toastError(genericResponse.getErrors());
+                }
+
+            }
+        };
+        private SpiceManager manager;
+
+        public AddLikeListener(boolean isLike,SpiceManager sm) {
+            manager=sm;
+            this.isLike = isLike;
+        }
+
+
+        @Override
+        public void onClick(View v) {
+
+            final AccountManager accountManager = AccountManager.get(activity);
+
+            if (accountManager.getAccountsByType(AppTV.getConfiguration().getAccountType()).length > 0) {
+                addLike();
+            } else {
+                accountManager.addAccount(AppTV.getConfiguration().getAccountType(),
+                        LoginActivity.AUTHTOKEN_TYPE_FULL_ACCESS,
+                        null, null, activity, null, null);
+            }
+
+        }
+
+        private void addLike() {
+            AddLikeRequest request = new AddLikeRequest(activity);
+            request.setApkversion(verName);
+            request.setpackagename(packageName);
+            request.setToken(LoginActivity.getToken(activity));
+            request.setLike(isLike);
+
+            manager.execute(request, CACHEKEYLikeRequest, DurationInMillis.ONE_SECOND, requestListener);
+            new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        }
+    }
+    public void updateUsername(final String username) {
+
+        UpdateUserRequest request = new UpdateUserRequest(this);
+        request.setName(username);
+
+        new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
+        manager.execute(request, new RequestListener<GenericResponseV2>() {
+
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                dismiss();
+            }
+
+            @Override
+            public void onRequestSuccess(GenericResponseV2 createUserJson) {
+                dismiss();
+
+                if (createUserJson.getStatus().equals("OK")) {
+                    Toast.makeText(AppTV.getContext(), R.string.username_success, Toast.LENGTH_LONG).show();
+                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("username", username).commit();
+                } else {
+                    AptoideUtils.toastError(createUserJson.getErrors());
+                }
+
+            }
+        });
+    }
+    private void dismiss(){
+        ProgressDialogFragment pd = (ProgressDialogFragment) getSupportFragmentManager()
+                .findFragmentByTag("pleaseWaitDialog");
+        if(pd!=null)
+            pd.dismissAllowingStateLoss();
     }
 }
 

@@ -22,6 +22,7 @@
     <string name="comments">Comments</string>
     <string name="write_your_comment">Write your comment</string>
     <string name="send_comment">Send comment</string>
+    <string name="opinion_success">Your request was successfully submitted</string>
     <string name="comment_submitted">Your comment was successfuly submitted</string>
     <string name="no_comments">No comments yet. Be the first!</string>
     <string name="install">Install</string>
@@ -37,7 +38,10 @@
     <string name="size">Size</string>
     <string name="ratings">Ratings</string>
     <string name="review">Review</string>
-
+    <string name="create_username">Username</string>
+    <string name="update_username">Update username</string>
+    <string name="username_success">Username updated with success.</string>
+    <string name="please_update_username">Please update your username to insert comment</string>
 
     <!-- Error messages -->
     <string name="failed_to_launch_app">Failed to launch application</string>

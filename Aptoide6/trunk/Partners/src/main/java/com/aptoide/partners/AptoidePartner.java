@@ -1,22 +1,28 @@
 package com.aptoide.partners;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
-import cm.aptoide.ptdev.*;
-import cm.aptoide.ptdev.AptoideThemePicker;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
+
 import com.crashlytics.android.Crashlytics;
+
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.HashMap;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.AptoideThemePicker;
+import cm.aptoide.ptdev.preferences.ManagerPreferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 /**
  * Created by tdeus on 12/23/13.
@@ -72,14 +78,6 @@ public class AptoidePartner extends Aptoide {
                             BufferedInputStream is = new BufferedInputStream(new URL("http://" + AptoideConfigurationPartners.DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
                             AptoideConfigurationPartners.parseBootConfigStream(is);
                         }
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    } catch (SAXException e) {
-                        e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -126,14 +124,6 @@ public class AptoidePartner extends Aptoide {
                                 BufferedInputStream is = new BufferedInputStream(new URL("http://" + AptoideConfigurationPartners.DEFAULTSTORENAME + ".store.aptoide.com/boot_config.xml").openStream());
                                 AptoideConfigurationPartners.parseBootConfigStream(is);
                             }
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
-                        } catch (SAXException e) {
-                            e.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -142,12 +132,6 @@ public class AptoidePartner extends Aptoide {
 
 
                 AptoideConfigurationPartners.savePreferences();
-
-
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -167,10 +151,7 @@ public class AptoidePartner extends Aptoide {
             }
 
         }
-
-
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitchValue()).commit();
-
     }
 
 

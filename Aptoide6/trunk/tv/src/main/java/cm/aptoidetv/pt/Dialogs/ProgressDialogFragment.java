@@ -1,4 +1,4 @@
-package cm.aptoidetv.pt;
+package cm.aptoidetv.pt.Dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import cm.aptoidetv.pt.R;
 
 /**
  * Created with IntelliJ IDEA.

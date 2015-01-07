@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="partnertype">premium</string>
+<!--    <string name="partnertype">premium</string>
     <string name="partnerid">7315ac8862b6cbefc2decd8b02b4ca42</string>
     <string name="marketname">Mediavision Market</string>
     <string name="defaultstorename">mediavision</string>
@@ -15,16 +15,15 @@
     <string name="view">list</string>
     <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
     <string name="search_authority">cm.aptoidetv.pt.geniatechapps.SearchAuthority</string>
-    <bool name="showsplash">true</bool><string name="splashcolor">#FFFFFFFF</string>
-<!--
+    <bool name="showsplash">true</bool><string name="splashcolor">#FFFFFFFF</string>-->
 
-    &lt;!&ndash;Store Config&ndash;&gt;
+    <!--Store Config-->
     <string name="theme">default</string>
     <string name="avatar">https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</string>
     <string name="view">list</string>
     <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
 
-    &lt;!&ndash;Partner Config&ndash;&gt;
+    <!--Partner Config-->
     <string name="partnertype">premium</string>
     <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
     <string name="marketname">Aptoide TV</string>
@@ -41,8 +40,7 @@
     <bool name="showsplash">true</bool>
     <string name="splashcolor">#FFe98023</string>
 
-    &lt;!&ndash;Project Config&ndash;&gt;
+    <!--Project Config-->
     <string name="search_authority">cm.aptoidetv.pt.aptoidetv.SearchAuthority</string>
--->
 
 </resources>

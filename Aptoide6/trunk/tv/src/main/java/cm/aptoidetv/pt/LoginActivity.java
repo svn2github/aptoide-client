@@ -7,6 +7,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -53,6 +54,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
+import cm.aptoidetv.pt.Dialogs.ProgressDialogFragment;
 import cm.aptoidetv.pt.Model.Error;
 import cm.aptoidetv.pt.SecurePrefs.SecurePreferences;
 import cm.aptoidetv.pt.WebServices.HttpService;
@@ -710,6 +712,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static String getToken(Context c){
+        return SecurePreferences.getInstance().getString("access_token",null);
     }
 }
 

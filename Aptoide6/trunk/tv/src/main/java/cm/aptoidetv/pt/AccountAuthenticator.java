@@ -166,6 +166,5 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         mContext.stopService(new Intent(mContext, RabbitMqService.class));
 
         return result;
-
     }
 }
