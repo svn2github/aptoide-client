@@ -121,6 +121,7 @@ public class MoreActivity extends ActionBarActivity {
         private boolean loading = true;
         private int visibleThreshold = 5;
         int firstVisibleItem, visibleItemCount, totalItemCount;
+        public int total;
 
         @Override
         public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
@@ -185,7 +186,7 @@ public class MoreActivity extends ActionBarActivity {
                                 previousTotal = totalItemCount;
                             }
                         }
-                        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold) && offset < total) {
                             // End has been reached
                             loading = true;
                             TestRequest request = new TestRequest();
@@ -211,6 +212,8 @@ public class MoreActivity extends ActionBarActivity {
             final TestRequest request = new TestRequest();
 
             requestListener = new RequestListener<Response>() {
+
+
 
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
@@ -256,6 +259,7 @@ public class MoreActivity extends ActionBarActivity {
                         if(category !=null && category.data!=null) {
 
                             offset = category.data.next;
+                            total = category.data.total;
 
                             ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(category.data.list);
 

@@ -1,12 +1,13 @@
 package openiab.webservices;
 
 import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.webservices.OauthErrorHandler;
 import cm.aptoide.ptdev.webservices.WebserviceOptions;
-import openiab.webservices.json.IabConsumeJson;
 import openiab.webservices.json.IabPurchaseStatusJson;
 import retrofit.RetrofitError;
 import retrofit.http.FieldMap;
@@ -29,6 +30,10 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         @POST("/webservices.aptoide.com/webservices/3/processInAppBilling")
         @FormUrlEncoded
         IabPurchaseStatusJson processInAppBilling(@FieldMap HashMap<String, String> args);
+
+        @POST("/webservices.aptoide.com/webservices/3/checkProductPayment")
+        @FormUrlEncoded
+        IabPurchaseStatusJson checkProductPayment(@FieldMap HashMap<String, String> args);
     }
 
 
@@ -117,7 +122,12 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         IabPurchaseStatusJson response = null;
 
         try{
-            response = getService().processInAppBilling(parameters);
+
+
+            response = executeRequest(getService(), parameters);
+
+
+
         }catch (RetrofitError error){
             OauthErrorHandler.handle(error);
         }
@@ -125,6 +135,8 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         return response;
 
     }
+
+    abstract IabPurchaseStatusJson executeRequest(Webservice webervice, HashMap<String, String> parameters);
 
     abstract String getReqType();
 

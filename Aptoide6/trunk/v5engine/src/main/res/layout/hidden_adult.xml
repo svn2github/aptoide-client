@@ -5,7 +5,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="@string/hidden_adult" style="?android:textAppearanceMedium"/>
+        android:layout_height="wrap_content" android:text="@string/hidden_adult" android:textAppearance="@android:style/TextAppearance"/>
 
     <CheckBox
         android:layout_width="match_parent" android:id="@+id/dontshow_checkbox"

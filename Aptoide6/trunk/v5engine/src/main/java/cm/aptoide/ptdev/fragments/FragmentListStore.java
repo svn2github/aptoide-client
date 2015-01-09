@@ -290,7 +290,7 @@ public class FragmentListStore extends Fragment {
             request.setRefId(getArguments().getString("refid"));
         }
 
-        manager.execute(request, offset + getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , expire, listener);
+        manager.execute(request, 0 + getArguments().getString("storename") + sort.getDir() + sort.getSort() + getArguments().getString("widgetrefid") + getArguments().getString("refid") + getSharedPreferences().getBoolean("matureChkBox", true) , expire, listener);
 
     }
 
@@ -301,30 +301,44 @@ public class FragmentListStore extends Fragment {
     private int visibleThreshold = 5;
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
+    private int total;
     RequestListener<Response> listener = new RequestListener<Response>() {
 
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
 
-            if(spiceException instanceof NoNetworkException){
+            if(items.isEmpty()) {
 
-                view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                view.findViewById(R.id.list).setVisibility(View.GONE);
-                view.findViewById(R.id.no_network_connection).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.retry_no_network).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        manager.execute(request, listener);
-                        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
-                        view.findViewById(R.id.list).setVisibility(View.GONE);
-                        view.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
-                    }
-                });
+                if (spiceException instanceof NoNetworkException) {
 
-            } else {
+                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                    view.findViewById(R.id.list).setVisibility(View.GONE);
+                    view.findViewById(R.id.no_network_connection).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.retry_no_network).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            manager.execute(request, listener);
+                            view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.list).setVisibility(View.GONE);
+                            view.findViewById(R.id.no_network_connection).setVisibility(View.GONE);
+                        }
+                    });
 
-                setError(view, manager, listener, request);
+                } else {
+
+                    setError(view, manager, listener, request);
+                }
+
+            }else{
+                if(loading){
+                    items.remove(items.size() - 1);
+                }
+
+                rRiew.getAdapter().notifyDataSetChanged();
+                swipeLayout.setRefreshing(false);
+                loading = false;
+
             }
         }
 
@@ -363,6 +377,7 @@ public class FragmentListStore extends Fragment {
 
                             if(category !=null && category.data!=null) {
                                 offset = category.data.next;
+                                total = category.data.total;
                             }
 
                             hidden += dataset.get(widgetrefid).data.hidden;
@@ -415,6 +430,7 @@ public class FragmentListStore extends Fragment {
 
                             if(category !=null && category.data!=null) {
                                 offset = category.data.next;
+                                total = category.data.total;
                             }
 
                             List<Response.ListApps.Apk> apksList = dataset.get(widgetrefid).data.list;
@@ -449,7 +465,7 @@ public class FragmentListStore extends Fragment {
                     @Override
                     public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
 
-                        Log.d("AptoideAdapter", "scrolling");
+                        Log.d("AptoideAdapter", "scrolling" + " " + offset + " " + total);
 
                         if(offset>0) {
 
@@ -463,7 +479,7 @@ public class FragmentListStore extends Fragment {
                                     previousTotal = totalItemCount;
                                 }
                             }
-                            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold) && offset < total) {
                                 // End has been reached
                                 loading = true;
 
@@ -474,7 +490,6 @@ public class FragmentListStore extends Fragment {
                                     }
                                 });
 
-                                Log.d("AptoideAdapter", "Adding row");
 
                                 rRiew.getAdapter().notifyItemInserted(rRiew.getAdapter().getItemCount());
 

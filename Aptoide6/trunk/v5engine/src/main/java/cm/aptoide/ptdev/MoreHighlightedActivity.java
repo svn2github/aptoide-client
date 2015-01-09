@@ -150,6 +150,7 @@ public class MoreHighlightedActivity extends ActionBarActivity {
 
 
                         view.findViewById(R.id.error).setVisibility(View.GONE);
+                        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
                         view.findViewById(R.id.swipe_container).setVisibility(View.VISIBLE);
 
                     }
