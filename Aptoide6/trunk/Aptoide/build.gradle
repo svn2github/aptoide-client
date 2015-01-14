@@ -44,7 +44,7 @@ android {
             minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
             zipAlignEnabled true
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
 
         }
 
