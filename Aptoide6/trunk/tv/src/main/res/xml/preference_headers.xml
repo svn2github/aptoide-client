@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header
+        android:fragment="cm.aptoidetv.pt.SettingsWHeaders$SettingHWspecs"
+        android:title="@string/setting_hwspecstitle"
+        android:summary="@string/setting_hwspecssum" />
+    <header
+        android:fragment="cm.aptoidetv.pt.SettingsWHeaders$SettingClearMemory"
+        android:title="@string/setting_clear_memory"
+        android:summary="@string/setting_clear_memorysum" >
+        <!-- key/value pairs can be included as arguments for the fragment.
+        <extra android:name="someKey" android:value="someHeaderValue" />-->
+    </header>
+    <header
+        android:fragment="cm.aptoidetv.pt.SettingsWHeaders$FragmentAbout"
+        android:title="@string/about_us"
+        android:summary="@string/about_us" >
+        <!-- key/value pairs can be included as arguments for the fragment.
+        <extra android:name="someKey" android:value="someHeaderValue" />-->
+    </header>
+</preference-headers>

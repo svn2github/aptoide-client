@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+    <string name="aptoide_email"> aptoide@aptoide.com</string>
+
+    <string name="aptoide_version">Version 0.9rc</string>
+    <string name="aptoide_brand">APTOiDE</string>
+
+    <string name="credits">
+    \tAptoide Android Native Team:\n\n
+    \t\t Rui Mateus\n
+    \t\t rui.mateus [at] aptoide.com\n\n
+    \t\t Teresa Deus\n
+    \t\t teresa.deus [at] aptoide.com\n\n
+    \t\t André Santos\n
+    \t\t andre.santos [at] aptoide.com\n\n
+
+    \tThank you to our Translators Team:\n\n
+    \t\t
+
+    Albanian: Eni Çuçka |
+    Arabic: Zuheir Sharafeldin, Ahmed Sami, ذوالفقار الزاملي, Yassine Nacer, Manaa Alshihe, Mohamed Gorrab, Omarioamriky |
+    Bosnian/Serbian: Rijad Spahic, Toni Grubisic  |
+    Catalan: Francisco Villalba Segarra, Marc Bres Gil |
+    Croatian: Rijad Spahic, Toni Grubisic, Roko Jurjevic |
+    Chinese: Junying Li, Theodore Wte, Xue Yao |
+    Czech: Jan Krumpholc |
+    Dutch: Shane Kloosterman, Jehan Bont, Ismail Gürol Celiktas, Stefan de Jong |
+    Finnish: Sami Kuusisto, Allu Saarinen |
+    French: Guillaume NV, Ultrapeer, Damien Mallard, Alexis Bonvin |
+    Georgian: Sandro Kakabadze |
+    German: Manuel Stroh, Marlon Bruske, Benny La, Simon Grabert, Robert Reep, Martin Nehrdich, Michael Mayer, Lionel Wyser |
+    Greek: Basileios Pitas |
+    Hebrew: שלו מויאל , David Liron, shiranbfree |
+    Indonesian: Adi Juarsa |
+    Italian: Rapper Skull, Arshdeep Singh, Pavo Baxter, Gabry Carne, Simili Giuseppe, Damiano Chiacchiaretta |
+    Lithuanian: Saulius Pranckevicius, Titus Virbickas |
+    Persian:  Mehrdad Allahkarami |
+    Polish: Trurl, Artur Stempkowski, Stanislaw, Tomasz Gregorczyk |
+    Portuguese (Brazil): Caio Fonseca, Juanito Silva, Paulo Henrique, Marchus Santos, Maurilio Filho, Edu Salgado |
+ 	Portuguese (Portugal): Joao Redondo |
+ 	Romanian: Munteanu Ovidiu, Heim Bogdan, Tudor Bobei |
+    Russian: Anton Tkachenko, Leonid Bogolubov, Kanat Yesseyev |
+    Spanish: Ronnie Simon, jvnski, Denis Arroyabe, Francisco Villalba Segarra, Jorge Conde, Pablo Cardozo, Luis Orellana |
+    Turkish: Ultrapeer, Zeynal Zeynalov, Emre Tosunkaya
+ 	</string>
+
+</resources>

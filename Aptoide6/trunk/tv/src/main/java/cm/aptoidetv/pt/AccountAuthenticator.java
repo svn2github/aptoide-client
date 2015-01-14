@@ -17,9 +17,6 @@ import cm.aptoidetv.pt.SecurePrefs.SecurePreferences;
 import cm.aptoidetv.pt.WebServices.old.RabbitMqService;
 
 
-/**
- * Created by brutus on 09-12-2013.
- */
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     private String TAG = "UdinicAuthenticator";

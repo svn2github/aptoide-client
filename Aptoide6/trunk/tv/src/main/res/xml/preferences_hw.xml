@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+            android:key="hwspecs"
+            android:summary="@string/setting_hwspecssum"
+            android:title="@string/setting_hwspecstitle"/>
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="hwspecsChkBox"
+            android:summary="@string/setting_appfiltersum"
+            android:title="@string/setting_appfiltertitle" />
+</PreferenceScreen>

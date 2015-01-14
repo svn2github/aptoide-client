@@ -92,7 +92,7 @@ public class FragmentComments extends ListFragment {
 //        view.setOnClickListener(getMoreCommentsListener(comment, subcommentsContainer, viewComments));
     }
 
-    private static View.OnClickListener getMoreCommentsListener(final Comment comment, final LinearLayout subcommentsContainer, final TextView viewComments) {
+/*    private static View.OnClickListener getMoreCommentsListener(final Comment comment, final LinearLayout subcommentsContainer, final TextView viewComments) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,5 +109,5 @@ public class FragmentComments extends ListFragment {
                 subcommentsContainer.setVisibility(visibility);
             }
         };
-    }
+    }*/
 }

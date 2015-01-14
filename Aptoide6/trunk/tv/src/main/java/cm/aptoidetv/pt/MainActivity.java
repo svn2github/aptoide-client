@@ -22,6 +22,7 @@ public class MainActivity extends Activity implements RequestsTvListener {
     public void onCreate(Bundle savedInstanceState) {
         Init();
         ThemePicker.setThemePicker(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 

@@ -33,6 +33,7 @@ import cm.aptoidetv.pt.Model.ApplicationAPK;
 import cm.aptoidetv.pt.Model.BindInterface;
 import cm.aptoidetv.pt.Model.EditorsChoice;
 import cm.aptoidetv.pt.Model.Settingitem.MyaccountItem;
+import cm.aptoidetv.pt.Model.Settingitem.PreferencesItem;
 import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.RequestTV;
 import cm.aptoidetv.pt.WebServices.Response;
@@ -155,7 +156,7 @@ public class MainFragment extends BrowseFragment{
                         final String settings = getString(R.string.settings);
                         ArrayObjectAdapter listsettingsAdapter = new ArrayObjectAdapter(cardPresenter);
                         listsettingsAdapter.add(new MyaccountItem());
-                        //listsettingsAdapter.add(new PreferencesItem());
+                        listsettingsAdapter.add(new PreferencesItem());
                         HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, settings, null);
                         mRowsAdapter.add(new ListRow(header, listsettingsAdapter));
                     }

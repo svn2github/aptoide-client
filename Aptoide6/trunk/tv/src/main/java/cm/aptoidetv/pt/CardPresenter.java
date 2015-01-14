@@ -87,7 +87,8 @@ public class CardPresenter extends Presenter {
         }
 
         protected void updateCardViewImage(String uri) {
-            Picasso.with(mContext)
+            //Picasso.with(mContext)
+            AppTV.getPicasso()
                     .load(uri)
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .centerInside()

@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,9 +46,9 @@ import cm.aptoidetv.pt.Model.GetApkInfoJson;
 import cm.aptoidetv.pt.Model.MediaObject;
 import cm.aptoidetv.pt.Model.Screenshot;
 import cm.aptoidetv.pt.Model.Video;
+import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.old.AddCommentRequest;
 import cm.aptoidetv.pt.WebServices.old.AddLikeRequest;
-import cm.aptoidetv.pt.WebServices.HttpService;
 import cm.aptoidetv.pt.WebServices.old.AptoideUtils;
 import cm.aptoidetv.pt.WebServices.old.GetApkInfoRequestFromMd5;
 import cm.aptoidetv.pt.WebServices.old.UpdateUserRequest;
@@ -56,6 +57,7 @@ import cm.aptoidetv.pt.WebServices.old.json.GenericResponseV2;
 public class DetailsActivity extends ActionBarActivity {
 
     private DownloadManager downloadmanager;
+    private long downloadID;
 
     public static final String CACHEKEYLikeRequest = "CK";
     public static final String PACKAGE_NAME = "packageName";
@@ -71,7 +73,8 @@ public class DetailsActivity extends ActionBarActivity {
     private String packageName, featuredGraphic, appName,download_URL, downloads, verName, md5sum, icon, size;
 
     private ImageView app_icon;
-    private Button download;
+    private Button downloadButton;
+    private Button canceldownloadButton;
     private TextView app_name;
     private TextView app_developer;
     private TextView app_version;
@@ -104,6 +107,13 @@ public class DetailsActivity extends ActionBarActivity {
         super.onStop();
         manager.shouldStop();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelDownload();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Base_Theme_AppCompat);
@@ -123,7 +133,7 @@ public class DetailsActivity extends ActionBarActivity {
         loading_pb = findViewById(R.id.loading_pb);
 
         app_icon = (ImageView) findViewById(R.id.app_icon);
-        download = (Button) findViewById(R.id.download);
+        downloadButton = (Button) findViewById(R.id.download);
         app_name = (TextView) findViewById(R.id.app_name);
         if(appName!=null)
             app_name.setText(appName);
@@ -225,7 +235,7 @@ public class DetailsActivity extends ActionBarActivity {
                         mediaLayout.setOnClickListener(new ScreenShotsListener(DetailsActivity.this, new ArrayList<String>(apkInfoJson.getMedia().getScreenshots()), i - screenshotIndexToAdd));
                     }
                     screenshots.addView(cell);
-                    Picasso.with(DetailsActivity.this)
+                    AppTV.getPicasso()
                             .load(imagePath)
                             .error(R.drawable.icon_non_available)
                             .into(imageView);
@@ -273,10 +283,10 @@ public class DetailsActivity extends ActionBarActivity {
 
         final Intent i = getPackageManager().getLaunchIntentForPackage(packageName);
 
-        download.setText(getString(R.string.open));
+        downloadButton.setText(getString(R.string.open));
 
         if (i != null) {
-            download.setOnClickListener(new View.OnClickListener() {
+            downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
@@ -287,7 +297,7 @@ public class DetailsActivity extends ActionBarActivity {
                 }
             });
         } else {
-            download.setEnabled(false);
+            downloadButton.setEnabled(false);
         }
     }
     private void addDownloadButtonListener(final GetApkInfoJson ApkInfoJson){
@@ -296,38 +306,58 @@ public class DetailsActivity extends ActionBarActivity {
             changebtInstalltoOpen(ApkInfoJson.getApk().getPackage());
         } else {
             if(info!=null)
-                download.setText(getString(R.string.update));
-            download.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String servicestring = Context.DOWNLOAD_SERVICE;
+                downloadButton.setText(getString(R.string.update));
+                downloadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String servicestring = Context.DOWNLOAD_SERVICE;
 
-                    downloadmanager = (DownloadManager) getSystemService(servicestring);
+                        downloadmanager = (DownloadManager) getSystemService(servicestring);
 
-                    Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
+                        Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
 
-                    DownloadManager.Request request = new DownloadManager.Request(uri);
-                    String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
-                    new updateDownLoadInfoTask().execute(APKpath);
-                    request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
+                        new updateDownLoadInfoTask().execute(APKpath);
+                        request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
 //                    Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
 
-                    //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                    request.setAllowedOverRoaming(false);
-                    request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
+                        //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                        request.setAllowedOverRoaming(false);
+                        request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
 //                  Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
 
 
-                    request.setDestinationInExternalPublicDir("apks", APKpath);
+
+
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                        request.setDestinationInExternalPublicDir("apks", APKpath);
 
 //                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
 
-                    downloadmanager.enqueue(request);
-                    //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                    //isRegistered = true;
-                }
-            });
+                        downloadID = downloadmanager.enqueue(request);
+                        //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                        //isRegistered = true;
+                    }
+                });
         }
+    }
+
+    public void cancelDownload(View v){
+        if(downloadmanager.remove(downloadID)>0){
+            restoreDownloadButton();
+        }
+    }
+    private void cancelDownload() {
+        if(downloadmanager!=null)
+            downloadmanager.remove(downloadID);
+    }
+
+    private void restoreDownloadButton(){
+        downloading_progress.setVisibility(View.GONE);
+        downloading_info.setVisibility(View.GONE);
+        canceldownloadButton.setVisibility(View.GONE);
+        downloadButton.setVisibility(View.VISIBLE);
     }
 
     public View fillComments(Activity activity, LinearLayout commentsContainer, List<Comment> comments) {
@@ -335,6 +365,7 @@ public class DetailsActivity extends ActionBarActivity {
         View view;
         View viewtoRet=null;
         commentsContainer.removeAllViews();
+
         for (Comment comment : FragmentComments.getCompoundedComments(comments)) {
             view = FragmentComments.createCommentView(activity, commentsContainer, comment, dateFormater);
             commentsContainer.addView(view);
@@ -391,14 +422,15 @@ public class DetailsActivity extends ActionBarActivity {
             downloading_progress.setVisibility(View.VISIBLE);
             downloading_info = (TextView) findViewById(R.id.downloading_info);
             downloading_info.setVisibility(View.VISIBLE);
-            download.setVisibility(View.GONE);
+            canceldownloadButton = (Button) findViewById(R.id.canceldownloadButton);
+            canceldownloadButton.setVisibility(View.VISIBLE);
+            downloadButton.setVisibility(View.GONE);
+
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            downloading_progress.setVisibility(View.GONE);
-            downloading_info.setVisibility(View.GONE);
-            download.setVisibility(View.VISIBLE);
+            restoreDownloadButton();
         }
 
         @Override
@@ -411,9 +443,9 @@ public class DetailsActivity extends ActionBarActivity {
         @Override
         protected Void doInBackground(String... path) {
             boolean loopagain = true;
-            do {
+            while (loopagain) {
                 DownloadManager.Query query = new DownloadManager.Query();
-
+                query.setFilterById(downloadID);
                 Cursor c = downloadmanager.query(query);
 
                 if (c.moveToFirst()) {
@@ -432,50 +464,65 @@ public class DetailsActivity extends ActionBarActivity {
                             break;
                         case DownloadManager.STATUS_SUCCESSFUL:
                             try {
-
+                                Log.d("pois","deu SUCCESSFUL:");
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
 
                                 String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                                intent.setDataAndType(Uri.fromFile(new File(absolutePath + "/apks/" + path[0])), "application/vnd.android.package-archive");
+                                File apk = new File(absolutePath + "/apks/" + path[0]);
+                                if(!apk.exists()){
+                                    Log.d("pois","Nao existe!");
+                                    loopagain = false;
+                                    break;
+                                }
+                                intent.setDataAndType(Uri.fromFile(apk), "application/vnd.android.package-archive");
 
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);
 
                             } catch (Exception e) {
+                                Log.d("pois","deu exception");
                                 e.printStackTrace();
                             }
                         case DownloadManager.STATUS_FAILED:
+                            Log.d("pois","deu Fail");
                             loopagain = false;
                             break;
                     }
                 }
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-            } while (loopagain);
+                //Uri myDownloads = Uri.parse( "content://downloads/my_downloads" );
+            }
             return null;
         }
     }
 
-    public class AddCommentListener implements View.OnClickListener {
-        private RequestListener<GenericResponseV2> addCommentRequestListener = new RequestListener<GenericResponseV2>() {
+    public class DARequestListener implements RequestListener<GenericResponseV2> {
+        private int msg;
+        DARequestListener(int msgID){
+            msg=msgID;
+        }
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            dismiss();
+        }
 
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                dismiss();
+        @Override
+        public void onRequestSuccess(GenericResponseV2 genericResponse) {
+            dismiss();
+            if (genericResponse.getStatus().equals("OK")) {
+                Toast.makeText(AppTV.getContext(), getString(msg), Toast.LENGTH_LONG).show();
+                manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
+            } else {
+                AptoideUtils.toastError(genericResponse.getErrors());
             }
-            @Override
-            public void onRequestSuccess(GenericResponseV2 genericResponse) {
-                dismiss();
-                if (genericResponse.getStatus().equals("OK")) {
-                    Toast.makeText(AppTV.getContext(), getString(R.string.comment_submitted), Toast.LENGTH_LONG).show();
-                    manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
-                } else {
-                    AptoideUtils.toastError(genericResponse.getErrors());
-                }
-            }
-        };
+        }
+    }
+
+    public class AddCommentListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
 
@@ -495,7 +542,7 @@ public class DetailsActivity extends ActionBarActivity {
                     request.setPackageName(packageName);
                     request.setToken(LoginActivity.getToken(activity));
                     request.setText(comment);
-                    manager.execute(request, addCommentRequestListener);
+                    manager.execute(request,CACHEKEYLikeRequest, DurationInMillis.ONE_SECOND, new DARequestListener(R.string.comment_submitted));
                     new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
                 } else {
                     new UsernameDialog().show(getSupportFragmentManager(), "updateNameDialog");
@@ -511,25 +558,6 @@ public class DetailsActivity extends ActionBarActivity {
 
     public class AddLikeListener implements View.OnClickListener {
         private final boolean isLike;
-        RequestListener<GenericResponseV2> requestListener = new RequestListener<GenericResponseV2>() {
-
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                dismiss();
-            }
-
-            @Override
-            public void onRequestSuccess(GenericResponseV2 genericResponse) {
-                dismiss();
-                if(genericResponse.getStatus().equals("OK")){
-                    Toast.makeText(AppTV.getContext(), getString(R.string.opinion_success), Toast.LENGTH_LONG).show();
-                    manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
-                }else{
-                    AptoideUtils.toastError(genericResponse.getErrors());
-                }
-
-            }
-        };
         private SpiceManager manager;
 
         public AddLikeListener(boolean isLike,SpiceManager sm) {
@@ -560,7 +588,7 @@ public class DetailsActivity extends ActionBarActivity {
             request.setToken(LoginActivity.getToken(activity));
             request.setLike(isLike);
 
-            manager.execute(request, CACHEKEYLikeRequest, DurationInMillis.ONE_SECOND, requestListener);
+            manager.execute(request, CACHEKEYLikeRequest, DurationInMillis.ONE_SECOND, new DARequestListener(R.string.opinion_success));
             new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
         }
     }

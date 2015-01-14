@@ -26,7 +26,6 @@
             android:layout_gravity="bottom"
             android:padding="10dp"
             android:text="@string/install">
-
             <requestFocus />
         </Button>
 
@@ -36,7 +35,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
-
         <TextView
             android:id="@+id/downloading_info"
             android:layout_width="wrap_content"
@@ -45,6 +43,16 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:visibility="gone" />
+        <Button
+            android:id="@+id/canceldownloadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:onClick="cancelDownload"
+            android:visibility="gone">
+        </Button>
 
         <Button
             android:id="@+id/TocommentsButton"

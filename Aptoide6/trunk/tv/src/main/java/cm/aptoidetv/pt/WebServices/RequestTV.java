@@ -31,6 +31,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         Api api = new Api();
 
         api.getApi_global_params().setLang("en");
+
         api.getApi_global_params().setStore_name(context.getString(R.string.defaultstorename));
 
 
@@ -41,6 +42,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
 
         Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
         widgetParams.setContext(this.store);
+
 
         //getStore.getDatasets_params().set(categoriesParams);
         getStore.getDatasets_params().set(widgetParams);

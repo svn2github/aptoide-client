@@ -115,6 +115,32 @@
     <string name="new_to_aptoide">New to %s? Create a free account</string>
     <string name="please_wait">Please wait&#8230;</string>
 
+    <string name="about_site">Website: </string>
+    <string name="about_mail">Contact: </string>
+    <string name="about_us">About us</string>
+
+    <string name="settings_title_bar">Settings</string>
+    <string name="setting_hwspecssum">Hardware Info about your TV</string>
+    <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
+    <string name="setting_appfiltertitle">Filter Applications</string>
+    <string name="setting_hwspecstitle">Hardware Specs</string>
+    <string name="setting_sdk_version">SDK Version</string>
+    <string name="setting_screen_size">Screen Size</string>
+    <string name="setting_esgl_version">ESGL Version</string>
+    <string name="screenCode">Screen code</string>
+    <string name="cpuAbi">CPU</string>
+
+    <string name="setting_clear_memorysum">Manage data on the device</string>
+    <string name="setting_clear_memory">Clear Memory</string>
+    <string name="clearcontent_title">Remove data and configurations</string>
+    <string name="clearcache_title">Clear cache</string>
+    <string name="clear_cache_sucess">Content successfully deleted</string>
+    <string name="cache_using_X_mb">Using %s MB</string>
+    <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
+    <string name="clearcontent_sum">Deletes the data from the SD card.</string>
+    <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
+    <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
+
     <string name="error_occured">An error occurred. Please try again</string>
 
     <string name="error_MARG_1">Missing store</string>
@@ -197,4 +223,5 @@
     <string name="error_SYS_2">No data found, please try again later</string>
     <string name="error_SYS_3">System is now in maintenance, please try again later</string>
     <string name="error_SYS_4">This call is not supported by the current API version</string>
+    <string name="cancel">Cancel</string>
 </resources>

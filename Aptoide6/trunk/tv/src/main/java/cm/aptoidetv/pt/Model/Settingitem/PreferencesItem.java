@@ -1,8 +1,10 @@
 package cm.aptoidetv.pt.Model.Settingitem;
 
 import android.content.Context;
+import android.content.Intent;
 
 import cm.aptoidetv.pt.R;
+import cm.aptoidetv.pt.SettingsWHeaders;
 
 /**
  * Created by asantos on 26-12-2014.
@@ -26,6 +28,6 @@ public class PreferencesItem extends SettingItem {
 
     @Override
     public void startActivity(Context context) {
-
+        context.startActivity(new Intent(context, SettingsWHeaders.class));
     }
 }
