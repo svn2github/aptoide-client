@@ -1,4 +1,4 @@
-package openiab;
+package org.onepf.oms;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.onepf.oms.IOpenAppstore;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -106,8 +104,10 @@ public class StoreBinder extends IOpenAppstore.Stub {
     @Override
     public Intent getBillingServiceIntent() throws RemoteException {
         Log.d("AptoideStore", "[getBillingServiceIntent]");
+        Intent intent = new Intent(context, BillingService.class);
+        intent.setAction(BILLING_BIND_INTENT);
 
-        return new Intent(BILLING_BIND_INTENT);
+        return intent;
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.paypal.android.sdk.payments.ProofOfPayment;
 
 import org.json.JSONException;
+import org.onepf.oms.BillingBinder;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

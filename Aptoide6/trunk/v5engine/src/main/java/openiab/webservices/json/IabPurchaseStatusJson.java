@@ -2,6 +2,7 @@ package openiab.webservices.json;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,10 +101,11 @@ public class IabPurchaseStatusJson {
                 myJSon.put("purchaseTime", purchaseTime);
                 myJSon.put("purchaseState", purchaseState);
                 myJSon.put("purchaseToken", purchaseToken);
-                myJSon.put("developerPayload", developerPayload);
+                if(developerPayload != null) myJSon.put("developerPayload", developerPayload);
 
 
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
                 String json = null;
                 try {

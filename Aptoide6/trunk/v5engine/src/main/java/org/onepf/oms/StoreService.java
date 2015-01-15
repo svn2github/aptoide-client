@@ -1,22 +1,23 @@
-package openiab;
+package org.onepf.oms;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.octo.android.robospice.SpiceManager;
 
-import org.onepf.oms.IOpenInAppBillingService;
-
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 
 
 /**
  * Created by j-pac on 12-02-2014.
  */
-public class BillingService extends Service {
+public class StoreService extends Service {
+
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
-    private final IOpenInAppBillingService.Stub wBinder = new BillingBinder(this, manager);
+    private final IOpenAppstore.Stub wBinder = new StoreBinder(Aptoide.getContext(), manager);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -26,6 +27,7 @@ public class BillingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("Aptoide", "StoreService onCreate");
         if(!manager.isStarted())manager.start(this);
     }
 
@@ -33,5 +35,6 @@ public class BillingService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if(manager.isStarted())manager.shouldStop();
+        Log.d("Aptoide", "manager onStop");
     }
 }

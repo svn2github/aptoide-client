@@ -205,7 +205,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         request.setStore_name(name);
 
 
-        manager.execute(request,"getStore" + name,DurationInMillis.ONE_HOUR * 6, checkStoreListener);
+
 
         Fragment fragmentHeader = new FragmentStoreHeader();
 
@@ -217,11 +217,20 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         args.putLong("storeid", storeid);
 
         if(getIntent().hasExtra("username")){
+            String username = getIntent().getStringExtra("username");
+            String password = getIntent().getStringExtra("password");
+            args.putString("username", username);
+            args.putString("password", password);
 
-            args.putString("username", getIntent().getStringExtra("username"));
-            args.putString("password", getIntent().getStringExtra("password"));
+            Login login = new Login();
+            login.setUsername(username);
+            login.setPassword(password);
+            request.setLogin(login);
 
         }
+
+        manager.execute(request,"getStore" + name,DurationInMillis.ONE_HOUR * 6, checkStoreListener);
+
         //args.putString("widgetrefid", "cat_1");
 
         fragment.setArguments(args);
@@ -314,6 +323,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     public static class TestServerRequest extends RetrofitSpiceRequest<Response.GetStore, TestServerWebservice> {
 
+        private Login login;
+        public void setLogin(Login login) {
+            this.login = login;
+        }
 
         private String store_name;
         public TestServerRequest() {
@@ -332,7 +345,10 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
             api.addDataset("meta");
             api.datasets_params = null;
             api.store_name = store_name;
-
+            if(login != null){
+                api.store_user = login.getUsername();
+                api.store_pass_sha1 = login.getPassword();
+            }
             return getService().checkServer(api);
         }
     }

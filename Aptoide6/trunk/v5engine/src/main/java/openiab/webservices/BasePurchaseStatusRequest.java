@@ -93,7 +93,7 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         parameters.put("currency",currency);
         parameters.put("simcc",simcc);
 
-        if(developerPayload!=null && !TextUtils.isEmpty(developerPayload)) parameters.put("developerpayload", developerPayload);
+        if(developerPayload!=null && !TextUtils.isEmpty(developerPayload)) parameters.put("developerPayload", developerPayload);
 
 
 
@@ -123,10 +123,7 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
 
         try{
 
-
             response = executeRequest(getService(), parameters);
-
-
 
         }catch (RetrofitError error){
             OauthErrorHandler.handle(error);

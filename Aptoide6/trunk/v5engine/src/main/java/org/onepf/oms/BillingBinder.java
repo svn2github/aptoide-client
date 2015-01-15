@@ -1,4 +1,4 @@
-package openiab;
+package org.onepf.oms;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -18,8 +18,6 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.onepf.oms.IOpenInAppBillingService;
 
 import java.io.IOException;
 import java.util.ArrayList;

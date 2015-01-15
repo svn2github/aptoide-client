@@ -1,5 +1,6 @@
 package openiab.webservices.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,8 +75,6 @@ public class    IabPurchasesJson {
 
             public String getJson() {
 
-
-
                 Map<String, Object> myJson = new LinkedHashMap<String, Object>();
 
                 myJson.put("orderId", orderId);
@@ -83,11 +82,14 @@ public class    IabPurchasesJson {
                 myJson.put("productId", productId);
                 myJson.put("purchaseTime", purchaseTime);
                 myJson.put("purchaseToken", purchaseToken);
-                if(developerPayload!=null) myJson.put("developerPayload", developerPayload);
+                if(developerPayload != null) myJson.put("developerPayload", developerPayload);
 
+                ObjectMapper mapper = new ObjectMapper();
+
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
                 try {
-                    return new ObjectMapper().writeValueAsString(myJson);
+                    return mapper.writeValueAsString(myJson);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
