@@ -332,6 +332,7 @@ public class MoreActivity extends ActionBarActivity {
                     }catch (Exception e){
                         view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
                         view.findViewById(R.id.list).setVisibility(View.GONE);
+                        manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize() + offset, DurationInMillis.ONE_DAY,  requestListener);
                         loading = true;
                         ObjectMapper mapper = new ObjectMapper();
                         try {

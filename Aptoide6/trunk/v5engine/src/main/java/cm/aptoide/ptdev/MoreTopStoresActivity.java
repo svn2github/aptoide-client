@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -115,27 +118,37 @@ public class MoreTopStoresActivity extends MoreBaseActivity implements AddStoreD
                 @Override
                 public void onRequestSuccess(Response.ListStores stores) {
                     ArrayList<Displayable> map = new ArrayList<>();
+                    try{
+                        for(Response.ListStores.StoreGroup storeGroup : stores.datasets.getDataset().values()) {
+                            for (Response.ListStores.Store store:storeGroup.data.list) {
+                                StoreRow row = new StoreRow(getActivity());
+                                row.header = store.name;
+                                row.appscount = store.apps_count.intValue();
+                                row.avatar = store.avatar;
+                                row.name = store.name;
+                                row.downloads = store.downloads.intValue();
+                                map.add(row);
+                            }
+                        }
 
-                    for(Response.ListStores.StoreGroup storeGroup : stores.datasets.getDataset().values()) {
-                        for (Response.ListStores.Store store:storeGroup.data.list) {
-                            StoreRow row = new StoreRow(getActivity());
-                            row.header = store.name;
-                            row.appscount = store.apps_count.intValue();
-                            row.avatar = store.avatar;
-                            row.name = store.name;
-                            row.downloads = store.downloads.intValue();
-                            map.add(row);
+                        list.clear();
+                        list.addAll(map);
+
+                        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                        view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }catch (Exception e) {
+                        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.list).setVisibility(View.GONE);
+                        ObjectMapper mapper = new ObjectMapper();
+                        try {
+                            String s = mapper.writeValueAsString(stores);
+                            Crashlytics.logException(new Throwable(s, e));
+                        } catch (JsonProcessingException e1) {
+                            e1.printStackTrace();
                         }
                     }
-
-                    list.clear();
-                    list.addAll(map);
-
-                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                    view.findViewById(R.id.list).setVisibility(View.VISIBLE);
-
-                    recyclerView.getAdapter().notifyDataSetChanged();
-
                 }
             });
         }
