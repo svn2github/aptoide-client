@@ -292,46 +292,43 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
         String activityTitle = getString(R.string.login_or_register);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
+        Bundle b = getIntent().getBundleExtra(ARG_OPTIONS_BUNDLE);
 
-            if (b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
-                activityTitle = getString(R.string.social_timeline);
+        if (b != null && b.getBoolean(OPTIONS_FASTBOOK_BOOL, false)) {
+            activityTitle = getString(R.string.social_timeline);
 
-                if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
-                    setContentView(R.layout.page_timeline_logout_and_login);
-                    removeAccount = true;
-                } else {
-                    setContentView(R.layout.page_timeline_not_logged_in);
-                }
-
+            if (b.getBoolean(OPTIONS_LOGOUT_BOOL, false)) {
+                setContentView(R.layout.page_timeline_logout_and_login);
+                removeAccount = true;
             } else {
-                initLogin(savedInstanceState);
+                setContentView(R.layout.page_timeline_not_logged_in);
             }
 
-            uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
-            uiLifecycleHelper.onCreate(savedInstanceState);
-
-            mPlusClient = new PlusClient.Builder(this, this, this).build();
-
-            LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
-            fbButton.setReadPermissions(Arrays.asList("email", "user_friends"));
-            fbButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
-                }
-            });
-            fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
-                @Override
-                public void onError(FacebookException error) {
-                    error.printStackTrace();
-                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                }
-            });
-        }else{
-            initLogin(savedInstanceState);
+        } else {
+            if(!initLogin())
+                return;
         }
+
+        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+        uiLifecycleHelper.onCreate(savedInstanceState);
+
+        mPlusClient = new PlusClient.Builder(this, this, this).build();
+
+        LoginButton fbButton = (LoginButton) findViewById(R.id.fb_login_button);
+        fbButton.setReadPermissions(Arrays.asList("email", "user_friends"));
+        fbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlurryAgent.logEvent("Login_Page_Clicked_On_Login_With_Facebook");
+            }
+        });
+        fbButton.setOnErrorListener(new LoginButton.OnErrorListener() {
+            @Override
+            public void onError(FacebookException error) {
+                error.printStackTrace();
+                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+            }
+        });
 
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -345,11 +342,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         getSupportActionBar().setTitle(activityTitle);
     }
 
-    private void initLogin(Bundle savedInstanceState) {
-
+    private boolean initLogin() {
         if (AptoideUtils.isLoggedIn(this)) {
             finish();
             Toast.makeText(this, R.string.one_account_allowed, Toast.LENGTH_SHORT).show();
+            return false;
         } else {
 
             setContentView(R.layout.form_login);
@@ -466,6 +463,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
 
 
         }
+        return true;
     }
 
     @Override

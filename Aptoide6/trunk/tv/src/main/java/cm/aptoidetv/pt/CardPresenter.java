@@ -89,16 +89,6 @@ public class CardPresenter extends Presenter {
         protected PicassoImageCardViewTarget getPicassoImageCardViewTarget(){
             return mImageCardViewTarget;
         }
-        protected void updateCardViewImage(String uri) {
-            //Picasso.with(mContext)
-            AppTV.getPicasso()
-                    .load(uri)
-                    .placeholder(android.R.drawable.sym_def_app_icon)
-                    .centerInside()
-                    .resize(ICON_WIDTH,ICON_HEIGHT)
-                 //   .error(mDefaultCardImage)
-                    .into(mImageCardViewTarget);
-        }
     }
 
 

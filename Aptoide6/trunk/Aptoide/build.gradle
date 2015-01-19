@@ -4,7 +4,7 @@ apply plugin: 'crashlytics'
 //def signingExists = false
 //def signingFile = new File('signing.gradle')
 
-    apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 
 
@@ -56,7 +56,7 @@ android {
         release {
             minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
 
         }
     }
