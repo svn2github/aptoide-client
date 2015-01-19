@@ -28,9 +28,13 @@
     <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
     <string name="marketname">Aptoide TV</string>
     <string name="defaultstorename">geniatechapps</string>
+    <!--<string name="defaultstorename">sharp-store</string>-->
+    <!--<string name="defaultstorename">magicbox-store</string>-->
+    <!--<string name="defaultstorename">iwedia-store</string>-->
+
     <string name="aptoidetheme">default</string>
-    <string name="splashscreen">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</string>
-    <string name="splashscreenland">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</string>
+    <string name="splashscreen"></string>
+    <string name="splashscreenland"></string>
     <bool name="searchstores">true</bool>
     <bool name="maturecontentswitch">false</bool>
     <bool name="multiplestores">false</bool>

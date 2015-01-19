@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 public class SplashDialogFragment extends DialogFragment {
     @Override
@@ -38,14 +38,15 @@ public class SplashDialogFragment extends DialogFragment {
         splashBackground.setBackgroundColor(parsed_color);
         DisplayMetrics mMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-
         int splashscreenID= getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE?
             R.string.splashscreenland:R.string.splashscreen;
-        Picasso.with(getActivity())
-                .load(getActivity().getString(splashscreenID))
-                .resize(mMetrics.widthPixels, mMetrics.heightPixels)
-                .centerCrop()
-                .error(parsed_color)
-                .into((ImageView) view.findViewById(R.id.splashscreen));
+        String link = getActivity().getString(splashscreenID);
+        RequestCreator img = link.length()==0 ?
+                AppTV.getPicasso().load(R.drawable.splashscreen_land):
+                AppTV.getPicasso().load(link);
+        img.resize(mMetrics.widthPixels, mMetrics.heightPixels)
+            .centerCrop()
+            .error(parsed_color)
+            .into((ImageView) view.findViewById(R.id.splashscreen));
     }
 }

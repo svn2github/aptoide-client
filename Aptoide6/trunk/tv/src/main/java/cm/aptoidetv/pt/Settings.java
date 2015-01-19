@@ -56,9 +56,7 @@ public class Settings extends PreferenceActivity {
         });*/
 
         findPreference("clearcache").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-
-			@Override
+    		@Override
 			public boolean onPreferenceClick(Preference preference) {
 				if(unlocked){
 					new DeleteDir().execute(new File(icon_path));

@@ -62,7 +62,8 @@ public class CardPresenter extends Presenter {
         myViewHolder.mCardView.setContentText(bi.getText(mContext));
         myViewHolder.mCardView.setTitleText(Html.fromHtml(bi.getName(mContext)));
         myViewHolder.mCardView.setMainImageDimensions(width,height);
-        myViewHolder.updateCardViewImage(bi.getImage());
+        //myViewHolder.updateCardViewImage(bi.getImage());
+        bi.setImage(ICON_WIDTH,ICON_HEIGHT,myViewHolder.getPicassoImageCardViewTarget());
     }
 
     @Override
@@ -85,7 +86,9 @@ public class CardPresenter extends Presenter {
 
             //mDefaultCardImage = mContext.getResources().getDrawable(R.drawable.movie);
         }
-
+        protected PicassoImageCardViewTarget getPicassoImageCardViewTarget(){
+            return mImageCardViewTarget;
+        }
         protected void updateCardViewImage(String uri) {
             //Picasso.with(mContext)
             AppTV.getPicasso()

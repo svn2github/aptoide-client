@@ -3,6 +3,8 @@ package cm.aptoidetv.pt.Model.Settingitem;
 import android.content.Context;
 import android.content.Intent;
 
+import cm.aptoidetv.pt.AppTV;
+import cm.aptoidetv.pt.CardPresenter;
 import cm.aptoidetv.pt.MyAccountActivity;
 import cm.aptoidetv.pt.R;
 
@@ -21,12 +23,18 @@ public class MyaccountItem extends SettingItem {
     }
 
     @Override
-    public String getImage() {
-        return "http://pool.img.aptoide.com/apps/e8ab34654c33b2e54713db0a4c0e5fc9_icon.png";
+    public void startActivity(Context context) {
+        context.startActivity(new Intent(context, MyAccountActivity.class));
     }
 
     @Override
-    public void startActivity(Context context) {
-        context.startActivity(new Intent(context, MyAccountActivity.class));
+    public void setImage(int iconWidth, int iconHeight, CardPresenter.PicassoImageCardViewTarget picassoImageCardViewTarget) {
+        AppTV.getPicasso()
+                .load(R.drawable.account)
+                .placeholder(android.R.drawable.sym_def_app_icon)
+                .centerInside()
+                .resize(iconWidth,iconHeight)
+                        //   .error(mDefaultCardImage)
+                .into(picassoImageCardViewTarget);
     }
 }

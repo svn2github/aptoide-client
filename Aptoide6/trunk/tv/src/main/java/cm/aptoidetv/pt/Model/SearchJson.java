@@ -8,6 +8,8 @@ import com.google.api.client.util.Key;
 
 import java.util.List;
 
+import cm.aptoidetv.pt.AppTV;
+import cm.aptoidetv.pt.CardPresenter;
 import cm.aptoidetv.pt.DetailsActivity;
 import cm.aptoidetv.pt.R;
 
@@ -149,7 +151,6 @@ public class SearchJson {
                 return "";
             }
 
-            @Override
             public String getImage() {
                 String imagepath;
                 if(!TextUtils.isEmpty(iconhd)){
@@ -178,6 +179,17 @@ public class SearchJson {
             @Override
             public String getDownloadUrl() {
                 return "";
+            }
+
+            @Override
+            public void setImage(int iconWidth, int iconHeight, CardPresenter.PicassoImageCardViewTarget picassoImageCardViewTarget) {
+                AppTV.getPicasso()
+                        .load(getImage())
+                        .placeholder(android.R.drawable.sym_def_app_icon)
+                        .centerInside()
+                        .resize(iconWidth,iconHeight)
+                                //   .error(mDefaultCardImage)
+                        .into(picassoImageCardViewTarget);
             }
 
             public void setName(String name) {

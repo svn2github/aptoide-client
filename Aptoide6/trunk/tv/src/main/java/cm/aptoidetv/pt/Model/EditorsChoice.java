@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import java.io.Serializable;
 
+import cm.aptoidetv.pt.AppTV;
+import cm.aptoidetv.pt.CardPresenter;
 import cm.aptoidetv.pt.DetailsActivity;
 import cm.aptoidetv.pt.R;
 import cm.aptoidetv.pt.WebServices.Response;
@@ -50,7 +52,6 @@ public class EditorsChoice implements Serializable, BindInterface {
         return packagename.getDwn();
     }
 
-    @Override
     public String getImage() {
         return featuregraphicpath +""+ packagename.featuregraphic;
     }
@@ -144,6 +145,17 @@ public class EditorsChoice implements Serializable, BindInterface {
 
     public String getDownloadUrl() {
         return apkpath+getPackagename().getPath();
+    }
+
+    @Override
+    public void setImage(int iconWidth, int iconHeight, CardPresenter.PicassoImageCardViewTarget picassoImageCardViewTarget) {
+        AppTV.getPicasso()
+                .load(getImage())
+                .placeholder(android.R.drawable.sym_def_app_icon)
+                .centerInside()
+                .resize(iconWidth,iconHeight)
+                        //   .error(mDefaultCardImage)
+                .into(picassoImageCardViewTarget);
     }
 
     public static class PackageName implements Serializable {

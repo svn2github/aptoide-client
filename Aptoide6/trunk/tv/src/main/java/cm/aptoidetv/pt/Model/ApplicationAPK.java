@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import java.io.Serializable;
 
+import cm.aptoidetv.pt.AppTV;
+import cm.aptoidetv.pt.CardPresenter;
 import cm.aptoidetv.pt.DetailsActivity;
 import cm.aptoidetv.pt.R;
 import cm.aptoidetv.pt.WebServices.Response;
@@ -72,7 +74,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
         return downloads;
     }
 
-    @Override
     public String getImage() {
         return TextUtils.isEmpty(icon_hd) ? icon:icon_hd;
     }
@@ -95,5 +96,16 @@ public class ApplicationAPK implements Serializable, BindInterface{
 
     public String getDownloadUrl() {
         return path;
+    }
+
+    @Override
+    public void setImage(int iconWidth, int iconHeight, CardPresenter.PicassoImageCardViewTarget picassoImageCardViewTarget) {
+       AppTV.getPicasso()
+                    .load(getImage())
+                    .placeholder(android.R.drawable.sym_def_app_icon)
+                    .centerInside()
+                    .resize(iconWidth,iconHeight)
+                            //   .error(mDefaultCardImage)
+                    .into(picassoImageCardViewTarget);
     }
 }
