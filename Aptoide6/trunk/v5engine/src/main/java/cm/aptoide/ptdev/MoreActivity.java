@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -248,85 +251,96 @@ public class MoreActivity extends ActionBarActivity {
 
                     int BUCKET_SIZE = AptoideUtils.getBucketSize();
                     ArrayList<FragmentListApps.Displayable> map = new ArrayList<FragmentListApps.Displayable>();
+                    try {
+                        List<Response.GetStore.Widgets.Widget> appsList = response.responses.getStore.datasets.widgets.data.list;
+                        HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
 
-                    List<Response.GetStore.Widgets.Widget> appsList = response.responses.getStore.datasets.widgets.data.list;
-                    HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
+                        if(appsList.isEmpty()){
 
-                    if(appsList.isEmpty()){
+                            Response.ListApps.Category category = dataset.get(getArguments().getString("widgetrefid"));
 
-                        Response.ListApps.Category category = dataset.get(getArguments().getString("widgetrefid"));
+                            if(category !=null && category.data!=null) {
 
-                        if(category !=null && category.data!=null) {
+                                offset = category.data.next;
+                                total = category.data.total;
 
-                            offset = category.data.next;
-                            total = category.data.total;
+                                ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(category.data.list);
 
-                            ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(category.data.list);
+                                while (!inElements.isEmpty()) {
+                                    FragmentListApps.Row row = new FragmentListApps.Row();
+                                    row.setEnabled(false);
+                                    row.header = getArguments().getString("widgetname");
 
-                            while (!inElements.isEmpty()) {
-                                FragmentListApps.Row row = new FragmentListApps.Row();
-                                row.setEnabled(false);
-                                row.header = getArguments().getString("widgetname");
-
-                                for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
-                                    row.addItem(inElements.remove(0));
-                                }
-                                map.add(row);
-                            }
-                        }
-                    }else{
-
-                        for(Response.GetStore.Widgets.Widget widget : appsList) {
-
-                            if(widget.type.equals("apps_list")) {
-                                Response.ListApps.Category category = dataset.get(widget.data.ref_id);
-
-                                if(category !=null && category.data!=null) {
-                                    ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
-
-                                    boolean showMore = inElements.size()>=BUCKET_SIZE*4;
-
-                                    while (!inElements.isEmpty()) {
-                                        FragmentListApps.Row row = new FragmentListApps.Row();
-                                        row.header = widget.name;
-
-                                        row.setMore(showMore);
-                                        row.widgetid = widget.widgetid;
-                                        row.widgetrefid = widget.data.ref_id;
-
-                                        for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
-                                            row.addItem(inElements.remove(0));
-                                        }
-                                        map.add(row);
+                                    for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
+                                        row.addItem(inElements.remove(0));
                                     }
+                                    map.add(row);
+                                }
+                            }
+                        }else{
+
+                            for(Response.GetStore.Widgets.Widget widget : appsList) {
+
+                                if(widget.type.equals("apps_list")) {
+                                    Response.ListApps.Category category = dataset.get(widget.data.ref_id);
+
+                                    if(category !=null && category.data!=null) {
+                                        ArrayList<Response.ListApps.Apk> inElements = new ArrayList<Response.ListApps.Apk>(dataset.get(widget.data.ref_id).data.list);
+
+                                        boolean showMore = inElements.size()>=BUCKET_SIZE*4;
+
+                                        while (!inElements.isEmpty()) {
+                                            FragmentListApps.Row row = new FragmentListApps.Row();
+                                            row.header = widget.name;
+
+                                            row.setMore(showMore);
+                                            row.widgetid = widget.widgetid;
+                                            row.widgetrefid = widget.data.ref_id;
+
+                                            for (int j = 0; j < BUCKET_SIZE && !inElements.isEmpty(); j++) {
+                                                row.addItem(inElements.remove(0));
+                                            }
+                                            map.add(row);
+                                        }
+                                    }
+
+                                } else {
+                                    FragmentListApps.Row row = new FragmentListApps.Row();
+                                    row.setEnabled(false);
+                                    map.add(row);
+                                    ((FragmentListApps.RecyclerAdapter)recyclerView.getAdapter()).getPlaceholders().put(widget.type, map.size());
                                 }
 
-                            } else {
-                                FragmentListApps.Row row = new FragmentListApps.Row();
-                                row.setEnabled(false);
-                                map.add(row);
-                                ((FragmentListApps.RecyclerAdapter)recyclerView.getAdapter()).getPlaceholders().put(widget.type, map.size());
                             }
 
                         }
 
+                        if(loading && !list.isEmpty()){
+                            list.remove(list.size() - 1);
+                        }
+                        //string.clear();
+                        list.addAll(map);
+
+                        //Log.d("AptoideDebug", string.toString());
+
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        //loading = false;
+
+                        view.findViewById(R.id.please_wait).setVisibility(View.GONE);
+                        view.findViewById(R.id.list).setVisibility(View.VISIBLE);
+                        loading = false;
+                    }catch (Exception e){
+                        view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.list).setVisibility(View.GONE);
+                        loading = true;
+                        ObjectMapper mapper = new ObjectMapper();
+                        try {
+                            String s = mapper.writeValueAsString(response);
+                            Crashlytics.logException(new Throwable(s, e));
+                        } catch (JsonProcessingException e1) {
+                            e1.printStackTrace();
+                        }
                     }
-
-                    if(loading && !list.isEmpty()){
-                        list.remove(list.size() - 1);
-                    }
-                    //string.clear();
-                    list.addAll(map);
-
-                    //Log.d("AptoideDebug", string.toString());
-
-                    recyclerView.getAdapter().notifyDataSetChanged();
-                    //loading = false;
-
-                    view.findViewById(R.id.please_wait).setVisibility(View.GONE);
-                    view.findViewById(R.id.list).setVisibility(View.VISIBLE);
-                    loading = false;
-
                 }
                                                                                                                                 
             };

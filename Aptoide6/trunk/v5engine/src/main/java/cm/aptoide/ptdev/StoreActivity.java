@@ -13,6 +13,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -264,45 +267,43 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         public void onRequestSuccess(Response.GetStore response) {
 
             final Store store = new Store();
-            Response.GetStore.StoreMetaData data = response.datasets.meta.data;
-            store.setId(data.id.longValue());
-            store.setName(response.datasets.meta.data.name);
-            store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
-
-
-            String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
-
-
-            String avatar = data.avatar;
-
-            if(avatar!=null) {
-                String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
-                avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
-            }
-
-
-            store.setAvatar(avatar);
-            store.setDescription(data.description);
-            store.setTheme(data.theme);
-            store.setView(data.view);
-            store.setBaseUrl(data.name);
-
-            Database database = new Database(Aptoide.getDb());
-
             try {
+                Response.GetStore.StoreMetaData data = response.datasets.meta.data;
+                store.setId(data.id.longValue());
+                store.setName(response.datasets.meta.data.name);
+                store.setDownloads(response.datasets.meta.data.downloads.intValue() + "");
+
+                String sizeString = IconSizes.generateSizeStringAvatar(Aptoide.getContext());
+
+                String avatar = data.avatar;
+
+                if(avatar!=null) {
+                    String[] splittedUrl = avatar.split("\\.(?=[^\\.]+$)");
+                    avatar = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+                }
+                store.setAvatar(avatar);
+                store.setDescription(data.description);
+                store.setTheme(data.theme);
+                store.setView(data.view);
+                store.setBaseUrl(data.name);
+
+                Database database = new Database(Aptoide.getDb());
+
+
                 database.insertStore(store);
                 database.updateStore(store);
 
                 BusProvider.getInstance().post(new RepoAddedEvent());
             }catch (Exception e){
-                e.printStackTrace();
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String s = mapper.writeValueAsString(response);
+                    Crashlytics.logException(new Throwable(s, e));
+                } catch (JsonProcessingException e1) {
+                    e1.printStackTrace();
+                }
             }
-
-
         }
-
-
-
     }
 
 
