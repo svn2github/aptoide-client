@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -314,10 +315,30 @@ public class DownloadService extends Service{
                 path + json.getApk().getMd5sum() + ".apk",
                 new ArrayList<String>(json.getApk().getPermissions()));
         apk.setId(json.getApk().getId().longValue());
+
         download(download.getId(), download, apk, filesToDownload);
     }
 
+    public void setReferrer(long id, String referrer){
+        try{
+
+            DownloadInfo downloadInfo = downloads.get(id);
+            if(downloadInfo != null){
+                downloadInfo.getDownloadExecutor().getApk().setReferrer(referrer);
+            }else{
+                Log.d("AptoideDownloadService", "Downloadinfo for referrer was null");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.d("AptoideDownloadService", "error setting referrer");
+
+        }
+
+    }
+
     private void download(long id, Download download, FinishedApk apk, ArrayList<DownloadModel> filesToDownload){
+
         DownloadInfo info = getDownload(id);
 
         if(download.getCpiUrl()!=null){
@@ -326,9 +347,12 @@ public class DownloadService extends Service{
 
         if(download.getReferrer()!=null){
             apk.setReferrer(download.getReferrer());
+        }else{
+            Log.d("AptoideDownloadService", "Creating download with no referrer");
         }
 
         info.setDownloadExecutor(new DownloadExecutorImpl(apk));
+
         info.setDownload(download);
         info.setFilesToDownload(filesToDownload);
 

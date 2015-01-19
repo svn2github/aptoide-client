@@ -9,7 +9,9 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Date;
+import java.util.UUID;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
@@ -47,10 +49,20 @@ public class AptoideAdNetworks {
     }
 
     private static String replaceAdvertisementId(String clickUrl) throws IOException, GooglePlayServicesNotAvailableException, GooglePlayServicesRepairableException {
+        String aaId;
         if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
-            String aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
-            clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+            aaId = AdvertisingIdClient.getAdvertisingIdInfo(Aptoide.getContext()).getId();
+        }else{
+            byte[] data = new byte[16];
+            String deviceId = android.provider.Settings.Secure.getString(Aptoide.getContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            SecureRandom secureRandom = new SecureRandom();
+            secureRandom.setSeed(deviceId.hashCode());
+            secureRandom.nextBytes(data);
+            aaId = UUID.nameUUIDFromBytes(data).toString();
         }
+
+        clickUrl = clickUrl.replace("[USER_AAID]", aaId);
+
         return clickUrl;
     }
 }

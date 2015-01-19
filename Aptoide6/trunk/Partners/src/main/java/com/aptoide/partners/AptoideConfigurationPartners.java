@@ -24,9 +24,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
 
 /**
  * Created by tdeus on 12/23/13.
@@ -417,7 +417,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 .putString("STORETHEME", THEME)
                 .putString("STOREITEMS", ITEMS)
                 .putString("STOREVIEW", VIEW)
-                .commit();
+                .apply();
 
         if(RESTRICTIONLIST != null && !RESTRICTIONLIST.equals("")) {
             SharedPreferences ssPref = SecurePreferences.getInstance();
@@ -425,7 +425,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
                 RESTRICTIONLIST += ", " + ssPref.getString("RESTRICTIONLIST", "");
             }
             Log.d("Restriction List", "Restriction List saved: " + RESTRICTIONLIST);
-            ssPref.edit().putString("RESTRICTIONLIST", RESTRICTIONLIST).commit();
+            ssPref.edit().putString("RESTRICTIONLIST", RESTRICTIONLIST).apply();
         }
 
 
@@ -453,17 +453,17 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
 
     @Override
     public String getUpdatesSyncAdapterAuthority(){
-        return "com.aptoide.partners.UpdatesProvider";
+        return Aptoide.getContext().getPackageName() + ".UpdatesProvider";
     }
 
     @Override
     public String getAutoUpdatesSyncAdapterAuthority(){
-        return "com.aptoide.partners.AutoUpdateProvider";
+        return Aptoide.getContext().getPackageName() + ".AutoUpdateProvider";
     }
 
     @Override
     public String getSearchAuthority() {
-        return "com.aptoide.partners.SuggestionProvider";
+        return Aptoide.getContext().getPackageName() + ".SuggestionProvider";
     }
 
     @Override
@@ -504,4 +504,9 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     public Class getNotificationsReceiver() {
         return PushNotificationReceiverPartner.class;
     }
+
+    @Override
+    public int getIcon() { return R.drawable.ic_launcher; }
+
+
 }

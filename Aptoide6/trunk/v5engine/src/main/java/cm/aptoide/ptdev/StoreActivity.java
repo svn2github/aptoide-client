@@ -194,6 +194,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         Cursor c = db.getStore(storeid);
 
         c.moveToFirst();
+
         String name = c.getString(c.getColumnIndex("name"));
         String theme = c.getString(c.getColumnIndex("theme"));
 
@@ -203,8 +204,6 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         CheckStoreListener checkStoreListener = new CheckStoreListener(null);
 
         request.setStore_name(name);
-
-
 
 
         Fragment fragmentHeader = new FragmentStoreHeader();

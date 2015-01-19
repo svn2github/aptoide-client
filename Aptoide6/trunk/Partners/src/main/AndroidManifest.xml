@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.aptoide.partners"
     android:installLocation="auto"
-    android:versionCode="433"
-    android:versionName="5.1.0">
+    android:versionCode="450"
+    android:versionName="6.0.0">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
@@ -37,12 +37,10 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+
 
         <activity
-            android:name=".StartPartner"
+            android:name="com.aptoide.partners.StartPartner"
             android:exported="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
@@ -61,7 +59,7 @@
             android:exported="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:targetActivity=".StartPartner">
+            android:targetActivity="com.aptoide.partners.StartPartner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -71,7 +69,7 @@
                 android:value="com.aptoide.partners.SearchManagerPartners" />
         </activity-alias>
 
-        <activity android:name=".AptoideJollaSupport" />
+        <activity android:name="com.aptoide.partners.AptoideJollaSupport" />
 
         <activity
             android:name="com.adsdk.sdk.banner.InAppWebView"
@@ -100,14 +98,16 @@
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
 
-        <activity android:name=".SignUpActivityPartner" />
+        <activity android:name="com.aptoide.partners.SignUpActivityPartner" />
+        <activity android:name="cm.aptoide.ptdev.MoreActivity" />
+
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity" />
 
         <activity android:name="cm.aptoide.ptdev.MoreFeaturedGraphicActivity" />
 
 
-        <activity android:name=".AppViewActivityPartner" />
+        <activity android:name="com.aptoide.partners.AppViewActivityPartner" />
 
         <activity
             android:name="cm.aptoide.ptdev.downloadmanager.PermissionsActivity"
@@ -129,6 +129,7 @@
 
         <activity android:name="cm.aptoide.ptdev.TimeLineFriendsInviteActivity" />
         <activity android:name="cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity" />
+        <activity android:name="cm.aptoide.ptdev.MoreTopStoresActivity" />
 
         <activity
             android:name="com.aptoide.partners.SettingsPartner"
@@ -147,6 +148,9 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/partners_find" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="cm.aptoide.ptdev.SearchManager" />
         </activity>
 
         <activity
@@ -264,9 +268,11 @@
             android:label="WebInstallService" />
 
         <service
-            android:name="cm.aptoide.ptdev.services.ParserService"
+            android:name="cm.aptoide.ptdev.services.UpdatesService"
             android:exported="false"
-            android:label="ParserService" />
+            android:label="UpdatesService" />
+
+
 
         <service
             android:name="cm.aptoide.ptdev.services.ParserHttp"
@@ -285,35 +291,35 @@
 
         <provider
             android:name="com.aptoide.partners.SuggestionProviderPartners"
-            android:authorities="com.aptoide.partners.SuggestionProvider"
+            android:authorities="${applicationId}.SuggestionProvider"
             android:exported="false" />
 
         <provider
             android:name="cm.aptoide.ptdev.StubProvider"
-            android:authorities="com.aptoide.partners.StubProvider"
+            android:authorities="${applicationId}.StubProvider"
             android:exported="false" />
 
         <provider
             android:name="cm.aptoide.ptdev.UpdatesProvider"
-            android:authorities="com.aptoide.partners.UpdatesProvider"
+            android:authorities="${applicationId}.UpdatesProvider"
             android:exported="false"
             android:label="Updates notification" />
 
         <provider
             android:name="cm.aptoide.ptdev.AutoUpdateProvider"
-            android:authorities="com.aptoide.partners.AutoUpdateProvider"
+            android:authorities="${applicationId}.AutoUpdateProvider"
             android:exported="false"
             android:label="Auto-Update Apps" />
 
         <provider
             android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline1"
-            android:authorities="com.aptoide.partners.TimelineActivity"
+            android:authorities="${applicationId}.TimelineActivity"
             android:exported="false"
             android:label="Timeline Activity" />
 
         <provider
             android:name="cm.aptoide.ptdev.AutoUpdateProvider$Timeline2"
-            android:authorities="com.aptoide.partners.TimelinePosts"
+            android:authorities="${applicationId}.TimelinePosts"
             android:exported="false"
             android:label="Timeline Posts" />
 
@@ -392,7 +398,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".SearchWidgetProviderPartner">
+        <receiver android:name="com.aptoide.partners.SearchWidgetProviderPartner">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -424,7 +430,7 @@
         </receiver>
 
 
-        <receiver android:name=".PushNotificationReceiverPartner">
+        <receiver android:name="com.aptoide.partners.PushNotificationReceiverPartner">
             <intent-filter>
                 <action android:name="com.aptoide.partners.PushNotification" />
                 <action android:name="com.aptoide.partners.PushNotificationTrackUrl" />
@@ -435,7 +441,7 @@
         </receiver>
 
         <service
-            android:name="openiab.StoreService"
+            android:name="org.onepf.oms.StoreService"
             android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
             <intent-filter>
                 <action android:name="org.onepf.oms.openappstore.BIND" />
@@ -444,7 +450,7 @@
         </service>
 
         <service
-            android:name="openiab.BillingService"
+            android:name="org.onepf.oms.BillingService"
             android:exported="true" android:permission="org.onepf.openiab.permission.BILLING">
 
             <intent-filter>

@@ -1,31 +1,31 @@
 package cm.aptoide.ptdev.downloadmanager;
 
-import android.app.NotificationManager;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import android.widget.ListView;
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
-import cm.aptoide.ptdev.downloadmanager.event.DownloadStatusEvent;
-import cm.aptoide.ptdev.downloadmanager.state.*;
-import cm.aptoide.ptdev.events.BusProvider;
-import cm.aptoide.ptdev.model.Download;
-import cm.aptoide.ptdev.utils.AptoideUtils;
 import com.squareup.otto.Produce;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
+import cm.aptoide.ptdev.downloadmanager.state.ActiveState;
+import cm.aptoide.ptdev.downloadmanager.state.CompletedState;
+import cm.aptoide.ptdev.downloadmanager.state.ErrorState;
+import cm.aptoide.ptdev.downloadmanager.state.NoState;
+import cm.aptoide.ptdev.downloadmanager.state.StatusState;
+import cm.aptoide.ptdev.events.BusProvider;
+import cm.aptoide.ptdev.model.Download;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +36,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class DownloadInfo implements Runnable, Serializable {
 
+    public DownloadExecutor getDownloadExecutor() {
+        return downloadExecutor;
+    }
 
     private boolean paid;
     private boolean update;

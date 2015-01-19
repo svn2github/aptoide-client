@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
@@ -1271,7 +1272,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             if(getIntent().getBooleanExtra("fromSponsored", false)){
                 GetApkInfoRequestFromPackageName request = new GetApkInfoRequestFromPackageName(getApplicationContext());
-                long id = getIntent().getLongExtra("id", 0);
+                final long id = getIntent().getLongExtra("id", 0);
 
                 String repo = getIntent().getStringExtra("repoName");
                 package_name = getIntent().getStringExtra("packageName");
@@ -1314,20 +1315,22 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                                         webview = new WebView(AppViewActivity.this);
                                         webview.getSettings().setJavaScriptEnabled(true);
                                         webview.setWebViewClient(new WebViewClient() {
+
                                             @Override
                                             public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
 
                                                 if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com")) {
                                                     referrer = getReferrer(clickUrl);
-                                                } else {
-                                                    view.loadUrl(clickUrl);
+                                                    service.setReferrer(downloadId, referrer);
+                                                    return true;
                                                 }
 
 
-                                                return true;
+                                                return false;
                                             }
                                         });
                                         webview.loadUrl(url);
+
                                     }
                                 });
 
@@ -1797,7 +1800,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
         });
     }
 
-    private void loadMoPub() {
+    public void loadMoPub() {
         publicityView.setVisibility(View.VISIBLE);
         ((MoPubView) publicityView).setAdUnitId("85aa542ded4e49f79bc6a1db8563ca66");
         ((MoPubView) publicityView).loadAd();
@@ -1955,7 +1958,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
             appName.setText(Html.fromHtml(name).toString());
             appVersionName.setText(Html.fromHtml(versionName).toString());
-//        ratingBar.setRating(rating);
+//          ratingBar.setRating(rating);
             String sizeString = IconSizes.generateSizeString(this);
             if (localIcon.contains("_icon")) {
                 String[] splittedUrl = localIcon.split("\\.(?=[^\\.]+$)");
@@ -2042,7 +2045,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         spiceManager.getFromCache(GetApkInfoJson.class, cacheKey, DurationInMillis.ONE_HOUR, requestListener);
 

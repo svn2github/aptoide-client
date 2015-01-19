@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -42,6 +42,7 @@ import java.util.Map;
 
 import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
@@ -230,7 +231,7 @@ public class FragmentListStore extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
-        StoreListAdapter adapter = new StoreListAdapter(getActivity(), items);
+        StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager());
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -273,7 +274,7 @@ public class FragmentListStore extends Fragment {
     public void refresh(long expire){
         setLoading(view);
         request = new GetStoreRequest();
-        StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
+        StoreActivity.Sort sort = ((CategoryCallback) getActivity()).getSort().getSort();
         request.setSort(sort);
         items.clear();
         rRiew.getAdapter().notifyDataSetChanged();
@@ -494,7 +495,7 @@ public class FragmentListStore extends Fragment {
                                 rRiew.getAdapter().notifyItemInserted(rRiew.getAdapter().getItemCount());
 
                                 request = new GetStoreRequest();
-                                StoreActivity.Sort sort = ((StoreActivity) getActivity()).getSort().getSort();
+                                StoreActivity.Sort sort = ((CategoryCallback) getActivity()).getSort().getSort();
                                 request.setSort(sort);
 
                                 if(getArguments().containsKey("username")){
@@ -671,12 +672,14 @@ public class FragmentListStore extends Fragment {
 
         private String storename;
 
-        public StoreListAdapter(Context context, List<StoreListItem> list) {
+        public StoreListAdapter(Context context, List<StoreListItem> list, FragmentManager fragmentManager) {
             this.list = list;
             this.context = context;
+            this.fragmentManager = fragmentManager;
         }
 
         private Context context;
+        private final FragmentManager fragmentManager;
 
         @Override
         public StoreListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -793,7 +796,7 @@ public class FragmentListStore extends Fragment {
 
                             fragment.setArguments(bundle);
 
-                            ((ActionBarActivity) context).getSupportFragmentManager().beginTransaction().setBreadCrumbTitle(storeListItem.name).replace(R.id.content_layout, fragment).addToBackStack(storeListItem.name).commit();
+                            fragmentManager.beginTransaction().setBreadCrumbTitle(storeListItem.name).replace(R.id.content_layout, fragment).addToBackStack(storeListItem.name).commit();
                         }
                     });
 

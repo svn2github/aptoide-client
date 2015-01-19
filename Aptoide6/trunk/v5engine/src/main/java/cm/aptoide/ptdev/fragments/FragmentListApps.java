@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cm.aptoide.ptdev.AppViewActivity;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
@@ -140,15 +140,15 @@ public class FragmentListApps extends Fragment {
             Api api = new Api();
             final int BUCKET_SIZE = AptoideUtils.getBucketSize();
             api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
-            api.getApi_global_params().setStore_name("apps");
+            api.getApi_global_params().setStore_name(Aptoide.getConfiguration().getDefaultStore());
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
             api.getApi_global_params().mature = String.valueOf(!sPref.getBoolean("matureChkBox", true));
 
 
             Api.GetStore getStore = new Api.GetStore();
-            Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
 
+            Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
             categoriesParams.setParent_ref_id("cat_2");
 
             Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
@@ -246,7 +246,7 @@ public class FragmentListApps extends Fragment {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(viewHolder.itemView.getContext(), AppViewActivity.class);
+                        Intent i = new Intent(viewHolder.itemView.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.getApk().getMd5sum());
                         i.putExtra("repoName", apk.getApk().getRepo());
@@ -293,7 +293,7 @@ public class FragmentListApps extends Fragment {
                 viewHolder.frameLayouts[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(viewHolder.itemView.getContext(), AppViewActivity.class);
+                        Intent intent = new Intent(viewHolder.itemView.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
                         intent.putExtra("fromRelated", true);
                         intent.putExtra("md5sum", apk.md5sum);
                         intent.putExtra("repoName", apk.store_name);
@@ -409,7 +409,7 @@ public class FragmentListApps extends Fragment {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(v.getContext(), AppViewActivity.class);
+                        Intent i = new Intent(v.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
                         long id = apkSuggestion.getData().getId().longValue();
                         i.putExtra("id", id);
                         i.putExtra("packageName", apkSuggestion.getData().getPackageName());
@@ -610,7 +610,7 @@ public class FragmentListApps extends Fragment {
                 viewHolder.views[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(v.getContext(), AppViewActivity.class);
+                        Intent i = new Intent(v.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
                         i.putExtra("fromRelated", true);
                         i.putExtra("md5sum", apk.md5sum);
                         i.putExtra("repoName", apk.store_name);

@@ -1,28 +1,24 @@
 package com.aptoide.partners;
 
 import android.content.DialogInterface;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import com.adsdk.sdk.banner.AdView;
+import com.flurry.android.FlurryAgent;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+
+import java.util.HashMap;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.InstalledApkEvent;
 import cm.aptoide.ptdev.UnInstalledApkEvent;
 import cm.aptoide.ptdev.downloadmanager.event.DownloadEvent;
 import cm.aptoide.ptdev.events.AppViewRefresh;
 import cm.aptoide.ptdev.events.OnMultiVersionClick;
-import cm.aptoide.ptdev.model.Comment;
 import cm.aptoide.ptdev.model.Download;
-import cm.aptoide.ptdev.webservices.GetApkInfoRequest;
-import com.adsdk.sdk.banner.AdView;
-import com.flurry.android.FlurryAgent;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by rmateus on 19-03-2014.
@@ -131,12 +127,13 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
 
     @Override
-    public void loadPublicity() {
+    public void loadMoPub() {
 
         if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getShowAds()) {
 
             if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
-                super.loadPublicity();
+                super.loadMoPub();
+//                Log.d("AppViewActivityPartner", "load mopub");
             } else {
                 RelativeLayout layout = (RelativeLayout) findViewById(R.id.advertisement);
                 layout.setVisibility(View.VISIBLE);
@@ -155,11 +152,11 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
                 layout.addView(mAdView, params);
 
+
                 HashMap<String, String> adTypeArgs = new HashMap<String, String>();
                 adTypeArgs.put("type", "mobfox");
-                if (Build.VERSION.SDK_INT >= 10)
-                    FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
-
+                FlurryAgent.logEvent("AppView_Load_Publicity", adTypeArgs);
+//                Log.d("AppViewActivityPartner", "load mobfox");
             }
         }
 
@@ -171,8 +168,10 @@ public class AppViewActivityPartner extends cm.aptoide.ptdev.AppViewActivity {
 
             if (TextUtils.isEmpty(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getAdUnitId())) {
                 super.destroyPublicity();
+//                Log.d("AppViewActivityPartner", "destroy mopub");
             } else {
                 if(mAdView!=null) mAdView.release();
+//                Log.d("AppViewActivityPartner", "destroy mobfox");
             }
 
         }

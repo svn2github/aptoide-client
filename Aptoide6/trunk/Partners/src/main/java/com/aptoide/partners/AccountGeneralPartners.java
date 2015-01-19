@@ -1,5 +1,7 @@
 package com.aptoide.partners;
 
+import cm.aptoide.ptdev.Aptoide;
+
 /**
  * Created by brutus on 10-12-2013.
  */
@@ -8,7 +10,7 @@ public class AccountGeneralPartners {
     /**
      * Account type id
      */
-    public static final String ACCOUNT_TYPE = "com.aptoide.partners";
+    public static final String ACCOUNT_TYPE = Aptoide.getContext().getString(R.string.account_type);
 
     /**
      * Account name

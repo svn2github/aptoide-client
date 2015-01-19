@@ -384,10 +384,16 @@ public class MoreActivity extends ActionBarActivity {
             Response postApk(@Body Api user);
         }
 
+        public String getStoreName(){
+            return "apps";
+        }
+
         public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
 
             private int offset;
             private String widget;
+
+
 
             public TestRequest() {
                 super(Response.class, TestService.class);
@@ -411,8 +417,8 @@ public class MoreActivity extends ActionBarActivity {
             public Response loadDataFromNetwork() throws Exception {
                 Api api = new Api();
 
-                api.getApi_global_params().setLang("en");
-                api.getApi_global_params().setStore_name("apps");
+                api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
+                api.getApi_global_params().setStore_name(Aptoide.getConfiguration().getDefaultStore());
                 int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
                 SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());

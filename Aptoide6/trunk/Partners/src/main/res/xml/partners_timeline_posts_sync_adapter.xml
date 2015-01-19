@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.aptoide.partners.TimelinePosts"
+    android:contentAuthority="@string/timelineposts_provider"
     android:accountType="com.aptoide.partners"
     android:supportsUploading="false"
     android:allowParallelSyncs="false"

@@ -1,22 +1,23 @@
 package com.aptoide.partners;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentBreadCrumbsPartners;
-import android.support.v4.app.FragmentManager;
-import android.view.*;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
-import cm.aptoide.ptdev.fragments.FragmentStore;
-import cm.aptoide.ptdev.fragments.FragmentStoreGridCategories;
-import cm.aptoide.ptdev.fragments.FragmentStoreListCategories;
+import cm.aptoide.ptdev.fragments.FragmentListStore;
 
 /**
  * Created by rmateus on 20-03-2014.
  */
-public class Fragment extends android.support.v4.app.Fragment implements FragmentStore {
+public class Fragment extends android.support.v4.app.Fragment  {
 
 
 
@@ -24,7 +25,7 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        if(((AptoideConfigurationPartners)Aptoide.getConfiguration()).getMultistores()) {
+        if(((AptoideConfigurationPartners) Aptoide.getConfiguration()).getMultistores()) {
             inflater.inflate(cm.aptoide.ptdev.R.menu.menu_categories, menu);
         } else{
             inflater.inflate(R.menu.partners_menu_categories, menu);
@@ -50,12 +51,6 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
                 menu.findItem(cm.aptoide.ptdev.R.id.rating).setChecked(true);
                 break;
         }
-
-        if(sort.isNoCategories()){
-            menu.findItem(cm.aptoide.ptdev.R.id.show_all).setChecked(true);
-        }
-
-        menu.findItem(cm.aptoide.ptdev.R.id.show_all).setVisible(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("mergeStores", false));
 
     }
 
@@ -86,13 +81,6 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
         }else if( i == cm.aptoide.ptdev.R.id.price){
             ((StartPartner)getActivity()).setSort(StoreActivity.Sort.PRICE);
             setSort(item);
-
-        }else if( i == cm.aptoide.ptdev.R.id.show_all){
-
-            ((StartPartner)getActivity()).toggleCategories();
-            getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            setSort(item);
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -144,7 +132,6 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
         super.onViewCreated(view, savedInstanceState);
 
 
-
         FragmentBreadCrumbsPartners breadCrumbs = (FragmentBreadCrumbsPartners) getView().findViewById(cm.aptoide.ptdev.R.id.breadcrumbs);
         breadCrumbs.setFragment(this);
         breadCrumbs.setTitle("Home", null);
@@ -153,14 +140,13 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
 
             android.support.v4.app.Fragment fragment;
             String storeView = ((AptoideConfigurationPartners)Aptoide.getConfiguration()).getStoreView();
-            if("grid".equals(storeView)){
-                fragment= new FragmentStoreGridCategories();
-            }else{
-                fragment= new FragmentStoreListCategories();
-            }
+
+            fragment = new FragmentListStore();
 
             Bundle args = new Bundle();
             args.putLong("storeid", -200);
+            args.putString("storename", Aptoide.getConfiguration().getDefaultStore());
+            args.putString("theme", ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getTheme());
             fragment.setArguments(args);
             fragment.setMenuVisibility(false);
             fragment.setUserVisibleHint(false);
@@ -179,40 +165,6 @@ public class Fragment extends android.support.v4.app.Fragment implements Fragmen
         super.onResume();
 
 
-
-    }
-
-
-    @Override
-    public void onRefreshCalled() {
-        FragmentStore fragStore = (FragmentStore) getChildFragmentManager().findFragmentByTag("fragStore");
-        if(fragStore!=null){
-            fragStore.onRefreshCalled();
-        }
-    }
-
-    @Override
-    public void onError() {
-        FragmentStore fragStore = (FragmentStore) getChildFragmentManager().findFragmentByTag("fragStore");
-        if(fragStore!=null){
-            fragStore.onError();
-        }
-    }
-
-    @Override
-    public void setRefreshing(boolean bool) {
-        FragmentStore fragStore = (FragmentStore) getChildFragmentManager().findFragmentByTag("fragStore");
-        if(fragStore!=null){
-            fragStore.setRefreshing(bool);
-        }
-    }
-
-    @Override
-    public void setListShown(boolean b) {
-        FragmentStore fragStore = (FragmentStore) getChildFragmentManager().findFragmentByTag("fragStore");
-        if(fragStore!=null){
-            fragStore.setListShown(b);
-        }
 
     }
 

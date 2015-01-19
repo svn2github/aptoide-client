@@ -30,7 +30,6 @@ public class Wizard {
         wizard.add(NewToAptoide1.newInstace());
         wizard.add(NewToAptoide2.newInstace());
         wizard.add(NewToAptoide3.newInstace());
-        wizard.add(OneClickInstallWizard.newInstance());
         return wizard;
     }
 

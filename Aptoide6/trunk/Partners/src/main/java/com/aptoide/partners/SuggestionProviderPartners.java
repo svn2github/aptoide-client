@@ -7,8 +7,12 @@ import cm.aptoide.ptdev.SuggestionProvider;
  */
 public class SuggestionProviderPartners extends SuggestionProvider {
 
-    public SuggestionProviderPartners() {
+    public SuggestionProviderPartners() {}
 
-        setupSuggestions("com.aptoide.partners.SuggestionProvider", DATABASE_MODE_QUERIES);
+    @Override
+    public boolean onCreate() {
+        setupSuggestions(getContext().getPackageName() + ".SuggestionProvider", DATABASE_MODE_QUERIES);
+        isConfigured = true;
+        return super.onCreate();
     }
 }

@@ -77,6 +77,8 @@ public class FragmentListTopApps extends Fragment {
     public interface TestService{
         @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps,listStores/")
         Response postApk(@Body Api user);
+
+
     }
 
     public static class TestRequest extends RetrofitSpiceRequest<Response, TestService> {
@@ -88,13 +90,15 @@ public class FragmentListTopApps extends Fragment {
 
         }
 
+        private String context;
+
         @Override
 
         public Response loadDataFromNetwork() throws Exception {
             Api api = new Api();
 
             api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
-            api.getApi_global_params().setStore_name("apps");
+            api.getApi_global_params().setStore_name(Aptoide.getConfiguration().getDefaultStore());
             api.getApi_global_params().limit = 10;
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
@@ -109,7 +113,7 @@ public class FragmentListTopApps extends Fragment {
 
 
             Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
-            widgetParams.setContext("top");
+            widgetParams.setContext(context);
 
             //getStore.getDatasets_params().set(categoriesParams);
             getStore.getDatasets_params().set(widgetParams);
@@ -130,9 +134,15 @@ public class FragmentListTopApps extends Fragment {
 
         }
 
+        public void setContext(String context) {
+            this.context = context;
+        }
     }
 
 
+    public String getContext(){
+        return "top";
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -182,6 +192,8 @@ public class FragmentListTopApps extends Fragment {
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
         final TestRequest request = new TestRequest();
+
+        request.setContext(getContext());
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
         requestListener = new RequestListener<Response>() {

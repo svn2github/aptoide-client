@@ -10,7 +10,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.adapters.V6.Displayable;
@@ -96,7 +95,7 @@ public class AppsRow implements Displayable {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, AppViewActivity.class);
+                    Intent i = new Intent(context, Aptoide.getConfiguration().getAppViewActivityClass());
                     i.putExtra("fromRelated", true);
                     i.putExtra("md5sum", apks.get(0).md5sum);
                     i.putExtra("repoName", apks.get(0).store_name);

@@ -12,5 +12,6 @@ package cm.aptoide.ptdev.downloadmanager;
 public interface DownloadExecutor {
 
     public void execute();
+    public FinishedApk getApk();
 
 }

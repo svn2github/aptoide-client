@@ -170,6 +170,7 @@ public class FinishedApk implements Parcelable, Serializable{
     }
 
     public void setReferrer(String referrer) {
+        Log.d("AptoideFinishedApk", "Setting referrer " + referrer);
         this.referrer = referrer;
     }
 
