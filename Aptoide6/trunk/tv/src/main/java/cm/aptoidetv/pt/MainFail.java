@@ -53,7 +53,7 @@ public class MainFail extends Activity implements RequestsTvListener {
 
     public void RetryClick(View view){
         findViewById(R.id.Loading_fail).setVisibility(View.VISIBLE);
-        final RequestTV request = new RequestTV("store", this);
+        final RequestTV request = new RequestTV(this);
 
         RequestListener<Response> requestListener = new RequestListener<Response>() {
             @Override

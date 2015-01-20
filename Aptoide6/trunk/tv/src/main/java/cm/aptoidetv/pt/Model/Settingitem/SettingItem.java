@@ -1,5 +1,6 @@
 package cm.aptoidetv.pt.Model.Settingitem;
 
+import cm.aptoidetv.pt.CardPresenter;
 import cm.aptoidetv.pt.Model.BindInterface;
 
 /**
@@ -7,8 +8,12 @@ import cm.aptoidetv.pt.Model.BindInterface;
  */
 public abstract class SettingItem implements BindInterface {
     @Override
-    public boolean isEditorsChoice() {
-        return false;
+    public int getWidth() {
+        return CardPresenter.ICON_WIDTH;
+    }
+    @Override
+    public int getHeight() {
+        return CardPresenter.ICON_HEIGHT;
     }
     @Override
     public String getVersion() {

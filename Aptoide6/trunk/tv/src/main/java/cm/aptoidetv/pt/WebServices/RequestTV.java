@@ -17,12 +17,11 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
         Response postApk(@Body Api user);
     }
-    private final String store;
+
     private final Context context;
 
-    public RequestTV(String store, Context context) {
+    public RequestTV(Context context) {
         super(Response.class, ServiceTV.class);
-        this.store = store;
         this.context = context;
     }
 
@@ -41,7 +40,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         categoriesParams.setParent_ref_id("cat_1");*/
 
         Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
-        widgetParams.setContext(this.store);
+        widgetParams.setContext("store_extended");
 
 
         //getStore.getDatasets_params().set(categoriesParams);

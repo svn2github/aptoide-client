@@ -29,11 +29,11 @@ public class ApplicationAPK implements Serializable, BindInterface{
     private String date;
     private String path;
     private String md5h;
-    private String sz;
+/*    private String sz;
     private String vercode;
     private String minSdk;
     private String minScreen;
-    private String cpu;
+    private String cpu;*/
 
     public ApplicationAPK(Response.ListApps.Apk apk,String cat){
         this.name = apk.name;
@@ -47,11 +47,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
         this.catg=cat;
 
         //public String apk.graphic;
-    }
-
-    @Override
-    public boolean isEditorsChoice() {
-        return false;
     }
 
     @Override
@@ -85,7 +80,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
         intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, getImage());
         intent.putExtra(DetailsActivity.APP_NAME, name);
         intent.putExtra(DetailsActivity.DOWNLOADS, downloads);
-        intent.putExtra(DetailsActivity.VERCODE, vercode);
         intent.putExtra(DetailsActivity.MD5_SUM, md5h);
         intent.putExtra(DetailsActivity.APP_ICON, getImage());
 
@@ -107,5 +101,14 @@ public class ApplicationAPK implements Serializable, BindInterface{
                     .resize(iconWidth,iconHeight)
                             //   .error(mDefaultCardImage)
                     .into(picassoImageCardViewTarget);
+    }
+
+    @Override
+    public int getWidth() {
+        return CardPresenter.ICON_WIDTH;
+    }
+    @Override
+    public int getHeight() {
+        return CardPresenter.ICON_HEIGHT;
     }
 }

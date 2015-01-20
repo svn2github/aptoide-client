@@ -26,12 +26,6 @@ public class EditorsChoice implements Serializable, BindInterface {
     public EditorsChoice(Response.GetStore.Widgets.Widget widget) {
         this.name = widget.name;
     }
-
-    @Override
-    public boolean isEditorsChoice() {
-        return true;
-    }
-
     @Override
     public String getText(Context context) {
         return context.getString(R.string.downloads) + ": " + getDownloads();
@@ -63,7 +57,6 @@ public class EditorsChoice implements Serializable, BindInterface {
         intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, featuregraphicpath + packagename.featuregraphic);
         intent.putExtra(DetailsActivity.APP_NAME, packagename.name);
         intent.putExtra(DetailsActivity.DOWNLOAD_URL, apkpath+getPackagename().getPath());
-        intent.putExtra(DetailsActivity.VERCODE, getPackagename().getVercode());
         intent.putExtra(DetailsActivity.MD5_SUM, getPackagename().getMd5h());
         intent.putExtra(DetailsActivity.APP_SIZE, getPackagename().getSz());
 
@@ -156,6 +149,16 @@ public class EditorsChoice implements Serializable, BindInterface {
                 .resize(iconWidth,iconHeight)
                         //   .error(mDefaultCardImage)
                 .into(picassoImageCardViewTarget);
+    }
+
+    @Override
+    public int getWidth() {
+        return CardPresenter.card_presenter_width;
+    }
+
+    @Override
+    public int getHeight() {
+        return CardPresenter.card_presenter_height;
     }
 
     public static class PackageName implements Serializable {

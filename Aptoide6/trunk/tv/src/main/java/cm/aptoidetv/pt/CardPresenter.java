@@ -24,8 +24,8 @@ public class CardPresenter extends Presenter {
     private static Context mContext;
     public static final int card_presenter_width = 705;
     public static final int card_presenter_height = 345;
-    private static final int ICON_WIDTH = 256;
-    private static final int ICON_HEIGHT = 256;
+    public static final int ICON_WIDTH = 256;
+    public static final int ICON_HEIGHT = 256;
 /*  public static final int card_presenter_width = 320;
     public static final int card_presenter_height = 180;
     private static final int CARD_WIDTH = 313;
@@ -51,17 +51,9 @@ public class CardPresenter extends Presenter {
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         ViewHolder myViewHolder = (ViewHolder) viewHolder;
         BindInterface bi = (BindInterface) item;
-        int width, height;
-        if (bi.isEditorsChoice()) {
-            width=card_presenter_width;
-            height=card_presenter_height;
-        } else  {
-            width=ICON_WIDTH;
-            height=ICON_HEIGHT;
-        }
         myViewHolder.mCardView.setContentText(bi.getText(mContext));
         myViewHolder.mCardView.setTitleText(Html.fromHtml(bi.getName(mContext)));
-        myViewHolder.mCardView.setMainImageDimensions(width,height);
+        myViewHolder.mCardView.setMainImageDimensions(bi.getWidth(),bi.getHeight());
         //myViewHolder.updateCardViewImage(bi.getImage());
         bi.setImage(ICON_WIDTH,ICON_HEIGHT,myViewHolder.getPicassoImageCardViewTarget());
     }

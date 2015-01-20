@@ -9,7 +9,7 @@ import cm.aptoidetv.pt.CardPresenter;
  */
 public interface BindInterface {
 
-    public boolean isEditorsChoice();
+
     public String getText(Context context);
     public String getName(Context context);
     public String getVersion();
@@ -19,4 +19,7 @@ public interface BindInterface {
     public String getDownloadUrl();
 
     public void setImage(int iconWidth, int iconHeight, CardPresenter.PicassoImageCardViewTarget picassoImageCardViewTarget);
+
+    int getWidth();
+    int getHeight();
 }

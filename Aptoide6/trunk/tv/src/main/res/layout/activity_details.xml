@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:padding="10dp"
-            android:text="@string/install">
+            android:text="@string/install"
+            android:visibility="gone">
             <requestFocus />
         </Button>
 

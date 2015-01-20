@@ -55,7 +55,6 @@ import cm.aptoidetv.pt.WebServices.old.UpdateUserRequest;
 import cm.aptoidetv.pt.WebServices.old.json.GenericResponseV2;
 
 public class DetailsActivity extends ActionBarActivity {
-
     private DownloadManager downloadmanager;
     private long downloadID;
 
@@ -65,17 +64,15 @@ public class DetailsActivity extends ActionBarActivity {
     public static final String APP_NAME = "name";
     public static final String DOWNLOADS = "downloads";
     public static final String DOWNLOAD_URL = "download_URL";
-    public static final String VERCODE = "vercode";
     public static final String MD5_SUM = "md5sum";
     public static final String APP_ICON = "icon";
     public static final String APP_SIZE = "size";
 
-    private String packageName, featuredGraphic, appName,download_URL, downloads, verName, md5sum, icon, size;
+    private String packageName, downloads, verName, md5sum, icon, size;
 
     private ImageView app_icon;
     private Button downloadButton;
     private Button canceldownloadButton;
-    private TextView app_name;
     private TextView app_developer;
     private TextView app_version;
     private TextView app_downloads;
@@ -120,11 +117,16 @@ public class DetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        String appName = getIntent().getStringExtra(APP_NAME);
+        if(appName!=null) {
+            TextView app_name = (TextView) findViewById(R.id.app_name);
+            app_name.setText(appName);
+        }
+
         packageName = getIntent().getStringExtra(PACKAGE_NAME);
-        featuredGraphic = getIntent().getStringExtra(FEATURED_GRAPHIC);
-        appName = getIntent().getStringExtra(APP_NAME);
+        /*featuredGraphic = getIntent().getStringExtra(FEATURED_GRAPHIC);
+        download_URL = getIntent().getStringExtra(DOWNLOAD_URL);*/
         downloads = getIntent().getStringExtra(DOWNLOADS);
-        download_URL = getIntent().getStringExtra(DOWNLOAD_URL);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
         size = getIntent().getStringExtra(APP_SIZE);
@@ -134,9 +136,6 @@ public class DetailsActivity extends ActionBarActivity {
 
         app_icon = (ImageView) findViewById(R.id.app_icon);
         downloadButton = (Button) findViewById(R.id.download);
-        app_name = (TextView) findViewById(R.id.app_name);
-        if(appName!=null)
-            app_name.setText(appName);
         app_developer = (TextView) findViewById(R.id.app_developer);
         app_version = (TextView) findViewById(R.id.app_version);
         app_downloads = (TextView) findViewById(R.id.app_downloads);
@@ -173,6 +172,7 @@ public class DetailsActivity extends ActionBarActivity {
             public void onRequestSuccess(GetApkInfoJson apkInfoJson) {
                 loading_pb.setVisibility(View.GONE);
                 app_view_details_layout.setVisibility(View.VISIBLE);
+                downloadButton.setVisibility(View.VISIBLE);
                 addDownloadButtonListener(apkInfoJson);
                 packageName = apkInfoJson.getApk().getPackage();
                 int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
@@ -280,11 +280,8 @@ public class DetailsActivity extends ActionBarActivity {
         }
     }
     private void changebtInstalltoOpen(String packageName){
-
         final Intent i = getPackageManager().getLaunchIntentForPackage(packageName);
-
         downloadButton.setText(getString(R.string.open));
-
         if (i != null) {
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -311,33 +308,18 @@ public class DetailsActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View view) {
                         String servicestring = Context.DOWNLOAD_SERVICE;
-
                         downloadmanager = (DownloadManager) getSystemService(servicestring);
 
                         Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
-
                         DownloadManager.Request request = new DownloadManager.Request(uri);
                         String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
                         new updateDownLoadInfoTask().execute(APKpath);
                         request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
-//                    Log.d(TAG, "User-Agent" + Utils.getUserAgentString(DetailsActivity.this));
-
-                        //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                         request.setAllowedOverRoaming(false);
                         request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
-//                  Log.d(TAG, "getName() " + ((GetApkInfoJson) detailRow.getItem()).getMeta().getTitle());
-
-
-
-
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
                         request.setDestinationInExternalPublicDir("apks", APKpath);
-
-//                        Log.d(TAG, "save to sdcard: " + (((GetApkInfoJson) detailRow.getItem()).getApk().getPackage() + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getVercode().intValue()) + "-" + (((GetApkInfoJson) detailRow.getItem()).getApk().getMd5sum()) + ".apk"));
-
                         downloadID = downloadmanager.enqueue(request);
-                        //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                        //isRegistered = true;
                     }
                 });
         }
@@ -376,9 +358,7 @@ public class DetailsActivity extends ActionBarActivity {
         return viewtoRet;
     }
 
-
     public static class ScreenShotsListener implements View.OnClickListener {
-
         private Context context;
         private final int position;
         private ArrayList<String> urls;
@@ -578,7 +558,6 @@ public class DetailsActivity extends ActionBarActivity {
                         LoginActivity.AUTHTOKEN_TYPE_FULL_ACCESS,
                         null, null, activity, null, null);
             }
-
         }
 
         private void addLike() {
@@ -593,13 +572,11 @@ public class DetailsActivity extends ActionBarActivity {
         }
     }
     public void updateUsername(final String username) {
-
         UpdateUserRequest request = new UpdateUserRequest(this);
         request.setName(username);
 
         new ProgressDialogFragment().show(getSupportFragmentManager(), "pleaseWaitDialog");
         manager.execute(request, new RequestListener<GenericResponseV2>() {
-
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 dismiss();
@@ -615,7 +592,6 @@ public class DetailsActivity extends ActionBarActivity {
                 } else {
                     AptoideUtils.toastError(createUserJson.getErrors());
                 }
-
             }
         });
     }

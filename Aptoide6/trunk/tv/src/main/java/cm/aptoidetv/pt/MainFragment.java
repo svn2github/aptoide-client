@@ -59,7 +59,7 @@ public class MainFragment extends BrowseFragment{
         super.onActivityCreated(savedInstanceState);
         setupUIElements();
         setupEventListeners();
-        final RequestTV request = new RequestTV("store", getActivity());
+        final RequestTV request = new RequestTV(getActivity());
         final HashMap<String,String> installed= new HashMap<>();
         for (PackageInfo pi : getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)){
             if(!pi.packageName.startsWith("com.android"))
@@ -78,9 +78,7 @@ public class MainFragment extends BrowseFragment{
                 try {
                     ArrayObjectAdapter mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
                     CardPresenter cardPresenter = new CardPresenter();
-
                     List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
-
                     {
                         List<EditorsChoice> mEditorsChoice = loadmEditorsChoice();
                         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
@@ -101,21 +99,20 @@ public class MainFragment extends BrowseFragment{
                         if (!"apps_list".equals(widget.type)) {
                             continue;
                         }
-
                         final String ref_id = widget.data.ref_id;
                         final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
-
                         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                         int amount = 0;
                         for (Response.ListApps.Apk apk : data.data.list) {
-                            if (installed.keySet().contains(apk.packageName)) {
+                            String installedapk = installed.get(apk.packageName);
+                            if(installedapk!=null) {
 /*                            Log.d("pois","Package: "+apk.packageName);
                             Log.d("pois","apk.vername: "+apk.vername);
                             Log.d("pois","installed: "+installed.get(apk.packageName));
                             Log.d("pois","###############################################");*/
-                                if (apk.vername.compareTo(installed.get(apk.packageName)) > 0) {
-                                    if (APKUpdates.containsKey(apk.packageName)) {
-                                        Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
+                                if (apk.vername.compareTo(installedapk) > 0) {
+                                    Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
+                                    if (currentapk!=null) {
                                         if (apk.vername.compareTo(currentapk.vername) > 0) {
                                             APKUpdates.remove(apk.packageName);
                                             APKUpdates.put(apk.packageName, apk);
@@ -125,7 +122,6 @@ public class MainFragment extends BrowseFragment{
                                     }
                                 }
                             }
-
                             ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
                             amount++;
                             listRowAdapter.add(storeApplication);
@@ -183,14 +179,11 @@ public class MainFragment extends BrowseFragment{
         setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
         TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor, R.attr.searchColor});
-
         int brandColorResourceId = typedArray.getResourceId(0, 0);
         int searchColorResourceId = typedArray.getResourceId(1, R.color.search_opaque);
         setBrandColor(getResources().getColor(brandColorResourceId));
         setSearchAffordanceColor(getResources().getColor(searchColorResourceId));
-
         typedArray.recycle();
-
     }
 
     private List<EditorsChoice> loadmEditorsChoice() {
@@ -201,23 +194,17 @@ public class MainFragment extends BrowseFragment{
     }
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
             }
         });
-
-        setOnItemViewClickedListener(new ItemViewClickedListener());
-    }
-
-    private final class ItemViewClickedListener implements OnItemViewClickedListener {
-        @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
-                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
-            ((BindInterface)item).startActivity(getActivity());
-
-        }
+        setOnItemViewClickedListener(new OnItemViewClickedListener() {
+            @Override
+            public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+                ((BindInterface)item).startActivity(getActivity());
+            }
+        });
     }
 }

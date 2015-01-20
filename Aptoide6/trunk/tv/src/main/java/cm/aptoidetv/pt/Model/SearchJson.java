@@ -128,10 +128,13 @@ public class SearchJson {
             }
 
             @Override
-            public boolean isEditorsChoice() {
-                return false;
+            public int getWidth() {
+                return CardPresenter.ICON_WIDTH;
             }
-
+            @Override
+            public int getHeight() {
+                return CardPresenter.ICON_HEIGHT;
+            }
             @Override
             public String getText(Context context) {
                 return context.getString(R.string.version) + ": " + getVersion();
@@ -168,7 +171,6 @@ public class SearchJson {
                 intent.putExtra(DetailsActivity.FEATURED_GRAPHIC, getImage());
                 intent.putExtra(DetailsActivity.APP_NAME, getName(context));
                 intent.putExtra(DetailsActivity.DOWNLOAD_URL, getDownloadUrl());
-                intent.putExtra(DetailsActivity.VERCODE, getVercode());
                 intent.putExtra(DetailsActivity.MD5_SUM, getMd5sum());
                 intent.putExtra(DetailsActivity.APP_ICON, getImage());
 
