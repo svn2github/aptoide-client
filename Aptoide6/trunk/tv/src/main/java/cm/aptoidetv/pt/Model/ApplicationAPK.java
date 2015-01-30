@@ -20,8 +20,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
     private String packagename;
     private String ver;
     private String name;
-    private String catg;
-    private String catg2;
     private String downloads;
     private String rat;
     private String icon_hd;
@@ -35,7 +33,7 @@ public class ApplicationAPK implements Serializable, BindInterface{
     private String minScreen;
     private String cpu;*/
 
-    public ApplicationAPK(Response.ListApps.Apk apk,String cat){
+    public ApplicationAPK(Response.ListApps.Apk apk){
         this.name = apk.name;
         this.packagename =  apk.packageName;
         this.ver = apk.vername;
@@ -43,9 +41,6 @@ public class ApplicationAPK implements Serializable, BindInterface{
         this.downloads = String.valueOf(apk.downloads);
         this.rat= String.valueOf(apk.rating);
         this.icon = apk.icon;
-        this.catg2=cat;
-        this.catg=cat;
-
         //public String apk.graphic;
     }
 

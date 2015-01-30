@@ -8,8 +8,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scroller"
-    android:layout_marginRight="50dp"
-    android:layout_marginLeft="50dp"
+    android:layout_marginRight="75dp"
+    android:layout_marginLeft="75dp"
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
@@ -98,12 +98,13 @@
 
             <CheckBox
                 android:id="@+id/link_my_device"
+                android:text="@string/link_device_webinstall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:checked="true"
-                android:text="@string/link_device_webinstall" />
-
-
+                android:buttonTint="@color/light_gray"
+                android:focusableInTouchMode="false" />
         </LinearLayout>
 
         <LinearLayout

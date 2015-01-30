@@ -38,7 +38,7 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
 /*        Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
 
         categoriesParams.setParent_ref_id("cat_1");*/
-
+        api.getApi_global_params().limit = 50;
         Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
         widgetParams.setContext("store_extended");
 
@@ -50,6 +50,19 @@ public class RequestTV extends RetrofitSpiceRequest<Response, RequestTV.ServiceT
         getStore.addDataset(widgetParams.getDatasetName());
 
         api.getApi_params().set(getStore);
+
+/*        Api.ListApps listApps = new Api.ListApps();
+
+        Api.CategoryParam highlightedParam = new Api.CategoryParam("EDITORS_group_hrand");
+        highlightedParam.setLimit(20);
+
+        listApps.datasets_params.set(highlightedParam);
+
+
+        listApps.limit = 20;
+        listApps.datasets = null;
+
+        api.getApi_params().set(listApps);*/
 
 
         return getService().postApk(api);

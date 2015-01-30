@@ -304,24 +304,25 @@ public class DetailsActivity extends ActionBarActivity {
         } else {
             if(info!=null)
                 downloadButton.setText(getString(R.string.update));
-                downloadButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String servicestring = Context.DOWNLOAD_SERVICE;
-                        downloadmanager = (DownloadManager) getSystemService(servicestring);
+            downloadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MainFragment.Reload = true;
+                    String servicestring = Context.DOWNLOAD_SERVICE;
+                    downloadmanager = (DownloadManager) getSystemService(servicestring);
 
-                        Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
-                        new updateDownLoadInfoTask().execute(APKpath);
-                        request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
-                        request.setAllowedOverRoaming(false);
-                        request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
-                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-                        request.setDestinationInExternalPublicDir("apks", APKpath);
-                        downloadID = downloadmanager.enqueue(request);
-                    }
-                });
+                    Uri uri = Uri.parse(ApkInfoJson.getApk().getPath());
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    String APKpath = ApkInfoJson.getApk().getPackage() + "-" + (ApkInfoJson.getApk().getVercode().intValue()) + "-" + (ApkInfoJson.getApk().getMd5sum()) + ".apk";
+                    new updateDownLoadInfoTask().execute(APKpath);
+                    request.addRequestHeader("User-Agent", Utils.getUserAgentString(DetailsActivity.this));
+                    request.setAllowedOverRoaming(false);
+                    request.setTitle("Downloading " + ApkInfoJson.getMeta().getTitle());
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                    request.setDestinationInExternalPublicDir("apks", APKpath);
+                    downloadID = downloadmanager.enqueue(request);
+                }
+            });
         }
     }
 
@@ -505,13 +506,11 @@ public class DetailsActivity extends ActionBarActivity {
     public class AddCommentListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
             final AccountManager accountManager = AccountManager.get(activity);
 
             if (accountManager.getAccountsByType(AppTV.getConfiguration().getAccountType()).length > 0) {
-                if (!PreferenceManager.getDefaultSharedPreferences(AppTV.getContext()).getString("username", "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
+                if (!PreferenceManager.getDefaultSharedPreferences(AppTV.getContext()).getString(Preferences.USERNAME, "NOT_SIGNED_UP").equals("NOT_SIGNED_UP")) {
                     String comment = editText_addcomment.getText().toString();
-
                     if(comment.length()<10){
                         Toast.makeText(getApplicationContext(), R.string.error_IARG_100, Toast.LENGTH_LONG).show();
                         return;
@@ -530,9 +529,7 @@ public class DetailsActivity extends ActionBarActivity {
             } else {
                 accountManager.addAccount(AppTV.getConfiguration().getAccountType(), LoginActivity.AUTHTOKEN_TYPE_FULL_ACCESS,
                         null, null, activity, null, null);
-
             }
-
         }
     }
 
@@ -548,7 +545,6 @@ public class DetailsActivity extends ActionBarActivity {
 
         @Override
         public void onClick(View v) {
-
             final AccountManager accountManager = AccountManager.get(activity);
 
             if (accountManager.getAccountsByType(AppTV.getConfiguration().getAccountType()).length > 0) {
@@ -588,7 +584,7 @@ public class DetailsActivity extends ActionBarActivity {
 
                 if (createUserJson.getStatus().equals("OK")) {
                     Toast.makeText(AppTV.getContext(), R.string.username_success, Toast.LENGTH_LONG).show();
-                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("username", username).commit();
+                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putString(Preferences.USERNAME, username).commit();
                 } else {
                     AptoideUtils.toastError(createUserJson.getErrors());
                 }

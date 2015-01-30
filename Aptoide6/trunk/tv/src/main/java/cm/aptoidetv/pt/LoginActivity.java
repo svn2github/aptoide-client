@@ -610,7 +610,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                     }
 
                     if (null != (checkUserCredentialsJson.getUsername())) {
-                        preferences.putString("username", checkUserCredentialsJson.getUsername());
+                        preferences.putString(Preferences.USERNAME, checkUserCredentialsJson.getUsername());
                     }
 
                     preferences.putString(LOGIN_USER_LOGIN, username);

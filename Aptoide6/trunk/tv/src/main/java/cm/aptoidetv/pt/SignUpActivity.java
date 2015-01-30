@@ -172,7 +172,7 @@ public class SignUpActivity extends ActionBarActivity{
 
                         if ("OK".equals(checkUserCredentialsJson.getStatus())) {
                             SharedPreferences.Editor editor =PreferenceManager
-                                    .getDefaultSharedPreferences(SignUpActivity.this)
+                                    .getDefaultSharedPreferences(AppTV.getContext())
                                     .edit();
                             if (null != checkUserCredentialsJson.getQueue()) {
                                 //hasQueue = true;
@@ -187,7 +187,7 @@ public class SignUpActivity extends ActionBarActivity{
                             }
 
                             if (null != checkUserCredentialsJson.getUsername()) {
-                                editor.putString("username", checkUserCredentialsJson.getUsername());
+                                editor.putString(Preferences.USERNAME, checkUserCredentialsJson.getUsername());
                             }
 
                             editor.putString(LoginActivity.LOGIN_USER_LOGIN, emailBox.getText().toString());

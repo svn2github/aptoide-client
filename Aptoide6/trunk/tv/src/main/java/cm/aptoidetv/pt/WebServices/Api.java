@@ -1,14 +1,20 @@
 package cm.aptoidetv.pt.WebServices;
 
+import android.preference.PreferenceManager;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cm.aptoidetv.pt.AppTV;
+import cm.aptoidetv.pt.Filters;
 
 /**
  * Created by rmateus on 13-11-2014.
@@ -46,11 +52,28 @@ public class Api {
 
     public static class ApiGlobalParams {
 
+        public Number limit;
+
+        public String mature;
         public String lang;
         public String store_name;
 
+        public String country;
+
+        public String q = getFilters();
+
         public void setLang(String lang) {
             this.lang = lang;
+        }
+
+        public String getFilters(){
+
+            if(PreferenceManager.getDefaultSharedPreferences(AppTV.getContext()).getBoolean("hwspecsChkBox", true)){
+                return Filters.filters(AppTV.getContext());
+            }else{
+                return null;
+            }
+            
         }
 
         public void setStore_name(String store_name) {
@@ -58,8 +81,77 @@ public class Api {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+
+    public static class CategoryParam implements DatasetParam{
+
+        @JsonIgnore
+        private final String category;
+
+        private Number limit;
+
+        @JsonIgnore
+        public CategoryParam(String categoryName) {
+            this.category = categoryName;
+        }
+
+        @Override
+        public String getDatasetName() {
+            return category;
+        }
+
+        public void setLimit(int limit) {
+            this.limit = limit;
+        }
+
+        public Number getLimit() {
+            return limit;
+        }
+    }
+
+    public static class ListStores implements ApiParam{
+
+        public int limit;
+        public Number offset;
+
+        public String order_by;
+        public String order_dir;
+
+        public DatasetParams datasets_params = new DatasetParams();
+
+        public List<String> datasets = new ArrayList<String>();
+
+        @Override
+        public String getApiName() {
+            return "listStores";
+        }
+    }
+
+    public static class ListApps implements ApiParam{
+
+        public int limit;
+        public Number offset;
+
+        public String order_by;
+        public String order_dir;
+
+        public DatasetParams datasets_params = new DatasetParams();
+
+        public List<String> datasets = new ArrayList<String>();
+
+        @Override
+        public String getApiName() {
+            return "listApps";
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class GetStore implements ApiParam {
 
+        public String store_name;
+
+        public String store_user;
+        public String store_pass_sha1 ;
 
         public List<String> datasets = new ArrayList<String>();
 
@@ -86,7 +178,7 @@ public class Api {
         public static class CategoriesParams implements DatasetParam {
 
             public String parent_ref_id;
-            public int max_depth = 3;
+
 
 
             public void setParent_ref_id(String parent_ref_id) {
@@ -99,9 +191,13 @@ public class Api {
             }
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class WidgetParams implements DatasetParam {
 
             private String context;
+            public String widgetid;
+            public Number offset;
+            public Number limit;
 
             public String getContext() {
                 return context;
@@ -114,6 +210,10 @@ public class Api {
             @Override
             public String getDatasetName() {
                 return "widgets";
+            }
+
+            public void setWidgetid(String widgetid) {
+                this.widgetid = widgetid;
             }
         }
 

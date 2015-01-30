@@ -17,15 +17,11 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.util.Log;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,7 +36,115 @@ import cm.aptoidetv.pt.WebServices.Response;
 
 public class MainFragment extends BrowseFragment{
     private static long timeof1strequest;
+    public static boolean Reload = true;
     private SpiceManager manager = new SpiceManager(HttpService.class);
+    private RequestListener<Response> requestListener = new RequestListener<Response>() {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Log.d("pois","spiceException msg:" + spiceException.getMessage());
+            Log.d("pois","spiceException cause:"+spiceException.getCause());
+            ((RequestsTvListener) getActivity()).onFailure();
+        }
+
+        @Override
+        public void onRequestSuccess(Response response) {
+            try {
+                ArrayObjectAdapter mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+                CardPresenter cardPresenter = new CardPresenter();
+                List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
+
+                final HashMap<String,String> installed= new HashMap<>();
+                for (PackageInfo pi : getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)){
+                    if(!pi.packageName.startsWith("com.android"))
+                        installed.put(pi.packageName, pi.versionName);
+                }
+                HashMap<String, Response.ListApps.Apk> APKUpdates = new HashMap<>();
+
+                for (Response.GetStore.Widgets.Widget widget : categories) {
+                    if (!"apps_list".equals(widget.type)) {
+                        continue;
+                    }
+                    final String ref_id = widget.data.ref_id;
+                    final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
+                    ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                    int amount = 0;
+                    int adapterSize = mRowsAdapter.size() - 1;
+                    int position = "Editors Choice".equals(widget.name) ?
+                            0 : adapterSize == 0 ? 1:adapterSize;
+                    for (Response.ListApps.Apk apk : data.data.list) {
+                        String installedapk = installed.get(apk.packageName);
+                        if(installedapk!=null) {
+                            if (apk.vername.compareTo(installedapk) > 0) {
+                                Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
+                                if (currentapk!=null) {
+                                    if (apk.vername.compareTo(currentapk.vername) > 0) {
+                                        APKUpdates.remove(apk.packageName);
+                                        APKUpdates.put(apk.packageName, apk);
+                                    }
+                                } else {
+                                    APKUpdates.put(apk.packageName, apk);
+                                }
+                            }
+                        }
+                        ApplicationAPK storeApplication = position == 0 ?
+                                        new EditorsChoice(apk):
+                                        new ApplicationAPK(apk);
+                        amount++;
+                        listRowAdapter.add(storeApplication);
+
+                    }
+                    if (listRowAdapter.size() > 0) {
+
+                        HeaderItem header = new HeaderItem(position, addAmountToTitle(widget.name, amount), null);
+                        mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                    }
+                }
+
+                // Updates
+                if (APKUpdates.size() > 0) {
+                    final String updates = getString(R.string.updates);
+                    ArrayObjectAdapter listUpdatesAdapter = new ArrayObjectAdapter(cardPresenter);
+                    int amount = 0;
+                    for (Response.ListApps.Apk apk : APKUpdates.values()) {
+                        ApplicationAPK storeApplication = new ApplicationAPK(apk);
+                        amount++;
+                        listUpdatesAdapter.add(storeApplication);
+
+                    }
+                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle(updates, amount), null);
+                    mRowsAdapter.add(new ListRow(header, listUpdatesAdapter));
+                }
+                // Settings
+                {
+                    final String settings = getString(R.string.settings);
+                    ArrayObjectAdapter listsettingsAdapter = new ArrayObjectAdapter(cardPresenter);
+                    listsettingsAdapter.add(new MyaccountItem());
+                    listsettingsAdapter.add(new PreferencesItem());
+                    HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, settings, null);
+                    mRowsAdapter.add(new ListRow(header, listsettingsAdapter));
+                }
+
+                setAdapter(mRowsAdapter);
+                ((RequestsTvListener) getActivity()).onSuccess();
+            } catch (Exception e) {
+                long timepassed = System.currentTimeMillis()-timeof1strequest;
+                if(timepassed>10000){
+                    Log.d("pois","Fail: Time Passed > 10000");
+                    ((RequestsTvListener) getActivity()).onFailure();
+                }
+
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Reload) {
+            manager.execute(new RequestTV(getActivity()), "store", DurationInMillis.ALWAYS_RETURNED, requestListener);
+            Reload=false;
+        }
+    }
 
     @Override
     public void onStart() {
@@ -60,118 +164,12 @@ public class MainFragment extends BrowseFragment{
         setupUIElements();
         setupEventListeners();
         final RequestTV request = new RequestTV(getActivity());
-        final HashMap<String,String> installed= new HashMap<>();
-        for (PackageInfo pi : getActivity().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)){
-            if(!pi.packageName.startsWith("com.android"))
-                installed.put(pi.packageName, pi.versionName);
-        }
-        RequestListener<Response> requestListener = new RequestListener<Response>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                Log.d("pois","spiceException msg:" + spiceException.getMessage());
-                Log.d("pois","spiceException cause:"+spiceException.getCause());
-                ((RequestsTvListener) getActivity()).onFailure();
-            }
 
-            @Override
-            public void onRequestSuccess(Response response) {
-                try {
-                    ArrayObjectAdapter mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-                    CardPresenter cardPresenter = new CardPresenter();
-                    List<Response.GetStore.Widgets.Widget> categories = response.responses.getStore.datasets.widgets.data.list;
-                    {
-                        List<EditorsChoice> mEditorsChoice = loadmEditorsChoice();
-                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-                        int amount = 0;
-                        for (EditorsChoice editorsChoice : mEditorsChoice) {
-                            amount++;
-                            listRowAdapter.add(editorsChoice);
-                        }
-                        if (mEditorsChoice.size() > 0) {
-                            HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle("Editors Choice", amount), null);
-                            mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                        }
-                    }
 
-                    HashMap<String, Response.ListApps.Apk> APKUpdates = new HashMap<>();
-
-                    for (Response.GetStore.Widgets.Widget widget : categories) {
-                        if (!"apps_list".equals(widget.type)) {
-                            continue;
-                        }
-                        final String ref_id = widget.data.ref_id;
-                        final Response.ListApps.Category data = response.responses.listApps.datasets.getDataset().get(ref_id);
-                        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-                        int amount = 0;
-                        for (Response.ListApps.Apk apk : data.data.list) {
-                            String installedapk = installed.get(apk.packageName);
-                            if(installedapk!=null) {
-/*                            Log.d("pois","Package: "+apk.packageName);
-                            Log.d("pois","apk.vername: "+apk.vername);
-                            Log.d("pois","installed: "+installed.get(apk.packageName));
-                            Log.d("pois","###############################################");*/
-                                if (apk.vername.compareTo(installedapk) > 0) {
-                                    Response.ListApps.Apk currentapk = APKUpdates.get(apk.packageName);
-                                    if (currentapk!=null) {
-                                        if (apk.vername.compareTo(currentapk.vername) > 0) {
-                                            APKUpdates.remove(apk.packageName);
-                                            APKUpdates.put(apk.packageName, apk);
-                                        }
-                                    } else {
-                                        APKUpdates.put(apk.packageName, apk);
-                                    }
-                                }
-                            }
-                            ApplicationAPK storeApplication = new ApplicationAPK(apk, widget.name);
-                            amount++;
-                            listRowAdapter.add(storeApplication);
-
-                        }
-                        if (listRowAdapter.size() > 0) {
-                            HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle(widget.name, amount), null);
-
-                            mRowsAdapter.add(new ListRow(header, listRowAdapter));
-                        }
-                    }
-
-                    // Updates
-                    if (APKUpdates.size() > 0) {
-                        final String updates = getString(R.string.updates);
-                        ArrayObjectAdapter listUpdatesAdapter = new ArrayObjectAdapter(cardPresenter);
-                        int amount = 0;
-                        for (Response.ListApps.Apk apk : APKUpdates.values()) {
-                            ApplicationAPK storeApplication = new ApplicationAPK(apk, updates);
-                            amount++;
-                            listUpdatesAdapter.add(storeApplication);
-                        }
-                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, addAmountToTitle(updates, amount), null);
-                        mRowsAdapter.add(new ListRow(header, listUpdatesAdapter));
-                    }
-                    // Settings
-                    {
-                        final String settings = getString(R.string.settings);
-                        ArrayObjectAdapter listsettingsAdapter = new ArrayObjectAdapter(cardPresenter);
-                        listsettingsAdapter.add(new MyaccountItem());
-                        listsettingsAdapter.add(new PreferencesItem());
-                        HeaderItem header = new HeaderItem(mRowsAdapter.size() - 1, settings, null);
-                        mRowsAdapter.add(new ListRow(header, listsettingsAdapter));
-                    }
-
-                    setAdapter(mRowsAdapter);
-                    ((RequestsTvListener) getActivity()).onSuccess();
-                } catch (Exception e) {
-                    long timepassed = System.currentTimeMillis()-timeof1strequest;
-                    if(timepassed>10000){
-                        Log.d("pois","Fail: Time Passed > 10000");
-                        ((RequestsTvListener) getActivity()).onFailure();
-                    }
-                    manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED, this);
-                }
-            }
-        };
         timeof1strequest = System.currentTimeMillis();
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED, requestListener);
     }
+
     private String addAmountToTitle(String Title,int amount){
         return Title + " ("+amount+')';
     }
@@ -186,12 +184,6 @@ public class MainFragment extends BrowseFragment{
         typedArray.recycle();
     }
 
-    private List<EditorsChoice> loadmEditorsChoice() {
-        String json = Utils.loadJSONFromResource(getActivity(), R.raw.editorschoice);
-        Gson gson = new Gson();
-        Type collection = new TypeToken<ArrayList<EditorsChoice>>(){}.getType();
-        return gson.fromJson( json, collection );
-    }
     private void setupEventListeners() {
         setOnSearchClickedListener(new View.OnClickListener() {
             @Override

@@ -4,6 +4,7 @@ public interface Preferences {
 	public final static String APTOIDE_CLIENT_UUID = "APTOIDE_CLIENT_UUID";
     public final static String SCREEN_WIDTH = "SCREEN_WIDTH";
     public final static String SCREEN_HEIGHT = "SCREEN_HEIGHT";
+    public final static String USERNAME = "username";
 /*    public final static SCREEN_DENSITY= "";
     public final static SHOW_APPLICATIONS_BY_CATEGORY= "";
     public final static SORT_APPLICATIONS_BY= "";
