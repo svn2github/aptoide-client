@@ -217,6 +217,7 @@ public class MoreActivity extends ActionBarActivity {
             requestListener = new RequestListener<Response>() {
 
 
+                public boolean addedAds;
 
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
@@ -329,7 +330,8 @@ public class MoreActivity extends ActionBarActivity {
                     request.setCategories(getArguments().getString("widgetid"));
 
 
-                    if(!loading) {
+
+                    if(!addedAds) {
                         manager.execute(request, new RequestListener<ApkSuggestionJson>() {
                             @Override
                             public void onRequestFailure(SpiceException spiceException) {
@@ -338,6 +340,8 @@ public class MoreActivity extends ActionBarActivity {
 
                             @Override
                             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+
+                                addedAds = true;
 
                                 FragmentListApps.Row row = new FragmentListApps.Row();
                                 row.header = "Suggested";
@@ -348,7 +352,9 @@ public class MoreActivity extends ActionBarActivity {
                                     Response.ListApps.Apk apk = new Response.ListApps.Apk();
 
                                     apk.icon = ads.getData().getIcon();
+                                    apk.name = ads.getData().getName();
                                     apk.id = ads.getData().id;
+                                    apk.downloads = ads.getData().getDownloads();
                                     apk.md5sum = ads.getData().md5sum;
                                     apk.rating = ads.getData().getStars();
                                     apk.vername = ads.getData().vername;
@@ -356,13 +362,17 @@ public class MoreActivity extends ActionBarActivity {
 
                                     row.addItem(apk);
                                 }
-                                map.add(0, row);
-                                recyclerView.getAdapter().notifyDataSetChanged();
+
+                                if (!apkSuggestionJson.getAds().isEmpty()) {
+                                    list.add(0, row);
+                                    recyclerView.getAdapter().notifyDataSetChanged();
+                                }
 
 
                             }
                         });
                     }
+
 
                     //Log.d("AptoideDebug", string.toString());
 
