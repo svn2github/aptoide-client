@@ -2,27 +2,12 @@ package com.aptoide.partners;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-
-import org.xml.sax.SAXException;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.net.URL;
-import java.util.HashMap;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.AptoideThemePicker;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 /**
  * Created by tdeus on 12/23/13.
@@ -37,7 +22,7 @@ public class AptoidePartner extends Aptoide {
         Crashlytics.start(this);
 
         SharedPreferences sPref = getContext().getSharedPreferences("aptoide_settings", 0);
-        if (sPref.contains("PARTNERID") && sPref.getString("PARTNERID", null) != null) {
+        /*if (sPref.contains("PARTNERID") && sPref.getString("PARTNERID", null) != null) {
 
             AptoideConfigurationPartners.PARTNERID = sPref.getString("PARTNERID", null);
             AptoideConfigurationPartners.PARTNERTYPE = sPref.getString("PARTNERTYPE", null);
@@ -150,7 +135,7 @@ public class AptoidePartner extends Aptoide {
                 e.printStackTrace();
             }
 
-        }
+        }*/
         PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit().putBoolean("matureChkBox", ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMatureContentSwitchValue()).commit();
     }
 

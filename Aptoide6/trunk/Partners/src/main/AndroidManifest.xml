@@ -97,6 +97,8 @@
         <activity android:name="cm.aptoide.ptdev.MoreUserBasedActivity" />
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
+        <activity android:name="cm.aptoide.ptdev.MoreHighlightedActivity" />
+        <activity android:name="com.aptoide.partners.FirstInstallActivity" />
 
         <activity android:name="com.aptoide.partners.SignUpActivityPartner" />
         <activity android:name="cm.aptoide.ptdev.MoreActivity" />

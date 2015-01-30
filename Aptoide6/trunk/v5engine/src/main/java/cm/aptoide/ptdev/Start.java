@@ -609,6 +609,7 @@ public class Start extends ActionBarActivity implements
                             }
 
                             FlurryAgent.logEvent("Started_From_Apkfy");
+                            startActivityForResult(intent, 50);
 
                         }
 
@@ -646,10 +647,12 @@ public class Start extends ActionBarActivity implements
                                 bundle.putString("partnerClickUrl", ad.getPartner().getPartnerData().getClick_url());
                                 intent.putExtra("partnerExtra", bundle);
                             }
+                            startActivityForResult(intent, 50);
+
                         }
+
                     }
 
-                    startActivityForResult(intent, 50);
 
 
                 } catch (IOException e) {

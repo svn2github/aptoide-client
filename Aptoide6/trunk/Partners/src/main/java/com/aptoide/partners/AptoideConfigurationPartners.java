@@ -1,68 +1,56 @@
 package com.aptoide.partners;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Environment;
-import android.util.Log;
 
 import com.aptoide.openiab.IABPurchaseActivityPartners;
 import com.aptoide.openiab.PaidAppPurchaseActivityPartners;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
 import java.util.Locale;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
-import cm.aptoide.ptdev.preferences.SecurePreferences;
 
 /**
  * Created by tdeus on 12/23/13.
  */
 public class AptoideConfigurationPartners extends AptoideConfiguration {
+    private static Context context = AptoidePartner.getContext();
 
-    public static String PARTNERTYPE;
-    public static String PARTNERID;
-    public static String DEFAULTSTORENAME;
-    public static boolean MATURECONTENTSWITCH = true;
-    public static String SPLASHSCREEN;
-    public static String SPLASHSCREENLAND;
+
+    private static Resources resources = context.getResources();
+
+    public static String PARTNERTYPE = resources.getString(R.string.partnertype);
+    public static String PARTNERID = resources.getString(R.string.partnerid);
+    public static String DEFAULTSTORENAME = resources.getString(R.string.defaultstorename);
+    public static boolean MATURECONTENTSWITCH = resources.getBoolean(R.bool.maturecontentswitch);
+    public static String SPLASHSCREEN = resources.getString(R.string.splashscreen);
+    public static String SPLASHSCREENLAND = resources.getString(R.string.splashscreenland);
     public static String BRAND = "";
-    public static boolean MATURECONTENTSWITCHVALUE = true;
-    public static boolean MULTIPLESTORES = true;
-    public static boolean CUSTOMEDITORSCHOICE = false;
-    public static boolean SEARCHSTORES = true;
-    public static String APTOIDETHEME = "";
-    public static String MARKETNAME = "";
-    public static String ADUNITID = "";
-    public static boolean CREATESHORTCUT = true;
+    public static boolean MATURECONTENTSWITCHVALUE = resources.getBoolean(R.bool.maturecontentswitchvalue);
+    public static boolean MULTIPLESTORES = resources.getBoolean(R.bool.multiplestores);
+    public static boolean CUSTOMEDITORSCHOICE = resources.getBoolean(R.bool.customeditorschoice);
+    public static boolean SEARCHSTORES = resources.getBoolean(R.bool.searchstores);
+    public static String APTOIDETHEME = resources.getString(R.string.aptoidetheme);
+    public static String MARKETNAME = resources.getString(R.string.marketname);
+    public static String ADUNITID = resources.getString(R.string.adunitid);
+    public static boolean CREATESHORTCUT = resources.getBoolean(R.bool.createshortcut);
 
 
-    public static String THEME = null;
-    public static String AVATAR = null;
-    public static String DESCRIPTION = null;
-    public static String VIEW = "list";
-    public static String ITEMS = null;
+    public static String THEME = resources.getString(R.string.theme);
+    public static String AVATAR = resources.getString(R.string.avatar);
+    public static String DESCRIPTION = resources.getString(R.string.description);
+    public static String VIEW = resources.getString(R.string.view);
+    public static String ITEMS = resources.getString(R.string.items);
     public static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static final String OEM_AUTO_UPDATE_URL = "http://%s.aptoide.com/latest_version_%s.xml";
 
-    public static String RESTRICTIONLIST;
-    public static String SPLASHCOLOR;
-    public static boolean SHOWSPLASH = true;
-    public static boolean SHOWADS = true;
-    public static boolean TIMELINE = false;
+    public static String RESTRICTIONLIST = resources.getString(R.string.restritionlist);;
+    public static String SPLASHCOLOR =  resources.getString(R.string.splashcolor);
+    public static boolean SHOWSPLASH = resources.getBoolean(R.bool.showsplash);
+    public static boolean SHOWADS = resources.getBoolean(R.bool.showads);
+    public static boolean TIMELINE= resources.getBoolean(R.bool.timeline);
 
     public String getFallbackEditorsChoiceUrl() {
         return "http://"+DEFAULTSTORENAME+".store.aptoide.com/editors.xml";
@@ -72,7 +60,6 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         STORECONF, THEME, AVATAR, DESCRIPTION, VIEW, ITEMS, RESTRICTIONLIST
     }
 
-    private static Context context = AptoidePartner.getContext();
 
     @Override
     public String getAutoUpdateUrl(){
@@ -197,7 +184,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         return RESTRICTIONLIST;
     }
 
-
+/*
     public static void parseBootConfigStream(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
@@ -429,7 +416,7 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         }
 
 
-    }
+    }*/
 
     @Override
     public Class getStartActivityClass(){

@@ -23,19 +23,15 @@ import java.util.concurrent.TimeUnit;
 public class SuggestionProvider extends SearchRecentSuggestionsProvider {
 
     private static final String URI =  "";
-    protected boolean isConfigured = false;
 
-    public SuggestionProvider(){
+
+    public String getSearchProvider(){
+        return "cm.aptoide.pt.SuggestionProvider";
     }
 
     @Override
     public boolean onCreate() {
-
-        if(!isConfigured){
-            setupSuggestions("cm.aptoide.pt.SuggestionProvider", DATABASE_MODE_QUERIES);
-            isConfigured = true;
-        }
-
+        setupSuggestions(getSearchProvider(), DATABASE_MODE_QUERIES);
         return super.onCreate();
     }
 

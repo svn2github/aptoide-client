@@ -57,6 +57,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     public static final long PUSH_NOTIFICATION_TIME_INTERVAL = AlarmManager.INTERVAL_DAY; //AlarmManager.INTERVAL_FIFTEEN_MINUTES / 30;
 
 
+
     // same as Manifest
     public final String PUSH_NOTIFICATION_Action_TRACK_URL = Aptoide.getConfiguration().getTrackUrl();
 
@@ -188,10 +189,16 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                                     @Override
                                     public void run() {
 
-                                        String bannerUrl = notification.getImages()!=null?getSize(notification.getImages().getBanner_url()):null;
+                                        try{
 
-                                        ImageLoader.getInstance().loadImage(bannerUrl,
-                                                new MyImageLoadingListener(context, extra));
+                                            String bannerUrl = notification.getImages()!=null?getSize(notification.getImages().getBanner_url()):null;
+
+                                            ImageLoader.getInstance().loadImage(bannerUrl, new MyImageLoadingListener(context, extra));
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+
+
                                     }
                                 });
 

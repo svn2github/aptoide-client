@@ -1,6 +1,7 @@
 package com.aptoide.partners;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -13,7 +14,12 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -33,14 +39,24 @@ import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
+import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentListApps;
 import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.webservices.Api;
+import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
+import cm.aptoide.ptdev.webservices.Response;
+import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 /**
  * Created by tdeus on 3/19/14.
@@ -204,6 +220,73 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+    public interface GetFirstInstall{
+        @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
+        Response postApk(@Body Api user);
+    }
+
+    public static class TestRequest extends RetrofitSpiceRequest<Response, GetFirstInstall> {
+
+        private int offset;
+        private String widget;
+
+
+
+        public TestRequest() {
+            super(Response.class, GetFirstInstall.class);
+
+        }
+
+
+        public void setOffset(int offset){
+
+            this.offset = offset;
+        }
+
+        public void setWidgetId(String widget){
+
+            this.widget = widget;
+        }
+
+
+
+        @Override
+        public Response loadDataFromNetwork() throws Exception {
+            Api api = new Api();
+
+            api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
+            api.getApi_global_params().setStore_name("savou");
+            int BUCKET_SIZE = AptoideUtils.getBucketSize();
+
+            SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
+            api.getApi_global_params().mature = String.valueOf(!sPref.getBoolean("matureChkBox", true));
+
+
+            Api.GetStore getStore = new Api.GetStore();
+            //Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
+
+            //categoriesParams.setParent_ref_id("cat_2");
+
+            Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
+            widgetParams.setContext("first_install");
+
+            //widgetParams.offset = offset;
+            //widgetParams.limit = 3;
+            //getStore.getDatasets_params().set(categoriesParams);
+            getStore.getDatasets_params().set(widgetParams);
+
+            //getStore.addDataset(categoriesParams.getDatasetName());
+            getStore.addDataset(widgetParams.getDatasetName());
+
+            api.getApi_params().set(getStore);
+
+
+            return getService().postApk(api);
+
+        }
+
+    }
+
 
 
     @Override
@@ -237,6 +320,36 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
                 sharedPreferences.edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).apply();
 
+                TestRequest request = new TestRequest();
+
+                getSpiceManager().execute(request, "firstInstallRequest", DurationInMillis.ONE_MINUTE, new RequestListener<Response>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+
+                    }
+
+                    @Override
+                    public void onRequestSuccess(Response response) {
+
+
+                        try {
+                            for (Response.GetStore.Widgets.Widget widget : response.responses.getStore.datasets.widgets.data.list) {
+
+                                if (!response.responses.listApps.datasets.getDataset().get(widget.data.ref_id).data.list.isEmpty()) {
+                                    Intent i = new Intent(StartPartner.this, FirstInstallActivity.class);
+                                    startActivityForResult(i, 365);
+
+                                    Log.d("Aptoide", "Starting Activity");
+                                    break;
+                                }
+
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
 
 
             }
@@ -250,7 +363,70 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 365:
 
+                if(resultCode == RESULT_OK){
+                    ArrayList<Integer> ids = data.getIntegerArrayListExtra("ids");
+
+                    for (Integer id : ids) {
+
+                        try{
+                            GetApkInfoRequestFromId getApkInfoRequestFromId = new GetApkInfoRequestFromId(Aptoide.getContext());
+                            getApkInfoRequestFromId.setAppId(String.valueOf(id));
+                            getSpiceManager().execute(getApkInfoRequestFromId, new RequestListener<GetApkInfoJson>() {
+                                @Override
+                                public void onRequestFailure(SpiceException spiceException) {
+
+                                }
+
+                                @Override
+                                public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+
+
+                                    try{
+
+                                        Download download = new Download();
+
+                                        int downloadId = getApkInfoJson.getApk().md5sum.hashCode();
+
+                                        download.setId(downloadId);
+                                        download.setName(getApkInfoJson.getMeta().getTitle());
+                                        download.setVersion(getApkInfoJson.getApk().getVername());
+                                        download.setIcon(getApkInfoJson.getApk().getIcon());
+                                        download.setPackageName(getApkInfoJson.getApk().getPackage());
+                                        download.setMd5(getApkInfoJson.getApk().getMd5sum());
+
+                                        //download.setReferrer(referrer);
+
+                                        getDownloadService().startDownloadFromJson(getApkInfoJson, downloadId , download );
+
+                                    }catch (Exception e){
+
+                                    }
+
+
+                                }
+                            });
+
+
+                        }catch (RetrofitError error){
+
+                        }
+
+
+                    }
+
+
+                }
+
+                break;
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

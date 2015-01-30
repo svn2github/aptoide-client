@@ -1,6 +1,15 @@
 <resources>
 
     <string name="app_name">Lisciani Market</string>
+
+
+
+
+
+
+
+
+
     <string name="suggestion_provider">${applicationId}.SuggestionProvider</string>
     <string name="autoupdate_provider">${applicationId}.AutoUpdateProvider</string>
     <string name="stub_provider">${applicationId}.StubProvider</string>

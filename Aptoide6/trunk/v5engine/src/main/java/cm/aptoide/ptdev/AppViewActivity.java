@@ -6,6 +6,8 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -1197,11 +1199,26 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
 
+    public static class DummyDialog extends DialogFragment{
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+
+            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setMessage("This application needs Google Play Services. Do you want download Google Play Services from an external source?").setPositiveButton("Yes", null).setNegativeButton("No", null).create();
+
+            return dialog;
+        }
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_view);
+
+        new DummyDialog().show(getSupportFragmentManager(), "cenas");
+
 
         //SearchManager manager;
 

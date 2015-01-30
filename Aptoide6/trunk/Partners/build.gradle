@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crashlytics'
-//apply from: 'signing.gradle'
+apply from: 'signing.gradle'
 
 repositories{
 
@@ -8,13 +8,16 @@ repositories{
 
 }
 
+def String packageName = "com.aptoide.partners.".concat(project.STORE_NAME).toLowerCase()
+
 android {
-    compileSdkVersion 18
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 19
+        applicationId packageName
+        minSdkVersion 9
+        targetSdkVersion 21
     }
 
     packagingOptions {
@@ -29,7 +32,6 @@ android {
         pickFirst 'META-INF/LGPL2.1'
     }
 
-
     buildTypes{
         debug {
             minifyEnabled true
@@ -37,20 +39,42 @@ android {
             zipAlignEnabled true
         }
         release {
+            zipAlignEnabled true
             minifyEnabled true
             proguardFile 'proguard-aptoide.txt'
-            zipAlignEnabled true
-//           signingConfig signingConfigs.release
+	        signingConfig signingConfigs.release
+        }
+	    dexOptions{
+                javaMaxHeapSize  "3g"
         }
 
+
+    }
+
+
+
+
+}
+
+android.applicationVariants.all{ variant ->
+    variant.mergeResources.doLast{
+
+        def String buildNumber = applicationId
+        if (buildNumber != null) {
+            File valuesFile = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
+            println("Replacing strings number in " + valuesFile)
+            println("PackageName = " + buildNumber)
+            String content = valuesFile.getText('UTF-8')
+            content = content.replace('${applicationId}', buildNumber)
+            valuesFile.write(content, 'UTF-8')
+        }
     }
 }
+
+
 
 dependencies {
     compile project(':v5engine')
     compile fileTree(dir: 'libs', include: '*.jar')
+
 }
-
-
-
-

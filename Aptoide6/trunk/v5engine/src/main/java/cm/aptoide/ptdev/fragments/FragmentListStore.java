@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cm.aptoide.ptdev.AppViewActivity;
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.EnumCategories;
@@ -231,7 +230,7 @@ public class FragmentListStore extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
-        StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager());
+        StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager(), getArguments());
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -669,13 +668,15 @@ public class FragmentListStore extends Fragment {
     public static class StoreListAdapter extends RecyclerView.Adapter<StoreListAdapter.StoreListViewHolder>{
 
         private final List<StoreListItem> list;
+        private final Bundle parentBundle;
 
         private String storename;
 
-        public StoreListAdapter(Context context, List<StoreListItem> list, FragmentManager fragmentManager) {
+        public StoreListAdapter(Context context, List<StoreListItem> list, FragmentManager fragmentManager, Bundle bundle) {
             this.list = list;
             this.context = context;
             this.fragmentManager = fragmentManager;
+            this.parentBundle = bundle;
         }
 
         private Context context;
@@ -728,7 +729,7 @@ public class FragmentListStore extends Fragment {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(context, AppViewActivity.class);
+                            Intent i = new Intent(context, Aptoide.getConfiguration().getAppViewActivityClass());
                             i.putExtra("fromRelated", true);
                             i.putExtra("md5sum", appItem.getMd5sum());
                             i.putExtra("repoName", appItem.getRepo());
@@ -788,10 +789,17 @@ public class FragmentListStore extends Fragment {
                                 bundle.putString("refid", refid);
                                 bundle.putString("storename", storename);
 
+
+
                                 Map<String, String> flurryParams = new HashMap<String, String>();
                                 flurryParams.put("Category", storeListItem.name);
                                 FlurryAgent.logEvent("Store_Clicked_On", flurryParams);
 
+                            }
+
+                            if(parentBundle.containsKey("username")){
+                                bundle.putString("username", parentBundle.getString("username"));
+                                bundle.putString("password", parentBundle.getString("password"));
                             }
 
                             fragment.setArguments(bundle);

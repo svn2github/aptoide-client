@@ -37,6 +37,7 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
     private int limit;
     private String package_name;
     private String repo;
+    private String categories;
 
     public void setPackage_name(String package_name) {
         this.package_name = package_name;
@@ -49,6 +50,10 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
     public GetAdsRequest(Context context) {
         super(ApkSuggestionJson.class, Webservice.class);
 
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
     public interface Webservice{
@@ -80,6 +85,9 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
         parameters.put("type", "1-3");
         parameters.put("flag", "gms");
         parameters.put("keywords", keyword);
+
+        parameters.put("categories", categories);
+
 
         String oemid = Aptoide.getConfiguration().getExtraId();
 

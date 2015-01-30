@@ -1,10 +1,8 @@
 package cm.aptoide.ptdev.tutorial;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -15,13 +13,12 @@ import android.widget.Button;
 
 import com.flurry.android.FlurryAgent;
 
-import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.AptoideThemePicker;
-import cm.aptoide.ptdev.R;
-import cm.aptoide.ptdev.tutorial.Wizard.WizardCallback;
-
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.tutorial.Wizard.WizardCallback;
 
 /**
  * Created with IntelliJ IDEA.
@@ -98,10 +95,14 @@ public class Tutorial extends ActionBarActivity {
             ft.add(R.id.wizard_fragment, firstFragment);
             ft.commit();
 
+        }else{
+            currentFragment = savedInstanceState.getInt("currentFragment");
         }
 
 
     }
+
+
 
     @Override
     protected void onStart() {
@@ -159,7 +160,7 @@ public class Tutorial extends ActionBarActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putInt("currentFragment", currentFragment);
     }
 
     private void changeFragment(int toPage) {

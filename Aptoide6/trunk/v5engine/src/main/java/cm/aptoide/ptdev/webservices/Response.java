@@ -119,8 +119,14 @@ public class Response {
                 public static class WidgetData {
                     public String ref_id;
                     public int apps_count;
+                    public Options options;
+
                     public List<WidgetCategory> categories;
 
+                }
+
+                public static class Options{
+                    public Number ads_count;
                 }
 
             }
