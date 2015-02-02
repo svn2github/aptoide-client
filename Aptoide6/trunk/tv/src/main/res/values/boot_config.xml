@@ -27,8 +27,9 @@
     <string name="partnertype">premium</string>
     <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
     <string name="marketname">Aptoide TV</string>
-    <!--<string name="defaultstorename">geniatechapps</string>-->
-    <string name="defaultstorename">sharp-store</string>
+    <string name="titleismarketname">false</string>
+    <string name="defaultstorename">geniatechapps</string>
+    <!--<string name="defaultstorename">sharp-store</string>-->
     <!--<string name="defaultstorename">magicbox-store</string>-->
     <!--<string name="defaultstorename">iwedia-store</string>-->
 

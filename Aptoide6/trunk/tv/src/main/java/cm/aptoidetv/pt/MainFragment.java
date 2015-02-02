@@ -136,6 +136,9 @@ public class MainFragment extends BrowseFragment{
             }
         }
     };
+    private String addAmountToTitle(String Title,int amount){
+        return Title + " ("+amount+')';
+    }
 
     @Override
     public void onResume() {
@@ -170,11 +173,13 @@ public class MainFragment extends BrowseFragment{
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED, requestListener);
     }
 
-    private String addAmountToTitle(String Title,int amount){
-        return Title + " ("+amount+')';
-    }
+
     private void setupUIElements() {
-        setTitle(getString(R.string.app_name));
+        if(getString(R.string.titleismarketname).equals("true")) {
+            setTitle(getString(R.string.app_name));
+        }else{
+            setBadgeDrawable(getResources().getDrawable(R.drawable.imgtitle));
+        }
         setHeadersState(HEADERS_ENABLED);
         TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor, R.attr.searchColor});
         int brandColorResourceId = typedArray.getResourceId(0, 0);
