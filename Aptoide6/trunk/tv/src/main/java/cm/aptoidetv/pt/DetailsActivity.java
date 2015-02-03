@@ -68,7 +68,7 @@ public class DetailsActivity extends ActionBarActivity {
     public static final String APP_ICON = "icon";
     public static final String APP_SIZE = "size";
 
-    private String packageName, downloads, verName, md5sum, icon, size;
+    private String packageName, downloads, verName, md5sum, icon;
 
     private ImageView app_icon;
     private Button downloadButton;
@@ -90,7 +90,7 @@ public class DetailsActivity extends ActionBarActivity {
     private EditText editText_addcomment;
 
 //    private TextView noComments;
-
+    GetApkInfoRequestFromMd5 request;
     private SpiceManager manager = new SpiceManager(HttpService.class);
     final private  DetailsActivity activity =this;
     @Override
@@ -129,7 +129,7 @@ public class DetailsActivity extends ActionBarActivity {
         downloads = getIntent().getStringExtra(DOWNLOADS);
         md5sum = getIntent().getStringExtra(MD5_SUM);
         icon = getIntent().getStringExtra(APP_ICON);
-        size = getIntent().getStringExtra(APP_SIZE);
+        //size = getIntent().getStringExtra(APP_SIZE);
 
         app_view_details_layout = findViewById(R.id.app_view_details_layout);
         loading_pb = findViewById(R.id.loading_pb);
@@ -159,7 +159,7 @@ public class DetailsActivity extends ActionBarActivity {
         }
        // new DetailRowBuilderTask().execute(md5sum);
 
-        GetApkInfoRequestFromMd5 request = new GetApkInfoRequestFromMd5(this);
+        request = new GetApkInfoRequestFromMd5(this);
         request.setMd5Sum(md5sum);
 
         manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
@@ -175,7 +175,7 @@ public class DetailsActivity extends ActionBarActivity {
                 downloadButton.setVisibility(View.VISIBLE);
                 addDownloadButtonListener(apkInfoJson);
                 packageName = apkInfoJson.getApk().getPackage();
-                int totalRatings =  apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue();
+
                 if(downloads!=String.valueOf(apkInfoJson.getMeta().getDownloads())){
                     downloads= String.valueOf(apkInfoJson.getMeta().getDownloads());
                     app_downloads.setText(getString(R.string.downloads)+": " + downloads);
@@ -185,19 +185,14 @@ public class DetailsActivity extends ActionBarActivity {
                 verName = apkInfoJson.getApk().getVername();
                 app_version.setText(getString(R.string.version)+": " + verName);
                 app_size.setText(getString(R.string.size)+": "+ Utils.formatBytes(apkInfoJson.getApk().getSize().longValue()));
-                if(totalRatings>0){
-                    rating_bar.setVisibility(View.VISIBLE);
-                    rating_bar.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
-                    RatingBar rating_bar2 = (RatingBar) findViewById(R.id.rating_bar2);
-                    rating_bar2.setVisibility(View.VISIBLE);
-                    rating_bar2.setRating(apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
-                }else {
-                    rating_bar.setVisibility(View.INVISIBLE);
-                }
+
                 findViewById(R.id.button_like).setOnClickListener(new AddLikeListener(true,manager));
                 findViewById(R.id.button_dont_like).setOnClickListener(new AddLikeListener(false,manager));
                 findViewById(R.id.button_send_comment).setOnClickListener(new AddCommentListener());
-                app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
+
+                updateRating(apkInfoJson.getMeta().getLikevotes().getLikes().intValue() + apkInfoJson.getMeta().getLikevotes().getDislikes().intValue(),
+                        apkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+
                 String description = apkInfoJson.getMeta().getDescription();
                 app_description.setText(Html.fromHtml(description.replace("\n", "<br/>")));
 
@@ -270,6 +265,19 @@ public class DetailsActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    private void updateRating(int totalRatings,float rating){
+        app_ratings.setText("("+totalRatings + " " + getString(R.string.ratings)+")");
+        if(totalRatings>0){
+            rating_bar.setVisibility(View.VISIBLE);
+            rating_bar.setRating(rating);
+            RatingBar rating_bar2 = (RatingBar) findViewById(R.id.rating_bar2);
+            rating_bar2.setVisibility(View.VISIBLE);
+            rating_bar2.setRating(rating);
+        }else {
+            rating_bar.setVisibility(View.INVISIBLE);
+        }
     }
 
     private PackageInfo getPackageInfo(String package_name){
@@ -497,6 +505,18 @@ public class DetailsActivity extends ActionBarActivity {
             if (genericResponse.getStatus().equals("OK")) {
                 Toast.makeText(AppTV.getContext(), getString(msg), Toast.LENGTH_LONG).show();
                 manager.removeDataFromCache(GetApkInfoJson.class, CACHEKEYLikeRequest);
+                request.setCmtlimit(0);
+                manager.execute(request, "details"+md5sum, DurationInMillis.ALWAYS_RETURNED,  new RequestListener<GetApkInfoJson>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+
+                    }
+                    @Override
+                    public void onRequestSuccess(GetApkInfoJson getApkInfoJson) {
+                        updateRating(getApkInfoJson.getMeta().getLikevotes().getLikes().intValue() + getApkInfoJson.getMeta().getLikevotes().getDislikes().intValue(),
+                                getApkInfoJson.getMeta().getLikevotes().getRating().floatValue());
+                    }
+                });
             } else {
                 AptoideUtils.toastError(genericResponse.getErrors());
             }
@@ -581,7 +601,6 @@ public class DetailsActivity extends ActionBarActivity {
             @Override
             public void onRequestSuccess(GenericResponseV2 createUserJson) {
                 dismiss();
-
                 if (createUserJson.getStatus().equals("OK")) {
                     Toast.makeText(AppTV.getContext(), R.string.username_success, Toast.LENGTH_LONG).show();
                     PreferenceManager.getDefaultSharedPreferences(activity).edit().putString(Preferences.USERNAME, username).commit();

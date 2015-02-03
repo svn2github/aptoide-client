@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -22,6 +26,10 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -173,12 +181,11 @@ public class MainFragment extends BrowseFragment{
         manager.execute(request, "store", DurationInMillis.ALWAYS_RETURNED, requestListener);
     }
 
-
     private void setupUIElements() {
-        if(getString(R.string.titleismarketname).equals("true")) {
-            setTitle(getString(R.string.app_name));
+        if(getString(R.string.imgtitle).length()>0) {
+            new UpdateTitleFromURL().execute(getString(R.string.imgtitle));
         }else{
-            setBadgeDrawable(getResources().getDrawable(R.drawable.imgtitle));
+            setTitle(getString(R.string.app_name));
         }
         setHeadersState(HEADERS_ENABLED);
         TypedArray typedArray = getActivity().getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor, R.attr.searchColor});
@@ -203,5 +210,32 @@ public class MainFragment extends BrowseFragment{
                 ((BindInterface)item).startActivity(getActivity());
             }
         });
+    }
+
+    public class UpdateTitleFromURL extends AsyncTask<String, Void, BitmapDrawable> {
+        @Override
+        protected void onPostExecute(BitmapDrawable d) {
+            super.onPostExecute(d);
+            if(d==null)
+                setTitle(getString(R.string.app_name));
+            else
+                setBadgeDrawable(d);
+        }
+
+        @Override
+        protected BitmapDrawable doInBackground(String... params) {
+            Bitmap x;
+
+            HttpURLConnection connection = null;
+            try {
+                connection = (HttpURLConnection) new URL(params[0]).openConnection();
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                x= BitmapFactory.decodeStream(input);
+                return new BitmapDrawable(x);
+            } catch (IOException e) {
+                return null;
+            }
+        }
     }
 }
